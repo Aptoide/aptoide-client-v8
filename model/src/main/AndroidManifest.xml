@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 12/04/2016.
+  -->
+
+<manifest package="cm.aptoide.pt.model"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        >
+
+    </application>
+
+</manifest>
