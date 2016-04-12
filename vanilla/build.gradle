@@ -4,6 +4,11 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
     compileSdkVersion 23
@@ -11,16 +16,79 @@ android {
 
     defaultConfig {
         applicationId "cm.aptoide.pt.aptoideclientv8"
-        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "8.0.0"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    signingConfigs { release }
+
+    productFlavors {
+        // Define separate dev and prod product flavors.
+        dev {
+            // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+            // to pre-dex each module and produce an APK that can be tested on
+            // Android Lollipop without time consuming dex merging processes.
+            minSdkVersion 21
+
+            // Enabling multidex support.
+//            multiDexEnabled true
+        }
+        prod {
+            // The actual minSdkVersion for the application.
+            minSdkVersion 9
+
+            applicationId "cm.aptoide.pt"
+        }
+    }
+
+    buildTypes {
+        release {
+            zipAlignEnabled true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    project.ext { appName = 'aptoide' }
+                    def newName = output.outputFile.name
+                    newName = newName.replace("vanilla-", "$project.ext.appName-") //"MyAppName" -> I set my app variables in the root project
+                    newName = newName.replace("prod-release", versionName)
+                    //noinspection GroovyAssignabilityCheck
+                    output.outputFile = new File(output.outputFile.parent, newName)
+                }
+            }
+        }
+
+        debug {
+            zipAlignEnabled false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+        pickFirst 'META-INF/DEPENDENCIES.txt'
+        pickFirst 'META-INF/DEPENDENCIES'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/MANIFEST.MF'
+        pickFirst 'META-INF/LGPL2.1'
     }
 }
 
