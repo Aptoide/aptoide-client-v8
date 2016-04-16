@@ -12,27 +12,26 @@ import cm.aptoide.pt.v8engine.util.ScreenUtils;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class Displayable<T> {
+public abstract class Displayable {
 
 	private static final float REFERENCE_WIDTH_DPI = 360;
-	private final T pojo;
+	private boolean fixedPerLineCount = false;
 
 	/**
 	 * Needed for reflective {@link Class#newInstance()}.
 	 */
 	public Displayable() {
-		pojo = null;
 	}
 
-	public Displayable(T pojo) {
-		this.pojo = pojo;
+	public Displayable(boolean fixedPerLineCount) {
+		this.fixedPerLineCount = fixedPerLineCount;
 	}
 
 	@LayoutRes
 	public abstract int getViewType();
 
 	public int getPerLineCount() {
-		return (int) (ScreenUtils.getScreenWidthInDip() / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils.getScreenWidthInDip() / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
 
 	public abstract int getDefaultPerLineCount();

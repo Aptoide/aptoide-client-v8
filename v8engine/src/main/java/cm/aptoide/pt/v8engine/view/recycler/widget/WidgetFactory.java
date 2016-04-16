@@ -95,7 +95,7 @@ public class WidgetFactory {
 
 		private final HashMap<Integer, WidgetEnum> internalMap = new HashMap<>();
 
-		public void put(Displayable<?> displayableImp, WidgetEnum widgetEnum) {
+		public void put(Displayable displayableImp, WidgetEnum widgetEnum) {
 			internalMap.put(displayableImp.getViewType(), widgetEnum);
 		}
 
