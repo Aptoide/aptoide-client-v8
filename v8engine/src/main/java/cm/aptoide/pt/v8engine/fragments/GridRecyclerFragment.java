@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 16/04/2016.
+ * Modified by Neurophobic Animal on 18/04/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -12,10 +12,12 @@ import java.util.List;
 
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.implementationsToRemove.DisplayableImp;
+import cm.aptoide.pt.v8engine.implementationsToRemove.DisplayableImp2;
 import cm.aptoide.pt.v8engine.util.SystemUtils;
-import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
-import cm.aptoide.pt.v8engine.view.recycler.BaseGridLayoutManager;
+import cm.aptoide.pt.v8engine.view.recycler.grid.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.grid.BaseGridLayoutManager;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.DisplayableGroup;
 
 /**
  * Created by neuro on 15-04-2016.
@@ -28,8 +30,16 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 		LinkedList<Displayable> displayables = new LinkedList<>();
 		Displayable displayable = new DisplayableImp(null);
 
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 21; i++) {
 			displayables.add(displayable);
+		}
+
+		List<Displayable> tmp = new LinkedList<>();
+		tmp.add(displayable);
+		displayables.add(new DisplayableGroup(tmp));
+
+		for (int i = 0; i < 2; i++) {
+			displayables.add(new DisplayableImp2());
 		}
 
 		return displayables;

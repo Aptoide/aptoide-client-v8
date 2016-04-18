@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 18/04/2016.
+ */
+
+package cm.aptoide.pt.v8engine.view.recycler.widget;
+
+import java.util.List;
+
+import cm.aptoide.pt.v8engine.view.recycler.widget.displayables.EmptyDisplayable;
+import lombok.Getter;
+
+/**
+ * Created by neuro on 16-04-2016.
+ */
+public class DisplayableGroup extends Displayable {
+
+	@Getter private final List<Displayable> children;
+
+	public DisplayableGroup(List<Displayable> children) {
+		this.children = children;
+		computeLeftSpaces();
+	}
+
+	private void computeLeftSpaces() {
+		int columnSize = WidgetFactory.getColumnSize();
+		int index = 0;
+
+		for (Displayable displayable : children) {
+			if (index + displayable.getSpanSize() > columnSize) {
+				index = displayable.getSpanSize();
+			} else {
+				index += displayable.getSpanSize();
+			}
+		}
+
+		if (index < columnSize) {
+			children.add(new EmptyDisplayable(columnSize - index));
+		}
+	}
+
+	@Override
+	public int getViewType() {
+		throw new IllegalStateException("getViewType() on DisplayableGroup should not be called!");
+	}
+
+	@Override
+	public int getDefaultPerLineCount() {
+		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not be called!");
+	}
+
+	@Override
+	public WidgetEnum getEnum() {
+		throw new IllegalStateException("getEnum() on DisplayableGroup should not be called!");
+	}
+}

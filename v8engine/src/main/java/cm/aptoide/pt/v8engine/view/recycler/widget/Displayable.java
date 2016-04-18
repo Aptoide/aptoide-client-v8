@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 16/04/2016.
+ * Modified by Neurophobic Animal on 18/04/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -42,4 +42,8 @@ public abstract class Displayable {
 	 * @return the DisplayableEnum which identifies this widget.
 	 */
 	public abstract WidgetEnum getEnum();
+
+	public int getSpanSize() {
+		return WidgetFactory.getColumnSize() / getPerLineCount();
+	}
 }

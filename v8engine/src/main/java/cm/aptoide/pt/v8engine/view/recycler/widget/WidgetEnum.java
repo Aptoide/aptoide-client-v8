@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 16/04/2016.
+ * Modified by Neurophobic Animal on 18/04/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -8,13 +8,18 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 import android.view.View;
 
 import cm.aptoide.pt.v8engine.implementationsToRemove.DisplayableImp;
+import cm.aptoide.pt.v8engine.implementationsToRemove.DisplayableImp2;
 import cm.aptoide.pt.v8engine.implementationsToRemove.WidgetImpl;
+import cm.aptoide.pt.v8engine.view.recycler.widget.displayables.EmptyDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.widgets.EmptyWidget;
 
 /**
  * Class that maps each Widget to it's identifier Enum. Useful for mapping purposes, which allows us to have a simpler Adapter basically.
  */
 public enum WidgetEnum {
-	WIDGET_IMPL(WidgetImpl.class, DisplayableImp.class);
+	EMPTY(EmptyWidget.class, EmptyDisplayable.class),
+	WIDGET_IMPL(WidgetImpl.class, DisplayableImp.class),
+	WIDGET_2(WidgetImpl.class, DisplayableImp2.class),;
 
 	private final Class<? extends Widget> widgetClass;
 	private final Class<? extends Displayable> displayableClass;

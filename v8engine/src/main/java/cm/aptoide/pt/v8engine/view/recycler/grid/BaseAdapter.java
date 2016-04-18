@@ -1,14 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 16/04/2016.
+ * Modified by Neurophobic Animal on 18/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler;
+package cm.aptoide.pt.v8engine.view.recycler.grid;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
@@ -21,14 +20,13 @@ import lombok.Getter;
  */
 public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
-	@Getter private final List<Displayable> displayables;
+	@Getter private final Displayables displayables = new Displayables();
 
 	public BaseAdapter() {
-		displayables = new LinkedList<>();
 	}
 
 	public BaseAdapter(List<Displayable> displayables) {
-		this.displayables = displayables;
+		this.displayables.add(displayables);
 	}
 
 	@Override
