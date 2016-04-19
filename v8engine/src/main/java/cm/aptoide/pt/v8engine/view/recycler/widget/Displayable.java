@@ -27,6 +27,7 @@ public abstract class Displayable {
 		this.fixedPerLineCount = fixedPerLineCount;
 	}
 
+	// shouldn't this be named "getViewId()" ??
 	@LayoutRes
 	public abstract int getViewType();
 
@@ -35,13 +36,6 @@ public abstract class Displayable {
 	}
 
 	public abstract int getDefaultPerLineCount();
-
-	/**
-	 * Only to enforce the DisplayableEnum definition.
-	 *
-	 * @return the DisplayableEnum which identifies this widget.
-	 */
-	public abstract WidgetEnum getEnum();
 
 	public int getSpanSize() {
 		return WidgetFactory.getColumnSize() / getPerLineCount();

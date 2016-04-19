@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.implementationsToRemove;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.DisplayablePojo;
-import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetEnum;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -32,8 +31,4 @@ public class DisplayableImp extends DisplayablePojo<GetAdsResponse> {
 		return 3;
 	}
 
-	@Override
-	public WidgetEnum getEnum() {
-		return WidgetEnum.WIDGET_IMPL;
-	}
 }

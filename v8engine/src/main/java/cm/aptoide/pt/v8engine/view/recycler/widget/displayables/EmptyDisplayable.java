@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.displayables;
 
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetEnum;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -32,11 +31,6 @@ public class EmptyDisplayable extends Displayable {
 	public int getDefaultPerLineCount() {
 		// Stub
 		return 1;
-	}
-
-	@Override
-	public WidgetEnum getEnum() {
-		return WidgetEnum.EMPTY;
 	}
 
 	@Override

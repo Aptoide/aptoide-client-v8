@@ -18,11 +18,4 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 	}
 
 	public abstract void bindView(T displayable);
-
-	/**
-	 * Only to enforce the WidgetEnum definition.
-	 *
-	 * @return the WidgetEnum which identifies this widget.
-	 */
-	public abstract WidgetEnum getEnum();
 }

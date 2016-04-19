@@ -48,9 +48,4 @@ public class DisplayableGroup extends Displayable {
 	public int getDefaultPerLineCount() {
 		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not be called!");
 	}
-
-	@Override
-	public WidgetEnum getEnum() {
-		throw new IllegalStateException("getEnum() on DisplayableGroup should not be called!");
-	}
 }
