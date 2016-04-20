@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 20/04/2016.
+ */
+
 package cm.aptoide.pt.dataprovider.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -65,20 +70,12 @@ public abstract class WebService<T, U> {
 		return getService().flatMap(this::loadDataFromNetwork).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 	}
 
-	public Observable<U> observe(SuccessRequestListener<U> successRequestListener) {
-		return observe().doOnNext(successRequestListener::onSuccess);
-	}
-
-	public Observable<U> observe(SuccessRequestListener<U> successRequestListener, ErrorRequestListener errorRequestListener) {
-		return observe(successRequestListener).doOnError(throwable -> errorRequestListener.onError((HttpException) throwable));
-	}
-
 	public void execute(SuccessRequestListener<U> successRequestListener) {
 		execute(successRequestListener, defaultErrorRequestListener());
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener, ErrorRequestListener errorRequestListener) {
-		observe(successRequestListener, errorRequestListener).subscribe();
+		observe().subscribe(successRequestListener::onSuccess, throwable -> errorRequestListener.onError((HttpException) throwable));
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
