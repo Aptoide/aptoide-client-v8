@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 20/04/2016.
+ */
+
 package cm.aptoide.pt.dataprovider.core.okhttp;
 
 import java.io.File;
@@ -11,6 +16,9 @@ import okhttp3.Response;
 
 /**
  * Factory for OkHttp Clients creation.
+ *
+ * @author Neurophobic Animal
+ * @author SithEngineer
  */
 public class OkHttpClientFactory {
 
@@ -33,27 +41,20 @@ public class OkHttpClientFactory {
 	private static Interceptor createCacheInterceptor() {
 		return new Interceptor() {
 
-			OkHttpCustomCache customCache = new OkHttpCustomCache();
+			AptoidePOSTRequestCache customCache = new AptoidePOSTRequestCache();
 
 			@Override
 			public Response intercept(Chain chain) throws IOException {
-
-				final String cache_key = getCacheKey(chain.request());
-				if (cache_key != null) {
-					Response response = customCache.get(cache_key);
-
-					if (response != null) {
-						return response;
-					} else {
-						return customCache.put(cache_key, chain.proceed(chain.request()));
-					}
+				Request request = chain.request();
+				Response response = customCache.get(request);
+				if (response != null) {
+					return response;
+				} else {
+					response = chain.proceed(chain.request());
+					customCache.put(request, response);
 				}
 
-				return chain.proceed(chain.request());
-			}
-
-			private String getCacheKey(Request request) {
-				return request.header("cache_key");
+				return response;
 			}
 		};
 	}
