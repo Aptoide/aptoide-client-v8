@@ -8,7 +8,6 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
@@ -18,70 +17,82 @@ import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
  */
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
-    private String TAG = "UdinicAuthenticator";
+    private static final String TAG = AccountAuthenticator.class.getSimpleName();
     private final Context mContext;
 
     public AccountAuthenticator(Context context) {
         super(context);
-
-
         // I hate you! Google - set mContext as protected!
         this.mContext = context;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
-        Log.d("udinic", TAG + "> addAccount");
+        Log.v(TAG, "Adding account: type=" + accountType);
 
-        final Intent intent = new Intent(mContext, LoginActivity.class);
-        intent.putExtra(cm.aptoide.accountmanager.AccountManager.ARG_ACCOUNT_TYPE, accountType);
-        intent.putExtra(cm.aptoide.accountmanager.AccountManager.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(cm.aptoide.accountmanager.AccountManager.ARG_IS_ADDING_NEW_ACCOUNT, true);
-        intent.putExtra(cm.aptoide.accountmanager.AccountManager.ARG_OPTIONS_BUNDLE, options);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        return createAuthActivityIntentBundle(response, accountType, requiredFeatures, authTokenType, null, options);
+    }
+
+    protected Bundle createAuthActivityIntentBundle(AccountAuthenticatorResponse response, String accountType, String[] requiredFeatures, String authTokenType, String password, Bundle options) {
 
 
         final Bundle bundle = new Bundle();
-
-        if(!(requiredFeatures == null || requiredFeatures.length == 0) && contains(requiredFeatures, "timelineLogin")){
-            String username = options.getString(AccountManager.KEY_ACCOUNT_NAME);
-            String password = options.getString(AccountManager.KEY_PASSWORD);
-            String authToken = options.getString(AccountManager.KEY_AUTHTOKEN);
-            Account account = new Account(username, accountType);
-            AccountManager.get(mContext).addAccountExplicitly(account, password, null);
-            AccountManager.get(mContext).setAuthToken(account, authTokenType, authToken);
-            Bundle data = new Bundle();
-            data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
-            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-
-            response.onResult(data);
-
-        }else{
+        // TODO: 4/22/16 trinkes check if this "timeline" login is needed
+//        if (!(requiredFeatures == null || requiredFeatures.length == 0) && contains(requiredFeatures, "timelineLogin")) {
+//            String username = options.getString(AccountManager.KEY_ACCOUNT_NAME);
+//            password = options.getString(AccountManager.KEY_PASSWORD);
+//            String authToken = options.getString(AccountManager.KEY_AUTHTOKEN);
+//            Account account = new Account(username, accountType);
+//            AccountManager.get(mContext).addAccountExplicitly(account, password, null);
+//            AccountManager.get(mContext).setAuthToken(account, authTokenType, authToken);
+//            Bundle data = new Bundle();
+//            data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
+//            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+//
+//            response.onResult(data);
+//
+//        } else {
+            final Intent intent = createAuthActivityIntent(response, accountType, authTokenType, options);
             bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-        }
+//        }
 
         return bundle;
     }
 
-    private boolean contains(String[] requiredFeatures, String timelineLogin) {
-        boolean toReturn = false;
 
-        for (String requiredFeature : requiredFeatures) {
-            if (requiredFeature.contains(timelineLogin)) {
-                toReturn = true;
-            }
-        }
-        return toReturn;
+    protected Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType, String authTokenType, Bundle options) {
+        // TODO: 4/21/16 trinkes check loginActivity.class if a custom activity was implemented, that one should be used
+        // TODO: 4/22/16 trinkes try to use application context instead of saving one
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        intent.putExtra(AptoideAccountManager.ARG_ACCOUNT_TYPE, accountType);
+        intent.putExtra(AptoideAccountManager.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(AptoideAccountManager.ARG_IS_ADDING_NEW_ACCOUNT, true);
+        intent.putExtra(AptoideAccountManager.ARG_OPTIONS_BUNDLE, options);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        return intent;
     }
+
+//    private boolean contains(String[] requiredFeatures, String timelineLogin) {
+//        boolean toReturn = false;
+//
+//        for (String requiredFeature : requiredFeatures) {
+//            if (requiredFeature.contains(timelineLogin)) {
+//                toReturn = true;
+//            }
+//        }
+//        return toReturn;
+//    }
 
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
 
-        Log.d("udinic", TAG + "> getAuthToken");
-
         // If the caller requested an authToken type we don't support, then
         // return an error
-        if (!authTokenType.equals(cm.aptoide.accountmanager.AccountManager.AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(cm.aptoide.accountmanager.AccountManager.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+        if (!authTokenType.equals(AptoideAccountManager.AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
             return result;
@@ -89,25 +100,26 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
         // Extract the username and password from the Account Manager, and ask
         // the server for an appropriate AuthToken.
+        // TODO: 4/22/16 trinkes try to use application context instead of saving one
         final AccountManager am = AccountManager.get(mContext);
 
         String authToken = am.peekAuthToken(account, authTokenType);
 
-        Log.d("udinic", TAG + "> peekAuthToken returned - " + account+ " " + authToken);
+        Log.d("udinic", TAG + "> peekAuthToken returned - " + account + " " + authToken);
 
         // Lets give another try to authenticate the user
 
 
         // If we get an authToken - we return it
-            final Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+        final Bundle result = new Bundle();
+        result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+        result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+        result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
 
-            Log.d("udinic", TAG + "> getAuthToken returning - " + account+ " " + authToken);
+        Log.d("udinic", TAG + "> getAuthToken returning - " + account + " " + authToken);
 
 
-            return result;
+        return result;
 
 
         // If we get here, then we couldn't access the user's password - so we
@@ -119,10 +131,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public String getAuthTokenLabel(String authTokenType) {
-        if (cm.aptoide.accountmanager.AccountManager.AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
-            return cm.aptoide.accountmanager.AccountManager.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
-        else if (cm.aptoide.accountmanager.AccountManager.AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
-            return cm.aptoide.accountmanager.AccountManager.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+        if (AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
+            return AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+        else if (AptoideAccountManager.AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
+            return AptoideAccountManager.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
         else
             return authTokenType + " (Label)";
     }
@@ -149,31 +161,14 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         return null;
     }
 
-    @NonNull
     @Override
     public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
-
-
-        final Bundle result = new Bundle();
-//        result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
-//
-//
-//        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-//        sPref.edit()
-//                .remove("queueName")
-//                .remove(Configs.LOGIN_USER_LOGIN)
-//                .remove("username")
-//                .remove("useravatar")
-//                .remove("userRepo")
-//                .remove(Preferences.REPOS_SYNCED)
-//                .remove(Preferences.TIMELINE_ACEPTED_BOOL)
-//                .remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)
-//                .remove(Preferences.REPOS_SYNCED)
-//         .apply();
-//        SecurePreferences.getInstance().edit().remove("access_token").apply();
-//        mContext.stopService(new Intent(mContext, RabbitMqService.class));
-
+        final Bundle result = super.getAccountRemovalAllowed(response, account);
+        if (result != null && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT) && !result.containsKey(AccountManager.KEY_INTENT)) {
+            if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+                AptoideAccountManager.getInstance().removeLocalAccount();
+            }
+        }
         return result;
-
     }
 }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,10 +16,13 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
+import cm.aptoide.accountmanager.interfaces.IAptoideAccountRemoved;
+
 /**
  * Created by trinkes on 4/18/16.
  */
-public class LoginActivity extends BaseActivity implements AccountManager.LoginInterface {
+public class LoginActivity extends BaseActivity implements AptoideAccountManager.ILoginInterface, IAptoideAccountRemoved {
+private static final String TAG = LoginActivity.class.getSimpleName();
 
     private Button mLoginButton;
     View content;
@@ -36,13 +40,14 @@ public class LoginActivity extends BaseActivity implements AccountManager.LoginI
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(getLayoutId());
         bindViews();
-        AccountManager.getInstance().setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
-        if (AccountManager.isLoggedIn(this)) {
+        AptoideAccountManager.getInstance().setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
+        if (AptoideAccountManager.isLoggedIn(this)) {
             finish();
             Snackbar.make(content, R.string.one_account_allowed, Snackbar.LENGTH_SHORT).show();
             return;
         }
 
+        AptoideAccountManager.getInstance().addOnAccountRemovedListener(this);
         setupShowHidePassButton();
         setupToolbar();
 
@@ -80,7 +85,7 @@ public class LoginActivity extends BaseActivity implements AccountManager.LoginI
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AccountManager.handleSignInResult(requestCode, resultCode, data);
+        AptoideAccountManager.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -107,8 +112,14 @@ public class LoginActivity extends BaseActivity implements AccountManager.LoginI
     }
 
     @Override
-    public void onLoginFail() {
-        Toast.makeText(LoginActivity.this, "login failed", Toast.LENGTH_SHORT).show();
+    protected void onDestroy() {
+        AptoideAccountManager.getInstance().removeAccountRemovedListener(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLoginFail(String reason) {
+        Toast.makeText(LoginActivity.this, "login failed-Reason: " + reason, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -119,5 +130,11 @@ public class LoginActivity extends BaseActivity implements AccountManager.LoginI
     @Override
     public String getPassword() {
         return password_box.getText().toString();
+    }
+
+    @Override
+    public void removeAccount() {
+        // TODO: 4/22/16 trinkes remove account called (remove repos, preferences, everything)
+        Log.e(TAG, "removeAccount() not implemented yet");
     }
 }

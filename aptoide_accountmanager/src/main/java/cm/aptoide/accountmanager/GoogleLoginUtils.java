@@ -83,10 +83,10 @@ public class GoogleLoginUtils {
             }
 
             if (result.isSuccess() && account != null) {
-                AccountManager.getInstance().submit(AccountManager.LoginMode.GOOGLE, account.getEmail(),account.getServerAuthCode(), account.getDisplayName());
+                AptoideAccountManager.submit(AptoideAccountManager.LoginMode.GOOGLE, account.getEmail(),account.getServerAuthCode(), account.getDisplayName());
             }
         }
-        Logger.d(TAG, "handleSignInResult() returned: " + toReturn);
+        Logger.d(TAG, "onActivityResult() returned: " + toReturn);
     }
 
     private static void handleErrors(GoogleSignInAccount account) {
