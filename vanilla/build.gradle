@@ -15,7 +15,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "cm.aptoide.pt.aptoideclientv8"
+        applicationId "cm.aptoide.pt.dev"
         targetSdkVersion 23
         versionCode 1
         versionName "8.0.0"
@@ -42,7 +42,7 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-            minSdkVersion 14
+           minSdkVersion 15
 
             applicationId "cm.aptoide.pt"
         }
@@ -51,10 +51,10 @@ android {
     buildTypes {
         release {
             zipAlignEnabled true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-
+            debuggable true
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     project.ext { appName = 'aptoide' }
@@ -98,4 +98,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
 
     compile project(':v8engine')
+    compile project(path:':aptoide_accountmanager')
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
 }

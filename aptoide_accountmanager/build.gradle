@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+
+Properties localProperties = new Properties()
+localProperties.load(new FileInputStream("local.properties"))
+
+def gmsServerId = localProperties.GMS_SERVER_ID
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+
+    def GMS_CONFIGURED = "GMS_CONFIGURED"
+    def GMS_SERVER_ID = "GMS_SERVER_ID"
+    def TRUE = "true"
+    def FALSE = "false"
+    def BOOLEAN = "boolean"
+    def STRING = "String"
+    def FACEBOOK_CONFIGURED = "FACEBOOK_CONFIGURED"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField BOOLEAN, GMS_CONFIGURED, (gmsServerId != null).toString()
+        buildConfigField STRING, GMS_SERVER_ID, "\"" + gmsServerId.toString() + "\""
+
+        def facebookAppId = localProperties.FACEBOOK_APP_ID
+        def facebookAppIdExists = facebookAppId != null
+        buildConfigField BOOLEAN, FACEBOOK_CONFIGURED, facebookAppIdExists.toString()
+        facebookAppId = facebookAppIdExists ? facebookAppId.toString() : "0"
+        resValue "string", "facebook_app_id", "\"" + facebookAppId + "\""
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    repositories {
+        jcenter()
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile project(':dataprovider')
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.11.0'
+    compile 'com.google.android.gms:play-services-basement:8.3.0'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
+}

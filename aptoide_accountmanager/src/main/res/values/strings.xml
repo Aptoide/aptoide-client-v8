@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AccountManager</string>
+    <string name="one_account_allowed">Only one account allowed</string>
+    <string name="or">or</string>
+    <string name="username">Email</string>
+    <string name="password">Password</string>
+    <string name="link_device_webinstall">Link account with Webinstall</string>
+    <string name="register">Sign Up</string>
+    <string name="setcredentials">Login</string>
+    <string name="forgot_passwd">Forgot password?</string>
+    <string name="fields_cannot_empty">Please check your email and password.</string>
+</resources>
