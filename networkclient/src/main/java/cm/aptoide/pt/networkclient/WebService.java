@@ -49,6 +49,7 @@ public abstract class WebService<T, U> {
 		objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
 
 		return JacksonConverterFactory.create(objectMapper);
 	}

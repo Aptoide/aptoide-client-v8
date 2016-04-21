@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/04/2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -11,7 +11,7 @@ import java.util.List;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.GetStoreResponse;
+import cm.aptoide.pt.model.v7.GetStore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,7 +22,7 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreRequest extends V7<GetStoreResponse> {
+public class GetStoreRequest extends V7<GetStore> {
 
 	private final Body body = new Body();
 
@@ -38,7 +38,7 @@ public class GetStoreRequest extends V7<GetStoreResponse> {
 	}
 
 	@Override
-	protected Observable<GetStoreResponse> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces) {
 		return interfaces.getStore(body);
 	}
 
