@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/04/2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.util;
@@ -19,7 +19,7 @@ import android.view.WindowManager;
 import java.util.Locale;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 
 /**
  * Created by neuro on 21-04-2016.

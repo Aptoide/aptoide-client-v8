@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/04/2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
  */
 
-package cm.aptoide.pt.dataprovider.preferences.secure;
+package cm.aptoide.pt.preferences.secure;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -32,7 +32,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.preferences.Application;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -48,7 +48,7 @@ class SecurePreferencesImplementation implements SharedPreferences {
 	// change to SC if using Spongycastle crypto libraries
 	private static final String PROVIDER = "BC";
 
-	private static final SharedPreferences instance = new SecurePreferencesImplementation(DataProvider.getContext());
+	private static final SharedPreferences instance = new SecurePreferencesImplementation(Application.getContext());
 	private static SharedPreferences sFile;
 	private static byte[] sKey;
 
