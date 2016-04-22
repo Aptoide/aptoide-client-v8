@@ -144,6 +144,23 @@ public class DiskLruUnitTest {
 	}
 
 	@Test
+	public void cacheControlBypassCache() {
+		Request request2 = request.newBuilder()
+				.header(
+						AptoidePOSTRequestCache.BYPASS_HEADER_KEY,
+						AptoidePOSTRequestCache.BYPASS_HEADER_VALUE
+				)
+				.build();
+
+		usedRequests.add(request2);
+
+		cache.put(request2, response);
+
+		Response resp2 = cache.get(request2);
+		assertNull("stored response after put() should be null due to cache bypass", resp2);
+	}
+
+	@Test
 	public void dontCacheErrorResponse() {
 		Response response2 = response.newBuilder().code(501).build();
 

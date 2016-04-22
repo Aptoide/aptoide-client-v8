@@ -30,6 +30,9 @@ import okio.Buffer;
  */
 public class AptoidePOSTRequestCache {
 
+	public static final String BYPASS_HEADER_KEY = "Bypass-Cache";
+	public static final String BYPASS_HEADER_VALUE = "true";
+
 	private static final String TAG = AptoidePOSTRequestCache.class.getName();
 
 	//
@@ -134,6 +137,12 @@ public class AptoidePOSTRequestCache {
 	@Nullable
 	public Response get(@NonNull Request request) {
 		try {
+
+			String header = request.headers().get(BYPASS_HEADER_KEY);
+			if(header!=null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
+				return null;
+			}
+
 			DiskLruCache.Snapshot snapshot;
 			synchronized (diskCacheLock) {
 				final String reqKey = getKeyFrom(request);
