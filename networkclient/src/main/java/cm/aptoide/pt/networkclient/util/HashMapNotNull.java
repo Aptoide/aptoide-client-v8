@@ -1,4 +1,9 @@
-package cm.aptoide.pt.dataprovider.core.util;
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
+ */
+
+package cm.aptoide.pt.networkclient.util;
 
 import java.util.HashMap;
 

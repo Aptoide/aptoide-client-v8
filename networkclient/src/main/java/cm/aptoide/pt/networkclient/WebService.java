@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 20/04/2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
  */
 
-package cm.aptoide.pt.dataprovider.core;
+package cm.aptoide.pt.networkclient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -11,9 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import cm.aptoide.pt.dataprovider.core.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.dataprovider.core.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.dataprovider.core.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.Retrofit;

@@ -1,4 +1,9 @@
-package cm.aptoide.pt.dataprovider.core.okhttp;
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
+ */
+
+package cm.aptoide.pt.networkclient.okhttp;
 
 import java.io.File;
 import java.io.IOException;
