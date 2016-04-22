@@ -10,12 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.LinkedList;
 
-import cm.aptoide.pt.dataprovider.core.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.model.v7.GetStore;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
 import retrofit2.adapter.rxjava.HttpException;
 
