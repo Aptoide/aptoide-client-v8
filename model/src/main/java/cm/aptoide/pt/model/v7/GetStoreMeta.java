@@ -22,8 +22,8 @@ public class GetStoreMeta extends BaseV7Response {
 		private Number id;
 		private String name;
 		private String avatar;
-		private Data.Appearance appearance;
-		private Data.Stats stats;
+		private Appearance appearance;
+		private Stats stats;
 
 		public static class Stats {
 
