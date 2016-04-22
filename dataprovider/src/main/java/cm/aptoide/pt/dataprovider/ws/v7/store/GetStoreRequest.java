@@ -50,10 +50,6 @@ public class GetStoreRequest extends V7<GetStore> {
 		}
 	}
 
-	public enum StoreContext {
-		home, store, store_extended, community, top, top_oem, first_install,
-	}
-
 	@Data
 	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
@@ -61,7 +57,7 @@ public class GetStoreRequest extends V7<GetStore> {
 
 		private String lang = Api.LANG;
 		private String q = Api.Q;
-		private StoreContext context = StoreContext.community;
+		private StoreContext context;
 		private Integer limitlimit;
 		private Boolean mature = Api.MATURE;
 		private List<StoreNodes> nodes;
