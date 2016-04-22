@@ -40,12 +40,12 @@ public class WidgetFactory {
 
 	public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-		return WidgetEnum.INSTANCE.newWidget(view, viewType);
+		return WidgetLoader.INSTANCE.newWidget(view, viewType);
 	}
 
 	private static int[] getDisplayablesSizes() {
 
-		List<Displayable> displayableList = WidgetEnum.INSTANCE.getDisplayables();
+		List<Displayable> displayableList = WidgetLoader.INSTANCE.getDisplayables();
 
 		int[] arr = new int[displayableList.size()];
 		int i = 0;

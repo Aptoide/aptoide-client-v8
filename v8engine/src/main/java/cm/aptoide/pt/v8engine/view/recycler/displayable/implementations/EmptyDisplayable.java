@@ -3,7 +3,7 @@
  * Modified by Neurophobic Animal on 18/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.displayables;
+package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
@@ -31,6 +31,11 @@ public class EmptyDisplayable extends Displayable {
 	public int getDefaultPerLineCount() {
 		// Stub
 		return 1;
+	}
+
+	@Override
+	public String getName() {
+		return "EMPTY";
 	}
 
 	@Override

@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 
 import java.util.List;
 
-import cm.aptoide.pt.v8engine.view.recycler.widget.displayables.EmptyDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import lombok.Getter;
 
 /**
@@ -37,6 +37,11 @@ public class DisplayableGroup extends Displayable {
 		if (index < columnSize) {
 			children.add(new EmptyDisplayable(columnSize - index));
 		}
+	}
+
+	@Override
+	public String getName() {
+		throw new IllegalStateException("getName() on DisplayableGroup should not be called!");
 	}
 
 	@Override

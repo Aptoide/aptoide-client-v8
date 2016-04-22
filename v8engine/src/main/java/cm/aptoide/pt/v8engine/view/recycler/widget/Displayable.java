@@ -27,6 +27,8 @@ public abstract class Displayable {
 		this.fixedPerLineCount = fixedPerLineCount;
 	}
 
+	public abstract String getName();
+
 	// shouldn't this be named "getViewId()" ??
 	@LayoutRes
 	public abstract int getViewType();

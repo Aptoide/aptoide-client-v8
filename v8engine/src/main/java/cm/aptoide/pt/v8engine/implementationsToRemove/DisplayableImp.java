@@ -31,4 +31,9 @@ public class DisplayableImp extends DisplayablePojo<GetAdsResponse> {
 		return 3;
 	}
 
+	@Override
+	public String getName() {
+		return "IMPL_1";
+	}
+
 }

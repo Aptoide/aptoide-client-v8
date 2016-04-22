@@ -18,7 +18,6 @@ import java.util.List;
 import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.view.recycler.widget.annotations.Displayables;
 import dalvik.system.DexFile;
-import dalvik.system.PathClassLoader;
 
 /**
  * Singleton used to dynamically load classes that extend {@link Widget}
@@ -26,10 +25,10 @@ import dalvik.system.PathClassLoader;
  * @author Neurophobic Animal
  * @author SithEngineer
  */
-public enum WidgetEnum {
+public enum WidgetLoader {
 	INSTANCE;
 
-	private static final String TAG = WidgetEnum.class.getName();
+	private static final String TAG = WidgetLoader.class.getName();
 
 	/**
 	 * Meta class to hold a {@link Widget} class reference, a {@link Displayable} class reference and a {@link Displayable} instance generated from the previous class.
@@ -56,7 +55,8 @@ public enum WidgetEnum {
 	}
 
 	// map of a view type to a WidgetMeta class
-	private HashMap<Integer, WidgetMeta> widgets;
+	private HashMap<Integer, WidgetMeta> widgetsHashMap;
+
 	// cache of a view type to a WidgetMeta class
 	private LruCache<Integer, WidgetMeta> widgetLruCache;
 
@@ -64,11 +64,11 @@ public enum WidgetEnum {
 	 * loads all {@link Widget} classes that have a {@link Displayables} annotation in the current module
 	 */
 	private synchronized void loadWidgets() {
-		widgets = new HashMap<>();
+		widgetsHashMap = new HashMap<>();
 //		long nanos = System.nanoTime();
 		try {
 			// get the current class loader
-			PathClassLoader classLoader = (PathClassLoader) Thread.currentThread().getContextClassLoader();
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			// current package name for filtering purposes
 			String packageName = Aptoide.class.getPackage().getName();
 			// current dex file
@@ -87,7 +87,7 @@ public enum WidgetEnum {
 					WidgetMeta wMeta;
 					for (Class<? extends Displayable> displayableClass : displayableClasses) {
 						wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass), displayableClass);
-						widgets.put(wMeta.displayable.getViewType(), wMeta);
+						widgetsHashMap.put(wMeta.displayable.getViewType(), wMeta);
 					}
 				}
 			}
@@ -99,10 +99,10 @@ public enum WidgetEnum {
 //		nanos *= -1;
 //		Log.v(TAG, String.format("loadWidgets() took %d millis", nanos / 1000000));
 
-		if (widgets.size() == 0) {
+		if (widgetsHashMap.size() == 0) {
 			throw new IllegalStateException("Unable to load Widgets");
 		}
-		int cacheSize = widgets.size() / 4;
+		int cacheSize = widgetsHashMap.size() / 4;
 		widgetLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the total, or 2
 	}
 
@@ -116,14 +116,14 @@ public enum WidgetEnum {
 //		long nanos = System.nanoTime();
 
 		// lazy loading Widgets
-		if (widgets == null) {
+		if (widgetsHashMap == null) {
 			loadWidgets();
 		}
 
 		// check if WidgetMeta instance is in cache
 		WidgetMeta widgetMeta = widgetLruCache.get(viewType);
 		if (widgetMeta == null) {
-			widgetMeta = widgets.get(viewType);
+			widgetMeta = widgetsHashMap.get(viewType);
 			widgetLruCache.put(viewType, widgetMeta);
 		}
 
@@ -147,11 +147,11 @@ public enum WidgetEnum {
 	}
 
 	public List<Displayable> getDisplayables() {
-		if (widgets == null) {
+		if (widgetsHashMap == null) {
 			loadWidgets();
 		}
-		ArrayList<Displayable> displayables = new ArrayList<>(widgets.size());
-		for (WidgetMeta widgetMeta : widgets.values()) {
+		ArrayList<Displayable> displayables = new ArrayList<>(widgetsHashMap.size());
+		for (WidgetMeta widgetMeta : widgetsHashMap.values()) {
 			displayables.add(widgetMeta.displayable);
 		}
 		return displayables;
