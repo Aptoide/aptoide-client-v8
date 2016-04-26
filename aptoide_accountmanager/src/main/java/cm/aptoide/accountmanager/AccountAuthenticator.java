@@ -8,6 +8,7 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
@@ -22,6 +23,8 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     public AccountAuthenticator(Context context) {
         super(context);
+
+
         // I hate you! Google - set mContext as protected!
         this.mContext = context;
     }

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/04/2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.core.util.HashMapNotNull;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

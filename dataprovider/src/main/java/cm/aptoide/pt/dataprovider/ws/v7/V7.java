@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/04/2016.
+ * Modified by Neurophobic Animal on 22/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.core.WebService;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.model.v7.GetStoreResponse;
+import cm.aptoide.pt.networkclient.WebService;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import rx.Observable;
