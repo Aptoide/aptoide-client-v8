@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 26/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -10,9 +10,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStore;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.networkclient.WebService;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -46,6 +47,9 @@ public abstract class V7<U> extends WebService<V7.Interfaces, U> {
 
 		@POST("listAppsVersions")
 		Observable<ListAppVersions> listAppVersions(@Body ListAppsVersionsRequest.Body body);
+
+		@POST("listSearchApps")
+		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body);
 
 		// dummy, apagar
 		@GET

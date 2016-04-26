@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 26/04/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.LinkedList;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
@@ -51,5 +52,9 @@ public class MainActivity extends AppCompatActivity {
 		listAppsVersionsRequest.getBody().setAppId(18711899);
 		listAppsVersionsRequest.execute(System.out::println);
 
+		ListSearchAppsRequest of = ListSearchAppsRequest.of("hay day");
+		of.execute(listSearchApps -> System.out.println("ListSearchAppsRequest: " + listAppsUpdatesRequest));
+
+		ListSearchAppsRequest of1 = ListSearchAppsRequest.of("");
 	}
 }

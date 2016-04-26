@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 26/04/2016.
  */
 
 package cm.aptoide.pt.model.v7.listapp;
@@ -35,17 +35,6 @@ public class ListAppData {
 	private GetStoreMeta.Data store;
 	private File file;
 	private Stats stats;
-
-	/**
-	 * Class used on an App item
-	 */
-	@Data
-	public static class File {
-
-		private String vername;
-		private Number vercode;
-		private String md5sum;
-	}
 
 	@Data
 	public static class Stats {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 26/04/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.model.v7.subclasses.Obb;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,7 +37,7 @@ public class GetAppMeta extends BaseV7Response {
 		private String modified;
 		private Developer developer;
 		private GetStoreMeta.Data store;
-		private File file;
+		private GetAppMetaFile file;
 		private Media media;
 		private Urls urls;
 		private Stats stats;
@@ -53,18 +55,13 @@ public class GetAppMeta extends BaseV7Response {
 	}
 
 	@Data
-	public static class File {
+	@EqualsAndHashCode(callSuper = true)
+	public static class GetAppMetaFile extends File {
 
-		private String vername;
-		private Number vercode;
-		private String md5sum;
-		private String path;
-		private String pathAlt;
-		private Number filesize;
-		private File.Signature signature;
-		private File.Hardware hardware;
-		private File.Malware malware;
-		private File.Flags flags;
+		private GetAppMetaFile.Signature signature;
+		private GetAppMetaFile.Hardware hardware;
+		private GetAppMetaFile.Malware malware;
+		private GetAppMetaFile.Flags flags;
 		private List<String> usedFeatures = new ArrayList<>();
 		private List<String> usedPermissions = new ArrayList<>();
 
@@ -111,17 +108,17 @@ public class GetAppMeta extends BaseV7Response {
 			private static final String GOOGLE_PLAY = "Google Play";
 
 			private String rank;
-			private File.Malware.Reason reason;
+			private GetAppMetaFile.Malware.Reason reason;
 			private String added;
 			private String modified;
 
 			@Data
 			public static class Reason {
 
-				private File.Malware.Reason.SignatureValidated signatureValidated;
-				private File.Malware.Reason.ThirdPartyValidated thirdpartyValidated;
-				private File.Malware.Reason.Manual manual;
-				private File.Malware.Reason.Scanned scanned;
+				private GetAppMetaFile.Malware.Reason.SignatureValidated signatureValidated;
+				private GetAppMetaFile.Malware.Reason.ThirdPartyValidated thirdpartyValidated;
+				private GetAppMetaFile.Malware.Reason.Manual manual;
+				private GetAppMetaFile.Malware.Reason.Scanned scanned;
 
 				@Data
 				public static class SignatureValidated {
@@ -157,12 +154,12 @@ public class GetAppMeta extends BaseV7Response {
 					 */
 					private String status;
 					private String date;
-					private List<File.Malware.Reason.Scanned.AvInfo> avInfo;
+					private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo> avInfo;
 
 					@Data
 					public static class AvInfo {
 
-						private List<File.Malware.Reason.Scanned.AvInfo.Infection> infections;
+						private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo.Infection> infections;
 						private String name;
 
 						@Data
@@ -186,7 +183,7 @@ public class GetAppMeta extends BaseV7Response {
 			 * flags: { review": "GOOD" },
 			 */
 			public String review;
-			private List<File.Flags.Vote> votes = new ArrayList<>();
+			private List<GetAppMetaFile.Flags.Vote> votes = new ArrayList<>();
 
 			@Data
 			public static class Vote {
@@ -196,7 +193,7 @@ public class GetAppMeta extends BaseV7Response {
 				 * <p>
 				 * FAKE, FREEZE, GOOD, LICENSE, VIRUS
 				 */
-				private File.Flags.Vote.Type type;
+				private GetAppMetaFile.Flags.Vote.Type type;
 				private Number count;
 
 				public enum Type {
@@ -271,24 +268,5 @@ public class GetAppMeta extends BaseV7Response {
 		private Number price;
 		private String currency;
 		private String symbol;
-	}
-
-	/**
-	 * Class containing the extra Obb file. http://ws2.aptoide.com/api/7/getApp/app_id/12966861
-	 */
-	@Data
-	public static class Obb {
-
-		private Obb.ObbItem patch;
-		private Obb.ObbItem main;
-
-		@Data
-		public static class ObbItem {
-
-			private String path;
-			private String md5sum;
-			private Number filesize;
-			private String filename;
-		}
 	}
 }
