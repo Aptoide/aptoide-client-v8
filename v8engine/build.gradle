@@ -27,7 +27,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
 
     compile project(':dataprovider')
@@ -40,4 +39,8 @@ dependencies {
     compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0'
+
+    // for unit tests
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.0'
 }
