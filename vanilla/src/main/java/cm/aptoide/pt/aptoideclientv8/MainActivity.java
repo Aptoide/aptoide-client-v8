@@ -14,8 +14,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsVersionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
-import cm.aptoide.pt.model.v7.GetStore;
+import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
 import retrofit2.adapter.rxjava.HttpException;
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 		ListSearchAppsRequest of = ListSearchAppsRequest.of("hay day");
 		of.execute(listSearchApps -> System.out.println("ListSearchAppsRequest: " + listAppsUpdatesRequest));
 
-		ListSearchAppsRequest of1 = ListSearchAppsRequest.of("");
+		GetStoreMetaRequest.of("apps").execute(getStoreMeta -> System.out.println("getStoreMeta: " + listAppsUpdatesRequest));
+
+		GetStoreDisplaysRequest.of("apps").execute(getStoreMeta -> System.out.println("GetStoreDisplaysRequest: " + listAppsUpdatesRequest));
 	}
 }

@@ -5,49 +5,43 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import java.util.Arrays;
-import java.util.List;
-
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import rx.Observable;
 
 /**
- * Created by neuro on 19-04-2016.
+ * Created by neuro on 22-04-2016.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreRequest extends V7<GetStore> {
+public class GetStoreDisplaysRequest extends V7<GetStoreDisplays> {
 
 	private final Body body = new Body();
 
-	private GetStoreRequest() {
+	public static GetStoreDisplaysRequest of(String storeName) {
+		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest();
+
+		getStoreDisplaysRequest.body.setStore_name(storeName);
+
+		return getStoreDisplaysRequest;
 	}
 
-	public static GetStoreRequest of(String storeName) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest();
+	public static GetStoreDisplaysRequest of(int storeId) {
+		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest();
 
-		getStoreRequest.body.setStore_name(storeName);
+		getStoreDisplaysRequest.body.setStore_id(storeId);
 
-		return getStoreRequest;
+		return getStoreDisplaysRequest;
 	}
 
 	@Override
-	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStore(body);
-	}
-
-	public enum StoreNodes {
-		meta, tabs, widgets;
-
-		public static List<StoreNodes> list() {
-			return Arrays.asList(values());
-		}
+	protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces) {
+		return interfaces.getStoreDisplays(body);
 	}
 
 	@Data
@@ -58,15 +52,10 @@ public class GetStoreRequest extends V7<GetStore> {
 		private StoreContext context;
 		private String lang = Api.LANG;
 		private Integer limit;
-		private Boolean mature = Api.MATURE;
-		private List<StoreNodes> nodes;
 		private Integer offset;
-		private String q = Api.Q;
 		private Integer store_id;
 		private String store_name;
 		private String store_pass_sha1;
 		private String store_user;
-		private String widget;
-		private WidgetsArgs widgets_args = WidgetsArgs.createDefault();
 	}
 }

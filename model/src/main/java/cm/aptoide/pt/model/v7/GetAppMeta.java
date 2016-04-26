@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.subclasses.Obb;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

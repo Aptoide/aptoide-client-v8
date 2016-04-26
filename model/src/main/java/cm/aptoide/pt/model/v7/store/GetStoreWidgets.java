@@ -1,15 +1,16 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 26/04/2016.
  */
 
-package cm.aptoide.pt.model.v7;
+package cm.aptoide.pt.model.v7.store;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

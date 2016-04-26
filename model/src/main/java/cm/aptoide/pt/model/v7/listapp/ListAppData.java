@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import cm.aptoide.pt.model.v7.GetStoreMeta;
+import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import lombok.Data;
 
 /**

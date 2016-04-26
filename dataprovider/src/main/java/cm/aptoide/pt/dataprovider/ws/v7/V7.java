@@ -7,12 +7,16 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsVersionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.GetStore;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.WebService;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -38,6 +42,12 @@ public abstract class V7<U> extends WebService<V7.Interfaces, U> {
 
 		@POST("getStore")
 		Observable<GetStore> getStore(@Body GetStoreRequest.Body body);
+
+		@POST("getStoreMeta")
+		Observable<GetStoreMeta> getStoreMeta(@Body GetStoreMetaRequest.Body body);
+
+		@POST("getStoreDisplays")
+		Observable<GetStoreDisplays> getStoreDisplays(@Body GetStoreDisplaysRequest.Body body);
 
 		@POST("getApp")
 		Observable<GetApp> getApp(@Body GetAppRequest.Body body);
