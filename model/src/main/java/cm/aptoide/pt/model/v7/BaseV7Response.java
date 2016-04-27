@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -28,7 +28,7 @@ public class BaseV7Response {
 		@Data
 		private static class Time {
 
-			private Number seconds;
+			private double seconds;
 			private String human;
 		}
 	}

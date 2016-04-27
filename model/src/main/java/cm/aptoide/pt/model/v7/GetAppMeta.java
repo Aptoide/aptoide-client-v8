@@ -7,7 +7,6 @@ package cm.aptoide.pt.model.v7;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.listapp.File;
@@ -27,10 +26,10 @@ public class GetAppMeta extends BaseV7Response {
 	@Data
 	public static class App {
 
-		private Number id;
+		private long id;
 		private String name;
 		@JsonProperty("package") private String packageName;
-		private Number size;
+		private long size;
 		private String icon;
 		private String graphic;
 		private String added;
@@ -62,8 +61,8 @@ public class GetAppMeta extends BaseV7Response {
 		private GetAppMetaFile.Hardware hardware;
 		private GetAppMetaFile.Malware malware;
 		private GetAppMetaFile.Flags flags;
-		private List<String> usedFeatures = new ArrayList<>();
-		private List<String> usedPermissions = new ArrayList<>();
+		private List<String> usedFeatures;
+		private List<String> usedPermissions;
 
 		@Data
 		public static class Signature {
@@ -75,14 +74,14 @@ public class GetAppMeta extends BaseV7Response {
 		@Data
 		public static class Hardware {
 
-			private Number sdk;
+			private int sdk;
 			private String screen;
-			private Number gles;
-			private List<String> cpus = new ArrayList<>();
+			private int gles;
+			private List<String> cpus;
 			/**
 			 * Second array contains only two values: First value is the screen, second value is the density
 			 */
-			private List<List<Number>> densities = new ArrayList<>();
+			private List<List<Integer>> densities;
 		}
 
 		/**
@@ -183,7 +182,7 @@ public class GetAppMeta extends BaseV7Response {
 			 * flags: { review": "GOOD" },
 			 */
 			public String review;
-			private List<GetAppMetaFile.Flags.Vote> votes = new ArrayList<>();
+			private List<GetAppMetaFile.Flags.Vote> votes;
 
 			@Data
 			public static class Vote {
@@ -194,7 +193,7 @@ public class GetAppMeta extends BaseV7Response {
 				 * FAKE, FREEZE, GOOD, LICENSE, VIRUS
 				 */
 				private GetAppMetaFile.Flags.Vote.Type type;
-				private Number count;
+				private int count;
 
 				public enum Type {
 					FAKE, FREEZE, GOOD, LICENSE, VIRUS
@@ -206,11 +205,11 @@ public class GetAppMeta extends BaseV7Response {
 	@Data
 	public static class Media {
 
-		private List<String> keywords = new ArrayList<>();
+		private List<String> keywords;
 		private String description;
 		private String news;
-		private List<Media.Screenshot> screenshots = new ArrayList<>();
-		private List<Media.Video> videos = new ArrayList<>();
+		private List<Media.Screenshot> screenshots;
+		private List<Media.Video> videos;
 
 		@Data
 		public static class Video {
@@ -224,11 +223,11 @@ public class GetAppMeta extends BaseV7Response {
 		public static class Screenshot {
 
 			private String url;
-			private Number height;
-			private Number width;
+			private int height;
+			private int width;
 
 			public String getOrientation() {
-				return height.intValue() > width.intValue() ? "portrait" : "landscape";
+				return height > width ? "portrait" : "landscape";
 			}
 		}
 	}
@@ -244,20 +243,20 @@ public class GetAppMeta extends BaseV7Response {
 	public static class Stats {
 
 		private Stats.Rating rating;
-		private Number downloads;
-		private Number pdownloads;
+		private int downloads;
+		private int pdownloads;
 
 		@Data
 		public static class Rating {
 
-			private Number avg;
-			private List<Stats.Rating.Vote> votes = new ArrayList<>();
+			private float avg;
+			private List<Stats.Rating.Vote> votes;
 
 			@Data
 			public static class Vote {
 
-				private Number value;
-				private Number count;
+				private int value;
+				private int count;
 			}
 		}
 	}
@@ -265,7 +264,7 @@ public class GetAppMeta extends BaseV7Response {
 	@Data
 	public static class Pay {
 
-		private Number price;
+		private float price;
 		private String currency;
 		private String symbol;
 	}

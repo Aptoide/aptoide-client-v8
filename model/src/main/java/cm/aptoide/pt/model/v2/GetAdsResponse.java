@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.model.v2;
@@ -21,17 +21,17 @@ public class GetAdsResponse {
 	@lombok.Data
 	public static class Data {
 
-		final private Number id;
+		final private long id;
 		final private String name;
 		final private String repo;
 		@JsonProperty("package") final private String packageName;
 		final private String md5sum;
-		final private Number size;
-		final private Number vercode;
+		final private long size;
+		final private int vercode;
 		final private String vername;
 		final private String icon;
-		final private Number downloads;
-		final private Number stars;
+		final private int downloads;
+		final private int stars;
 		final private String description;
 	}
 
@@ -63,7 +63,7 @@ public class GetAdsResponse {
 		@lombok.Data
 		public static class Info {
 
-			final private Number id;
+			final private int id;
 			final private String name;
 		}
 

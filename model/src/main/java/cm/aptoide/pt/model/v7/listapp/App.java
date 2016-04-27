@@ -7,7 +7,6 @@ package cm.aptoide.pt.model.v7.listapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.store.Store;
@@ -19,10 +18,10 @@ import lombok.Data;
 @Data
 public class App {
 
-	private Number id;
+	private long id;
 	private String name;
 	@JsonProperty("package") private String packageName;
-	private Number size;
+	private long size;
 	private String icon;
 	private String graphic;
 	private String added;
@@ -36,23 +35,23 @@ public class App {
 	@Data
 	public static class Stats {
 
-		private Number apps;         // used on Store items
-		private Number subscribers;  // used both on App items and Store items
-		private Number downloads;    // used on listApps, Store items and listAppsVersions
-		private Stats.Rating rating;       // used on App items and listAppsVersions
+		private int apps;         // used on Store items
+		private int subscribers;  // used both on App items and Store items
+		private int downloads;    // used on listApps, Store items and listAppsVersions
+		private Rating rating;       // used on App items and listAppsVersions
 
 		@Data
 		public static class Rating {
 
-			private Number avg;
-			private Number total;
-			private List<Stats.Rating.Vote> votes = new ArrayList<>();
+			private int avg;
+			private int total;
+			private List<Vote> votes;
 
 			@Data
 			public static class Vote {
 
-				private Number value;
-				private Number count;
+				private int value;
+				private int count;
 			}
 		}
 	}

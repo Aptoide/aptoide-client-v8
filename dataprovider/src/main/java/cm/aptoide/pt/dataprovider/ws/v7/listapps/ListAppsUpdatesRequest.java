@@ -67,7 +67,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates> {
 
 		@JsonProperty("package") private String packageName;
 
-		private Number vercode;
+		private int vercode;
 		private String signature;
 	}
 }
