@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.model.v7.listapp;
@@ -10,14 +10,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.model.v7.store.Store;
 import lombok.Data;
 
 /**
  * Created by neuro on 22-04-2016.
  */
 @Data
-public class ListAppData {
+public class App {
 
 	private Number id;
 	private String name;
@@ -29,10 +29,7 @@ public class ListAppData {
 	private String modified;
 	private String updated;
 	private String uptype;
-	/**
-	 * Class used on an App item
-	 */
-	private GetStoreMeta.Data store;
+	private Store store;
 	private File file;
 	private Stats stats;
 

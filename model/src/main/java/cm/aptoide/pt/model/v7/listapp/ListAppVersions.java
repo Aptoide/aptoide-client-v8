@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.model.v7.listapp;
@@ -21,5 +21,5 @@ public class ListAppVersions extends BaseV7Response {
 	/**
 	 * The other versions list always returns one item (itself), as per the web team.
 	 */
-	private List<ListAppData> list;
+	private List<App> list;
 }

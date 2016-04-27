@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.model.v7.listapp;
@@ -19,5 +19,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppsUpdates extends BaseV7Response {
 
-	private List<ListAppData> list;
+	private List<App> list;
 }

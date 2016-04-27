@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
-package cm.aptoide.pt.model.v7.subclasses;
+package cm.aptoide.pt.model.v7;
 
 import lombok.Data;
 
