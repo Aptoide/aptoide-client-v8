@@ -36,10 +36,10 @@ public class ListAppsRequest extends V7<ListApps> {
 		private Order order;
 		private String q = Api.Q;
 		private Sort sort;
-		private Integer store_id;
-		private String store_name;
-		private String store_pass_sha1;
-		private String store_user;
+		private Integer storeId;
+		private String storeName;
+		private String storePassSha1;
+		private String storeUser;
 		private Subgroups subgroups;
 
 		public enum Sort {

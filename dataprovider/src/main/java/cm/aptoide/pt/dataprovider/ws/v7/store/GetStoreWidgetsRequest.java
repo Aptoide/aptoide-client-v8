@@ -26,7 +26,7 @@ public class GetStoreWidgetsRequest extends V7<GetStoreWidgets> {
 	public static GetStoreWidgetsRequest of(String storeName) {
 		GetStoreWidgetsRequest getStoreDisplaysRequest = new GetStoreWidgetsRequest();
 
-		getStoreDisplaysRequest.body.setStore_name(storeName);
+		getStoreDisplaysRequest.body.setStoreName(storeName);
 
 		return getStoreDisplaysRequest;
 	}
@@ -34,7 +34,7 @@ public class GetStoreWidgetsRequest extends V7<GetStoreWidgets> {
 	public static GetStoreWidgetsRequest of(int storeId) {
 		GetStoreWidgetsRequest getStoreDisplaysRequest = new GetStoreWidgetsRequest();
 
-		getStoreDisplaysRequest.body.setStore_id(storeId);
+		getStoreDisplaysRequest.body.setStoreId(storeId);
 
 		return getStoreDisplaysRequest;
 	}
@@ -55,11 +55,11 @@ public class GetStoreWidgetsRequest extends V7<GetStoreWidgets> {
 		private Boolean mature = Api.MATURE;
 		private Integer offset;
 		private String q = Api.Q;
-		private Integer store_id;
-		private String store_name;
-		private String store_pass_sha1;
-		private String store_user;
+		private Integer storeId;
+		private String storeName;
+		private String storePassSha1;
+		private String storeUser;
 		private String widget;
-		private WidgetsArgs widgets_args = WidgetsArgs.createDefault();
+		private WidgetsArgs widgetsArgs = WidgetsArgs.createDefault();
 	}
 }

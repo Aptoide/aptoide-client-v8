@@ -56,13 +56,13 @@ public class GetStoreWidgets extends BaseV7Response {
 			public static class Categories {
 
 				private Number id;
-				private String ref_id;
-				private String parent_id;
-				private String parent_ref_id;
+				private String refId;
+				private String parentId;
+				private String parentRefId;
 				private String name;
 				private String graphic;
 				private String icon;
-				private Number ads_count;
+				private Number adsCount;
 			}
 		}
 

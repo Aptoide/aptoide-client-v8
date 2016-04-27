@@ -26,7 +26,7 @@ public class GetStoreTabsRequest extends V7<GetStoreTabs> {
 	public static GetStoreTabsRequest of(String storeName) {
 		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest();
 
-		getStoreDisplaysRequest.body.setStore_name(storeName);
+		getStoreDisplaysRequest.body.setStoreName(storeName);
 
 		return getStoreDisplaysRequest;
 	}
@@ -34,7 +34,7 @@ public class GetStoreTabsRequest extends V7<GetStoreTabs> {
 	public static GetStoreTabsRequest of(int storeId) {
 		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest();
 
-		getStoreDisplaysRequest.body.setStore_id(storeId);
+		getStoreDisplaysRequest.body.setStoreId(storeId);
 
 		return getStoreDisplaysRequest;
 	}
@@ -50,9 +50,9 @@ public class GetStoreTabsRequest extends V7<GetStoreTabs> {
 	public static class Body extends BaseBody {
 
 		private String lang = Api.LANG;
-		private Integer store_id;
-		private String store_name;
-		private String store_pass_sha1;
-		private String store_user;
+		private Integer storeId;
+		private String storeName;
+		private String storePassSha1;
+		private String storeUser;
 	}
 }

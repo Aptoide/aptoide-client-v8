@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -28,7 +28,7 @@ public class GetStoreMetaRequest extends V7<GetStoreMeta> {
 	public static GetStoreMetaRequest of(String storeName) {
 		GetStoreMetaRequest getStoreRequest = new GetStoreMetaRequest();
 
-		getStoreRequest.body.setStore_name(storeName);
+		getStoreRequest.body.setStoreName(storeName);
 
 		return getStoreRequest;
 	}
@@ -36,7 +36,7 @@ public class GetStoreMetaRequest extends V7<GetStoreMeta> {
 	public static GetStoreMetaRequest of(int storeId) {
 		GetStoreMetaRequest getStoreRequest = new GetStoreMetaRequest();
 
-		getStoreRequest.body.setStore_id(storeId);
+		getStoreRequest.body.setStoreId(storeId);
 
 		return getStoreRequest;
 	}
@@ -51,9 +51,9 @@ public class GetStoreMetaRequest extends V7<GetStoreMeta> {
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private Integer store_id;
-		private String store_name;
-		private String store_pass_sha1;
-		private String store_user;
+		private Integer storeId;
+		private String storeName;
+		private String storePassSha1;
+		private String storeUser;
 	}
 }

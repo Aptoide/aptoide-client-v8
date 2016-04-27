@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -32,7 +32,7 @@ public class GetStoreRequest extends V7<GetStore> {
 	public static GetStoreRequest of(String storeName) {
 		GetStoreRequest getStoreRequest = new GetStoreRequest();
 
-		getStoreRequest.body.setStore_name(storeName);
+		getStoreRequest.body.setStoreName(storeName);
 
 		return getStoreRequest;
 	}
@@ -62,11 +62,11 @@ public class GetStoreRequest extends V7<GetStore> {
 		private List<StoreNodes> nodes;
 		private Integer offset;
 		private String q = Api.Q;
-		private Integer store_id;
-		private String store_name;
-		private String store_pass_sha1;
-		private String store_user;
+		private Integer storeId;
+		private String storeName;
+		private String storePassSha1;
+		private String storeUser;
 		private String widget;
-		private WidgetsArgs widgets_args = WidgetsArgs.createDefault();
+		private WidgetsArgs widgetsArgs = WidgetsArgs.createDefault();
 	}
 }
