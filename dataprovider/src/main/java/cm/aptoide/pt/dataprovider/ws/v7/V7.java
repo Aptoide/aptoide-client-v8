@@ -36,13 +36,15 @@ import rx.Observable;
  */
 public abstract class V7<U> extends WebService<V7.Interfaces, U> {
 
+	public static final String BASE_HOST = "http://ws75.aptoide.com/api/7/";
+
 	protected V7() {
 		super(Interfaces.class);
 	}
 
 	@Override
 	protected String getBaseHost() {
-		return "http://ws75.aptoide.com/api/7/";
+		return BASE_HOST;
 	}
 
 	public interface Interfaces {
@@ -80,9 +82,13 @@ public abstract class V7<U> extends WebService<V7.Interfaces, U> {
 		@POST("listSearchApps")
 		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body);
 
-		// dummy, apagar
 		@GET
-		Observable<Object> testeGet(@Url String str);
+		Observable<ListApps> listApps(@Url String url);
 
+		@GET
+		Observable<ListStores> listStores(@Url String url);
+
+		@GET
+		Observable<GetStoreDisplays> getStoreDisplays(@Url String url);
 	}
 }

@@ -7,15 +7,22 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsParser;
 import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 19-04-2016.
@@ -25,6 +32,7 @@ import rx.Observable;
 public class GetStoreRequest extends V7<GetStore> {
 
 	private final Body body = new Body();
+	private boolean recursive = false;
 
 	private GetStoreRequest() {
 	}
@@ -40,6 +48,37 @@ public class GetStoreRequest extends V7<GetStore> {
 	@Override
 	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces) {
 		return interfaces.getStore(body);
+	}
+
+	@Override
+	public Observable<GetStore> observe() {
+		if (recursive) {
+			return super.observe().observeOn(Schedulers.io()).doOnNext(getStore -> {
+
+				List<GetStoreWidgets.WSWidget> list = getStore.getNodes().getWidgets().getDatalist().getList();
+				CountDownLatch countDownLatch = new CountDownLatch(list.size());
+
+				Observable.from(list).forEach(wsWidget -> WSWidgetsParser.parse(wsWidget, countDownLatch));
+
+				try {
+					countDownLatch.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}).observeOn(AndroidSchedulers.mainThread());
+		} else {
+			return super.observe();
+		}
+	}
+
+	public void execute(SuccessRequestListener<GetStore> successRequestListener, boolean recursive) {
+		this.recursive = recursive;
+		execute(successRequestListener);
+	}
+
+	public void execute(SuccessRequestListener<GetStore> successRequestListener, ErrorRequestListener errorRequestListener, boolean recursive) {
+		this.recursive = recursive;
+		super.execute(successRequestListener, errorRequestListener);
 	}
 
 	public enum StoreNodes {

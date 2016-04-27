@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.model.v7.store;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +22,12 @@ public class GetStoreWidgets extends BaseV7Response {
 
 	private Datalist<WSWidget> datalist;
 
+	public enum Type {
+		APPS_GROUP,
+		STORES_GROUP,
+		DISPLAYS,
+	}
+
 	@Data
 	public static class WSWidget {
 
@@ -38,10 +42,12 @@ public class GetStoreWidgets extends BaseV7Response {
 		public static final String COMMENTS_TYPE = "COMMENTS";
 		public static final String STORE_GROUP = "STORES_GROUP";
 
-		private String type;
+		private Type type;
 		private String tag;
 		private String title; // Highlighted, Games, Categories, Timeline, Recommended for you, Aptoide Publishers
-		@JsonProperty("view") private String listApps;
+		private String view;
+		// Object that will hold view response.
+		private Object viewObject;
 		private List<Action> actions = new ArrayList<>();
 		private Data data;
 

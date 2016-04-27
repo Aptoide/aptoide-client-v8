@@ -64,12 +64,15 @@ public abstract class WebService<T, U> {
 	protected abstract String getBaseHost();
 
 	protected Observable<T> getService() {
-		return service == null ? createService() : service;
+		return service == null ? createServiceObservable() : service;
 	}
 
-	private Observable<T> createService() {
-		return Observable.fromCallable(() -> new Retrofit.Builder().baseUrl(getBaseHost()).client(client).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).addConverterFactory
-				(factory).build().create(clazz));
+	private Observable<T> createServiceObservable() {
+		return Observable.fromCallable(this::createService);
+	}
+
+	protected T createService() {
+		return new Retrofit.Builder().baseUrl(getBaseHost()).client(client).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).addConverterFactory(factory).build().create(clazz);
 	}
 
 	protected abstract Observable<U> loadDataFromNetwork(T t);

@@ -15,6 +15,8 @@ import rx.Observable;
 /**
  * Created by neuro on 27-04-2016.
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class ListAppsRequest extends V7<ListApps> {
 
 	private final Body body = new Body();
