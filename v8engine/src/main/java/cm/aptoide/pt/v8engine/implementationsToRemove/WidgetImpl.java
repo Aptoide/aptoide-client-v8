@@ -9,11 +9,12 @@ import android.view.View;
 
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetEnum;
+import cm.aptoide.pt.v8engine.view.recycler.widget.annotations.Displayables;
 
 /**
  * Created by neuro on 14-04-2016.
  */
+@Displayables({DisplayableImp.class, DisplayableImp2.class})
 public class WidgetImpl extends Widget {
 
 	public WidgetImpl(View view) {
@@ -23,10 +24,5 @@ public class WidgetImpl extends Widget {
 	@Override
 	public void bindView(Displayable displayable) {
 
-	}
-
-	@Override
-	public WidgetEnum getEnum() {
-		return WidgetEnum.WIDGET_IMPL;
 	}
 }

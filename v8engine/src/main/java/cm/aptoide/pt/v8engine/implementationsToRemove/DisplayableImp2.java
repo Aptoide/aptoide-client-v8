@@ -11,6 +11,11 @@ package cm.aptoide.pt.v8engine.implementationsToRemove;
 public class DisplayableImp2 extends DisplayableImp {
 
 	@Override
+	public String getName() {
+		return "IMPL_2";
+	}
+
+	@Override
 	public int getDefaultPerLineCount() {
 		return super.getDefaultPerLineCount() * 3;
 	}

@@ -22,7 +22,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
 
     compile 'io.reactivex:rxjava:1.1.0'
@@ -30,4 +29,12 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
     compile 'com.squareup.retrofit2:converter-jackson:2.0.2'
+
+    compile 'com.jakewharton:disklrucache:2.0.2'
+
+    provided 'org.projectlombok:lombok:1.16.8'
+
+    // for unit tests
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.0'
 }

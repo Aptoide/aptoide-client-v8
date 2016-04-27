@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 
 import java.util.List;
 
-import cm.aptoide.pt.v8engine.view.recycler.widget.displayables.EmptyDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import lombok.Getter;
 
 /**
@@ -40,6 +40,11 @@ public class DisplayableGroup extends Displayable {
 	}
 
 	@Override
+	public String getName() {
+		throw new IllegalStateException("getName() on DisplayableGroup should not be called!");
+	}
+
+	@Override
 	public int getViewType() {
 		throw new IllegalStateException("getViewType() on DisplayableGroup should not be called!");
 	}
@@ -47,10 +52,5 @@ public class DisplayableGroup extends Displayable {
 	@Override
 	public int getDefaultPerLineCount() {
 		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not be called!");
-	}
-
-	@Override
-	public WidgetEnum getEnum() {
-		throw new IllegalStateException("getEnum() on DisplayableGroup should not be called!");
 	}
 }

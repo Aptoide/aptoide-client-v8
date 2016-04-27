@@ -3,11 +3,10 @@
  * Modified by Neurophobic Animal on 18/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.displayables;
+package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetEnum;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -24,6 +23,11 @@ public class EmptyDisplayable extends Displayable {
 	}
 
 	@Override
+	public String getName() {
+		return "EMPTY";
+	}
+
+	@Override
 	public int getViewType() {
 		return R.layout.empty_frame_layout;
 	}
@@ -32,11 +36,6 @@ public class EmptyDisplayable extends Displayable {
 	public int getDefaultPerLineCount() {
 		// Stub
 		return 1;
-	}
-
-	@Override
-	public WidgetEnum getEnum() {
-		return WidgetEnum.EMPTY;
 	}
 
 	@Override

@@ -1,12 +1,10 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 20/04/2016.
+  ~ Modified by SithEngineer on 20/04/2016.
   -->
 
 <manifest package="cm.aptoide.pt.dataprovider"
           xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
