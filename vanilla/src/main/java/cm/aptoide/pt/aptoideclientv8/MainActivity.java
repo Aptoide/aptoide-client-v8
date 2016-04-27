@@ -12,8 +12,8 @@ import java.util.LinkedList;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
@@ -52,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
 		LinkedList<ListAppsUpdatesRequest.ApksData> apksData = new LinkedList<>();
 		apksData.add(new ListAppsUpdatesRequest.ApksData("cm.aptoide.pt", 300, "D5:90:A7:D7:92:FD:03:31:54:2D:99:FA:F9:99:76:41:79:07:73:A9"));
-		ListAppsUpdatesRequest listAppsUpdatesRequest = new ListAppsUpdatesRequest();
+		ListAppsUpdatesRequest listAppsUpdatesRequest = ListAppsUpdatesRequest.of();
 		listAppsUpdatesRequest.getBody().setApksData(apksData);
 		listAppsUpdatesRequest.observe().subscribe(System.out::println, System.out::println);
 
-		ListAppsVersionsRequest listAppsVersionsRequest = new ListAppsVersionsRequest();
-		listAppsVersionsRequest.getBody().setAppId(18711899);
-		listAppsVersionsRequest.execute(System.out::println);
+		ListAppVersionsRequest listAppVersionsRequest = ListAppVersionsRequest.of();
+		listAppVersionsRequest.getBody().setAppId(18711899);
+		listAppVersionsRequest.execute(System.out::println);
 
 		ListSearchAppsRequest of = ListSearchAppsRequest.of("hay day");
 		of.execute(listSearchApps -> System.out.println("ListSearchAppsRequest: " + listAppsUpdatesRequest));

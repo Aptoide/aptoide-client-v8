@@ -21,6 +21,14 @@ public class ListStoresRequest extends V7<ListStores> {
 
 	private final Body body = new Body();
 
+	private ListStoresRequest() {
+
+	}
+
+	public static ListStoresRequest of() {
+		return new ListStoresRequest();
+	}
+
 	@Override
 	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces) {
 		return interfaces.listStores(body);
