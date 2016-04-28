@@ -14,6 +14,7 @@ import java.util.List;
 
 import cm.aptoide.pt.v8engine.util.MathUtils;
 import cm.aptoide.pt.v8engine.util.ScreenUtils;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
  * Class responsible for mapping the widgets and creating on demand through they view id.

@@ -7,9 +7,9 @@ package cm.aptoide.pt.v8engine.implementationsToRemove;
 
 import android.view.View;
 
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.annotations.Displayables;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 
 /**
  * Created by neuro on 14-04-2016.

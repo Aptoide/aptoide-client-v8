@@ -16,7 +16,6 @@ import java.util.Map;
 
 import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.util.MultiDexHelper;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
 import dalvik.system.DexFile;
 
 /**
@@ -37,7 +36,7 @@ public enum DisplayLoader {
 			// get the current class loader
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			// current package name for filtering purposes
-			String packageName = Aptoide.class.getPackage().getName();
+			String packageName = getClass().getPackage().getName();
 
 			List<Map.Entry<String, DexFile>> classNames =
 					MultiDexHelper.getAllClasses(Aptoide.getContext());

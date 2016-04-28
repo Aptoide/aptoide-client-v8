@@ -54,12 +54,11 @@ public class RequestCache {
 
 	public RequestCache(KeyAlgorithm keyAlgorithm) {
 		try {
+			// FIXME move the cache directory to the app folder
+			// TODO check if module update renders a new and fresh cache
 			File cachePath = new File(Environment.getExternalStorageDirectory(), DISK_CACHE_SUBDIR);
 
-			if(
-				(BuildConfig.BUILD_TYPE.equalsIgnoreCase("debug") || BuildConfig.DEBUG )
-				&& cachePath.exists()
-			) {
+			if( BuildConfig.DEBUG && cachePath.exists() ) {
 				int deletedFiles = 0;
 				for(File f : cachePath.listFiles()) {
 					deletedFiles += f.delete() ? 1 : 0;

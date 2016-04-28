@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
  * Created by neuro on 14-04-2016.

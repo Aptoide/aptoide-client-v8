@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 18/04/2016.
+ * Modified by SithEngineer on 28/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget;
+package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.support.annotation.LayoutRes;
 
 import cm.aptoide.pt.v8engine.util.ScreenUtils;
+import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 
 /**
  * Created by neuro on 14-04-2016.

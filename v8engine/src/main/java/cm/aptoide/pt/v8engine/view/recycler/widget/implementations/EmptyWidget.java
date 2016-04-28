@@ -8,9 +8,9 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
 import android.view.View;
 
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.annotations.Displayables;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -26,5 +26,6 @@ public class EmptyWidget extends Widget {
 
 	@Override
 	public void bindView(Displayable displayable) {
+		// TODO
 	}
 }

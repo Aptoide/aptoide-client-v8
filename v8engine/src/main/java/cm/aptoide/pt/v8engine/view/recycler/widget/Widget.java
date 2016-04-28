@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+
 /**
  * Class that represents a generic Widget. All widgets should extend this class.
  */

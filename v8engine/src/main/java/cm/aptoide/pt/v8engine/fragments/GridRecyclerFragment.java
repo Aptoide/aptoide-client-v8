@@ -14,10 +14,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.implementationsToRemove.DisplayableImp;
 import cm.aptoide.pt.v8engine.implementationsToRemove.DisplayableImp2;
 import cm.aptoide.pt.v8engine.util.SystemUtils;
-import cm.aptoide.pt.v8engine.view.recycler.grid.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.grid.BaseGridLayoutManager;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.DisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 
 /**
  * Created by neuro on 15-04-2016.
