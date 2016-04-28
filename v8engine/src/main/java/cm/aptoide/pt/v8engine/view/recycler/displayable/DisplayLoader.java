@@ -10,10 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.pt.v8engine.Aptoide;
+import cm.aptoide.pt.v8engine.util.MultiDexHelper;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
 import dalvik.system.DexFile;
 
@@ -36,16 +38,18 @@ public enum DisplayLoader {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			// current package name for filtering purposes
 			String packageName = Aptoide.class.getPackage().getName();
-			// current dex file
-			DexFile dex = new DexFile(Aptoide.getContext().getPackageCodePath());
-			// iterate over all classes declared in the dex
-			Enumeration<String> classNameEnumeration = dex.entries();
-			while (classNameEnumeration.hasMoreElements()) {
-				String className = classNameEnumeration.nextElement();
+
+			List<Map.Entry<String, DexFile>> classNames =
+					MultiDexHelper.getAllClasses(Aptoide.getContext());
+
+			for(Map.Entry<String, DexFile> className : classNames ) {
+
 				// if the class doesn't belong in the current project we discard it
 				// useful for speeding this method
-				if (!className.startsWith(packageName)) continue;
-				Class<?> displayableClass = dex.loadClass(className, classLoader);
+				if (!className.getKey().startsWith(packageName)) continue;
+				Class<?> displayableClass = className.getValue().loadClass(
+						className.getKey(), classLoader);
+
 				if (displayableClass != null && Displayable.class.isAssignableFrom(displayableClass)) {
 					try {
 						Displayable d = (Displayable) displayableClass.newInstance();

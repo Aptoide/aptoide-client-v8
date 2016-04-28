@@ -26,12 +26,12 @@ import okhttp3.Response;
  * @author Neurophobic Animal
  * @author SithEngineer
  */
-public class AptoidePOSTRequestCache {
+public class RequestCache {
 
 	public static final String BYPASS_HEADER_KEY = "Bypass-Cache";
 	public static final String BYPASS_HEADER_VALUE = "true";
 
-	private static final String TAG = AptoidePOSTRequestCache.class.getName();
+	private static final String TAG = RequestCache.class.getName();
 
 	//
 	// vars
@@ -41,7 +41,7 @@ public class AptoidePOSTRequestCache {
 	private static final int DATA_BUCKET_INDEX = 0;
 	private static final int TIMESTAMP_BUCKET_INDEX = 1;
 	private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
-	private static final String DISK_CACHE_SUBDIR = "posts";
+	private static final String DISK_CACHE_SUBDIR = "request_cache";
 
 	private final KeyAlgorithm keyAlgorithm;
 
@@ -52,10 +52,26 @@ public class AptoidePOSTRequestCache {
 	// ctors
 	//
 
-	public AptoidePOSTRequestCache(KeyAlgorithm keyAlgorithm) {
+	public RequestCache(KeyAlgorithm keyAlgorithm) {
 		try {
+			File cachePath = new File(Environment.getExternalStorageDirectory(), DISK_CACHE_SUBDIR);
+
+			if(
+				(BuildConfig.BUILD_TYPE.equalsIgnoreCase("debug") || BuildConfig.DEBUG )
+				&& cachePath.exists()
+			) {
+				int deletedFiles = 0;
+				for(File f : cachePath.listFiles()) {
+					deletedFiles += f.delete() ? 1 : 0;
+				}
+				deletedFiles += cachePath.delete() ? 1 : 0;
+				Log.w(TAG, String.format("cache running in debug mode : cleaned %d disk cache " +
+						"files",
+						deletedFiles));
+			}
+
 			diskLruCache = DiskLruCache.open(
-					new File(Environment.getExternalStorageDirectory(), DISK_CACHE_SUBDIR),
+					cachePath,
 					BuildConfig.VERSION_CODE,
 					BUCKET_COUNT,
 					DISK_CACHE_SIZE
@@ -67,7 +83,7 @@ public class AptoidePOSTRequestCache {
 		this.keyAlgorithm = keyAlgorithm;
 	}
 
-	public AptoidePOSTRequestCache() {
+	public RequestCache() {
 		this(new Sha1KeyAlgorithm());
 	}
 
@@ -97,6 +113,7 @@ public class AptoidePOSTRequestCache {
 
 		if ((response.code() / 100) != 2) return null;
 
+		final Response clonedResponse = response.newBuilder().build();
 		DiskLruCache.Editor editor = null;
 		try {
 			final String reqKey = keyAlgorithm.getKeyFrom(request);
@@ -107,7 +124,7 @@ public class AptoidePOSTRequestCache {
 				editor.set(DATA_BUCKET_INDEX, cacheEntry.toString());
 				editor.set(TIMESTAMP_BUCKET_INDEX, SimpleDateFormat.getInstance().format(new Date()));
 				editor.commit();
-				return response;
+				return clonedResponse;
 			}
 		} catch (Exception ex) {
 			Log.e(TAG, "", ex);
