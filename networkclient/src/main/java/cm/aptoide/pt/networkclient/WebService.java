@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -10,6 +10,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -49,6 +53,10 @@ public abstract class WebService<T, U> {
 		objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+		objectMapper.setDateFormat(df);
 
 		return JacksonConverterFactory.create(objectMapper);
 	}
@@ -56,12 +64,15 @@ public abstract class WebService<T, U> {
 	protected abstract String getBaseHost();
 
 	protected Observable<T> getService() {
-		return service == null ? createService() : service;
+		return service == null ? createServiceObservable() : service;
 	}
 
-	private Observable<T> createService() {
-		return Observable.fromCallable(() -> new Retrofit.Builder().baseUrl(getBaseHost()).client(client).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).addConverterFactory
-				(factory).build().create(clazz));
+	private Observable<T> createServiceObservable() {
+		return Observable.fromCallable(this::createService);
+	}
+
+	protected T createService() {
+		return new Retrofit.Builder().baseUrl(getBaseHost()).client(client).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).addConverterFactory(factory).build().create(clazz);
 	}
 
 	protected abstract Observable<U> loadDataFromNetwork(T t);
