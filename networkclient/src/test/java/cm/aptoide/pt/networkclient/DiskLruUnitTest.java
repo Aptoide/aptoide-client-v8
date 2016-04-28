@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;
 
-import cm.aptoide.pt.networkclient.okhttp.AptoidePOSTRequestCache;
+import cm.aptoide.pt.networkclient.okhttp.cache.AptoidePOSTRequestCache;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;

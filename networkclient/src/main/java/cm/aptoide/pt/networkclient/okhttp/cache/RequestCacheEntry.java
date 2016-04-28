@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by SithEngineer on 28/04/2016.
  */
 
-package cm.aptoide.pt.networkclient.okhttp;
+package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -42,8 +42,7 @@ class RequestCacheEntry {
 	private String bodyMediaType;
 	private Map<String, List<String>> headers;
 
-	public RequestCacheEntry() {
-	}
+	public RequestCacheEntry() { }
 
 	public RequestCacheEntry(Response response) {
 		this.code = response.code();

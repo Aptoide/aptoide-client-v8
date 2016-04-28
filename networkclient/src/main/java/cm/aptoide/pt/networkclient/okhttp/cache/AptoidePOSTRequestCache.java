@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by SithEngineer on 27/04/2016.
  */
 
-package cm.aptoide.pt.networkclient.okhttp;
+package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -14,8 +14,6 @@ import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +21,6 @@ import java.util.Date;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import okhttp3.Request;
 import okhttp3.Response;
-import okio.Buffer;
 
 /**
  * @author Neurophobic Animal
@@ -45,6 +42,9 @@ public class AptoidePOSTRequestCache {
 	private static final int TIMESTAMP_BUCKET_INDEX = 1;
 	private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
 	private static final String DISK_CACHE_SUBDIR = "posts";
+
+	private final KeyAlgorithm keyAlgorithm;
+
 	private final Object diskCacheLock = new Object();
 	private DiskLruCache diskLruCache;
 
@@ -52,12 +52,23 @@ public class AptoidePOSTRequestCache {
 	// ctors
 	//
 
-	public AptoidePOSTRequestCache() {
+	public AptoidePOSTRequestCache(KeyAlgorithm keyAlgorithm) {
 		try {
-			diskLruCache = DiskLruCache.open(new File(Environment.getExternalStorageDirectory() + "/" + DISK_CACHE_SUBDIR), BuildConfig.VERSION_CODE, BUCKET_COUNT, DISK_CACHE_SIZE);
+			diskLruCache = DiskLruCache.open(
+					new File(Environment.getExternalStorageDirectory(), DISK_CACHE_SUBDIR),
+					BuildConfig.VERSION_CODE,
+					BUCKET_COUNT,
+					DISK_CACHE_SIZE
+			);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		this.keyAlgorithm = keyAlgorithm;
+	}
+
+	public AptoidePOSTRequestCache() {
+		this(new Sha1KeyAlgorithm());
 	}
 
 	//
@@ -67,27 +78,11 @@ public class AptoidePOSTRequestCache {
 	public void remove(@NonNull Request request) {
 		synchronized (diskCacheLock) {
 			try {
-				diskLruCache.remove(getKeyFrom(request));
+				diskLruCache.remove(keyAlgorithm.getKeyFrom(request));
 			} catch (Exception e) {
 				Log.e(TAG, "", e);
 			}
 		}
-	}
-
-	@NonNull
-	private String getKeyFrom(@NonNull Request request) throws IOException, NoSuchAlgorithmException {
-		Buffer bodyBuffer = new Buffer();
-		request.body().writeTo(bodyBuffer);
-		String requestBody = bodyBuffer.readUtf8();
-
-		MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-		messageDigest.update(requestBody.getBytes("UTF-8"));
-		byte[] bytes = messageDigest.digest();
-		StringBuilder buffer = new StringBuilder();
-		for (byte b : bytes) {
-			buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-		}
-		return buffer.toString();
 	}
 
 	/**
@@ -104,7 +99,7 @@ public class AptoidePOSTRequestCache {
 
 		DiskLruCache.Editor editor = null;
 		try {
-			final String reqKey = getKeyFrom(request);
+			final String reqKey = keyAlgorithm.getKeyFrom(request);
 			synchronized (diskCacheLock) {
 				editor = diskLruCache.edit(reqKey);
 				// create cache entry building from the previous response so that we don't modify it
@@ -145,7 +140,7 @@ public class AptoidePOSTRequestCache {
 
 			DiskLruCache.Snapshot snapshot;
 			synchronized (diskCacheLock) {
-				final String reqKey = getKeyFrom(request);
+				final String reqKey = keyAlgorithm.getKeyFrom(request);
 				snapshot = diskLruCache.get(reqKey);
 			}
 

@@ -8,6 +8,7 @@ package cm.aptoide.pt.networkclient.okhttp;
 import java.io.File;
 import java.io.IOException;
 
+import cm.aptoide.pt.networkclient.okhttp.cache.AptoidePOSTRequestCache;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
