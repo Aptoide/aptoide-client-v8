@@ -9,10 +9,21 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 14
+    }
+
+    publishNonDefault true
+
+    buildTypes {
+        release {
+
+        }
+        debug {
+
+        }
     }
 
     compileOptions {
@@ -25,9 +36,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.3.0'
 
-    compile project(':model')
-    compile project(':networkclient')
-    compile project(':aptoidepreferences')
+    debugCompile project(path: ':model', configuration: 'debug')
+    releaseCompile project(path: ':model', configuration: 'release')
+
+    debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
+    releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
+
+    debugCompile project(path: ':networkclient', configuration: 'debug')
+    releaseCompile project(path: ':networkclient', configuration: 'release')
 
     provided 'org.projectlombok:lombok:1.16.8'
 }

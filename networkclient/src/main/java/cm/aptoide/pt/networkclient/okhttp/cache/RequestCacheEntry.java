@@ -23,7 +23,6 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okio.Buffer;
 
 /**
  * @author SithEngineer
@@ -31,6 +30,8 @@ import okio.Buffer;
 public
 @Data
 class RequestCacheEntry {
+
+	private static final String DEFAULT_CHARSET = "UTF-8";
 
 	private static final String TAG = RequestCacheEntry.class.getName();
 
@@ -45,15 +46,19 @@ class RequestCacheEntry {
 	public RequestCacheEntry() { }
 
 	public RequestCacheEntry(Response response) {
+
+		final ResponseBody responseBody = response.body();
+
 		this.code = response.code();
 		this.message = response.message();
 		this.protocol = response.protocol().toString();
 		this.headers = response.headers().toMultimap();
+		this.bodyMediaType = responseBody.contentType().toString();
 
-		Buffer responseBodyClone = response.body().source().buffer().clone();
-		this.body = responseBodyClone.readString(Charset.forName("UTF-8"));
+		Charset charset = Charset.forName(DEFAULT_CHARSET);
+		charset = responseBody.contentType().charset(charset);
 
-		this.bodyMediaType = response.body().contentType().toString();
+		this.body = responseBody.source().buffer().clone().readString(charset);
 	}
 
 	@NonNull

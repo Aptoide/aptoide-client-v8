@@ -22,7 +22,7 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm {
 		try {
 
 			Buffer bodyBuffer = new Buffer();
-			request.body().writeTo(bodyBuffer);
+			request.newBuilder().build().body().writeTo(bodyBuffer);
 			String requestBody = bodyBuffer.readUtf8();
 
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;
 
-import cm.aptoide.pt.networkclient.okhttp.cache.AptoidePOSTRequestCache;
+import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
@@ -40,7 +40,7 @@ public class DiskLruUnitTest {
 
 	private static final String TAG = DiskLruCache.class.getName();
 
-	private static AptoidePOSTRequestCache cache;
+	private static RequestCache cache;
 	private static Request request;
 	private static Response response;
 
@@ -48,7 +48,7 @@ public class DiskLruUnitTest {
 
 	@BeforeClass
 	public static void init() {
-		cache = new AptoidePOSTRequestCache();
+		cache = new RequestCache();
 		usedRequests = new Vector<>(2);
 
 		final String requestData = "limit=1";
@@ -145,7 +145,7 @@ public class DiskLruUnitTest {
 
 	@Test
 	public void cacheControlBypassCache() {
-		Request request2 = request.newBuilder().header(AptoidePOSTRequestCache.BYPASS_HEADER_KEY, AptoidePOSTRequestCache.BYPASS_HEADER_VALUE).build();
+		Request request2 = request.newBuilder().header(RequestCache.BYPASS_HEADER_KEY, RequestCache.BYPASS_HEADER_VALUE).build();
 
 		usedRequests.add(request2);
 

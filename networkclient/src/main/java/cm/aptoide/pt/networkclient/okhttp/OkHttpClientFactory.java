@@ -5,10 +5,13 @@
 
 package cm.aptoide.pt.networkclient.okhttp;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 
-import cm.aptoide.pt.networkclient.okhttp.cache.AptoidePOSTRequestCache;
+import cm.aptoide.pt.networkclient.BuildConfig;
+import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -36,27 +39,45 @@ public class OkHttpClientFactory {
 	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
 		final Cache cache = new Cache(cacheDirectory, cacheSize);
 
-//		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
-		return new OkHttpClient.Builder().cache(cache).build();
+		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
+		//return new OkHttpClient.Builder().cache(cache).build();
 	}
 
 	private static Interceptor createCacheInterceptor() {
 		return new Interceptor() {
 
-			AptoidePOSTRequestCache customCache = new AptoidePOSTRequestCache();
+			private static final String TAG = "CacheInterceptor";
+
+			private final RequestCache customCache = new RequestCache();
 
 			@Override
 			public Response intercept(Chain chain) throws IOException {
 				Request request = chain.request();
 				Response response = customCache.get(request);
+
 				if (response != null) {
+
+					if(BuildConfig.DEBUG) {
+						Log.v(TAG, "cache hit");
+					}
+
 					return response;
-				} else {
-					response = chain.proceed(chain.request());
-					customCache.put(request, response);
 				}
 
-				return response;
+				response = chain.proceed(chain.request());
+				long responseLength = response.body().contentLength();
+				final Response resultResponse = customCache.put(request, response);
+
+				if(resultResponse==null || resultResponse.body().contentLength()
+						!=responseLength) {
+					Log.e(TAG, "server response and cached response are different");
+				}
+
+				if(BuildConfig.DEBUG) {
+					Log.v(TAG, "cache miss");
+				}
+
+				return resultResponse;
 			}
 		};
 	}

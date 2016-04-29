@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 18/04/2016.
+ * Modified by SithEngineer on 28/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget;
+package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import lombok.Getter;
 
 /**
@@ -40,13 +42,13 @@ public class DisplayableGroup extends Displayable {
 	}
 
 	@Override
-	public String getName() {
+	public GetStoreWidgets.Type getName() {
 		throw new IllegalStateException("getName() on DisplayableGroup should not be called!");
 	}
 
 	@Override
-	public int getViewType() {
-		throw new IllegalStateException("getViewType() on DisplayableGroup should not be called!");
+	public int getViewLayout() {
+		throw new IllegalStateException("getViewLayout() on DisplayableGroup should not be called!");
 	}
 
 	@Override

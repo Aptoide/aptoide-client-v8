@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:clickable="true"
+             android:foreground="?selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="?attr/backgroundCard"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/icon"
+            android:orientation="vertical"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingTop="3dp">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:textColor="?android:attr/textColorSecondary"
+                android:lines="2"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/downloads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textSize="12sp" />
+
+            <!--style="?android:attr/ratingBarStyleIndicator"-->
+            <RatingBar
+                android:id="@+id/ratingbar"
+                style="?attr/gridItemRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:clickable="false"
+                android:isIndicator="true"
+                android:numStars="5" />
+
+            <TextView
+                android:id="@+id/store_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/text_size_small"
+                android:visibility="gone" />
+
+            <!--
+                android:drawableLeft="@drawable/ic_timestamp"
+            -->
+            <TextView
+                android:id="@+id/added_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

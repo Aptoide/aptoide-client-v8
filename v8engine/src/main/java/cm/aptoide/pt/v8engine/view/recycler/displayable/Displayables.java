@@ -1,21 +1,18 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 18/04/2016.
+ * Modified by SithEngineer on 28/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.grid;
+package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.DisplayableGroup;
-
 /**
  * Created by neuro on 18-04-2016.
  */
-class Displayables {
+public class Displayables {
 
 	private final List<Displayable> displayables = new LinkedList<>();
 

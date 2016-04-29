@@ -5,8 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
+import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -15,20 +16,19 @@ public class EmptyDisplayable extends Displayable {
 
 	private int spanSize = 1;
 
-	public EmptyDisplayable() {
-	}
+	public EmptyDisplayable() { }
 
 	public EmptyDisplayable(int spanSize) {
 		this.spanSize = spanSize;
 	}
 
 	@Override
-	public String getName() {
-		return "EMPTY";
+	public GetStoreWidgets.Type getName() {
+		return GetStoreWidgets.Type.APPS_GROUP;
 	}
 
 	@Override
-	public int getViewType() {
+	public int getViewLayout() {
 		return R.layout.empty_frame_layout;
 	}
 

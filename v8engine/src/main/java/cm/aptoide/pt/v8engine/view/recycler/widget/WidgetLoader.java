@@ -11,12 +11,13 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.pt.v8engine.Aptoide;
-import cm.aptoide.pt.v8engine.view.recycler.widget.annotations.Displayables;
+import cm.aptoide.pt.v8engine.util.MultiDexHelper;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import dalvik.system.DexFile;
 
 /**
@@ -44,24 +45,24 @@ public enum WidgetLoader {
 			// get the current class loader
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			// current package name for filtering purposes
-			String packageName = Aptoide.class.getPackage().getName();
-			// current dex file
-			DexFile dex = new DexFile(Aptoide.getContext().getPackageCodePath());
-			// iterate over all classes declared in the dex
-			Enumeration<String> classNameEnumeration = dex.entries();
-			while (classNameEnumeration.hasMoreElements()) {
-				String className = classNameEnumeration.nextElement();
+			String packageName = getClass().getPackage().getName();
+
+			List<Map.Entry<String, DexFile>> classNames =
+					MultiDexHelper.getAllClasses(Aptoide.getContext());
+
+			for(Map.Entry<String, DexFile> className : classNames ) {
+
 				// if the class doesn't belong in the current project we discard it
 				// useful for speeding this method
-				if (!className.startsWith(packageName)) continue;
-				Class<?> widgetClass = dex.loadClass(className, classLoader);
+				if (!className.getKey().startsWith(packageName)) continue;
+				Class<?> widgetClass = className.getValue().loadClass(className.getKey(), classLoader);
 				if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) && widgetClass.isAnnotationPresent(Displayables.class)) {
 					Displayables annotation = widgetClass.getAnnotation(Displayables.class);
 					Class<? extends Displayable>[] displayableClasses = annotation.value();
 					WidgetMeta wMeta;
 					for (Class<? extends Displayable> displayableClass : displayableClasses) {
 						wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass), displayableClass);
-						widgetsHashMap.put(wMeta.displayable.getViewType(), wMeta);
+						widgetsHashMap.put(wMeta.displayable.getViewLayout(), wMeta);
 					}
 				}
 			}

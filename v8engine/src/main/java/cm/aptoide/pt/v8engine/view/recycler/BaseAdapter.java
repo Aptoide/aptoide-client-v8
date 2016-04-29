@@ -1,16 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 18/04/2016.
+ * Modified by SithEngineer on 28/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.grid;
+package cm.aptoide.pt.v8engine.view.recycler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
 	@Override
 	public int getItemViewType(int position) {
-		return displayables.get(position).getViewType();
+		return displayables.get(position).getViewLayout();
 	}
 
 	@Override
