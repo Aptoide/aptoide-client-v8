@@ -5,13 +5,15 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import lombok.Getter;
+
 /**
  * Created by neuro on 14-04-2016.
  */
 public abstract class DisplayablePojo<T> extends Displayable {
 
 	private static final float REFERENCE_WIDTH_DPI = 360;
-	private T pojo;
+	@Getter private T pojo;
 
 	/**
 	 * Needed for reflective {@link Class#newInstance()}.

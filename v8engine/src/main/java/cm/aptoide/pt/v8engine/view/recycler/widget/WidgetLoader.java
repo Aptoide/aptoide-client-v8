@@ -62,7 +62,7 @@ public enum WidgetLoader {
 					WidgetMeta wMeta;
 					for (Class<? extends Displayable> displayableClass : displayableClasses) {
 						wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass), displayableClass);
-						widgetsHashMap.put(wMeta.displayable.getViewType(), wMeta);
+						widgetsHashMap.put(wMeta.displayable.getViewLayout(), wMeta);
 					}
 				}
 			}

@@ -52,7 +52,10 @@ public enum DisplayLoader {
 				if (displayableClass != null && Displayable.class.isAssignableFrom(displayableClass)) {
 					try {
 						Displayable d = (Displayable) displayableClass.newInstance();
-						displayableHashMap.put(d.getName(), (Class<? extends Displayable>) displayableClass);
+						displayableHashMap.put(
+								d.getName().name(),
+								(Class<? extends Displayable>) displayableClass
+						);
 					} catch (Exception e) {
 						Log.e(TAG, "", e);
 					}

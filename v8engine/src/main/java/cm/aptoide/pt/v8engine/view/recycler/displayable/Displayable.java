@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.support.annotation.LayoutRes;
 
+import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.util.ScreenUtils;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 
@@ -28,11 +29,10 @@ public abstract class Displayable {
 		this.fixedPerLineCount = fixedPerLineCount;
 	}
 
-	public abstract String getName();
+	public abstract GetStoreWidgets.Type getName();
 
-	// shouldn't this be named "getViewId()" ??
 	@LayoutRes
-	public abstract int getViewType();
+	public abstract int getViewLayout();
 
 	public int getPerLineCount() {
 		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils.getScreenWidthInDip() / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());

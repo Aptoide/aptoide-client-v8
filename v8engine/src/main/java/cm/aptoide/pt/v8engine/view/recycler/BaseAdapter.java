@@ -43,7 +43,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
 	@Override
 	public int getItemViewType(int position) {
-		return displayables.get(position).getViewType();
+		return displayables.get(position).getViewLayout();
 	}
 
 	@Override

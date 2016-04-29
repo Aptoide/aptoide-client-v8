@@ -25,6 +25,11 @@ public class EmptyWidget extends Widget {
 	}
 
 	@Override
+	protected void assignViews(View itemView) {
+		// TODO
+	}
+
+	@Override
 	public void bindView(Displayable displayable) {
 		// TODO
 	}

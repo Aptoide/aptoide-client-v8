@@ -17,7 +17,10 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
 	public Widget(View itemView) {
 		super(itemView);
+		assignViews(itemView);
 	}
+
+	protected abstract void assignViews(View itemView);
 
 	public abstract void bindView(T displayable);
 }
