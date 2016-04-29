@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'me.tatarka.retrolambda'
 
 Properties localProperties = new Properties()
 localProperties.load(new FileInputStream("local.properties"))
@@ -43,6 +43,11 @@ android {
     repositories {
         jcenter()
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -50,6 +55,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile project(':networkclient')
+    compile project(':aptoidepreferences')
 
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'

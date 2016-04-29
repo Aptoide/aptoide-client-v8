@@ -50,6 +50,8 @@ private static final String TAG = LoginActivity.class.getSimpleName();
         AptoideAccountManager.getInstance().addOnAccountRemovedListener(this);
         setupShowHidePassButton();
         setupToolbar();
+        Snackbar.make(content, AptoideAccountManager.getAccessToken(), Snackbar.LENGTH_SHORT).show();
+
 
     }
     private void setupToolbar() {
@@ -123,12 +125,12 @@ private static final String TAG = LoginActivity.class.getSimpleName();
     }
 
     @Override
-    public String getUser() {
+    public String getIntroducedUserName() {
         return emailBox.getText().toString();
     }
 
     @Override
-    public String getPassword() {
+    public String getIntroducedPassword() {
         return password_box.getText().toString();
     }
 

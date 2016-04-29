@@ -18,6 +18,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.Arrays;
 import java.util.Collection;
 
+import cm.aptoide.accountmanager.ws.LoginMode;
+
 /**
  * Created by trinkes on 4/19/16.
  */
@@ -72,7 +74,7 @@ public class GoogleLoginUtils {
      * @param data Given on onActivityResult method
      * @return An account
      */
-    protected static void handleSignInResult(int requestCode, Intent data) {
+    protected static void onActivityResult(int requestCode, Intent data) {
         boolean toReturn = false;
         if (requestCode == REQ_SIGN_IN_GOOGLE) {
             final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -83,7 +85,7 @@ public class GoogleLoginUtils {
             }
 
             if (result.isSuccess() && account != null) {
-                AptoideAccountManager.submit(AptoideAccountManager.LoginMode.GOOGLE, account.getEmail(),account.getServerAuthCode(), account.getDisplayName());
+                AptoideAccountManager.loginUserCredentials(LoginMode.GOOGLE, account.getEmail(),account.getServerAuthCode(), account.getDisplayName());
             }
         }
         Logger.d(TAG, "onActivityResult() returned: " + toReturn);

@@ -9,4 +9,5 @@
     <string name="setcredentials">Login</string>
     <string name="forgot_passwd">Forgot password?</string>
     <string name="fields_cannot_empty">Please check your email and password.</string>
+    <string name="unknown_error">Unknown Error</string>
 </resources>

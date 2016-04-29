@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
+import cm.aptoide.accountmanager.ws.LoginMode;
+
 /**
  * Created by trinkes on 4/19/16.
  */
@@ -37,7 +39,7 @@ public class FacebookLoginUtils {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookLoginCallback());
     }
 
-    public static void handleSignInResult(int requestCode, int resultCode, Intent data) {
+    public static void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -94,7 +96,7 @@ public class FacebookLoginUtils {
                     Log.i("LoginActivity", response.toString());
                     // Get facebook data from login
                     Bundle bFacebookData = FacebookLoginUtils.getFacebookData(object);
-                    AptoideAccountManager.submit(AptoideAccountManager.LoginMode.FACEBOOK, bFacebookData.getString("email"), token, null);
+                    AptoideAccountManager.loginUserCredentials(LoginMode.FACEBOOK, bFacebookData.getString("email"), token, null);
                 }
             });
 

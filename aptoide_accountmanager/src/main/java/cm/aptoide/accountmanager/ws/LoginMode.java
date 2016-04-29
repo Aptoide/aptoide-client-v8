@@ -8,6 +8,6 @@ package cm.aptoide.accountmanager.ws;
 /**
  * Created by neuro on 25-04-2016.
  */
-public enum Mode {
+public enum LoginMode {
 	APTOIDE, GOOGLE, FACEBOOK
 }

@@ -8,8 +8,9 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import cm.aptoide.pt.preferences.Application;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
@@ -59,8 +60,8 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 //            response.onResult(data);
 //
 //        } else {
-            final Intent intent = createAuthActivityIntent(response, accountType, authTokenType, options);
-            bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        final Intent intent = createAuthActivityIntent(response, accountType, authTokenType, options);
+        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
 //        }
 
         return bundle;
@@ -69,8 +70,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     protected Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType, String authTokenType, Bundle options) {
         // TODO: 4/21/16 trinkes check loginActivity.class if a custom activity was implemented, that one should be used
-        // TODO: 4/22/16 trinkes try to use application context instead of saving one
-        Intent intent = new Intent(mContext, LoginActivity.class);
+        Intent intent = new Intent(Application.getContext(), LoginActivity.class);
         intent.putExtra(AptoideAccountManager.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(AptoideAccountManager.ARG_AUTH_TYPE, authTokenType);
         intent.putExtra(AptoideAccountManager.ARG_IS_ADDING_NEW_ACCOUNT, true);
@@ -95,7 +95,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
         // If the caller requested an authToken type we don't support, then
         // return an error
-        if (!authTokenType.equals(AptoideAccountManager.AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+        if (!authTokenType.equals(AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
             return result;
@@ -103,8 +103,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
         // Extract the username and password from the Account Manager, and ask
         // the server for an appropriate AuthToken.
-        // TODO: 4/22/16 trinkes try to use application context instead of saving one
-        final AccountManager am = AccountManager.get(mContext);
+        final AccountManager am = AccountManager.get(Application.getContext());
 
         String authToken = am.peekAuthToken(account, authTokenType);
 
@@ -128,7 +127,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         // If we get here, then we couldn't access the user's password - so we
         // need to re-prompt them for their credentials. We do that by creating
         // an intent to display our AuthenticatorActivity.
-
+// TODO: 4/28/16 trinkes ask to relog if refresh token expires
     }
 
 

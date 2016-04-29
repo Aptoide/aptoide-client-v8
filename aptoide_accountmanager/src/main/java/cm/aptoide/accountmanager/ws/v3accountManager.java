@@ -25,6 +25,7 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 	}
 
 	@Override
+	// TODO: 4/26/16 trinkes change to https
 	protected String getBaseHost() {
 		return "https://webservices.aptoide.com/webservices/";
 	}
