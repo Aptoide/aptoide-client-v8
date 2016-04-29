@@ -21,6 +21,10 @@ public class ListAppsRequest extends V7<ListApps> {
 
 	private final Body body = new Body();
 
+	private ListAppsRequest() {
+
+	}
+
 	@Override
 	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces) {
 		return interfaces.listApps(body);

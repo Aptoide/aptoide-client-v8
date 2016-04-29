@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
@@ -58,8 +58,8 @@ public abstract class V7<U> extends WebService<V7.Interfaces, U> {
 		@POST("listAppsUpdates")
 		Observable<ListAppsUpdates> listAppsUpdates(@Body ListAppsUpdatesRequest.Body body);
 
-		@POST("listAppsVersions")
-		Observable<ListAppVersions> listAppVersions(@Body ListAppsVersionsRequest.Body body);
+		@POST("listAppVersions")
+		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body);
 
 		@POST("getStore")
 		Observable<GetStore> getStore(@Body GetStoreRequest.Body body);

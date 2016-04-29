@@ -21,7 +21,7 @@ public class Obb {
 
 		private String path;
 		private String md5sum;
-		private Number filesize;
+		private long filesize;
 		private String filename;
 	}
 }

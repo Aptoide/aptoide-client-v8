@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.model.v7.store;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -48,7 +47,7 @@ public class GetStoreWidgets extends BaseV7Response {
 		private String view;
 		// Object that will hold view response.
 		private Object viewObject;
-		private List<Action> actions = new ArrayList<>();
+		private List<Action> actions;
 		private Data data;
 
 		@lombok.Data
@@ -56,19 +55,19 @@ public class GetStoreWidgets extends BaseV7Response {
 
 			private String layout; // GRID, LIST, BRICK
 			private String icon;
-			private List<Data.Categories> categories = new ArrayList<>(); //only present if type": "DISPLAYS"
+			private List<Data.Categories> categories; //only present if type": "DISPLAYS"
 
 			@lombok.Data
 			public static class Categories {
 
-				private Number id;
+				private long id;
 				private String refId;
 				private String parentId;
 				private String parentRefId;
 				private String name;
 				private String graphic;
 				private String icon;
-				private Number adsCount;
+				private int adsCount;
 			}
 		}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -23,6 +23,10 @@ import rx.Observable;
 public class GetAppRequest extends V7<GetApp> {
 
 	private final Body body = new Body();
+
+	private GetAppRequest() {
+
+	}
 
 	public static GetAppRequest of(int appId) {
 		GetAppRequest getAppRequest = new GetAppRequest();

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -27,6 +27,13 @@ import rx.Observable;
 public class ListAppsUpdatesRequest extends V7<ListAppsUpdates> {
 
 	private final Body body = new Body();
+
+	private ListAppsUpdatesRequest() {
+	}
+
+	public static ListAppsUpdatesRequest of() {
+		return new ListAppsUpdatesRequest();
+	}
 
 	@Override
 	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces) {
@@ -60,7 +67,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates> {
 
 		@JsonProperty("package") private String packageName;
 
-		private Number vercode;
+		private int vercode;
 		private String signature;
 	}
 }

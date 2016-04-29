@@ -15,12 +15,12 @@ import lombok.Data;
 @Data
 public class Datalist<T> {
 
-	private Number total;
-	private Number count;
-	private Number offset;
-	private Number limit;
-	private Number next;
-	private Number hidden;
+	private int total;
+	private int count;
+	private int offset;
+	private int limit;
+	private int next;
+	private int hidden;
 	private boolean loaded;
 	private List<T> list;
 }

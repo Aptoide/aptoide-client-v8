@@ -23,6 +23,10 @@ public class GetStoreDisplaysRequest extends V7<GetStoreDisplays> {
 
 	private final Body body = new Body();
 
+	private GetStoreDisplaysRequest() {
+
+	}
+
 	public static GetStoreDisplaysRequest of(String storeName) {
 		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest();
 

@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class Store {
 
-	private Number id;
+	private long id;
 	private String name;
 	private String avatar;
 	private Date added;
@@ -23,13 +23,15 @@ public class Store {
 	private Appearance appearance;
 	private Stats stats;
 
+	@Data
 	public static class Stats {
 
-		private Number apps;
-		private Number subscribers;
-		private Number downloads;
+		private int apps;
+		private int subscribers;
+		private int downloads;
 	}
 
+	@Data
 	public static class Appearance {
 
 		private String theme;

@@ -1,11 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/04/2016.
+ * Modified by Neurophobic Animal on 27/04/2016.
  */
 
 package cm.aptoide.pt.model.v7.store;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreTabs extends BaseV7Response {
 
-	@JsonProperty("list") private List<Tab> tabList;
+	private List<Tab> list;
 
 	@Data
 	public static class Tab {
