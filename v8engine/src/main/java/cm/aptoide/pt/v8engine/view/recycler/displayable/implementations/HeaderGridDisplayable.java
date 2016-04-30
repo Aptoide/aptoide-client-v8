@@ -5,39 +5,30 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
-import android.support.annotation.LayoutRes;
-
-import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
- * Created by sithengineer on 28/04/16.
- *
- * @author SithEngineer
+ * Created by sithengineer on 29/04/16.
  */
-public class AppGridDisplayable extends DisplayablePojo<App> {
+public class HeaderGridDisplayable extends DisplayablePojo<Object> {
 
-	public AppGridDisplayable() {
-	}
-
-	public AppGridDisplayable(App pojo) {
-		super(pojo);
+	public HeaderGridDisplayable() {
 	}
 
 	@Override
 	public GetStoreWidgets.Type getName() {
-		return GetStoreWidgets.Type.APPS_GROUP;
+		return GetStoreWidgets.Type.HEADER_ROW;
 	}
 
-	@LayoutRes @Override
+	@Override
 	public int getViewLayout() {
-		return R.layout.app_grid_displayable_layout;
+		return R.layout.header_grid_displayable_layout;
 	}
 
 	@Override
 	public int getDefaultPerLineCount() {
-		return 3;
+		return 1;
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 30/04/2016.
  */
 
 package cm.aptoide.pt.model.v7.store;
@@ -25,6 +25,7 @@ public class GetStoreWidgets extends BaseV7Response {
 		APPS_GROUP,
 		STORES_GROUP,
 		DISPLAYS,
+		HEADER_ROW,
 	}
 
 	@Data
