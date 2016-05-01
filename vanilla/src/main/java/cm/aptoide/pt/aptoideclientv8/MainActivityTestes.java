@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -26,7 +26,7 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
 import retrofit2.adapter.rxjava.HttpException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivityTestes extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
