@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 16/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -12,7 +12,7 @@ retrolambda {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId "cm.aptoide.pt.aptoideclientv8"
@@ -53,6 +53,7 @@ android {
         release {
             zipAlignEnabled true
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
@@ -96,8 +97,30 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
     debugCompile project(path: ':v8engine', configuration: 'debug')
     releaseCompile project(path: ':v8engine', configuration: 'release')
+}
+
+def File propFile = new File('signing.properties')
+if (propFile.canRead()) {
+    def Properties props = new Properties()
+    props.load(new FileInputStream(propFile))
+
+    if (props != null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+
+        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+        println 'all good to go'
+    } else {
+        android.buildTypes.release.signingConfig = null
+        println 'signing.properties found but some entries are missing'
+    }
+} else {
+    println 'signing.properties not found'
+    android.buildTypes.release.signingConfig = null
 }
