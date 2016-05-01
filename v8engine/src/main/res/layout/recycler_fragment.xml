@@ -1,12 +1,12 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 15/04/2016.
+  ~ Modified by Neurophobic Animal on 01/05/2016.
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@android:color/black">
+    >
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
@@ -19,8 +19,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FF0"
             android:clipToPadding="false"
+            android:paddingLeft="@dimen/recycler_margin"
+            android:paddingRight="@dimen/recycler_margin"
             android:visibility="gone"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.dynamicget;
@@ -15,7 +15,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
  */
 public class WSWidgetsParser {
 
-	public static void parse(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch) {
+	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch) {
 
 		if (isKnownType(wsWidget.getType())) {
 			V7.Interfaces interfaces = GenericInterface.newInstance();

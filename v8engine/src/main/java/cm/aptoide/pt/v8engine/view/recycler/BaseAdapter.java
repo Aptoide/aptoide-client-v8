@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -49,5 +49,9 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	@Override
 	public int getItemCount() {
 		return displayables.size();
+	}
+
+	public void addDisplayables(List<Displayable> displayables) {
+		this.displayables.add(displayables);
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -52,13 +52,15 @@ public class GetStoreRequest extends V7<GetStore> {
 
 	@Override
 	public Observable<GetStore> observe() {
+		// Todo: deprecated parece-me
+
 		if (recursive) {
 			return super.observe().observeOn(Schedulers.io()).doOnNext(getStore -> {
 
 				List<GetStoreWidgets.WSWidget> list = getStore.getNodes().getWidgets().getDatalist().getList();
 				CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
-				Observable.from(list).forEach(wsWidget -> WSWidgetsParser.parse(wsWidget, countDownLatch));
+				Observable.from(list).forEach(wsWidget -> WSWidgetsParser.loadInnerNodes(wsWidget, countDownLatch));
 
 				try {
 					countDownLatch.await();

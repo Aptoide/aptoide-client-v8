@@ -13,16 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.AppGridDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.grid.BaseGridLayoutManager;
 
 /**
@@ -35,25 +30,8 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 
 	private Handler handler;
 
-	@Deprecated
-	private static List<Displayable> makeDisp() {
-		LinkedList<Displayable> displayables = new LinkedList<>();
-		Displayable displayable = new EmptyDisplayable(1);
-
-		List<Displayable> tmp = new LinkedList<>();
-		tmp.add(new AppGridDisplayable(new App()));
-		displayables.add(new DisplayableGroup(tmp));
-
-		for (int i = 0; i < 2; i++) {
-			displayables.add(new AppGridDisplayable(new App()));
-		}
-
-		return displayables;
-	}
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
-			savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		handler = new Handler(Looper.myLooper());
 
@@ -68,7 +46,7 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 
 	@Override
 	protected BaseAdapter createAdapter() {
-		return new BaseAdapter(makeDisp());
+		return new BaseAdapter();
 	}
 
 	@Override
@@ -79,5 +57,9 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 	@Override
 	protected int getBaseViewId() {
 		return R.id.recycler_view;
+	}
+
+	public void addDisplayables(List<Displayable> displayables) {
+		adapter.addDisplayables(displayables);
 	}
 }

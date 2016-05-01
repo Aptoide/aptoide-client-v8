@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 package cm.aptoide.pt.model.v7.store;
@@ -24,7 +24,7 @@ public class GetStoreTabs extends BaseV7Response {
 	public static class Tab {
 
 		private String label;
-		private Tab.Event event;
+		private Event event;
 
 		@Data
 		public static class Event {
@@ -42,9 +42,20 @@ public class GetStoreTabs extends BaseV7Response {
 			public static final String EVENT_GETSTOREWIDGETS = "getStoreWidgets";
 			public static final String EVENT_GETAPKCOMMENTS = "getApkComments";
 
-			private String type; // API, v3
-			private String name; // listApps, getStore, getStoreWidgets, getApkComments
+			private Type type; // API, v3
+			private Name name; // listApps, getStore, getStoreWidgets, getApkComments
 			private String action;
+
+			public enum Type {
+				API,
+				v3,
+			}
+
+			public enum Name {
+				getStoreWidgets,
+				getReviews,
+				getApkComments,
+			}
 		}
 	}
 }
