@@ -48,9 +48,6 @@ dependencies {
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
 
-    debugCompile project(path: ':dataprovider', configuration: 'debug')
-    releaseCompile project(path: ':dataprovider', configuration: 'release')
-
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
@@ -65,4 +62,11 @@ dependencies {
     // for unit tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
+
+    // Internal dependencies
+    debugCompile project(path: ':dataprovider', configuration: 'debug')
+    releaseCompile project(path: ':dataprovider', configuration: 'release')
+
+    debugCompile project(path: ':logger', configuration: 'debug')
+    releaseCompile project(path: ':logger', configuration: 'release')
 }
