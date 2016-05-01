@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 18/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
@@ -29,7 +29,7 @@ public class EmptyDisplayable extends Displayable {
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.empty_frame_layout;
+		return R.layout.empty_displayable;
 	}
 
 	@Override

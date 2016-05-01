@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -35,26 +35,13 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 
 	private Handler handler;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
-			savedInstanceState) {
-
-		handler = new Handler(Looper.myLooper());
-
-		return super.onCreateView(inflater, container, savedInstanceState);
-	}
-
 	@Deprecated
 	private static List<Displayable> makeDisp() {
 		LinkedList<Displayable> displayables = new LinkedList<>();
 		Displayable displayable = new EmptyDisplayable(1);
 
-		for (int i = 0; i < 21; i++) {
-			displayables.add(displayable);
-		}
-
 		List<Displayable> tmp = new LinkedList<>();
-		tmp.add(displayable);
+		tmp.add(new AppGridDisplayable(new App()));
 		displayables.add(new DisplayableGroup(tmp));
 
 		for (int i = 0; i < 2; i++) {
@@ -62,6 +49,15 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 		}
 
 		return displayables;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+			savedInstanceState) {
+
+		handler = new Handler(Looper.myLooper());
+
+		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
