@@ -20,6 +20,8 @@ import cm.aptoide.pt.v8engine.fragments.implementations.StoreGridRecyclerFragmen
 /**
  * Created by sithengineer on 02/05/16.
  */
+// FIXME delete this class. for tests only.
+@Deprecated
 public class MainActivityStoreList extends AptoideBaseScreenActivity {
 
 	private Toolbar mToolbar;

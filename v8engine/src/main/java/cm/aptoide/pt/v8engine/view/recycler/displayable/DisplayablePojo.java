@@ -20,10 +20,11 @@ public abstract class DisplayablePojo<T> extends Displayable {
 	 * Needed for reflective {@link Class#newInstance()}.
 	 */
 	public DisplayablePojo() {
+		this(null, false);
 	}
 
 	public DisplayablePojo(T pojo) {
-		this.pojo = pojo;
+		this(pojo, false);
 	}
 
 	public DisplayablePojo(T pojo, boolean fixedPerLineCount) {
