@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 02/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -69,4 +69,7 @@ dependencies {
 
     debugCompile project(path: ':logger', configuration: 'debug')
     releaseCompile project(path: ':logger', configuration: 'release')
+
+    debugCompile project(path: ':utils', configuration: 'debug')
+    releaseCompile project(path: ':utils', configuration: 'release')
 }

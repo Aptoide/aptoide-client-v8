@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 02/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -39,12 +40,6 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		handler.postDelayed(this::finishLoading, 1000);
-	}
-
-	@Override
 	protected BaseAdapter createAdapter() {
 		return new BaseAdapter();
 	}
@@ -61,5 +56,7 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 
 	public void addDisplayables(List<Displayable> displayables) {
 		adapter.addDisplayables(displayables);
+		AptoideUtils.runOnUiThread(() -> adapter.notifyDataSetChanged());
+		finishLoading();
 	}
 }

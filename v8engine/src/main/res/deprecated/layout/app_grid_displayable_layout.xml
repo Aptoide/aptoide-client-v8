@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 02/05/2016.
+  -->
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
@@ -6,9 +11,9 @@
              android:foreground="?selectableItemBackground">
 
     <RelativeLayout
+        style="?attr/backgroundCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="?attr/backgroundCard"
         android:orientation="vertical"
         android:paddingBottom="5dp"
         android:paddingTop="8dp">
@@ -35,10 +40,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textColor="?android:attr/textColorSecondary"
                 android:lines="2"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -46,9 +51,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:textColor="?android:attr/textColorSecondary"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp" />
 
             <!--style="?android:attr/ratingBarStyleIndicator"-->
@@ -57,8 +62,8 @@
                 style="?attr/gridItemRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:clickable="false"
                 android:isIndicator="true"
                 android:numStars="5" />
@@ -71,13 +76,11 @@
                 android:textSize="@dimen/text_size_small"
                 android:visibility="gone" />
 
-            <!--
-                android:drawableLeft="@drawable/ic_timestamp"
-            -->
             <TextView
                 android:id="@+id/added_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_timestamp"
                 android:textSize="@dimen/text_size_small"
                 android:visibility="gone" />
 
