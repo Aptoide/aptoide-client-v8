@@ -43,6 +43,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    // previous dependency added due to Glide. is this really necessary?
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
@@ -51,6 +53,8 @@ dependencies {
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
+
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     //    Apagar
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'

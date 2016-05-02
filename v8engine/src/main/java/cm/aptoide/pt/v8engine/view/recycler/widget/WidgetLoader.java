@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.pt.v8engine.Aptoide;
-import cm.aptoide.pt.v8engine.util.MultiDexHelper;
+import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import dalvik.system.DexFile;
 

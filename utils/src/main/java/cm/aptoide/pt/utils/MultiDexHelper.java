@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 28/04/2016.
  */
 
-package cm.aptoide.pt.v8engine.util;
+package cm.aptoide.pt.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
