@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.HeaderGridDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -28,9 +29,9 @@ public class HeaderGridWidget extends Widget<HeaderGridDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
-//		title = (TextView )itemView.findViewById(R.id.title);
-//		more = (Button )itemView.findViewById(R.id.more);
-//		moreLayout = (RelativeLayout )itemView.findViewById(R.id.more_layout);
+		title = (TextView )itemView.findViewById(R.id.title);
+		more = (Button )itemView.findViewById(R.id.more);
+		moreLayout = (RelativeLayout )itemView.findViewById(R.id.more_layout);
 	}
 
 	@Override
