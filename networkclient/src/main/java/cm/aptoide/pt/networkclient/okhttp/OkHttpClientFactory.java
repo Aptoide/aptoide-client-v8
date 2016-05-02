@@ -39,8 +39,8 @@ public class OkHttpClientFactory {
 	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
 		final Cache cache = new Cache(cacheDirectory, cacheSize);
 
-		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
-		//return new OkHttpClient.Builder().cache(cache).build();
+//		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
+		return new OkHttpClient.Builder().cache(cache).build();
 	}
 
 	private static Interceptor createCacheInterceptor() {
