@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+
+import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.HeaderGridDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -37,9 +40,13 @@ public class HeaderGridWidget extends Widget<HeaderGridDisplayable> {
 
 	@Override
 	public void bindView(HeaderGridDisplayable displayable) {
-		// TODO
-
-		Object pojo = displayable.getPojo();
-		// ...
+		final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
+		final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
+		title.setText(pojo.getTitle());
+		more.setVisibility(actions!=null && actions.size()>0 ? View.VISIBLE : View.GONE);
+		
+		more.setOnClickListener((view)->{
+			// TODO
+		});
 	}
 }

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,7 +37,7 @@ public class StoreGridWidget extends Widget<StoreGridDisplayable> {
 	private LinearLayout storeLayout;
 	private TextView storeSubscribers;
 	private TextView storeDownloads;
-	private LinearLayout infoLayout;
+	//private LinearLayout infoLayout;
 
 	public StoreGridWidget(View itemView) {
 		super(itemView);
@@ -50,7 +51,7 @@ public class StoreGridWidget extends Widget<StoreGridDisplayable> {
 		storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
 		storeSubscribers = (TextView) itemView.findViewById(R.id.store_subscribers);
 		storeDownloads = (TextView) itemView.findViewById(R.id.store_downloads);
-		infoLayout = (LinearLayout) itemView.findViewById(R.id.store_layout_subscribers);
+		//infoLayout = (LinearLayout) itemView.findViewById(R.id.store_layout_subscribers);
 	}
 
 	@Override
@@ -66,11 +67,11 @@ public class StoreGridWidget extends Widget<StoreGridDisplayable> {
 		// in order to re-use the row_store_item layout, we hide the unsubscribe button and increase the padding
 		storeUnsubscribe.setVisibility(View.GONE);
 
-		/*
-		final EnumStoreTheme themeIz = EnumStoreTheme.get(storeGridDisplayable.theme);
-
-		@ColorInt int color = context.getResources().getColor(themeIz.getStoreHeader());
+		//final EnumStoreTheme themeIz = EnumStoreTheme.get(store.getAppearance().getTheme());
+		//@ColorInt int color = context.getResources().getColor(themeIz.getStoreHeader());
+		@ColorInt int color = context.getResources().getColor(R.color.blue);
 		storeLayout.setBackgroundColor(color);
+		/*
 		storeLayout.setOnClickListener(()->{
 			Snackbar.make()
 		});

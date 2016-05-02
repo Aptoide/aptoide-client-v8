@@ -30,6 +30,9 @@ public enum WidgetLoader {
 	INSTANCE;
 
 	private static final String TAG = WidgetLoader.class.getName();
+
+	//TODO use a eager loading technique and remove synchronization primitives
+
 	// map of a view type to a WidgetMeta class
 	private HashMap<Integer, WidgetMeta> widgetsHashMap;
 	// cache of a view type to a WidgetMeta class

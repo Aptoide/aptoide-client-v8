@@ -22,6 +22,7 @@ public class GetStoreWidgets extends BaseV7Response {
 	private Datalist<WSWidget> datalist;
 
 	public enum Type {
+		_EMPTY, // FIXME for tests only
 		APPS_GROUP,
 		STORES_GROUP,
 		DISPLAYS,

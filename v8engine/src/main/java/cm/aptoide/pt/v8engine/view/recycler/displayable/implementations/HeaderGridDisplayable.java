@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 /**
  * Created by sithengineer on 29/04/16.
  */
-public class HeaderGridDisplayable extends DisplayablePojo<Object> {
+public class HeaderGridDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
 	public HeaderGridDisplayable() {
 	}

@@ -24,7 +24,7 @@ public class EmptyDisplayable extends Displayable {
 
 	@Override
 	public GetStoreWidgets.Type getName() {
-		return GetStoreWidgets.Type.APPS_GROUP;
+		return GetStoreWidgets.Type._EMPTY;
 	}
 
 	@Override
