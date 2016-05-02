@@ -1,19 +1,23 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 02/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.dynamicget;
+
+import android.support.annotation.NonNull;
 
 import java.util.concurrent.CountDownLatch;
 
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 27-04-2016.
  */
-public class WSWidgetsParser {
+public class WSWidgetsUtils {
 
 	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch) {
 
@@ -27,13 +31,13 @@ public class WSWidgetsParser {
 			}
 			switch (wsWidget.getType()) {
 				case APPS_GROUP:
-					interfaces.listApps(url).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
+					ioScheduler(interfaces.listApps(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
 					break;
 				case STORES_GROUP:
-					interfaces.listStores(url).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
+					ioScheduler(interfaces.listStores(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
 					break;
 				case DISPLAYS:
-					interfaces.getStoreDisplays(url).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
+					ioScheduler(interfaces.getStoreDisplays(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
 					break;
 				default:
 					// In case a known enum is not implemented
@@ -43,6 +47,10 @@ public class WSWidgetsParser {
 			// Case we don't have the enum defined we still need to countDown the latch
 			countDownLatch.countDown();
 		}
+	}
+
+	private static <T> Observable<T> ioScheduler(@NonNull Observable<T> observable) {
+		return observable.subscribeOn(Schedulers.io());
 	}
 
 	private static void setObjectView(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch, Object o) {

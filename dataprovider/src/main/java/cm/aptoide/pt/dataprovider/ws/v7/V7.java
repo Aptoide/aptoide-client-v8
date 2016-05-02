@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 02/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -90,5 +90,8 @@ public abstract class V7<U> extends WebService<V7.Interfaces, U> {
 
 		@GET
 		Observable<GetStoreDisplays> getStoreDisplays(@Url String url);
+
+		@GET
+		Observable<GetStoreWidgets> getStoreWidgets(@Url String url);
 	}
 }
