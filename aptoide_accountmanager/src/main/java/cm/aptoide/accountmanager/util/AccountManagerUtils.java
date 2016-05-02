@@ -28,7 +28,8 @@ public class AccountManagerUtils {
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	@SuppressWarnings("deprecation")
 	public static String getAbis() {
-		final String[] abis = getSdkVer() >= 21 ? Build.SUPPORTED_ABIS : new String[]{Build.CPU_ABI, Build.CPU_ABI2};
+		final String[] abis = getSdkVer() >= 21 ? Build.SUPPORTED_ABIS : new String[]{Build
+				.CPU_ABI, Build.CPU_ABI2};
 		final StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < abis.length; i++) {
 			builder.append(abis[i]);
@@ -40,15 +41,19 @@ public class AccountManagerUtils {
 	}
 
 	public static int getNumericScreenSize(Context context) {
-		int size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+		int size = context.getResources()
+				.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 		return (size + 1) * 100;
 	}
 
 	public static String getGlEsVer(Context context) {
-		return ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
+		return ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
+				.getDeviceConfigurationInfo()
+				.getGlEsVersion();
 	}
 
 	public static int getScreenSize(Context context) {
-		return context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+		return context.getResources()
+				.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 	}
 }

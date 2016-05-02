@@ -42,7 +42,8 @@ public class CheckUserCredentialsRequest extends v3accountManager<CheckUserCrede
 		density = String.valueOf(AccountManagerUtils.getNumericScreenSize(context));
 		openGl = AccountManagerUtils.getGlEsVer(context);
 		model = Build.MODEL;
-		screenSize = Filters.Screen.values()[AccountManagerUtils.getScreenSize(context)].name().toLowerCase(Locale.ENGLISH);
+		screenSize = Filters.Screen.values()[AccountManagerUtils.getScreenSize(context)].name()
+				.toLowerCase(Locale.ENGLISH);
 	}
 
 	@Override

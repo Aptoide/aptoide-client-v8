@@ -30,6 +30,21 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 	private String grantType;
 	private String refreshToken;
 
+	public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,
+												 @Nullable String nameForGoogle) {
+		return new OAuth2AuthenticationRequest().setUsername(username)
+				.setPassword(password)
+				.setMode(mode)
+				.setGrantType("password")
+				.setNameForGoogle(nameForGoogle);
+	}
+
+	public static OAuth2AuthenticationRequest of(String refreshToken) {
+
+		return new OAuth2AuthenticationRequest().setGrantType("refresh_token")
+				.setRefreshToken(refreshToken);
+	}
+
 	@Override
 	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces) {
 		HashMap<String, String> parameters = new HashMap<>();
@@ -65,22 +80,5 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 //		}
 
 		return interfaces.oauth2Authentication(parameters);
-	}
-
-
-	public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,@Nullable String nameForGoogle) {
-		return new OAuth2AuthenticationRequest()
-				.setUsername(username)
-				.setPassword(password)
-				.setMode(mode)
-				.setGrantType("password")
-				.setNameForGoogle(nameForGoogle);
-	}
-
-	public static OAuth2AuthenticationRequest of(String refreshToken) {
-
-		return new OAuth2AuthenticationRequest()
-				.setGrantType("refresh_token")
-				.setRefreshToken(refreshToken);
 	}
 }

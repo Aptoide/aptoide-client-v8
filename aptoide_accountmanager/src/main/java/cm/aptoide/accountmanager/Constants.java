@@ -5,8 +5,8 @@ package cm.aptoide.accountmanager;
  */
 public class Constants {
 
-    /**
-     * Account type id
-     */
-    public static final String ACCOUNT_TYPE = "cm.aptoide.pt";
+	/**
+	 * Account type id
+	 */
+	public static final String ACCOUNT_TYPE = "cm.aptoide.pt";
 }

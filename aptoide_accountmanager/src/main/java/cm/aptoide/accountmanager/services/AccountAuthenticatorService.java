@@ -11,10 +11,9 @@ import cm.aptoide.accountmanager.AccountAuthenticator;
  */
 public class AccountAuthenticatorService extends Service {
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        AccountAuthenticator authenticator = new AccountAuthenticator(this);
-        return authenticator.getIBinder();
-    }
-
+	@Override
+	public IBinder onBind(Intent intent) {
+		AccountAuthenticator authenticator = new AccountAuthenticator(this);
+		return authenticator.getIBinder();
+	}
 }

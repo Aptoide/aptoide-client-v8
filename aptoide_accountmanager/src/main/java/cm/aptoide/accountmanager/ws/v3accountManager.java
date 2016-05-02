@@ -25,7 +25,6 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 	}
 
 	@Override
-	// TODO: 4/26/16 trinkes change to https
 	protected String getBaseHost() {
 		return "https://webservices.aptoide.com/webservices/";
 	}
@@ -39,5 +38,9 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 		@FormUrlEncoded
 		@POST("3/getUserInfo")
 		Observable<CheckUserCredentialsJson> getUserInfo(@FieldMap HashMap<String, String> args);
+
+		@POST("3/createUser")
+		@FormUrlEncoded
+		Observable<OAuth> createUser(@FieldMap HashMap<String, String> args);
 	}
 }

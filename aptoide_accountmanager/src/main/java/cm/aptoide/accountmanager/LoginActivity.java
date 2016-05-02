@@ -3,10 +3,8 @@ package cm.aptoide.accountmanager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,127 +14,113 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
-import cm.aptoide.accountmanager.interfaces.IAptoideAccountRemoved;
-
 /**
  * Created by trinkes on 4/18/16.
  */
-public class LoginActivity extends BaseActivity implements AptoideAccountManager.ILoginInterface, IAptoideAccountRemoved {
-private static final String TAG = LoginActivity.class.getSimpleName();
+public class LoginActivity extends BaseActivity implements AptoideAccountManager.ILoginInterface {
 
-    private Button mLoginButton;
-    View content;
-    private Button mRegisterButton;
-    private LoginButton mFacebookLoginButton;
-    private EditText password_box;
-    private EditText emailBox;
-    private Button hidePassButton;
-    private CheckBox registerDevice;
-    private Toolbar mToolbar;
+	private static final String TAG = LoginActivity.class.getSimpleName();
+	View content;
+	private Button mLoginButton;
+	private Button mRegisterButton;
+	private LoginButton mFacebookLoginButton;
+	private EditText password_box;
+	private EditText emailBox;
+	private Button hidePassButton;
+	private CheckBox registerDevice;
+	private Toolbar mToolbar;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(getLayoutId());
-        bindViews();
-        AptoideAccountManager.getInstance().setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
-        if (AptoideAccountManager.isLoggedIn(this)) {
-            finish();
-            Snackbar.make(content, R.string.one_account_allowed, Snackbar.LENGTH_SHORT).show();
-            return;
-        }
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		FacebookSdk.sdkInitialize(getApplicationContext());
+		setContentView(getLayoutId());
+		bindViews();
+		AptoideAccountManager.getInstance()
+				.setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
+		setupShowHidePassButton();
+		setupToolbar();
+	}
 
-        AptoideAccountManager.getInstance().addOnAccountRemovedListener(this);
-        setupShowHidePassButton();
-        setupToolbar();
-        Snackbar.make(content, AptoideAccountManager.getAccessToken(), Snackbar.LENGTH_SHORT).show();
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
 
+	@Override
+	protected String getActivityTitle() {
+		// TODO: 4/21/16 trinkes resource
+		return "Login Activity";
+	}
 
-    }
-    private void setupToolbar() {
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setTitle(getActivityTitle());
-        }
-    }
+	@Override
+	int getLayoutId() {
+		return R.layout.login_activity_layout;
+	}
 
-    @Override
-    protected String getActivityTitle() {
-        // TODO: 4/21/16 trinkes resource
-        return "Login Activity";
-    }
+	private void setupToolbar() {
+		if (mToolbar != null) {
+			setSupportActionBar(mToolbar);
+			getSupportActionBar().setHomeButtonEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setTitle(getActivityTitle());
+		}
+	}
 
-    private void setupShowHidePassButton() {
-        hidePassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int cursorPosition = password_box.getSelectionStart();
-                final boolean passwordShown = password_box.getTransformationMethod() == null;
-                v.setBackgroundResource(passwordShown ? R.drawable.icon_closed_eye : R.drawable.icon_open_eye);
-                password_box.setTransformationMethod(passwordShown ? new PasswordTransformationMethod() : null);
-                password_box.setSelection(cursorPosition);
-            }
-        });
-    }
+	private void setupShowHidePassButton() {
+		hidePassButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final int cursorPosition = password_box.getSelectionStart();
+				final boolean passwordShown = password_box.getTransformationMethod() == null;
+				v.setBackgroundResource(passwordShown ? R.drawable.icon_closed_eye : R.drawable
+						.icon_open_eye);
+				password_box.setTransformationMethod(passwordShown ? new
+						PasswordTransformationMethod() : null);
+				password_box.setSelection(cursorPosition);
+			}
+		});
+	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		AptoideAccountManager.onActivityResult(this, requestCode, resultCode, data);
+	}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        AptoideAccountManager.onActivityResult(requestCode, resultCode, data);
-    }
+	private void bindViews() {
+		content = findViewById(android.R.id.content);
+		mLoginButton = (Button) findViewById(R.id.button_login);
+		mRegisterButton = (Button) findViewById(R.id.button_register);
+		mFacebookLoginButton = (LoginButton) findViewById(R.id.fb_login_button);
+		password_box = (EditText) findViewById(R.id.password);
+		emailBox = (EditText) findViewById(R.id.username);
+		hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
+		registerDevice = (CheckBox) findViewById(R.id.link_my_device);
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+	}
 
+	@Override
+	public void onLoginSuccess() {
+		Toast.makeText(LoginActivity.this, "login successful", Toast.LENGTH_SHORT).show();
+		finish();
+		AptoideAccountManager.openAccountManager(this);
+	}
 
-    private void bindViews() {
-        content = findViewById(android.R.id.content);
-        mLoginButton = (Button) findViewById(R.id.button_login);
-        mRegisterButton = (Button) findViewById(R.id.button_register);
-        mFacebookLoginButton = (LoginButton) findViewById(R.id.fb_login_button);
-        password_box = (EditText) findViewById(R.id.password);
-        emailBox = (EditText) findViewById(R.id.username);
-        hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
-        registerDevice = (CheckBox) findViewById(R.id.link_my_device);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-    }
+	@Override
+	public void onLoginFail(String reason) {
+		Toast.makeText(LoginActivity.this, "login failed-Reason: " + reason, Toast.LENGTH_SHORT)
+				.show();
+	}
 
-    @Override
-    int getLayoutId() {
-        return R.layout.login_activity_layout;
-    }
+	@Override
+	public String getIntroducedUserName() {
+		return emailBox.getText().toString();
+	}
 
-    @Override
-    public void onLoginSuccess() {
-        Toast.makeText(LoginActivity.this, "login successful", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        AptoideAccountManager.getInstance().removeAccountRemovedListener(this);
-        super.onDestroy();
-    }
-
-    @Override
-    public void onLoginFail(String reason) {
-        Toast.makeText(LoginActivity.this, "login failed-Reason: " + reason, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public String getIntroducedUserName() {
-        return emailBox.getText().toString();
-    }
-
-    @Override
-    public String getIntroducedPassword() {
-        return password_box.getText().toString();
-    }
-
-    @Override
-    public void removeAccount() {
-        // TODO: 4/22/16 trinkes remove account called (remove repos, preferences, everything)
-        Log.e(TAG, "removeAccount() not implemented yet");
-    }
+	@Override
+	public String getIntroducedPassword() {
+		return password_box.getText().toString();
+	}
 }

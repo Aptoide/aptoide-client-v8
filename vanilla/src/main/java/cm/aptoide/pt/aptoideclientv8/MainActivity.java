@@ -18,6 +18,7 @@ import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,10 +33,9 @@ private static final String TAG = MainActivity.class.getSimpleName();
 		setContentView(R.layout.activity_main);
 
 		getSupportFragmentManager().beginTransaction().replace(R.id.contentor, new GridRecyclerFragment()).commit();
-		AptoideAccountManager.openAccountManager(this);
 
-		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps");
-		getStoreRequest.execute(getStoreResponse -> System.out.println("Ss: " + getStoreResponse.getNodes().getMeta()), System.out::println);
+//		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps");
+//		getStoreRequest.execute(getStoreResponse -> System.out.println("Ss: " + getStoreResponse.getNodes().getMeta()), System.out::println);
 
 
 //		Observable<String> s = AptoideAccountManager.invalidateAccessToken(this);
@@ -50,19 +50,20 @@ private static final String TAG = MainActivity.class.getSimpleName();
 //			}).subscribe();
 //		}
 
-		Executors.newSingleThreadScheduledExecutor().execute(() -> {
-			String token = AptoideAccountManager.invalidateAccessTokenSync(MainActivity.this);
-			Log.d(TAG, "onCreate: "+token);
-			Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-		});
+//		Executors.newSingleThreadScheduledExecutor().execute(() -> {
+//			String token = AptoideAccountManager.invalidateAccessTokenSync(MainActivity.this);
+//			Log.d(TAG, "onCreate: "+token);
+//			Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+//		});
+//
+//		AptoideAccountManager.invalidateAccessToken(this).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<String>() {
+//			@Override
+//			public void call(String s) {
+//				Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+//				Log.d(TAG, "call: " + s);
+//			}
+//		}).subscribe();
 
-		AptoideAccountManager.invalidateAccessToken(this).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<String>() {
-			@Override
-			public void call(String s) {
-				Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-				Log.d(TAG, "call: " + s);
-			}
-		}).subscribe();
 
 		// Fabio Account Manager
 //		OAuth2AuthenticationRequest oAuth2AuthenticationRequest = new OAuth2AuthenticationRequest();

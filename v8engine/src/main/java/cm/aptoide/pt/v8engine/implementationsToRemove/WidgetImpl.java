@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.implementationsToRemove;
 
 import android.view.View;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetEnum;
@@ -22,7 +23,12 @@ public class WidgetImpl extends Widget {
 
 	@Override
 	public void bindView(Displayable displayable) {
-
+		itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AptoideAccountManager.openAccountManager(itemView.getContext());
+			}
+		});
 	}
 
 	@Override
