@@ -31,22 +31,17 @@ public enum WidgetLoader {
 
 	private static final String TAG = WidgetLoader.class.getName();
 
-	private static final boolean useLazyLoading = false;
-	private final static Object lock = new Object();
-	private volatile boolean created = false;
-
-	// map of a view type to a WidgetMeta class
-	private HashMap<Integer, WidgetMeta> widgetsHashMap = useLazyLoading ? null : loadWidgets();
-	// cache of a view type to a WidgetMeta class
+	private HashMap<Integer, WidgetMeta> widgetsHashMap;
 	private LruCache<Integer, WidgetMeta> widgetLruCache;
 
 	/**
 	 * loads all {@link Widget} classes that have a {@link Displayables} annotation in the current
 	 * module
 	 */
-	private HashMap<Integer, WidgetMeta> loadWidgets() {
-		HashMap<Integer, WidgetMeta> widgetsHashMap = new HashMap<>();
+	WidgetLoader() {
+		final String TAG = WidgetLoader.class.getName();
 //		long nanos = System.nanoTime();
+		widgetsHashMap = new HashMap<>();
 		try {
 			// get the current class loader
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -108,8 +103,6 @@ public enum WidgetLoader {
 		// total, or 2
 
 		Log.w(TAG, "Loaded Widgets");
-
-		return widgetsHashMap;
 	}
 
 	/**
@@ -119,16 +112,7 @@ public enum WidgetLoader {
 	 */
 	@NonNull
 	public Widget newWidget(@NonNull View view, int viewType) {
-//		long nanos = System.nanoTime();
-
-		if (useLazyLoading && (widgetsHashMap == null || !created)) {
-			synchronized (lock) {
-				if (!created) {
-					widgetsHashMap = loadWidgets();
-					created = true;
-				}
-			}
-		}
+		long nanos = System.nanoTime();
 
 		// check if WidgetMeta instance is in cache
 		WidgetMeta widgetMeta = widgetLruCache.get(viewType);
@@ -149,23 +133,14 @@ public enum WidgetLoader {
 			throw new RuntimeException("Error instantiating widget!");
 		}
 
-//		nanos -= System.nanoTime();
-//		nanos *= -1;
-//		Log.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
+		nanos -= System.nanoTime();
+		nanos *= -1;
+		Log.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
 
 		return resultWidget;
 	}
 
 	public List<Displayable> getDisplayables() {
-
-		if (useLazyLoading && (widgetsHashMap == null || !created)) {
-			synchronized (lock) {
-				if (!created) {
-					widgetsHashMap = loadWidgets();
-					created = true;
-				}
-			}
-		}
 
 		ArrayList<Displayable> displayables = new ArrayList<>(widgetsHashMap.size());
 		for (WidgetMeta widgetMeta : widgetsHashMap.values()) {

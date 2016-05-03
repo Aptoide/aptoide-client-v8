@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,14 +37,13 @@ public class OkHttpClientFactory {
 	}
 
 	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
-		/*
+
 		return new OkHttpClient.Builder()
 									.cache(new Cache(cacheDirectory, cacheSize))
 									.addInterceptor(createCacheInterceptor())
 									.build();
-		*/
 
-		return new OkHttpClient.Builder().build();
+		//return new OkHttpClient.Builder().build();
 	}
 
 	private static Interceptor createCacheInterceptor() {
@@ -73,7 +73,7 @@ public class OkHttpClientFactory {
 
 				if(resultResponse==null || resultResponse.body().contentLength()
 						!=responseLength) {
-					Log.e(TAG, "server response and cached response are different");
+					Log.w(TAG, "server response and cached response are different");
 				}
 
 				if(BuildConfig.DEBUG) {

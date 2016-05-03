@@ -21,6 +21,8 @@ import lombok.Getter;
  */
 public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
+	private static final String TAG = BaseAdapter.class.getName();
+
 	@Getter private final Displayables displayables = new Displayables();
 
 	public BaseAdapter() {
@@ -32,18 +34,26 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
 	@Override
 	public Widget onCreateViewHolder(ViewGroup parent, int viewType) {
-		return WidgetFactory.newBaseViewHolder(parent, viewType);
+		//long nanoTime = System.nanoTime();
+		Widget w = WidgetFactory.newBaseViewHolder(parent, viewType);
+		//Log.d(TAG, "onCreateViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000));
+		return w;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onBindViewHolder(Widget holder, int position) {
+		//long nanoTime = System.nanoTime();
 		holder.bindView(displayables.get(position));
+		//Log.d(TAG, "onBindViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000));
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return displayables.get(position).getViewLayout();
+		//long nanoTime = System.nanoTime();
+		int itemViewType =  displayables.get(position).getViewLayout();
+		//Log.d(TAG, "getItemViewType = " + ((System.nanoTime() - nanoTime) / 1000000));
+		return itemViewType;
 	}
 
 	@Override
@@ -52,6 +62,10 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	}
 
 	public void addDisplayables(List<Displayable> displayables) {
+		//long nanoTime = System.nanoTime();
 		this.displayables.add(displayables);
+		//Log.d(TAG, "addDisplayables = " + ((System.nanoTime() - nanoTime) / 1000000));
 	}
+
+
 }

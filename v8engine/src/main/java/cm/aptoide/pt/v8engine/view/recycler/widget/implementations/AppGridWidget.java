@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import com.bumptech.glide.Glide;
 
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.StringUtils;
+import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.AppGridDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -43,12 +43,13 @@ public class AppGridWidget extends Widget<AppGridDisplayable> {
 
 	@Override
 	public void bindView(AppGridDisplayable displayable) {
-		final Context context = itemView.getContext();
 		final App pojo = displayable.getPojo();
+
+		Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(icon);
+
 		name.setText(pojo.getName());
-		Glide.with(icon.getContext()).load(pojo.getIcon()).into(icon);
 		downloads.setText(StringUtils.withSuffix(pojo.getStats()
-				.getDownloads()) + context.getString(R.string._downloads));
+				.getDownloads()) + Aptoide.getContext().getString(R.string._downloads));
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
 		tvAddedTime.setText(pojo.getAdded());

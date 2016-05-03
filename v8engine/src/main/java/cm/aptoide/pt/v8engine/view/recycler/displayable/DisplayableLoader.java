@@ -24,20 +24,14 @@ import dalvik.system.DexFile;
 public enum DisplayableLoader {
 	INSTANCE;
 
-	private static final String TAG = DisplayableLoader.class.getName();
-
-	private static final boolean useLazyLoading = false;
-	private final static Object lock = new Object();
-	private volatile boolean created = false;
-
-	private HashMap<String, Class<? extends Displayable>> displayableHashMap = useLazyLoading ?
-			null : loadDisplayables();
-
+	private HashMap<String, Class<? extends Displayable>> displayableHashMap;
 	private LruCache<String, Class<? extends Displayable>> displayableLruCache;
 
-	private HashMap<String, Class<? extends Displayable>> loadDisplayables() {
-		HashMap<String, Class<? extends Displayable>> displayableHashMap = new HashMap<>();
+	DisplayableLoader() {
+		final String TAG = DisplayableLoader.class.getName();
+
 //		long nanos = System.
+		displayableHashMap = new HashMap<>();
 		try {
 			// get the current class loader
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -98,23 +92,10 @@ public enum DisplayableLoader {
 		// total, or 2
 
 		Log.w(TAG, "Loaded Displayables");
-
-		return displayableHashMap;
 	}
 
 	@Nullable
 	public Displayable newDisplayable(@NonNull String type) {
-
-		// lazy loading Widgets
-		if (useLazyLoading && (displayableHashMap == null || !created)) {
-			synchronized (lock) {
-				if (!created) {
-					displayableHashMap = loadDisplayables();
-					created = true;
-				}
-			}
-		}
-
 		Class<? extends Displayable> displayableClass = displayableLruCache.get(type);
 
 		if (displayableClass == null) {

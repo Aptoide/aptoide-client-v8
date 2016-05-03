@@ -36,6 +36,7 @@
                 android:theme="?attr/toolbarTheme"
                 app:layout_scrollFlags="scroll|enterAlways"/>
 
+
             <com.astuetz.PagerSlidingTabStrip
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
