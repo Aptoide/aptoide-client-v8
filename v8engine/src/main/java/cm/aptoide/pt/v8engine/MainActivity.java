@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseScreenActivity;
@@ -33,23 +34,14 @@ public class MainActivity extends AptoideBaseScreenActivity {
 		GetStoreRequest.of("apps").execute(this::setupViewPager);
 	}
 
-	private void setupViewPager(GetStore getStore) {
-		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(), getStore);
-		mViewPager.setAdapter(pagerAdapter);
-
-		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		if (pagerSlidingTabStrip != null) {
-			pagerSlidingTabStrip.setViewPager(mViewPager);
-		}
-	}
-
 	@Override
 	protected void setupToolbar() {
 		if (mToolbar != null) {
 			setSupportActionBar(mToolbar);
 			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
 			mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
+					.START));
 		}
 	}
 
@@ -66,13 +58,24 @@ public class MainActivity extends AptoideBaseScreenActivity {
 		return R.layout.main_activity;
 	}
 
+	private void setupViewPager(GetStore getStore) {
+		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(),
+				getStore);
+		mViewPager.setAdapter(pagerAdapter);
+
+		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		if (pagerSlidingTabStrip != null) {
+			pagerSlidingTabStrip.setViewPager(mViewPager);
+		}
+	}
+
 	private void setupNavigationView() {
 		if (mNavigationView != null) {
 			mNavigationView.setNavigationItemSelectedListener(menuItem -> {
 
 				int itemId = menuItem.getItemId();
 				if (itemId == R.id.navigation_item_my_account) {
-					Snackbar.make(mNavigationView, "MyAccountActivity", Snackbar.LENGTH_SHORT).show();
+					AptoideAccountManager.openAccountManager(this);
 				} else if (itemId == R.id.navigation_item_rollback) {
 					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
