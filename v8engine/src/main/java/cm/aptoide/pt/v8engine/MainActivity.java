@@ -33,6 +33,16 @@ public class MainActivity extends AptoideBaseScreenActivity {
 		GetStoreRequest.of("apps").execute(this::setupViewPager);
 	}
 
+	private void setupViewPager(GetStore getStore) {
+		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(), getStore);
+		mViewPager.setAdapter(pagerAdapter);
+
+		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		if (pagerSlidingTabStrip != null) {
+			pagerSlidingTabStrip.setViewPager(mViewPager);
+		}
+	}
+
 	@Override
 	protected void setupToolbar() {
 		if (mToolbar != null) {
@@ -54,16 +64,6 @@ public class MainActivity extends AptoideBaseScreenActivity {
 	@Override
 	protected int getContentViewId() {
 		return R.layout.main_activity;
-	}
-
-	private void setupViewPager(GetStore getStore) {
-		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(), getStore);
-		mViewPager.setAdapter(pagerAdapter);
-
-		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		if (pagerSlidingTabStrip != null) {
-			pagerSlidingTabStrip.setViewPager(mViewPager);
-		}
 	}
 
 	private void setupNavigationView() {

@@ -14,17 +14,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.Aptoide;
-import cm.aptoide.pt.v8engine.util.MultiDexHelper;
 import dalvik.system.DexFile;
 
 /**
  * @author sithengineer
  */
-public enum DisplayLoader {
+public enum DisplayableLoader {
 	INSTANCE;
 
-	private static final String TAG = DisplayLoader.class.getName();
+	private static final String TAG = DisplayableLoader.class.getName();
+
+	//TODO use a eager loading technique and remove synchronization primitives
 
 	private HashMap<String, Class<? extends Displayable>> displayableHashMap;
 	private LruCache<String, Class<? extends Displayable>> displayableLruCache;
@@ -91,7 +93,6 @@ public enum DisplayLoader {
 		}
 
 		try {
-
 			return displayableClass.newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();

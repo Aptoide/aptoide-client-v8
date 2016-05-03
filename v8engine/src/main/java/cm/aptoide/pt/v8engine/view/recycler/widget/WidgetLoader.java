@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.pt.v8engine.Aptoide;
-import cm.aptoide.pt.v8engine.util.MultiDexHelper;
+import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import dalvik.system.DexFile;
 
@@ -30,6 +30,9 @@ public enum WidgetLoader {
 	INSTANCE;
 
 	private static final String TAG = WidgetLoader.class.getName();
+
+	//TODO use a eager loading technique and remove synchronization primitives
+
 	// map of a view type to a WidgetMeta class
 	private HashMap<Integer, WidgetMeta> widgetsHashMap;
 	// cache of a view type to a WidgetMeta class

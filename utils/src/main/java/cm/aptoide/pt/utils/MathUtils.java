@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/04/2016.
+ * Modified by SithEngineer on 02/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.util;
+package cm.aptoide.pt.utils;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -19,13 +19,13 @@ public class MathUtils {
 		return a;
 	}
 
-	public static int LeastCommonMultiple(int a, int b) {
+	public static int leastCommonMultiple(int a, int b) {
 		return a * (b / greatestCommonDivisor(a, b));
 	}
 
-	public static int LeastCommonMultiple(int[] input) {
+	public static int leastCommonMultiple(int[] input) {
 		int result = input[0];
-		for (int i = 1; i < input.length; i++) result = LeastCommonMultiple(result, input[i]);
+		for (int i = 1; i < input.length; i++) result = leastCommonMultiple(result, input[i]);
 		return result;
 	}
 }

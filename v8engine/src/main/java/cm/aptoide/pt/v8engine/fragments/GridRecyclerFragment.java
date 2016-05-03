@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ThreadUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -56,7 +56,7 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 
 	public void addDisplayables(List<Displayable> displayables) {
 		adapter.addDisplayables(displayables);
-		AptoideUtils.runOnUiThread(() -> adapter.notifyDataSetChanged());
+		ThreadUtils.runOnUiThread(() -> adapter.notifyDataSetChanged());
 		finishLoading();
 	}
 }

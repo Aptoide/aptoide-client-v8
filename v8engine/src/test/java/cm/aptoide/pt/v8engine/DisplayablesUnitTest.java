@@ -21,9 +21,9 @@ public class DisplayablesUnitTest {
 		DisplayableImp impl1 = new DisplayableImp();
 		DisplayableImp2 impl2 = new DisplayableImp2();
 
-		assertEquals(emptyDisplayable.getClass(), DisplayLoader.INSTANCE.newDisplayable(emptyDisplayable.getName()).getClass());
-		assertEquals(impl1.getClass(), DisplayLoader.INSTANCE.newDisplayable(impl1.getName()).getClass());
-		assertEquals(impl2.getClass(), DisplayLoader.INSTANCE.newDisplayable(impl2.getName()).getClass());
+		assertEquals(emptyDisplayable.getClass(), DisplayableLoader.INSTANCE.newDisplayable(emptyDisplayable.getName()).getClass());
+		assertEquals(impl1.getClass(), DisplayableLoader.INSTANCE.newDisplayable(impl1.getName()).getClass());
+		assertEquals(impl2.getClass(), DisplayableLoader.INSTANCE.newDisplayable(impl2.getName()).getClass());
 		*/
 	}
 }
