@@ -53,26 +53,42 @@ public enum WidgetLoader {
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, DexFile>> classNames = MultiDexHelper.getAllClasses(Aptoide
+			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(Aptoide
 					.getContext());
 
-			for (Map.Entry<String, DexFile> className : classNames) {
+			DexFile dexFile = null;
+			for (Map.Entry<String, String> className : classNames) {
+				try {
+					// if the class doesn't belong in the current project we discard it
+					// useful for speeding this method
+					if (!className.getKey().startsWith(packageName)) continue;
 
-				// if the class doesn't belong in the current project we discard it
-				// useful for speeding this method
-				if (!className.getKey().startsWith(packageName)) continue;
-				Class<?> widgetClass = className.getValue()
-						.loadClass(className.getKey(), classLoader);
-				if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) &&
-						widgetClass
-						.isAnnotationPresent(Displayables.class)) {
-					Displayables annotation = widgetClass.getAnnotation(Displayables.class);
-					Class<? extends Displayable>[] displayableClasses = annotation.value();
-					WidgetMeta wMeta;
-					for (Class<? extends Displayable> displayableClass : displayableClasses) {
-						wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass),
-								displayableClass);
-						widgetsHashMap.put(wMeta.displayable.getViewLayout(), wMeta);
+					String dexFilePath = className.getValue();
+
+					if(dexFilePath.endsWith(MultiDexHelper.EXTRACTED_SUFFIX)) {
+						dexFile = DexFile.loadDex(dexFilePath, dexFilePath + ".tmp", 0);
+					}else{
+						dexFile = new DexFile(dexFilePath);
+					}
+
+					Class<?> widgetClass = dexFile.loadClass(className.getKey(), classLoader);
+					if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) &&
+							widgetClass
+									.isAnnotationPresent(Displayables.class)) {
+						Displayables annotation = widgetClass.getAnnotation(Displayables.class);
+						Class<? extends Displayable>[] displayableClasses = annotation.value();
+						WidgetMeta wMeta;
+						for (Class<? extends Displayable> displayableClass : displayableClasses) {
+							wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass),
+									displayableClass);
+							widgetsHashMap.put(wMeta.displayable.getViewLayout(), wMeta);
+						}
+					}
+				} catch (Exception e) {
+					Log.e(TAG, "", e);
+				} finally {
+					if(dexFile!=null) {
+						dexFile.close();
 					}
 				}
 			}
@@ -91,7 +107,7 @@ public enum WidgetLoader {
 		widgetLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the
 		// total, or 2
 
-		Log.v(TAG, "Loaded Widgets");
+		Log.w(TAG, "Loaded Widgets");
 
 		return widgetsHashMap;
 	}

@@ -48,7 +48,6 @@ public class DisplayablesFactory {
 		}
 
 		// FIXME remove this lines. for debug only
-		/*
 		if(cm.aptoide.pt.v8engine.BuildConfig.DEBUG) {
 			GetStoreWidgets.WSWidget header1 = new GetStoreWidgets.WSWidget();
 			header1.setTitle("header 1");
@@ -58,7 +57,6 @@ public class DisplayablesFactory {
 			header2.setTitle("header 2");
 			displayables.addLast(getHeader(header2));
 		}
-		*/
 
 		return displayables;
 	}

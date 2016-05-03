@@ -12,7 +12,6 @@ import java.io.IOException;
 
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
-import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,10 +36,14 @@ public class OkHttpClientFactory {
 	}
 
 	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
-		final Cache cache = new Cache(cacheDirectory, cacheSize);
+		/*
+		return new OkHttpClient.Builder()
+									.cache(new Cache(cacheDirectory, cacheSize))
+									.addInterceptor(createCacheInterceptor())
+									.build();
+		*/
 
-//		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
-		return new OkHttpClient.Builder().cache(cache).build();
+		return new OkHttpClient.Builder().build();
 	}
 
 	private static Interceptor createCacheInterceptor() {

@@ -30,7 +30,7 @@ import dalvik.system.DexFile;
 public class MultiDexHelper {
 
 	private static final String EXTRACTED_NAME_EXT = ".classes";
-	private static final String EXTRACTED_SUFFIX = ".zip";
+	public static final String EXTRACTED_SUFFIX = ".zip";
 
 	private static final String SECONDARY_FOLDER_NAME = "code_cache" + File.separator +
 			"secondary-dexes";
@@ -91,12 +91,12 @@ public class MultiDexHelper {
 	 * @throws PackageManager.NameNotFoundException
 	 * @throws IOException
 	 */
-	public static List<Map.Entry<String, DexFile>> getAllClasses(Context context) throws
+	public static List<Map.Entry<String, String>> getAllClasses(Context context) throws
 			PackageManager.NameNotFoundException, IOException {
-		List<Map.Entry<String, DexFile>> classNames = new ArrayList<>();
+		List<Map.Entry<String, String>> classNames = new ArrayList<>();
 		for (String path : getSourcePaths(context)) {
+			DexFile dexfile = null;
 			try {
-				DexFile dexfile = null;
 				if (path.endsWith(EXTRACTED_SUFFIX)) {
 					//NOT use new DexFile(path), because it will throw "permission error in
 					// /data/dalvik-cache"
@@ -107,11 +107,15 @@ public class MultiDexHelper {
 				Enumeration<String> dexEntries = dexfile.entries();
 				while (dexEntries.hasMoreElements()) {
 					classNames.add(new AbstractMap.SimpleImmutableEntry<>(dexEntries.nextElement()
-							, dexfile));
+							, path));
 				}
 			} catch (IOException e) {
 				throw new IOException("Error at loading dex file '" +
 						path + "'");
+			} finally {
+				if (dexfile!=null) {
+					dexfile.close();
+				}
 			}
 		}
 		return classNames;

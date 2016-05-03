@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 03/05/2016.
  */
 
-package cm.aptoide.pt.aptoideclientv8;
+package cm.aptoide.pt.v8engine;
 
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -55,8 +55,8 @@ public class MainActivityStoreList extends AptoideBaseScreenActivity {
 	protected void setupToolbar() {
 		if (mToolbar != null) {
 			setSupportActionBar(mToolbar);
-			mToolbar.setLogo(cm.aptoide.pt.v8engine.R.drawable.ic_aptoide_toolbar);
-			mToolbar.setNavigationIcon(cm.aptoide.pt.v8engine.R.drawable.ic_drawer);
+			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+			mToolbar.setNavigationIcon(R.drawable.ic_drawer);
 			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
 					.START));
 		}
@@ -64,15 +64,15 @@ public class MainActivityStoreList extends AptoideBaseScreenActivity {
 
 	@Override
 	protected void bindViews() {
-		mToolbar = (Toolbar) findViewById(cm.aptoide.pt.v8engine.R.id.toolbar);
-		mNavigationView = (NavigationView) findViewById(cm.aptoide.pt.v8engine.R.id.nav_view);
-		mDrawerLayout = (DrawerLayout) findViewById(cm.aptoide.pt.v8engine.R.id.drawer_layout);
-		mFragmentPlaceholder = (FrameLayout) findViewById(cm.aptoide.pt.v8engine.R.id
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mFragmentPlaceholder = (FrameLayout) findViewById(R.id
 				.fragment_placeholder);
 	}
 
 	@Override
 	protected int getContentViewId() {
-		return cm.aptoide.pt.v8engine.R.layout.main_activity_store_list;
+		return R.layout.main_activity_store_list;
 	}
 }
