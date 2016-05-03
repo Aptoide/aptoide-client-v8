@@ -228,7 +228,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					Log.e(TAG, "Error while adding the local account. Probably context was null");
 				}
 			}
-		}, e -> getInstance().onLoginFail(e.response().message()));
+		}, e -> getInstance().onLoginFail(e.getMessage()));
 	}
 
 	/**

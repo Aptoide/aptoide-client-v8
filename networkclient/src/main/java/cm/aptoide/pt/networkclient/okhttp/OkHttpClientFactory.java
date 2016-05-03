@@ -1,13 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by SithEngineer on 20/04/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 
+import cm.aptoide.pt.networkclient.BuildConfig;
+import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -16,6 +20,9 @@ import okhttp3.Response;
 
 /**
  * Factory for OkHttp Clients creation.
+ *
+ * @author Neurophobic Animal
+ * @author SithEngineer
  */
 public class OkHttpClientFactory {
 
@@ -32,33 +39,45 @@ public class OkHttpClientFactory {
 	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
 		final Cache cache = new Cache(cacheDirectory, cacheSize);
 
-		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
+//		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
+		return new OkHttpClient.Builder().cache(cache).build();
 	}
 
 	private static Interceptor createCacheInterceptor() {
 		return new Interceptor() {
 
-			OkHttpCustomCache customCache = new OkHttpCustomCache();
+			private static final String TAG = "CacheInterceptor";
+
+			private final RequestCache customCache = new RequestCache();
 
 			@Override
 			public Response intercept(Chain chain) throws IOException {
+				Request request = chain.request();
+				Response response = customCache.get(request);
 
-				final String cache_key = getCacheKey(chain.request());
-				if (cache_key != null) {
-					Response response = customCache.get(cache_key);
+				if (response != null) {
 
-					if (response != null) {
-						return response;
-					} else {
-						return customCache.put(cache_key, chain.proceed(chain.request()));
+					if(BuildConfig.DEBUG) {
+						Log.v(TAG, "cache hit");
 					}
+
+					return response;
 				}
 
-				return chain.proceed(chain.request());
-			}
+				response = chain.proceed(chain.request());
+				long responseLength = response.body().contentLength();
+				final Response resultResponse = customCache.put(request, response);
 
-			private String getCacheKey(Request request) {
-				return request.header("cache_key");
+				if(resultResponse==null || resultResponse.body().contentLength()
+						!=responseLength) {
+					Log.e(TAG, "server response and cached response are different");
+				}
+
+				if(BuildConfig.DEBUG) {
+					Log.v(TAG, "cache miss");
+				}
+
+				return resultResponse;
 			}
 		};
 	}

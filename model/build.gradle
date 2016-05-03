@@ -1,25 +1,36 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 9
+    }
+
+    publishNonDefault true
+
+    buildTypes {
+        release {
+
+        }
+        debug {
+
+        }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    provided 'org.projectlombok:lombok:1.16.8'
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
 
     // Just for lombok not to complain

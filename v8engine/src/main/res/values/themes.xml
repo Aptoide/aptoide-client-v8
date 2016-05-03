@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 30/04/2016.
+  -->
+
+<resources>
+
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="android:ratingBarStyle">@style/RatingBarSmallAptoide</item>
+
+        <item name="colorPrimary">@color/aptoide_orange</item>
+        <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
+        <item name="colorAccent">@color/aptoide_color_focused</item>
+        <item name="customColor">@color/aptoide_orange</item>
+
+        <!--toolbar-->
+        <item name="toolbarTheme">@style/Toolbar</item>
+
+        <!--background-->
+        <item name="backgroundMain">@color/white</item>
+        <item name="backgroundSecondary">@color/light_custom_gray</item>
+        <item name="backgroundInverse">@android:color/black</item>
+        <item name="backgroundTabs">@android:color/transparent</item>
+        <item name="backgroundWidgetSecondary">@android:color/transparent</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundCardColor">@color/white</item>
+        <item name="appviewRatingCardBarckground">@drawable/black_card</item>
+        <item name="backgroundHomeSeparator">@color/background_window</item>
+        <item name="backgroundAddStoreButton">@android:color/white</item>
+        <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
+
+
+        <!--text-->
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+        <item name="android:textColorSecondary">@android:color/tertiary_text_light</item>
+        <item name="tertiaryTextColor">@android:color/black</item>
+        <item name="inverseTextColor">@android:color/white</item>
+        <item name="storesTextColor">@color/white</item>
+        <item name="appviewRatingCardTextColor">@color/white</item>
+
+
+        <!--widgets-->
+        <item name="colorButtonNormal">@color/default_color</item>
+        <item name="customButton">@style/WidgetButtonCustomAptoide</item>
+        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
+        <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
+        <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="gridItemRatingBar">@style/RatingBarGridItem</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarGridItem</item>
+        <item name="titleLabelStyle">@style/titleLabel</item>
+        <item name="separatorColor">@color/lighter_custom_gray</item>
+
+
+        <!--recycler-->
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="sectionListView.sectionTextViewPadding">2dip</item>
+        <item name="sectionListView.sectionTextViewTextColor">@android:color/black</item>
+        <item name="sectionListView.sectionTextViewTextSize">18dip</item>
+        <item name="sectionListView.sectionItemPadding">2dip</item>
+        <item name="sectionListView.sectionItemBackground">@null</item>
+        <item name="sectionListView.listTextViewPadding">2dip</item>
+        <item name="sectionListView.listTextViewTextColor">@android:color/black</item>
+        <item name="sectionListView.listTextViewTextSize">22dip</item>
+        <item name="sectionListView.listItemPadding">2dip</item>
+        <item name="sectionListView.listItemBackground">@drawable/list_selector_background</item>
+
+        <!--icons-->
+        <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
+        <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
+        <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
+        <item name="icEmailDrawable">@drawable/ic_email</item>
+        <item name="icCancelDrawable">@drawable/ic_action_cancel</item>
+        <item name="icPlayDrawable">@drawable/ic_action_play</item>
+        <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
+        <item name="icUpdateDrawable">@drawable/ic_action_update</item>
+        <item name="icAboutDrawable">@drawable/ic_action_about</item>
+        <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
+        <item name="icLikeDrawable">@drawable/ic_action_good</item>
+        <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
+        <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
+        <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
+        <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
+        <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
+        <item name="icRollbackDrawable">@drawable/ic_action_time</item>
+        <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
+        <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
+        <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
+        <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
+        <item name="icRevertDrawable">@drawable/ic_action_undo</item>
+        <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
+        <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
+        <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow</item>
+        <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
+        <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
+        <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
+        <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
+        <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
+        <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
+        <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
+        <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
+        <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
+        <item name="icAppviewsPencil">@drawable/ic_pencil</item>
+    </style>
+
+    <style name="AptoideThemeDefault" parent="AppBaseTheme">
+    </style>
+
+
+    <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/transparent_black</item>
+        <item name="android:ratingBarStyle">@style/RatingBarSmallAptoide</item>
+
+        <item name="colorPrimary">@color/aptoide_orange</item>
+        <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
+        <item name="colorAccent">@color/aptoide_color_focused</item>
+        <item name="customColor">@color/aptoide_orange</item>
+
+        <!--toolbar-->
+        <item name="toolbarTheme">@style/ToolbarDark</item>
+
+        <!--background-->
+        <item name="backgroundMain">@color/black</item>
+        <item name="backgroundSecondary">@color/dark_gray</item>
+        <item name="backgroundInverse">@android:color/white</item>
+        <item name="backgroundTabs">@color/dark_gray</item>
+        <item name="backgroundWidgetSecondary">@android:color/transparent</item>
+        <item name="backgroundCard">@style/backgroundCardStyleDark</item>
+        <item name="backgroundCardColor">@color/black</item>
+        <item name="appviewRatingCardBarckground">@drawable/dark_card</item>
+        <item name="backgroundHomeSeparator">@color/background_window</item>
+        <item name="backgroundAddStoreButton">@android:color/white</item>
+        <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
+
+        <!--text-->
+        <item name="android:textColorPrimary">@android:color/primary_text_dark</item>
+        <item name="android:textColorSecondary">@android:color/tertiary_text_light</item>
+        <item name="tertiaryTextColor">@android:color/white</item>
+        <item name="inverseTextColor">@android:color/black</item>
+        <item name="storesTextColor">@color/white</item>
+        <item name="appviewRatingCardTextColor">@color/white</item>
+
+
+        <!--widgets-->
+        <item name="colorButtonNormal">@color/default_color</item>
+        <item name="customButton">@style/WidgetButtonCustomAptoide</item>
+        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
+        <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
+        <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="gridItemRatingBar">@style/RatingBarGridItem</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarGridItem</item>
+        <item name="titleLabelStyle">@style/titleLabel</item>
+        <item name="separatorColor">@color/light_custom_gray</item>
+
+
+        <!--recycler-->
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="sectionListView.sectionTextViewPadding">2dip</item>
+        <item name="sectionListView.sectionTextViewTextColor">@android:color/black</item>
+        <item name="sectionListView.sectionTextViewTextSize">18dip</item>
+        <item name="sectionListView.sectionItemPadding">2dip</item>
+        <item name="sectionListView.sectionItemBackground">@null</item>
+        <item name="sectionListView.listTextViewPadding">2dip</item>
+        <item name="sectionListView.listTextViewTextColor">@android:color/black</item>
+        <item name="sectionListView.listTextViewTextSize">22dip</item>
+        <item name="sectionListView.listItemPadding">2dip</item>
+        <item name="sectionListView.listItemBackground">@drawable/list_selector_background</item>
+
+
+        <!--icons-->
+        <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
+        <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
+        <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
+        <item name="icEmailDrawable">@drawable/ic_email</item>
+        <item name="icCancelDrawable">@drawable/ic_action_cancel_dark</item>
+        <item name="icPlayDrawable">@drawable/ic_action_play</item>
+        <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
+        <item name="icUpdateDrawable">@drawable/ic_action_update</item>
+        <item name="icAboutDrawable">@drawable/ic_action_about</item>
+        <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
+        <item name="icLikeDrawable">@drawable/ic_action_good</item>
+        <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
+        <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
+        <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
+        <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
+        <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
+        <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
+        <item name="icScheduledDrawable">@drawable/ic_drawer_schedule_light</item>
+        <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
+        <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
+        <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
+        <item name="icRevertDrawable">@drawable/ic_action_undo</item>
+        <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
+        <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
+        <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow</item>
+        <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
+        <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
+        <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
+        <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
+        <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
+        <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
+        <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
+        <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
+        <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
+        <item name="icAppviewsPencil">@drawable/ic_pencil</item>
+
+
+    </style>
+
+    <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
+    </style>
+
+</resources>

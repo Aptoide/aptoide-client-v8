@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/04/2016.
+ * Modified by Neurophobic Animal on 02/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -12,10 +12,21 @@ retrolambda {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
+    }
+
+    publishNonDefault true
+
+    buildTypes {
+        release {
+
+        }
+        debug {
+
+        }
     }
 
     compileOptions {
@@ -32,12 +43,18 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    // previous dependency added due to Glide. is this really necessary?
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
 
-    compile project(':dataprovider')
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
-    provided 'org.projectlombok:lombok:1.16.8'
+    compile 'com.jpardogo.materialtabstrip:library:1.1.0'
+
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     //    Apagar
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
@@ -45,4 +62,21 @@ dependencies {
     compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0'
+
+    // for unit tests
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.0'
+
+    // Internal dependencies
+    debugCompile project(path: ':dataprovider', configuration: 'debug')
+    releaseCompile project(path: ':dataprovider', configuration: 'release')
+
+    debugCompile project(path: ':logger', configuration: 'debug')
+    releaseCompile project(path: ':logger', configuration: 'release')
+
+    debugCompile project(path: ':utils', configuration: 'debug')
+    releaseCompile project(path: ':utils', configuration: 'release')
+
+    debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
+    releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
 }

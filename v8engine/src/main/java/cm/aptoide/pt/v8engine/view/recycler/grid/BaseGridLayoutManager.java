@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler.grid;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 
+import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 
 /**

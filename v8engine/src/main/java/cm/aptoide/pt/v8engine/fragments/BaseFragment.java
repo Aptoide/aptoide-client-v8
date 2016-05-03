@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 16/04/2016.
+ * Modified by Neurophobic Animal on 02/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -20,6 +20,20 @@ public abstract class BaseFragment<T extends View> extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(getRootViewId(), container, false);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		loadBundle(getArguments());
+	}
+
+	/**
+	 * Called after onStart. This is where arguments should be loaded.
+	 *
+	 * @param args {@link #getArguments()}
+	 */
+	protected void loadBundle(Bundle args) {
 	}
 
 	@LayoutRes

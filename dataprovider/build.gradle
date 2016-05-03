@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 01/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -9,10 +9,21 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
+    }
+
+    publishNonDefault true
+
+    buildTypes {
+        release {
+
+        }
+        debug {
+
+        }
     }
 
     compileOptions {
@@ -23,13 +34,19 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile project(':model')
-    compile project(':networkclient')
-    compile project(':aptoidepreferences')
-    compile project(':aptoide_accountmanager')
+    debugCompile project(path: ':model', configuration: 'debug')
+    releaseCompile project(path: ':model', configuration: 'release')
 
-    provided 'org.projectlombok:lombok:1.16.8'
+    debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
+    releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
+
+    debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
+    releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
+
+    debugCompile project(path: ':networkclient', configuration: 'debug')
+    releaseCompile project(path: ':networkclient', configuration: 'release')
+
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 }
