@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.v8engine.util.MathUtils;
-import cm.aptoide.pt.v8engine.util.ScreenUtils;
+import cm.aptoide.pt.utils.MathUtils;
+import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
@@ -35,8 +36,8 @@ public class WidgetFactory {
 	}
 
 	private static void computeColumnSize() {
-		columnSize = MathUtils.LeastCommonMultiple(getDisplayablesSizes());
-		orientation = ScreenUtils.getCurrentOrientation();
+		columnSize = MathUtils.leastCommonMultiple(getDisplayablesSizes());
+		orientation = ScreenUtils.getCurrentOrientation(Aptoide.getContext());
 	}
 
 	public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
@@ -59,7 +60,7 @@ public class WidgetFactory {
 	}
 
 	public static int getColumnSize() {
-		if (orientation != ScreenUtils.getCurrentOrientation()) {
+		if (orientation != ScreenUtils.getCurrentOrientation(Aptoide.getContext())) {
 			computeColumnSize();
 		}
 

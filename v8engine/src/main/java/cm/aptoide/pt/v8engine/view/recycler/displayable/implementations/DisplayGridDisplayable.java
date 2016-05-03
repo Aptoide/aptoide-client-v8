@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/04/2016.
+ * Modified by SithEngineer on 02/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
@@ -10,25 +10,22 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
- * Created by sithengineer on 29/04/16.
+ * Created by sithengineer on 02/05/16.
  */
-public class HeaderGridDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
-
-	public HeaderGridDisplayable() {
-	}
+public class DisplayGridDisplayable extends DisplayablePojo<Object> {
 
 	@Override
 	public GetStoreWidgets.Type getName() {
-		return GetStoreWidgets.Type.HEADER_ROW;
+		return GetStoreWidgets.Type.DISPLAYS;
 	}
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.header_grid_displayable_layout;
+		return R.layout.display_grid_displayable_layout;
 	}
 
 	@Override
 	public int getDefaultPerLineCount() {
-		return 1;
+		return 2;
 	}
 }

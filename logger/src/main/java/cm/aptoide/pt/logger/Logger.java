@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 03/05/2016.
  */
 
 package cm.aptoide.pt.logger;
@@ -19,7 +19,7 @@ public class Logger {
 	 *
 	 * @param e exception to log.
 	 */
-	public static void printException(Exception e) {
+	public static void printException(Throwable e) {
 		if (DBG && e != null) {
 			e.printStackTrace();
 		}

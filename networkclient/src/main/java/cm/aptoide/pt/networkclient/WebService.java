@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 03/05/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -21,7 +21,6 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import rx.Observable;
@@ -86,13 +85,13 @@ public abstract class WebService<T, U> {
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener, ErrorRequestListener errorRequestListener) {
-		observe().subscribe(successRequestListener::onSuccess, throwable -> errorRequestListener.onError((HttpException) throwable));
+		observe().subscribe(successRequestListener::onSuccess, errorRequestListener::onError);
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
 		return (e) -> {
 			// TODO: Implementar
-			System.out.println("Erro");
+			System.out.println("Erro por implementar");
 		};
 	}
 }

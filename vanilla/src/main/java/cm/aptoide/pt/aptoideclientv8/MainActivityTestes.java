@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 03/05/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -24,7 +24,6 @@ import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
-import retrofit2.adapter.rxjava.HttpException;
 
 public class MainActivityTestes extends AppCompatActivity {
 
@@ -45,7 +44,7 @@ public class MainActivityTestes extends AppCompatActivity {
 			System.out.println("Teste 2: " + getApp);
 		}, new ErrorRequestListener() {
 			@Override
-			public void onError(HttpException e) {
+			public void onError(Throwable e) {
 				System.out.println(e);
 			}
 		});

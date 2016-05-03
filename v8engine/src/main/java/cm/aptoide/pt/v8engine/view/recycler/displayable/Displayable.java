@@ -8,7 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.support.annotation.LayoutRes;
 
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
-import cm.aptoide.pt.v8engine.util.ScreenUtils;
+import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 
 /**
@@ -17,12 +18,13 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 public abstract class Displayable {
 
 	private static final float REFERENCE_WIDTH_DPI = 360;
-	private boolean fixedPerLineCount = false;
+	private boolean fixedPerLineCount;
 
 	/**
 	 * Needed for reflective {@link Class#newInstance()}.
 	 */
 	public Displayable() {
+		this(false);
 	}
 
 	public Displayable(boolean fixedPerLineCount) {
@@ -35,7 +37,8 @@ public abstract class Displayable {
 	public abstract int getViewLayout();
 
 	public int getPerLineCount() {
-		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils.getScreenWidthInDip() / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils
+				.getScreenWidthInDip(Aptoide.getContext()) / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
 
 	public abstract int getDefaultPerLineCount();
