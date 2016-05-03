@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.utils.MultiDexHelper;
+import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import dalvik.system.DexFile;
 
@@ -31,18 +31,21 @@ public enum WidgetLoader {
 
 	private static final String TAG = WidgetLoader.class.getName();
 
-	//TODO use a eager loading technique and remove synchronization primitives
+	private static final boolean useLazyLoading = false;
+	private final static Object lock = new Object();
+	private volatile boolean created = false;
 
 	// map of a view type to a WidgetMeta class
-	private HashMap<Integer, WidgetMeta> widgetsHashMap;
+	private HashMap<Integer, WidgetMeta> widgetsHashMap = useLazyLoading ? null : loadWidgets();
 	// cache of a view type to a WidgetMeta class
 	private LruCache<Integer, WidgetMeta> widgetLruCache;
 
 	/**
-	 * loads all {@link Widget} classes that have a {@link Displayables} annotation in the current module
+	 * loads all {@link Widget} classes that have a {@link Displayables} annotation in the current
+	 * module
 	 */
-	private synchronized void loadWidgets() {
-		widgetsHashMap = new HashMap<>();
+	private HashMap<Integer, WidgetMeta> loadWidgets() {
+		HashMap<Integer, WidgetMeta> widgetsHashMap = new HashMap<>();
 //		long nanos = System.nanoTime();
 		try {
 			// get the current class loader
@@ -50,21 +53,25 @@ public enum WidgetLoader {
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, DexFile>> classNames =
-					MultiDexHelper.getAllClasses(Aptoide.getContext());
+			List<Map.Entry<String, DexFile>> classNames = MultiDexHelper.getAllClasses(Aptoide
+					.getContext());
 
-			for(Map.Entry<String, DexFile> className : classNames ) {
+			for (Map.Entry<String, DexFile> className : classNames) {
 
 				// if the class doesn't belong in the current project we discard it
 				// useful for speeding this method
 				if (!className.getKey().startsWith(packageName)) continue;
-				Class<?> widgetClass = className.getValue().loadClass(className.getKey(), classLoader);
-				if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) && widgetClass.isAnnotationPresent(Displayables.class)) {
+				Class<?> widgetClass = className.getValue()
+						.loadClass(className.getKey(), classLoader);
+				if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) &&
+						widgetClass
+						.isAnnotationPresent(Displayables.class)) {
 					Displayables annotation = widgetClass.getAnnotation(Displayables.class);
 					Class<? extends Displayable>[] displayableClasses = annotation.value();
 					WidgetMeta wMeta;
 					for (Class<? extends Displayable> displayableClass : displayableClasses) {
-						wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass), displayableClass);
+						wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass),
+								displayableClass);
 						widgetsHashMap.put(wMeta.displayable.getViewLayout(), wMeta);
 					}
 				}
@@ -81,7 +88,12 @@ public enum WidgetLoader {
 			throw new IllegalStateException("Unable to load Widgets");
 		}
 		int cacheSize = widgetsHashMap.size() / 4;
-		widgetLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the total, or 2
+		widgetLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the
+		// total, or 2
+
+		Log.v(TAG, "Loaded Widgets");
+
+		return widgetsHashMap;
 	}
 
 	/**
@@ -93,9 +105,13 @@ public enum WidgetLoader {
 	public Widget newWidget(@NonNull View view, int viewType) {
 //		long nanos = System.nanoTime();
 
-		// lazy loading Widgets
-		if (widgetsHashMap == null) {
-			loadWidgets();
+		if (useLazyLoading && (widgetsHashMap == null || !created)) {
+			synchronized (lock) {
+				if (!created) {
+					widgetsHashMap = loadWidgets();
+					created = true;
+				}
+			}
 		}
 
 		// check if WidgetMeta instance is in cache
@@ -125,9 +141,16 @@ public enum WidgetLoader {
 	}
 
 	public List<Displayable> getDisplayables() {
-		if (widgetsHashMap == null) {
-			loadWidgets();
+
+		if (useLazyLoading && (widgetsHashMap == null || !created)) {
+			synchronized (lock) {
+				if (!created) {
+					widgetsHashMap = loadWidgets();
+					created = true;
+				}
+			}
 		}
+
 		ArrayList<Displayable> displayables = new ArrayList<>(widgetsHashMap.size());
 		for (WidgetMeta widgetMeta : widgetsHashMap.values()) {
 			displayables.add(widgetMeta.displayable);
@@ -136,7 +159,8 @@ public enum WidgetLoader {
 	}
 
 	/**
-	 * Meta class to hold a {@link Widget} class reference, a {@link Displayable} class reference and a {@link Displayable} instance generated from the previous class.
+	 * Meta class to hold a {@link Widget} class reference, a {@link Displayable} class reference
+	 * and a {@link Displayable} instance generated from the previous class.
 	 */
 	private static final class WidgetMeta {
 
@@ -144,7 +168,8 @@ public enum WidgetLoader {
 		private final Class<? extends Displayable> displayableClass;
 		private final Displayable displayable;
 
-		WidgetMeta(Class<? extends Widget> widgetClass, Class<? extends Displayable> displayableClass) {
+		WidgetMeta(Class<? extends Widget> widgetClass, Class<? extends Displayable>
+				displayableClass) {
 			this.widgetClass = widgetClass;
 			this.displayableClass = displayableClass;
 			displayable = newDisplayable();

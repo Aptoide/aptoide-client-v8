@@ -17,7 +17,8 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> extends BaseLoaderFragment<RecyclerView> {
+public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> extends
+		BaseLoaderFragment<RecyclerView> {
 
 	protected T adapter;
 
@@ -37,9 +38,13 @@ public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> e
 
 		baseView.addItemDecoration(new RecyclerView.ItemDecoration() {
 			@Override
-			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView
+					.State state) {
 
-				int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getActivity().getResources().getDisplayMetrics());
+				int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
+						getActivity()
+						.getResources()
+						.getDisplayMetrics());
 				outRect.set(offset, offset, offset, offset);
 			}
 		});

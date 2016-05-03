@@ -21,7 +21,7 @@ public class DisplayableGroup extends Displayable {
 
 	public DisplayableGroup(List<Displayable> children) {
 		this.children = children;
-		computeLeftSpaces();
+		//computeLeftSpaces(); // FIXME
 	}
 
 	private void computeLeftSpaces() {
@@ -48,11 +48,13 @@ public class DisplayableGroup extends Displayable {
 
 	@Override
 	public int getViewLayout() {
-		throw new IllegalStateException("getViewLayout() on DisplayableGroup should not be called!");
+		throw new IllegalStateException("getViewLayout() on DisplayableGroup should not be " +
+				"called!");
 	}
 
 	@Override
 	public int getDefaultPerLineCount() {
-		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not be called!");
+		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not " +
+				"be called!");
 	}
 }

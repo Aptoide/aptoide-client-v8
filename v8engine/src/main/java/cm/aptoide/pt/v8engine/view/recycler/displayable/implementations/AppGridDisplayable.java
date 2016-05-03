@@ -19,14 +19,16 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class AppGridDisplayable extends DisplayablePojo<App> {
 
-	public AppGridDisplayable() { }
+	public AppGridDisplayable() {
+	}
 
 	@Override
 	public GetStoreWidgets.Type getName() {
 		return GetStoreWidgets.Type.APPS_GROUP;
 	}
 
-	@LayoutRes @Override
+	@LayoutRes
+	@Override
 	public int getViewLayout() {
 		return R.layout.app_grid_displayable_layout;
 	}

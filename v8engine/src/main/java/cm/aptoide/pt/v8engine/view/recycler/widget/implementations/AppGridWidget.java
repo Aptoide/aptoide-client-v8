@@ -47,11 +47,8 @@ public class AppGridWidget extends Widget<AppGridDisplayable> {
 		final App pojo = displayable.getPojo();
 		name.setText(pojo.getName());
 		Glide.with(icon.getContext()).load(pojo.getIcon()).into(icon);
-		downloads.setText(
-				StringUtils.withSuffix(pojo.getStats().getDownloads())
-				+ context.getString(R.string._downloads
-			)
-		);
+		downloads.setText(StringUtils.withSuffix(pojo.getStats()
+				.getDownloads()) + context.getString(R.string._downloads));
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
 		tvAddedTime.setText(pojo.getAdded());
@@ -59,12 +56,11 @@ public class AppGridWidget extends Widget<AppGridDisplayable> {
 
 	@Override
 	protected void assignViews(@NonNull View view) {
-		name = (TextView )itemView.findViewById(R.id.name);
-		icon = (ImageView )itemView.findViewById(R.id.icon);
-		downloads = (TextView )itemView.findViewById(R.id.downloads);
-		ratingBar = (RatingBar )itemView.findViewById(R.id.ratingbar);
-		tvStoreName = (TextView )itemView.findViewById(R.id.store_name);
-		tvAddedTime = (TextView )itemView.findViewById(R.id.added_time);
+		name = (TextView) itemView.findViewById(R.id.name);
+		icon = (ImageView) itemView.findViewById(R.id.icon);
+		downloads = (TextView) itemView.findViewById(R.id.downloads);
+		ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
+		tvStoreName = (TextView) itemView.findViewById(R.id.store_name);
+		tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
 	}
-
 }

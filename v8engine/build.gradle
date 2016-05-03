@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by SithEngineer on 03/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -76,4 +76,9 @@ dependencies {
 
     debugCompile project(path: ':utils', configuration: 'debug')
     releaseCompile project(path: ':utils', configuration: 'release')
+
+    // leakcanary - lib to detect leaks inside the app
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 }

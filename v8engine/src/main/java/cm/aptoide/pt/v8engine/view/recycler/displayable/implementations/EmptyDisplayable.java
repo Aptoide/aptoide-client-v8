@@ -16,7 +16,8 @@ public class EmptyDisplayable extends Displayable {
 
 	private int spanSize = 1;
 
-	public EmptyDisplayable() { }
+	public EmptyDisplayable() {
+	}
 
 	public EmptyDisplayable(int spanSize) {
 		this.spanSize = spanSize;

@@ -32,7 +32,8 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 	private Handler handler;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+			savedInstanceState) {
 
 		handler = new Handler(Looper.myLooper());
 

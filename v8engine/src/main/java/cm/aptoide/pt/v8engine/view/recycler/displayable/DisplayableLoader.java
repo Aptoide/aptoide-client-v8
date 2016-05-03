@@ -26,13 +26,17 @@ public enum DisplayableLoader {
 
 	private static final String TAG = DisplayableLoader.class.getName();
 
-	//TODO use a eager loading technique and remove synchronization primitives
+	private static final boolean useLazyLoading = false;
+	private final static Object lock = new Object();
+	private volatile boolean created = false;
 
-	private HashMap<String, Class<? extends Displayable>> displayableHashMap;
+	private HashMap<String, Class<? extends Displayable>> displayableHashMap = useLazyLoading ?
+			null : loadDisplayables();
+
 	private LruCache<String, Class<? extends Displayable>> displayableLruCache;
 
-	private synchronized void loadDisplayables() {
-		displayableHashMap = new HashMap<>();
+	private HashMap<String, Class<? extends Displayable>> loadDisplayables() {
+		HashMap<String, Class<? extends Displayable>> displayableHashMap = new HashMap<>();
 //		long nanos = System.
 		try {
 			// get the current class loader
@@ -40,24 +44,23 @@ public enum DisplayableLoader {
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, DexFile>> classNames =
-					MultiDexHelper.getAllClasses(Aptoide.getContext());
+			List<Map.Entry<String, DexFile>> classNames = MultiDexHelper.getAllClasses(Aptoide
+					.getContext());
 
-			for(Map.Entry<String, DexFile> className : classNames ) {
+			for (Map.Entry<String, DexFile> className : classNames) {
 
 				// if the class doesn't belong in the current project we discard it
 				// useful for speeding this method
 				if (!className.getKey().startsWith(packageName)) continue;
-				Class<?> displayableClass = className.getValue().loadClass(
-						className.getKey(), classLoader);
+				Class<?> displayableClass = className.getValue()
+						.loadClass(className.getKey(), classLoader);
 
-				if (displayableClass != null && Displayable.class.isAssignableFrom(displayableClass)) {
+				if (displayableClass != null && Displayable.class.isAssignableFrom
+						(displayableClass)) {
 					try {
 						Displayable d = (Displayable) displayableClass.newInstance();
-						displayableHashMap.put(
-								d.getName().name(),
-								(Class<? extends Displayable>) displayableClass
-						);
+						displayableHashMap.put(d.getName()
+								.name(), (Class<? extends Displayable>) displayableClass);
 					} catch (Exception e) {
 						Log.e(TAG, "", e);
 					}
@@ -75,13 +78,25 @@ public enum DisplayableLoader {
 			throw new IllegalStateException("Unable to load Displayables");
 		}
 		int cacheSize = displayableHashMap.size() / 4;
-		displayableLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the total, or 2
+		displayableLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the
+		// total, or 2
+
+		Log.v(TAG, "Loaded Displayables");
+
+		return displayableHashMap;
 	}
 
 	@Nullable
-	public synchronized Displayable newDisplayable(@NonNull String type) {
-		if (displayableHashMap == null) {
-			loadDisplayables();
+	public Displayable newDisplayable(@NonNull String type) {
+
+		// lazy loading Widgets
+		if (useLazyLoading && (displayableHashMap == null || !created)) {
+			synchronized (lock) {
+				if (!created) {
+					displayableHashMap = loadDisplayables();
+					created = true;
+				}
+			}
 		}
 
 		Class<? extends Displayable> displayableClass = displayableLruCache.get(type);

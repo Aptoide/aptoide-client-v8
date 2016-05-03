@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by SithEngineer on 03/05/2016.
  */
 
-package cm.aptoide.pt.v8engine;
+package cm.aptoide.pt.aptoideclientv8;
 
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -46,8 +46,7 @@ public class MainActivityStoreList extends AptoideBaseScreenActivity {
 
 		fragment.setStoreList(listStores.getDatalist().getList());
 
-		getSupportFragmentManager()
-				.beginTransaction()
+		getSupportFragmentManager().beginTransaction()
 				.replace(mFragmentPlaceholder.getId(), fragment)
 				.commit();
 	}
@@ -56,22 +55,24 @@ public class MainActivityStoreList extends AptoideBaseScreenActivity {
 	protected void setupToolbar() {
 		if (mToolbar != null) {
 			setSupportActionBar(mToolbar);
-			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-			mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+			mToolbar.setLogo(cm.aptoide.pt.v8engine.R.drawable.ic_aptoide_toolbar);
+			mToolbar.setNavigationIcon(cm.aptoide.pt.v8engine.R.drawable.ic_drawer);
+			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
+					.START));
 		}
 	}
 
 	@Override
 	protected void bindViews() {
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mFragmentPlaceholder = (FrameLayout) findViewById(R.id.fragment_placeholder);
+		mToolbar = (Toolbar) findViewById(cm.aptoide.pt.v8engine.R.id.toolbar);
+		mNavigationView = (NavigationView) findViewById(cm.aptoide.pt.v8engine.R.id.nav_view);
+		mDrawerLayout = (DrawerLayout) findViewById(cm.aptoide.pt.v8engine.R.id.drawer_layout);
+		mFragmentPlaceholder = (FrameLayout) findViewById(cm.aptoide.pt.v8engine.R.id
+				.fragment_placeholder);
 	}
 
 	@Override
 	protected int getContentViewId() {
-		return R.layout.main_activity_store_list;
+		return cm.aptoide.pt.v8engine.R.layout.main_activity_store_list;
 	}
 }

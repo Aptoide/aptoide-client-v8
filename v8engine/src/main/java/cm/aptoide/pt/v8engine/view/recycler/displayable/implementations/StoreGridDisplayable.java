@@ -15,7 +15,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class StoreGridDisplayable extends DisplayablePojo<Store> {
 
-	public StoreGridDisplayable() { }
+	public StoreGridDisplayable() {
+	}
 
 	@Override
 	public GetStoreWidgets.Type getName() {

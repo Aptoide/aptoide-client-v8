@@ -64,7 +64,8 @@ public class StoreGridWidget extends Widget<StoreGridDisplayable> {
 		storeDownloads.setText(StringUtils.withSuffix(store.getStats().getDownloads()));
 		storeSubscribers.setText(StringUtils.withSuffix(store.getStats().getSubscribers()));
 
-		// in order to re-use the row_store_item layout, we hide the unsubscribe button and increase the padding
+		// in order to re-use the row_store_item layout, we hide the unsubscribe button and
+		// increase the padding
 		storeUnsubscribe.setVisibility(View.GONE);
 
 		//final EnumStoreTheme themeIz = EnumStoreTheme.get(store.getAppearance().getTheme());
@@ -78,10 +79,15 @@ public class StoreGridWidget extends Widget<StoreGridDisplayable> {
 		*/
 
 		if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
-			Glide.with(context).fromResource().load(R.drawable.ic_avatar_apps)
-					.transform(new CircleTransform(context)).into(storeAvatar);
+			Glide.with(context)
+					.fromResource()
+					.load(R.drawable.ic_avatar_apps)
+					.transform(new CircleTransform(context))
+					.into(storeAvatar);
 		} else {
-			Glide.with(context).load(store.getAvatar()).transform(new CircleTransform(context))
+			Glide.with(context)
+					.load(store.getAvatar())
+					.transform(new CircleTransform(context))
 					.into(storeAvatar);
 		}
 	}

@@ -24,8 +24,9 @@ import android.widget.ImageView;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * An {@link ImageView} that draws its contents inside a mask and draws a border drawable on top. This is useful for applying a beveled look to image contents, but is also flexible
- * enough for use with other desired aesthetics.
+ * An {@link ImageView} that draws its contents inside a mask and draws a border drawable on top.
+ * This is useful for applying a beveled look to image contents, but is also flexible enough for use
+ * with other desired aesthetics.
  */
 public class BezelImageView extends ImageView {
 
@@ -58,7 +59,8 @@ public class BezelImageView extends ImageView {
 		super(context, attrs, defStyle);
 
 		// Attribute initialization
-		final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BezelImageView, defStyle, 0);
+		final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BezelImageView,
+				defStyle, 0);
 
 		mMaskDrawable = a.getDrawable(R.styleable.BezelImageView_maskDrawable);
 		if (mMaskDrawable != null) {
@@ -70,7 +72,8 @@ public class BezelImageView extends ImageView {
 			mBorderDrawable.setCallback(this);
 		}
 
-		mDesaturateOnPress = a.getBoolean(R.styleable.BezelImageView_desaturateOnPress, mDesaturateOnPress);
+		mDesaturateOnPress = a.getBoolean(R.styleable.BezelImageView_desaturateOnPress,
+				mDesaturateOnPress);
 
 		a.recycle();
 
@@ -171,15 +174,18 @@ public class BezelImageView extends ImageView {
 			if (mMaskDrawable != null) {
 				int sc = cacheCanvas.save();
 				mMaskDrawable.draw(cacheCanvas);
-				mMaskedPaint.setColorFilter((mDesaturateOnPress && isPressed()) ? mDesaturateColorFilter : null);
-				cacheCanvas.saveLayer(mBoundsF, mMaskedPaint, Canvas.HAS_ALPHA_LAYER_SAVE_FLAG | Canvas.FULL_COLOR_LAYER_SAVE_FLAG);
+				mMaskedPaint.setColorFilter((mDesaturateOnPress && isPressed()) ?
+						mDesaturateColorFilter : null);
+				cacheCanvas.saveLayer(mBoundsF, mMaskedPaint, Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
+						Canvas.FULL_COLOR_LAYER_SAVE_FLAG);
 				super.onDraw(cacheCanvas);
 				cacheCanvas.restoreToCount(sc);
 			} else if (mDesaturateOnPress && isPressed()) {
 				int sc = cacheCanvas.save();
 				cacheCanvas.drawRect(0, 0, mCachedWidth, mCachedHeight, mBlackPaint);
 				mMaskedPaint.setColorFilter(mDesaturateColorFilter);
-				cacheCanvas.saveLayer(mBoundsF, mMaskedPaint, Canvas.HAS_ALPHA_LAYER_SAVE_FLAG | Canvas.FULL_COLOR_LAYER_SAVE_FLAG);
+				cacheCanvas.saveLayer(mBoundsF, mMaskedPaint, Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
+						Canvas.FULL_COLOR_LAYER_SAVE_FLAG);
 				super.onDraw(cacheCanvas);
 				cacheCanvas.restoreToCount(sc);
 			} else {

@@ -33,8 +33,8 @@ public class HeaderGridWidget extends Widget<HeaderGridDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
-		title = (TextView )itemView.findViewById(R.id.title);
-		more = (Button )itemView.findViewById(R.id.more);
+		title = (TextView) itemView.findViewById(R.id.title);
+		more = (Button) itemView.findViewById(R.id.more);
 		//moreLayout = (RelativeLayout )itemView.findViewById(R.id.more_layout);
 	}
 
@@ -43,9 +43,9 @@ public class HeaderGridWidget extends Widget<HeaderGridDisplayable> {
 		final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
 		final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
 		title.setText(pojo.getTitle());
-		more.setVisibility(actions!=null && actions.size()>0 ? View.VISIBLE : View.GONE);
-		
-		more.setOnClickListener((view)->{
+		more.setVisibility(actions != null && actions.size() > 0 ? View.VISIBLE : View.GONE);
+
+		more.setOnClickListener((view) -> {
 			// TODO
 		});
 	}
