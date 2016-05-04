@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import cm.aptoide.pt.utils.ThreadUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -53,5 +54,17 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
 	public void addDisplayables(List<Displayable> displayables) {
 		this.displayables.add(displayables);
+		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
+	}
+
+	public void clearDisplayables() {
+		clearDisplayables(true);
+	}
+
+	public void clearDisplayables(boolean notifyDataSetChanged) {
+		displayables.clear();
+		if (notifyDataSetChanged) {
+			ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
+		}
 	}
 }
