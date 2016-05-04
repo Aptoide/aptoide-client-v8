@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -41,6 +41,14 @@ public class GetStoreRequest extends V7<GetStore> {
 		GetStoreRequest getStoreRequest = new GetStoreRequest();
 
 		getStoreRequest.body.setStoreName(storeName);
+
+		return getStoreRequest;
+	}
+
+	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
+		GetStoreRequest getStoreRequest = new GetStoreRequest();
+
+		getStoreRequest.body.setStoreName(storeName).setContext(storeContext);
 
 		return getStoreRequest;
 	}
