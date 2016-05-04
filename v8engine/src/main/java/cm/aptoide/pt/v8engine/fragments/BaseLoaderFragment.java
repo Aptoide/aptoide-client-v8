@@ -1,88 +1,53 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
 
+import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ProgressBar;
 
-import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.ThreadUtils;
-import cm.aptoide.pt.v8engine.R;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import cm.aptoide.pt.v8engine.layouthandler.LoadInterface;
+import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 
 /**
  * Created by neuro on 16-04-2016.
  */
-public abstract class BaseLoaderFragment<T extends View> extends BaseFragment<T> {
+public abstract class BaseLoaderFragment extends BaseFragment implements LoadInterface {
 
-	protected T baseView;
-	protected ProgressBar progressBar;
-	protected View genericErrorView;
-	protected View noNetworkConnectionView;
-	protected View retryView;
-	protected SwipeRefreshLayout swipeContainer;
+	private LoaderLayoutHandler loaderLayoutHandler;
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		loaderLayoutHandler = createLoaderLayoutHandler();
+	}
+
+	@NonNull
+	protected LoaderLayoutHandler createLoaderLayoutHandler() {
+		return new LoaderLayoutHandler(getBaseViewId(), this);
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	protected void bindViews(View view) {
-		baseView = (T) view.findViewById(getBaseViewId());
-		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-		genericErrorView = view.findViewById(R.id.generic_error);
-		noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
-		retryView = view.findViewById(R.id.retry);
+		loaderLayoutHandler.bindViews(view);
 	}
 
 	@IdRes
 	protected abstract int getBaseViewId();
 
 	protected void finishLoading() {
-		Observable.fromCallable(() -> {
-			progressBar.setVisibility(View.GONE);
-			baseView.setVisibility(View.VISIBLE);
-			return null;
-		}).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+		loaderLayoutHandler.finishLoading();
 	}
 
 	protected void finishLoading(Throwable throwable) {
-		Logger.printException(throwable);
-
-		ThreadUtils.runOnUiThread(() -> {
-			progressBar.setVisibility(View.GONE);
-			baseView.setVisibility(View.GONE);
-			swipeContainer.setRefreshing(false);
-			swipeContainer.setEnabled(false);
-
-			if (throwable instanceof NoNetworkConnectionException) {
-				genericErrorView.setVisibility(View.GONE);
-				noNetworkConnectionView.setVisibility(View.VISIBLE);
-				retryView.setOnClickListener(view -> {
-					restoreVisibility();
-					load();
-				});
-			} else {
-				noNetworkConnectionView.setVisibility(View.GONE);
-				genericErrorView.setVisibility(View.VISIBLE);
-				retryView.setOnClickListener(view -> {
-					restoreVisibility();
-					load();
-				});
-			}
-		});
+		loaderLayoutHandler.finishLoading(throwable);
 	}
 
-	protected void restoreVisibility() {
-		genericErrorView.setVisibility(View.GONE);
-		noNetworkConnectionView.setVisibility(View.GONE);
-		progressBar.setVisibility(View.VISIBLE);
-	}
-
-	protected abstract void load();
+	public abstract void load();
 }

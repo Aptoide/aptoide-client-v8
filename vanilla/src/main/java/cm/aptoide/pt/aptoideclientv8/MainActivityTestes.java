@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -34,7 +34,7 @@ public class MainActivityTestes extends AppCompatActivity {
 
 		getSupportFragmentManager().beginTransaction().replace(R.id.contentor, new GridRecyclerFragment() {
 			@Override
-			protected void load() {
+			public void load() {
 
 			}
 		}).commit();

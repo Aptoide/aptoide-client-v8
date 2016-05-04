@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments.implementations;
@@ -16,7 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.GenericInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
-import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragments.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import rx.Observable;
@@ -25,7 +25,7 @@ import rx.Subscription;
 /**
  * Created by neuro on 29-04-2016.
  */
-public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
+public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	private GetStoreTabs.Tab.Event.Type type;
 	private GetStoreTabs.Tab.Event.Name name;
@@ -51,7 +51,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	protected void load() {
+	public void load() {
 		String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 		V7.Interfaces interfaces = GenericInterface.newInstance();
 

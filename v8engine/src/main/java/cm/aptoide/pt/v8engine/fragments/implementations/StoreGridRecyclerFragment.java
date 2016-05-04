@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments.implementations;
@@ -53,7 +53,7 @@ public class StoreGridRecyclerFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	protected void load() {
+	public void load() {
 
 	}
 }

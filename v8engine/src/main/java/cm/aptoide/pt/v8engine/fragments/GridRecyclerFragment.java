@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.utils.ThreadUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -62,7 +61,6 @@ public abstract class GridRecyclerFragment extends BaseRecyclerViewFragment<Base
 
 	public void addDisplayables(List<Displayable> displayables) {
 		adapter.addDisplayables(displayables);
-		ThreadUtils.runOnUiThread(() -> adapter.notifyDataSetChanged());
 		finishLoading();
 	}
 }
