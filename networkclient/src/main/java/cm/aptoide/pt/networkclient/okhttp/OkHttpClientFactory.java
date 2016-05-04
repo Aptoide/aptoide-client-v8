@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/04/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
@@ -39,8 +40,8 @@ public class OkHttpClientFactory {
 	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
 		final Cache cache = new Cache(cacheDirectory, cacheSize);
 
-//		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
-		return new OkHttpClient.Builder().cache(cache).build();
+//		return new OkHttpClient.Builder().readTimeout(1, TimeUnit.SECONDS).cache(cache).addInterceptor(createCacheInterceptor()).build();
+		return new OkHttpClient.Builder().readTimeout(1, TimeUnit.SECONDS).cache(cache).build();
 	}
 
 	private static Interceptor createCacheInterceptor() {
