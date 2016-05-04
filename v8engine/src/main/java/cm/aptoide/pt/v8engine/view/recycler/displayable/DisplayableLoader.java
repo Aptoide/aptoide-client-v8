@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -58,8 +58,8 @@ public enum DisplayableLoader {
 
 					Class<?> displayableClass = dexFile.loadClass(className.getKey(), classLoader);
 
-					if (displayableClass != null && Displayable.class.isAssignableFrom
-							(displayableClass)) {
+					if (displayableClass != null && Displayable.class.isAssignableFrom(displayableClass) && !displayableClass
+							.isAnnotationPresent(Ignore.class)) {
 						try {
 							Displayable d = (Displayable) displayableClass.newInstance();
 							displayableHashMap.put(d.getName()

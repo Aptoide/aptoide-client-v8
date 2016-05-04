@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -137,7 +137,7 @@ public class RequestCache {
 			Log.e(TAG, "aborting transaction to disk cache", ex);
 		}
 
-		return null;
+		return clonedResponse;
 	}
 
 	/**
@@ -157,6 +157,11 @@ public class RequestCache {
 			DiskLruCache.Snapshot snapshot;
 			synchronized (diskCacheLock) {
 				final String reqKey = keyAlgorithm.getKeyFrom(request);
+				if (reqKey == null) {
+					Log.w(TAG, "Key algorithm returned a null key for request");
+					return null;
+				}
+
 				snapshot = diskLruCache.get(reqKey);
 			}
 

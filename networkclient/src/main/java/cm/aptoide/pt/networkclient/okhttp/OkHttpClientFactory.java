@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
@@ -67,9 +67,10 @@ public class OkHttpClientFactory {
 					return response;
 				}
 
-				response = chain.proceed(chain.request());
-				long responseLength = response.body().contentLength();
-				final Response resultResponse = customCache.put(request, response);
+				final Request clonedRequest = request.newBuilder().build();
+				response = chain.proceed(request);
+				long responseLength = response.newBuilder().build().body().contentLength();
+				final Response resultResponse = customCache.put(clonedRequest, response);
 
 				if(resultResponse==null || resultResponse.body().contentLength()
 						!=responseLength) {

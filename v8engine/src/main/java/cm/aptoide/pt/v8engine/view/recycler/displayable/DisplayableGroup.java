@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -15,6 +15,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
+@Ignore
 public class DisplayableGroup extends Displayable {
 
 	@Getter private final List<Displayable> children;
