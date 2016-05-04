@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 03/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -18,6 +18,7 @@ import java.util.Locale;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -36,6 +37,7 @@ import rx.schedulers.Schedulers;
 public abstract class WebService<T, U> {
 
 	protected final static OkHttpClient client = OkHttpClientFactory.newClient();
+	@Getter protected static ObjectMapper objectMapper;
 	protected final static Converter.Factory factory = createConverter();
 
 	private Class<T> clazz;
@@ -47,7 +49,7 @@ public abstract class WebService<T, U> {
 
 	protected static Converter.Factory createConverter() {
 
-		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -89,7 +91,7 @@ public abstract class WebService<T, U> {
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
-		return (e) -> {
+		return e -> {
 			// TODO: Implementar
 			System.out.println("Erro por implementar");
 		};
