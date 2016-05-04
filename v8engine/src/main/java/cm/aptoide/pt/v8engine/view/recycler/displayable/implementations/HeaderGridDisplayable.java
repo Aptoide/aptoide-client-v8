@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/04/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
@@ -15,6 +15,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 public class HeaderGridDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
 	public HeaderGridDisplayable() {
+	}
+
+	public HeaderGridDisplayable(GetStoreWidgets.WSWidget pojo) {
+		super(pojo);
 	}
 
 	@Override
