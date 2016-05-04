@@ -49,19 +49,18 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
 	protected String getActivityTitle() {
-		// TODO: 4/21/16 trinkes resource
-		return "Login Activity";
+		return getString(R.string.login_activity_title);
 	}
 
 	@Override
 	int getLayoutId() {
 		return R.layout.login_activity_layout;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 	}
 
 	private void setupViewListeners() {

@@ -20,6 +20,7 @@ public class OAuth {
 	private String error_description;
 	private List<ErrorResponse> errors;
 	private String status;
+	private String error;
 
 	public boolean hasErrors() {
 		return errors != null && errors.size() > 0;

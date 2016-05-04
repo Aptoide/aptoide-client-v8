@@ -8,8 +8,8 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
@@ -19,6 +19,7 @@ import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
  */
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
+	public static final String INVALID_AUTH_TOKEN_TYPE = "invalid authTokenType";
 	private static final String TAG = AccountAuthenticator.class.getSimpleName();
 
 	public AccountAuthenticator(Context context) {
@@ -30,22 +31,6 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 			options) {
 
 		final Bundle bundle = new Bundle();
-		// TODO: 4/22/16 trinkes check if this "timeline" login is needed
-//        if (!(requiredFeatures == null || requiredFeatures.length == 0) && contains
-// (requiredFeatures, "timelineLogin")) {
-//            String username = options.getString(AccountManager.KEY_ACCOUNT_NAME);
-//            password = options.getString(AccountManager.KEY_PASSWORD);
-//            String authToken = options.getString(AccountManager.KEY_AUTHTOKEN);
-//            Account account = new Account(username, accountType);
-//            AccountManager.get(mContext).addAccountExplicitly(account, password, null);
-//            AccountManager.get(mContext).setAuthToken(account, authTokenType, authToken);
-//            Bundle data = new Bundle();
-//            data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
-//            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-//
-//            response.onResult(data);
-//
-//        } else {
 		final Intent intent = createAuthActivityIntent(response, accountType, authTokenType,
 				options);
 		bundle.putParcelable(AccountManager.KEY_INTENT, intent);
@@ -56,8 +41,6 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
 	protected Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String
 			accountType, String authTokenType, Bundle options) {
-		// TODO: 4/21/16 trinkes check loginActivity.class if a custom activity was implemented,
-		// that one should be used
 		Intent intent = new Intent(Application.getContext(), LoginActivity.class);
 		intent.putExtra(AptoideAccountManager.ARG_ACCOUNT_TYPE, accountType);
 		intent.putExtra(AptoideAccountManager.ARG_AUTH_TYPE, authTokenType);
@@ -72,16 +55,6 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 		return null;
 	}
 
-//    private boolean contains(String[] requiredFeatures, String timelineLogin) {
-//        boolean toReturn = false;
-//
-//        for (String requiredFeature : requiredFeatures) {
-//            if (requiredFeature.contains(timelineLogin)) {
-//                toReturn = true;
-//            }
-//        }
-//        return toReturn;
-//    }
 
 	/**
 	 * {@inheritDoc}
@@ -90,7 +63,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 	public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String
 			authTokenType, String[] requiredFeatures, Bundle options) throws
 			NetworkErrorException {
-		Log.v(TAG, "Adding account: type=" + accountType);
+		Logger.d(TAG, "Adding account: type=" + accountType);
 
 		return createAuthActivityIntentBundle(response, accountType, requiredFeatures,
 				authTokenType, null, options);
@@ -110,7 +83,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 		// return an error
 		if (!authTokenType.equals(AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS)) {
 			final Bundle result = new Bundle();
-			result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
+			result.putString(AccountManager.KEY_ERROR_MESSAGE, INVALID_AUTH_TOKEN_TYPE);
 			return result;
 		}
 
@@ -120,7 +93,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
 		String authToken = am.peekAuthToken(account, authTokenType);
 
-		Log.d("udinic", TAG + "> peekAuthToken returned - " + account + " " + authToken);
+		Logger.d("udinic", TAG + "> peekAuthToken returned - " + account + " " + authToken);
 
 		// Lets give another try to authenticate the user
 
@@ -130,7 +103,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 		result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
 		result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
 
-		Log.d("udinic", TAG + "> getAuthToken returning - " + account + " " + authToken);
+		Logger.d("udinic", TAG + "> getAuthToken returning - " + account + " " + authToken);
 
 		return result;
 

@@ -17,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -33,7 +32,11 @@ import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -75,7 +78,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param extras Extras to add on created intent (to login or register activity)
 	 */
 	public static void openAccountManager(Context context, @Nullable Bundle extras) {
-		Log.d(TAG, "openAccountManager() called with: " + "context = [" + context + "], extras =" +
+		Logger.d(TAG, "openAccountManager() called with: " + "context = [" + context + "], extras =" +
 				" " +
 				"[" + extras + "]");
 		if (isLoggedIn(context)) {
@@ -215,7 +218,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		oAuth2AuthenticationRequest.execute(new SuccessRequestListener<OAuth>() {
 			@Override
 			public void onSuccess(OAuth oAuth) {
-				Log.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
+				Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
 				boolean loginSuccessful = getInstance().addLocalUserAccount(userName,
 						passwordOrToken, null, oAuth
 						.getRefresh_token());
@@ -225,10 +228,22 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				} else {
 					getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
 							.getString(R.string.unknown_error));
-					Log.e(TAG, "Error while adding the local account. Probably context was null");
+					Logger.e(TAG, "Error while adding the local account. Probably context was null");
 				}
 			}
-		}, e -> getInstance().onLoginFail(e.getMessage()));
+		}, new ErrorRequestListener() {
+			@Override
+			public void onError(Throwable e) {
+				try {
+					String string = ((HttpException) e).response().errorBody().string();
+					OAuth oAuth = WebService.getObjectMapper().readValue(string, OAuth.class);
+					getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
+							.getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError())));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 	}
 
 	/**
@@ -266,7 +281,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	}
 
 	private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken) {
-		Log.d(TAG, "invalidateAccessTokenSync: " + new Date().getTime());
+		Logger.d(TAG, "invalidateAccessTokenSync: " + new Date().getTime());
 		return OAuth2AuthenticationRequest.of(refreshToken)
 				.observe()
 				.map(OAuth::getAccessToken)
@@ -293,8 +308,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			CreateUserRequest.of(email, password).execute(oAuth -> {
 				if (oAuth.hasErrors()) {
 					if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
-						callback.onRegisterFail(ErrorsMapper.getErrorsMap()
-								.get(oAuth.getErrors().get(0).code));
+						callback.onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth
+								.getErrors()
+								.get(0).code));
 					} else {
 						callback.onRegisterFail(R.string.unknown_error);
 					}
@@ -385,10 +401,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	/**
 	 * Method responsible to setup all login modes
 	 *
-	 * @param callback            Callback used to let outsiders know if the login was
-	 *                               successful or
-	 *
-	 *                            not
+	 * @param callback            Callback used to let outsiders know if the login was successful
+	 *                            or not
 	 * @param activity            Activity where the login is being made
 	 * @param facebookLoginButton facebook login button
 	 * @param loginButton         Aptoide login button

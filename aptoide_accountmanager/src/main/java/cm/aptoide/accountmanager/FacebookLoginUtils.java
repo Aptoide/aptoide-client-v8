@@ -175,12 +175,10 @@ class FacebookLoginUtils {
 						askForMailAgain();
 						break;
 					case USER_FRIENDS:
-						// TODO: 5/2/16 trinkes what to do when we have no friends
-						Log.e(TAG, "hasDeclinedPermissions: " + declinedPermission);
+						Logger.e(TAG, "hasDeclinedPermissions: " + declinedPermission);
 						break;
 					default:
-						// TODO: 5/2/16 trinkes other permission
-						Log.e(TAG, "hasDeclinedPermissions: check if we need the permission" +
+						Logger.e(TAG, "hasDeclinedPermissions: check if we need the permission" +
 								declinedPermission);
 				}
 			}

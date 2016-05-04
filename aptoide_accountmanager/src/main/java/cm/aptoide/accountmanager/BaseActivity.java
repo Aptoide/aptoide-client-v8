@@ -20,30 +20,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 		Log.d(TAG, "testeonCreate: " + getClass().getSimpleName());
 	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-		Log.d(TAG, "testeonStop: " + getClass().getSimpleName());
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "testeonDestroy: " + getClass().getSimpleName());
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.d(TAG, "testeonPause: " + getClass().getSimpleName());
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(TAG, "testeonResume: " + getClass().getSimpleName());
-	}
-
 	protected abstract String getActivityTitle();
 
 	@LayoutRes
