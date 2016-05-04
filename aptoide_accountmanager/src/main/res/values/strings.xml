@@ -116,4 +116,5 @@
         account
     </string>
     <string name="facebook_garant_permission_button">Garant permission</string>
+    <string name="error_occured">An error occurred. Please try again</string>
 </resources>

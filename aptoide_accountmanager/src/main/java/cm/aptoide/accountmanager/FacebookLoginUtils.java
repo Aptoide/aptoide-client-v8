@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 
 /**
@@ -154,8 +155,9 @@ class FacebookLoginUtils {
 		 */
 		@Override
 		public void onError(FacebookException error) {
-			// TODO: 4/21/16 trinkes facebook cancel/fail
-			AptoideAccountManager.getInstance().onLoginFail(error.toString());
+			Logger.e(TAG, "onError: " + error.toString());
+			AptoideAccountManager.getInstance()
+					.onLoginFail(Application.getContext().getString(R.string.error_occured));
 		}
 
 		/**

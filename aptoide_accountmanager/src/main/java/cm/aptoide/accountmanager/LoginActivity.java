@@ -1,14 +1,18 @@
 package cm.aptoide.accountmanager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -29,6 +33,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	private Button hidePassButton;
 	private CheckBox registerDevice;
 	private Toolbar mToolbar;
+	private TextView forgotPassword;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +45,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 				.setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
 		setupShowHidePassButton();
 		setupToolbar();
+		setupViewListeners();
 	}
 
 	@Override
@@ -56,6 +62,20 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	@Override
 	int getLayoutId() {
 		return R.layout.login_activity_layout;
+	}
+
+	private void setupViewListeners() {
+		SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
+		forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
+		forgotPassword.setText(forgetString);
+		forgotPassword.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m" +
+						".aptoide.com/account/password-recovery"));
+				startActivity(passwordRecovery);
+			}
+		});
 	}
 
 	private void setupToolbar() {
@@ -99,6 +119,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 		hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
 		registerDevice = (CheckBox) findViewById(R.id.link_my_device);
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		forgotPassword = (TextView) findViewById(R.id.forgot_password);
 	}
 
 	@Override

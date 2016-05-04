@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
@@ -25,6 +24,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 
 /**
  * Created by trinkes on 4/19/16.
@@ -62,7 +63,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 			return;
 		}
 
-		Log.d(TAG, "setUpGoogle serverId: " + BuildConfig.GMS_SERVER_ID);
+		Logger.d(TAG, "setUpGoogle serverId: " + BuildConfig.GMS_SERVER_ID);
 		GoogleApiClient googleApiClient = setupGoogleApiClient(activity);
 		if (googleSignIn != null) {
 			googleSignIn.setOnClickListener(new View.OnClickListener() {
@@ -106,13 +107,11 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 	protected static void onActivityResult(int requestCode, Intent data) {
 		if (requestCode == REQ_SIGN_IN_GOOGLE) {
 			final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-			Logger.d(TAG, "GoogleSignInResult. status: " + result.getStatus());
 			GoogleSignInAccount account = result.getSignInAccount();
 			if (!result.isSuccess()) {
 				handleErrors(result);
-			}
-
-			if (result.isSuccess() && account != null) {
+			} else if (account != null) {
+				Logger.d(TAG, "onActivityResult: Email: " + account.getEmail() + "Disp name" + account);
 				AptoideAccountManager.loginUserCredentials(LoginMode.GOOGLE, account.getEmail(),
 						account
 						.getServerAuthCode(), account.getDisplayName());
@@ -121,7 +120,15 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 	}
 
 	private static void handleErrors(GoogleSignInResult account) {
-		// TODO: 4/20/16 trinkes handle google sign in errors
+		if (account.getStatus().getStatusCode() == 12501) {
+			Logger.e(TAG, "probably this apk is in debug mode");
+			AptoideAccountManager.getInstance()
+					.onLoginFail(Application.getContext().getString(R.string.unknown_error));
+		} else {
+			AptoideAccountManager.getInstance()
+					.onLoginFail(Application.getContext().getString(R.string.unknown_error));
+			Logger.e(TAG, "handleErrors: " + account.toString());
+		}
 	}
 
 	static void logout() {

@@ -24,7 +24,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-
+        consumerProguardFiles 'proguard-rules.pro'
         buildConfigField BOOLEAN, GMS_CONFIGURED, (gmsServerId != null).toString()
         buildConfigField STRING, GMS_SERVER_ID, "\"" + gmsServerId.toString() + "\""
 
@@ -39,11 +39,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
         }
     }
 
@@ -72,6 +69,9 @@ dependencies {
 
     debugCompile project(path: ':networkclient', configuration: 'debug')
     releaseCompile project(path: ':networkclient', configuration: 'release')
+
+    debugCompile project(path: ':logger', configuration: 'debug')
+    releaseCompile project(path: ':logger', configuration: 'release')
 
     compile 'com.facebook.android:facebook-android-sdk:4.11.0'
     compile 'com.google.android.gms:play-services-basement:8.3.0'
