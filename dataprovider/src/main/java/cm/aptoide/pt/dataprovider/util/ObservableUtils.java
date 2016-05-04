@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.util;
 
 import java.util.concurrent.TimeUnit;
 
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -28,7 +29,7 @@ public class ObservableUtils {
 				return i;
 			} else {
 				// Don't retry
-				throw new RuntimeException(n);
+				throw new NoNetworkConnectionException(n);
 			}
 		}).delay(500, TimeUnit.MILLISECONDS));
 	}
