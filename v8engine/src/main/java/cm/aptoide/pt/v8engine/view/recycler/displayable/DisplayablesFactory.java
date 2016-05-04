@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -14,6 +14,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.HeaderGridDisplayable;
 
 /**
  * Created by neuro on 01-05-2016.
@@ -30,24 +31,24 @@ public class DisplayablesFactory {
 			switch (wsWidget.getType()) {
 
 				case APPS_GROUP:
-					displayables.add(getApps(wsWidget.getViewObject()));
+					displayables.add(new HeaderGridDisplayable(wsWidget));
+					displayables.add(getApps(wsWidget));
 					break;
 
 				case STORES_GROUP:
+					displayables.add(new HeaderGridDisplayable(wsWidget));
 					displayables.add(getStores(wsWidget.getViewObject()));
 					break;
 
 				case DISPLAYS:
+					displayables.add(new HeaderGridDisplayable(wsWidget));
 					displayables.add(getDisplays(wsWidget.getViewObject()));
-					break;
-
-				case HEADER_ROW:
-					displayables.add(getHeader(wsWidget.getViewObject()));
 					break;
 			}
 		}
 
 		// FIXME remove this lines. for debug only
+		/*
 		if(cm.aptoide.pt.v8engine.BuildConfig.DEBUG) {
 			GetStoreWidgets.WSWidget header1 = new GetStoreWidgets.WSWidget();
 			header1.setTitle("header 1");
@@ -57,19 +58,18 @@ public class DisplayablesFactory {
 			header2.setTitle("header 2");
 			displayables.addLast(getHeader(header2));
 		}
+		*/
 
 		return displayables;
 	}
 
-	private static Displayable getApps(Object viewObject) {
-		ListApps listApps = (ListApps) viewObject;
+	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {
+		ListApps listApps = (ListApps) wsWidget.getViewObject();
 		List<App> apps = listApps.getDatalist().getList();
 		List<Displayable> tmp = new ArrayList<>(apps.size());
 		// Todo: row
 		for (App app : apps) {
-			DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader.INSTANCE
-					.newDisplayable(GetStoreWidgets.Type.APPS_GROUP
-					.name());
+			DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader.INSTANCE.newDisplayable(wsWidget.getType().name());
 			diplayable.setPojo(app);
 			tmp.add(diplayable);
 		}
@@ -81,9 +81,7 @@ public class DisplayablesFactory {
 		List<Store> stores = listStores.getDatalist().getList();
 		List<Displayable> tmp = new ArrayList<>(stores.size());
 		for (Store store : stores) {
-			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader
-					.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP
-					.name());
+			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP.name());
 			diplayable.setPojo(store);
 			tmp.add(diplayable);
 		}
@@ -97,9 +95,8 @@ public class DisplayablesFactory {
 
 	private static Displayable getHeader(Object viewObject) {
 		GetStoreWidgets.WSWidget header = (GetStoreWidgets.WSWidget) viewObject;
-		DisplayablePojo<GetStoreWidgets.WSWidget> displayable = (DisplayablePojo<GetStoreWidgets
-				.WSWidget>) DisplayableLoader.INSTANCE
-				.newDisplayable(GetStoreWidgets.Type.HEADER_ROW.name());
+		DisplayablePojo<GetStoreWidgets.WSWidget> displayable = (DisplayablePojo<GetStoreWidgets.WSWidget>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.HEADER_ROW
+				.name());
 		displayable.setPojo(header);
 		return displayable;
 	}
