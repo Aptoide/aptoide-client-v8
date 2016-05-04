@@ -14,7 +14,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.HeaderGridDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 
 /**
  * Created by neuro on 01-05-2016.
@@ -31,17 +31,17 @@ public class DisplayablesFactory {
 			switch (wsWidget.getType()) {
 
 				case APPS_GROUP:
-					displayables.add(new HeaderGridDisplayable(wsWidget));
+					displayables.add(new GridHeaderDisplayable(wsWidget));
 					displayables.add(getApps(wsWidget));
 					break;
 
 				case STORES_GROUP:
-					displayables.add(new HeaderGridDisplayable(wsWidget));
+					displayables.add(new GridHeaderDisplayable(wsWidget));
 					displayables.add(getStores(wsWidget.getViewObject()));
 					break;
 
 				case DISPLAYS:
-					displayables.add(new HeaderGridDisplayable(wsWidget));
+					displayables.add(new GridHeaderDisplayable(wsWidget));
 					displayables.add(getDisplays(wsWidget.getViewObject()));
 					break;
 			}

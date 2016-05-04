@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
+package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -17,15 +17,15 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.AppGridDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 28/04/16.
  */
-@Displayables({AppGridDisplayable.class})
-public class AppGridWidget extends Widget<AppGridDisplayable> {
+@Displayables({GridAppDisplayable.class})
+public class GridAppWidget extends Widget<GridAppDisplayable> {
 
 	private TextView name;
 	private ImageView icon;
@@ -37,22 +37,8 @@ public class AppGridWidget extends Widget<AppGridDisplayable> {
 	//private static final SimpleDateFormat dateFormatter =
 	//		new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
-	public AppGridWidget(View itemView) {
+	public GridAppWidget(View itemView) {
 		super(itemView);
-	}
-
-	@Override
-	public void bindView(AppGridDisplayable displayable) {
-		final App pojo = displayable.getPojo();
-
-		Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(icon);
-
-		name.setText(pojo.getName());
-		downloads.setText(StringUtils.withSuffix(pojo.getStats()
-				.getDownloads()) + Aptoide.getContext().getString(R.string._downloads));
-		ratingBar.setRating(pojo.getStats().getRating().getAvg());
-		tvStoreName.setText(pojo.getStore().getName());
-		tvAddedTime.setText(pojo.getAdded());
 	}
 
 	@Override
@@ -63,5 +49,19 @@ public class AppGridWidget extends Widget<AppGridDisplayable> {
 		ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
 		tvStoreName = (TextView) itemView.findViewById(R.id.store_name);
 		tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
+	}
+
+	@Override
+	public void bindView(GridAppDisplayable displayable) {
+		final App pojo = displayable.getPojo();
+
+		Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(icon);
+
+		name.setText(pojo.getName());
+		downloads.setText(StringUtils.withSuffix(pojo.getStats()
+				.getDownloads()) + Aptoide.getContext().getString(R.string._downloads));
+		ratingBar.setRating(pojo.getStats().getRating().getAvg());
+		tvStoreName.setText(pojo.getStore().getName());
+		tvAddedTime.setText(pojo.getAdded());
 	}
 }

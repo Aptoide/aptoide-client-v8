@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
+package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.view.View;
 import android.widget.Button;
@@ -13,21 +13,21 @@ import java.util.List;
 
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.HeaderGridDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 29/04/16.
  */
-@Displayables({HeaderGridDisplayable.class})
-public class HeaderGridWidget extends Widget<HeaderGridDisplayable> {
+@Displayables({GridHeaderDisplayable.class})
+public class GridHeaderWidget extends Widget<GridHeaderDisplayable> {
 
 	private TextView title;
 	private Button more;
 	//private RelativeLayout moreLayout;
 
-	public HeaderGridWidget(View itemView) {
+	public GridHeaderWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -39,7 +39,7 @@ public class HeaderGridWidget extends Widget<HeaderGridDisplayable> {
 	}
 
 	@Override
-	public void bindView(HeaderGridDisplayable displayable) {
+	public void bindView(GridHeaderDisplayable displayable) {
 		final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
 		final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
 		title.setText(pojo.getTitle());

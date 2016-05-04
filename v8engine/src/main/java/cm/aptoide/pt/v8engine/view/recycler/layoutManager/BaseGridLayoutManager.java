@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 18/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.grid;
+package cm.aptoide.pt.v8engine.view.recycler.layoutManager;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;

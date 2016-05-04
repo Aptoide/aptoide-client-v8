@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
+package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.support.annotation.LayoutRes;
 
@@ -17,12 +17,12 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  *
  * @author SithEngineer
  */
-public class AppGridDisplayable extends DisplayablePojo<App> {
+public class GridAppDisplayable extends DisplayablePojo<App> {
 
-	public AppGridDisplayable() {
+	public GridAppDisplayable() {
 	}
 
-	public AppGridDisplayable(App pojo) {
+	public GridAppDisplayable(App pojo) {
 		super(pojo);
 	}
 

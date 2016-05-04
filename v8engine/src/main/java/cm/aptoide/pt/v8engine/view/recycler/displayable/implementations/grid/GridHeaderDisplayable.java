@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
+package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
@@ -12,12 +12,12 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 /**
  * Created by sithengineer on 29/04/16.
  */
-public class HeaderGridDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
+public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
-	public HeaderGridDisplayable() {
+	public GridHeaderDisplayable() {
 	}
 
-	public HeaderGridDisplayable(GetStoreWidgets.WSWidget pojo) {
+	public GridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
 		super(pojo);
 	}
 

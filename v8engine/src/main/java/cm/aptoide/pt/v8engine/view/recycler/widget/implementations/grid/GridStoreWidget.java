@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
+package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
@@ -19,17 +19,17 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CircleTransform;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.StoreGridDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 29/04/16.
  */
-@Displayables({StoreGridDisplayable.class})
-public class StoreGridWidget extends Widget<StoreGridDisplayable> {
+@Displayables({GridStoreDisplayable.class})
+public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
-	private static final String TAG = StoreGridWidget.class.getSimpleName();
+	private static final String TAG = GridStoreWidget.class.getSimpleName();
 
 	private ImageView storeAvatar;
 	private TextView storeName;
@@ -39,7 +39,7 @@ public class StoreGridWidget extends Widget<StoreGridDisplayable> {
 	private TextView storeDownloads;
 	//private LinearLayout infoLayout;
 
-	public StoreGridWidget(View itemView) {
+	public GridStoreWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -55,10 +55,10 @@ public class StoreGridWidget extends Widget<StoreGridDisplayable> {
 	}
 
 	@Override
-	public void bindView(StoreGridDisplayable storeGridDisplayable) {
+	public void bindView(GridStoreDisplayable gridStoreDisplayable) {
 
 		final Context context = itemView.getContext();
-		final Store store = storeGridDisplayable.getPojo();
+		final Store store = gridStoreDisplayable.getPojo();
 
 		storeName.setText(store.getName());
 		storeDownloads.setText(StringUtils.withSuffix(store.getStats().getDownloads()));

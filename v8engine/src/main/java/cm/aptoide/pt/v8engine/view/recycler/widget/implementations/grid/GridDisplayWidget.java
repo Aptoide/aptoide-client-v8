@@ -1,27 +1,27 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
+package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.view.View;
 import android.widget.ImageView;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayGridDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 02/05/16.
  */
-@Displayables({DisplayGridDisplayable.class})
-public class DisplayGridWidget extends Widget<DisplayGridDisplayable> {
+@Displayables({GridDisplayDisplayable.class})
+public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 
 	private ImageView imageView;
 
-	public DisplayGridWidget(View itemView) {
+	public GridDisplayWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -31,7 +31,7 @@ public class DisplayGridWidget extends Widget<DisplayGridDisplayable> {
 	}
 
 	@Override
-	public void bindView(DisplayGridDisplayable displayable) {
+	public void bindView(GridDisplayDisplayable displayable) {
 		Object pojo = displayable.getPojo();
 		// TODO
 	}

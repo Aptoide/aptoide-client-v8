@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -13,7 +13,7 @@ import cm.aptoide.pt.utils.ThreadUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.grid.BaseGridLayoutManager;
+import cm.aptoide.pt.v8engine.view.recycler.layoutManager.BaseGridLayoutManager;
 
 /**
  * Created by neuro on 15-04-2016.
