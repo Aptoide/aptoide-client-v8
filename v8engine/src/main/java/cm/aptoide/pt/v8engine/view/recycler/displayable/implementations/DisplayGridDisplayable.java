@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 public class DisplayGridDisplayable extends DisplayablePojo<Object> {
 
 	@Override
-	public GetStoreWidgets.Type getName() {
+	public GetStoreWidgets.Type getType() {
 		return GetStoreWidgets.Type.DISPLAYS;
 	}
 

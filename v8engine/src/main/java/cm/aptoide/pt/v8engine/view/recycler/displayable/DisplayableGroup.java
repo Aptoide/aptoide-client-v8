@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/04/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -42,8 +42,8 @@ public class DisplayableGroup extends Displayable {
 	}
 
 	@Override
-	public GetStoreWidgets.Type getName() {
-		throw new IllegalStateException("getName() on DisplayableGroup should not be called!");
+	public GetStoreWidgets.Type getType() {
+		throw new IllegalStateException("getType() on DisplayableGroup should not be called!");
 	}
 
 	@Override

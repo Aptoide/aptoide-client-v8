@@ -69,8 +69,7 @@ public class DisplayablesFactory {
 		List<Displayable> tmp = new ArrayList<>(apps.size());
 		// Todo: row
 		for (App app : apps) {
-			DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader.INSTANCE.newDisplayable(wsWidget.getType().name());
-			diplayable.setPojo(app);
+			DisplayablePojo<App> diplayable = DisplayableLoader.INSTANCE.newDisplayable(wsWidget.getType(), app);
 			tmp.add(diplayable);
 		}
 		return new DisplayableGroup(tmp);
@@ -81,7 +80,7 @@ public class DisplayablesFactory {
 		List<Store> stores = listStores.getDatalist().getList();
 		List<Displayable> tmp = new ArrayList<>(stores.size());
 		for (Store store : stores) {
-			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP.name());
+			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
 			diplayable.setPojo(store);
 			tmp.add(diplayable);
 		}
@@ -95,8 +94,7 @@ public class DisplayablesFactory {
 
 	private static Displayable getHeader(Object viewObject) {
 		GetStoreWidgets.WSWidget header = (GetStoreWidgets.WSWidget) viewObject;
-		DisplayablePojo<GetStoreWidgets.WSWidget> displayable = (DisplayablePojo<GetStoreWidgets.WSWidget>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.HEADER_ROW
-				.name());
+		DisplayablePojo<GetStoreWidgets.WSWidget> displayable = (DisplayablePojo<GetStoreWidgets.WSWidget>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.HEADER_ROW);
 		displayable.setPojo(header);
 		return displayable;
 	}
