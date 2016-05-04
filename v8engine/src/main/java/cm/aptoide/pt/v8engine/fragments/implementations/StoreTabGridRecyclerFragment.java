@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments.implementations;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -45,16 +44,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void loadBundle(Bundle args) {
+		type = GetStoreTabs.Tab.Event.Type.valueOf(args.getString(BundleCons.TYPE));
+		name = GetStoreTabs.Tab.Event.Name.valueOf(args.getString(BundleCons.NAME));
+		action = args.getString(BundleCons.ACTION);
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-
-		loadBundle(getArguments());
-
+	protected void load() {
 		String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 		V7.Interfaces interfaces = GenericInterface.newInstance();
 
@@ -69,13 +66,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
 				//todo
 				break;
 		}
-	}
-
-	@Override
-	protected void loadBundle(Bundle args) {
-		type = GetStoreTabs.Tab.Event.Type.valueOf(args.getString(BundleCons.TYPE));
-		name = GetStoreTabs.Tab.Event.Name.valueOf(args.getString(BundleCons.NAME));
-		action = args.getString(BundleCons.ACTION);
 	}
 
 	private Subscription caseGetStoreWidgets(String url, V7.Interfaces interfaces) {
@@ -95,7 +85,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
 
 			List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets);
 			addDisplayables(displayables);
-		});
+		}, throwable -> finishLoading(throwable));
 	}
 
 	private static class BundleCons {

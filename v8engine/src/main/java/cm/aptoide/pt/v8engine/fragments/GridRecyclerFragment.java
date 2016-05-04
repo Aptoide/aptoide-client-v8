@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -27,7 +27,7 @@ import cm.aptoide.pt.v8engine.view.recycler.grid.BaseGridLayoutManager;
  * @author neuro
  * @author sithengineer
  */
-public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> {
+public abstract class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> {
 
 	private Handler handler;
 
@@ -37,6 +37,12 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 		handler = new Handler(Looper.myLooper());
 
 		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		load();
 	}
 
 	@Override

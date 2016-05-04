@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 03/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -32,7 +32,12 @@ public class MainActivityTestes extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		getSupportFragmentManager().beginTransaction().replace(R.id.contentor, new GridRecyclerFragment()).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.contentor, new GridRecyclerFragment() {
+			@Override
+			protected void load() {
+
+			}
+		}).commit();
 
 		final GetStore[] gaga = new GetStore[1];
 		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps");

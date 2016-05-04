@@ -1,12 +1,18 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 01/05/2016.
+  ~ Modified by Neurophobic Animal on 04/05/2016.
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
     >
+
+    <include layout="@layout/incl_no_network_layout"/>
+
+    <include layout="@layout/error_layout"/>
+
+    <include layout="@layout/progress_bar"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
@@ -24,14 +30,6 @@
             android:paddingRight="@dimen/recycler_margin"
             android:visibility="gone"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="visible"/>
 
 </FrameLayout>
 

@@ -51,4 +51,9 @@ public class StoreGridRecyclerFragment extends GridRecyclerFragment {
 		d.setPojo(store);
 		return d;
 	}
+
+	@Override
+	protected void load() {
+
+	}
 }
