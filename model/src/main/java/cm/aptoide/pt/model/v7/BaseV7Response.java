@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
+
+import java.util.List;
 
 import lombok.Data;
 
@@ -14,6 +16,7 @@ import lombok.Data;
 public class BaseV7Response {
 
 	private Info info;
+	private List<Error> errors;
 
 	@Data
 	public static class Info {
@@ -31,5 +34,12 @@ public class BaseV7Response {
 			private double seconds;
 			private String human;
 		}
+	}
+
+	@Data
+	public static class Error {
+
+		private String code;
+		private String description;
 	}
 }
