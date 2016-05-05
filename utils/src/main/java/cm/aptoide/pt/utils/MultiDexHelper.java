@@ -29,9 +29,8 @@ import dalvik.system.DexFile;
  */
 public class MultiDexHelper {
 
-	private static final String EXTRACTED_NAME_EXT = ".classes";
 	public static final String EXTRACTED_SUFFIX = ".zip";
-
+	private static final String EXTRACTED_NAME_EXT = ".classes";
 	private static final String SECONDARY_FOLDER_NAME = "code_cache" + File.separator +
 			"secondary-dexes";
 
@@ -113,7 +112,7 @@ public class MultiDexHelper {
 				throw new IOException("Error at loading dex file '" +
 						path + "'");
 			} finally {
-				if (dexfile!=null) {
+				if (dexfile != null) {
 					dexfile.close();
 				}
 			}

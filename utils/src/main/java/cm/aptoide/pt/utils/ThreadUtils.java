@@ -15,7 +15,9 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ThreadUtils {
 
 	public static void runOnUiThread(Runnable runnable) {
-		Observable.just(null).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> runnable.run(), Logger::printException);
+		Observable.just(null)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(o -> runnable.run(), Logger::printException);
 	}
 
 	public static void sleep(long l) {
@@ -25,5 +27,4 @@ public class ThreadUtils {
 			e.printStackTrace();
 		}
 	}
-
 }

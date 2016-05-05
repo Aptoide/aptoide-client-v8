@@ -19,7 +19,9 @@ public class ObservableUtils {
 
 	public static <T> Observable<T> retryOnTicket(Observable<T> observable) {
 		return observable.subscribeOn(Schedulers.io()).flatMap(t -> {
-			if (((BaseV7Response) t).getInfo().getStatus().equals(BaseV7Response.Info.Status.QUEUED)) {
+			if (((BaseV7Response) t).getInfo()
+					.getStatus()
+					.equals(BaseV7Response.Info.Status.QUEUED)) {
 				return Observable.error(new ToRetryThrowable());
 			} else {
 				return Observable.just(t);

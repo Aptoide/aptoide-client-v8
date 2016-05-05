@@ -66,10 +66,15 @@ public class GetStoreRequest extends V7<GetStore> {
 		if (recursive) {
 			return super.observe().observeOn(Schedulers.io()).doOnNext(getStore -> {
 
-				List<GetStoreWidgets.WSWidget> list = getStore.getNodes().getWidgets().getDatalist().getList();
+				List<GetStoreWidgets.WSWidget> list = getStore.getNodes()
+						.getWidgets()
+						.getDatalist()
+						.getList();
 				CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
-				Observable.from(list).forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, Logger::printException));
+				Observable.from(list)
+						.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+								countDownLatch, Logger::printException));
 
 				try {
 					countDownLatch.await();
@@ -82,12 +87,14 @@ public class GetStoreRequest extends V7<GetStore> {
 		}
 	}
 
-	public void execute(SuccessRequestListener<GetStore> successRequestListener, boolean recursive) {
+	public void execute(SuccessRequestListener<GetStore> successRequestListener, boolean
+			recursive) {
 		this.recursive = recursive;
 		execute(successRequestListener);
 	}
 
-	public void execute(SuccessRequestListener<GetStore> successRequestListener, ErrorRequestListener errorRequestListener, boolean recursive) {
+	public void execute(SuccessRequestListener<GetStore> successRequestListener,
+						ErrorRequestListener errorRequestListener, boolean recursive) {
 		this.recursive = recursive;
 		super.execute(successRequestListener, errorRequestListener);
 	}

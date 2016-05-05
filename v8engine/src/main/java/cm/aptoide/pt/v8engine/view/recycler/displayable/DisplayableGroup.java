@@ -54,7 +54,7 @@ public class DisplayableGroup extends Displayable {
 
 	@Override
 	public int getDefaultPerLineCount() {
-		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not " +
-				"be called!");
+		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not "
+				+ "be called!");
 	}
 }

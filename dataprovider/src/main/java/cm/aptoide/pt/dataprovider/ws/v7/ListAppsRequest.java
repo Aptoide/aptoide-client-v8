@@ -49,7 +49,8 @@ public class ListAppsRequest extends V7<ListApps> {
 		private Subgroups subgroups;
 
 		public enum Sort {
-			latest, downloads, downloads7d, downloads30d, pdownloads, pdownloads7d, pdownloads30d, trending7d, trending30d, rating, alpha,
+			latest, downloads, downloads7d, downloads30d, pdownloads, pdownloads7d, pdownloads30d,
+			trending7d, trending30d, rating, alpha,
 		}
 
 		public enum Subgroups {

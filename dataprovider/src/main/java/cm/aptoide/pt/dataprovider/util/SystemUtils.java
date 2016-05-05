@@ -34,7 +34,8 @@ public class SystemUtils {
 		}
 
 		int minSdk = getSdkVer();
-		String minScreen = Filters.Screen.values()[getScreenSize()].name().toLowerCase(Locale.ENGLISH);
+		String minScreen = Filters.Screen.values()[getScreenSize()].name()
+				.toLowerCase(Locale.ENGLISH);
 		String minGlEs = getGlEsVer();
 
 		final int density = getDensityDpi();
@@ -48,10 +49,16 @@ public class SystemUtils {
 		} catch (PackageManager.NameNotFoundException ignore) {
 		}
 
-		String filters = (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "") + "maxSdk=" + minSdk + "&maxScreen=" + minScreen + "&maxGles=" + minGlEs + "&myCPU=" +
+		String filters = (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "") +
+				"maxSdk=" + minSdk + "&maxScreen=" + minScreen + "&maxGles=" + minGlEs +
+				"&myCPU=" +
 				cpuAbi + "&myDensity=" + density + "&myApt=" + myversionCode;
 
-		return Base64.encodeToString(filters.getBytes(), 0).replace("=", "").replace("/", "*").replace("+", "_").replace("\n", "");
+		return Base64.encodeToString(filters.getBytes(), 0)
+				.replace("=", "")
+				.replace("/", "*")
+				.replace("+", "_")
+				.replace("\n", "");
 	}
 
 	public static int getSdkVer() {
@@ -59,17 +66,21 @@ public class SystemUtils {
 	}
 
 	public static int getScreenSize() {
-		return context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+		return context.getResources()
+				.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 	}
 
 	public static String getGlEsVer() {
-		return ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
+		return ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
+				.getDeviceConfigurationInfo()
+				.getGlEsVersion();
 	}
 
 	public static int getDensityDpi() {
 
 		DisplayMetrics metrics = new DisplayMetrics();
-		((WindowManager) context.getSystemService(Service.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
+		((WindowManager) context.getSystemService(Service.WINDOW_SERVICE)).getDefaultDisplay()
+				.getMetrics(metrics);
 
 		int dpi = metrics.densityDpi;
 
@@ -95,7 +106,8 @@ public class SystemUtils {
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	@SuppressWarnings("deprecation")
 	public static String getAbis() {
-		final String[] abis = getSdkVer() >= Build.VERSION_CODES.LOLLIPOP ? Build.SUPPORTED_ABIS : new String[]{Build.CPU_ABI, Build.CPU_ABI2};
+		final String[] abis = getSdkVer() >= Build.VERSION_CODES.LOLLIPOP ? Build.SUPPORTED_ABIS :
+				new String[]{Build.CPU_ABI, Build.CPU_ABI2};
 		final StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < abis.length; i++) {
 			builder.append(abis[i]);
@@ -108,6 +120,8 @@ public class SystemUtils {
 
 	public static String getCountryCode() {
 		Context context = DataProvider.getContext();
-		return context.getResources().getConfiguration().locale.getLanguage() + "_" + context.getResources().getConfiguration().locale.getCountry();
+		return context.getResources()
+				.getConfiguration().locale.getLanguage() + "_" + context.getResources()
+				.getConfiguration().locale.getCountry();
 	}
 }

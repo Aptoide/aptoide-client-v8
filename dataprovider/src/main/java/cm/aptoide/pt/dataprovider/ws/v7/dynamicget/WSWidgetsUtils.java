@@ -20,7 +20,8 @@ import rx.schedulers.Schedulers;
  */
 public class WSWidgetsUtils {
 
-	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch, Action1<Throwable> action1) {
+	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch
+			countDownLatch, Action1<Throwable> action1) {
 
 		if (isKnownType(wsWidget.getType())) {
 			V7.Interfaces interfaces = GenericInterface.newInstance();
@@ -32,13 +33,16 @@ public class WSWidgetsUtils {
 			}
 			switch (wsWidget.getType()) {
 				case APPS_GROUP:
-					ioScheduler(interfaces.listApps(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
+					ioScheduler(interfaces.listApps(url)).subscribe(listApps -> setObjectView
+							(wsWidget, countDownLatch, listApps), action1);
 					break;
 				case STORES_GROUP:
-					ioScheduler(interfaces.listStores(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
+					ioScheduler(interfaces.listStores(url)).subscribe(listApps -> setObjectView
+							(wsWidget, countDownLatch, listApps), action1);
 					break;
 				case DISPLAYS:
-					ioScheduler(interfaces.getStoreDisplays(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
+					ioScheduler(interfaces.getStoreDisplays(url)).subscribe(listApps ->
+							setObjectView(wsWidget, countDownLatch, listApps), action1);
 					break;
 				default:
 					// In case a known enum is not implemented
@@ -54,7 +58,8 @@ public class WSWidgetsUtils {
 		return observable.subscribeOn(Schedulers.io());
 	}
 
-	private static void setObjectView(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch, Object o) {
+	private static void setObjectView(GetStoreWidgets.WSWidget wsWidget, CountDownLatch
+			countDownLatch, Object o) {
 		wsWidget.setViewObject(o);
 		countDownLatch.countDown();
 	}
