@@ -58,7 +58,11 @@ class RequestCacheEntry {
 		Charset charset = Charset.forName(DEFAULT_CHARSET);
 		charset = responseBody.contentType().charset(charset);
 
-		this.body = responseBody.source().buffer().clone().readString(charset);
+		try {
+			this.body = responseBody.source().readString(charset);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@NonNull
