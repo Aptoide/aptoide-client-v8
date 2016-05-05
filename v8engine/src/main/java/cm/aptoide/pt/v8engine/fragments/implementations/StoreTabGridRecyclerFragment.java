@@ -9,12 +9,13 @@ import android.os.Bundle;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.util.ObservableUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.GenericInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerSwipeFragment;
@@ -22,6 +23,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import rx.Observable;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 29-04-2016.
@@ -38,7 +40,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		args.putString(BundleCons.TYPE, event.getType().toString());
 		args.putString(BundleCons.NAME, event.getName().toString());
 		// todo: apagar martelada!
-		if (event.getAction().contains("getStore")) {
+		if (event.getAction() != null && event.getAction().contains("getStore")) {
 			event.setAction(event.getAction().replace("context/store", "context/home"));
 		}
 		args.putString(BundleCons.ACTION, event.getAction());
@@ -58,14 +60,13 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void load() {
 		String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
-		V7.Interfaces interfaces = GenericInterface.newInstance();
 
 		switch (name) {
 			case getStore:
-				caseGetStore(url, interfaces);
+				caseGetStore(url);
 				break;
 			case getStoreWidgets:
-				caseGetStoreWidgets(url, interfaces);
+				caseGetStoreWidgets(url);
 				break;
 			case getReviews:
 				//todo
@@ -76,8 +77,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 	}
 
-	private Subscription caseGetStore(String url, V7.Interfaces interfaces) {
+	private Subscription caseGetStore(String url) {
 		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url).observe())
+				.observeOn(Schedulers.io())
 				.subscribe(getStore -> {
 
 					// Load sub nodes
@@ -92,7 +94,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 									countDownLatch, throwable -> finishLoading(throwable)));
 
 					try {
-						countDownLatch.await();
+						countDownLatch.await(5, TimeUnit.SECONDS);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -104,8 +106,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	}
 
-	private Subscription caseGetStoreWidgets(String url, V7.Interfaces interfaces) {
-		return ObservableUtils.retryOnTicket(interfaces.getStoreWidgets(url))
+	private Subscription caseGetStoreWidgets(String url) {
+		return ObservableUtils.retryOnTicket(GetStoreWidgetsRequest.ofAction(url).observe())
+				.observeOn(Schedulers.io())
 				.subscribe(getStoreWidgets -> {
 
 					// Load sub nodes
