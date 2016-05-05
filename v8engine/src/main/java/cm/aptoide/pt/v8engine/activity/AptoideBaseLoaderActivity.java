@@ -32,7 +32,7 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity impl
 
 	@NonNull
 	protected LoaderLayoutHandler createLoaderLayoutHandler() {
-		return new LoaderLayoutHandler(getBaseViewId(), this);
+		return new LoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
 	}
 
 	public void finishLoading() {
@@ -44,7 +44,7 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity impl
 	}
 
 	@IdRes
-	protected abstract int getBaseViewId();
+	protected abstract int getViewToShowAfterLoadingId();
 
 	public abstract void load();
 }

@@ -25,22 +25,22 @@ import rx.android.schedulers.AndroidSchedulers;
 public class LoaderLayoutHandler {
 
 	protected final LoadInterface loadInterface;
-	@IdRes private final int baseViewId;
+	@IdRes private final int viewToShowAfterLoadingId;
 
-	protected View baseView;
+	protected View viewToShowAfterLoading;
 	protected ProgressBar progressBar;
 	protected View genericErrorView;
 	protected View noNetworkConnectionView;
 	protected View retryView;
 
-	public LoaderLayoutHandler(int baseViewId, LoadInterface loadInterface) {
-		this.baseViewId = baseViewId;
+	public LoaderLayoutHandler(int viewToShowAfterLoadingId, LoadInterface loadInterface) {
+		this.viewToShowAfterLoadingId = viewToShowAfterLoadingId;
 		this.loadInterface = loadInterface;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void bindViews(View view) {
-		baseView = view.findViewById(baseViewId);
+		viewToShowAfterLoading = view.findViewById(viewToShowAfterLoadingId);
 		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 		genericErrorView = view.findViewById(R.id.generic_error);
 		noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
@@ -55,7 +55,7 @@ public class LoaderLayoutHandler {
 
 	protected void onFinishLoading(Throwable throwable) {
 		progressBar.setVisibility(View.GONE);
-		baseView.setVisibility(View.GONE);
+		viewToShowAfterLoading.setVisibility(View.GONE);
 
 		if (throwable instanceof NoNetworkConnectionException || (throwable.getCause() != null && throwable.getCause() instanceof SocketTimeoutException)) {
 			genericErrorView.setVisibility(View.GONE);
@@ -84,7 +84,7 @@ public class LoaderLayoutHandler {
 
 	protected void onFinishLoading() {
 		progressBar.setVisibility(View.GONE);
-		baseView.setVisibility(View.VISIBLE);
+		viewToShowAfterLoading.setVisibility(View.VISIBLE);
 	}
 
 	protected void restoreState() {

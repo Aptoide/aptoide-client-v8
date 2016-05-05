@@ -75,7 +75,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	protected int getBaseViewId() {
+	protected int getViewToShowAfterLoadingId() {
 		return R.id.app_bar_layout;
 	}
 
