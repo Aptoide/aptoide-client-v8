@@ -3,7 +3,6 @@ package cm.aptoide.accountmanager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 /**
@@ -17,7 +16,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle(getActivityTitle());
-		Log.d(TAG, "testeonCreate: " + getClass().getSimpleName());
 	}
 
 	protected abstract String getActivityTitle();

@@ -38,6 +38,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.ThreadUtils;
+import cm.aptoide.pt.utils.dialogs.GenericPleaseWaitDialog;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -60,8 +61,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Aptoide " +
 			"account";
-	static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL = "Read only access to an Aptoide "
-			+ "account";
+	static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL = "Read only access to an Aptoide " +
+			"account";
 	static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
 	static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
 	/**
@@ -95,7 +96,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
 	/**
 	 * This method should be used to open login or account activity
-	 * @param extras Extras to add on created intent (to login or register activity)
+	 *
+	 * @param extras        Extras to add on created intent (to login or register activity)
 	 * @param openMyAccount true if is expeted to open myAccountActivity after login
 	 */
 	public static void openAccountManager(Context context, @Nullable Bundle extras, boolean
@@ -244,8 +246,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	static void loginUserCredentials(LoginMode mode, final String userName, final String
 			passwordOrToken, final String nameForGoogle) {
+		Context context = getInstance().mContextWeakReference.get();
+		GenericPleaseWaitDialog genericPleaseWaitDialog = null;
+		if (context != null) {
+			genericPleaseWaitDialog = new GenericPleaseWaitDialog(context);
+			genericPleaseWaitDialog.show();
+		}
 		OAuth2AuthenticationRequest oAuth2AuthenticationRequest = OAuth2AuthenticationRequest.of
 				(userName, passwordOrToken, mode, nameForGoogle);
+		final GenericPleaseWaitDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
 		oAuth2AuthenticationRequest.execute(oAuth -> {
 			Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
 			if (!oAuth.hasErrors()) {
@@ -254,12 +263,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 						.getRefresh_token(), oAuth
 						.getAccessToken())) {
 					getInstance().onLoginSuccess();
+					if (finalGenericPleaseWaitDialog != null) {
+						finalGenericPleaseWaitDialog.dismiss();
+					}
 					return;
 				}
 			}
+			if (finalGenericPleaseWaitDialog != null) {
+				finalGenericPleaseWaitDialog.dismiss();
+			}
 			getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
 					.getString(R.string.unknown_error));
-			Logger.e(TAG, "Error while adding the local account. Probably context was " + "null");
+			Logger.e(TAG, "Error while adding the local account. Probably context was null");
 		}, new ErrorRequestListener() {
 			@Override
 			public void onError(Throwable e) {
@@ -394,13 +409,17 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			public void onClick(View v) {
 				IRegisterUser callback = (IRegisterUser) callBackWeakReference.get();
 				if (callback != null) {
-					RegisterUserUsingWebServices(callback);
+					GenericPleaseWaitDialog genericPleaseWaitDialog = new GenericPleaseWaitDialog
+							(v.getContext());
+					genericPleaseWaitDialog.show();
+					RegisterUserUsingWebServices(callback, genericPleaseWaitDialog);
 				}
 			}
 		});
 	}
 
-	static void RegisterUserUsingWebServices(IRegisterUser callback) {
+	static void RegisterUserUsingWebServices(IRegisterUser callback, GenericPleaseWaitDialog
+			genericPleaseWaitDialog) {
 		String email = callback.getUserEmail();
 		String password = callback.getUserPassword();
 		if (validateUserCredentials(callback, email, password)) {
@@ -411,8 +430,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 								(oAuth
 								.getErrors()
 								.get(0).code));
+						genericPleaseWaitDialog.dismiss();
 					} else {
 						callback.onRegisterFail(R.string.unknown_error);
+						genericPleaseWaitDialog.dismiss();
 					}
 				} else {
 					Bundle bundle = new Bundle();
@@ -423,6 +444,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY, oAuth
 							.getAccessToken());
 					callback.onRegisterSuccess(bundle);
+					genericPleaseWaitDialog.dismiss();
 				}
 			});
 		}
@@ -529,7 +551,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	protected void setupLogins(ILoginInterface callback, FragmentActivity activity, LoginButton
 			facebookLoginButton, Button loginButton, Button registerButton) {
 		this.mCallback = callback;
-		this.mContextWeakReference = new WeakReference<>(activity.getApplicationContext());
+		this.mContextWeakReference = new WeakReference<>(activity);
 		GoogleLoginUtils.setUpGoogle(activity);
 		FacebookLoginUtils.setupFacebook(activity, facebookLoginButton);
 		AptoideLoginUtils.setupAptoideLogin(activity, loginButton, registerButton);

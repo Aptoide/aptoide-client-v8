@@ -5,4 +5,5 @@
 
 <resources>
     <string name="app_name">Utils</string>
+    <string name="please_wait">Please wait…</string>
 </resources>
