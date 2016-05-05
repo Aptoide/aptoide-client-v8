@@ -29,6 +29,7 @@ public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 
 	@Override
 	public void bindView(AppViewRateThisDisplayable displayable) {
-
+		final Object pojo = displayable.getPojo();
+		// TODO
 	}
 }

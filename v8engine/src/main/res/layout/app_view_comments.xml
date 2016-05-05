@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <!-- comments -->
+
+    <RelativeLayout
+        android:id="@+id/more_layout"
+        style="@style/focusableRowBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:gravity="center_vertical"
+            android:text="@string/comments"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="?colorPrimary"/>
+
+
+        <LinearLayout
+            android:id="@+id/write_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/border_grey"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="4dp"
+                android:src="?attr/icAppviewsPencil"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/write_a_comment"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="11sp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!-- comment 1 -->
+    <FrameLayout
+        android:id="@+id/comment_1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        tools:background="@color/red"
+        />
+
+    <include layout="@layout/partial_comment_separator"/>
+
+    <!-- comment 2 -->
+    <FrameLayout
+        android:id="@+id/comment_2"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        tools:background="@color/blue"
+        />
+
+    <include layout="@layout/partial_comment_separator"/>
+
+    <!-- comment 3 -->
+    <FrameLayout
+        android:id="@+id/comment_3"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        tools:background="@color/green"
+        />
+
+    <!-- see more button -->
+
+
+
+</LinearLayout>

@@ -29,6 +29,7 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
 
 	@Override
 	public void bindView(AppViewSuggestedAppsDisplayable displayable) {
-
+		final Object pojo = displayable.getPojo();
+		// TODO
 	}
 }

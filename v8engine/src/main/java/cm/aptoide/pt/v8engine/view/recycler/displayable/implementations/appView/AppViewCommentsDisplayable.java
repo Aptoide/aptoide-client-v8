@@ -6,12 +6,12 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import cm.aptoide.pt.v8engine.R;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewCommentsDisplayable extends DisplayablePojo<Object> {
+public class AppViewCommentsDisplayable extends AppViewDisplayable<Object> {
 
 	@Override
 	public GetStoreWidgets.Type getName() {
@@ -20,11 +20,7 @@ public class AppViewCommentsDisplayable extends DisplayablePojo<Object> {
 
 	@Override
 	public int getViewLayout() {
-		return 0;
+		return R.layout.app_view_comments;
 	}
 
-	@Override
-	public int getDefaultPerLineCount() {
-		return 0;
-	}
 }

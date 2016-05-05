@@ -29,6 +29,7 @@ public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDispl
 
 	@Override
 	public void bindView(AppViewOtherVersionsDisplayable displayable) {
-
+		final Object pojo = displayable.getPojo();
+		// TODO
 	}
 }

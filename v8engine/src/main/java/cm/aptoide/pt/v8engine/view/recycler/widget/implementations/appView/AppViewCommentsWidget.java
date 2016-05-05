@@ -29,6 +29,7 @@ public class AppViewCommentsWidget extends Widget<AppViewCommentsDisplayable> {
 
 	@Override
 	public void bindView(AppViewCommentsDisplayable displayable) {
-
+		final Object pojo = displayable.getPojo();
+		// TODO
 	}
 }

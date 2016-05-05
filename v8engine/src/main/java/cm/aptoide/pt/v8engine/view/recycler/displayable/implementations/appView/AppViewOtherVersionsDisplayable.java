@@ -6,12 +6,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewOtherVersionsDisplayable extends DisplayablePojo<Object> {
+public class AppViewOtherVersionsDisplayable extends AppViewDisplayable<Object> {
 
 	@Override
 	public GetStoreWidgets.Type getName() {
@@ -20,11 +19,6 @@ public class AppViewOtherVersionsDisplayable extends DisplayablePojo<Object> {
 
 	@Override
 	public int getViewLayout() {
-		return 0;
-	}
-
-	@Override
-	public int getDefaultPerLineCount() {
 		return 0;
 	}
 }

@@ -53,8 +53,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
 	public void onStart() {
 		super.onStart();
 
-		loadBundle(getArguments());
-
 		String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 		V7.Interfaces interfaces = GenericInterface.newInstance();
 

@@ -29,6 +29,7 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 
 	@Override
 	public void bindView(AppViewDeveloperDisplayable displayable) {
-
+		final Object pojo = displayable.getPojo();
+		// TODO
 	}
 }
