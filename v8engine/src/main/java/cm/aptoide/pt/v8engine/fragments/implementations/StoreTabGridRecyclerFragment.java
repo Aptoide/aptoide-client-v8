@@ -75,7 +75,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
 			CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
-			Observable.from(list).forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch));
+			Observable.from(list).forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, throwable -> finishLoading(throwable)));
 
 			try {
 				countDownLatch.await();

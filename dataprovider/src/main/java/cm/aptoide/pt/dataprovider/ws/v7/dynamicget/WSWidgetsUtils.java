@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.dynamicget;
@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -19,7 +20,7 @@ import rx.schedulers.Schedulers;
  */
 public class WSWidgetsUtils {
 
-	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch) {
+	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch, Action1<Throwable> action1) {
 
 		if (isKnownType(wsWidget.getType())) {
 			V7.Interfaces interfaces = GenericInterface.newInstance();
@@ -31,13 +32,13 @@ public class WSWidgetsUtils {
 			}
 			switch (wsWidget.getType()) {
 				case APPS_GROUP:
-					ioScheduler(interfaces.listApps(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
+					ioScheduler(interfaces.listApps(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
 					break;
 				case STORES_GROUP:
-					ioScheduler(interfaces.listStores(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
+					ioScheduler(interfaces.listStores(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
 					break;
 				case DISPLAYS:
-					ioScheduler(interfaces.getStoreDisplays(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps));
+					ioScheduler(interfaces.getStoreDisplays(url)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
 					break;
 				default:
 					// In case a known enum is not implemented

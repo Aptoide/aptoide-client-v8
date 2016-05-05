@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -68,7 +69,7 @@ public class GetStoreRequest extends V7<GetStore> {
 				List<GetStoreWidgets.WSWidget> list = getStore.getNodes().getWidgets().getDatalist().getList();
 				CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
-				Observable.from(list).forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch));
+				Observable.from(list).forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, Logger::printException));
 
 				try {
 					countDownLatch.await();
