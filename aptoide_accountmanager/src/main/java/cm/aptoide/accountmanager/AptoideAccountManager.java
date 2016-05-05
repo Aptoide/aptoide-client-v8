@@ -25,7 +25,6 @@ import com.facebook.login.widget.LoginButton;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.Date;
 
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
@@ -36,8 +35,11 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.utils.ThreadUtils;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -78,13 +80,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param extras Extras to add on created intent (to login or register activity)
 	 */
 	public static void openAccountManager(Context context, @Nullable Bundle extras) {
-		Logger.d(TAG, "openAccountManager() called with: " + "context = [" + context + "], extras =" +
-				" " +
-				"[" + extras + "]");
 		if (isLoggedIn(context)) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
-			Intent intent = new Intent(context, LoginActivity.class);
+			final Intent intent = new Intent(context, LoginActivity.class);
 			if (extras != null) {
 				intent.putExtras(extras);
 			}
@@ -228,7 +227,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				} else {
 					getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
 							.getString(R.string.unknown_error));
-					Logger.e(TAG, "Error while adding the local account. Probably context was null");
+					Logger.e(TAG, "Error while adding the local account. Probably context was " +
+							"null");
 				}
 			}
 		}, new ErrorRequestListener() {
@@ -238,7 +238,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					String string = ((HttpException) e).response().errorBody().string();
 					OAuth oAuth = WebService.getObjectMapper().readValue(string, OAuth.class);
 					getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
-							.getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError())));
+							.getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth
+									.getError())));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -252,14 +253,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static Observable<String> invalidateAccessToken(@NonNull Activity context) {
 		return Observable.fromCallable(() -> {
-			if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+			if (ThreadUtils.isOnUiThread()) {
 				throw new IllegalThreadStateException("This method shouldn't be called on ui " +
 						"thread.");
 			}
 			return getRefreshToken(context);
 		})
 				.subscribeOn(Schedulers.io())
-				.flatMap(AptoideAccountManager::getNewAccessTokenFromRefreshToken);
+				.flatMap(s -> getNewAccessTokenFromRefreshToken(getRefreshToken(context),
+						getOnErrorAction(context)));
 	}
 
 	/**
@@ -274,18 +276,23 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		}
 		String refreshToken = getRefreshToken(context);
 		final String[] stringToReturn = {""};
-		getNewAccessTokenFromRefreshToken(refreshToken).toBlocking().subscribe((token) -> {
-			stringToReturn[0] = token;
-		});
+		getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
+				.subscribe((token) -> {
+					stringToReturn[0] = token;
+				});
 		return stringToReturn[0];
 	}
 
-	private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken) {
-		Logger.d(TAG, "invalidateAccessTokenSync: " + new Date().getTime());
+	private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
+																		Action1<Throwable>
+																				action1) {
 		return OAuth2AuthenticationRequest.of(refreshToken)
 				.observe()
 				.map(OAuth::getAccessToken)
-				.doOnNext(AccountManagerPreferences::setAccessToken);
+				.subscribeOn(Schedulers.io())
+				.doOnNext(AccountManagerPreferences::setAccessToken)
+				.doOnError(action1)
+				.observeOn(AndroidSchedulers.mainThread());
 	}
 
 	public static void setupRegisterUser(IRegisterUser callback, Button signupButton) {
@@ -295,20 +302,21 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			public void onClick(View v) {
 				IRegisterUser callback = (IRegisterUser) callBackWeakReference.get();
 				if (callback != null) {
-					RegisterUser(callback);
+					RegisterUserUsingWebServices(callback);
 				}
 			}
 		});
 	}
 
-	public static void RegisterUser(IRegisterUser callback) {
+	public static void RegisterUserUsingWebServices(IRegisterUser callback) {
 		String email = callback.getUserEmail();
 		String password = callback.getUserPassword();
 		if (validateUserCredentials(callback, email, password)) {
 			CreateUserRequest.of(email, password).execute(oAuth -> {
 				if (oAuth.hasErrors()) {
 					if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
-						callback.onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth
+						callback.onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode
+								(oAuth
 								.getErrors()
 								.get(0).code));
 					} else {
@@ -381,6 +389,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		return hasNumber && hasLetter;
 	}
 
+	public static Action1<Throwable> getOnErrorAction(Context context) {
+		return new Action1<Throwable>() {
+			@Override
+			public void call(Throwable throwable) {
+				getInstance().removeLocalAccount();
+				openAccountManager(context);
+			}
+		};
+	}
+
 	private void removeLocalAccount() {
 		AccountManager manager = android.accounts.AccountManager.get(cm.aptoide.pt.preferences
 				.Application
@@ -402,7 +420,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * Method responsible to setup all login modes
 	 *
 	 * @param callback            Callback used to let outsiders know if the login was successful
-	 *                            or not
+	 *                            or
+	 *                            <p>
+	 *                            not
 	 * @param activity            Activity where the login is being made
 	 * @param facebookLoginButton facebook login button
 	 * @param loginButton         Aptoide login button

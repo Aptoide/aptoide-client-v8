@@ -111,7 +111,8 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 			if (!result.isSuccess()) {
 				handleErrors(result);
 			} else if (account != null) {
-				Logger.d(TAG, "onActivityResult: Email: " + account.getEmail() + "Disp name" + account);
+				Logger.d(TAG, "onActivityResult: Email: " + account.getEmail() + "Disp name" +
+						account);
 				AptoideAccountManager.loginUserCredentials(LoginMode.GOOGLE, account.getEmail(),
 						account
 						.getServerAuthCode(), account.getDisplayName());
@@ -132,7 +133,9 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 	}
 
 	static void logout() {
-		Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+		if (mGoogleApiClient.isConnected()) {
+			Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+		}
 	}
 
 	/* Called from ErrorDialogFragment when the dialog is dismissed. */

@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
+import cm.aptoide.pt.logger.Logger;
+
 /**
  * Created by trinkes on 4/18/16.
  */
@@ -38,6 +40,8 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Logger.d(TAG, "onCreate() called with: " + "savedInstanceState = [" + savedInstanceState +
+				"]");
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(getLayoutId());
 		bindViews();

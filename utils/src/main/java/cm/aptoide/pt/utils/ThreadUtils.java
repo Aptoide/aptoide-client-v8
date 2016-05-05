@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.utils;
 
+import android.os.Looper;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -25,4 +27,7 @@ public class ThreadUtils {
 		}
 	}
 
+	public static boolean isOnUiThread() {
+		return Looper.getMainLooper().getThread() == Thread.currentThread();
+	}
 }

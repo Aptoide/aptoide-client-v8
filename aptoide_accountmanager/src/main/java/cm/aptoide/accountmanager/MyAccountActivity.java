@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import rx.functions.Action1;
+import cm.aptoide.pt.utils.SimpleSubscriber;
 
 /**
  * Created by trinkes on 5/2/16.
@@ -50,13 +50,12 @@ public class MyAccountActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				AptoideAccountManager.invalidateAccessToken(MyAccountActivity.this)
-						.doOnNext(new Action1<String>() {
+						.subscribe(new SimpleSubscriber<String>() {
 							@Override
-							public void call(String s) {
+							public void onNext(String s) {
 								Snackbar.make(v, s, Snackbar.LENGTH_LONG).show();
 							}
-						})
-						.subscribe();
+						});
 			}
 		});
 
@@ -71,12 +70,6 @@ public class MyAccountActivity extends BaseActivity {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(TAG, "onResume: ");
-	}
-
-	@Override
 	protected String getActivityTitle() {
 		return "My Account";
 	}
@@ -84,6 +77,12 @@ public class MyAccountActivity extends BaseActivity {
 	@Override
 	int getLayoutId() {
 		return R.layout.my_account_activity;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "onResume: ");
 	}
 
 	private void setupToolbar() {
