@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -34,6 +34,6 @@ task clean(type: Delete) {
 
 ext {
     BUILD_TOOLS_VERSION = '23.0.3'
-    SUPPORT_LIB_VERSION = '23.3.0'
+    SUPPORT_LIB_VERSION = '23.1.1'
     LOMBOK_VERSION = '1.16.8'
 }
