@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 03/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.logger;
 
 import android.util.Log;
+
+import cm.aptoide.pt.utils.BuildConfig;
 
 /**
  * Aptoide default logger.
