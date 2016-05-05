@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -15,14 +15,13 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
-@Ignore
 public class DisplayableGroup extends Displayable {
 
 	@Getter private final List<Displayable> children;
 
 	public DisplayableGroup(List<Displayable> children) {
 		this.children = children;
-		//computeLeftSpaces(); // FIXME
+		computeLeftSpaces();
 	}
 
 	private void computeLeftSpaces() {
@@ -43,19 +42,17 @@ public class DisplayableGroup extends Displayable {
 	}
 
 	@Override
-	public GetStoreWidgets.Type getName() {
-		throw new IllegalStateException("getName() on DisplayableGroup should not be called!");
+	public GetStoreWidgets.Type getType() {
+		throw new IllegalStateException("getType() on DisplayableGroup should not be called!");
 	}
 
 	@Override
 	public int getViewLayout() {
-		throw new IllegalStateException("getViewLayout() on DisplayableGroup should not be " +
-				"called!");
+		throw new IllegalStateException("getViewLayout() on DisplayableGroup should not be called!");
 	}
 
 	@Override
 	public int getDefaultPerLineCount() {
-		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not " +
-				"be called!");
+		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not be called!");
 	}
 }

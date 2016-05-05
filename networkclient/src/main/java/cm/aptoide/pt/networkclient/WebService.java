@@ -91,7 +91,7 @@ public abstract class WebService<T, U> {
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
-		return e -> {
+		return (Throwable e) -> {
 			// TODO: Implementar
 			System.out.println("Erro por implementar");
 		};

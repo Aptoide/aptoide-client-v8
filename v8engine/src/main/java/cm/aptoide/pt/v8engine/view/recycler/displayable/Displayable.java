@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -15,7 +15,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 /**
  * Created by neuro on 14-04-2016.
  */
-@Ignore
 public abstract class Displayable {
 
 	private static final float REFERENCE_WIDTH_DPI = 360;
@@ -32,15 +31,14 @@ public abstract class Displayable {
 		this.fixedPerLineCount = fixedPerLineCount;
 	}
 
-	public abstract GetStoreWidgets.Type getName();
+	public abstract GetStoreWidgets.Type getType();
 
 	@LayoutRes
 	public abstract int getViewLayout();
 
 	public int getPerLineCount() {
 		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils
-				.getScreenWidthInDip(Aptoide
-				.getContext()) / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+				.getScreenWidthInDip(Aptoide.getContext()) / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
 
 	public abstract int getDefaultPerLineCount();

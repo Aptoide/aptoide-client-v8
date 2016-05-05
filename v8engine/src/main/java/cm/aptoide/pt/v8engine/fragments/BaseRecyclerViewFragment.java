@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -17,10 +17,10 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> extends
-		BaseLoaderFragment<RecyclerView> {
+public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> extends BaseLoaderFragment {
 
 	protected T adapter;
+	private RecyclerView recyclerView;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,21 +30,23 @@ public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> e
 	}
 
 	@Override
+	protected void bindViews(View view) {
+		super.bindViews(view);
+		recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+	}
+
+	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		baseView.setAdapter(adapter);
-		baseView.setLayoutManager(createLayoutManager());
+		recyclerView.setAdapter(adapter);
+		recyclerView.setLayoutManager(createLayoutManager());
 
-		baseView.addItemDecoration(new RecyclerView.ItemDecoration() {
+		recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 			@Override
-			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView
-					.State state) {
+			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
-				int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
-						getActivity()
-						.getResources()
-						.getDisplayMetrics());
+				int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getActivity().getResources().getDisplayMetrics());
 				outRect.set(offset, offset, offset, offset);
 			}
 		});

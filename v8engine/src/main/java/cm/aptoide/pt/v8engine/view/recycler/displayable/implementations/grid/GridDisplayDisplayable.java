@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
+package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
@@ -12,10 +12,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 /**
  * Created by sithengineer on 02/05/16.
  */
-public class GridDisplayDisplayable extends DisplayablePojo<Object> {
+public class DisplayGridDisplayable extends DisplayablePojo<Object> {
 
 	@Override
-	public GetStoreWidgets.Type getName() {
+	public GetStoreWidgets.Type getType() {
 		return GetStoreWidgets.Type.DISPLAYS;
 	}
 

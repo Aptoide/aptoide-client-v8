@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -16,12 +16,11 @@ import android.support.v7.widget.Toolbar;
 import com.astuetz.PagerSlidingTabStrip;
 
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.v8engine.activity.AptoideBaseScreenActivity;
+import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
 
-public class MainActivity extends AptoideBaseScreenActivity {
+public class MainActivity extends AptoideBaseLoaderActivity {
 
 	private Toolbar mToolbar;
 	private DrawerLayout mDrawerLayout;
@@ -31,24 +30,7 @@ public class MainActivity extends AptoideBaseScreenActivity {
 	@Override
 	protected void setupViews() {
 		setupNavigationView();
-
-		// TODO use correct WidgetArgs
-		//GetStoreRequest.of("apps", defaultArgs).execute(this::setupViewPager);
-
-		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps");
-		getStoreRequest.getBody().setContext(StoreContext.home);
-		getStoreRequest.execute(this::setupViewPager);
-	}
-
-	private void setupViewPager(GetStore getStore) {
-		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(),
-				getStore);
-		mViewPager.setAdapter(pagerAdapter);
-
-		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		if (pagerSlidingTabStrip != null) {
-			pagerSlidingTabStrip.setViewPager(mViewPager);
-		}
+		load();
 	}
 
 	@Override
@@ -57,13 +39,35 @@ public class MainActivity extends AptoideBaseScreenActivity {
 			setSupportActionBar(mToolbar);
 			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
 			mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
-					.START));
+			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
 		}
 	}
 
 	@Override
+	protected int getContentViewId() {
+		return R.layout.main_activity;
+	}
+
+	@Override
+	protected String getAnalyticsScreenName() {
+		return StaticScreenNames.MAIN_ACTIVITY;
+	}
+
+	private void setupViewPager(GetStore getStore) {
+		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(), getStore);
+		mViewPager.setAdapter(pagerAdapter);
+
+		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		if (pagerSlidingTabStrip != null) {
+			pagerSlidingTabStrip.setViewPager(mViewPager);
+		}
+
+		finishLoading();
+	}
+
+	@Override
 	protected void bindViews() {
+		super.bindViews();
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,8 +75,13 @@ public class MainActivity extends AptoideBaseScreenActivity {
 	}
 
 	@Override
-	protected int getContentViewId() {
-		return R.layout.main_activity;
+	protected int getViewToShowAfterLoadingId() {
+		return R.id.app_bar_layout;
+	}
+
+	@Override
+	public void load() {
+		GetStoreRequest.of("apps").execute((getStore) -> setupViewPager(getStore));
 	}
 
 	private void setupNavigationView() {
@@ -81,18 +90,13 @@ public class MainActivity extends AptoideBaseScreenActivity {
 
 				int itemId = menuItem.getItemId();
 				if (itemId == R.id.navigation_item_my_account) {
-					Snackbar.make(mNavigationView, "MyAccountActivity", Snackbar.LENGTH_SHORT)
-							.show();
+					Snackbar.make(mNavigationView, "MyAccountActivity", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_rollback) {
 					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
-				} else if (itemId == R.id
-						.navigation_item_setting_schdwntitle) {
-					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
-							.show();
-				} else if (itemId == R.id
-						.navigation_item_excluded_updates) {
-					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
-							.show();
+				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
+					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT).show();
+				} else if (itemId == R.id.navigation_item_excluded_updates) {
+					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_settings) {
 					Snackbar.make(mNavigationView, "Settings", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_facebook) {
@@ -108,10 +112,5 @@ public class MainActivity extends AptoideBaseScreenActivity {
 				return false;
 			});
 		}
-	}
-
-	@Override
-	protected String getAnalyticsScreenName() {
-		return StaticScreenNames.MAIN_ACTIVITY;
 	}
 }

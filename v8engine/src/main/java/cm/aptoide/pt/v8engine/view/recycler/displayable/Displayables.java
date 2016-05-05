@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/04/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -35,5 +35,9 @@ public class Displayables {
 
 	public int size() {
 		return displayables.size();
+	}
+
+	public void clear() {
+		displayables.clear();
 	}
 }

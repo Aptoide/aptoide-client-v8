@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 01/05/2016.
+  ~ Modified by Neurophobic Animal on 05/05/2016.
   -->
 
 <android.support.v4.widget.DrawerLayout
@@ -11,12 +11,16 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include layout="@layout/incl_no_network_layout"/>
+
+        <include layout="@layout/error_layout"/>
+
+        <include layout="@layout/progress_bar"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
@@ -26,8 +30,10 @@
 
 
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

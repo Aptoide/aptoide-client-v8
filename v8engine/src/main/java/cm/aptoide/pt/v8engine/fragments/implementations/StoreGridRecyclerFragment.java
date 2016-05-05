@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments.implementations;
@@ -46,10 +46,14 @@ public class StoreGridRecyclerFragment extends GridRecyclerFragment {
 	}
 
 	public Displayable storeToDisplayable(Store store) {
-		DisplayablePojo<Store> d = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE
-				.newDisplayable(GetStoreWidgets.Type.STORES_GROUP
-				.name());
+		DisplayablePojo<Store> d =
+				(DisplayablePojo<Store>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
 		d.setPojo(store);
 		return d;
+	}
+
+	@Override
+	public void load() {
+
 	}
 }

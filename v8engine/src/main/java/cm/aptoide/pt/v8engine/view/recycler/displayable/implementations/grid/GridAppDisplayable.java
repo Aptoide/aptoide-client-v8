@@ -27,7 +27,7 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
 	}
 
 	@Override
-	public GetStoreWidgets.Type getName() {
+	public GetStoreWidgets.Type getType() {
 		return GetStoreWidgets.Type.APPS_GROUP;
 	}
 

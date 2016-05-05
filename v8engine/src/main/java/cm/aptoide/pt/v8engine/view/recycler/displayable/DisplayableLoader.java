@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2016.
+<<<<<<< HEAD
  * Modified by SithEngineer on 04/05/2016.
+=======
+ * Modified by Neurophobic Animal on 04/05/2016.
+>>>>>>> master
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -14,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.Aptoide;
 import dalvik.system.DexFile;
@@ -24,8 +30,10 @@ import dalvik.system.DexFile;
 public enum DisplayableLoader {
 	INSTANCE;
 
-	private HashMap<String, Class<? extends Displayable>> displayableHashMap;
-	private LruCache<String, Class<? extends Displayable>> displayableLruCache;
+	private static final String TAG = DisplayableLoader.class.getName();
+
+	private HashMap<GetStoreWidgets.Type, Class<? extends Displayable>> displayableHashMap;
+	private LruCache<GetStoreWidgets.Type, Class<? extends Displayable>> displayableLruCache;
 
 	DisplayableLoader() {
 		final String TAG = DisplayableLoader.class.getName();
@@ -38,8 +46,8 @@ public enum DisplayableLoader {
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(Aptoide
-					.getContext());
+			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(
+					Aptoide.getContext());
 
 			DexFile dexFile = null;
 			for (Map.Entry<String, String> className : classNames) {
@@ -62,8 +70,7 @@ public enum DisplayableLoader {
 							.isAnnotationPresent(Ignore.class)) {
 						try {
 							Displayable d = (Displayable) displayableClass.newInstance();
-							displayableHashMap.put(d.getName()
-									.name(), (Class<? extends Displayable>) displayableClass);
+							displayableHashMap.put(d.getType(), (Class<? extends Displayable>) displayableClass);
 						} catch (Exception e) {
 							Log.e(TAG, "", e);
 						}
@@ -95,7 +102,7 @@ public enum DisplayableLoader {
 	}
 
 	@Nullable
-	public Displayable newDisplayable(@NonNull String type) {
+	public Displayable newDisplayable(@NonNull GetStoreWidgets.Type type) {
 		Class<? extends Displayable> displayableClass = displayableLruCache.get(type);
 
 		if (displayableClass == null) {
@@ -110,6 +117,23 @@ public enum DisplayableLoader {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Nullable
+	public synchronized <T> DisplayablePojo<T> newDisplayable(@NonNull GetStoreWidgets.Type type, T pojo) {
+		Displayable displayable = newDisplayable(type);
+
+		if (displayable != null && displayable instanceof DisplayablePojo<?>) {
+			try {
+				return ((DisplayablePojo<T>) displayable).setPojo(pojo);
+			} catch (ClassCastException e) {
+				Logger.e(TAG, "Trying to instantiate a DisplayablePojo with a wrong type!");
+			}
+		} else {
+			Logger.e(TAG, "Trying to instantiate a standard Displayable with a pojo!");
 		}
 
 		return null;

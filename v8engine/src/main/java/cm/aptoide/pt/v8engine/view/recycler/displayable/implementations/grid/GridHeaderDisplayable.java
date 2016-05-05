@@ -22,7 +22,7 @@ public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWid
 	}
 
 	@Override
-	public GetStoreWidgets.Type getName() {
+	public GetStoreWidgets.Type getType() {
 		return GetStoreWidgets.Type.HEADER_ROW;
 	}
 
