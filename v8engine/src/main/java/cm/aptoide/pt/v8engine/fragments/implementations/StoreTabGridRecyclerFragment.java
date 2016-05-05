@@ -87,7 +87,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					}
 
 					List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets);
-					addDisplayables(displayables);
+					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
 	}
 

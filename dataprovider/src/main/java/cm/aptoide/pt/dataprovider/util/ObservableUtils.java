@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.util;
@@ -30,6 +30,7 @@ public class ObservableUtils {
 			if ((n instanceof ToRetryThrowable) && i < 3) {
 				return i;
 			} else {
+				// Todo: quando nao é erro de net, isto induz em erro lol
 				// Don't retry
 				throw new NoNetworkConnectionException(n);
 			}
