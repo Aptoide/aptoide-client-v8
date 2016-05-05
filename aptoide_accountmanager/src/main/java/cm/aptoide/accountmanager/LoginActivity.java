@@ -25,6 +25,8 @@ import cm.aptoide.pt.logger.Logger;
  */
 public class LoginActivity extends BaseActivity implements AptoideAccountManager.ILoginInterface {
 
+	public static final String OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS =
+			"OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS";
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	View content;
 	private Button mLoginButton;
@@ -36,6 +38,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	private CheckBox registerDevice;
 	private Toolbar mToolbar;
 	private TextView forgotPassword;
+	private boolean openMyAccountOnLoginSuccess;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +48,8 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(getLayoutId());
 		bindViews();
+		openMyAccountOnLoginSuccess = getIntent().getBooleanExtra
+				(OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, true);
 		AptoideAccountManager.getInstance()
 				.setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
 		setupShowHidePassButton();
@@ -129,7 +134,11 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	public void onLoginSuccess() {
 		Toast.makeText(LoginActivity.this, "login successful", Toast.LENGTH_SHORT).show();
 		finish();
-		AptoideAccountManager.openAccountManager(this);
+		if (openMyAccountOnLoginSuccess) {
+			AptoideAccountManager.openAccountManager(this);
+		} else {
+			finish();
+		}
 	}
 
 	@Override

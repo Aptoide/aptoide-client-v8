@@ -63,10 +63,10 @@ class AptoideLoginUtils {
 			String password = (String) bundle.get(APTOIDE_LOGIN_PASSWORD_KEY);
 			String refreshToken = (String) bundle.get(APTOIDE_LOGIN_REFRESH_TOKEN_KEY);
 			String accessToken = (String) bundle.get(APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
-			AptoideAccountManager.getInstance()
-					.addLocalUserAccount(userName, password, null, refreshToken);
 			AccountManagerPreferences.setAccessToken(accessToken);
-			AptoideAccountManager.openAccountManager(activity);
+			AptoideAccountManager.getInstance()
+					.addLocalUserAccount(userName, password, null, refreshToken, accessToken);
+			AptoideAccountManager.getInstance().onLoginSuccess();
 			activity.finish();
 		}
 	}

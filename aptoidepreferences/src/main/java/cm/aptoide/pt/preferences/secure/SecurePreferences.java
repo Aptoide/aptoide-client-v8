@@ -45,4 +45,23 @@ public class SecurePreferences {
 		SecurePreferencesImplementation.getInstance().edit().remove(key).apply();
 	}
 
+	/**
+	 * DO NOT USE THIS METHOD
+	 *
+	 * @param key
+	 * @param value
+	 */
+	public static void putBoolean(String key, boolean value) {
+		SecurePreferencesImplementation.getInstance().edit().putBoolean(key, value).apply();
+	}
+
+	/**
+	 * DO NOT USE THIS METHOD!!!!
+	 *
+	 * @param key
+	 * @return
+	 */
+	public static boolean getBoolean(String key) {
+		return SecurePreferencesImplementation.getInstance().getBoolean(key, false);
+	}
 }

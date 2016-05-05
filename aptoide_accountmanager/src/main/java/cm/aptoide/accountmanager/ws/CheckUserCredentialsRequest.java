@@ -14,6 +14,7 @@ import java.util.Locale;
 import cm.aptoide.accountmanager.util.AccountManagerUtils;
 import cm.aptoide.accountmanager.util.Filters;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
+import cm.aptoide.pt.preferences.Application;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rx.Observable;
@@ -44,6 +45,25 @@ public class CheckUserCredentialsRequest extends v3accountManager<CheckUserCrede
 		model = Build.MODEL;
 		screenSize = Filters.Screen.values()[AccountManagerUtils.getScreenSize(context)].name()
 				.toLowerCase(Locale.ENGLISH);
+	}
+
+	/**
+	 * Create a checkUserInfo request
+	 *
+	 * @param accessToken access token to identify user
+	 * @return the built request
+	 */
+	public static CheckUserCredentialsRequest of(String accessToken) {
+		CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application
+				.getContext());
+		request.setToken(accessToken);
+		return request;
+	}
+
+	public static CheckUserCredentialsRequest of(String accessToken, boolean accountLinked) {
+		CheckUserCredentialsRequest request = of(accessToken);
+		request.setRegisterDevice(accountLinked);
+		return request;
 	}
 
 	@Override

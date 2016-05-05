@@ -17,12 +17,14 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseScreenActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
 
 public class MainActivity extends AptoideBaseScreenActivity {
 
+	private static final String TAG = MainActivity.class.getSimpleName();
 	private Toolbar mToolbar;
 	private DrawerLayout mDrawerLayout;
 	private NavigationView mNavigationView;
@@ -75,13 +77,17 @@ public class MainActivity extends AptoideBaseScreenActivity {
 
 				int itemId = menuItem.getItemId();
 				if (itemId == R.id.navigation_item_my_account) {
-					AptoideAccountManager.openAccountManager(this);
+					AptoideAccountManager.openAccountManager(this, false);
 				} else if (itemId == R.id.navigation_item_rollback) {
-					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(mNavigationView, AptoideAccountManager.getUserInfo()
+							.toString(), Snackbar.LENGTH_SHORT).show();
+					Logger.d(TAG, "setupNavigationView: " + AptoideAccountManager.getUserInfo());
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
-					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
+							.show();
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
-					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
+							.show();
 				} else if (itemId == R.id.navigation_item_settings) {
 					Snackbar.make(mNavigationView, "Settings", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_facebook) {

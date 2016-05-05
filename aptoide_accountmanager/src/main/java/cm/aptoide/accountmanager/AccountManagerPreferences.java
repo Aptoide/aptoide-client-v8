@@ -42,4 +42,76 @@ class AccountManagerPreferences {
 	static void removeUserName() {
 		SecurePreferences.remove(SecureKeys.USER_NAME);
 	}
+
+	static String getQueueName() {
+		return SecurePreferences.getString(SecureKeys.QUEUE_NAME);
+	}
+
+	static void setQueueName(String queueName) {
+		SecurePreferences.putString(SecureKeys.QUEUE_NAME, queueName);
+	}
+
+	static void removeQueueName() {
+		SecurePreferences.remove(SecureKeys.QUEUE_NAME);
+	}
+
+	static String getUserAvatar() {
+		return SecurePreferences.getString(SecureKeys.USER_AVATAR);
+	}
+
+	static void setUserAvatar(String userAvatar) {
+		SecurePreferences.putString(SecureKeys.USER_AVATAR, userAvatar);
+	}
+
+	static void removeUserAvatar() {
+		SecurePreferences.remove(SecureKeys.USER_AVATAR);
+	}
+
+	static String getUserRepo() {
+		return SecurePreferences.getString(SecureKeys.USER_REPO);
+	}
+
+	static void setUserRepo(String userRepo) {
+		SecurePreferences.putString(SecureKeys.USER_REPO, userRepo);
+	}
+
+	static void removeUserRepo() {
+		SecurePreferences.remove(SecureKeys.USER_REPO);
+	}
+
+	static String getUserNickName() {
+		return SecurePreferences.getString(SecureKeys.USER_NICK_NAME);
+	}
+
+	static void setUserNickName(String userNickName) {
+		SecurePreferences.putString(SecureKeys.USER_NICK_NAME, userNickName);
+	}
+
+	static void removeUserNickName() {
+		SecurePreferences.remove(SecureKeys.USER_NICK_NAME);
+	}
+
+	static boolean getMatureSwitch() {
+		return SecurePreferences.getBoolean(SecureKeys.MATURE_SWITCH);
+	}
+
+	static void setMatureSwitch(boolean matureSwitch) {
+		SecurePreferences.putBoolean(SecureKeys.MATURE_SWITCH, matureSwitch);
+	}
+
+	static void removeMatureSwitch() {
+		SecurePreferences.remove(SecureKeys.MATURE_SWITCH);
+	}
+
+	static String getRepoAvatar() {
+		return SecurePreferences.getString(SecureKeys.REPO_AVATAR);
+	}
+
+	static void setRepoAvatar(String repoAvatar) {
+		SecurePreferences.putString(SecureKeys.REPO_AVATAR, repoAvatar);
+	}
+
+	static void removeRepoAvatar() {
+		SecurePreferences.remove(SecureKeys.REPO_AVATAR);
+	}
 }
