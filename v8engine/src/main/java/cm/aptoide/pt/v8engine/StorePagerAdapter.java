@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +19,7 @@ import cm.aptoide.pt.v8engine.fragments.implementations.StoreTabGridRecyclerFrag
 /**
  * Created by neuro on 28-04-2016.
  */
-public class StorePagerAdapter extends FragmentPagerAdapter {
+public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 	private final List<GetStoreTabs.Tab> tabs;
 
