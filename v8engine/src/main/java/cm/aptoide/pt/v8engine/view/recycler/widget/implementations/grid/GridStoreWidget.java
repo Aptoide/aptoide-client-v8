@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -19,6 +19,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CircleTransform;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -68,9 +69,8 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 		// increase the padding
 		storeUnsubscribe.setVisibility(View.GONE);
 
-		//final EnumStoreTheme themeIz = EnumStoreTheme.get(store.getAppearance().getTheme());
-		//@ColorInt int color = context.getResources().getColor(themeIz.getStoreHeader());
-		@ColorInt int color = context.getResources().getColor(R.color.blue);
+		@ColorInt int color = context.getResources()
+				.getColor(StoreThemeEnum.get(store.getAppearance().getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
 		/*
 		storeLayout.setOnClickListener(()->{
