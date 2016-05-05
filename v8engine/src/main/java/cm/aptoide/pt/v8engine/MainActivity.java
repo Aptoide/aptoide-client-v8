@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import com.astuetz.PagerSlidingTabStrip;
 
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
@@ -83,7 +84,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 
 	@Override
 	public void load() {
-		GetStoreRequest.of("apps").execute(this::setupViewPager);
+		GetStoreRequest.of("apps", StoreContext.home).execute(this::setupViewPager);
 	}
 
 	private void setupNavigationView() {

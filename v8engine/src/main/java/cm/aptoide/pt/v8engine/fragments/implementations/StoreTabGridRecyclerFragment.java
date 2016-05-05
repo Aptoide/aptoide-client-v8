@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.util.ObservableUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.GenericInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerSwipeFragment;
@@ -36,6 +37,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 		args.putString(BundleCons.TYPE, event.getType().toString());
 		args.putString(BundleCons.NAME, event.getName().toString());
+		// todo: apagar martelada!
+		if (event.getAction().contains("getStore")) {
+			event.setAction(event.getAction().replace("context/store", "context/home"));
+		}
 		args.putString(BundleCons.ACTION, event.getAction());
 
 		StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
@@ -56,6 +61,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		V7.Interfaces interfaces = GenericInterface.newInstance();
 
 		switch (name) {
+			case getStore:
+				caseGetStore(url, interfaces);
+				break;
 			case getStoreWidgets:
 				caseGetStoreWidgets(url, interfaces);
 				break;
@@ -66,6 +74,34 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				//todo
 				break;
 		}
+	}
+
+	private Subscription caseGetStore(String url, V7.Interfaces interfaces) {
+		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url).observe())
+				.subscribe(getStore -> {
+
+					// Load sub nodes
+					List<GetStoreWidgets.WSWidget> list = getStore.getNodes()
+							.getWidgets()
+							.getDatalist()
+							.getList();
+					CountDownLatch countDownLatch = new CountDownLatch(list.size());
+
+					Observable.from(list)
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+									countDownLatch, throwable -> finishLoading(throwable)));
+
+					try {
+						countDownLatch.await();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					List<Displayable> displayables = DisplayablesFactory.parse(getStore.getNodes()
+							.getWidgets());
+					setDisplayables(displayables);
+				}, throwable -> finishLoading(throwable));
+
 	}
 
 	private Subscription caseGetStoreWidgets(String url, V7.Interfaces interfaces) {

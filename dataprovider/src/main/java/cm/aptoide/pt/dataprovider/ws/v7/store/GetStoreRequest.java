@@ -33,9 +33,15 @@ import rx.schedulers.Schedulers;
 public class GetStoreRequest extends V7<GetStore> {
 
 	private final Body body = new Body();
+	private final String url;
 	private boolean recursive = false;
 
 	private GetStoreRequest() {
+		this("");
+	}
+
+	private GetStoreRequest(String url) {
+		this.url = url.replace("getStore", "");
 	}
 
 	public static GetStoreRequest of(String storeName) {
@@ -54,9 +60,13 @@ public class GetStoreRequest extends V7<GetStore> {
 		return getStoreRequest;
 	}
 
+	public static GetStoreRequest ofAction(String url) {
+		return new GetStoreRequest(url);
+	}
+
 	@Override
 	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStore(body);
+		return interfaces.getStore(url, body);
 	}
 
 	@Override

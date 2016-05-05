@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -28,6 +28,7 @@ import cm.aptoide.pt.networkclient.WebService;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
 
@@ -61,8 +62,9 @@ public abstract class V7<U> extends WebService<V7.Interfaces, U> {
 		@POST("listAppVersions")
 		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body);
 
-		@POST("getStore")
-		Observable<GetStore> getStore(@Body GetStoreRequest.Body body);
+		@POST("getStore{url}")
+		Observable<GetStore> getStore(@Path(value = "url", encoded = true) String path, @Body
+		GetStoreRequest.Body body);
 
 		@POST("getStoreMeta")
 		Observable<GetStoreMeta> getStoreMeta(@Body GetStoreMetaRequest.Body body);
