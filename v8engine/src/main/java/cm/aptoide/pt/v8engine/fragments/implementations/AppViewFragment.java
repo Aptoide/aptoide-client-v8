@@ -42,9 +42,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-
+	public void load() {
 		loadAppInfo(appId)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())

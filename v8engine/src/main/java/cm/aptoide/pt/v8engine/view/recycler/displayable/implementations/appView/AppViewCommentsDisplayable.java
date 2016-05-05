@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.R;
 public class AppViewCommentsDisplayable extends AppViewDisplayable<Object> {
 
 	@Override
-	public GetStoreWidgets.Type getName() {
+	public GetStoreWidgets.Type getType() {
 		return null;
 	}
 

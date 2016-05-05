@@ -13,7 +13,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 public class AppViewRateThisDisplayable extends AppViewDisplayable<Object> {
 
 	@Override
-	public GetStoreWidgets.Type getName() {
+	public GetStoreWidgets.Type getType() {
 		return null;
 	}
 

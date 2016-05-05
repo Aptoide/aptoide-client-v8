@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.v8engine.activity.AptoideBaseScreenActivity;
+import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
 import cm.aptoide.pt.v8engine.fragments.implementations.StoreGridRecyclerFragment;
 
@@ -22,7 +22,7 @@ import cm.aptoide.pt.v8engine.fragments.implementations.StoreGridRecyclerFragmen
  */
 // FIXME delete this class. for tests only.
 @Deprecated
-public class MainActivityStoreList extends AptoideBaseScreenActivity {
+public class MainActivityStoreList extends AptoideBaseActivity {
 
 	private Toolbar mToolbar;
 	private DrawerLayout mDrawerLayout;
