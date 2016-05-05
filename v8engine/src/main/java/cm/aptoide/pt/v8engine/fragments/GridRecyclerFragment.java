@@ -6,8 +6,6 @@
 package cm.aptoide.pt.v8engine.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +26,13 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 public abstract class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> {
 
-	private Handler handler;
+	//private Handler handler;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
 			savedInstanceState) {
 
-		handler = new Handler(Looper.myLooper());
+		//handler = new Handler(Looper.myLooper());
 
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}

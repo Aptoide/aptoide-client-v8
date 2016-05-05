@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.support.v7.widget.Toolbar;
 
+import java.lang.ref.WeakReference;
+
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -14,22 +16,26 @@ import cm.aptoide.pt.v8engine.R;
  */
 public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity {
 
-	protected Toolbar mToolbar;
+	protected WeakReference<Toolbar> weakToolbar;
 
 	@Override
 	protected void setupViews() {
+
 	}
 
 	@Override
 	protected void setupToolbar() {
-		if (mToolbar != null) {
-			setSupportActionBar(mToolbar);
-			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+		Toolbar toolbar = weakToolbar !=null ? weakToolbar.get() : null;
+		if (toolbar != null) {
+			setSupportActionBar(toolbar);
+			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
 		}
 	}
 
 	@Override
 	protected void bindViews() {
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if(weakToolbar==null || weakToolbar.get() == null) {
+			weakToolbar = new WeakReference<>((Toolbar) findViewById(R.id.toolbar));
+		}
 	}
 }

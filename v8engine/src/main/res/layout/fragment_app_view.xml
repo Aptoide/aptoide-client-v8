@@ -4,17 +4,14 @@
   ~ Modified by SithEngineer on 05/05/2016.
   -->
 
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     >
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="cm.aptoide.pt.v8engine.fragments.implementations.AppViewFragment"
-        />
+    <include layout="@layout/partial_app_view_collapsing_toolbar"/>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

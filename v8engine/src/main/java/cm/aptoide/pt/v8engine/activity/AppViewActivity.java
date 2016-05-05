@@ -8,16 +8,12 @@ package cm.aptoide.pt.v8engine.activity;
 import android.support.v4.app.Fragment;
 
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragments.implementations.AppViewFragment;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
 public class AppViewActivity extends AptoideSimpleFragmentActivity {
-
-	@Override
-	protected Fragment createFragment() {
-		return null;
-	}
 
 	@Override
 	protected int getContentViewId() {
@@ -27,5 +23,11 @@ public class AppViewActivity extends AptoideSimpleFragmentActivity {
 	@Override
 	protected String getAnalyticsScreenName() {
 		return null;
+	}
+
+	@Override
+	protected Fragment createFragment() {
+		// TODO
+		return AppViewFragment.newInstance("");
 	}
 }
