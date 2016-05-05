@@ -46,31 +46,33 @@ public enum DisplayableLoader {
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(
-					Aptoide.getContext());
+			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(Aptoide
+					.getContext());
 
 			DexFile dexFile = null;
 			for (Map.Entry<String, String> className : classNames) {
-				try{
+				try {
 					// if the class doesn't belong in the current project we discard it
 					// useful for speeding this method
 					if (!className.getKey().startsWith(packageName)) continue;
 
 					String dexFilePath = className.getValue();
 
-					if(dexFilePath.endsWith(MultiDexHelper.EXTRACTED_SUFFIX)) {
+					if (dexFilePath.endsWith(MultiDexHelper.EXTRACTED_SUFFIX)) {
 						dexFile = DexFile.loadDex(dexFilePath, dexFilePath + ".tmp", 0);
-					}else{
+					} else {
 						dexFile = new DexFile(dexFilePath);
 					}
 
 					Class<?> displayableClass = dexFile.loadClass(className.getKey(), classLoader);
 
-					if (displayableClass != null && Displayable.class.isAssignableFrom(displayableClass) && !displayableClass
+					if (displayableClass != null && Displayable.class.isAssignableFrom
+							(displayableClass) && !displayableClass
 							.isAnnotationPresent(Ignore.class)) {
 						try {
 							Displayable d = (Displayable) displayableClass.newInstance();
-							displayableHashMap.put(d.getType(), (Class<? extends Displayable>) displayableClass);
+							displayableHashMap.put(d.getType(), (Class<? extends Displayable>)
+									displayableClass);
 						} catch (Exception e) {
 							Log.e(TAG, "", e);
 						}
@@ -78,7 +80,7 @@ public enum DisplayableLoader {
 				} catch (Exception e) {
 					Log.e(TAG, "", e);
 				} finally {
-					if(dexFile!=null) {
+					if (dexFile != null) {
 						dexFile.close();
 					}
 				}
@@ -123,7 +125,8 @@ public enum DisplayableLoader {
 	}
 
 	@Nullable
-	public synchronized <T> DisplayablePojo<T> newDisplayable(@NonNull GetStoreWidgets.Type type, T pojo) {
+	public synchronized <T> DisplayablePojo<T> newDisplayable(@NonNull GetStoreWidgets.Type type,
+															  T pojo) {
 		Displayable displayable = newDisplayable(type);
 
 		if (displayable != null && displayable instanceof DisplayablePojo<?>) {

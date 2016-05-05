@@ -19,7 +19,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Handler for Loader Layouts. Needs four identified views in the corresponding layout:<br> <br>&#9{@link R.id#progress_bar} <br>&#9{@link R.id#generic_error} <br>&#9{@link
+ * Handler for Loader Layouts. Needs four identified views in the corresponding layout:<br>
+ * <br>&#9{@link R.id#progress_bar} <br>&#9{@link R.id#generic_error} <br>&#9{@link
  * R.id#no_network_connection} <br>&#9{@link R.id#retry}
  */
 public class LoaderLayoutHandler {
@@ -57,7 +58,9 @@ public class LoaderLayoutHandler {
 		progressBar.setVisibility(View.GONE);
 		viewToShowAfterLoading.setVisibility(View.GONE);
 
-		if (throwable instanceof NoNetworkConnectionException || (throwable.getCause() != null && throwable.getCause() instanceof SocketTimeoutException)) {
+		if (throwable instanceof NoNetworkConnectionException || (throwable.getCause() != null &&
+				throwable
+				.getCause() instanceof SocketTimeoutException)) {
 			genericErrorView.setVisibility(View.GONE);
 			noNetworkConnectionView.setVisibility(View.VISIBLE);
 			retryView.setOnClickListener(view -> {

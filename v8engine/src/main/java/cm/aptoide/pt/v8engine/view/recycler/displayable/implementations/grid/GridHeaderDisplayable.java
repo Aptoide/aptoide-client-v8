@@ -28,7 +28,7 @@ public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWid
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.header_grid_displayable_layout;
+		return R.layout.displayable_grid_header;
 	}
 
 	@Override

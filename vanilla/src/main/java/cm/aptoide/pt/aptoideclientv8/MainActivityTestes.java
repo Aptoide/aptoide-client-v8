@@ -30,7 +30,7 @@ public class MainActivityTestes extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main_testes);
 
 		getSupportFragmentManager().beginTransaction().replace(R.id.contentor, new GridRecyclerFragment() {
 			@Override

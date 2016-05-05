@@ -8,11 +8,11 @@
              android:layout_height="match_parent"
     >
 
-    <include layout="@layout/incl_no_network_layout"/>
+    <include layout="@layout/partial_view_incl_no_network"/>
 
-    <include layout="@layout/error_layout"/>
+    <include layout="@layout/partial_view_error"/>
 
-    <include layout="@layout/progress_bar"/>
+    <include layout="@layout/partial_view_progress_bar"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"

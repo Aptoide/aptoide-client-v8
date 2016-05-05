@@ -46,8 +46,8 @@ public class StoreGridRecyclerFragment extends GridRecyclerFragment {
 	}
 
 	public Displayable storeToDisplayable(Store store) {
-		DisplayablePojo<Store> d =
-				(DisplayablePojo<Store>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
+		DisplayablePojo<Store> d = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE
+				.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
 		d.setPojo(store);
 		return d;
 	}

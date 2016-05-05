@@ -20,7 +20,6 @@ public class AppViewCommentsDisplayable extends AppViewDisplayable<Object> {
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.app_view_comments;
+		return R.layout.displayable_app_view_comments;
 	}
-
 }

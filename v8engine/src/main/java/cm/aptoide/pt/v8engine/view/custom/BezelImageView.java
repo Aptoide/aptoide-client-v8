@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by SithEngineer on 05/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view;
+package cm.aptoide.pt.v8engine.view.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;

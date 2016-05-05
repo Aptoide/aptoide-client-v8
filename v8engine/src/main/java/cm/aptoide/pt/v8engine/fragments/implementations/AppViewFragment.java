@@ -19,10 +19,7 @@ import rx.schedulers.Schedulers;
 public class AppViewFragment extends GridRecyclerFragment {
 
 	private static final String TAG = AppViewFragment.class.getName();
-
-	private enum BundleKeys {
-		APP_ID
-	}
+	private String appId;
 
 	public static AppViewFragment newInstance(String appId) {
 		Bundle bundle = new Bundle();
@@ -33,8 +30,6 @@ public class AppViewFragment extends GridRecyclerFragment {
 		return fragment;
 	}
 
-	private String appId;
-
 	@Override
 	protected void loadBundle(Bundle args) {
 		super.loadBundle(args);
@@ -43,8 +38,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 	@Override
 	public void load() {
-		loadAppInfo(appId)
-				.subscribeOn(Schedulers.io())
+		loadAppInfo(appId).subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(this::showAppInfo);
 	}
@@ -57,5 +51,9 @@ public class AppViewFragment extends GridRecyclerFragment {
 		Logger.d(TAG, "loaded app info");
 
 		// TODO
+	}
+
+	private enum BundleKeys {
+		APP_ID
 	}
 }

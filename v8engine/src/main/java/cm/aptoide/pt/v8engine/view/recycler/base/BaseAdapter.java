@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by SithEngineer on 05/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler;
+package cm.aptoide.pt.v8engine.view.recycler.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;

@@ -69,23 +69,26 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private Subscription caseGetStoreWidgets(String url, V7.Interfaces interfaces) {
-		return ObservableUtils.retryOnTicket(interfaces.getStoreWidgets(url)).subscribe(getStoreWidgets -> {
+		return ObservableUtils.retryOnTicket(interfaces.getStoreWidgets(url))
+				.subscribe(getStoreWidgets -> {
 
-			// Load sub nodes
-			List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
-			CountDownLatch countDownLatch = new CountDownLatch(list.size());
+					// Load sub nodes
+					List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
+					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
-			Observable.from(list).forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, throwable -> finishLoading(throwable)));
+					Observable.from(list)
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+									countDownLatch, throwable -> finishLoading(throwable)));
 
-			try {
-				countDownLatch.await();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+					try {
+						countDownLatch.await();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 
-			List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets);
-			addDisplayables(displayables);
-		}, throwable -> finishLoading(throwable));
+					List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets);
+					addDisplayables(displayables);
+				}, throwable -> finishLoading(throwable));
 	}
 
 	private static class BundleCons {

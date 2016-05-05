@@ -69,7 +69,7 @@
         tools:background="@color/red"
         />
 
-    <include layout="@layout/partial_comment_separator"/>
+    <include layout="@layout/partial_view_comment_separator"/>
 
     <!-- comment 2 -->
     <FrameLayout
@@ -79,7 +79,7 @@
         tools:background="@color/blue"
         />
 
-    <include layout="@layout/partial_comment_separator"/>
+    <include layout="@layout/partial_view_comment_separator"/>
 
     <!-- comment 3 -->
     <FrameLayout

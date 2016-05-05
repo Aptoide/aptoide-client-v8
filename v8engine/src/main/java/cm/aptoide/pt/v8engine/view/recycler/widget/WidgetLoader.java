@@ -60,16 +60,15 @@ public enum WidgetLoader {
 
 					String dexFilePath = className.getValue();
 
-					if(dexFilePath.endsWith(MultiDexHelper.EXTRACTED_SUFFIX)) {
+					if (dexFilePath.endsWith(MultiDexHelper.EXTRACTED_SUFFIX)) {
 						dexFile = DexFile.loadDex(dexFilePath, dexFilePath + ".tmp", 0);
-					}else{
+					} else {
 						dexFile = new DexFile(dexFilePath);
 					}
 
 					Class<?> widgetClass = dexFile.loadClass(className.getKey(), classLoader);
 					if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) &&
-							widgetClass
-									.isAnnotationPresent(Displayables.class)) {
+							widgetClass.isAnnotationPresent(Displayables.class)) {
 						Displayables annotation = widgetClass.getAnnotation(Displayables.class);
 						Class<? extends Displayable>[] displayableClasses = annotation.value();
 						WidgetMeta wMeta;
@@ -82,7 +81,7 @@ public enum WidgetLoader {
 				} catch (Exception e) {
 					Log.e(TAG, "", e);
 				} finally {
-					if(dexFile!=null) {
+					if (dexFile != null) {
 						dexFile.close();
 					}
 				}

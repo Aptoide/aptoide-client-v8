@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseGridLayoutManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.layoutManager.BaseGridLayoutManager;
 
 /**
  * Created by neuro on 15-04-2016.
@@ -31,7 +31,8 @@ public abstract class GridRecyclerFragment extends BaseRecyclerViewFragment<Base
 	private Handler handler;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+			savedInstanceState) {
 
 		handler = new Handler(Looper.myLooper());
 

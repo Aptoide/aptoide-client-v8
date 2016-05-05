@@ -11,7 +11,8 @@ import android.view.View;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * Handler for Swipe Loader Layouts. Needs five identified views in the corresponding layout:<br> <br>&#9{@link R.id#progress_bar} <br>&#9{@link R.id#generic_error} <br>&#9{@link
+ * Handler for Swipe Loader Layouts. Needs five identified views in the corresponding layout:<br>
+ * <br>&#9{@link R.id#progress_bar} <br>&#9{@link R.id#generic_error} <br>&#9{@link
  * R.id#no_network_connection} <br>&#9{@link R.id#retry} <br>&#9{@link R.id#swipe_container}
  */
 public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
@@ -26,7 +27,8 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
 	public void bindViews(View view) {
 		super.bindViews(view);
 		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-		swipeContainer.setColorSchemeResources(R.color.default_progress_bar_color, R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+		swipeContainer.setColorSchemeResources(R.color.default_progress_bar_color, R.color
+				.default_color, R.color.default_progress_bar_color, R.color.default_color);
 		swipeContainer.setOnRefreshListener(((ReloadInterface) loadInterface)::reload);
 	}
 

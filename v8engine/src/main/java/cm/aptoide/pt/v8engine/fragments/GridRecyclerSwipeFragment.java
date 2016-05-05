@@ -14,7 +14,8 @@ import cm.aptoide.pt.v8engine.layouthandler.SwipeLoaderLayoutHandler;
 /**
  * Created by neuro on 05-05-2016.
  */
-public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragment implements ReloadInterface {
+public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragment implements
+		ReloadInterface {
 
 	@NonNull
 	@Override

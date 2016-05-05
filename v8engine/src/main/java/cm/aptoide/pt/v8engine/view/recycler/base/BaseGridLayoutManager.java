@@ -3,12 +3,11 @@
  * Modified by SithEngineer on 04/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.layoutManager;
+package cm.aptoide.pt.v8engine.view.recycler.base;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 
-import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 

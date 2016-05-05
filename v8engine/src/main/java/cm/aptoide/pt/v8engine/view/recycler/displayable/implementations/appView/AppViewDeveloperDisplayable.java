@@ -21,5 +21,4 @@ public class AppViewDeveloperDisplayable extends AppViewDisplayable<Object> {
 	public int getViewLayout() {
 		return 0;
 	}
-
 }

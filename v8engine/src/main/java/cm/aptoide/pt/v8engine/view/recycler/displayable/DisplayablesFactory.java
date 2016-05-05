@@ -84,7 +84,8 @@ public class DisplayablesFactory {
 		List<Displayable> tmp = new ArrayList<>(stores.size());
 		for (Store store : stores) {
 
-			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
+			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader
+					.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
 			diplayable.setPojo(store);
 			tmp.add(diplayable);
 		}

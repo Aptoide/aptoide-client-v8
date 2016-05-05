@@ -21,7 +21,7 @@ public class GridDisplayDisplayable extends DisplayablePojo<Object> {
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.display_grid_displayable_layout;
+		return R.layout.displayable_grid_display;
 	}
 
 	@Override

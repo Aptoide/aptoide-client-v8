@@ -29,6 +29,8 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 	protected void onStart() {
 		super.onStart();
 		fragment = createFragment();
-		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, fragment).commit();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment_placeholder, fragment)
+				.commit();
 	}
 }

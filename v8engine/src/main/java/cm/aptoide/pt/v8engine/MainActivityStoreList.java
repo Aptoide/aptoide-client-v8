@@ -32,23 +32,8 @@ public class MainActivityStoreList extends AptoideBaseActivity {
 	private StoreGridRecyclerFragment fragment;
 
 	@Override
-	protected String getAnalyticsScreenName() {
-		return StaticScreenNames.MAIN_ACTIVITY;
-	}
-
-	@Override
 	protected void setupViews() {
 		ListStoresRequest.of().execute(this::setupStoreList);
-	}
-
-	private void setupStoreList(ListStores listStores) {
-		fragment = StoreGridRecyclerFragment.newInstance();
-
-		fragment.setStoreList(listStores.getDatalist().getList());
-
-		getSupportFragmentManager().beginTransaction()
-				.replace(mFragmentPlaceholder.getId(), fragment)
-				.commit();
 	}
 
 	@Override
@@ -67,12 +52,26 @@ public class MainActivityStoreList extends AptoideBaseActivity {
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mFragmentPlaceholder = (FrameLayout) findViewById(R.id
-				.fragment_placeholder);
+		mFragmentPlaceholder = (FrameLayout) findViewById(R.id.fragment_placeholder);
 	}
 
 	@Override
 	protected int getContentViewId() {
-		return R.layout.main_activity_store_list;
+		return R.layout.activity_main_store_list;
+	}
+
+	@Override
+	protected String getAnalyticsScreenName() {
+		return StaticScreenNames.MAIN_ACTIVITY;
+	}
+
+	private void setupStoreList(ListStores listStores) {
+		fragment = StoreGridRecyclerFragment.newInstance();
+
+		fragment.setStoreList(listStores.getDatalist().getList());
+
+		getSupportFragmentManager().beginTransaction()
+				.replace(mFragmentPlaceholder.getId(), fragment)
+				.commit();
 	}
 }

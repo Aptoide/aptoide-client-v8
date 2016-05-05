@@ -15,7 +15,8 @@ import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 /**
  * Created by neuro on 04-05-2016.
  */
-public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity implements LoadInterface {
+public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity implements
+		LoadInterface {
 
 	private LoaderLayoutHandler loaderLayoutHandler;
 

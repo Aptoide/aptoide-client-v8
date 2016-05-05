@@ -39,13 +39,14 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 			setSupportActionBar(mToolbar);
 			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
 			mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
+					.START));
 		}
 	}
 
 	@Override
 	protected int getContentViewId() {
-		return R.layout.main_activity;
+		return R.layout.activity_main;
 	}
 
 	@Override
@@ -54,7 +55,8 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	}
 
 	private void setupViewPager(GetStore getStore) {
-		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(), getStore);
+		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(),
+				getStore);
 		mViewPager.setAdapter(pagerAdapter);
 
 		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -81,7 +83,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 
 	@Override
 	public void load() {
-		GetStoreRequest.of("apps").execute((getStore) -> setupViewPager(getStore));
+		GetStoreRequest.of("apps").execute(this::setupViewPager);
 	}
 
 	private void setupNavigationView() {
@@ -90,13 +92,16 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 
 				int itemId = menuItem.getItemId();
 				if (itemId == R.id.navigation_item_my_account) {
-					Snackbar.make(mNavigationView, "MyAccountActivity", Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(mNavigationView, "MyAccountActivity", Snackbar.LENGTH_SHORT)
+							.show();
 				} else if (itemId == R.id.navigation_item_rollback) {
 					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
-					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
+							.show();
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
-					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
+							.show();
 				} else if (itemId == R.id.navigation_item_settings) {
 					Snackbar.make(mNavigationView, "Settings", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_facebook) {

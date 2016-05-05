@@ -15,7 +15,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridStoreDisplayable extends DisplayablePojo<Store> {
 
-	public GridStoreDisplayable() { }
+	public GridStoreDisplayable() {
+	}
 
 	@Override
 	public GetStoreWidgets.Type getType() {
@@ -24,7 +25,7 @@ public class GridStoreDisplayable extends DisplayablePojo<Store> {
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.store_grid_displayable_layout;
+		return R.layout.displayable_grid_store;
 	}
 
 	@Override

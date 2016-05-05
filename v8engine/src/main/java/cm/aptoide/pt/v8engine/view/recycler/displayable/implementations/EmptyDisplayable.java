@@ -30,7 +30,7 @@ public class EmptyDisplayable extends Displayable {
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.empty_displayable;
+		return R.layout.displayable_empty;
 	}
 
 	@Override

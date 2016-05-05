@@ -38,7 +38,8 @@ public abstract class Displayable {
 
 	public int getPerLineCount() {
 		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils
-				.getScreenWidthInDip(Aptoide.getContext()) / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+				.getScreenWidthInDip(Aptoide
+				.getContext()) / REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
 
 	public abstract int getDefaultPerLineCount();

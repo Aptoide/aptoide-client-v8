@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.support.v4.app.Fragment;
 
+import cm.aptoide.pt.v8engine.R;
+
 /**
  * Created by sithengineer on 04/05/16.
  */
@@ -19,7 +21,7 @@ public class AppViewActivity extends AptoideSimpleFragmentActivity {
 
 	@Override
 	protected int getContentViewId() {
-		return 0;
+		return R.layout.activity_app_view;
 	}
 
 	@Override
