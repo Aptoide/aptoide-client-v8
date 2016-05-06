@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import java.util.List;
 
+import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
@@ -15,6 +16,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
+@Ignore
 public class DisplayableGroup extends Displayable {
 
 	@Getter private final List<Displayable> children;

@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.support.annotation.LayoutRes;
 
+import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.Aptoide;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 /**
  * Created by neuro on 14-04-2016.
  */
+@Ignore
 public abstract class Displayable {
 
 	private static final float REFERENCE_WIDTH_DPI = 360;

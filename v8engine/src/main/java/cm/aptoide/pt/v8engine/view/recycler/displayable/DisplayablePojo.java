@@ -9,6 +9,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import cm.aptoide.pt.annotation.Ignore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -12,7 +12,7 @@ import android.view.WindowManager;
 /**
  * Created by neuro on 14-04-2016.
  */
-public class ScreenUtils {
+public final class ScreenUtils {
 
 	private static ScreenUtilsCache screenWidthInDipCache = new ScreenUtilsCache();
 

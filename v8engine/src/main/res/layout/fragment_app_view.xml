@@ -14,4 +14,6 @@
 
     <include layout="@layout/partial_app_view_collapsing_toolbar"/>
 
+    <include layout="@layout/recycler_fragment" />
+
 </android.support.design.widget.CoordinatorLayout>

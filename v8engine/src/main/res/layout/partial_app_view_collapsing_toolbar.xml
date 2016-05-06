@@ -111,7 +111,8 @@
                     android:layout_width="@dimen/appview_header_app_image_size"
                     android:layout_height="@dimen/appview_header_app_image_size"
                     app:layout_anchor="@id/app_bar"
-                    app:layout_anchorGravity="bottom|left|start" />
+                    app:layout_anchorGravity="bottom|left|start"
+                    />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -129,7 +130,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/appview_top_rating_top_margin"
-                        android:numStars="5" />
+                        android:numStars="5"
+                        />
 
                     <LinearLayout
                         android:layout_width="186dp"
@@ -207,7 +209,7 @@
                                 android:src="@drawable/ic_appview_download_icon" />
 
                             <TextView
-                                android:id="@+id/downloads_number"
+                                android:id="@+id/downloads_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"

@@ -15,14 +15,21 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
+import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.utils.ObservableUtils;
+import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 04/05/16.
@@ -40,7 +47,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	// vars
 	//
 
-	private String appId;
+	private int appId;
 	private AppViewHeader header;
 
 	//
@@ -57,6 +64,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 		private RatingBar ratingBar;
 		private TextView fileSize;
 		private TextView versionName;
+		private TextView downloadsCount;
 
 		// ctor
 		public AppViewHeader(@NonNull View view) {
@@ -68,11 +76,21 @@ public class AppViewFragment extends GridRecyclerFragment {
 			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar_top);
 			fileSize = (TextView) view.findViewById(R.id.file_size);
 			versionName = (TextView) view.findViewById(R.id.version_name);
+			downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
 		}
 
 		// setup methods
-		public void setup(@NonNull Object pojo) {
-			// TODO
+		public void setup(@NonNull GetAppMeta.App pojo) {
+			Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(appIcon);
+			Glide.with(Aptoide.getContext()).load(pojo.getGraphic()).into(featuredGraphic); //
+			// TODO add placeholders
+
+			ratingBar.setRating(pojo.getStats().getRating().getAvg());
+			fileSize.setText(String.format(Locale.ROOT, "%d", pojo.getFile().getFilesize()));
+			versionName.setText(pojo.getFile().getVername());
+			downloadsCount.setText(String.format(Locale.ROOT, "%d", pojo.getStats().getDownloads()));
+
+			// TODO add badge
 		}
 
 	}
@@ -89,9 +107,9 @@ public class AppViewFragment extends GridRecyclerFragment {
 	// static fragment default new instance method
 	//
 
-	public static AppViewFragment newInstance(String appId) {
+	public static AppViewFragment newInstance(int appId) {
 		Bundle bundle = new Bundle();
-		bundle.putString(BundleKeys.APP_ID.name(), appId);
+		bundle.putInt(BundleKeys.APP_ID.name(), appId);
 
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
@@ -112,28 +130,36 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	protected void loadBundle(Bundle args) {
 		super.loadBundle(args);
-		appId = args.getString(BundleKeys.APP_ID.name());
+		appId = args.getInt(BundleKeys.APP_ID.name());
 	}
 
 	@Override
 	public void load() {
-		loadAppInfo(appId).subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
+		loadAppInfo(appId)
+				.compose(ObservableUtils.applySchedulers())
 				.subscribe(this::showAppInfo);
 	}
 
-	private Observable<Object> loadAppInfo(String appId) {
-		return Observable.just(appId);
+	private Observable<GetApp> loadAppInfo(int appId) {
+		return GetAppRequest.of(appId).observe();
 	}
 
-	private void showAppInfo(Object obj) {
-		// TODO generate displayables + widgets for body
+	private void showAppInfo(GetApp pojo) {
+
+		GetAppMeta.App app = pojo.getNodes().getMeta().getData();
+
+		// TODO generate displayables for app body
+
 		ArrayList<Displayable> displayables = new ArrayList<>();
+		displayables.add(new AppViewInstallDisplayable(app));
+
 		// ...
+
+		// setup displayables in view
 		addDisplayables(displayables);
 
-		// setup header view
-		header.setup(obj);
+		// setup header in view
+		header.setup(app);
 	}
 
 }

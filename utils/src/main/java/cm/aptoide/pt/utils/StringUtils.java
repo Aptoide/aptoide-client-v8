@@ -3,7 +3,7 @@ package cm.aptoide.pt.utils;
 /**
  * Created by sithengineer on 02/05/16.
  */
-public class StringUtils {
+public final class StringUtils {
 
 	public static String withSuffix(long count) {
 		if (count < 1000) return String.valueOf(count);
