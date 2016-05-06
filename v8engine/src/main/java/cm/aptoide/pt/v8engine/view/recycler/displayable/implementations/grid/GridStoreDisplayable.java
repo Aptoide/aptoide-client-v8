@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -19,8 +19,8 @@ public class GridStoreDisplayable extends DisplayablePojo<Store> {
 	}
 
 	@Override
-	public GetStoreWidgets.Type getType() {
-		return GetStoreWidgets.Type.STORES_GROUP;
+	public Type getType() {
+		return Type.STORES_GROUP;
 	}
 
 	@Override

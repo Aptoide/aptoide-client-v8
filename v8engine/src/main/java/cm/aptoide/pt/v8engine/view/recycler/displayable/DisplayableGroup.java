@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import java.util.List;
 
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import lombok.Getter;
@@ -42,7 +42,7 @@ public class DisplayableGroup extends Displayable {
 	}
 
 	@Override
-	public GetStoreWidgets.Type getType() {
+	public Type getType() {
 		throw new IllegalStateException("getType() on DisplayableGroup should not be called!");
 	}
 

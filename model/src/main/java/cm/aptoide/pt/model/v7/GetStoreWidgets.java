@@ -1,14 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/04/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
-package cm.aptoide.pt.model.v7.store;
+package cm.aptoide.pt.model.v7;
 
 import java.util.List;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.Datalist;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,14 +18,6 @@ import lombok.EqualsAndHashCode;
 public class GetStoreWidgets extends BaseV7Response {
 
 	private Datalist<WSWidget> datalist;
-
-	public enum Type {
-		_EMPTY, // FIXME for tests only
-		APPS_GROUP,
-		STORES_GROUP,
-		DISPLAYS,
-		HEADER_ROW,
-	}
 
 	@Data
 	public static class WSWidget {

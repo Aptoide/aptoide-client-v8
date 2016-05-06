@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
@@ -88,7 +89,7 @@ public class DisplayablesFactory {
 		for (Store store : stores) {
 
 			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader
-					.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
+					.INSTANCE.newDisplayable(Type.STORES_GROUP);
 			diplayable.setPojo(store);
 			tmp.add(diplayable);
 		}
@@ -114,7 +115,7 @@ public class DisplayablesFactory {
 		GetStoreWidgets.WSWidget header = (GetStoreWidgets.WSWidget) viewObject;
 		DisplayablePojo<GetStoreWidgets.WSWidget> displayable = (DisplayablePojo<GetStoreWidgets
 				.WSWidget>) DisplayableLoader.INSTANCE
-				.newDisplayable(GetStoreWidgets.Type.HEADER_ROW);
+				.newDisplayable(Type.HEADER_ROW);
 		displayable.setPojo(header);
 		return displayable;
 	}
