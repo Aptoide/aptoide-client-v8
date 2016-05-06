@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.support.annotation.LayoutRes;
 
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -27,8 +27,8 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
 	}
 
 	@Override
-	public GetStoreWidgets.Type getType() {
-		return GetStoreWidgets.Type.APPS_GROUP;
+	public Type getType() {
+		return Type.APPS_GROUP;
 	}
 
 	@LayoutRes

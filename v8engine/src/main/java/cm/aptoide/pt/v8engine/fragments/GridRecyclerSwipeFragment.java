@@ -25,7 +25,6 @@ public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragment imp
 
 	@Override
 	public void reload() {
-		adapter.clearDisplayables();
 		load();
 	}
 }

@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,7 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
@@ -30,9 +32,13 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	private ViewPager mViewPager;
 
 	@Override
+	protected void loadExtras(Bundle extras) {
+
+	}
+
+	@Override
 	protected void setupViews() {
 		setupNavigationView();
-		load();
 	}
 
 	@Override
@@ -85,7 +91,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 
 	@Override
 	public void load() {
-		GetStoreRequest.of("apps").execute(this::setupViewPager);
+		GetStoreRequest.of("apps", StoreContext.home).execute(this::setupViewPager);
 	}
 
 	private void setupNavigationView() {
