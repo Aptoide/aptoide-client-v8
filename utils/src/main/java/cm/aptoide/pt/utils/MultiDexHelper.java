@@ -28,9 +28,9 @@ import dalvik.system.DexFile;
  * @author SithEngineer
  */
 public class MultiDexHelper {
-	private static final String EXTRACTED_NAME_EXT = ".classes";
-	private static final String EXTRACTED_SUFFIX = ".zip";
 
+	public static final String EXTRACTED_SUFFIX = ".zip";
+	private static final String EXTRACTED_NAME_EXT = ".classes";
 	private static final String SECONDARY_FOLDER_NAME = "code_cache" + File.separator +
 			"secondary-dexes";
 
@@ -38,10 +38,9 @@ public class MultiDexHelper {
 	private static final String KEY_DEX_NUMBER = "dex.number";
 
 	private static SharedPreferences getMultiDexPreferences(Context context) {
-		return context.getSharedPreferences(PREFS_FILE,
-				Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
-						? Context.MODE_PRIVATE
-						: Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+		return context.getSharedPreferences(PREFS_FILE, Build.VERSION.SDK_INT < Build
+				.VERSION_CODES.HONEYCOMB ? Context.MODE_PRIVATE : Context.MODE_PRIVATE | Context
+				.MODE_MULTI_PROCESS);
 	}
 
 	/**
@@ -52,8 +51,10 @@ public class MultiDexHelper {
 	 * @throws PackageManager.NameNotFoundException
 	 * @throws IOException
 	 */
-	public static List<String> getSourcePaths(Context context) throws PackageManager.NameNotFoundException, IOException {
-		ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
+	public static List<String> getSourcePaths(Context context) throws PackageManager
+			.NameNotFoundException, IOException {
+		ApplicationInfo applicationInfo = context.getPackageManager()
+				.getApplicationInfo(context.getPackageName(), 0);
 		File sourceApk = new File(applicationInfo.sourceDir);
 		File dexDir = new File(applicationInfo.dataDir, SECONDARY_FOLDER_NAME);
 
@@ -89,31 +90,31 @@ public class MultiDexHelper {
 	 * @throws PackageManager.NameNotFoundException
 	 * @throws IOException
 	 */
-	public static List<Map.Entry<String, DexFile>> getAllClasses(Context context) throws
-			PackageManager
-			.NameNotFoundException, IOException {
-		List<Map.Entry<String, DexFile>> classNames = new ArrayList<>();
+	public static List<Map.Entry<String, String>> getAllClasses(Context context) throws
+			PackageManager.NameNotFoundException, IOException {
+		List<Map.Entry<String, String>> classNames = new ArrayList<>();
 		for (String path : getSourcePaths(context)) {
+			DexFile dexfile = null;
 			try {
-				DexFile dexfile = null;
 				if (path.endsWith(EXTRACTED_SUFFIX)) {
-					//NOT use new DexFile(path), because it will throw "permission error in /data/dalvik-cache"
+					//NOT use new DexFile(path), because it will throw "permission error in
+					// /data/dalvik-cache"
 					dexfile = DexFile.loadDex(path, path + ".tmp", 0);
 				} else {
 					dexfile = new DexFile(path);
 				}
 				Enumeration<String> dexEntries = dexfile.entries();
 				while (dexEntries.hasMoreElements()) {
-					classNames.add(
-						new AbstractMap.SimpleImmutableEntry<>(
-							dexEntries.nextElement(),
-							dexfile
-						)
-					);
+					classNames.add(new AbstractMap.SimpleImmutableEntry<>(dexEntries.nextElement()
+							, path));
 				}
 			} catch (IOException e) {
 				throw new IOException("Error at loading dex file '" +
 						path + "'");
+			} finally {
+				if (dexfile != null) {
+					dexfile.close();
+				}
 			}
 		}
 		return classNames;

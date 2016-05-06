@@ -79,18 +79,23 @@ public class GetAppMeta extends BaseV7Response {
 			private int gles;
 			private List<String> cpus;
 			/**
-			 * Second array contains only two values: First value is the screen, second value is the density
+			 * Second array contains only two values: First value is the screen, second value is
+			 * the
+			 * density
 			 */
 			private List<List<Integer>> densities;
 		}
 
 		/**
-		 * List of various malware reasons http://ws2.aptoide.com/api/7/getApp/apk_md5sum/7de07d96488277d8d76eafa2ef66f5a8
+		 * List of various malware reasons http://ws2.aptoide
+		 * .com/api/7/getApp/apk_md5sum/7de07d96488277d8d76eafa2ef66f5a8
 		 * <p>
 		 * <p>
-		 * RANK2: http://ws2.aptoide.com/api/7/getApp/apk_md5sum/7de07d96488277d8d76eafa2ef66f5a8 http://ws2.aptoide.com/api/7/getApp/apk_md5sum/06c9eb56b787b6d3b606d68473a38f47
+		 * RANK2: http://ws2.aptoide.com/api/7/getApp/apk_md5sum/7de07d96488277d8d76eafa2ef66f5a8
+		 * http://ws2.aptoide.com/api/7/getApp/apk_md5sum/06c9eb56b787b6d3b606d68473a38f47
 		 * <p>
-		 * RANK3: http://ws2.aptoide.com/api/7/getApp/apk_md5sum/18f0d5bdb9df1e0e27604890113c3331 http://ws2.aptoide.com/api/7/getApp/apk_md5sum/74cbfde9dc6da43d3d14f4df9cdb9f2f
+		 * RANK3: http://ws2.aptoide.com/api/7/getApp/apk_md5sum/18f0d5bdb9df1e0e27604890113c3331
+		 * http://ws2.aptoide.com/api/7/getApp/apk_md5sum/74cbfde9dc6da43d3d14f4df9cdb9f2f
 		 * <p>
 		 * Rank can be: TRUSTED, WARNING, UNKNOWN
 		 */
@@ -158,7 +163,8 @@ public class GetAppMeta extends BaseV7Response {
 					@Data
 					public static class AvInfo {
 
-						private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo.Infection> infections;
+						private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo.Infection>
+								infections;
 						private String name;
 
 						@Data

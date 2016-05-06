@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -17,12 +17,11 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.v8engine.activity.AptoideBaseScreenActivity;
+import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
 
-public class MainActivity extends AptoideBaseScreenActivity {
+public class MainActivity extends AptoideBaseLoaderActivity {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private Toolbar mToolbar;
@@ -33,7 +32,7 @@ public class MainActivity extends AptoideBaseScreenActivity {
 	@Override
 	protected void setupViews() {
 		setupNavigationView();
-		GetStoreRequest.of("apps").execute(this::setupViewPager);
+		load();
 	}
 
 	@Override
@@ -48,16 +47,13 @@ public class MainActivity extends AptoideBaseScreenActivity {
 	}
 
 	@Override
-	protected void bindViews() {
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+	protected int getContentViewId() {
+		return R.layout.activity_main;
 	}
 
 	@Override
-	protected int getContentViewId() {
-		return R.layout.main_activity;
+	protected String getAnalyticsScreenName() {
+		return StaticScreenNames.MAIN_ACTIVITY;
 	}
 
 	private void setupViewPager(GetStore getStore) {
@@ -69,6 +65,27 @@ public class MainActivity extends AptoideBaseScreenActivity {
 		if (pagerSlidingTabStrip != null) {
 			pagerSlidingTabStrip.setViewPager(mViewPager);
 		}
+
+		finishLoading();
+	}
+
+	@Override
+	protected void bindViews() {
+		super.bindViews();
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+	}
+
+	@Override
+	protected int getViewToShowAfterLoadingId() {
+		return R.id.app_bar_layout;
+	}
+
+	@Override
+	public void load() {
+		GetStoreRequest.of("apps").execute(this::setupViewPager);
 	}
 
 	private void setupNavigationView() {
@@ -79,9 +96,7 @@ public class MainActivity extends AptoideBaseScreenActivity {
 				if (itemId == R.id.navigation_item_my_account) {
 					AptoideAccountManager.openAccountManager(this, false);
 				} else if (itemId == R.id.navigation_item_rollback) {
-					Snackbar.make(mNavigationView, AptoideAccountManager.getUserInfo()
-							.toString(), Snackbar.LENGTH_SHORT).show();
-					Logger.d(TAG, "setupNavigationView: " + AptoideAccountManager.getUserInfo());
+					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
 					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
 							.show();
@@ -103,10 +118,5 @@ public class MainActivity extends AptoideBaseScreenActivity {
 				return false;
 			});
 		}
-	}
-
-	@Override
-	protected String getAnalyticsScreenName() {
-		return StaticScreenNames.MAIN_ACTIVITY;
 	}
 }

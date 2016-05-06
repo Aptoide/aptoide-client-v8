@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/04/2016.
+<<<<<<< HEAD
+ * Modified by SithEngineer on 04/05/2016.
+=======
+ * Modified by Neurophobic Animal on 04/05/2016.
+>>>>>>> master
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -14,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.Aptoide;
 import dalvik.system.DexFile;
@@ -26,40 +32,56 @@ public enum DisplayableLoader {
 
 	private static final String TAG = DisplayableLoader.class.getName();
 
-	//TODO use a eager loading technique and remove synchronization primitives
+	private HashMap<GetStoreWidgets.Type, Class<? extends Displayable>> displayableHashMap;
+	private LruCache<GetStoreWidgets.Type, Class<? extends Displayable>> displayableLruCache;
 
-	private HashMap<String, Class<? extends Displayable>> displayableHashMap;
-	private LruCache<String, Class<? extends Displayable>> displayableLruCache;
+	DisplayableLoader() {
+		final String TAG = DisplayableLoader.class.getName();
 
-	private synchronized void loadDisplayables() {
-		displayableHashMap = new HashMap<>();
 //		long nanos = System.
+		displayableHashMap = new HashMap<>();
 		try {
 			// get the current class loader
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, DexFile>> classNames =
-					MultiDexHelper.getAllClasses(Aptoide.getContext());
+			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(Aptoide
+					.getContext());
 
-			for(Map.Entry<String, DexFile> className : classNames ) {
+			DexFile dexFile = null;
+			for (Map.Entry<String, String> className : classNames) {
+				try {
+					// if the class doesn't belong in the current project we discard it
+					// useful for speeding this method
+					if (!className.getKey().startsWith(packageName)) continue;
 
-				// if the class doesn't belong in the current project we discard it
-				// useful for speeding this method
-				if (!className.getKey().startsWith(packageName)) continue;
-				Class<?> displayableClass = className.getValue().loadClass(
-						className.getKey(), classLoader);
+					String dexFilePath = className.getValue();
 
-				if (displayableClass != null && Displayable.class.isAssignableFrom(displayableClass)) {
-					try {
-						Displayable d = (Displayable) displayableClass.newInstance();
-						displayableHashMap.put(
-								d.getName().name(),
-								(Class<? extends Displayable>) displayableClass
-						);
-					} catch (Exception e) {
-						Log.e(TAG, "", e);
+					if (dexFilePath.endsWith(MultiDexHelper.EXTRACTED_SUFFIX)) {
+						dexFile = DexFile.loadDex(dexFilePath, dexFilePath + ".tmp", 0);
+					} else {
+						dexFile = new DexFile(dexFilePath);
+					}
+
+					Class<?> displayableClass = dexFile.loadClass(className.getKey(), classLoader);
+
+					if (displayableClass != null && Displayable.class.isAssignableFrom
+							(displayableClass) && !displayableClass
+							.isAnnotationPresent(Ignore.class)) {
+						try {
+							Displayable d = (Displayable) displayableClass.newInstance();
+							displayableHashMap.put(d.getType(), (Class<? extends Displayable>)
+									displayableClass);
+						} catch (Exception e) {
+							Log.e(TAG, "", e);
+						}
+					}
+				} catch (Exception e) {
+					Log.e(TAG, "", e);
+				} finally {
+					if (dexFile != null) {
+						dexFile.close();
 					}
 				}
 			}
@@ -75,15 +97,14 @@ public enum DisplayableLoader {
 			throw new IllegalStateException("Unable to load Displayables");
 		}
 		int cacheSize = displayableHashMap.size() / 4;
-		displayableLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the total, or 2
+		displayableLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the
+		// total, or 2
+
+		Log.w(TAG, "Loaded Displayables");
 	}
 
 	@Nullable
-	public synchronized Displayable newDisplayable(@NonNull String type) {
-		if (displayableHashMap == null) {
-			loadDisplayables();
-		}
-
+	public Displayable newDisplayable(@NonNull GetStoreWidgets.Type type) {
 		Class<? extends Displayable> displayableClass = displayableLruCache.get(type);
 
 		if (displayableClass == null) {
@@ -98,6 +119,24 @@ public enum DisplayableLoader {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Nullable
+	public synchronized <T> DisplayablePojo<T> newDisplayable(@NonNull GetStoreWidgets.Type type,
+															  T pojo) {
+		Displayable displayable = newDisplayable(type);
+
+		if (displayable != null && displayable instanceof DisplayablePojo<?>) {
+			try {
+				return ((DisplayablePojo<T>) displayable).setPojo(pojo);
+			} catch (ClassCastException e) {
+				Logger.e(TAG, "Trying to instantiate a DisplayablePojo with a wrong type!");
+			}
+		} else {
+			Logger.e(TAG, "Trying to instantiate a standard Displayable with a pojo!");
 		}
 
 		return null;

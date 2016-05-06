@@ -98,8 +98,13 @@ public class DiskLruUnitTest {
 		usedRequests.add(request);
 		Response resp1 = cache.put(request, response);
 
+		Charset charset = Charset.forName("UTF-8");
 		try {
-			assertEquals("stored response body after put() is not the same", response.body(), resp1.body());
+			assertEquals(
+					"stored response body after put() is not the same",
+					response.body().source().readString(charset),
+					resp1.body().source().readString(charset)
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -109,18 +114,14 @@ public class DiskLruUnitTest {
 	@Test
 	public void simpleGet() throws IOException {
 		usedRequests.add(request);
-		cache.put(request, response);
+		Response cachedResponse = cache.put(request, response);
 
-		String expectedResponseBodyData = response.body().source().readString(Charset.forName("UTF-8"));
-		ResponseBody currentResponseBodyData;
-
+		String expectedResponseBodyData = cachedResponse.body().source().readString(Charset.forName("UTF-8"));
 		try {
 			Response resp2 = cache.get(request);
 			assertNotNull(resp2);
-			currentResponseBodyData = resp2.body();
-			assertNotNull(currentResponseBodyData);
 
-			String currentData = currentResponseBodyData.source().readString(Charset.forName("UTF-8"));
+			String currentData = resp2.body().source().readString(Charset.forName("UTF-8"));
 
 			assertEquals("response body content after get() is not the same", expectedResponseBodyData, currentData);
 		} catch (Exception e) {

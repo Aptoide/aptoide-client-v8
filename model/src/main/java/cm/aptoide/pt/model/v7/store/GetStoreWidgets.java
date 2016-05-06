@@ -45,7 +45,8 @@ public class GetStoreWidgets extends BaseV7Response {
 
 		private Type type;
 		private String tag;
-		private String title; // Highlighted, Games, Categories, Timeline, Recommended for you, Aptoide Publishers
+		private String title; // Highlighted, Games, Categories, Timeline, Recommended for you,
+		// Aptoide Publishers
 		private String view;
 		// Object that will hold view response.
 		private Object viewObject;

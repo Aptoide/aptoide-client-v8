@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments.implementations;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -17,7 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.GenericInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
-import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragments.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import rx.Observable;
@@ -26,7 +25,7 @@ import rx.Subscription;
 /**
  * Created by neuro on 29-04-2016.
  */
-public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
+public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	private GetStoreTabs.Tab.Event.Type type;
 	private GetStoreTabs.Tab.Event.Name name;
@@ -45,16 +44,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void loadBundle(Bundle args) {
+		type = GetStoreTabs.Tab.Event.Type.valueOf(args.getString(BundleCons.TYPE));
+		name = GetStoreTabs.Tab.Event.Name.valueOf(args.getString(BundleCons.NAME));
+		action = args.getString(BundleCons.ACTION);
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-
-		loadBundle(getArguments());
-
+	public void load() {
 		String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 		V7.Interfaces interfaces = GenericInterface.newInstance();
 
@@ -71,31 +68,27 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerFragment {
 		}
 	}
 
-	@Override
-	protected void loadBundle(Bundle args) {
-		type = GetStoreTabs.Tab.Event.Type.valueOf(args.getString(BundleCons.TYPE));
-		name = GetStoreTabs.Tab.Event.Name.valueOf(args.getString(BundleCons.NAME));
-		action = args.getString(BundleCons.ACTION);
-	}
-
 	private Subscription caseGetStoreWidgets(String url, V7.Interfaces interfaces) {
-		return ObservableUtils.retryOnTicket(interfaces.getStoreWidgets(url)).subscribe(getStoreWidgets -> {
+		return ObservableUtils.retryOnTicket(interfaces.getStoreWidgets(url))
+				.subscribe(getStoreWidgets -> {
 
-			// Load sub nodes
-			List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
-			CountDownLatch countDownLatch = new CountDownLatch(list.size());
+					// Load sub nodes
+					List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
+					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
-			Observable.from(list).forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch));
+					Observable.from(list)
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+									countDownLatch, throwable -> finishLoading(throwable)));
 
-			try {
-				countDownLatch.await();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+					try {
+						countDownLatch.await();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 
-			List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets);
-			addDisplayables(displayables);
-		});
+					List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets);
+					addDisplayables(displayables);
+				}, throwable -> finishLoading(throwable));
 	}
 
 	private static class BundleCons {

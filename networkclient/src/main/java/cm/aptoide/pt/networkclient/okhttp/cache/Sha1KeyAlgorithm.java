@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -14,21 +14,37 @@ import okio.Buffer;
 
 /**
  * Created by sithengineer on 28/04/16.
+ * <br><br>
+ * Creates a unique SHA-1 key for each request using one of this methods, ordered
+ * by preference:
+ * <ol>
+ * <li>Request body</li>
+ * <li>URL</li>
+ * </ol>
  */
 public class Sha1KeyAlgorithm implements KeyAlgorithm {
 
 	@Override
 	public String getKeyFrom(Request request)  {
 		try {
+			String requestIdentifier;
+			final Buffer bodyBuffer = new Buffer();
+			final Request clonedRequest = request.newBuilder().build();
 
-			Buffer bodyBuffer = new Buffer();
-			request.newBuilder().build().body().writeTo(bodyBuffer);
-			String requestBody = bodyBuffer.readUtf8();
+			if (clonedRequest.body() != null && clonedRequest.body().contentLength() > 0) {
+				// best scenario: use request body as key
+				clonedRequest.body().writeTo(bodyBuffer);
+				requestIdentifier = bodyBuffer.readUtf8();
+			} else {
+				// no body to use as key. use query string params if they exist or
+				// in the worst case the url itself
+				requestIdentifier = clonedRequest.url().toString();
+			}
 
-			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-			messageDigest.update(requestBody.getBytes("UTF-8"));
+			final MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+			messageDigest.update(requestIdentifier.getBytes("UTF-8"));
 			byte[] bytes = messageDigest.digest();
-			StringBuilder buffer = new StringBuilder();
+			final StringBuilder buffer = new StringBuilder();
 			for (byte b : bytes) {
 				buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
 			}

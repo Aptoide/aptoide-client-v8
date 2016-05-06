@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -91,7 +91,7 @@ public abstract class WebService<T, U> {
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
-		return e -> {
+		return (Throwable e) -> {
 			// TODO: Implementar
 			System.out.println("Erro por implementar");
 		};

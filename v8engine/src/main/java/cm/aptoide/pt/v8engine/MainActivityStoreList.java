@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by SithEngineer on 03/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.v8engine.activity.AptoideBaseScreenActivity;
+import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
 import cm.aptoide.pt.v8engine.fragments.implementations.StoreGridRecyclerFragment;
 
@@ -22,7 +22,7 @@ import cm.aptoide.pt.v8engine.fragments.implementations.StoreGridRecyclerFragmen
  */
 // FIXME delete this class. for tests only.
 @Deprecated
-public class MainActivityStoreList extends AptoideBaseScreenActivity {
+public class MainActivityStoreList extends AptoideBaseActivity {
 
 	private Toolbar mToolbar;
 	private DrawerLayout mDrawerLayout;
@@ -32,24 +32,8 @@ public class MainActivityStoreList extends AptoideBaseScreenActivity {
 	private StoreGridRecyclerFragment fragment;
 
 	@Override
-	protected String getAnalyticsScreenName() {
-		return StaticScreenNames.MAIN_ACTIVITY;
-	}
-
-	@Override
 	protected void setupViews() {
 		ListStoresRequest.of().execute(this::setupStoreList);
-	}
-
-	private void setupStoreList(ListStores listStores) {
-		fragment = StoreGridRecyclerFragment.newInstance();
-
-		fragment.setStoreList(listStores.getDatalist().getList());
-
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(mFragmentPlaceholder.getId(), fragment)
-				.commit();
 	}
 
 	@Override
@@ -58,7 +42,8 @@ public class MainActivityStoreList extends AptoideBaseScreenActivity {
 			setSupportActionBar(mToolbar);
 			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
 			mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+			mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
+					.START));
 		}
 	}
 
@@ -72,6 +57,21 @@ public class MainActivityStoreList extends AptoideBaseScreenActivity {
 
 	@Override
 	protected int getContentViewId() {
-		return R.layout.main_activity_store_list;
+		return R.layout.activity_main_store_list;
+	}
+
+	@Override
+	protected String getAnalyticsScreenName() {
+		return StaticScreenNames.MAIN_ACTIVITY;
+	}
+
+	private void setupStoreList(ListStores listStores) {
+		fragment = StoreGridRecyclerFragment.newInstance();
+
+		fragment.setStoreList(listStores.getDatalist().getList());
+
+		getSupportFragmentManager().beginTransaction()
+				.replace(mFragmentPlaceholder.getId(), fragment)
+				.commit();
 	}
 }

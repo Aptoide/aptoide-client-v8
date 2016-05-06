@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -112,7 +112,6 @@ public class RequestCache {
 
 		if ((response.code() / 100) != 2) return null;
 
-		final Response clonedResponse = response.newBuilder().build();
 		DiskLruCache.Editor editor = null;
 		try {
 			final String reqKey = keyAlgorithm.getKeyFrom(request);
@@ -123,21 +122,19 @@ public class RequestCache {
 				editor.set(DATA_BUCKET_INDEX, cacheEntry.toString());
 				editor.set(TIMESTAMP_BUCKET_INDEX, SimpleDateFormat.getInstance().format(new Date()));
 				editor.commit();
-				return clonedResponse;
+
+				// return deep cloned response
+				Response cachedResponse = cacheEntry.getResponse(request);
+				return cachedResponse;
 			}
 		} catch (Exception ex) {
 			Log.e(TAG, "", ex);
-		}
-
-		try {
-			if (editor != null) {
-				editor.abort();
+			if(editor!=null) {
+				editor.abortUnlessCommitted();
 			}
-		} catch (Exception ex) {
-			Log.e(TAG, "aborting transaction to disk cache", ex);
 		}
 
-		return null;
+		return response;
 	}
 
 	/**
@@ -157,6 +154,11 @@ public class RequestCache {
 			DiskLruCache.Snapshot snapshot;
 			synchronized (diskCacheLock) {
 				final String reqKey = keyAlgorithm.getKeyFrom(request);
+				if (reqKey == null) {
+					Log.w(TAG, "Key algorithm returned a null key for request");
+					return null;
+				}
+
 				snapshot = diskLruCache.get(reqKey);
 			}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 03/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -30,9 +30,16 @@ public class MainActivityTestes extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main_testes);
 
-		getSupportFragmentManager().beginTransaction().replace(R.id.contentor, new GridRecyclerFragment()).commit();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.contentor, new GridRecyclerFragment() {
+					@Override
+					public void load() {
+
+					}
+				})
+				.commit();
 
 		final GetStore[] gaga = new GetStore[1];
 		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps");
@@ -50,7 +57,8 @@ public class MainActivityTestes extends AppCompatActivity {
 		});
 
 		LinkedList<ListAppsUpdatesRequest.ApksData> apksData = new LinkedList<>();
-		apksData.add(new ListAppsUpdatesRequest.ApksData("cm.aptoide.pt", 300, "D5:90:A7:D7:92:FD:03:31:54:2D:99:FA:F9:99:76:41:79:07:73:A9"));
+		apksData.add(new ListAppsUpdatesRequest.ApksData("cm.aptoide.pt", 300,
+				"D5:90:A7:D7:92:FD:03:31:54:2D:99:FA:F9:99:76:41:79:07:73:A9"));
 		ListAppsUpdatesRequest listAppsUpdatesRequest = ListAppsUpdatesRequest.of();
 		listAppsUpdatesRequest.getBody().setApksData(apksData);
 		listAppsUpdatesRequest.observe().subscribe(System.out::println, System.out::println);
@@ -60,11 +68,16 @@ public class MainActivityTestes extends AppCompatActivity {
 		listAppVersionsRequest.execute(System.out::println);
 
 		ListSearchAppsRequest of = ListSearchAppsRequest.of("hay day");
-		of.execute(listSearchApps -> System.out.println("ListSearchAppsRequest: " + listAppsUpdatesRequest));
+		of.execute(listSearchApps -> System.out.println("ListSearchAppsRequest: " +
+				listAppsUpdatesRequest));
 
-		GetStoreMetaRequest.of("apps").execute(getStoreMeta -> System.out.println("getStoreMeta: " + listAppsUpdatesRequest));
+		GetStoreMetaRequest.of("apps")
+				.execute(getStoreMeta -> System.out.println("getStoreMeta: " +
+						listAppsUpdatesRequest));
 
-		GetStoreDisplaysRequest.of("apps").execute(getStoreMeta -> System.out.println("GetStoreDisplaysRequest: " + listAppsUpdatesRequest));
+		GetStoreDisplaysRequest.of("apps")
+				.execute(getStoreMeta -> System.out.println("GetStoreDisplaysRequest: " +
+						listAppsUpdatesRequest));
 
 		GetStoreTabsRequest.of("apps").execute(System.out::println);
 		GetStoreWidgetsRequest.of("apps").execute(System.out::println);

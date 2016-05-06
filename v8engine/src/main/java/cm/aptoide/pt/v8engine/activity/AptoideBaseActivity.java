@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.activity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import lombok.Getter;
 
@@ -75,4 +76,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity {
 	protected void onStart() {
 		super.onStart();
 	}
+
+	public View getView() {
+		return getWindow().getDecorView().getRootView();
+	}
+
+	/**
+	 * @return o nome so monitor associado a esta activity, para efeitos de Analytics.
+	 */
+	protected abstract String getAnalyticsScreenName();
 }

@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.utils.MultiDexHelper;
+import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import dalvik.system.DexFile;
 
@@ -31,41 +31,58 @@ public enum WidgetLoader {
 
 	private static final String TAG = WidgetLoader.class.getName();
 
-	//TODO use a eager loading technique and remove synchronization primitives
-
-	// map of a view type to a WidgetMeta class
 	private HashMap<Integer, WidgetMeta> widgetsHashMap;
-	// cache of a view type to a WidgetMeta class
 	private LruCache<Integer, WidgetMeta> widgetLruCache;
 
 	/**
-	 * loads all {@link Widget} classes that have a {@link Displayables} annotation in the current module
+	 * loads all {@link Widget} classes that have a {@link Displayables} annotation in the current
+	 * module
 	 */
-	private synchronized void loadWidgets() {
-		widgetsHashMap = new HashMap<>();
+	WidgetLoader() {
+		final String TAG = WidgetLoader.class.getName();
 //		long nanos = System.nanoTime();
+		widgetsHashMap = new HashMap<>();
 		try {
 			// get the current class loader
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, DexFile>> classNames =
-					MultiDexHelper.getAllClasses(Aptoide.getContext());
+			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(Aptoide
+					.getContext());
 
-			for(Map.Entry<String, DexFile> className : classNames ) {
+			DexFile dexFile = null;
+			for (Map.Entry<String, String> className : classNames) {
+				try {
+					// if the class doesn't belong in the current project we discard it
+					// useful for speeding this method
+					if (!className.getKey().startsWith(packageName)) continue;
 
-				// if the class doesn't belong in the current project we discard it
-				// useful for speeding this method
-				if (!className.getKey().startsWith(packageName)) continue;
-				Class<?> widgetClass = className.getValue().loadClass(className.getKey(), classLoader);
-				if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) && widgetClass.isAnnotationPresent(Displayables.class)) {
-					Displayables annotation = widgetClass.getAnnotation(Displayables.class);
-					Class<? extends Displayable>[] displayableClasses = annotation.value();
-					WidgetMeta wMeta;
-					for (Class<? extends Displayable> displayableClass : displayableClasses) {
-						wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass), displayableClass);
-						widgetsHashMap.put(wMeta.displayable.getViewLayout(), wMeta);
+					String dexFilePath = className.getValue();
+
+					if (dexFilePath.endsWith(MultiDexHelper.EXTRACTED_SUFFIX)) {
+						dexFile = DexFile.loadDex(dexFilePath, dexFilePath + ".tmp", 0);
+					} else {
+						dexFile = new DexFile(dexFilePath);
+					}
+
+					Class<?> widgetClass = dexFile.loadClass(className.getKey(), classLoader);
+					if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) &&
+							widgetClass.isAnnotationPresent(Displayables.class)) {
+						Displayables annotation = widgetClass.getAnnotation(Displayables.class);
+						Class<? extends Displayable>[] displayableClasses = annotation.value();
+						WidgetMeta wMeta;
+						for (Class<? extends Displayable> displayableClass : displayableClasses) {
+							wMeta = new WidgetMeta(((Class<? extends Widget>) widgetClass),
+									displayableClass);
+							widgetsHashMap.put(wMeta.displayable.getViewLayout(), wMeta);
+						}
+					}
+				} catch (Exception e) {
+					Log.e(TAG, "", e);
+				} finally {
+					if (dexFile != null) {
+						dexFile.close();
 					}
 				}
 			}
@@ -81,7 +98,10 @@ public enum WidgetLoader {
 			throw new IllegalStateException("Unable to load Widgets");
 		}
 		int cacheSize = widgetsHashMap.size() / 4;
-		widgetLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the total, or 2
+		widgetLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the
+		// total, or 2
+
+		Log.w(TAG, "Loaded Widgets");
 	}
 
 	/**
@@ -91,12 +111,7 @@ public enum WidgetLoader {
 	 */
 	@NonNull
 	public Widget newWidget(@NonNull View view, int viewType) {
-//		long nanos = System.nanoTime();
-
-		// lazy loading Widgets
-		if (widgetsHashMap == null) {
-			loadWidgets();
-		}
+		long nanos = System.nanoTime();
 
 		// check if WidgetMeta instance is in cache
 		WidgetMeta widgetMeta = widgetLruCache.get(viewType);
@@ -117,17 +132,15 @@ public enum WidgetLoader {
 			throw new RuntimeException("Error instantiating widget!");
 		}
 
-//		nanos -= System.nanoTime();
-//		nanos *= -1;
-//		Log.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
+		nanos -= System.nanoTime();
+		nanos *= -1;
+		Log.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
 
 		return resultWidget;
 	}
 
 	public List<Displayable> getDisplayables() {
-		if (widgetsHashMap == null) {
-			loadWidgets();
-		}
+
 		ArrayList<Displayable> displayables = new ArrayList<>(widgetsHashMap.size());
 		for (WidgetMeta widgetMeta : widgetsHashMap.values()) {
 			displayables.add(widgetMeta.displayable);
@@ -136,7 +149,8 @@ public enum WidgetLoader {
 	}
 
 	/**
-	 * Meta class to hold a {@link Widget} class reference, a {@link Displayable} class reference and a {@link Displayable} instance generated from the previous class.
+	 * Meta class to hold a {@link Widget} class reference, a {@link Displayable} class reference
+	 * and a {@link Displayable} instance generated from the previous class.
 	 */
 	private static final class WidgetMeta {
 
@@ -144,7 +158,8 @@ public enum WidgetLoader {
 		private final Class<? extends Displayable> displayableClass;
 		private final Displayable displayable;
 
-		WidgetMeta(Class<? extends Widget> widgetClass, Class<? extends Displayable> displayableClass) {
+		WidgetMeta(Class<? extends Widget> widgetClass, Class<? extends Displayable>
+				displayableClass) {
 			this.widgetClass = widgetClass;
 			this.displayableClass = displayableClass;
 			displayable = newDisplayable();

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
@@ -15,11 +15,10 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.utils.ThreadUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseGridLayoutManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.grid.BaseGridLayoutManager;
 
 /**
  * Created by neuro on 15-04-2016.
@@ -27,16 +26,23 @@ import cm.aptoide.pt.v8engine.view.recycler.grid.BaseGridLayoutManager;
  * @author neuro
  * @author sithengineer
  */
-public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> {
+public abstract class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> {
 
 	private Handler handler;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+			savedInstanceState) {
 
 		handler = new Handler(Looper.myLooper());
 
 		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		load();
 	}
 
 	@Override
@@ -56,7 +62,6 @@ public class GridRecyclerFragment extends BaseRecyclerViewFragment<BaseAdapter> 
 
 	public void addDisplayables(List<Displayable> displayables) {
 		adapter.addDisplayables(displayables);
-		ThreadUtils.runOnUiThread(() -> adapter.notifyDataSetChanged());
 		finishLoading();
 	}
 }

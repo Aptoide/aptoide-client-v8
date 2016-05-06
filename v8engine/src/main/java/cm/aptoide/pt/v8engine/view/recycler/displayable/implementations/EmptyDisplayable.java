@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
@@ -16,20 +16,21 @@ public class EmptyDisplayable extends Displayable {
 
 	private int spanSize = 1;
 
-	public EmptyDisplayable() { }
+	public EmptyDisplayable() {
+	}
 
 	public EmptyDisplayable(int spanSize) {
 		this.spanSize = spanSize;
 	}
 
 	@Override
-	public GetStoreWidgets.Type getName() {
+	public GetStoreWidgets.Type getType() {
 		return GetStoreWidgets.Type._EMPTY;
 	}
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.empty_displayable;
+		return R.layout.displayable_empty;
 	}
 
 	@Override

@@ -70,9 +70,6 @@ dependencies {
     debugCompile project(path: ':networkclient', configuration: 'debug')
     releaseCompile project(path: ':networkclient', configuration: 'release')
 
-    debugCompile project(path: ':logger', configuration: 'debug')
-    releaseCompile project(path: ':logger', configuration: 'release')
-
     debugCompile project(path: ':utils', configuration: 'debug')
     releaseCompile project(path: ':utils', configuration: 'release')
 

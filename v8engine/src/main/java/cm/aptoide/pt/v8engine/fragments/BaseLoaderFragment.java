@@ -1,45 +1,53 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 16/04/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ProgressBar;
 
-import cm.aptoide.pt.v8engine.R;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import cm.aptoide.pt.v8engine.layouthandler.LoadInterface;
+import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 
 /**
  * Created by neuro on 16-04-2016.
  */
-public abstract class BaseLoaderFragment<T extends View> extends BaseFragment<T> {
+public abstract class BaseLoaderFragment extends BaseFragment implements LoadInterface {
 
-	protected T baseView;
-	protected ProgressBar progressBar;
+	private LoaderLayoutHandler loaderLayoutHandler;
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		loaderLayoutHandler = createLoaderLayoutHandler();
+	}
 
-		baseView = (T) view.findViewById(getBaseViewId());
-		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+	@NonNull
+	protected LoaderLayoutHandler createLoaderLayoutHandler() {
+		return new LoaderLayoutHandler(getBaseViewId(), this);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	protected void bindViews(View view) {
+		loaderLayoutHandler.bindViews(view);
 	}
 
 	@IdRes
 	protected abstract int getBaseViewId();
 
-	public void finishLoading() {
-		Observable.fromCallable(() -> {
-			progressBar.setVisibility(View.GONE);
-			baseView.setVisibility(View.VISIBLE);
-			return null;
-		}).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+	protected void finishLoading() {
+		loaderLayoutHandler.finishLoading();
 	}
+
+	protected void finishLoading(Throwable throwable) {
+		loaderLayoutHandler.finishLoading(throwable);
+	}
+
+	public abstract void load();
 }

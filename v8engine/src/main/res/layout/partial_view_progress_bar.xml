@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 04/05/2016.
+  -->
+<ProgressBar
+    android:id="@+id/progress_bar"
+    style="?android:attr/progressBarStyleLarge"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:visibility="visible"/>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -14,7 +14,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.HeaderGridDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 
 /**
  * Created by neuro on 01-05-2016.
@@ -31,17 +31,17 @@ public class DisplayablesFactory {
 			switch (wsWidget.getType()) {
 
 				case APPS_GROUP:
-					displayables.add(new HeaderGridDisplayable(wsWidget));
+					displayables.add(new GridHeaderDisplayable(wsWidget));
 					displayables.add(getApps(wsWidget));
 					break;
 
 				case STORES_GROUP:
-					displayables.add(new HeaderGridDisplayable(wsWidget));
+					displayables.add(new GridHeaderDisplayable(wsWidget));
 					displayables.add(getStores(wsWidget.getViewObject()));
 					break;
 
 				case DISPLAYS:
-					displayables.add(new HeaderGridDisplayable(wsWidget));
+					displayables.add(new GridHeaderDisplayable(wsWidget));
 					displayables.add(getDisplays(wsWidget.getViewObject()));
 					break;
 			}
@@ -69,7 +69,9 @@ public class DisplayablesFactory {
 		List<Displayable> tmp = new ArrayList<>(apps.size());
 		// Todo: row
 		for (App app : apps) {
-			DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader.INSTANCE.newDisplayable(wsWidget.getType().name());
+			DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader.INSTANCE
+					.newDisplayable(wsWidget
+					.getType());
 			diplayable.setPojo(app);
 			tmp.add(diplayable);
 		}
@@ -81,7 +83,9 @@ public class DisplayablesFactory {
 		List<Store> stores = listStores.getDatalist().getList();
 		List<Displayable> tmp = new ArrayList<>(stores.size());
 		for (Store store : stores) {
-			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP.name());
+
+			DisplayablePojo<Store> diplayable = (DisplayablePojo<Store>) DisplayableLoader
+					.INSTANCE.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
 			diplayable.setPojo(store);
 			tmp.add(diplayable);
 		}
@@ -95,8 +99,9 @@ public class DisplayablesFactory {
 
 	private static Displayable getHeader(Object viewObject) {
 		GetStoreWidgets.WSWidget header = (GetStoreWidgets.WSWidget) viewObject;
-		DisplayablePojo<GetStoreWidgets.WSWidget> displayable = (DisplayablePojo<GetStoreWidgets.WSWidget>) DisplayableLoader.INSTANCE.newDisplayable(GetStoreWidgets.Type.HEADER_ROW
-				.name());
+		DisplayablePojo<GetStoreWidgets.WSWidget> displayable = (DisplayablePojo<GetStoreWidgets
+				.WSWidget>) DisplayableLoader.INSTANCE
+				.newDisplayable(GetStoreWidgets.Type.HEADER_ROW);
 		displayable.setPojo(header);
 		return displayable;
 	}

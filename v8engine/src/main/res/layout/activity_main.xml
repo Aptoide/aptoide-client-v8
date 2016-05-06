@@ -1,0 +1,69 @@
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 05/05/2016.
+  -->
+
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/partial_view_incl_no_network"/>
+
+        <include layout="@layout/partial_view_error"/>
+
+        <include layout="@layout/partial_view_progress_bar"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="?attr/toolbarTheme"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+
+
+            <com.astuetz.PagerSlidingTabStrip
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tabsHeight"
+                android:background="?attr/backgroundTabs"
+                android:theme="?attr/toolbarTheme"/>
+
+        </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <!-- The navigation drawer -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="?attr/backgroundMain"
+        android:saveEnabled="true"
+        app:headerLayout="@layout/drawer_header"
+        app:itemTextColor="?attr/tertiaryTextColor"
+        app:menu="@menu/menu_drawer"/>
+
+
+</android.support.v4.widget.DrawerLayout>

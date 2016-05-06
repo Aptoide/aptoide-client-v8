@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragments.implementations;
@@ -11,8 +11,8 @@ import java.util.List;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableLoader;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableLoader;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -46,10 +46,14 @@ public class StoreGridRecyclerFragment extends GridRecyclerFragment {
 	}
 
 	public Displayable storeToDisplayable(Store store) {
-		DisplayablePojo<Store> d =
-				(DisplayablePojo<Store>) DisplayableLoader.INSTANCE
-						.newDisplayable(GetStoreWidgets.Type.STORES_GROUP.name());
+		DisplayablePojo<Store> d = (DisplayablePojo<Store>) DisplayableLoader.INSTANCE
+				.newDisplayable(GetStoreWidgets.Type.STORES_GROUP);
 		d.setPojo(store);
 		return d;
+	}
+
+	@Override
+	public void load() {
+
 	}
 }

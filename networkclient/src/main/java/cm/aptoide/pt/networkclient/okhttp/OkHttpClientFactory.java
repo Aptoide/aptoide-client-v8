@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/04/2016.
+ * Modified by SithEngineer on 04/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
@@ -26,6 +26,8 @@ import okhttp3.Response;
  */
 public class OkHttpClientFactory {
 
+	private static final String TAG = OkHttpClientFactory.class.getName();
+
 	public static OkHttpClient newClient() {
 		return newClient(new File("/"));
 	}
@@ -37,48 +39,42 @@ public class OkHttpClientFactory {
 	}
 
 	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
-		final Cache cache = new Cache(cacheDirectory, cacheSize);
 
-//		return new OkHttpClient.Builder().cache(cache).addInterceptor(createCacheInterceptor()).build();
-		return new OkHttpClient.Builder().cache(cache).build();
+		return new OkHttpClient.Builder()
+									.cache(new Cache(cacheDirectory, cacheSize))
+									.addInterceptor(new AptoideCacheInterceptor())
+									.build();
+
+		//return new OkHttpClient.Builder().build();
 	}
 
-	private static Interceptor createCacheInterceptor() {
-		return new Interceptor() {
+	private static final class AptoideCacheInterceptor implements Interceptor {
 
-			private static final String TAG = "CacheInterceptor";
+		private final String TAG = OkHttpClientFactory.TAG + "." + AptoideCacheInterceptor.class
+				.getSimpleName();
 
-			private final RequestCache customCache = new RequestCache();
+		private final RequestCache customCache = new RequestCache();
 
-			@Override
-			public Response intercept(Chain chain) throws IOException {
-				Request request = chain.request();
-				Response response = customCache.get(request);
+		@Override
+		public Response intercept(Chain chain) throws IOException {
+			Request request = chain.request();
+			Response response = customCache.get(request);
 
-				if (response != null) {
-
-					if(BuildConfig.DEBUG) {
-						Log.v(TAG, "cache hit");
-					}
-
-					return response;
-				}
-
-				response = chain.proceed(chain.request());
-				long responseLength = response.body().contentLength();
-				final Response resultResponse = customCache.put(request, response);
-
-				if(resultResponse==null || resultResponse.body().contentLength()
-						!=responseLength) {
-					Log.e(TAG, "server response and cached response are different");
-				}
+			if (response != null) {
 
 				if(BuildConfig.DEBUG) {
-					Log.v(TAG, "cache miss");
+					Log.v(TAG, "cache hit");
 				}
 
-				return resultResponse;
+				return response;
 			}
-		};
+
+			if(BuildConfig.DEBUG) {
+				Log.v(TAG, "cache miss");
+			}
+
+			Response cachedResponse = customCache.put(request, chain.proceed(request));
+			return cachedResponse;
+		}
 	}
 }
