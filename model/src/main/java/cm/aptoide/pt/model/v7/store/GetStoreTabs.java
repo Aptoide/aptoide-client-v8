@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.model.v7.store;
@@ -52,6 +52,7 @@ public class GetStoreTabs extends BaseV7Response {
 			}
 
 			public enum Name {
+				getStore,
 				getStoreWidgets,
 				getReviews,
 				getApkComments,

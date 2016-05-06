@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -22,6 +22,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (getIntent().getExtras() != null) {
+			loadExtras(getIntent().getExtras());
+		}
 		setContentView(getContentViewId());
 		bindViews();
 		setupToolbar();
@@ -37,6 +40,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 	}
+
+	protected abstract void loadExtras(Bundle extras);
 
 	/**
 	 * Setup previously binded views.

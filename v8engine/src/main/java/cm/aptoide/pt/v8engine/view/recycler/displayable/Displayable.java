@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.support.annotation.LayoutRes;
 
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
@@ -31,7 +31,7 @@ public abstract class Displayable {
 		this.fixedPerLineCount = fixedPerLineCount;
 	}
 
-	public abstract GetStoreWidgets.Type getType();
+	public abstract Type getType();
 
 	@LayoutRes
 	public abstract int getViewLayout();
