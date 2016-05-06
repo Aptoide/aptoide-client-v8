@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
 	@Override
 	public void onLoginSuccess() {
-		Toast.makeText(LoginActivity.this, "login successful", Toast.LENGTH_SHORT).show();
+		Toast.makeText(LoginActivity.this, R.string.login_successful, Toast.LENGTH_SHORT).show();
 		finish();
 		if (openMyAccountOnLoginSuccess) {
 			AptoideAccountManager.openAccountManager(this);
@@ -143,7 +143,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
 	@Override
 	public void onLoginFail(String reason) {
-		Toast.makeText(LoginActivity.this, "login failed-Reason: " + reason, Toast.LENGTH_SHORT)
+		Toast.makeText(LoginActivity.this, reason, Toast.LENGTH_SHORT)
 				.show();
 	}
 

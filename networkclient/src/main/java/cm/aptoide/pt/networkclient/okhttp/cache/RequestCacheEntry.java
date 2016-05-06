@@ -23,6 +23,7 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.BufferedSource;
 
 /**
  * @author SithEngineer
@@ -58,10 +59,18 @@ class RequestCacheEntry {
 		Charset charset = Charset.forName(DEFAULT_CHARSET);
 		charset = responseBody.contentType().charset(charset);
 
+		BufferedSource source = null;
 		try {
-			this.body = responseBody.source().readString(charset);
+			source = responseBody.source();
+			this.body = source.readString(charset);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				source.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

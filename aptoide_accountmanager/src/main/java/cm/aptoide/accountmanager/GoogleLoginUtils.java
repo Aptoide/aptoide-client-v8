@@ -42,7 +42,6 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 	private static WeakReference activityReference;
 	// Bool to track whether the app is already resolving an error
 	private static boolean mResolvingError = false;
-	private static GoogleApiClient mGoogleApiClient;
 
 	/**
 	 * This method set's up google social login
@@ -83,12 +82,13 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 	}
 
 	public static GoogleApiClient setupGoogleApiClient(FragmentActivity activity) {
-		final GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions
 				.DEFAULT_SIGN_IN)
 				.requestEmail()
 				.requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
 				.build();
-		mGoogleApiClient = new GoogleApiClient.Builder(activity).enableAutoManage(activity, new
+		GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(activity).enableAutoManage
+				(activity, new
 				GoogleLoginUtils())
 				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
 				.build();
@@ -132,9 +132,10 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 		}
 	}
 
-	static void logout() {
-		if (mGoogleApiClient.isConnected()) {
-			Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+	static void logout(FragmentActivity activity) {
+		GoogleApiClient googleApiClient = setupGoogleApiClient(activity);
+		if (googleApiClient.isConnected()) {
+			Auth.GoogleSignInApi.signOut(googleApiClient);
 		}
 	}
 
@@ -157,7 +158,10 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 				}
 			} catch (IntentSender.SendIntentException e) {
 				// There was an error with the resolution intent. Try again.
-				mGoogleApiClient.connect();
+				FragmentActivity activity = (FragmentActivity) activityReference.get();
+				if (activity != null) {
+					setupGoogleApiClient(activity).connect();
+				}
 			}
 		} else {
 			// Show dialog using GoogleApiAvailability.getErrorDialog()

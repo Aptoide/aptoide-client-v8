@@ -96,7 +96,11 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 				if (itemId == R.id.navigation_item_my_account) {
 					AptoideAccountManager.openAccountManager(this, false);
 				} else if (itemId == R.id.navigation_item_rollback) {
-					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
+					AptoideAccountManager.updateMatureSwitch(!AptoideAccountManager.getUserInfo()
+							.isMatureSwitch());
+					Snackbar.make(mNavigationView, "MatureSwitch: " + AptoideAccountManager
+							.getUserInfo()
+							.isMatureSwitch(), Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
 					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
 							.show();

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import cm.aptoide.accountmanager.util.UserInfo;
+import cm.aptoide.accountmanager.ws.ChangeUserSettingsRequest;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
@@ -83,7 +84,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param extras Extras to add on created intent (to login or register activity)
 	 */
 	public static void openAccountManager(Context context, @Nullable Bundle extras) {
-		if (isLoggedIn(context)) {
+		if (isLoggedIn()) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
 			final Intent intent = new Intent(context, LoginActivity.class);
@@ -102,7 +103,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static void openAccountManager(Context context, @Nullable Bundle extras, boolean
 			openMyAccount) {
-		if (isLoggedIn(context)) {
+		if (isLoggedIn()) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
 			final Intent intent = new Intent(context, LoginActivity.class);
@@ -120,7 +121,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param openMyAccount true if is expeted to open myAccountActivity after login
 	 */
 	public static void openAccountManager(Context context, boolean openMyAccount) {
-		if (isLoggedIn(context)) {
+		if (isLoggedIn()) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
 			final Intent intent = new Intent(context, LoginActivity.class);
@@ -136,8 +137,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		openAccountManager(context, null);
 	}
 
-	public static boolean isLoggedIn(Context context) {
-		AccountManager manager = android.accounts.AccountManager.get(context);
+	public static boolean isLoggedIn() {
+		AccountManager manager = android.accounts.AccountManager.get(cm.aptoide.pt.preferences
+				.Application
+				.getContext());
 		return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
 	}
 
@@ -154,15 +157,14 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				logout(activityRef);
 			}
 		});
-		GoogleLoginUtils.setupGoogleApiClient(activity);
 	}
 
 	private static void logout(WeakReference<FragmentActivity> activityRef) {
 		FacebookLoginUtils.logout();
-		GoogleLoginUtils.logout();
 		getInstance().removeLocalAccount();
 		Activity activity = activityRef.get();
 		if (activity != null) {
+			GoogleLoginUtils.logout((FragmentActivity) activity);
 			openAccountManager(activity);
 			activity.finish();
 		}
@@ -197,7 +199,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 *
 	 * @return A string with the token
 	 */
-	public static String getAccessToken() {
+	public static
+	@Nullable
+	String getAccessToken() {
 		return AccountManagerPreferences.getAccessToken();
 	}
 
@@ -338,7 +342,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	}
 
 	/**
-	 * This method returns all the user info
+	 * This method creates a new UserInfo object with all the user info
 	 *
 	 * @return User info
 	 */
@@ -352,6 +356,25 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		userInfo.setMatureSwitch(AccountManagerPreferences.getMatureSwitch());
 		userInfo.setUserAvatarRepo(AccountManagerPreferences.getRepoAvatar());
 		return userInfo;
+	}
+
+	public static void updateMatureSwitch(boolean matureSwitch) {
+		Observable.fromCallable(() -> {
+			AccountManagerPreferences.setMatureSwitch(matureSwitch);
+			return matureSwitch;
+		}).doOnNext(matureSwitch1 -> {
+			if (isLoggedIn()) {
+				ChangeUserSettingsRequest.of(matureSwitch1)
+						.observe()
+						.subscribeOn(Schedulers.io())
+						.doOnError(throwable -> {
+							Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
+						})
+						.subscribe();
+			}
+		}).doOnError(throwable -> {
+			Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
+		}).subscribe();
 	}
 
 	/**

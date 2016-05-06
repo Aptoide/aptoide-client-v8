@@ -23,7 +23,6 @@ import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
 
 public class MainActivityTestes extends AppCompatActivity {
 
@@ -33,12 +32,7 @@ public class MainActivityTestes extends AppCompatActivity {
 		setContentView(R.layout.activity_main_testes);
 
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.contentor, new GridRecyclerFragment() {
-					@Override
-					public void load() {
-
-					}
-				})
+				.replace(R.id.contentor, new GridRecyclerFragment())
 				.commit();
 
 		final GetStore[] gaga = new GetStore[1];
@@ -88,5 +82,18 @@ public class MainActivityTestes extends AppCompatActivity {
 				System.out.println(getStoreRequest);
 			}
 		});
+	}
+
+	public static final class GridRecyclerFragment extends cm.aptoide.pt.v8engine.fragments
+			.GridRecyclerFragment {
+
+		public GridRecyclerFragment() {
+		}
+
+		@Override
+		public void load() {
+
+		}
+
 	}
 }

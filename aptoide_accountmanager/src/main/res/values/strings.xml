@@ -67,6 +67,7 @@
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
     <string name="login_activity_title">Login Activity</string>
+    <string name="login_successful">Login successful</string>
 
 
 </resources>
