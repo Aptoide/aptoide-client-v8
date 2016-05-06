@@ -41,7 +41,12 @@ public class AppViewFragment extends GridRecyclerFragment {
 	//
 
 	public static final int VIEW_ID = R.layout.fragment_app_view;
-	private static final String TAG = AppViewFragment.class.getName();
+	//private static final String TAG = AppViewFragment.class.getName();
+
+	@Override
+	public int getRootViewId() {
+		return VIEW_ID;
+	}
 
 	//
 	// vars
