@@ -144,14 +144,14 @@ public class RequestCache {
 	 */
 	@Nullable
 	public Response get(@NonNull Request request) {
+
+		DiskLruCache.Snapshot snapshot = null;
 		try {
 
 			String header = request.headers().get(BYPASS_HEADER_KEY);
 			if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
 				return null;
 			}
-
-			DiskLruCache.Snapshot snapshot;
 			synchronized (diskCacheLock) {
 				final String reqKey = keyAlgorithm.getKeyFrom(request);
 				if (reqKey == null) {
@@ -181,8 +181,13 @@ public class RequestCache {
 			}
 
 			return response;
+
 		} catch (Exception ex) {
 			Log.e(TAG, "", ex);
+		} finally {
+			if(snapshot!=null) {
+				snapshot.close();
+			}
 		}
 		return null;
 	}
