@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +31,11 @@ public class MainActivityStoreList extends AptoideBaseActivity {
 	private FrameLayout mFragmentPlaceholder;
 
 	private StoreGridRecyclerFragment fragment;
+
+	@Override
+	protected void loadExtras(Bundle extras) {
+
+	}
 
 	@Override
 	protected void setupViews() {

@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -29,9 +30,13 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	private ViewPager mViewPager;
 
 	@Override
+	protected void loadExtras(Bundle extras) {
+
+	}
+
+	@Override
 	protected void setupViews() {
 		setupNavigationView();
-		load();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.activities.StoreActivity;
 import cm.aptoide.pt.v8engine.util.CircleTransform;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -72,11 +73,8 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 		@ColorInt int color = context.getResources()
 				.getColor(StoreThemeEnum.get(store.getAppearance().getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		/*
-		storeLayout.setOnClickListener(()->{
-			Snackbar.make()
-		});
-		*/
+		storeLayout.setOnClickListener(v -> v.getContext()
+				.startActivity(StoreActivity.newIntent(gridStoreDisplayable.getPojo().getName())));
 
 		if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
 			Glide.with(context)
