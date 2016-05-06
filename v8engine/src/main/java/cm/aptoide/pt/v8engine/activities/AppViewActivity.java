@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 06/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.activity;
+package cm.aptoide.pt.v8engine.activities;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.activity.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.fragments.implementations.AppViewFragment;
 
 /**
@@ -16,8 +18,11 @@ import cm.aptoide.pt.v8engine.fragments.implementations.AppViewFragment;
 public class AppViewActivity extends AptoideSimpleFragmentActivity {
 
 	@Override
+	protected void loadExtras(Bundle extras) { }
+
+	@Override
 	protected int getContentViewId() {
-		return R.layout.activity_app_view;
+		return R.layout.frame_layout;
 	}
 
 	@Override
@@ -27,7 +32,7 @@ public class AppViewActivity extends AptoideSimpleFragmentActivity {
 
 	@Override
 	protected Fragment createFragment() {
-		// TODO
-		return AppViewFragment.newInstance("");
+		// FIXME for debug only
+		return AppViewFragment.newInstance(18696152);
 	}
 }

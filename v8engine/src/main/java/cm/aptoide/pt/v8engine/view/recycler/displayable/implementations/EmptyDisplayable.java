@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
@@ -24,8 +24,8 @@ public class EmptyDisplayable extends Displayable {
 	}
 
 	@Override
-	public GetStoreWidgets.Type getType() {
-		return GetStoreWidgets.Type._EMPTY;
+	public Type getType() {
+		return Type._EMPTY;
 	}
 
 	@Override

@@ -1,10 +1,6 @@
 /*
  * Copyright (c) 2016.
-<<<<<<< HEAD
- * Modified by SithEngineer on 04/05/2016.
-=======
- * Modified by Neurophobic Animal on 04/05/2016.
->>>>>>> master
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -20,7 +16,7 @@ import java.util.Map;
 
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.Aptoide;
 import dalvik.system.DexFile;
@@ -33,8 +29,8 @@ public enum DisplayableLoader {
 
 	private static final String TAG = DisplayableLoader.class.getName();
 
-	private HashMap<GetStoreWidgets.Type, Class<? extends Displayable>> displayableHashMap;
-	private LruCache<GetStoreWidgets.Type, Class<? extends Displayable>> displayableLruCache;
+	private HashMap<Type, Class<? extends Displayable>> displayableHashMap;
+	private LruCache<Type, Class<? extends Displayable>> displayableLruCache;
 
 	DisplayableLoader() {
 		final String TAG = DisplayableLoader.class.getName();
@@ -105,7 +101,7 @@ public enum DisplayableLoader {
 	}
 
 	@Nullable
-	public Displayable newDisplayable(@NonNull GetStoreWidgets.Type type) {
+	public Displayable newDisplayable(@NonNull Type type) {
 		Class<? extends Displayable> displayableClass = displayableLruCache.get(type);
 
 		if (displayableClass == null) {
@@ -126,7 +122,7 @@ public enum DisplayableLoader {
 	}
 
 	@Nullable
-	public synchronized <T> DisplayablePojo<T> newDisplayable(@NonNull GetStoreWidgets.Type type,
+	public synchronized <T> DisplayablePojo<T> newDisplayable(@NonNull Type type,
 															  T pojo) {
 		Displayable displayable = newDisplayable(type);
 

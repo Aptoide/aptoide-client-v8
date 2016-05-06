@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -20,14 +20,23 @@ import rx.Observable;
 public class ListAppsRequest extends V7<ListApps> {
 
 	private final Body body = new Body();
+	private final String url;
 
 	private ListAppsRequest() {
+		this("");
+	}
 
+	private ListAppsRequest(String url) {
+		this.url = url.replace("listApps", "");
+	}
+
+	public static ListAppsRequest ofAction(String url) {
+		return new ListAppsRequest(url);
 	}
 
 	@Override
 	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.listApps(body);
+		return interfaces.listApps(url, body);
 	}
 
 	@Data

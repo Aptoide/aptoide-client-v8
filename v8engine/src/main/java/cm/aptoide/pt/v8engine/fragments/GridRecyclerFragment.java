@@ -62,4 +62,9 @@ public abstract class GridRecyclerFragment extends BaseRecyclerViewFragment<Base
 		adapter.addDisplayables(displayables);
 		finishLoading();
 	}
+
+	public void setDisplayables(List<Displayable> displayables) {
+		adapter.clearDisplayables();
+		addDisplayables(displayables);
+	}
 }

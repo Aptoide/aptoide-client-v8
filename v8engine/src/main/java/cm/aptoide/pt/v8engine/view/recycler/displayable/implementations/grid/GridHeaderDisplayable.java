@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -22,8 +23,8 @@ public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWid
 	}
 
 	@Override
-	public GetStoreWidgets.Type getType() {
-		return GetStoreWidgets.Type.HEADER_ROW;
+	public Type getType() {
+		return Type.HEADER_ROW;
 	}
 
 	@Override

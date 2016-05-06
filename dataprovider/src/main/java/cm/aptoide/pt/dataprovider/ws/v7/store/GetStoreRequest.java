@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -14,8 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import lombok.Data;
@@ -33,9 +33,15 @@ import rx.schedulers.Schedulers;
 public class GetStoreRequest extends V7<GetStore> {
 
 	private final Body body = new Body();
+	private final String url;
 	private boolean recursive = false;
 
 	private GetStoreRequest() {
+		this("");
+	}
+
+	private GetStoreRequest(String url) {
+		this.url = url.replace("getStore", "");
 	}
 
 	public static GetStoreRequest of(String storeName) {
@@ -54,9 +60,13 @@ public class GetStoreRequest extends V7<GetStore> {
 		return getStoreRequest;
 	}
 
+	public static GetStoreRequest ofAction(String url) {
+		return new GetStoreRequest(url);
+	}
+
 	@Override
 	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStore(body);
+		return interfaces.getStore(url, body);
 	}
 
 	@Override

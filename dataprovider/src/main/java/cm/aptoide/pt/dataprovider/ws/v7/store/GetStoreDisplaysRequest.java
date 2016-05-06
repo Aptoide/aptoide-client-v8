@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 05/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -22,10 +22,16 @@ import rx.Observable;
 public class GetStoreDisplaysRequest extends V7<GetStoreDisplays> {
 
 	private final Body body = new Body();
+	private final String url;
 
 	private GetStoreDisplaysRequest() {
-
+		this("");
 	}
+
+	private GetStoreDisplaysRequest(String url) {
+		this.url = url.replace("getStoreDisplays", "");
+	}
+
 
 	public static GetStoreDisplaysRequest of(String storeName) {
 		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest();
@@ -43,9 +49,13 @@ public class GetStoreDisplaysRequest extends V7<GetStoreDisplays> {
 		return getStoreDisplaysRequest;
 	}
 
+	public static GetStoreDisplaysRequest ofAction(String url) {
+		return new GetStoreDisplaysRequest(url);
+	}
+
 	@Override
 	protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStoreDisplays(body);
+		return interfaces.getStoreDisplays(url, body);
 	}
 
 	@Data

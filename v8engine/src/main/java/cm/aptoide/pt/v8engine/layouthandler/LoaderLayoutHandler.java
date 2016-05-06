@@ -32,7 +32,8 @@ public class LoaderLayoutHandler {
 	protected ProgressBar progressBar;
 	protected View genericErrorView;
 	protected View noNetworkConnectionView;
-	protected View retryView;
+	protected View retryErrorView;
+	protected View retryNoNetworkView;
 
 	public LoaderLayoutHandler(int viewToShowAfterLoadingId, LoadInterface loadInterface) {
 		this.viewToShowAfterLoadingId = viewToShowAfterLoadingId;
@@ -45,7 +46,9 @@ public class LoaderLayoutHandler {
 		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 		genericErrorView = view.findViewById(R.id.generic_error);
 		noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
-		retryView = view.findViewById(R.id.retry);
+//		retryView = view.findViewById(R.id.retry);
+		retryErrorView = genericErrorView.findViewById(R.id.retry);
+		retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
 	}
 
 	public void finishLoading(Throwable throwable) {
@@ -63,14 +66,14 @@ public class LoaderLayoutHandler {
 				.getCause() instanceof SocketTimeoutException)) {
 			genericErrorView.setVisibility(View.GONE);
 			noNetworkConnectionView.setVisibility(View.VISIBLE);
-			retryView.setOnClickListener(view -> {
+			retryNoNetworkView.setOnClickListener(view -> {
 				restoreState();
 				loadInterface.load();
 			});
 		} else {
 			noNetworkConnectionView.setVisibility(View.GONE);
 			genericErrorView.setVisibility(View.VISIBLE);
-			retryView.setOnClickListener(view -> {
+			retryErrorView.setOnClickListener(view -> {
 				restoreState();
 				loadInterface.load();
 			});

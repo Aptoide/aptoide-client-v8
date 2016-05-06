@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,10 +22,16 @@ import rx.Observable;
 public class GetStoreWidgetsRequest extends V7<GetStoreWidgets> {
 
 	private final Body body = new Body();
+	private final String url;
 
 	private GetStoreWidgetsRequest() {
-
+		this("");
 	}
+
+	private GetStoreWidgetsRequest(String url) {
+		this.url = url.replace("getStoreWidgets", "");
+	}
+
 
 	public static GetStoreWidgetsRequest of(String storeName) {
 		GetStoreWidgetsRequest getStoreDisplaysRequest = new GetStoreWidgetsRequest();
@@ -43,9 +49,13 @@ public class GetStoreWidgetsRequest extends V7<GetStoreWidgets> {
 		return getStoreDisplaysRequest;
 	}
 
+	public static GetStoreWidgetsRequest ofAction(String url) {
+		return new GetStoreWidgetsRequest(url);
+	}
+
 	@Override
 	protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStoreWidgets(body);
+		return interfaces.getStoreWidgets(url, body);
 	}
 
 	@Data

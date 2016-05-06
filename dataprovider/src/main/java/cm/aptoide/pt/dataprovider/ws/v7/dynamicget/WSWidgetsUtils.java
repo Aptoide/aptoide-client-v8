@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 06/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.dynamicget;
@@ -9,8 +9,12 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.store.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -24,7 +28,6 @@ public class WSWidgetsUtils {
 			countDownLatch, Action1<Throwable> action1) {
 
 		if (isKnownType(wsWidget.getType())) {
-			V7.Interfaces interfaces = GenericInterface.newInstance();
 
 			String url = null;
 			// Can be null in legacy ws :/
@@ -33,16 +36,19 @@ public class WSWidgetsUtils {
 			}
 			switch (wsWidget.getType()) {
 				case APPS_GROUP:
-					ioScheduler(interfaces.listApps(url)).subscribe(listApps -> setObjectView
-							(wsWidget, countDownLatch, listApps), action1);
+					ioScheduler(ListAppsRequest.ofAction(url)
+							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+							countDownLatch, listApps), action1);
 					break;
 				case STORES_GROUP:
-					ioScheduler(interfaces.listStores(url)).subscribe(listApps -> setObjectView
-							(wsWidget, countDownLatch, listApps), action1);
+					ioScheduler(ListStoresRequest.ofAction(url)
+							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+							countDownLatch, listApps), action1);
 					break;
 				case DISPLAYS:
-					ioScheduler(interfaces.getStoreDisplays(url)).subscribe(listApps ->
-							setObjectView(wsWidget, countDownLatch, listApps), action1);
+					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
+							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+							countDownLatch, listApps), action1);
 					break;
 				default:
 					// In case a known enum is not implemented
@@ -64,7 +70,7 @@ public class WSWidgetsUtils {
 		countDownLatch.countDown();
 	}
 
-	private static boolean isKnownType(GetStoreWidgets.Type type) {
+	private static boolean isKnownType(Type type) {
 		return type != null;
 	}
 }
