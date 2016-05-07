@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragments.implementations;
+package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 
@@ -18,7 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
-import cm.aptoide.pt.v8engine.fragments.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import rx.Observable;
@@ -33,6 +33,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	private GetStoreTabs.Tab.Event.Type type;
 	private GetStoreTabs.Tab.Event.Name name;
 	private String action;
+	private List<Displayable> displayables;
 
 	public static StoreTabGridRecyclerFragment newInstance(GetStoreTabs.Tab.Event event) {
 		Bundle args = new Bundle();
@@ -58,22 +59,26 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void load() {
-		String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
+	public void load(boolean refresh) {
+		if (refresh) {
+			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
-		switch (name) {
-			case getStore:
-				caseGetStore(url);
-				break;
-			case getStoreWidgets:
-				caseGetStoreWidgets(url);
-				break;
-			case getReviews:
-				//todo
-				break;
-			case getApkComments:
-				//todo
-				break;
+			switch (name) {
+				case getStore:
+					caseGetStore(url);
+					break;
+				case getStoreWidgets:
+					caseGetStoreWidgets(url);
+					break;
+				case getReviews:
+					//todo
+					break;
+				case getApkComments:
+					//todo
+					break;
+			}
+		} else {
+			setDisplayables(displayables);
 		}
 	}
 
@@ -99,11 +104,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 						e.printStackTrace();
 					}
 
-					List<Displayable> displayables = DisplayablesFactory.parse(getStore.getNodes()
+					displayables = DisplayablesFactory.parse(getStore.getNodes()
 							.getWidgets());
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
-
 	}
 
 	private Subscription caseGetStoreWidgets(String url) {
@@ -125,9 +129,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 						e.printStackTrace();
 					}
 
-					List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets);
+					displayables = DisplayablesFactory.parse(getStoreWidgets);
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
+	}
+
+	@Override
+	protected void setupToolbar() {
+
 	}
 
 	private static class BundleCons {

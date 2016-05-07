@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 07/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
-import cm.aptoide.pt.v8engine.fragments.implementations.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 
 /**
  * Created by neuro on 28-04-2016.

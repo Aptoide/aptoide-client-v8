@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragments;
+package cm.aptoide.pt.v8engine.fragment;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -18,28 +18,25 @@ import cm.aptoide.pt.v8engine.R;
  * Created by neuro on 14-04-2016.
  */
 public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> extends
-		BaseLoaderFragment {
+		BaseLoaderToolbarFragment {
 
 	protected T adapter;
 	private RecyclerView recyclerView;
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		adapter = createAdapter();
-	}
 
-	@Override
-	protected void bindViews(View view) {
-		super.bindViews(view);
-		recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+	}
 
+	@Override
+	public int getRootViewId() {
+		return R.layout.recycler_fragment;
+	}
+
+	@Override
+	protected void setupViews() {
 		recyclerView.setAdapter(adapter);
 		recyclerView.setLayoutManager(createLayoutManager());
 
@@ -58,8 +55,16 @@ public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> e
 	}
 
 	@Override
-	public int getRootViewId() {
-		return R.layout.recycler_fragment;
+	protected void bindViews(View view) {
+		super.bindViews(view);
+		recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		recyclerView = null;
+		adapter = null;
 	}
 
 	protected abstract T createAdapter();

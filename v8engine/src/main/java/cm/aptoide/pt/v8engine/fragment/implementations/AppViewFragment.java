@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragments.implementations;
+package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -37,7 +37,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void load() {
+	public void load(boolean refresh) {
 		loadAppInfo(appId).subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(this::showAppInfo);

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragments;
+package cm.aptoide.pt.v8engine.fragment;
 
 import android.support.annotation.NonNull;
 
@@ -20,11 +20,11 @@ public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragment imp
 	@NonNull
 	@Override
 	protected LoaderLayoutHandler createLoaderLayoutHandler() {
-		return new SwipeLoaderLayoutHandler(getBaseViewId(), this);
+		return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
 	}
 
 	@Override
 	public void reload() {
-		load();
+		load(true);
 	}
 }
