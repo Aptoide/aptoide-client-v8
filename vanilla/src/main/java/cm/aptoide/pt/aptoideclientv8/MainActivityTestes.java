@@ -23,7 +23,6 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 
 public class MainActivityTestes extends AppCompatActivity {
 
@@ -31,15 +30,15 @@ public class MainActivityTestes extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_testes);
-
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.contentor, new GridRecyclerFragment() {
-					@Override
-					public void load(boolean refresh) {
-
-					}
-				})
-				.commit();
+//
+//		getSupportFragmentManager().beginTransaction()
+//				.replace(R.id.contentor, new GridRecyclerFragment() {
+//					@Override
+//					public void load(boolean refresh) {
+//
+//					}
+//				})
+//				.commit();
 
 		final GetStore[] gaga = new GetStore[1];
 		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps");

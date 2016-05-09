@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -13,6 +13,8 @@ import android.view.WindowManager;
  * Created by neuro on 14-04-2016.
  */
 public class ScreenUtils {
+
+	public static final float REFERENCE_WIDTH_DPI = 360;
 
 	private static ScreenUtilsCache screenWidthInDipCache = new ScreenUtilsCache();
 

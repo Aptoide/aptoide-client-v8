@@ -113,7 +113,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 		finishLoading();
 	}
 
-	private static class BundleCons {
+	protected static class BundleCons {
 
 		public static final String STORE_NAME = "storeName";
 		public static final String STORE_CONTEXT = "storeContext";
