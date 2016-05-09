@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/05/2016.
+ * Modified by SithEngineer on 09/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.activity;
+package cm.aptoide.pt.v8engine.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,7 +23,6 @@ public class AppViewActivity extends AptoideSimpleFragmentActivityDeprecated {
 
 	@Override
 	protected void loadExtras(Bundle extras) {
-
 	}
 
 	@Override
