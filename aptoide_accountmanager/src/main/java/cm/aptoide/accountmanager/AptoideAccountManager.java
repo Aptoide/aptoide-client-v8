@@ -290,6 +290,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 									.getError())));
 				} catch (IOException e1) {
 					e1.printStackTrace();
+				}finally {
+					if (finalGenericPleaseWaitDialog != null) {
+						finalGenericPleaseWaitDialog.dismiss();
+					}
 				}
 			}
 		});

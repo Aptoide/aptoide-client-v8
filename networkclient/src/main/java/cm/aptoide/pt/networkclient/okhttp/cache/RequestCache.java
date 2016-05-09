@@ -110,7 +110,7 @@ public class RequestCache {
 	@Nullable
 	public Response put(@NonNull Request request, @NonNull Response response) {
 
-		if ((response.code() / 100) != 2) return null;
+		if ((response.code() / 100) != 2) return response;
 //		String header = request.headers().get(BYPASS_HEADER_KEY);
 //		if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
 //			return response;

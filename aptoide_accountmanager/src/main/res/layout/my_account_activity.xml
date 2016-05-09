@@ -11,77 +11,80 @@
               android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        />
-        <!--android:theme="?attr/toolbarTheme"-->
+            android:id="@+id/toolbar_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="?attr/toolbarTheme"/>
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="5dp">
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
-                    android:id="@+id/logged_as"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:text="@string/logged_as"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:id="@+id/logged_as"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/logged_as"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
-                    android:id="@+id/username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
         </LinearLayout>
 
         <Button
-                android:id="@+id/button_logout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/sign_out"/>
-        <!--style="?attr/customButton"-->
+            android:id="@+id/button_logout"
+            style="?attr/customButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sign_out"/>
 
-        <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_user_name"
-                android:text="User Name"/>
+        <Button
+            android:id="@+id/btn_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"/>
 
-        <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_access_token"
-                android:text="Access Token"/>
+        <Button
+            android:id="@+id/btn_access_token"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Access Token"/>
 
-        <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_refresh_token"
-                android:text="Refresh Token"/>
+        <Button
+            android:id="@+id/btn_refresh_token"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refresh Token"/>
 
-        <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_invalidate_token"
-                android:text="Invalidate Token"/>
+        <Button
+            android:id="@+id/btn_invalidate_token"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invalidate Token"/>
 
 
     </LinearLayout>

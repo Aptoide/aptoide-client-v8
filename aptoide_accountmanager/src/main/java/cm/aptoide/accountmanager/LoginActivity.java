@@ -13,12 +13,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.ShowMessage;
 
 /**
  * Created by trinkes on 4/18/16.
@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
 	@Override
 	public void onLoginSuccess() {
-		Toast.makeText(LoginActivity.this, R.string.login_successful, Toast.LENGTH_SHORT).show();
+		ShowMessage.show(content, R.string.login_successful);
 		finish();
 		if (openMyAccountOnLoginSuccess) {
 			AptoideAccountManager.openAccountManager(this);
@@ -143,8 +143,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
 	@Override
 	public void onLoginFail(String reason) {
-		Toast.makeText(LoginActivity.this, reason, Toast.LENGTH_SHORT)
-				.show();
+		ShowMessage.show(content, reason);
 	}
 
 	@Override
