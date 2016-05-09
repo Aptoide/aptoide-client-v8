@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 07/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -16,7 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
-import cm.aptoide.pt.v8engine.fragments.implementations.StoreGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 
 /**
  * Created by sithengineer on 02/05/16.

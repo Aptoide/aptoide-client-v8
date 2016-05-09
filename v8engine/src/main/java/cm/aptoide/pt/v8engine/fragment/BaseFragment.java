@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 07/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragments;
+package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -18,6 +18,16 @@ import android.view.ViewGroup;
  */
 public abstract class BaseFragment extends Fragment {
 
+	private final String TAG = getClass().getSimpleName();
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			loadBundle(getArguments());
+		}
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
 			savedInstanceState) {
@@ -28,16 +38,11 @@ public abstract class BaseFragment extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		bindViews(view);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		loadBundle(getArguments());
+		setupViews();
 	}
 
 	/**
-	 * Called after onStart. This is where arguments should be loaded.
+	 * Called after onCreate. This is where arguments should be loaded.
 	 *
 	 * @param args {@link #getArguments()}
 	 */
@@ -48,4 +53,9 @@ public abstract class BaseFragment extends Fragment {
 	public abstract int getRootViewId();
 
 	protected abstract void bindViews(View view);
+
+	/**
+	 * Setup previously binded views.
+	 */
+	protected abstract void setupViews();
 }

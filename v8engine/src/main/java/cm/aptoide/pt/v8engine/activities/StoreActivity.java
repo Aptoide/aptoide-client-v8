@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activities;
@@ -24,21 +24,30 @@ import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 /**
  * Created by neuro on 05-05-2016.
  */
+@Deprecated
 public class StoreActivity extends AptoideBaseLoaderActivity {
 
 	private String storeName;
+	private StoreContext storeContext;
 	private Toolbar mToolbar;
 	private ViewPager mViewPager;
+	private GetStore getStore;
 
 	public static Intent newIntent(String storeName) {
+		return newIntent(storeName, StoreContext.store);
+	}
+
+	public static Intent newIntent(String storeName, StoreContext storeContext) {
 		Intent intent = new Intent(Aptoide.getContext(), StoreActivity.class);
 		intent.putExtra(Extras.STORE_NAME, storeName);
+		intent.putExtra(Extras.STORE_CONTEXT, storeContext);
 		return intent;
 	}
 
 	@Override
 	protected void loadExtras(Bundle extras) {
 		storeName = extras.getString(Extras.STORE_NAME);
+		storeContext = (StoreContext) extras.get(Extras.STORE_CONTEXT);
 	}
 
 	@Override
@@ -80,9 +89,15 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	public void load() {
-		GetStoreRequest.of(storeName, StoreContext.store)
-				.execute((getStore) -> setupViewPager(getStore));
+	public void load(boolean refresh) {
+		if (refresh) {
+			GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
+				this.getStore = getStore;
+				setupViewPager(getStore);
+			});
+		} else {
+			setupViewPager(getStore);
+		}
 	}
 
 	private void setupViewPager(GetStore getStore) {
@@ -102,5 +117,6 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	private static class Extras {
 
 		public static final String STORE_NAME = "storeName";
+		public static final String STORE_CONTEXT = "storeContext";
 	}
 }

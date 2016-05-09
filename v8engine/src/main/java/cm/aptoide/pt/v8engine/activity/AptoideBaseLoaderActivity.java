@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -24,7 +24,7 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity impl
 	protected void onCreate(Bundle savedInstanceState) {
 		loaderLayoutHandler = createLoaderLayoutHandler();
 		super.onCreate(savedInstanceState);
-		load();
+		load(true);
 	}
 
 	@Override
@@ -48,5 +48,5 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity impl
 	@IdRes
 	protected abstract int getViewToShowAfterLoadingId();
 
-	public abstract void load();
+	public abstract void load(boolean refresh);
 }

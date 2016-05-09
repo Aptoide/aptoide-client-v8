@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -23,7 +23,7 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.v8engine.fragments.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 
 public class MainActivityTestes extends AppCompatActivity {
 
@@ -35,7 +35,7 @@ public class MainActivityTestes extends AppCompatActivity {
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.contentor, new GridRecyclerFragment() {
 					@Override
-					public void load() {
+					public void load(boolean refresh) {
 
 					}
 				})

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.layouthandler;
@@ -10,5 +10,5 @@ package cm.aptoide.pt.v8engine.layouthandler;
  */
 public interface LoadInterface {
 
-	void load();
+	void load(boolean refresh);
 }
