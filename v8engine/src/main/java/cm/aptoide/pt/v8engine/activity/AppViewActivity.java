@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 07/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.activity.deprecated.AptoideSimpleFragmentActivityDeprecated;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewActivity extends AptoideSimpleFragmentActivity {
+public class AppViewActivity extends AptoideSimpleFragmentActivityDeprecated {
 
 	@Override
 	protected Fragment createFragment() {

@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 07/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,8 +19,9 @@ import com.bumptech.glide.Glide;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.activities.StoreActivity;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.CircleTransform;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -73,8 +75,9 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 		@ColorInt int color = context.getResources()
 				.getColor(StoreThemeEnum.get(store.getAppearance().getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v -> v.getContext()
-				.startActivity(StoreActivity.newIntent(gridStoreDisplayable.getPojo().getName())));
+		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragment((FragmentActivity) v
+				.getContext(), StoreFragment
+				.newInstance(gridStoreDisplayable.getPojo().getName())));
 
 		if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
 			Glide.with(context)

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.layouthandler;
@@ -43,10 +43,11 @@ public class LoaderLayoutHandler {
 	@SuppressWarnings("unchecked")
 	public void bindViews(View view) {
 		viewToShowAfterLoading = view.findViewById(viewToShowAfterLoadingId);
+		viewToShowAfterLoading.setVisibility(View.GONE);
 		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+		progressBar.setVisibility(View.VISIBLE);
 		genericErrorView = view.findViewById(R.id.generic_error);
 		noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
-//		retryView = view.findViewById(R.id.retry);
 		retryErrorView = genericErrorView.findViewById(R.id.retry);
 		retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
 	}
@@ -68,14 +69,14 @@ public class LoaderLayoutHandler {
 			noNetworkConnectionView.setVisibility(View.VISIBLE);
 			retryNoNetworkView.setOnClickListener(view -> {
 				restoreState();
-				loadInterface.load();
+				loadInterface.load(true);
 			});
 		} else {
 			noNetworkConnectionView.setVisibility(View.GONE);
 			genericErrorView.setVisibility(View.VISIBLE);
 			retryErrorView.setOnClickListener(view -> {
 				restoreState();
-				loadInterface.load();
+				loadInterface.load(true);
 			});
 		}
 	}
