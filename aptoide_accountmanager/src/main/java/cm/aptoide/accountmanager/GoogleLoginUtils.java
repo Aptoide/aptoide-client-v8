@@ -79,6 +79,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 				}
 			});
 		}
+		googleApiClient.disconnect();
 	}
 
 	public static GoogleApiClient setupGoogleApiClient(FragmentActivity activity) {
@@ -137,6 +138,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 		if (googleApiClient.isConnected()) {
 			Auth.GoogleSignInApi.signOut(googleApiClient);
 		}
+		googleApiClient.disconnect();
 	}
 
 	/* Called from ErrorDialogFragment when the dialog is dismissed. */
