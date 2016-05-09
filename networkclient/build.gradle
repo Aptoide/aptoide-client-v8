@@ -50,4 +50,6 @@ dependencies {
     // for unit tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
+    debugCompile project(path: ':utils', configuration: 'debug')
+    releaseCompile project(path: ':utils', configuration: 'release')
 }

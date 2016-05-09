@@ -52,17 +52,23 @@ public class MathUtils {
 	}
 
 	private static String convToHex(byte[] data) {
-		StringBuilder buf = new StringBuilder();
-		for (int i = 0; i < data.length; i++) {
-			int halfbyte = (data[i] >>> 4) & 0x0F;
-			int two_halfs = 0;
-			do {
-				if ((0 <= halfbyte) && (halfbyte <= 9)) buf.append((char) ('0' + halfbyte));
-				else buf.append((char) ('a' + (halfbyte - 10)));
-				halfbyte = data[i] & 0x0F;
-			} while (two_halfs++ < 1);
+//		StringBuilder buf = new StringBuilder();
+//		for (int i = 0; i < data.length; i++) {
+//			int halfbyte = (data[i] >>> 4) & 0x0F;
+//			int two_halfs = 0;
+//			do {
+//				if ((0 <= halfbyte) && (halfbyte <= 9)) buf.append((char) ('0' + halfbyte));
+//				else buf.append((char) ('a' + (halfbyte - 10)));
+//				halfbyte = data[i] & 0x0F;
+//			} while (two_halfs++ < 1);
+//		}
+//		return buf.toString();
+
+		final StringBuilder buffer = new StringBuilder();
+		for (byte b : data) {
+			buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
 		}
-		return buf.toString();
+		return buffer.toString();
 	}
 
 	public static String computeSHA1sum(String text) throws NoSuchAlgorithmException,

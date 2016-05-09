@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import cm.aptoide.pt.utils.ShowMessage;
+
 /**
  * Created by trinkes on 4/29/16.
  */
@@ -20,6 +22,7 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 	private EditText password_box;
 	private EditText emailBox;
 	private Button hidePasswordButton;
+	private View content;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 
 	@Override
 	protected String getActivityTitle() {
-		return "Sign up";
+		return getString(R.string.register);
 	}
 
 	@Override
@@ -51,11 +54,12 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 			getSupportActionBar().setHomeButtonEnabled(true);
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowTitleEnabled(true);
-			getSupportActionBar().setTitle(getString(R.string.register));
+			getSupportActionBar().setTitle(getActivityTitle());
 		}
 	}
 
 	private void bindViews() {
+		content = findViewById(android.R.id.content);
 		signUpButton = (Button) findViewById(R.id.submitCreateUser);
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		emailBox = (EditText) findViewById(R.id.username);
@@ -64,29 +68,27 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 	}
 
 	private void setupShowHidePassButton() {
-		hidePasswordButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				final int cursorPosition = password_box.getSelectionStart();
-				final boolean passwordShown = password_box.getTransformationMethod() == null;
-				v.setBackgroundResource(passwordShown ? R.drawable.icon_closed_eye : R.drawable
-						.icon_open_eye);
-				password_box.setTransformationMethod(passwordShown ? new
-						PasswordTransformationMethod() : null);
-				password_box.setSelection(cursorPosition);
-			}
+		hidePasswordButton.setOnClickListener(v -> {
+			final int cursorPosition = password_box.getSelectionStart();
+			final boolean passwordShown = password_box.getTransformationMethod() == null;
+			v.setBackgroundResource(passwordShown ? R.drawable.icon_closed_eye : R.drawable
+					.icon_open_eye);
+			password_box.setTransformationMethod(passwordShown ? new PasswordTransformationMethod
+					() : null);
+			password_box.setSelection(cursorPosition);
 		});
 	}
 
 	@Override
 	public void onRegisterSuccess(Bundle data) {
-		Toast.makeText(SignUpActivity.this, "User Registed", Toast.LENGTH_SHORT).show();
+		ShowMessage.show(content, R.string.user_created);
 		setResult(RESULT_OK, new Intent().putExtras(data));
 		finish();
 	}
 
 	@Override
 	public void onRegisterFail(@StringRes int reason) {
+		ShowMessage.show(content, reason);
 		Toast.makeText(SignUpActivity.this, reason, Toast.LENGTH_SHORT).show();
 	}
 

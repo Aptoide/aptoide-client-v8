@@ -68,6 +68,7 @@
         update)</string>
     <string name="login_activity_title">Login Activity</string>
     <string name="login_successful">Login successful</string>
+    <string name="user_created">User Created</string>
 
 
 </resources>

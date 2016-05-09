@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
 import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.utils.ShowMessage;
 
 /**
  * Created by trinkes on 4/26/16.
@@ -32,8 +32,7 @@ class AptoideLoginUtils {
 
 				if (username == null || password == null || (username.length() == 0 || password
 						.length() == 0)) {
-					Toast.makeText(v.getContext(), R.string.fields_cannot_empty, Toast.LENGTH_LONG)
-							.show();
+					ShowMessage.show(v, R.string.fields_cannot_empty);
 					return;
 				}
 

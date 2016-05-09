@@ -7,6 +7,7 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -38,8 +39,8 @@ import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ThreadUtils;
-import cm.aptoide.pt.utils.dialogs.GenericPleaseWaitDialog;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -47,10 +48,19 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by trinkes on 4/18/16.
+ * Created by trinkes on 4/18/16. <li>{@link #openAccountManager(Context)}</li> <li>{@link
+ * #openAccountManager(Context, boolean)}</li> <li>{@link #openAccountManager(Context, Bundle)}</li>
+ * <li>{@link #openAccountManager(Context, Bundle, boolean)}</li> <li>{@link #getAccessToken()}</li>
+ * <li>{@link #getUserName()}</li> <li>{@link #onActivityResult(Activity, int, int, Intent)}</li>
+ * <li>{@link #getUserInfo()}</li> <li>{@link #updateMatureSwitch(boolean)}</li> <li>{@link
+ * #invalidateAccessToken(Activity)}</li> <li>{@link #invalidateAccessTokenSync(Activity)}</li>
+ * <li>{@link #ACCOUNT_REMOVED_BROADCAST_KEY}</li>
  */
 public class AptoideAccountManager implements Application.ActivityLifecycleCallbacks {
 
+	/**
+	 * This constant is used to send the broadcast when an account is removed
+	 */
 	public static final String ACCOUNT_REMOVED_BROADCAST_KEY = "cm.aptoide.accountmanager" + "" +
 			".removedaccount.broadcast";
 	final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
@@ -231,10 +241,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param requestCode Given on onActivityResult method
 	 * @param resultCode  Given on onActivityResult method
 	 * @param data        Given on onActivityResult method
-	 * @return true if the login was successful, false otherwise
 	 */
-	protected static void onActivityResult(Activity activity, int requestCode, int resultCode,
-										   Intent data) {
+	public static void onActivityResult(Activity activity, int requestCode, int resultCode, Intent
+			data) {
 		GoogleLoginUtils.onActivityResult(requestCode, data);
 		FacebookLoginUtils.onActivityResult(requestCode, resultCode, data);
 		AptoideLoginUtils.onActivityResult(activity, requestCode, resultCode, data);
@@ -251,14 +260,14 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	static void loginUserCredentials(LoginMode mode, final String userName, final String
 			passwordOrToken, final String nameForGoogle) {
 		Context context = getInstance().mContextWeakReference.get();
-		GenericPleaseWaitDialog genericPleaseWaitDialog = null;
+		ProgressDialog genericPleaseWaitDialog = null;
 		if (context != null) {
-			genericPleaseWaitDialog = new GenericPleaseWaitDialog(context);
+			genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 			genericPleaseWaitDialog.show();
 		}
 		OAuth2AuthenticationRequest oAuth2AuthenticationRequest = OAuth2AuthenticationRequest.of
 				(userName, passwordOrToken, mode, nameForGoogle);
-		final GenericPleaseWaitDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
+		final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
 		oAuth2AuthenticationRequest.execute(oAuth -> {
 			Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
 			if (!oAuth.hasErrors()) {
@@ -290,7 +299,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 									.getError())));
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				}finally {
+				} finally {
 					if (finalGenericPleaseWaitDialog != null) {
 						finalGenericPleaseWaitDialog.dismiss();
 					}
@@ -348,7 +357,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	/**
 	 * This method creates a new UserInfo object with all the user info
 	 *
-	 * @return User info
+	 * @return User info class with all collected information about the user
 	 */
 	public static UserInfo getUserInfo() {
 		UserInfo userInfo = new UserInfo();
@@ -362,6 +371,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		return userInfo;
 	}
 
+	/**
+	 * Update the mature switch. If user is logged, it updates on aptoide's server too
+	 *
+	 * @param matureSwitch Switch state
+	 */
 	public static void updateMatureSwitch(boolean matureSwitch) {
 		Observable.fromCallable(() -> {
 			AccountManagerPreferences.setMatureSwitch(matureSwitch);
@@ -384,6 +398,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	/**
 	 * Method used when the given AccessToken is invalid or has expired. The method will ask to
 	 * server for other accessToken
+	 *
+	 * @see AptoideAccountManager#invalidateAccessTokenSync(Activity)
 	 */
 	public static Observable<String> invalidateAccessToken(@NonNull Activity context) {
 		return Observable.fromCallable(() -> {
@@ -400,9 +416,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
 	/**
 	 * Method used when the given AccessToken is invalid or has expired. The method will ask to
-	 * server for other accessToken
+	 * server for other accessToken. This request is synchronous.
 	 *
 	 * @return The new Access token
+	 * @see AptoideAccountManager#invalidateAccessToken(Activity)
 	 */
 	public static String invalidateAccessTokenSync(@NonNull Activity context) {
 		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
@@ -436,8 +453,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			public void onClick(View v) {
 				IRegisterUser callback = (IRegisterUser) callBackWeakReference.get();
 				if (callback != null) {
-					GenericPleaseWaitDialog genericPleaseWaitDialog = new GenericPleaseWaitDialog
-							(v.getContext());
+					ProgressDialog genericPleaseWaitDialog = GenericDialogs
+							.createGenericPleaseWaitDialog(v
+							.getContext());
 					genericPleaseWaitDialog.show();
 					RegisterUserUsingWebServices(callback, genericPleaseWaitDialog);
 				}
@@ -445,7 +463,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		});
 	}
 
-	static void RegisterUserUsingWebServices(IRegisterUser callback, GenericPleaseWaitDialog
+	static void RegisterUserUsingWebServices(IRegisterUser callback, ProgressDialog
 			genericPleaseWaitDialog) {
 		String email = callback.getUserEmail();
 		String password = callback.getUserPassword();
@@ -566,9 +584,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	/**
 	 * Method responsible to setup all login modes
 	 *
-	 * @param callback            Callback used to let outsiders know if the login was successful
-	 *                            or
-	 *                            <p>
+	 * @param callback            Callback used to let outsiders know if the login was
+	 *                               successful or
 	 *                            not
 	 * @param activity            Activity where the login is being made
 	 * @param facebookLoginButton facebook login button

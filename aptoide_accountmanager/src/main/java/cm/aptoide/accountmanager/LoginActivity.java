@@ -80,6 +80,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 			@Override
 			public void onClick(View v) {
 				Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m" +
+						"" +
 						".aptoide.com/account/password-recovery"));
 				startActivity(passwordRecovery);
 			}
