@@ -15,11 +15,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.utils.ObservableUtils;
+import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 		.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.Observable;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -68,6 +71,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		btinstallshare = (CheckBox) itemView.findViewById(R.id.btinstallshare);
 		downloadProgress = (ProgressBar) itemView.findViewById(R.id.downloading_progress);
 		textProgress = (TextView) itemView.findViewById(R.id.text_progress);
+
 		actionContainer = (LinearLayout) itemView.findViewById(R.id.actionContainer);
 		actionResume = (ImageView) itemView.findViewById(R.id.ic_action_resume);
 		actionCancel = (ImageView) itemView.findViewById(R.id.ic_action_cancel);
@@ -75,6 +79,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		// bind "install and latest versions" views
 		installAndLatestVersionLayout = (LinearLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
 		latestVersionLayout = (LinearLayout) itemView.findViewById(R.id.latestversion_layout);
+
 		getLatestButton = (Button) itemView.findViewById(R.id.btn_get_latest);
 		uninstallButton = (Button) itemView.findViewById(R.id.btn_uninstall);
 		installButton = (Button) itemView.findViewById(R.id.btn_install);
@@ -86,7 +91,96 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		GetAppMeta.App pojo = displayable.getPojo();
 
+		getLatestButton.setOnClickListener(v -> {
+			downloadRequest(pojo, DownloadRequest.UPDATE).compose(ObservableUtils
+					.applySchedulers())
+					.subscribe(this::updateUi);
+		});
+
+		uninstallButton.setOnClickListener(v -> {
+			downloadRequest(pojo, DownloadRequest.UNINSTALL).compose(ObservableUtils
+					.applySchedulers())
+					.subscribe(this::updateUi);
+		});
+
+		installButton.setOnClickListener(v -> {
+			downloadRequest(pojo, DownloadRequest.INSTALL).compose(ObservableUtils
+					.applySchedulers())
+					.subscribe(this::updateUi);
+		});
+
+
+
 		// TODO
+
+	}
+
+	private void updateUi(DownloadResult downloadResult) {
+		switch (downloadResult) {
+			default:
+			case COMPLETE:
+				installAndLatestVersionLayout.setVisibility(View.VISIBLE);
+				downloadProgressLayout.setVisibility(View.GONE);
+				break;
+
+			case ACTIVE:
+				actionResume.setVisibility(View.GONE);
+				downloadProgress.setIndeterminate(false);
+				downloadProgress.setProgress(downloadResult.getProgress());
+				textProgress.setText(downloadResult.getProgress() + "% - " +
+						StringUtils.formatBits((long) downloadResult.getSpeed()) + "/s");
+				break;
+
+			case INACTIVE:
+				break;
+
+			case PENDING:
+				actionResume.setVisibility(View.GONE);
+				downloadProgress.setIndeterminate(false);
+				downloadProgress.setProgress(downloadResult.getProgress());
+				textProgress.setText(actionResume.getContext()
+						.getString(R.string.download_pending));
+				break;
+
+			case ERROR:
+				actionResume.setVisibility(View.VISIBLE);
+				textProgress.setText(downloadResult.getError());
+				downloadProgress.setIndeterminate(false);
+				downloadProgress.setProgress(downloadResult.getProgress());
+				break;
+		}
+	}
+
+	private Observable<DownloadResult> downloadRequest(GetAppMeta.App app, DownloadRequest
+			downloadRequest) {
+
+		// TODO
+
+		return Observable.just(DownloadResult.COMPLETE);
+	}
+
+	enum DownloadResult {
+		ACTIVE, INACTIVE, COMPLETE, PENDING, ERROR;
+
+		private String error;
+		private int progress;
+		private int speed;
+
+		public String getError() {
+			return error;
+		}
+
+		public int getProgress() {
+			return progress;
+		}
+
+		public int getSpeed() {
+			return speed;
+		}
+	}
+
+	enum DownloadRequest {
+		INSTALL, UPDATE, UNINSTALL
 	}
 
 	/*
