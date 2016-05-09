@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -46,7 +46,7 @@ public class GetStoreWidgets extends BaseV7Response {
 		@lombok.Data
 		public static class Data {
 
-			private String layout; // GRID, LIST, BRICK
+			private Layout layout;
 			private String icon;
 			private List<Data.Categories> categories; //only present if type": "DISPLAYS"
 

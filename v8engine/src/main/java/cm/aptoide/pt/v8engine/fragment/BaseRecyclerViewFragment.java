@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -49,6 +49,11 @@ public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> e
 						getActivity()
 						.getResources()
 						.getDisplayMetrics());
+
+				if (view.getId() == R.id.brick_app_item) {
+					offset /= 2;
+				}
+
 				outRect.set(offset, offset, offset, offset);
 			}
 		});
