@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by SithEngineer on 09/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -102,13 +102,11 @@ public class GetAppMeta extends BaseV7Response {
 		@Data
 		public static class Malware {
 
+			public static final String TRUSTED = "TRUSTED";
+			public static final String WARNING = "WARNING";
+			public static final String UNKNOWN = "UNKNOWN";
 			private static final String PASSED = "passed";
 			private static final String WARN = "warn";
-
-			private static final String TRUSTED = "TRUSTED";
-			private static final String WARNING = "WARNING";
-			private static final String UNKNOWN = "UNKNOWN";
-
 			private static final String GOOGLE_PLAY = "Google Play";
 
 			private String rank;

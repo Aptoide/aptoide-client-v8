@@ -6,7 +6,10 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,6 +134,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	private static final class AppViewHeader {
 
 		// views
+		private CollapsingToolbarLayout collapsingToolbar;
 		private ImageView featuredGraphic;
 		private RelativeLayout badgeLayout;
 		private ImageView badge;
@@ -143,6 +147,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 		// ctor
 		public AppViewHeader(@NonNull View view) {
+			collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
 			featuredGraphic = (ImageView) view.findViewById(R.id.featured_graphic);
 			badgeLayout = (RelativeLayout) view.findViewById(R.id.badge_layout);
 			badge = (ImageView) view.findViewById(R.id.badge_img);
@@ -156,17 +161,53 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 		// setup methods
 		public void setup(@NonNull GetAppMeta.App pojo) {
-			Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(appIcon);
-			Glide.with(Aptoide.getContext()).load(pojo.getGraphic()).into(featuredGraphic); //
-			// TODO add placeholders
 
+			if (pojo.getGraphic() != null) {
+				Glide.with(Aptoide.getContext()).load(pojo.getGraphic()).into(featuredGraphic);
+			}
+			/*
+			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty
+			(screenshots.get(0).url)) {
+				Glide.with(Aptoide.getContext()).load(screenshots.get(0).url).into
+				(mFeaturedGraphic);
+			}
+			*/
+
+			if (pojo.getIcon() != null) {
+				Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(appIcon);
+			}
+
+			// TODO add placeholders in image loading
+
+			collapsingToolbar.setTitle(pojo.getName());
 			ratingBar.setRating(pojo.getStats().getRating().getAvg());
 			fileSize.setText(String.format(Locale.ROOT, "%d", pojo.getFile().getFilesize()));
 			versionName.setText(pojo.getFile().getVername());
 			downloadsCount.setText(String.format(Locale.ROOT, "%d", pojo.getStats()
 					.getDownloads()));
 
-			// TODO add badge
+			@DrawableRes int badgeResId = 0;
+			@StringRes int badgeMessageId = 0;
+			switch (pojo.getFile().getMalware().getRank()) {
+				case GetAppMeta.GetAppMetaFile.Malware.TRUSTED:
+					badgeResId = R.drawable.ic_badge_trusted;
+					badgeMessageId = R.string.appview_header_trusted_text;
+					break;
+
+				case GetAppMeta.GetAppMetaFile.Malware.WARNING:
+					badgeResId = R.drawable.ic_badge_warning;
+					badgeMessageId = R.string.warning;
+					break;
+
+				default:
+				case GetAppMeta.GetAppMetaFile.Malware.UNKNOWN:
+					badgeResId = R.drawable.ic_badge_unknown;
+					badgeMessageId = R.string.unknown;
+					break;
+			}
+
+			Glide.with(Aptoide.getContext()).load(badgeResId).into(badge);
+			badgeText.setText(badgeMessageId);
 		}
 
 	}

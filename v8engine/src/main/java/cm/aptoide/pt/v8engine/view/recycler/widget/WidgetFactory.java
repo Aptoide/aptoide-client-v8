@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/04/2016.
+ * Modified by SithEngineer on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -45,9 +45,9 @@ public class WidgetFactory {
 	public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
 		//long nanoTime = System.nanoTime();
 		View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-		Widget w = WidgetLoader.INSTANCE.newWidget(view, viewType);
+		Widget widget = WidgetLoader.INSTANCE.newWidget(view, viewType);
 		//Log.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
-		return w;
+		return widget;
 	}
 
 	private static int[] getDisplayablesSizes() {

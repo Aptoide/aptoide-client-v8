@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 05/05/2016.
+  ~ Modified by SithEngineer on 09/05/2016.
   -->
 
 <android.support.design.widget.AppBarLayout
+    android:id="@+id/app_bar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/app_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/appview_header_height"
     android:background="#80000000"
@@ -30,8 +30,8 @@
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
         <RelativeLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -40,13 +40,20 @@
             >
 
             <!-- background image -->
-            <ImageView
-                android:id="@+id/featured_graphic"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:foreground="#80000000"
-                android:scaleType="centerCrop"
-                />
+                >
+
+                <ImageView
+                    android:id="@+id/featured_graphic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    />
+
+            </FrameLayout>
 
             <!-- app detailed info -->
             <RelativeLayout
@@ -54,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/black_header_background_height"
                 android:layout_alignParentBottom="true"
-                android:gravity="end"
-                android:visibility="invisible">
+                android:background="#80000000"
+                >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -63,8 +70,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="13dp"
                     android:layout_marginEnd="13dp"
+                    android:layout_marginRight="13dp"
                     android:orientation="vertical">
 
                     <!--
@@ -74,9 +81,14 @@
                     -->
                     <ImageView
                         android:id="@+id/badge_img"
+                        xmlns:tools="http://schemas.android.com/tools"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:scaleType="centerInside"
+                        tools:layout_height="48dp"
+                        tools:layout_width="48dp"
+                        tools:src="@color/red"
                         />
 
                     <!--
@@ -92,6 +104,7 @@
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_small"
+                        tools:text="@string/trusted_app"
                         />
 
                 </LinearLayout>
@@ -117,10 +130,10 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginRight="45dp"
                     android:layout_marginEnd="45dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="45dp"
+                    android:layout_marginStart="12dp"
                     >
 
 
@@ -175,8 +188,8 @@
 
                             <ImageView
                                 android:layout_width="7dp"
-                                android:layout_gravity="center"
                                 android:layout_height="9dp"
+                                android:layout_gravity="center"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginStart="5dp"
                                 android:src="@drawable/ic_appview_version" />

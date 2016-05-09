@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/05/2016.
+ * Modified by SithEngineer on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -18,11 +18,13 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 		.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 06/05/16.
  */
+@Displayables({AppViewInstallDisplayable.class})
 public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	//
@@ -124,7 +126,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	}
 	*/
-
 
 	/**
 	 * Hides the layout with the install button and shows the download progress bar.

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/05/2016.
+ * Modified by SithEngineer on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -15,7 +15,15 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class AppViewInstallDisplayable extends DisplayablePojo<GetAppMeta.App> {
 
+	public AppViewInstallDisplayable() {
+	}
+
 	public AppViewInstallDisplayable(GetAppMeta.App app) {
+		super(app);
+	}
+
+	public AppViewInstallDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
+		super(pojo, fixedPerLineCount);
 	}
 
 	@Override

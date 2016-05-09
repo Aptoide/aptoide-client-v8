@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/04/2016.
+ * Modified by SithEngineer on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -111,7 +111,7 @@ public enum WidgetLoader {
 	 */
 	@NonNull
 	public Widget newWidget(@NonNull View view, int viewType) {
-		long nanos = System.nanoTime();
+//		long nanos = System.nanoTime();
 
 		// check if WidgetMeta instance is in cache
 		WidgetMeta widgetMeta = widgetLruCache.get(viewType);
@@ -132,9 +132,9 @@ public enum WidgetLoader {
 			throw new RuntimeException("Error instantiating widget!");
 		}
 
-		nanos -= System.nanoTime();
-		nanos *= -1;
-		Log.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
+//		nanos -= System.nanoTime();
+//		nanos *= -1;
+//		Log.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
 
 		return resultWidget;
 	}
