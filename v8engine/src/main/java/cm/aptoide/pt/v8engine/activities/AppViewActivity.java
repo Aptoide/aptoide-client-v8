@@ -9,17 +9,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.activity.deprecated.AptoideSimpleFragmentActivityDeprecated;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewActivity extends AptoideSimpleFragmentActivityDeprecated {
-
-	@Override
-	protected Fragment createFragment() {
-		return null;
-	}
+public class AppViewActivity extends AptoideSimpleFragmentActivity {
 
 	@Override
 	protected void loadExtras(Bundle extras) {
@@ -27,11 +22,17 @@ public class AppViewActivity extends AptoideSimpleFragmentActivityDeprecated {
 
 	@Override
 	protected int getContentViewId() {
-		return R.layout.activity_app_view;
+		return R.layout.frame_layout;
 	}
 
 	@Override
 	protected String getAnalyticsScreenName() {
 		return null;
+	}
+
+	@Override
+	protected Fragment createFragment() {
+		// FIXME for debug only
+		return AppViewFragment.newInstance(18696152);
 	}
 }
