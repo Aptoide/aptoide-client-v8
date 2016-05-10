@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -16,13 +18,17 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
  */
 public class AppViewActivity extends AptoideSimpleFragmentActivity {
 
-	public static final String APP_ID = "APP_ID";
-
 	private long appId;
+
+	public static Intent getIntent(Context ctx, long appId) {
+		Intent intent = new Intent(ctx, AppViewActivity.class);
+		intent.putExtra(BundleKeys.APP_ID.name(), appId);
+		return intent;
+	}
 
 	@Override
 	protected void loadExtras(Bundle extras) {
-		appId = extras.getLong(APP_ID);
+		appId = extras.getLong(BundleKeys.APP_ID.name());
 	}
 
 	@Override
@@ -38,5 +44,9 @@ public class AppViewActivity extends AptoideSimpleFragmentActivity {
 	@Override
 	protected Fragment createFragment() {
 		return AppViewFragment.newInstance(appId);
+	}
+
+	private enum BundleKeys {
+		APP_ID
 	}
 }

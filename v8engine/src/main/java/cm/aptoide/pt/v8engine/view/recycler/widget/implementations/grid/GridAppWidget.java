@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
@@ -73,9 +72,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		itemView.setOnClickListener(
 				v -> {
 					Context ctx = v.getContext();
-					Intent startAppViewActivity = new Intent(ctx, AppViewActivity.class);
-					startAppViewActivity.putExtra(AppViewActivity.APP_ID, appId);
-					ctx.startActivity(startAppViewActivity);
+					ctx.startActivity(AppViewActivity.getIntent(ctx, appId));
 				}
 		);
 	}
