@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -59,6 +59,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 	@Override
 	public void bindView(GridAppDisplayable displayable) {
 		final App pojo = displayable.getPojo();
+		final long appId = pojo.getId();
 
 		Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(icon);
 
@@ -69,11 +70,12 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		tvStoreName.setText(pojo.getStore().getName());
 		tvAddedTime.setText(pojo.getAdded());
 
-
 		itemView.setOnClickListener(
 				v -> {
 					Context ctx = v.getContext();
-					ctx.startActivity(new Intent(ctx, AppViewActivity.class));
+					Intent startAppViewActivity = new Intent(ctx, AppViewActivity.class);
+					startAppViewActivity.putExtra(AppViewActivity.APP_ID, appId);
+					ctx.startActivity(startAppViewActivity);
 				}
 		);
 	}

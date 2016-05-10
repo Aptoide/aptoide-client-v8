@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by SithEngineer on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -46,16 +46,16 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 	public static final int VIEW_ID = R.layout.fragment_app_view;
 	//private static final String TAG = AppViewFragment.class.getName();
-	private int appId;
+	private long appId;
 
 	//
 	// vars
 	//
 	private AppViewHeader header;
 
-	public static AppViewFragment newInstance(int appId) {
+	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
-		bundle.putInt(BundleKeys.APP_ID.name(), appId);
+		bundle.putLong(BundleKeys.APP_ID.name(), appId);
 
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
@@ -90,7 +90,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh) {
 		if (refresh) {
-			loadAppInfo(appId).compose(ObservableUtils.applySchedulers())
+			loadAppInfo((int) appId).compose(ObservableUtils.applySchedulers())
 					.subscribe(this::showAppInfo);
 		}
 	}
@@ -102,7 +102,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	protected void loadBundle(Bundle args) {
 		super.loadBundle(args);
-		appId = args.getInt(BundleKeys.APP_ID.name());
+		appId = args.getLong(BundleKeys.APP_ID.name());
 	}
 
 	private Observable<GetApp> loadAppInfo(int appId) {

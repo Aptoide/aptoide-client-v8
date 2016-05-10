@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by SithEngineer on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activities;
@@ -16,8 +16,13 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
  */
 public class AppViewActivity extends AptoideSimpleFragmentActivity {
 
+	public static final String APP_ID = "APP_ID";
+
+	private long appId;
+
 	@Override
 	protected void loadExtras(Bundle extras) {
+		appId = extras.getLong(APP_ID);
 	}
 
 	@Override
@@ -32,7 +37,6 @@ public class AppViewActivity extends AptoideSimpleFragmentActivity {
 
 	@Override
 	protected Fragment createFragment() {
-		// FIXME for debug only
-		return AppViewFragment.newInstance(18696152);
+		return AppViewFragment.newInstance(appId);
 	}
 }

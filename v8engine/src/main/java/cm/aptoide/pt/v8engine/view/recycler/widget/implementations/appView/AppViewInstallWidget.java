@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by SithEngineer on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -113,6 +113,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		// TODO
 
+		downloadRequest(pojo, DownloadRequest.UPDATE).compose(ObservableUtils
+				.applySchedulers())
+				.subscribe(this::updateUi);
 	}
 
 	private void updateUi(DownloadResult downloadResult) {
