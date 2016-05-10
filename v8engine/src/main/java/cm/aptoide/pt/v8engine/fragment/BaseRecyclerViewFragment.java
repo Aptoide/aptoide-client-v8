@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -38,6 +38,7 @@ public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> e
 
 	@Override
 	protected void setupViews() {
+		super.setupViews();
 		recyclerView.setAdapter(adapter);
 		recyclerView.setLayoutManager(createLayoutManager());
 

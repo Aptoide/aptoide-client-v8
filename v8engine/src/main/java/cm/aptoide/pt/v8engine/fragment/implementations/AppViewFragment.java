@@ -8,9 +8,15 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -53,6 +59,10 @@ public class AppViewFragment extends GridRecyclerFragment {
 	//
 	private AppViewHeader header;
 
+	//
+	// static fragment default new instance method
+	//
+
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(BundleKeys.APP_ID.name(), appId);
@@ -62,30 +72,14 @@ public class AppViewFragment extends GridRecyclerFragment {
 		return fragment;
 	}
 
-	//
-	// micro widget for header
-	//
-
-	@Override
-	public int getRootViewId() {
-		return VIEW_ID;
-	}
-
-	//
-	// bundle keys used internally in this fragment
-	//
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
 			savedInstanceState) {
 		View root = super.onCreateView(inflater, container, savedInstanceState);
 		header = new AppViewHeader(root);
+		setHasOptionsMenu(true);
 		return root;
 	}
-
-	//
-	// static fragment default new instance method
-	//
 
 	@Override
 	public void load(boolean refresh) {
@@ -95,9 +89,51 @@ public class AppViewFragment extends GridRecyclerFragment {
 		}
 	}
 
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
+		ActionBar supportActionBar = parentActivity.getSupportActionBar();
+		if (supportActionBar != null) {
+			supportActionBar.setDisplayHomeAsUpEnabled(true);
+		}
+	}
+
+	@Override
+	public int getRootViewId() {
+		return VIEW_ID;
+	}
+
 	//
 	// methods
 	//
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_appview_fragment, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int i = item.getItemId();
+
+		if (i == android.R.id.home) {
+			getActivity().onBackPressed();
+			return true;
+		} else if (i == R.id.menu_share) {
+
+			// TODO
+
+		} else if (i == R.id.menu_schedule) {
+
+			// TODO
+
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	protected void loadBundle(Bundle args) {
@@ -127,9 +163,17 @@ public class AppViewFragment extends GridRecyclerFragment {
 		header.setup(app);
 	}
 
+	//
+	// bundle keys used internally in this fragment
+	//
+
 	private enum BundleKeys {
 		APP_ID
 	}
+
+	//
+	// micro widget for header
+	//
 
 	private static final class AppViewHeader {
 

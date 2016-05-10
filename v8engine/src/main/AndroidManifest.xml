@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 07/05/2016.
+  ~ Modified by SithEngineer on 10/05/2016.
   -->
 
 <manifest package="cm.aptoide.pt.v8engine"
@@ -20,7 +20,12 @@
         </activity>
 
         <activity android:name=".activities.StoreActivity"/>
-        <activity android:name=".activities.AppViewActivity"/>
+        <activity android:name=".activities.SearchActivity"/>
+        <activity android:name=".activities.AppViewActivity">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".activities.SearchActivity"/>
+        </activity>
 
         <!--
         <activity android:name="cm.aptoide.pt.v8engine.MainActivityStoreList">
