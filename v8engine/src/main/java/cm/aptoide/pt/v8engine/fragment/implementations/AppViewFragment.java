@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -37,8 +38,13 @@ import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 		.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewSubscriptionDisplayable;
 import rx.Observable;
 
 /**
@@ -123,13 +129,16 @@ public class AppViewFragment extends GridRecyclerFragment {
 			getActivity().onBackPressed();
 			return true;
 		} else if (i == R.id.menu_share) {
+			Toast.makeText(getContext(), "TO DO", Toast.LENGTH_SHORT).show();
 
 			// TODO
 
+			return true;
 		} else if (i == R.id.menu_schedule) {
+			Toast.makeText(getContext(), "TO DO", Toast.LENGTH_SHORT).show();
 
 			// TODO
-
+			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -153,8 +162,12 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 		ArrayList<Displayable> displayables = new ArrayList<>();
 		displayables.add(new AppViewInstallDisplayable(app));
+		displayables.add(new AppViewSubscriptionDisplayable(app));
+		displayables.add(new AppViewDescriptionDisplayable(app));
 
-		// ...
+		// TODO ...
+
+		displayables.add(new AppViewDeveloperDisplayable(app));
 
 		// setup displayables in view
 		addDisplayables(displayables);

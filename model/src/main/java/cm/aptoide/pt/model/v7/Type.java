@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 10/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -24,16 +24,22 @@ public enum Type {
 	//
 	// app view widget types
 	//
-	APP_VIEW_INSTALL(1),
-	APP_VIEW_COMMENTS(1),
-	APP_VIEW_DEVELOPER(1),
-	APP_VIEW_OTHER_VERSIONS(1),
-	APP_VIEW_RATE_RESULT(1),
-	APP_VIEW_RATE_THIS(1),
-	APP_VIEW_SUGGESTED_APPS(1);
+	APP_VIEW_INSTALL,
+	APP_VIEW_COMMENTS,
+	APP_VIEW_DEVELOPER,
+	APP_VIEW_OTHER_VERSIONS,
+	APP_VIEW_RATE_RESULT,
+	APP_VIEW_RATE_THIS,
+	APP_VIEW_SUGGESTED_APPS,
+	APP_VIEW_SUBSCRIPTION,
+	APP_VIEW_DESCRIPTION;
 
 	@Getter private int defaultPerLineCount;
 	@Getter private boolean fixedPerLineCount;
+
+	Type() {
+		this(1);
+	}
 
 	Type(int defaultPerLineCount) {
 		this(defaultPerLineCount, false);

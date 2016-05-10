@@ -10,28 +10,29 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created by sithengineer on 10/05/16.
  */
-public class AppViewDeveloperDisplayable extends AppViewDisplayable<GetAppMeta.App> {
+public class AppViewSubscriptionDisplayable extends AppViewDisplayable<GetAppMeta.App> {
 
-	public AppViewDeveloperDisplayable() {
+
+	public AppViewSubscriptionDisplayable() {
 	}
 
-	public AppViewDeveloperDisplayable(GetAppMeta.App app) {
+	public AppViewSubscriptionDisplayable(GetAppMeta.App app) {
 		super(app);
 	}
 
-	public AppViewDeveloperDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
+	public AppViewSubscriptionDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
 		super(pojo, fixedPerLineCount);
 	}
 
 	@Override
 	public Type getType() {
-		return Type.APP_VIEW_DEVELOPER;
+		return Type.APP_VIEW_SUBSCRIPTION;
 	}
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.displayable_app_view_developer;
+		return R.layout.displayable_app_view_subscription;
 	}
 }
