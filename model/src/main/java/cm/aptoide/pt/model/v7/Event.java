@@ -23,6 +23,7 @@ public class Event {
 	}
 
 	public enum Name {
+		listApps,
 		getStore,
 		getStoreWidgets,
 		getReviews,

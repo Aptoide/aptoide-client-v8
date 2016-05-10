@@ -8,19 +8,24 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.util.ObservableUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableLoader;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import rx.Observable;
 import rx.Subscription;
@@ -86,6 +91,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			// todo: não é redundante? se não existe nem devia chegar aqui.. hmm..
 			if (name != null) {
 				switch (name) {
+					case listApps:
+						caseListApps(url);
+						break;
 					case getStore:
 						caseGetStore(url);
 						break;
@@ -106,6 +114,24 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		} else {
 			setDisplayables(displayables);
 		}
+	}
+
+	private Subscription caseListApps(String url) {
+		return ObservableUtils.retryOnTicket(ListAppsRequest.ofAction(url).observe())
+				.observeOn(Schedulers.io())
+				.subscribe(listApps -> {
+
+					// Load sub nodes
+					List<App> list = listApps.getDatalist().getList();
+
+					displayables = new LinkedList<>();
+					for (App app : list) {
+						displayables.add(DisplayableLoader.INSTANCE.newDisplayable(Type
+								.APPS_GROUP, app));
+					}
+
+					setDisplayables(displayables);
+				}, throwable -> finishLoading(throwable));
 	}
 
 	private Subscription caseGetStore(String url) {
