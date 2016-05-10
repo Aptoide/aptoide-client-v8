@@ -79,7 +79,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	/**
 	 * Account type id
 	 */
-	static final String ACCOUNT_TYPE = "cm.aptoide.pt";
+	static final String ACCOUNT_TYPE = cm.aptoide.pt.preferences.Application.getConfiguration()
+			.getAccountType();
 	private final static AptoideAccountManager instance = new AptoideAccountManager();
 	private static String TAG = AptoideAccountManager.class.getSimpleName();
 	/**
