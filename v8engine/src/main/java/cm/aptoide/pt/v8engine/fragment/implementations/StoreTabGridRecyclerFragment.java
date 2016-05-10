@@ -17,8 +17,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
@@ -31,13 +31,13 @@ import rx.schedulers.Schedulers;
  */
 public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
-	protected GetStoreTabs.Tab.Event.Type type;
-	protected GetStoreTabs.Tab.Event.Name name;
+	protected Event.Type type;
+	protected Event.Name name;
 	protected String action;
 	protected String title;
 	private List<Displayable> displayables;
 
-	public static StoreTabGridRecyclerFragment newInstance(GetStoreTabs.Tab.Event event, String
+	public static StoreTabGridRecyclerFragment newInstance(Event event, String
 			title) {
 		Bundle args = buildBundle(event, title);
 
@@ -47,7 +47,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@NonNull
-	protected static Bundle buildBundle(GetStoreTabs.Tab.Event event, String title) {
+	protected static Bundle buildBundle(Event event, String title) {
 		Bundle args = new Bundle();
 
 		if (event.getType() != null) {
@@ -69,10 +69,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	@Override
 	protected void loadBundle(Bundle args) {
 		if (args.containsKey(BundleCons.TYPE)) {
-			type = GetStoreTabs.Tab.Event.Type.valueOf(args.getString(BundleCons.TYPE));
+			type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
 		}
 		if (args.containsKey(BundleCons.NAME)) {
-			name = GetStoreTabs.Tab.Event.Name.valueOf(args.getString(BundleCons.NAME));
+			name = Event.Name.valueOf(args.getString(BundleCons.NAME));
 		}
 		title = args.getString(BundleCons.TITLE);
 		action = args.getString(BundleCons.ACTION);

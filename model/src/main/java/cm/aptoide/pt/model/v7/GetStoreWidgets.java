@@ -7,7 +7,6 @@ package cm.aptoide.pt.model.v7;
 
 import java.util.List;
 
-import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -71,7 +70,7 @@ public class GetStoreWidgets extends BaseV7Response {
 			private String type; // button
 			private String label;
 			private String tag;
-			private GetStoreTabs.Tab.Event event;
+			private Event event;
 		}
 	}
 }

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
@@ -45,10 +46,14 @@ public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> e
 			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView
 					.State state) {
 
-				int offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
-						getActivity()
-						.getResources()
-						.getDisplayMetrics());
+				int offset = 0;
+				FragmentActivity activity = getActivity();
+				if (activity != null) {
+					offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
+							activity
+							.getResources()
+							.getDisplayMetrics());
+				}
 
 				if (view.getId() == R.id.brick_app_item) {
 					offset /= 2;

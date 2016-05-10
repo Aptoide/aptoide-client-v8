@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import cm.aptoide.pt.model.v7.store.GetStoreTabs;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.R;
  */
 public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
-	public static StoreGridRecyclerFragment newInstance(GetStoreTabs.Tab.Event event, String
+	public static StoreGridRecyclerFragment newInstance(Event event, String
 			title) {
 		Bundle args = buildBundle(event, title);
 
