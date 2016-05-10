@@ -7,6 +7,7 @@ package cm.aptoide.pt.model.v7;
 
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -70,28 +71,7 @@ public class GetStoreWidgets extends BaseV7Response {
 			private String type; // button
 			private String label;
 			private String tag;
-			private Action.Event event;
-
-			@lombok.Data
-			public static class Event {
-
-				public static final String GET_STORE_TAB = "getStore";
-				public static final String GET_STORE_WIDGETS_TAB = "getStoreWidgets";
-				public static final String GET_APK_COMMENTS_TAB = "getApkComments";
-				public static final String GET_REVIEWS_TAB = "getReviews";
-
-				public static final String API_V7_TYPE = "API";
-				public static final String API_V3_TYPE = "v3";
-
-				public static final String EVENT_LIST_APPS = "listApps";
-				public static final String EVENT_LIST_STORES = "listStores";
-				public static final String EVENT_GETSTOREWIDGETS = "getStoreWidgets";
-				public static final String EVENT_GETAPKCOMMENTS = "getApkComments";
-
-				public String type; // API, v3
-				public String name; // listApps, getStore, getStoreWidgets, getApkComments
-				public String action;
-			}
+			private GetStoreTabs.Tab.Event event;
 		}
 	}
 }

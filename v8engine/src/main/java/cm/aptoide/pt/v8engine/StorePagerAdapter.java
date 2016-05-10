@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -41,7 +41,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		return StoreTabGridRecyclerFragment.newInstance(tabs.get(position).getEvent());
+		return StoreTabGridRecyclerFragment.newInstance(tabs.get(position)
+				.getEvent(), tabs.get(position).getLabel());
 	}
 
 	@Override

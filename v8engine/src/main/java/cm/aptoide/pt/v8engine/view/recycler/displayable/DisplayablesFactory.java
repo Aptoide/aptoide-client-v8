@@ -89,7 +89,10 @@ public class DisplayablesFactory {
 				tmp.add(new FooterDisplayable(wsWidget));
 			}
 		} else {
-			tmp.add(new GridHeaderDisplayable(wsWidget));
+			if (apps.size() > 0) {
+				tmp.add(new GridHeaderDisplayable(wsWidget));
+			}
+
 			for (App app : apps) {
 				DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader
 						.INSTANCE.newDisplayable(wsWidget
