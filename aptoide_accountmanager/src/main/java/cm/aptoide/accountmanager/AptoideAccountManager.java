@@ -83,6 +83,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	private final static AptoideAccountManager instance = new AptoideAccountManager();
 	private static String TAG = AptoideAccountManager.class.getSimpleName();
 	/**
+	 * This variable indicates if the user is logged or not. It's used because in some cases the
+	 * account manager is not fast enough
+	 */
+	private static boolean isLogin = isLoggedIn();
+	/**
 	 * private variables
 	 */
 	private ILoginInterface mCallback;
@@ -94,7 +99,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param extras Extras to add on created intent (to login or register activity)
 	 */
 	public static void openAccountManager(Context context, @Nullable Bundle extras) {
-		if (isLoggedIn()) {
+		if (isLogin) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
 			final Intent intent = new Intent(context, LoginActivity.class);
@@ -113,7 +118,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static void openAccountManager(Context context, @Nullable Bundle extras, boolean
 			openMyAccount) {
-		if (isLoggedIn()) {
+		if (isLogin) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
 			final Intent intent = new Intent(context, LoginActivity.class);
@@ -131,7 +136,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param openMyAccount true if is expeted to open myAccountActivity after login
 	 */
 	public static void openAccountManager(Context context, boolean openMyAccount) {
-		if (isLoggedIn()) {
+		if (isLogin) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
 			final Intent intent = new Intent(context, LoginActivity.class);
@@ -172,6 +177,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	private static void logout(WeakReference<FragmentActivity> activityRef) {
 		FacebookLoginUtils.logout();
 		getInstance().removeLocalAccount();
+		isLogin = false;
 		Activity activity = activityRef.get();
 		if (activity != null) {
 			GoogleLoginUtils.logout((FragmentActivity) activity);
@@ -381,7 +387,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			AccountManagerPreferences.setMatureSwitch(matureSwitch);
 			return matureSwitch;
 		}).doOnNext(matureSwitch1 -> {
-			if (isLoggedIn()) {
+			if (isLogin) {
 				ChangeUserSettingsRequest.of(matureSwitch1)
 						.observe()
 						.subscribeOn(Schedulers.io())
@@ -647,6 +653,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	}
 
 	void onLoginSuccess() {
+		isLogin = true;
 		mCallback.onLoginSuccess();
 	}
 
