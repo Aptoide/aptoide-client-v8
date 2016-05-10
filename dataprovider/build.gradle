@@ -12,7 +12,7 @@ android {
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 15
     }
 
     publishNonDefault true
@@ -38,6 +38,9 @@ dependencies {
 
     debugCompile project(path: ':model', configuration: 'debug')
     releaseCompile project(path: ':model', configuration: 'release')
+
+    debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
+    releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
 
     debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
     releaseCompile project(path: ':aptoidepreferences', configuration: 'release')

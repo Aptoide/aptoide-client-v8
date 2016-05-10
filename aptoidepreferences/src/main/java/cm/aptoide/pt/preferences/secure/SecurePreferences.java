@@ -14,14 +14,6 @@ import java.util.UUID;
  */
 public class SecurePreferences {
 
-	public static String getAccessToken() {
-		return SecurePreferencesImplementation.getInstance().getString(SecureKeys.ACCESS_TOKEN, null);
-	}
-
-	public static void setAccessToken(String accessToken) {
-		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ACCESS_TOKEN, accessToken).apply();
-	}
-
 	public static String getAptoideClientUUID() {
 		SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance();
 		if (!sharedPreferences.contains(SecureKeys.APTOIDE_CLIENT_UUID)) {
@@ -29,5 +21,47 @@ public class SecurePreferences {
 		}
 
 		return sharedPreferences.getString(SecureKeys.APTOIDE_CLIENT_UUID, null);
+	}
+
+    /**
+     * DO NOT USE THIS METHOD
+     * @param key
+     * @param value
+     */
+    public static void putString(String key, String value) {
+        SecurePreferencesImplementation.getInstance().edit().putString(key, value).apply();
+    }
+
+    /**
+     * DO NOT USE THIS METHOD!!!!
+     * @param key
+     * @return
+     */
+    public static String getString(String key) {
+        return SecurePreferencesImplementation.getInstance().getString(key, null);
+    }
+
+	public static void remove(String key) {
+		SecurePreferencesImplementation.getInstance().edit().remove(key).apply();
+	}
+
+	/**
+	 * DO NOT USE THIS METHOD
+	 *
+	 * @param key
+	 * @param value
+	 */
+	public static void putBoolean(String key, boolean value) {
+		SecurePreferencesImplementation.getInstance().edit().putBoolean(key, value).apply();
+	}
+
+	/**
+	 * DO NOT USE THIS METHOD!!!!
+	 *
+	 * @param key
+	 * @return
+	 */
+	public static boolean getBoolean(String key) {
+		return SecurePreferencesImplementation.getInstance().getBoolean(key, false);
 	}
 }

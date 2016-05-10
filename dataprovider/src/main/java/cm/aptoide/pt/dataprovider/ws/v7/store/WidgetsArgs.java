@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,8 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
 	}
 
 	public static WidgetsArgs createDefault() {
-		return new WidgetsArgs().add(Key.APPS_GROUP, 3).add(Key.STORES_GROUP, 2);
+		return new WidgetsArgs().add(Key.APPS_GROUP, Type.APPS_GROUP.getPerLineCount())
+				.add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount());
 	}
 
 	public WidgetsArgs add(Key key, int gridRowSize) {
@@ -33,6 +35,7 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
 		return this;
 	}
 
+	// FIXME Parece me redundante com Type! Confirmar!
 	public enum Key {
 		APPS_GROUP, STORES_GROUP
 	}

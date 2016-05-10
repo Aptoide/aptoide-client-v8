@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +14,8 @@ import java.util.List;
 
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -43,10 +46,16 @@ public class GridHeaderWidget extends Widget<GridHeaderDisplayable> {
 		final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
 		final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
 		title.setText(pojo.getTitle());
-		more.setVisibility(actions != null && actions.size() > 0 ? View.VISIBLE : View.GONE);
-
+		more.setVisibility(actions != null && actions.size() > 0 && actions.get(0)
+				.getEvent()
+				.getName() != null ? View.VISIBLE : View.GONE);
 		more.setOnClickListener((view) -> {
-			// TODO
+			FragmentUtils.replaceFragment((FragmentActivity) itemView.getContext(),
+					StoreGridRecyclerFragment
+					.newInstance(displayable.getPojo()
+							.getActions()
+							.get(0)
+							.getEvent(), displayable.getPojo().getTitle()));
 		});
 	}
 }

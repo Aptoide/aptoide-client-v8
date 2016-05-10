@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -69,6 +69,8 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 			GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
 				this.getStore = getStore;
 				setupViewPager(getStore);
+			}, (throwable) -> {
+				finishLoading(throwable);
 			});
 		} else {
 			setupViewPager(getStore);
@@ -113,7 +115,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 		finishLoading();
 	}
 
-	private static class BundleCons {
+	protected static class BundleCons {
 
 		public static final String STORE_NAME = "storeName";
 		public static final String STORE_CONTEXT = "storeContext";

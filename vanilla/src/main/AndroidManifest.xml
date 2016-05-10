@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 02/05/2016.
+  ~ Modified by Neurophobic Animal on 12/04/2016.
   -->
 
 <manifest package="cm.aptoide.pt.aptoideclientv8"
@@ -14,6 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AptoideThemeDefault"
         >
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
     </application>
 
 </manifest>

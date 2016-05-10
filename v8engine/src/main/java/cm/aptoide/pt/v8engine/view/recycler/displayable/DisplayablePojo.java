@@ -1,10 +1,6 @@
 /*
  * Copyright (c) 2016.
-<<<<<<< HEAD
- * Modified by SithEngineer on 04/05/2016.
-=======
- * Modified by Neurophobic Animal on 04/05/2016.
->>>>>>> master
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -28,11 +24,11 @@ public abstract class DisplayablePojo<T> extends Displayable {
 	 * Needed for reflective {@link Class#newInstance()}.
 	 */
 	public DisplayablePojo() {
-		this(null, false);
 	}
 
 	public DisplayablePojo(T pojo) {
-		this(pojo, false);
+		this.pojo = pojo;
+
 	}
 
 	public DisplayablePojo(T pojo, boolean fixedPerLineCount) {

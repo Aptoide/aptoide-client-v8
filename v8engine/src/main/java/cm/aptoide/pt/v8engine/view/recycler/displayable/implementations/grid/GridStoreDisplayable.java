@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
@@ -26,10 +26,5 @@ public class GridStoreDisplayable extends DisplayablePojo<Store> {
 	@Override
 	public int getViewLayout() {
 		return R.layout.displayable_grid_store;
-	}
-
-	@Override
-	public int getDefaultPerLineCount() {
-		return 2;
 	}
 }

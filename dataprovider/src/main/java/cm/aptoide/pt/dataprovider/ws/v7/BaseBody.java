@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.util.AptoideUtils;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import lombok.Getter;
 @Getter
 public class BaseBody {
 
-	private String accessToken = SecurePreferences.getAccessToken();
-	private int aptoideVercode = AptoideUtils.getVerCode();
+	private String access_token = AptoideAccountManager.getAccessToken();
+	private int aptoide_vercode = AptoideUtils.getVerCode();
 	private String cdn = "pool";
 }

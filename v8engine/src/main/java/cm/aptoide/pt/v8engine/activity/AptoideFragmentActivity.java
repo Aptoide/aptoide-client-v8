@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import java.lang.ref.WeakReference;
@@ -16,6 +17,7 @@ import cm.aptoide.pt.v8engine.R;
  */
 public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 
+	/*
 	private WeakReference<Fragment> weakFragment;
 
 	protected abstract Fragment createFragment();
@@ -38,11 +40,11 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 		super.onStart();
 
 		Fragment fragment = null;
-		if(weakFragment!=null) {
+		if (weakFragment != null) {
 			fragment = weakFragment.get();
 		}
 
-		if(fragment==null) {
+		if (fragment == null) {
 			fragment = createFragment();
 			weakFragment = new WeakReference<>(fragment);
 		}
@@ -50,5 +52,19 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.fragment_placeholder, fragment)
 				.commit();
+	}
+	*/
+
+	protected abstract Fragment createFragment();
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState == null) {
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragment_placeholder, createFragment())
+					.commit();
+		}
+
 	}
 }

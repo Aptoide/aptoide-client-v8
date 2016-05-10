@@ -1,9 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 09/05/2016.
  */
 
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
     compileSdkVersion 23
@@ -23,6 +28,11 @@ android {
 
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -35,4 +45,11 @@ dependencies {
 
     // Just for lombok not to complain
     provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    debugCompile project(path: ':utils', configuration: 'debug')
+    releaseCompile project(path: ':utils', configuration: 'release')
+
+    debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
+    releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
+
 }

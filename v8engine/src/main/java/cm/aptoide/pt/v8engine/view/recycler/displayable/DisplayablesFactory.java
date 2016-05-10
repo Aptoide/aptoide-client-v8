@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -10,12 +10,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 
 /**
@@ -35,7 +37,6 @@ public class DisplayablesFactory {
 				switch (wsWidget.getType()) {
 
 					case APPS_GROUP:
-						displayables.add(new GridHeaderDisplayable(wsWidget));
 						displayables.add(getApps(wsWidget));
 						break;
 
@@ -72,12 +73,33 @@ public class DisplayablesFactory {
 		List<App> apps = listApps.getDatalist().getList();
 		List<Displayable> tmp = new ArrayList<>(apps.size());
 
-		for (App app : apps) {
-			DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader.INSTANCE
-					.newDisplayable(wsWidget
-					.getType());
-			diplayable.setPojo(app);
-			tmp.add(diplayable);
+		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
+			if (apps.size() > 0) {
+				tmp.add(DisplayableLoader.INSTANCE.newDisplayable(Type.APP_BRICK, apps.get(0))
+						.setDefaultPerLineCount(1));
+
+				for (int i = 1; i < apps.size(); i++) {
+					DisplayablePojo<App> appDisplayablePojo = DisplayableLoader.INSTANCE
+							.newDisplayable(Type.APP_BRICK, apps
+							.get(i));
+
+					tmp.add(appDisplayablePojo);
+				}
+
+				tmp.add(new FooterDisplayable(wsWidget));
+			}
+		} else {
+			if (apps.size() > 0) {
+				tmp.add(new GridHeaderDisplayable(wsWidget));
+			}
+
+			for (App app : apps) {
+				DisplayablePojo<App> diplayable = (DisplayablePojo<App>) DisplayableLoader
+						.INSTANCE.newDisplayable(wsWidget
+						.getType());
+				diplayable.setPojo(app);
+				tmp.add(diplayable);
+			}
 		}
 		return new DisplayableGroup(tmp);
 	}

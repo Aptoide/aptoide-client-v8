@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.model.v7.listapp;
@@ -43,7 +43,7 @@ public class App {
 		@Data
 		public static class Rating {
 
-			private int avg;
+			private float avg;
 			private int total;
 			private List<Vote> votes;
 

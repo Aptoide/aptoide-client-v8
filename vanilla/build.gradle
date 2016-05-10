@@ -43,7 +43,7 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-            minSdkVersion 14
+           minSdkVersion 15
 
             applicationId "cm.aptoide.pt"
         }
@@ -99,6 +99,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
     debugCompile project(path: ':v8engine', configuration: 'debug')
     releaseCompile project(path: ':v8engine', configuration: 'release')
 }

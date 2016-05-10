@@ -3,4 +3,4 @@
  * Modified by Neurophobic Animal on 05/05/2016.
  */
 
-include ':vanilla', ':v8engine', ':dataprovider', ':model', ':networkclient', ':aptoidepreferences', ':utils'
+include ':vanilla', ':v8engine', ':dataprovider', ':model', ':networkclient', ':aptoidepreferences', ':logger', ':utils', ':aptoide_accountmanager'
