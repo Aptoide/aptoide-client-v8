@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/04/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.pt.utils.MultiDexHelper;
-import cm.aptoide.pt.v8engine.Aptoide;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import dalvik.system.DexFile;
 
@@ -48,7 +48,7 @@ public enum WidgetLoader {
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(Aptoide
+			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(V8Engine
 					.getContext());
 
 			DexFile dexFile = null;

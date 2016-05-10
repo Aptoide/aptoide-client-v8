@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -18,6 +18,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity {
 
 	@Override
 	protected Fragment createFragment() {
-		return HomeFragment.newInstance("apps", StoreContext.home);
+		return HomeFragment.newInstance(V8Engine.getConfiguration()
+				.getDefaultStore(), StoreContext.home);
 	}
 }

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 12/04/2016.
+  ~ Modified by Neurophobic Animal on 10/05/2016.
   -->
 
-<manifest package="cm.aptoide.pt.aptoideclientv8"
+<manifest package="cm.aptoide.pt"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+        android:name=".Aptoide"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
