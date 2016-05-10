@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -15,9 +15,11 @@ import lombok.Getter;
 public enum Type {
 	_EMPTY(1), // FIXME for tests only
 	APPS_GROUP(3),
+	APP_BRICK(2),
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
-	HEADER_ROW(1);
+	HEADER_ROW(1),
+	FOOTER_ROW(1);
 
 	@Getter private int defaultPerLineCount;
 	@Getter private boolean fixedPerLineCount;

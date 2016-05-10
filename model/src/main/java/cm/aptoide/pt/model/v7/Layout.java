@@ -3,11 +3,13 @@
  * Modified by Neurophobic Animal on 10/05/2016.
  */
 
-package cm.aptoide.pt.model;
+package cm.aptoide.pt.model.v7;
 
 /**
  * Created by neuro on 09-05-2016.
  */
-public abstract class Model extends cm.aptoide.pt.preferences.Application {
-
+public enum Layout {
+	GRID,
+	LIST,
+	BRICK
 }

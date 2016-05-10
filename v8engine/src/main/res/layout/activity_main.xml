@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 06/05/2016.
+  ~ Modified by Neurophobic Animal on 09/05/2016.
   -->
 
 <android.support.v4.widget.DrawerLayout
@@ -9,7 +9,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    >
 
     <include layout="@layout/store_activity"/>
 

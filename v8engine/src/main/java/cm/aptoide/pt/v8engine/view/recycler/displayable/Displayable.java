@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -11,14 +11,17 @@ import cm.aptoide.pt.model.Model;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 14-04-2016.
  */
+@Accessors(chain = true)
 public abstract class Displayable {
 
 	private Boolean fixedPerLineCount;
-	private Integer defaultPerLineCount;
+	@Setter private Integer defaultPerLineCount;
 
 	/**
 	 * Needed for reflective {@link Class#newInstance()}.
