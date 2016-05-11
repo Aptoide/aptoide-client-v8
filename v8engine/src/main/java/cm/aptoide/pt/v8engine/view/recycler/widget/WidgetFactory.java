@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -15,6 +15,7 @@ import java.util.List;
 import cm.aptoide.pt.utils.MathUtils;
 import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
@@ -45,14 +46,14 @@ public class WidgetFactory {
 	public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
 		//long nanoTime = System.nanoTime();
 		View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-		Widget w = WidgetLoader.INSTANCE.newWidget(view, viewType);
+		Widget w = DisplayableType.newWidget(view, viewType);
 		//Log.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
 		return w;
 	}
 
 	private static int[] getDisplayablesSizes() {
 
-		List<Displayable> displayableList = WidgetLoader.INSTANCE.getDisplayables();
+		List<Displayable> displayableList = DisplayableType.getCachedDisplayables();
 
 		int[] arr = new int[displayableList.size()];
 		int i = 0;
