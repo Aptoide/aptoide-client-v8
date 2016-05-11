@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -19,6 +19,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -39,12 +40,17 @@ public abstract class WebService<T, U> {
 	protected final static OkHttpClient client = OkHttpClientFactory.newClient();
 	@Getter protected static ObjectMapper objectMapper;
 	protected final static Converter.Factory factory = createConverter();
-
+	@Getter @Setter protected boolean bypassCache;
 	private Class<T> clazz;
 	private Observable<T> service;
 
 	protected WebService(Class<T> clazz) {
 		this.clazz = clazz;
+	}
+
+	protected WebService(Class<T> clazz, boolean bypassCache) {
+		this.clazz = clazz;
+		this.bypassCache = bypassCache;
 	}
 
 	protected static Converter.Factory createConverter() {

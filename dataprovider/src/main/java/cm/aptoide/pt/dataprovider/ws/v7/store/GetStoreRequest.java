@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
@@ -36,37 +36,39 @@ public class GetStoreRequest extends V7<GetStore> {
 	private final String url;
 	private boolean recursive = false;
 
-	private GetStoreRequest() {
-		this("");
+	private GetStoreRequest(boolean bypassCache) {
+		this("", bypassCache);
 	}
 
-	private GetStoreRequest(String url) {
+	private GetStoreRequest(String url, boolean bypassCache) {
+		super(bypassCache);
 		this.url = url.replace("getStore", "");
 	}
 
-	public static GetStoreRequest of(String storeName) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest();
+	public static GetStoreRequest of(String storeName, boolean bypassCache) {
+		GetStoreRequest getStoreRequest = new GetStoreRequest(bypassCache);
 
 		getStoreRequest.body.setStoreName(storeName);
 
 		return getStoreRequest;
 	}
 
-	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest();
+	public static GetStoreRequest of(String storeName, StoreContext storeContext, boolean
+			bypassCache) {
+		GetStoreRequest getStoreRequest = new GetStoreRequest(bypassCache);
 
 		getStoreRequest.body.setStoreName(storeName).setContext(storeContext);
 
 		return getStoreRequest;
 	}
 
-	public static GetStoreRequest ofAction(String url) {
-		return new GetStoreRequest(url);
+	public static GetStoreRequest ofAction(String url, boolean bypassCache) {
+		return new GetStoreRequest(url, bypassCache);
 	}
 
 	@Override
 	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStore(url, body);
+		return interfaces.getStore(url, body, bypassCache);
 	}
 
 	@Override
@@ -84,7 +86,7 @@ public class GetStoreRequest extends V7<GetStore> {
 
 				Observable.from(list)
 						.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-								countDownLatch, Logger::printException));
+								countDownLatch, bypassCache, Logger::printException));
 
 				try {
 					countDownLatch.await();

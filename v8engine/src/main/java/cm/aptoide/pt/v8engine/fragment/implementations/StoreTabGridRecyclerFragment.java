@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import cm.aptoide.pt.dataprovider.util.ObservableUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.model.v7.Event;
@@ -86,13 +86,13 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			if (name != null) {
 				switch (name) {
 					case listApps:
-						caseListApps(url);
+						caseListApps(url, refresh);
 						break;
 					case getStore:
-						caseGetStore(url);
+						caseGetStore(url, refresh);
 						break;
 					case getStoreWidgets:
-						caseGetStoreWidgets(url);
+						caseGetStoreWidgets(url, refresh);
 						break;
 					case getReviews:
 						//todo
@@ -110,8 +110,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 	}
 
-	private Subscription caseListApps(String url) {
-		return ObservableUtils.retryOnTicket(ListAppsRequest.ofAction(url).observe())
+	private Subscription caseListApps(String url, boolean refresh) {
+		return ObservableUtils.retryOnTicket(ListAppsRequest.ofAction(url, refresh).observe())
 				.observeOn(Schedulers.io())
 				.subscribe(listApps -> {
 
@@ -127,8 +127,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				}, throwable -> finishLoading(throwable));
 	}
 
-	private Subscription caseGetStore(String url) {
-		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url).observe())
+	private Subscription caseGetStore(String url, boolean refresh) {
+		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url, refresh).observe())
 				.observeOn(Schedulers.io())
 				.subscribe(getStore -> {
 
@@ -140,8 +140,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
 					Observable.from(list)
-							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-									countDownLatch, throwable -> finishLoading(throwable)));
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> finishLoading(throwable)));
 
 					try {
 						countDownLatch.await(5, TimeUnit.SECONDS);
@@ -154,8 +153,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				}, throwable -> finishLoading(throwable));
 	}
 
-	private Subscription caseGetStoreWidgets(String url) {
-		return ObservableUtils.retryOnTicket(GetStoreWidgetsRequest.ofAction(url).observe())
+	private Subscription caseGetStoreWidgets(String url, boolean refresh) {
+		return ObservableUtils.retryOnTicket(GetStoreWidgetsRequest.ofAction(url, refresh)
+				.observe())
 				.observeOn(Schedulers.io())
 				.subscribe(getStoreWidgets -> {
 
@@ -164,8 +164,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
 					Observable.from(list)
-							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-									countDownLatch, throwable -> finishLoading(throwable)));
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> finishLoading(throwable)));
 
 					try {
 						countDownLatch.await();

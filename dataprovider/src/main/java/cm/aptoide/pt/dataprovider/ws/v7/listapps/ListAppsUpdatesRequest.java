@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -28,16 +28,17 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates> {
 
 	private final Body body = new Body();
 
-	private ListAppsUpdatesRequest() {
+	private ListAppsUpdatesRequest(boolean bypassCache) {
+		super(bypassCache);
 	}
 
-	public static ListAppsUpdatesRequest of() {
-		return new ListAppsUpdatesRequest();
+	public static ListAppsUpdatesRequest of(boolean bypassCache) {
+		return new ListAppsUpdatesRequest(bypassCache);
 	}
 
 	@Override
 	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.listAppsUpdates(body);
+		return interfaces.listAppsUpdates(body, bypassCache);
 	}
 
 	@Data

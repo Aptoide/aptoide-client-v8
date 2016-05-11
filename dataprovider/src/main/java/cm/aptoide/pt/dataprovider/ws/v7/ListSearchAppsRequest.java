@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/04/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -22,12 +22,17 @@ public class ListSearchAppsRequest extends V7<ListSearchApps> {
 
 	@Delegate(types = Body.class) private final Body body = new Body();
 
-	private ListSearchAppsRequest() {
-
+	private ListSearchAppsRequest(boolean bypassCache) {
+		super(bypassCache);
 	}
 
 	public static ListSearchAppsRequest of(String query) {
-		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest();
+		return of(query, false);
+	}
+
+	public static ListSearchAppsRequest of(String query, boolean bypassCache) {
+		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(bypassCache);
+
 		listSearchAppsRequest.body.setQuery(query);
 
 		return listSearchAppsRequest;
@@ -35,7 +40,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps> {
 
 	@Override
 	protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.listSearchApps(body);
+		return interfaces.listSearchApps(body, bypassCache);
 	}
 
 	@Data

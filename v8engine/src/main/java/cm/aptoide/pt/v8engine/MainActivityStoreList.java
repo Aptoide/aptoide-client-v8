@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -48,7 +48,7 @@ public class MainActivityStoreList extends AptoideBaseActivity {
 
 	@Override
 	public void setupViews() {
-		ListStoresRequest.of().execute(this::setupStoreList);
+		ListStoresRequest.of(false).execute(this::setupStoreList);
 	}
 
 	@Override

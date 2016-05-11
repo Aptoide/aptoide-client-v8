@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -24,38 +24,38 @@ public class GetStoreDisplaysRequest extends V7<GetStoreDisplays> {
 	private final Body body = new Body();
 	private final String url;
 
-	private GetStoreDisplaysRequest() {
-		this("");
+	private GetStoreDisplaysRequest(boolean bypassCache) {
+		this("", bypassCache);
 	}
 
-	private GetStoreDisplaysRequest(String url) {
+	private GetStoreDisplaysRequest(String url, boolean bypassCache) {
+		super(bypassCache);
 		this.url = url.replace("getStoreDisplays", "");
 	}
 
-
-	public static GetStoreDisplaysRequest of(String storeName) {
-		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest();
+	public static GetStoreDisplaysRequest of(String storeName, boolean bypassCache) {
+		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest(bypassCache);
 
 		getStoreDisplaysRequest.body.setStoreName(storeName);
 
 		return getStoreDisplaysRequest;
 	}
 
-	public static GetStoreDisplaysRequest of(int storeId) {
-		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest();
+	public static GetStoreDisplaysRequest of(int storeId, boolean bypassCache) {
+		GetStoreDisplaysRequest getStoreDisplaysRequest = new GetStoreDisplaysRequest(bypassCache);
 
 		getStoreDisplaysRequest.body.setStoreId(storeId);
 
 		return getStoreDisplaysRequest;
 	}
 
-	public static GetStoreDisplaysRequest ofAction(String url) {
-		return new GetStoreDisplaysRequest(url);
+	public static GetStoreDisplaysRequest ofAction(String url, boolean bypassCache) {
+		return new GetStoreDisplaysRequest(url, bypassCache);
 	}
 
 	@Override
 	protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStoreDisplays(url, body);
+		return interfaces.getStoreDisplays(url, body, bypassCache);
 	}
 
 	@Data

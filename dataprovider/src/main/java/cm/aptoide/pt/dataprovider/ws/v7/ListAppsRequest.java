@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -22,21 +22,22 @@ public class ListAppsRequest extends V7<ListApps> {
 	private final Body body = new Body();
 	private final String url;
 
-	private ListAppsRequest() {
-		this("");
+	private ListAppsRequest(boolean bypassCache) {
+		this("", bypassCache);
 	}
 
-	private ListAppsRequest(String url) {
+	private ListAppsRequest(String url, boolean bypassCache) {
+		super(bypassCache);
 		this.url = url.replace("listApps", "");
 	}
 
-	public static ListAppsRequest ofAction(String url) {
-		return new ListAppsRequest(url);
+	public static ListAppsRequest ofAction(String url, boolean bypassCache) {
+		return new ListAppsRequest(url, bypassCache);
 	}
 
 	@Override
 	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.listApps(url, body);
+		return interfaces.listApps(url, body, bypassCache);
 	}
 
 	@Data

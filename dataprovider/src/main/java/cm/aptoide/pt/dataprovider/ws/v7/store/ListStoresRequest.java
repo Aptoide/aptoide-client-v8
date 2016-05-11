@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -22,25 +22,26 @@ public class ListStoresRequest extends V7<ListStores> {
 	private final Body body = new Body();
 	private final String url;
 
-	private ListStoresRequest() {
-		this("");
+	private ListStoresRequest(boolean bypassCache) {
+		this("", bypassCache);
 	}
 
-	private ListStoresRequest(String url) {
+	private ListStoresRequest(String url, boolean bypassCache) {
+		super(bypassCache);
 		this.url = url.replace("listStores", "");
 	}
 
-	public static ListStoresRequest of() {
-		return new ListStoresRequest();
+	public static ListStoresRequest of(boolean bypassCache) {
+		return new ListStoresRequest(bypassCache);
 	}
 
-	public static ListStoresRequest ofAction(String url) {
-		return new ListStoresRequest(url);
+	public static ListStoresRequest ofAction(String url, boolean bypassCache) {
+		return new ListStoresRequest(url, bypassCache);
 	}
 
 	@Override
 	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.listStores(url, body);
+		return interfaces.listStores(url, body, bypassCache);
 	}
 
 	@Data
