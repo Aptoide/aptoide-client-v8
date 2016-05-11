@@ -10,16 +10,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.util.Locale;
 
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSubscriptionDisplayable;
-
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -65,7 +64,7 @@ public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplay
 		);
 
 		buttonSubscribe.setOnClickListener(
-				v -> Toast.makeText(v.getContext(), "TO DO", Toast.LENGTH_SHORT).show()
+				v -> ShowMessage.show(v, "TO DO")
 		);
 
 	}

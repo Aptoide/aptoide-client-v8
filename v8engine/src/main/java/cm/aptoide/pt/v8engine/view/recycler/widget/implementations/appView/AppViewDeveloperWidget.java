@@ -8,12 +8,11 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -63,8 +62,7 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 		}
 
 		permissionsLabel.setOnClickListener(
-				v -> Toast.makeText(v.getContext(), "TO DO", Toast.LENGTH_SHORT)
-						.show()
+				v -> ShowMessage.show(v, "TO DO")
 		);
 	}
 }

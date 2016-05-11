@@ -89,7 +89,6 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 	@Override
 	public void onRegisterFail(@StringRes int reason) {
 		ShowMessage.show(content, reason);
-		Toast.makeText(SignUpActivity.this, reason, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

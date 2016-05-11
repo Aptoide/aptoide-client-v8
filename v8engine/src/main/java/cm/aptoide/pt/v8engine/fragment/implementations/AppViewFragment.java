@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -34,17 +33,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ObservableUtils;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewSubscriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSubscriptionDisplayable;
 import rx.Observable;
 
 /**
@@ -128,14 +125,15 @@ public class AppViewFragment extends GridRecyclerFragment {
 		if (i == android.R.id.home) {
 			getActivity().onBackPressed();
 			return true;
+
 		} else if (i == R.id.menu_share) {
-			Toast.makeText(getContext(), "TO DO", Toast.LENGTH_SHORT).show();
+			ShowMessage.show(item.getActionView(), "TO DO");
 
 			// TODO
 
 			return true;
 		} else if (i == R.id.menu_schedule) {
-			Toast.makeText(getContext(), "TO DO", Toast.LENGTH_SHORT).show();
+			ShowMessage.show(item.getActionView(), "TO DO");
 
 			// TODO
 			return true;
