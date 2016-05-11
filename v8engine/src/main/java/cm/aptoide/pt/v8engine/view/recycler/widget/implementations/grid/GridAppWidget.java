@@ -15,8 +15,10 @@ import com.bumptech.glide.Glide;
 
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.StringUtils;
+import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -54,6 +56,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 	@Override
 	public void bindView(GridAppDisplayable displayable) {
 		final App pojo = displayable.getPojo();
+		final long appId = pojo.getId();
 
 		Glide.with(V8Engine.getContext()).load(pojo.getIcon()).into(icon);
 
@@ -63,5 +66,14 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
 		tvAddedTime.setText(pojo.getAdded());
+
+		itemView.setOnClickListener(
+				v -> {
+					// FIXME
+					((MainActivityFragment)v.getContext()).showFragment(
+							AppViewFragment.newInstance(appId)
+					);
+				}
+		);
 	}
 }

@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine;
 
 import android.support.v4.app.Fragment;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
@@ -18,7 +20,16 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity {
 
 	@Override
 	protected Fragment createFragment() {
-		return HomeFragment.newInstance(V8Engine.getConfiguration()
-				.getDefaultStore(), StoreContext.home);
+		return HomeFragment
+				.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home);
+	}
+
+	private AtomicInteger atomicInt = new AtomicInteger(0);
+
+	public void showFragment(Fragment fragment) {
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment_placeholder, fragment)
+				.addToBackStack("fragment_" + atomicInt.incrementAndGet())
+				.commit();
 	}
 }

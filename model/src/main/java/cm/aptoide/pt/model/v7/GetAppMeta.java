@@ -105,9 +105,10 @@ public class GetAppMeta extends BaseV7Response {
 			public static final String TRUSTED = "TRUSTED";
 			public static final String WARNING = "WARNING";
 			public static final String UNKNOWN = "UNKNOWN";
-			private static final String PASSED = "passed";
-			private static final String WARN = "warn";
-			private static final String GOOGLE_PLAY = "Google Play";
+
+			public static final String PASSED = "passed";
+			public static final String WARN = "warn";
+			public static final String GOOGLE_PLAY = "Google Play";
 
 			private String rank;
 			private GetAppMetaFile.Malware.Reason reason;

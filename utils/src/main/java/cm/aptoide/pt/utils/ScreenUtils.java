@@ -9,6 +9,8 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import cm.aptoide.pt.logger.Logger;
+
 /**
  * Created by neuro on 14-04-2016.
  */
@@ -31,6 +33,45 @@ public final class ScreenUtils {
 		}
 
 		return screenWidthInDipCache.value;
+	}
+
+
+
+	public static String screenshotToThumb(Context context, String imageUrl, String orientation) {
+
+		String screen = null;
+
+		try {
+
+			if (imageUrl.contains("_screen")) {
+
+				String sizeString = IconSizeUtils.generateSizeStringScreenshots(context, orientation);
+
+				String[] splitUrl = imageUrl.split("\\.(?=[^\\.]+$)");
+				screen = splitUrl[0] + "_" + sizeString + "." + splitUrl[1];
+
+			} else {
+
+				String[] splitString = imageUrl.split("/");
+				StringBuilder db = new StringBuilder();
+				for (int i = 0; i != splitString.length - 1; i++) {
+					db.append(splitString[i]);
+					db.append("/");
+				}
+
+				db.append("thumbs/mobile/");
+				db.append(splitString[splitString.length - 1]);
+				screen = db.toString();
+			}
+
+		} catch (Exception e) {
+			Logger.printException(e);
+			// FIXME uncomment the following lines
+			//Crashlytics.setString("imageUrl", imageUrl);
+			//Crashlytics.logException(e);
+		}
+
+		return screen;
 	}
 
 	private static class ScreenUtilsCache {

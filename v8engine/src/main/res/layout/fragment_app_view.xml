@@ -11,8 +11,8 @@
     android:fitsSystemWindows="true"
     >
 
-    <include layout="@layout/partial_app_view_collapsing_toolbar"/>
-
     <include layout="@layout/recycler_fragment" />
+
+    <include layout="@layout/partial_app_view_collapsing_toolbar" />
 
 </android.support.design.widget.CoordinatorLayout>

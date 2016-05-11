@@ -80,8 +80,8 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
-			savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
 		View root = super.onCreateView(inflater, container, savedInstanceState);
 		header = new AppViewHeader(root);
 		setHasOptionsMenu(true);
@@ -91,7 +91,8 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh) {
 		if (refresh) {
-			loadAppInfo((int) appId).compose(ObservableUtils.applySchedulers())
+			loadAppInfo((int) appId)
+					.compose(ObservableUtils.applySchedulers())
 					.subscribe(this::showAppInfo);
 		}
 	}
