@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 30/04/2016.
+  ~ Modified by Neurophobic Animal on 11/05/2016.
   -->
 
 <LinearLayout
@@ -56,8 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
             android:ellipsize="end"
+            android:gravity="center_horizontal"
             android:maxLines="1"
             android:padding="4dp"
             android:singleLine="true"
@@ -67,7 +66,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/store_layout_subscribers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -76,6 +74,7 @@
             android:paddingTop="4dp">
 
             <LinearLayout
+                android:id="@+id/store_layout_subscribers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -84,8 +83,8 @@
 
 
                 <!-- DELETED android:background="@drawable/user" BECAUSE user.xml IS STILL a VectorDrawable
-                    will be re-added when converted to vectorAsset // Vector Asset replaced with png file for compatibility
-                    issues -->
+                will be re-added when converted to vectorAsset // Vector Asset replaced with png file for compatibility
+                issues -->
                 <ImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
@@ -121,24 +120,26 @@
 
             </LinearLayout>
 
+            <!--  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview -->
+            <TextView
+                android:id="@+id/store_unsubscribe_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_corners_dark"
+                android:drawableLeft="@drawable/ic_close_white"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:padding="6dp"
+                android:text="Unsubscribe"
+                android:textColor="?attr/storesTextColor"
+                android:textSize="12sp"/>
+
         </RelativeLayout>
 
 
         <!--  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview -->
-        <TextView
-            android:id="@+id/store_unsubscribe_row"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/rounded_corners_dark"
-            android:drawableLeft="@drawable/ic_close_white"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:padding="6dp"
-            android:text="Unsubscribe"
-            android:textColor="?attr/storesTextColor"
-            android:textSize="12sp"/>
-
     </LinearLayout>
 </LinearLayout>

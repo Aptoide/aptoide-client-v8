@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -19,14 +19,18 @@ public class Event {
 
 	public enum Type {
 		API,
-		v3,
+		CLIENT
 	}
 
 	public enum Name {
+		// Api
 		listApps,
 		getStore,
 		getStoreWidgets,
 		getReviews,
 		getApkComments,
+
+		// Client
+		myStores
 	}
 }

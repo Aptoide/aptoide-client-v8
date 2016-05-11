@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -62,11 +62,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			args.putString(BundleCons.NAME, event.getName().toString());
 		}
 		args.putString(BundleCons.TITLE, title);
-
-		// todo: apagar martelada!
-		if (event.getAction() != null && event.getAction().contains("getStore")) {
-			event.setAction(event.getAction().replace("context/store", "context/home"));
-		}
 		args.putString(BundleCons.ACTION, event.getAction());
 		return args;
 	}
