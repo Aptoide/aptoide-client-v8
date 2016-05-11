@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -15,9 +15,9 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 /**
  * Created by neuro on 14-04-2016.
  */
-public class Aptoide extends DataProvider {
+public abstract class V8Engine extends DataProvider {
 
-	private static final String TAG = Aptoide.class.getName();
+	private static final String TAG = V8Engine.class.getName();
 
 	@Override
 	public void onCreate() {

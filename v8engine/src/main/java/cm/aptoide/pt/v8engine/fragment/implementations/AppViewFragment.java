@@ -34,14 +34,18 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ObservableUtils;
 import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSubscriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewDescriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewSubscriptionDisplayable;
 import rx.Observable;
 
 /**
@@ -218,18 +222,18 @@ public class AppViewFragment extends GridRecyclerFragment {
 		public void setup(@NonNull GetAppMeta.App pojo) {
 
 			if (pojo.getGraphic() != null) {
-				Glide.with(Aptoide.getContext()).load(pojo.getGraphic()).into(featuredGraphic);
+				Glide.with(V8Engine.getContext()).load(pojo.getGraphic()).into(featuredGraphic);
 			}
 			/*
 			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty
 			(screenshots.get(0).url)) {
-				Glide.with(Aptoide.getContext()).load(screenshots.get(0).url).into
+				Glide.with(V8Engine.getContext()).load(screenshots.get(0).url).into
 				(mFeaturedGraphic);
 			}
 			*/
 
 			if (pojo.getIcon() != null) {
-				Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(appIcon);
+				Glide.with(V8Engine.getContext()).load(pojo.getIcon()).into(appIcon);
 			}
 
 			// TODO add placeholders in image loading
@@ -261,7 +265,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 					break;
 			}
 
-			Glide.with(Aptoide.getContext()).load(badgeResId).into(badge);
+			Glide.with(V8Engine.getContext()).load(badgeResId).into(badge);
 			badgeText.setText(badgeMessageId);
 		}
 

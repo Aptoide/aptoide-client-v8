@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.LinkedList;
 
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;

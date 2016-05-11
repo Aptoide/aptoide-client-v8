@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import cm.aptoide.pt.utils.MathUtils;
 import cm.aptoide.pt.utils.ScreenUtils;
-import cm.aptoide.pt.v8engine.Aptoide;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
@@ -39,15 +39,15 @@ public class WidgetFactory {
 
 	private static void computeColumnSize() {
 		columnSize = MathUtils.leastCommonMultiple(getDisplayablesSizes());
-		orientation = ScreenUtils.getCurrentOrientation(Aptoide.getContext());
+		orientation = ScreenUtils.getCurrentOrientation(V8Engine.getContext());
 	}
 
 	public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
 		//long nanoTime = System.nanoTime();
 		View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-		Widget widget = WidgetLoader.INSTANCE.newWidget(view, viewType);
+		Widget w = WidgetLoader.INSTANCE.newWidget(view, viewType);
 		//Log.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
-		return widget;
+		return w;
 	}
 
 	private static int[] getDisplayablesSizes() {
@@ -65,7 +65,7 @@ public class WidgetFactory {
 	}
 
 	public static int getColumnSize() {
-		if (orientation != ScreenUtils.getCurrentOrientation(Aptoide.getContext())) {
+		if (orientation != ScreenUtils.getCurrentOrientation(V8Engine.getContext())) {
 			computeColumnSize();
 		}
 

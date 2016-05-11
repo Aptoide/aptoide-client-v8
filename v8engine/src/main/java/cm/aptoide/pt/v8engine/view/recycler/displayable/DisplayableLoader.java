@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -18,7 +18,7 @@ import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.MultiDexHelper;
-import cm.aptoide.pt.v8engine.Aptoide;
+import cm.aptoide.pt.v8engine.V8Engine;
 import dalvik.system.DexFile;
 
 /**
@@ -43,7 +43,7 @@ public enum DisplayableLoader {
 			// current package name for filtering purposes
 			String packageName = getClass().getPackage().getName();
 
-			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(Aptoide
+			List<Map.Entry<String, String>> classNames = MultiDexHelper.getAllClasses(V8Engine
 					.getContext());
 
 			DexFile dexFile = null;

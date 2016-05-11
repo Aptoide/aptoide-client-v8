@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.model.v7.store;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by neuro on 27-04-2016.
@@ -32,6 +34,8 @@ public class Store {
 	}
 
 	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor()
 	public static class Appearance {
 
 		private String theme;

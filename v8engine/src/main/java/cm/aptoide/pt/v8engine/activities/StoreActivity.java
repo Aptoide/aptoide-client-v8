@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activities;
@@ -16,9 +16,9 @@ import com.astuetz.PagerSlidingTabStrip;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 
 /**
@@ -38,7 +38,7 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	}
 
 	public static Intent newIntent(String storeName, StoreContext storeContext) {
-		Intent intent = new Intent(Aptoide.getContext(), StoreActivity.class);
+		Intent intent = new Intent(V8Engine.getContext(), StoreActivity.class);
 		intent.putExtra(Extras.STORE_NAME, storeName);
 		intent.putExtra(Extras.STORE_CONTEXT, storeContext);
 		return intent;

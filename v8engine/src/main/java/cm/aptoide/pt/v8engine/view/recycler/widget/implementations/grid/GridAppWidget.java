@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by Neurophobic Animal on 10/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,9 +15,8 @@ import com.bumptech.glide.Glide;
 
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.StringUtils;
-import cm.aptoide.pt.v8engine.Aptoide;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.activities.AppViewActivity;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -28,8 +26,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
  */
 @Displayables({GridAppDisplayable.class})
 public class GridAppWidget extends Widget<GridAppDisplayable> {
-
-	//private static final String TAG = GridAppWidget.class.getName();
 
 	private TextView name;
 	private ImageView icon;
@@ -58,22 +54,14 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 	@Override
 	public void bindView(GridAppDisplayable displayable) {
 		final App pojo = displayable.getPojo();
-		final long appId = pojo.getId();
 
-		Glide.with(Aptoide.getContext()).load(pojo.getIcon()).into(icon);
+		Glide.with(V8Engine.getContext()).load(pojo.getIcon()).into(icon);
 
 		name.setText(pojo.getName());
 		downloads.setText(StringUtils.withSuffix(pojo.getStats()
-				.getDownloads()) + Aptoide.getContext().getString(R.string._downloads));
+				.getDownloads()) + V8Engine.getContext().getString(R.string._downloads));
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
 		tvAddedTime.setText(pojo.getAdded());
-
-		itemView.setOnClickListener(
-				v -> {
-					Context ctx = v.getContext();
-					ctx.startActivity(AppViewActivity.getIntent(ctx, appId));
-				}
-		);
 	}
 }

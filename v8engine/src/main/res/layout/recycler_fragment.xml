@@ -1,15 +1,11 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 09/05/2016.
+  ~ Modified by Neurophobic Animal on 11/05/2016.
   -->
 
-<FrameLayout
-    android:id="@+id/partial_view_recycler_fragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
     >
 
     <include layout="@layout/partial_view_incl_no_network"/>
@@ -18,21 +14,14 @@
 
     <include layout="@layout/partial_view_progress_bar"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingLeft="@dimen/recycler_margin"
-            android:paddingRight="@dimen/recycler_margin"/>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/recycler_margin"
+        android:paddingRight="@dimen/recycler_margin"/>
 
 </FrameLayout>
 
