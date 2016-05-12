@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -12,18 +12,15 @@ import cm.aptoide.pt.model.v7.ListSearchApps;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import lombok.experimental.Delegate;
 import rx.Observable;
 
 /**
  * Created by neuro on 26-04-2016.
  */
-public class ListSearchAppsRequest extends V7<ListSearchApps> {
-
-	@Delegate(types = Body.class) private final Body body = new Body();
+public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
 	private ListSearchAppsRequest(boolean bypassCache) {
-		super(bypassCache);
+		super(bypassCache, new Body());
 	}
 
 	public static ListSearchAppsRequest of(String query) {

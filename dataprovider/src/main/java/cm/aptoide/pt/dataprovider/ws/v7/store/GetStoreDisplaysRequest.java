@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -19,9 +19,8 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreDisplaysRequest extends V7<GetStoreDisplays> {
+public class GetStoreDisplaysRequest extends V7<GetStoreDisplays, GetStoreDisplaysRequest.Body> {
 
-	private final Body body = new Body();
 	private final String url;
 
 	private GetStoreDisplaysRequest(boolean bypassCache) {
@@ -29,7 +28,7 @@ public class GetStoreDisplaysRequest extends V7<GetStoreDisplays> {
 	}
 
 	private GetStoreDisplaysRequest(String url, boolean bypassCache) {
-		super(bypassCache);
+		super(bypassCache, new Body());
 		this.url = url.replace("getStoreDisplays", "");
 	}
 

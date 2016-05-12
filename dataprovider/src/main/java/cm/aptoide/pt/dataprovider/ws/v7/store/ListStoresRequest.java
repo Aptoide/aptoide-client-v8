@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -17,9 +17,8 @@ import rx.Observable;
 /**
  * Created by neuro on 27-04-2016.
  */
-public class ListStoresRequest extends V7<ListStores> {
+public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
-	private final Body body = new Body();
 	private final String url;
 
 	private ListStoresRequest(boolean bypassCache) {
@@ -27,7 +26,7 @@ public class ListStoresRequest extends V7<ListStores> {
 	}
 
 	private ListStoresRequest(String url, boolean bypassCache) {
-		super(bypassCache);
+		super(bypassCache, new Body());
 		this.url = url.replace("listStores", "");
 	}
 

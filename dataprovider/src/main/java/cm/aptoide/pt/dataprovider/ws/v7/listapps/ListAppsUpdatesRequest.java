@@ -34,13 +34,12 @@ import rx.schedulers.Schedulers;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListAppsUpdatesRequest extends V7<ListAppsUpdates> {
+public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesRequest.Body> {
 
 	private static final int SPLIT_SIZE = 100;
-	private final Body body = new Body();
 
 	private ListAppsUpdatesRequest(boolean bypassCache) {
-		super(bypassCache);
+		super(bypassCache, new Body());
 	}
 
 	public static ListAppsUpdatesRequest of(boolean bypassCache) {

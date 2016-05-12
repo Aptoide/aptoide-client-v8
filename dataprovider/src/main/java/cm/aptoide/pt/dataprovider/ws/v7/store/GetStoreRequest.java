@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -30,9 +30,8 @@ import rx.schedulers.Schedulers;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreRequest extends V7<GetStore> {
+public class GetStoreRequest extends V7<GetStore, GetStoreRequest.Body> {
 
-	private final Body body = new Body();
 	private final String url;
 	private boolean recursive = false;
 
@@ -41,7 +40,7 @@ public class GetStoreRequest extends V7<GetStore> {
 	}
 
 	private GetStoreRequest(String url, boolean bypassCache) {
-		super(bypassCache);
+		super(bypassCache, new Body());
 		this.url = url.replace("getStore", "");
 	}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -21,12 +21,10 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListAppVersionsRequest extends V7<ListAppVersions> {
-
-	private final Body body = new Body();
+public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsRequest.Body> {
 
 	private ListAppVersionsRequest(boolean bypassCache) {
-		super(bypassCache);
+		super(bypassCache, new Body());
 	}
 
 	public static ListAppVersionsRequest of(boolean bypassCache) {
