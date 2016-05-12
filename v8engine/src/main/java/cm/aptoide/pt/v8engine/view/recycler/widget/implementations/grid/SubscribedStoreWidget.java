@@ -31,7 +31,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
  * Created by neuro on 11-05-2016. //todo: código duplicado, se cair a reflexão, deixa de o ser.
  */
 @Displayables({SubscribedStoreDisplayable.class})
-public class UnsubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
+public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 	private static final String TAG = GridStoreWidget.class.getSimpleName();
 
@@ -41,7 +41,7 @@ public class UnsubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> 
 	private LinearLayout storeLayout;
 	private View infoLayout;
 
-	public UnsubscribedStoreWidget(View itemView) {
+	public SubscribedStoreWidget(View itemView) {
 		super(itemView);
 	}
 
