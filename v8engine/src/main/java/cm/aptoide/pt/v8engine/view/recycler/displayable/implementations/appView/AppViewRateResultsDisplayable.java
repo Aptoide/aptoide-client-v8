@@ -10,7 +10,7 @@ import cm.aptoide.pt.model.v7.Type;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewRateResultDisplayable extends AppViewDisplayable<Object> {
+public class AppViewRateResultsDisplayable extends AppViewDisplayable<Object> {
 
 	public AppViewRateResultDisplayable() {
 	}

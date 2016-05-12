@@ -24,8 +24,8 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableLoader;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import rx.Observable;
 import rx.Subscription;
@@ -42,8 +42,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	protected String title;
 	private List<Displayable> displayables;
 
-	public static StoreTabGridRecyclerFragment newInstance(Event event, String
-			title) {
+	public static StoreTabGridRecyclerFragment newInstance(Event event, String title) {
 		Bundle args = buildBundle(event, title);
 
 		StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
@@ -121,8 +120,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 					displayables = new LinkedList<>();
 					for (App app : list) {
-						displayables.add(DisplayableLoader.INSTANCE.newDisplayable(Type
-								.APPS_GROUP, app));
+						displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
 					}
 
 					setDisplayables(displayables);
