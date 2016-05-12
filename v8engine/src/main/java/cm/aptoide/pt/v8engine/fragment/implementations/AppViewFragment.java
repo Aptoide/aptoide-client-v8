@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -109,7 +109,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public int getRootViewId() {
+	public int getContentViewId() {
 		return VIEW_ID;
 	}
 
@@ -148,8 +148,8 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	protected void loadBundle(Bundle args) {
-		super.loadBundle(args);
+	public void loadExtras(Bundle args) {
+		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
 	}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -18,22 +18,22 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
 
 	protected Toolbar toolbar;
 
+	@Override
+	public void setupViews() {
+		setupToolbar();
+	}
+
 	/**
 	 * Setup the toolbar, if present.
 	 */
-	protected void setupToolbar() {
+	public void setupToolbar() {
 		if (toolbar != null) {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 		}
 	}
 
 	@Override
-	protected void setupViews() {
-		setupToolbar();
-	}
-
-	@Override
-	protected void bindViews(View view) {
+	public void bindViews(View view) {
 		super.bindViews(view);
 		toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 	}

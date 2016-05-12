@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -33,10 +33,5 @@ public class AppViewInstallDisplayable extends AppViewDisplayable<GetAppMeta.App
 	@Override
 	public int getViewLayout() {
 		return R.layout.displayable_app_view_install;
-	}
-
-	@Override
-	public int getDefaultPerLineCount() {
-		return 1;
 	}
 }

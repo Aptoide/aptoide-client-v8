@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -13,6 +13,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -32,17 +33,17 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	private ViewPager mViewPager;
 
 	@Override
-	protected void loadExtras(Bundle extras) {
+	public void loadExtras(Bundle extras) {
 
 	}
 
 	@Override
-	protected void setupViews() {
+	public void setupViews() {
 		setupNavigationView();
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupToolbar() {
 		if (mToolbar != null) {
 			setSupportActionBar(mToolbar);
 			mToolbar.setLogo(R.drawable.ic_aptoide_toolbar);
@@ -53,7 +54,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	protected int getContentViewId() {
+	public int getContentViewId() {
 		return R.layout.activity_main;
 	}
 
@@ -76,8 +77,8 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	protected void bindViews() {
-		super.bindViews();
+	public void bindViews(View view) {
+		super.bindViews(view);
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -6,7 +6,9 @@
 package cm.aptoide.pt.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.WindowManager;
 
 import cm.aptoide.pt.logger.Logger;
@@ -72,6 +74,14 @@ public final class ScreenUtils {
 		}
 
 		return screen;
+	}
+
+	public static int getPixels(Context context, int dipValue) {
+		Resources r = context.getResources();
+		int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r
+				.getDisplayMetrics());
+		Logger.d("getPixels", "" + px);
+		return px;
 	}
 
 	private static class ScreenUtilsCache {

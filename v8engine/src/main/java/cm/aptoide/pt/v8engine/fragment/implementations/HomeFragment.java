@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -39,7 +39,7 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	@Override
-	protected void setupViews() {
+	public void setupViews() {
 		super.setupViews();
 		setupNavigationView();
 	}
@@ -77,12 +77,12 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	@Override
-	public int getRootViewId() {
+	public int getContentViewId() {
 		return R.layout.activity_main;
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupToolbar() {
 		if (toolbar != null) {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
@@ -93,7 +93,7 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	@Override
-	protected void bindViews(View view) {
+	public void bindViews(View view) {
 		super.bindViews(view);
 		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
 		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);

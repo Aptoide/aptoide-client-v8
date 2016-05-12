@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ScreenshotsAdapter;
@@ -41,8 +41,8 @@ public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
 	public void bindView(AppViewImagesDisplayable displayable) {
 		final GetAppMeta.App app = displayable.getPojo();
 
-		mediaList.addItemDecoration(new DividerItemDecoration(
-				AptoideUtils.getPixels(V8Engine.getContext(), 5))
+		mediaList.addItemDecoration(new DividerItemDecoration(ScreenUtils.getPixels(V8Engine
+				.getContext(), 5))
 		);
 		mediaList.setLayoutManager(new LinearLayoutManager(
 				itemView.getContext(), LinearLayoutManager.HORIZONTAL, false)

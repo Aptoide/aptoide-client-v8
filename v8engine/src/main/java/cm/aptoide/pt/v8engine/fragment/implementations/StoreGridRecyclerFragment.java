@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -27,7 +27,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupToolbar() {
 		// It's not calling super cause it does nothing in the middle class}
 		// StoreTabGridRecyclerFragment.
 		if (toolbar != null) {
@@ -40,18 +40,18 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 	}
 
 	@Override
-	public int getRootViewId() {
+	public int getContentViewId() {
 		return R.layout.recycler_fragment_with_toolbar;
 	}
 
 	@Override
-	protected void setupViews() {
+	public void setupViews() {
 		super.setupViews();
 		setupToolbar();
 	}
 
 	@Override
-	protected void bindViews(View view) {
+	public void bindViews(View view) {
 		super.bindViews(view);
 	}
 }

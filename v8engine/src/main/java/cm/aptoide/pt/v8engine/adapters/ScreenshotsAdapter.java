@@ -18,24 +18,35 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activities.ScreenshotsViewerActivity;
+import cm.aptoide.pt.v8engine.fragment.implementations.ScreenshotsViewerFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 
 /**
  * Created by gmartinsribeiro on 01/12/15.
+ *
+ * code migrated from v7
  */
 public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.ScreenshotsViewHolder> {
 
 	private final List<GetAppMeta.Media.Video> videos;
 	private final List<GetAppMeta.Media.Screenshot> screenshots;
+	private final ArrayList<String> imageUris;
+
 	public ScreenshotsAdapter(GetAppMeta.Media media) {
 		this.videos = media.getVideos();
 		this.screenshots = media.getScreenshots();
+
+		imageUris = new ArrayList<>(screenshots.size());
+		for (GetAppMeta.Media.Screenshot screenshot : screenshots) {
+			imageUris.add(screenshot.getUrl());
+		}
 	}
 
 	@Override
@@ -58,7 +69,13 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 		} else {
 			// its a screenshot. show placeholder for screenshot
 			GetAppMeta.Media.Screenshot item = screenshots.get(position);
-			holder.bindViews(item);
+			int videosOffset = videos!=null? videos.size() : 0;
+			holder.bindViews(
+					item,
+					position - videosOffset,
+					imageUris
+
+			);
 		}
 	}
 
@@ -119,12 +136,16 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 			);
 		}
 
-		public void bindViews(GetAppMeta.Media.Screenshot item) {
+		public void bindViews(
+				GetAppMeta.Media.Screenshot item,
+				final int position,
+				final ArrayList<String> imagesUris
+		) {
 
 			Context mainContext = V8Engine.getContext();
 
 			String thumbnail =
-					AptoideUtils.UI.screenshotToThumb(
+					ScreenUtils.screenshotToThumb(
 							mainContext,
 							item.getUrl(),
 							item.getOrientation()
@@ -140,10 +161,17 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 
 			itemView.setOnClickListener(
 					v ->{
-						Intent intent = new Intent(mainContext, ScreenshotsViewerActivity.class);
-						intent.putExtra(ScreenshotsViewerActivity.URLs, item.getUrl());
-						intent.putExtra(ScreenshotsViewerActivity.POSITION, item.getUrl());
-						mainContext.startActivity(intent);
+						// FIXME
+						try {
+							((FragmentShower)v.getContext()).showFragment(
+									ScreenshotsViewerFragment.newInstance(
+											imagesUris,
+											position
+									)
+							);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 			);
 		}

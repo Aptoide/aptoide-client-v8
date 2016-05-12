@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.layouthandler;
@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ThreadUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 

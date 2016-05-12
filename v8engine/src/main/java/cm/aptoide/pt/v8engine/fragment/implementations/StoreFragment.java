@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -47,14 +47,14 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 	}
 
 	@Override
-	protected void loadBundle(Bundle args) {
-		super.loadBundle(args);
+	public void loadExtras(Bundle args) {
+		super.loadExtras(args);
 		storeName = args.getString(BundleCons.STORE_NAME);
 		storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
 	}
 
 	@Override
-	public int getRootViewId() {
+	public int getContentViewId() {
 		return R.layout.store_activity;
 	}
 
@@ -78,7 +78,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupToolbar() {
 		super.setupToolbar();
 		if (toolbar != null) {
 			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(storeName);
@@ -89,7 +89,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 	}
 
 	@Override
-	protected void bindViews(View view) {
+	public void bindViews(View view) {
 		super.bindViews(view);
 
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);

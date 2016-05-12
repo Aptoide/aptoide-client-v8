@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activities;
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -33,6 +34,8 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	private ViewPager mViewPager;
 	private GetStore getStore;
 
+	private PagerSlidingTabStrip pagerSlidingTabStrip;
+
 	public static Intent newIntent(String storeName) {
 		return newIntent(storeName, StoreContext.store);
 	}
@@ -45,17 +48,17 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	protected void loadExtras(Bundle extras) {
+	public void loadExtras(Bundle extras) {
 		storeName = extras.getString(Extras.STORE_NAME);
 		storeContext = (StoreContext) extras.get(Extras.STORE_CONTEXT);
 	}
 
 	@Override
-	protected void setupViews() {
+	public void setupViews() {
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupToolbar() {
 		if (mToolbar != null) {
 			setSupportActionBar(mToolbar);
 			getSupportActionBar().setTitle(storeName);
@@ -65,7 +68,7 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	protected int getContentViewId() {
+	public int getContentViewId() {
 		return R.layout.store_activity;
 	}
 
@@ -76,11 +79,11 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	protected void bindViews() {
-		super.bindViews();
-
+	public void bindViews(View view) {
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		mViewPager = (ViewPager) findViewById(R.id.pager);
+
+		pagerSlidingTabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
 	}
 
 	@Override
@@ -104,9 +107,6 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 		final PagerAdapter pagerAdapter = new StorePagerAdapter(getSupportFragmentManager(),
 				getStore);
 		mViewPager.setAdapter(pagerAdapter);
-
-		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById
-				(R.id.tabs);
 		if (pagerSlidingTabStrip != null) {
 			pagerSlidingTabStrip.setViewPager(mViewPager);
 		}

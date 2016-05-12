@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activities;
 
 import android.os.Bundle;
+import android.view.View;
 
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 
@@ -15,27 +16,27 @@ import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 public class SearchActivity extends AptoideBaseActivity {
 
 	@Override
-	protected void loadExtras(Bundle extras) {
+	public void bindViews(View view) {
 
 	}
 
 	@Override
-	protected void setupViews() {
+	public void loadExtras(Bundle extras) {
 
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupViews() {
 
 	}
 
 	@Override
-	protected void bindViews() {
+	public void setupToolbar() {
 
 	}
 
 	@Override
-	protected int getContentViewId() {
+	public int getContentViewId() {
 		return 0;
 	}
 
