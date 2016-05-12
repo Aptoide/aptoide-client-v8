@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.logger;
@@ -56,6 +56,12 @@ public class Logger {
 	public static void e(String TAG, String msg) {
 		if (DBG) {
 			Log.e(TAG, msg);
+		}
+	}
+
+	public static void e(String TAG, String msg, Throwable tr) {
+		if (DBG) {
+			Log.e(TAG, msg, tr);
 		}
 	}
 }

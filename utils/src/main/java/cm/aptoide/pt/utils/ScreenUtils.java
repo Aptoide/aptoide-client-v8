@@ -1,18 +1,22 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.WindowManager;
+
+import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-public class ScreenUtils {
+public final class ScreenUtils {
 
 	public static final float REFERENCE_WIDTH_DPI = 360;
 
@@ -31,6 +35,53 @@ public class ScreenUtils {
 		}
 
 		return screenWidthInDipCache.value;
+	}
+
+
+
+	public static String screenshotToThumb(Context context, String imageUrl, String orientation) {
+
+		String screen = null;
+
+		try {
+
+			if (imageUrl.contains("_screen")) {
+
+				String sizeString = IconSizeUtils.generateSizeStringScreenshots(context, orientation);
+
+				String[] splitUrl = imageUrl.split("\\.(?=[^\\.]+$)");
+				screen = splitUrl[0] + "_" + sizeString + "." + splitUrl[1];
+
+			} else {
+
+				String[] splitString = imageUrl.split("/");
+				StringBuilder db = new StringBuilder();
+				for (int i = 0; i != splitString.length - 1; i++) {
+					db.append(splitString[i]);
+					db.append("/");
+				}
+
+				db.append("thumbs/mobile/");
+				db.append(splitString[splitString.length - 1]);
+				screen = db.toString();
+			}
+
+		} catch (Exception e) {
+			Logger.printException(e);
+			// FIXME uncomment the following lines
+			//Crashlytics.setString("imageUrl", imageUrl);
+			//Crashlytics.logException(e);
+		}
+
+		return screen;
+	}
+
+	public static int getPixels(Context context, int dipValue) {
+		Resources r = context.getResources();
+		int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r
+				.getDisplayMetrics());
+		Logger.d("getPixels", "" + px);
+		return px;
 	}
 
 	private static class ScreenUtilsCache {

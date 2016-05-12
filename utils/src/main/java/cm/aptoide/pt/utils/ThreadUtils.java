@@ -14,7 +14,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 02-05-2016.
  */
-public class ThreadUtils {
+public final class ThreadUtils {
 
 	public static void runOnUiThread(Runnable runnable) {
 		Observable.just(null)

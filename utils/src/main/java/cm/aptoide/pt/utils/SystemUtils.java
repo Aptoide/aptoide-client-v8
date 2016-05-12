@@ -1,14 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
-package cm.aptoide.pt.dataprovider.util;
+package cm.aptoide.pt.utils;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -18,25 +19,32 @@ import android.view.WindowManager;
 
 import java.util.Locale;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-
 /**
  * Created by neuro on 21-04-2016.
  */
 public class SystemUtils {
 
-	private static final Context context = DataProvider.getContext();
+	public static Context context;
 
-	public static String filters() {
-		if (!ManagerPreferences.getHWSpecsFilter()) {
+	public static int getVerCode() {
+		PackageManager manager = context.getPackageManager();
+		try {
+			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+			return info.versionCode;
+		} catch (PackageManager.NameNotFoundException e) {
+			return -1;
+		}
+	}
+
+	public static String filters(boolean hwSpecsFilter) {
+		if (!hwSpecsFilter) {
 			return null;
 		}
 
 		int minSdk = getSdkVer();
 		String minScreen = Filters.Screen.values()[getScreenSize()].name()
 				.toLowerCase(Locale.ENGLISH);
-		String minGlEs = getGlEsVer();
+		String minGlEs = getGlEsVer(context);
 
 		final int density = getDensityDpi();
 
@@ -70,7 +78,7 @@ public class SystemUtils {
 				.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 	}
 
-	public static String getGlEsVer() {
+	public static String getGlEsVer(Context context) {
 		return ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
 				.getDeviceConfigurationInfo()
 				.getGlEsVersion();
@@ -119,7 +127,6 @@ public class SystemUtils {
 	}
 
 	public static String getCountryCode() {
-		Context context = DataProvider.getContext();
 		return context.getResources()
 				.getConfiguration().locale.getLanguage() + "_" + context.getResources()
 				.getConfiguration().locale.getCountry();

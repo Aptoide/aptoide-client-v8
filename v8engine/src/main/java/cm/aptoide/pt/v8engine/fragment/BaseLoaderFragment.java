@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cm.aptoide.pt.v8engine.layouthandler.LoadInterface;
+import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
 
@@ -42,7 +42,7 @@ public abstract class BaseLoaderFragment extends BaseFragment implements LoadInt
 	}
 
 	@Override
-	protected void bindViews(View view) {
+	public void bindViews(View view) {
 		if (loaderLayoutHandler != null) loaderLayoutHandler.bindViews(view);
 		if (created) {
 			finishLoading();

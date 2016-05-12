@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -20,6 +21,24 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 		.AppViewCommentsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewDescriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewImagesDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewOtherVersionsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewRateResultsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewRateThisDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewSubscriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
 		.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
@@ -28,11 +47,20 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
-		.SubscribedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDescriptionWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewImagesWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewInstallWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
+		.AppViewSubscriptionWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
@@ -64,17 +92,28 @@ public enum DisplayableType {
 
 	// appView widgets / displayables
 	APP_VIEW_COMMENTS(AppViewCommentsWidget.class, AppViewCommentsDisplayable.class),
-	/*
+
+	APP_VIEW_DESCRIPTION(AppViewDescriptionWidget.class, AppViewDescriptionDisplayable.class),
+
 	APP_VIEW_DEVELOPER(AppViewDeveloperWidget.class, AppViewDeveloperDisplayable.class),
-	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class,
-			AppViewOtherVersionsDisplayable.class),
+
+	APP_VIEW_IMAGES(AppViewImagesWidget.class, AppViewImagesDisplayable.class),
+
+	APP_VIEW_INSTALL(AppViewInstallWidget.class, AppViewInstallDisplayable.class),
+
+	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class, AppViewOtherVersionsDisplayable
+			.class),
+
 	APP_VIEW_RATE_RESULTS(AppViewRateResultsWidget.class, AppViewRateResultsDisplayable.class),
 
 	APP_VIEW_RATE_THIS(AppViewRateThisWidget.class, AppViewRateThisDisplayable.class),
-	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class,
-			AppViewSuggestedAppsDisplayable.class)
-	*/
-	;
+
+	APP_VIEW_SUBSCRIPTION(AppViewSubscriptionWidget.class, AppViewSubscriptionDisplayable.class),
+
+	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable
+			.class);
+
+	private static final String TAG = DisplayableType.class.getName();
 
 	private static List<Displayable> cachedDisplayables;
 	private Displayable displayable;
@@ -112,7 +151,8 @@ public enum DisplayableType {
 			}
 		}
 
-		throw new IllegalStateException("There's no displayable for " + type + " type!");
+		throw new IllegalStateException(String.format("There is no displayable for '%s' type",
+				type));
 	}
 
 	public static Widget newWidget(View view, int viewType) {
@@ -122,7 +162,8 @@ public enum DisplayableType {
 			}
 		}
 
-		throw new IllegalStateException("There's no widget for " + viewType + " viewType!");
+		throw new IllegalStateException(String.format("There's no widget for '%s' viewType",
+				viewType));
 	}
 
 	public static List<Displayable> getCachedDisplayables() {
@@ -134,35 +175,32 @@ public enum DisplayableType {
 			}
 			cachedDisplayables = Collections.unmodifiableList(tmp);
 		}
-
 		return cachedDisplayables;
 	}
 
 	@Nullable
 	private Widget newWidget(View view) {
-
 		Class[] cArg = new Class[1];
 		cArg[0] = View.class;
-
-		Widget resultWidget = null;
 		try {
-			resultWidget = widgetClass.getDeclaredConstructor(cArg).newInstance(view);
+			return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
 		} catch (Exception e) {
-			throw new RuntimeException("Error instantiating widget!");
+			String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName
+					());
+			Logger.e(TAG, errMsg, e);
+			throw new RuntimeException(errMsg);
 		}
-
-		return resultWidget;
 	}
 
 	@Nullable
 	public Displayable newDisplayable() {
 		try {
 			return displayableClass.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			String errMsg = String.format("Error instantiating displayable '%s'", displayableClass
+					.getName());
+			Logger.e(TAG, errMsg, e);
+			throw new RuntimeException(errMsg);
 		}
-		return null;
 	}
 }

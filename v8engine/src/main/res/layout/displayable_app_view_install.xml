@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 06/05/2016.
+  -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    >
+    <!-- progress bar while installing -->
+    <RelativeLayout
+        android:id="@+id/download_progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="7dp"
+        android:weightSum="2">
+
+        <CheckBox
+            android:id="@+id/btinstallshare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:checked="true"
+            android:text="@string/share_on_timeline"
+            android:textColor="@color/separators_grey"
+            />
+
+
+        <ProgressBar
+            android:id="@+id/downloading_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btinstallshare"
+            android:layout_toLeftOf="@+id/actionContainer"
+            android:indeterminate="true"
+            />
+
+        <TextView
+            android:id="@+id/text_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/btinstallshare"
+            android:layout_toLeftOf="@+id/actionContainer"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            tools:text="80%"
+            android:textColor="@color/default_color"
+            />
+
+        <LinearLayout
+            android:id="@+id/actionContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            >
+
+            <ImageView
+                android:id="@+id/ic_action_resume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:padding="5dp"
+                android:src="?attr/icPlayDrawable"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/ic_action_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:padding="5dp"
+                android:src="?attr/icCancelDrawable"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!-- install latest version buttons -->
+    <LinearLayout
+        android:id="@+id/install_and_latest_version_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:weightSum="2"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:id="@+id/latestversion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_latest_version"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:maxWidth="70dp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/appview_latest_version_text"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_get_latest"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_border_orange"
+            android:gravity="center"
+            android:text="@string/get_latest"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textColor="@drawable/button_border_orange"
+            android:textSize="12sp"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/btn_uninstall"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_border_orange"
+            android:gravity="center"
+            android:text="@string/uninstall"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textColor="@drawable/button_border_orange"
+            android:textSize="12sp"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/btn_install"
+            style="?attr/customButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/install"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

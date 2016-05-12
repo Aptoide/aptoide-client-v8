@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -66,7 +66,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	protected void loadBundle(Bundle args) {
+	public void loadExtras(Bundle args) {
 		if (args.containsKey(BundleCons.TYPE)) {
 			type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
 		}
@@ -179,7 +179,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupToolbar() {
 
 	}
 
