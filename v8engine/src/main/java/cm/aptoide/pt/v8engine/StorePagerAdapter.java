@@ -23,6 +23,8 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
  */
 public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
+	protected static String KEY = "PqLnMn1DStY2ibbUzeeu";
+
 	private final List<GetStoreTabs.Tab> tabs;
 
 	public StorePagerAdapter(FragmentManager fm, GetStore getStore) {

@@ -5,9 +5,16 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'io.fabric'
 
 retrolambda {
     jvmArgs '-noverify'
+}
+
+crashlytics {
+    enableNdk true
+    androidNdkOut 'src/main/obj'
+    androidNdkLibsOut 'src/main/libs'
 }
 
 android {
@@ -72,7 +79,22 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
+    /*
+    // Crashlytics Kit
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true
+    }
+    // NDK Kit
+    compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
+        transitive = true
+    }
+    */
+
     // Internal dependencies
+
+    debugCompile project(path: ':database', configuration: 'debug')
+    releaseCompile project(path: ':database', configuration: 'release')
+
     debugCompile project(path: ':dataprovider', configuration: 'debug')
     releaseCompile project(path: ':dataprovider', configuration: 'release')
 

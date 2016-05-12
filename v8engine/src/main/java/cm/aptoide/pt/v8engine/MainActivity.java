@@ -26,6 +26,8 @@ import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
 
 public class MainActivity extends AptoideBaseLoaderActivity {
 
+	protected static String KEY = "42FA3NWpcGKYGAl6az2F";
+
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private Toolbar mToolbar;
 	private DrawerLayout mDrawerLayout;
