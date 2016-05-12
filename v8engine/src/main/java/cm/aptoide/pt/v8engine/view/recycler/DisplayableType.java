@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -20,6 +20,16 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 		.AppViewCommentsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewOtherVersionsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewRateResultsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewRateThisDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
+		.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
 		.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
@@ -33,6 +43,13 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
+		.AppViewOtherVersionsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
+		.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
@@ -64,17 +81,14 @@ public enum DisplayableType {
 
 	// appView widgets / displayables
 	APP_VIEW_COMMENTS(AppViewCommentsWidget.class, AppViewCommentsDisplayable.class),
-	/*
 	APP_VIEW_DEVELOPER(AppViewDeveloperWidget.class, AppViewDeveloperDisplayable.class),
-	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class,
-			AppViewOtherVersionsDisplayable.class),
+	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class, AppViewOtherVersionsDisplayable
+			.class),
 	APP_VIEW_RATE_RESULTS(AppViewRateResultsWidget.class, AppViewRateResultsDisplayable.class),
 
 	APP_VIEW_RATE_THIS(AppViewRateThisWidget.class, AppViewRateThisDisplayable.class),
-	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class,
-			AppViewSuggestedAppsDisplayable.class)
-	*/
-	;
+	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable
+			.class);
 
 	private static List<Displayable> cachedDisplayables;
 	private Displayable displayable;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 11/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -171,7 +171,8 @@ public class IconSizeUtils {
 
 		//Log.d("Aptoide-IconSize", "Size is " + size + " baseline is " + baseLineScreenshotPort + " with multiplier " +densityMultiplier );
 
-		return size+"x"+AptoideUtils.HWSpecifications.getDensityDpi(context);
+		SystemUtils.context = context;
+		return size + "x" + SystemUtils.getDensityDpi();
 	}
 
 

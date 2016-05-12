@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 11/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.adapters;
@@ -20,8 +20,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import cm.aptoide.pt.dataprovider.util.AptoideUtils;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activities.ScreenshotsViewerActivity;
@@ -30,6 +30,47 @@ import cm.aptoide.pt.v8engine.activities.ScreenshotsViewerActivity;
  * Created by gmartinsribeiro on 01/12/15.
  */
 public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.ScreenshotsViewHolder> {
+
+	private final List<GetAppMeta.Media.Video> videos;
+	private final List<GetAppMeta.Media.Screenshot> screenshots;
+	public ScreenshotsAdapter(GetAppMeta.Media media) {
+		this.videos = media.getVideos();
+		this.screenshots = media.getScreenshots();
+	}
+
+	@Override
+	public ScreenshotsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View inflate =
+				LayoutInflater
+						.from(V8Engine.getContext())
+						.inflate(R.layout.row_item_screenshots_gallery, parent, false);
+
+		return new ScreenshotsViewHolder(inflate);
+	}
+
+	@Override
+	public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
+
+		if(videos!=null && position<videos.size()) {
+			// its a video. show placeholder for video
+			GetAppMeta.Media.Video item = videos.get(position);
+			holder.bindViews(item);
+		} else {
+			// its a screenshot. show placeholder for screenshot
+			GetAppMeta.Media.Screenshot item = screenshots.get(position);
+			holder.bindViews(item);
+		}
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		return super.getItemViewType(position);
+	}
+
+	@Override
+	public int getItemCount() {
+		return (videos!=null? videos.size() : 0) + (screenshots!=null? screenshots.size() : 0);
+	}
 
 	public static class ScreenshotsViewHolder  extends RecyclerView.ViewHolder {
 
@@ -116,47 +157,6 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 			}
 			return id;
 		}
-	}
-
-	private final List<GetAppMeta.Media.Video> videos;
-	private final List<GetAppMeta.Media.Screenshot> screenshots;
-
-	public ScreenshotsAdapter(GetAppMeta.Media media) {
-		this.videos = media.getVideos();
-		this.screenshots = media.getScreenshots();
-	}
-	@Override
-	public ScreenshotsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View inflate =
-				LayoutInflater
-						.from(V8Engine.getContext())
-						.inflate(R.layout.row_item_screenshots_gallery, parent, false);
-
-		return new ScreenshotsViewHolder(inflate);
-	}
-
-	@Override
-	public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
-
-		if(videos!=null && position<videos.size()) {
-			// its a video. show placeholder for video
-			GetAppMeta.Media.Video item = videos.get(position);
-			holder.bindViews(item);
-		} else {
-			// its a screenshot. show placeholder for screenshot
-			GetAppMeta.Media.Screenshot item = screenshots.get(position);
-			holder.bindViews(item);
-		}
-	}
-
-	@Override
-	public int getItemViewType(int position) {
-		return super.getItemViewType(position);
-	}
-
-	@Override
-	public int getItemCount() {
-		return (videos!=null? videos.size() : 0) + (screenshots!=null? screenshots.size() : 0);
 	}
 
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -14,6 +14,14 @@ import cm.aptoide.pt.v8engine.R;
 public class AppViewCommentsDisplayable extends AppViewDisplayable<Object> {
 
 	public AppViewCommentsDisplayable() {
+	}
+
+	public AppViewCommentsDisplayable(Object app) {
+		super(app);
+	}
+
+	public AppViewCommentsDisplayable(Object pojo, boolean fixedPerLineCount) {
+		super(pojo, fixedPerLineCount);
 	}
 
 	@Override
