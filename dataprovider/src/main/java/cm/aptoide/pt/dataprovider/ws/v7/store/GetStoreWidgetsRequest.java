@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -19,43 +19,42 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreWidgetsRequest extends V7<GetStoreWidgets> {
+public class GetStoreWidgetsRequest extends V7<GetStoreWidgets, GetStoreWidgetsRequest.Body> {
 
-	private final Body body = new Body();
 	private final String url;
 
-	private GetStoreWidgetsRequest() {
-		this("");
+	private GetStoreWidgetsRequest(boolean bypassCache) {
+		this("", bypassCache);
 	}
 
-	private GetStoreWidgetsRequest(String url) {
+	private GetStoreWidgetsRequest(String url, boolean bypassCache) {
+		super(bypassCache, new Body());
 		this.url = url.replace("getStoreWidgets", "");
 	}
 
-
-	public static GetStoreWidgetsRequest of(String storeName) {
-		GetStoreWidgetsRequest getStoreDisplaysRequest = new GetStoreWidgetsRequest();
+	public static GetStoreWidgetsRequest of(String storeName, boolean bypassCache) {
+		GetStoreWidgetsRequest getStoreDisplaysRequest = new GetStoreWidgetsRequest(bypassCache);
 
 		getStoreDisplaysRequest.body.setStoreName(storeName);
 
 		return getStoreDisplaysRequest;
 	}
 
-	public static GetStoreWidgetsRequest of(int storeId) {
-		GetStoreWidgetsRequest getStoreDisplaysRequest = new GetStoreWidgetsRequest();
+	public static GetStoreWidgetsRequest of(int storeId, boolean bypassCache) {
+		GetStoreWidgetsRequest getStoreDisplaysRequest = new GetStoreWidgetsRequest(bypassCache);
 
 		getStoreDisplaysRequest.body.setStoreId(storeId);
 
 		return getStoreDisplaysRequest;
 	}
 
-	public static GetStoreWidgetsRequest ofAction(String url) {
-		return new GetStoreWidgetsRequest(url);
+	public static GetStoreWidgetsRequest ofAction(String url, boolean bypassCache) {
+		return new GetStoreWidgetsRequest(url, bypassCache);
 	}
 
 	@Override
 	protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStoreWidgets(url, body);
+		return interfaces.getStoreWidgets(url, body, bypassCache);
 	}
 
 	@Data

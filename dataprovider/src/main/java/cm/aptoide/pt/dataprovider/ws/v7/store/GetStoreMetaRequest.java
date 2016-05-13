@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -18,23 +18,22 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreMetaRequest extends V7<GetStoreMeta> {
+public class GetStoreMetaRequest extends V7<GetStoreMeta, GetStoreMetaRequest.Body> {
 
-	private final Body body = new Body();
-
-	private GetStoreMetaRequest() {
+	private GetStoreMetaRequest(boolean bypassCache) {
+		super(bypassCache, new Body());
 	}
 
-	public static GetStoreMetaRequest of(String storeName) {
-		GetStoreMetaRequest getStoreRequest = new GetStoreMetaRequest();
+	public static GetStoreMetaRequest of(String storeName, boolean bypassCache) {
+		GetStoreMetaRequest getStoreRequest = new GetStoreMetaRequest(bypassCache);
 
 		getStoreRequest.body.setStoreName(storeName);
 
 		return getStoreRequest;
 	}
 
-	public static GetStoreMetaRequest of(int storeId) {
-		GetStoreMetaRequest getStoreRequest = new GetStoreMetaRequest();
+	public static GetStoreMetaRequest of(int storeId, boolean bypassCache) {
+		GetStoreMetaRequest getStoreRequest = new GetStoreMetaRequest(bypassCache);
 
 		getStoreRequest.body.setStoreId(storeId);
 
@@ -43,7 +42,7 @@ public class GetStoreMetaRequest extends V7<GetStoreMeta> {
 
 	@Override
 	protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStoreMeta(body);
+		return interfaces.getStoreMeta(body, bypassCache);
 	}
 
 	@Data

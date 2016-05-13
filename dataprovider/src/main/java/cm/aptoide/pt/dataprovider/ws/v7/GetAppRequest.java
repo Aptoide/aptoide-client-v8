@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -20,16 +20,18 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetAppRequest extends V7<GetApp> {
+public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
-	private final Body body = new Body();
-
-	private GetAppRequest() {
-
+	private GetAppRequest(boolean bypassCache) {
+		super(bypassCache, new Body());
 	}
 
 	public static GetAppRequest of(int appId) {
-		GetAppRequest getAppRequest = new GetAppRequest();
+		return of(appId, false);
+	}
+
+	public static GetAppRequest of(int appId, boolean bypassCache) {
+		GetAppRequest getAppRequest = new GetAppRequest(bypassCache);
 
 		getAppRequest.body.appId = appId;
 
@@ -38,7 +40,7 @@ public class GetAppRequest extends V7<GetApp> {
 
 	@Override
 	protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getApp(body);
+		return interfaces.getApp(body, bypassCache);
 	}
 
 	public enum AppNodes {

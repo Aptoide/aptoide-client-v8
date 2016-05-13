@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
-package cm.aptoide.pt.dataprovider.ws.v7.dynamicget;
+package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.NonNull;
 
 import java.util.concurrent.CountDownLatch;
 
-import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -24,8 +22,7 @@ import rx.schedulers.Schedulers;
  */
 public class WSWidgetsUtils {
 
-	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch
-			countDownLatch, Action1<Throwable> action1) {
+	public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget, CountDownLatch countDownLatch, boolean refresh, Action1<Throwable> action1) {
 
 		if (isKnownType(wsWidget.getType())) {
 
@@ -36,17 +33,17 @@ public class WSWidgetsUtils {
 			}
 			switch (wsWidget.getType()) {
 				case APPS_GROUP:
-					ioScheduler(ListAppsRequest.ofAction(url)
+					ioScheduler(ListAppsRequest.ofAction(url, refresh)
 							.observe()).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				case STORES_GROUP:
-					ioScheduler(ListStoresRequest.ofAction(url)
+					ioScheduler(ListStoresRequest.ofAction(url, refresh)
 							.observe()).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				case DISPLAYS:
-					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
+					ioScheduler(GetStoreDisplaysRequest.ofAction(url, refresh)
 							.observe()).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;

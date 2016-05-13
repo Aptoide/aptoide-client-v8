@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -66,7 +66,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 	@Override
 	public void load(boolean refresh) {
 		if (refresh) {
-			GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
+			GetStoreRequest.of(storeName, storeContext, refresh).execute((getStore) -> {
 				this.getStore = getStore;
 				setupViewPager(getStore);
 			}, (throwable) -> {

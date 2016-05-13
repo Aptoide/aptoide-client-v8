@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cm.aptoide.accountmanager">
+<manifest package="cm.aptoide.accountmanager"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -24,14 +24,7 @@
         <activity android:name=".MyAccountActivity"/>
 
         <activity android:name=".SignUpActivity"/>
-        <service android:name=".services.AccountAuthenticatorService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator"/>
-        </service>
+
     </application>
 
 </manifest>

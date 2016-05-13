@@ -42,10 +42,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 	protected Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String
 			accountType, String authTokenType, Bundle options) {
 		Intent intent = new Intent(Application.getContext(), LoginActivity.class);
-		intent.putExtra(AptoideAccountManager.ARG_ACCOUNT_TYPE, accountType);
-		intent.putExtra(AptoideAccountManager.ARG_AUTH_TYPE, authTokenType);
-		intent.putExtra(AptoideAccountManager.ARG_IS_ADDING_NEW_ACCOUNT, true);
-		intent.putExtra(AptoideAccountManager.ARG_OPTIONS_BUNDLE, options);
+		intent.putExtra(Constants.ARG_ACCOUNT_TYPE, accountType);
+		intent.putExtra(Constants.ARG_AUTH_TYPE, authTokenType);
+		intent.putExtra(Constants.ARG_IS_ADDING_NEW_ACCOUNT, true);
+		intent.putExtra(Constants.ARG_OPTIONS_BUNDLE, options);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 		return intent;
 	}
@@ -81,7 +81,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
 		// If the caller requested an authToken type we don't support, then
 		// return an error
-		if (!authTokenType.equals(AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+		if (!authTokenType.equals(Constants.AUTHTOKEN_TYPE_FULL_ACCESS)) {
 			final Bundle result = new Bundle();
 			result.putString(AccountManager.KEY_ERROR_MESSAGE, INVALID_AUTH_TOKEN_TYPE);
 			return result;
@@ -115,10 +115,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
 	@Override
 	public String getAuthTokenLabel(String authTokenType) {
-		if (AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
-			return AptoideAccountManager.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
-		else if (AptoideAccountManager.AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
-			return AptoideAccountManager.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+		if (Constants.AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
+			return Constants.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+		else if (Constants.AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
+			return Constants.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
 		else return authTokenType + " (Label)";
 	}
 

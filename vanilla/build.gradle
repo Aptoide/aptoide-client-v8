@@ -15,7 +15,6 @@ android {
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId "cm.aptoide.pt.aptoideclientv8"
         targetSdkVersion 23
         versionCode 1
         versionName "8.0.0"
@@ -33,19 +32,20 @@ android {
     productFlavors {
         // Define separate dev and prod product flavors.
         dev {
+            applicationId "cm.aptoide.pt.aptoideclientv8"
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
             minSdkVersion 21
-
+            resValue "string", "authenticatorAccountType", applicationId
             // Enabling multidex support.
 //            multiDexEnabled true
         }
         prod {
             // The actual minSdkVersion for the application.
            minSdkVersion 15
-
             applicationId "cm.aptoide.pt"
+            resValue "string", "authenticatorAccountType", applicationId
         }
     }
 
