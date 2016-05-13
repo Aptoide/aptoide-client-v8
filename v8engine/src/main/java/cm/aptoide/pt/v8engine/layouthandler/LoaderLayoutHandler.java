@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.layouthandler;
@@ -9,12 +9,11 @@ import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.net.SocketTimeoutException;
-
-import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
+import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ThreadUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -62,9 +61,7 @@ public class LoaderLayoutHandler {
 		progressBar.setVisibility(View.GONE);
 		viewToShowAfterLoading.setVisibility(View.GONE);
 
-		if (throwable instanceof NoNetworkConnectionException || (throwable.getCause() != null &&
-				throwable
-				.getCause() instanceof SocketTimeoutException)) {
+		if (ErrorUtils.isNoNetworkConnection(throwable)) {
 			genericErrorView.setVisibility(View.GONE);
 			noNetworkConnectionView.setVisibility(View.VISIBLE);
 			retryNoNetworkView.setOnClickListener(view -> {

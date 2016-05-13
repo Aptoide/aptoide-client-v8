@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 11/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -12,9 +12,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.Iterator;
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 
 /**
  * Created by neuro on 28-04-2016.
@@ -41,8 +43,30 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		return StoreTabGridRecyclerFragment.newInstance(tabs.get(position)
-				.getEvent(), tabs.get(position).getLabel());
+
+		Event event = tabs.get(position).getEvent();
+
+		switch (event.getType()) {
+			case API:
+				return StoreTabGridRecyclerFragment.newInstance(event, tabs.get(position)
+						.getLabel());
+			case CLIENT:
+				return caseClient(event);
+			default:
+				// Safe to throw exception as the tab should be filtered prior to getting here.
+				throw new RuntimeException("Fragment type not implemented!");
+		}
+	}
+
+	private Fragment caseClient(Event event) {
+		switch (event.getName()) {
+			case myStores:
+				return SubscribedStoresFragment.newInstance();
+
+			default:
+				// Safe to throw exception as the tab should be filtered prior to getting here.
+				throw new RuntimeException("Fragment type not implemented!");
+		}
 	}
 
 	@Override

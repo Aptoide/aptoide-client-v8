@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -8,18 +8,23 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.util.ObservableUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.dynamicget.WSWidgetsUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import rx.Observable;
@@ -37,8 +42,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	protected String title;
 	private List<Displayable> displayables;
 
-	public static StoreTabGridRecyclerFragment newInstance(Event event, String
-			title) {
+	public static StoreTabGridRecyclerFragment newInstance(Event event, String title) {
 		Bundle args = buildBundle(event, title);
 
 		StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
@@ -57,17 +61,12 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			args.putString(BundleCons.NAME, event.getName().toString());
 		}
 		args.putString(BundleCons.TITLE, title);
-
-		// todo: apagar martelada!
-		if (event.getAction() != null && event.getAction().contains("getStore")) {
-			event.setAction(event.getAction().replace("context/store", "context/home"));
-		}
 		args.putString(BundleCons.ACTION, event.getAction());
 		return args;
 	}
 
 	@Override
-	protected void loadBundle(Bundle args) {
+	public void loadExtras(Bundle args) {
 		if (args.containsKey(BundleCons.TYPE)) {
 			type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
 		}
@@ -86,11 +85,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			// todo: não é redundante? se não existe nem devia chegar aqui.. hmm..
 			if (name != null) {
 				switch (name) {
+					case listApps:
+						caseListApps(url, refresh);
+						break;
 					case getStore:
-						caseGetStore(url);
+						caseGetStore(url, refresh);
 						break;
 					case getStoreWidgets:
-						caseGetStoreWidgets(url);
+						caseGetStoreWidgets(url, refresh);
 						break;
 					case getReviews:
 						//todo
@@ -108,8 +110,25 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 	}
 
-	private Subscription caseGetStore(String url) {
-		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url).observe())
+	private Subscription caseListApps(String url, boolean refresh) {
+		return ObservableUtils.retryOnTicket(ListAppsRequest.ofAction(url, refresh).observe())
+				.observeOn(Schedulers.io())
+				.subscribe(listApps -> {
+
+					// Load sub nodes
+					List<App> list = listApps.getDatalist().getList();
+
+					displayables = new LinkedList<>();
+					for (App app : list) {
+						displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
+					}
+
+					setDisplayables(displayables);
+				}, throwable -> finishLoading(throwable));
+	}
+
+	private Subscription caseGetStore(String url, boolean refresh) {
+		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url, refresh).observe())
 				.observeOn(Schedulers.io())
 				.subscribe(getStore -> {
 
@@ -121,8 +140,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
 					Observable.from(list)
-							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-									countDownLatch, throwable -> finishLoading(throwable)));
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> finishLoading(throwable)));
 
 					try {
 						countDownLatch.await(5, TimeUnit.SECONDS);
@@ -135,8 +153,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				}, throwable -> finishLoading(throwable));
 	}
 
-	private Subscription caseGetStoreWidgets(String url) {
-		return ObservableUtils.retryOnTicket(GetStoreWidgetsRequest.ofAction(url).observe())
+	private Subscription caseGetStoreWidgets(String url, boolean refresh) {
+		return ObservableUtils.retryOnTicket(GetStoreWidgetsRequest.ofAction(url, refresh)
+				.observe())
 				.observeOn(Schedulers.io())
 				.subscribe(getStoreWidgets -> {
 
@@ -145,8 +164,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
 					Observable.from(list)
-							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-									countDownLatch, throwable -> finishLoading(throwable)));
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> finishLoading(throwable)));
 
 					try {
 						countDownLatch.await();
@@ -160,7 +178,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	protected void setupToolbar() {
+	public void setupToolbar() {
 
 	}
 

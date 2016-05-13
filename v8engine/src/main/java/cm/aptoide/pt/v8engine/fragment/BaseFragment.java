@@ -1,22 +1,23 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements Lifecycle {
 
 	private final String TAG = getClass().getSimpleName();
 
@@ -24,14 +25,14 @@ public abstract class BaseFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			loadBundle(getArguments());
+			loadExtras(getArguments());
 		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
 			savedInstanceState) {
-		return inflater.inflate(getRootViewId(), container, false);
+		return inflater.inflate(getContentViewId(), container, false);
 	}
 
 	@Override
@@ -46,16 +47,18 @@ public abstract class BaseFragment extends Fragment {
 	 *
 	 * @param args {@link #getArguments()}
 	 */
-	protected void loadBundle(Bundle args) {
+	@Override
+	public void loadExtras(Bundle args) {
+		// optional method
 	}
-
-	@LayoutRes
-	public abstract int getRootViewId();
-
-	protected abstract void bindViews(View view);
 
 	/**
 	 * Setup previously binded views.
 	 */
-	protected abstract void setupViews();
+	public abstract void setupViews();
+
+	@Override
+	public void setupToolbar() {
+		// optional method
+	}
 }

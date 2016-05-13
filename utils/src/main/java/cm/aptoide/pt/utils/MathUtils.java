@@ -16,7 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by neuro on 14-04-2016.
  */
-public class MathUtils {
+public final class MathUtils {
 
 	public static int greatestCommonDivisor(int a, int b) {
 		while (b > 0) {

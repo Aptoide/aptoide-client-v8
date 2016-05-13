@@ -1,22 +1,29 @@
 /*
  * Copyright (c) 2016.
+<<<<<<< HEAD
+ * Modified by SithEngineer on 09/05/2016.
+=======
  * Modified by Neurophobic Animal on 10/05/2016.
+>>>>>>> develop
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.support.annotation.LayoutRes;
 
+import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.model.Model;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
+
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 14-04-2016.
  */
+@Ignore
 @Accessors(chain = true)
 public abstract class Displayable {
 

@@ -27,7 +27,7 @@ import dalvik.system.DexFile;
  * @author xudshen@hotmail.com
  * @author SithEngineer
  */
-public class MultiDexHelper {
+public final class MultiDexHelper {
 
 	public static final String EXTRACTED_SUFFIX = ".zip";
 	private static final String EXTRACTED_NAME_EXT = ".classes";

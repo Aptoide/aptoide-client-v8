@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -8,8 +8,9 @@ package cm.aptoide.pt.v8engine.activity;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.view.View;
 
-import cm.aptoide.pt.v8engine.layouthandler.LoadInterface;
+import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 
 /**
@@ -28,8 +29,8 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity impl
 	}
 
 	@Override
-	protected void bindViews() {
-		loaderLayoutHandler.bindViews(getView());
+	public void bindViews(View view) {
+		loaderLayoutHandler.bindViews(view);
 	}
 
 	@NonNull

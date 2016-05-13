@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 06/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.displayable;
+package cm.aptoide.pt.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

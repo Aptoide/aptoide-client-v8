@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+<<<<<<< HEAD
+ * Modified by SithEngineer on 10/05/2016.
+=======
+ * Modified by Neurophobic Animal on 11/05/2016.
+>>>>>>> develop
  */
 
 package cm.aptoide.pt.model.v7;
@@ -13,16 +17,40 @@ import lombok.Getter;
  * Created by neuro on 06-05-2016.
  */
 public enum Type {
-	_EMPTY(1), // FIXME for tests only
+	_EMPTY, // FIXME for tests only
+
+	// Server
 	APPS_GROUP(3),
 	APP_BRICK(2),
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
-	HEADER_ROW(1),
-	FOOTER_ROW(1);
+
+	// Server Complement
+	HEADER_ROW,
+	FOOTER_ROW,
+
+	// App View
+	APP_VIEW_INSTALL,
+	APP_VIEW_COMMENTS,
+	APP_VIEW_DEVELOPER,
+	APP_VIEW_OTHER_VERSIONS,
+	APP_VIEW_RATE_RESULT,
+	APP_VIEW_RATE_THIS,
+	APP_VIEW_SUGGESTED_APPS,
+	APP_VIEW_SUBSCRIPTION,
+	APP_VIEW_DESCRIPTION,
+	APP_VIEW_IMAGES,
+
+	// Client
+	SUBSCRIBED_STORE(2),
+	ADD_MORE_STORES(1, true);
 
 	@Getter private int defaultPerLineCount;
 	@Getter private boolean fixedPerLineCount;
+
+	Type() {
+		this(1);
+	}
 
 	Type(int defaultPerLineCount) {
 		this(defaultPerLineCount, false);
@@ -38,4 +66,5 @@ public enum Type {
 				.getScreenWidthInDip(Model
 				.getContext()) / ScreenUtils.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
+
 }

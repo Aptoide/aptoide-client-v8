@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -19,24 +19,22 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreTabsRequest extends V7<GetStoreTabs> {
+public class GetStoreTabsRequest extends V7<GetStoreTabs, GetStoreTabsRequest.Body> {
 
-	private final Body body = new Body();
-
-	private GetStoreTabsRequest() {
-
+	private GetStoreTabsRequest(boolean bypassCache) {
+		super(bypassCache, new Body());
 	}
 
-	public static GetStoreTabsRequest of(String storeName) {
-		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest();
+	public static GetStoreTabsRequest of(String storeName, boolean bypassCache) {
+		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest(bypassCache);
 
 		getStoreDisplaysRequest.body.setStoreName(storeName);
 
 		return getStoreDisplaysRequest;
 	}
 
-	public static GetStoreTabsRequest of(int storeId) {
-		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest();
+	public static GetStoreTabsRequest of(int storeId, boolean bypassCache) {
+		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest(bypassCache);
 
 		getStoreDisplaysRequest.body.setStoreId(storeId);
 
@@ -45,7 +43,7 @@ public class GetStoreTabsRequest extends V7<GetStoreTabs> {
 
 	@Override
 	protected Observable<GetStoreTabs> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.getStoreTabs(body);
+		return interfaces.getStoreTabs(body, bypassCache);
 	}
 
 	@Data

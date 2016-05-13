@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -17,26 +17,26 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListAppsRequest extends V7<ListApps> {
+public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 
-	private final Body body = new Body();
 	private final String url;
 
-	private ListAppsRequest() {
-		this("");
+	private ListAppsRequest(boolean bypassCache) {
+		this("", bypassCache);
 	}
 
-	private ListAppsRequest(String url) {
+	private ListAppsRequest(String url, boolean bypassCache) {
+		super(bypassCache, new Body());
 		this.url = url.replace("listApps", "");
 	}
 
-	public static ListAppsRequest ofAction(String url) {
-		return new ListAppsRequest(url);
+	public static ListAppsRequest ofAction(String url, boolean bypassCache) {
+		return new ListAppsRequest(url, bypassCache);
 	}
 
 	@Override
 	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces) {
-		return interfaces.listApps(url, body);
+		return interfaces.listApps(url, body, bypassCache);
 	}
 
 	@Data

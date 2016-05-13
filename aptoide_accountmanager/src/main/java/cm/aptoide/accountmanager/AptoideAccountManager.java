@@ -1,10 +1,12 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 12/05/2016.
+ */
+
 package cm.aptoide.accountmanager;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -53,7 +55,7 @@ import rx.schedulers.Schedulers;
  * <li>{@link #openAccountManager(Context, Bundle, boolean)}</li> <li>{@link #getAccessToken()}</li>
  * <li>{@link #getUserName()}</li> <li>{@link #onActivityResult(Activity, int, int, Intent)}</li>
  * <li>{@link #getUserInfo()}</li> <li>{@link #updateMatureSwitch(boolean)}</li> <li>{@link
- * #invalidateAccessToken(Activity)}</li> <li>{@link #invalidateAccessTokenSync(Activity)}</li>
+ * #invalidateAccessToken(Context)}</li> <li>{@link #invalidateAccessTokenSync(Context)}</li>
  * <li>{@link #ACCOUNT_REMOVED_BROADCAST_KEY}</li>
  */
 public class AptoideAccountManager implements Application.ActivityLifecycleCallbacks {
@@ -187,27 +189,28 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		}
 	}
 
-	private static String getRefreshToken(Activity context) {
+	private static String getRefreshToken(Context context) {
 		String refreshToken = AccountManagerPreferences.getRefreshToken();
-		if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
-			AccountManager accountManager = AccountManager.get(cm.aptoide.pt.preferences
-					.Application
-					.getContext());
-			Account[] accountsByType = accountManager.getAccountsByType(ACCOUNT_TYPE);
-			//we only allow 1 aptoide account
-
-			if (accountsByType.length > 0) {
-				AccountManagerFuture<Bundle> authToken = accountManager.getAuthToken
-						(accountsByType[0], AUTHTOKEN_TYPE_FULL_ACCESS, null, context, null, null);
-				try {
-					Bundle result = authToken.getResult();
-					refreshToken = result.getString(AccountManager.KEY_AUTHTOKEN);
-					AccountManagerPreferences.setRefreshToken(refreshToken);
-				} catch (OperationCanceledException | IOException | AuthenticatorException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		// TODO: 12-05-2016 trinkes save access token on AccountManager userData
+//		if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
+//			AccountManager accountManager = AccountManager.get(cm.aptoide.pt.preferences
+//					.Application
+//					.getContext());
+//			Account[] accountsByType = accountManager.getAccountsByType(ACCOUNT_TYPE);
+//			//we only allow 1 aptoide account
+//
+//			if (accountsByType.length > 0) {
+//				AccountManagerFuture<Bundle> authToken = accountManager.getAuthToken
+//						(accountsByType[0], AUTHTOKEN_TYPE_FULL_ACCESS, null, context, null, null);
+//				try {
+//					Bundle result = authToken.getResult();
+//					refreshToken = result.getString(AccountManager.KEY_AUTHTOKEN);
+//					AccountManagerPreferences.setRefreshToken(refreshToken);
+//				} catch (OperationCanceledException | IOException | AuthenticatorException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 		return refreshToken;
 	}
 
@@ -406,9 +409,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * Method used when the given AccessToken is invalid or has expired. The method will ask to
 	 * server for other accessToken
 	 *
-	 * @see AptoideAccountManager#invalidateAccessTokenSync(Activity)
+	 * @see AptoideAccountManager#invalidateAccessTokenSync(Context)
 	 */
-	public static Observable<String> invalidateAccessToken(@NonNull Activity context) {
+	public static Observable<String> invalidateAccessToken(@NonNull Context context) {
 		return Observable.fromCallable(() -> {
 			if (ThreadUtils.isOnUiThread()) {
 				throw new IllegalThreadStateException("This method shouldn't be called on ui " +
@@ -426,9 +429,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * server for other accessToken. This request is synchronous.
 	 *
 	 * @return The new Access token
-	 * @see AptoideAccountManager#invalidateAccessToken(Activity)
+	 * @see AptoideAccountManager#invalidateAccessToken(Context)
 	 */
-	public static String invalidateAccessTokenSync(@NonNull Activity context) {
+	public static String invalidateAccessTokenSync(@NonNull Context context) {
 		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			throw new IllegalThreadStateException("This method shouldn't be called on ui thread.");
 		}
