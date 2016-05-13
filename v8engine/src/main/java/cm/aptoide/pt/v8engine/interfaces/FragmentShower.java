@@ -11,6 +11,6 @@ import android.support.v4.app.Fragment;
  * Created by sithengineer on 12/05/16.
  */
 public interface FragmentShower {
-
-	void showFragment(Fragment fragment);
+	void pushFragment(Fragment fragment);
+	void popFragment();
 }

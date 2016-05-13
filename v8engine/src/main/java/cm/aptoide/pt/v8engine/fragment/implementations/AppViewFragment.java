@@ -13,12 +13,10 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -26,7 +24,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -37,15 +34,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewSubscriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import rx.Observable;
 
 /**
@@ -65,6 +54,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	// vars
 	//
 	private AppViewHeader header;
+	private GetAppMeta.App app;
 
 	//
 	// static fragment default new instance method
@@ -80,26 +70,28 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		View root = super.onCreateView(inflater, container, savedInstanceState);
-		header = new AppViewHeader(root);
-		setHasOptionsMenu(true);
-		return root;
-	}
-
-	@Override
 	public void load(boolean refresh) {
 		if (refresh) {
 			loadAppInfo((int) appId)
 					.compose(ObservableUtils.applySchedulers())
-					.subscribe(this::showAppInfo);
+					.subscribe(pojo -> {
+						this.setApp(pojo.getNodes().getMeta().getData());
+						this.showAppInfo();
+					});
 		}
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+	public void bindViews(View view) {
+		super.bindViews(view);
+		header = new AppViewHeader(view);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void setupViews() {
+		super.setupViews();
+		this.showAppInfo();
 
 		final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
 		ActionBar supportActionBar = parentActivity.getSupportActionBar();
@@ -109,13 +101,14 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override
 	public int getContentViewId() {
 		return VIEW_ID;
 	}
-
-	//
-	// methods
-	//
 
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -137,11 +130,13 @@ public class AppViewFragment extends GridRecyclerFragment {
 			// TODO
 
 			return true;
+
 		} else if (i == R.id.menu_schedule) {
 			ShowMessage.show(item.getActionView(), "TO DO");
 
 			// TODO
 			return true;
+
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -157,23 +152,15 @@ public class AppViewFragment extends GridRecyclerFragment {
 		return GetAppRequest.of(appId).observe();
 	}
 
-	private void showAppInfo(GetApp pojo) {
+	private void setApp(GetAppMeta.App app) {
+		this.app = app;
+	}
 
-		GetAppMeta.App app = pojo.getNodes().getMeta().getData();
-
-		// TODO generate displayables for app body
-
-		ArrayList<Displayable> displayables = new ArrayList<>();
-		displayables.add(new AppViewInstallDisplayable(app));
-		displayables.add(new AppViewSubscriptionDisplayable(app));
-		displayables.add(new AppViewDescriptionDisplayable(app));
-
-		// TODO ...
-
-		displayables.add(new AppViewDeveloperDisplayable(app));
+	private void showAppInfo() {
+		if(app==null) return;
 
 		// setup displayables in view
-		addDisplayables(displayables);
+		addDisplayables(DisplayableType.newDisplayables(DisplayableType.Group.APP_VIEW, app));
 
 		// setup header in view
 		header.setup(app);

@@ -52,7 +52,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		return displayables.size();
 	}
 
-	public void addDisplayables(List<Displayable> displayables) {
+	public void addDisplayables(List<? extends Displayable> displayables) {
 		this.displayables.add(displayables);
 		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
 	}

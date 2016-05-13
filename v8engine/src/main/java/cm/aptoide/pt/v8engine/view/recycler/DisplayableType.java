@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +48,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
+		.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
@@ -55,12 +57,14 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewImagesWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewInstallWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
+		.AppViewOtherVersionsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
 		.AppViewSubscriptionWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
+		.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
@@ -111,7 +115,30 @@ public enum DisplayableType {
 	APP_VIEW_SUBSCRIPTION(AppViewSubscriptionWidget.class, AppViewSubscriptionDisplayable.class),
 
 	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable
-			.class);
+			.class)
+
+	;
+
+	public enum Group {
+		APP_VIEW(
+				APP_VIEW_INSTALL,
+				APP_VIEW_SUBSCRIPTION,
+				APP_VIEW_DESCRIPTION,
+				APP_VIEW_IMAGES,
+				APP_VIEW_RATE_THIS,
+				APP_VIEW_RATE_RESULTS,
+				APP_VIEW_COMMENTS,
+				APP_VIEW_OTHER_VERSIONS,
+				APP_VIEW_DEVELOPER
+		)
+		;
+
+		public final DisplayableType[] displayableTypes;
+
+		Group(DisplayableType... displayableTypes){
+			this.displayableTypes = displayableTypes;
+		}
+	}
 
 	private static final String TAG = DisplayableType.class.getName();
 
@@ -138,6 +165,26 @@ public enum DisplayableType {
 			throw new IllegalStateException(String.format("Missing view type in Widget %s",
 					widgetClass
 					.getName()));
+	}
+
+	public static List<Displayable> newDisplayables(Group group) {
+		ArrayList<Displayable> displayables = new ArrayList<>(group.displayableTypes.length);
+		for (int i = 0; i < group.displayableTypes.length; i++) {
+			displayables.add(group.displayableTypes[i].newDisplayable());
+		}
+		return displayables;
+	}
+
+	public static <T> List<DisplayablePojo> newDisplayables(Group group, T pojo) {
+		ArrayList<DisplayablePojo> displayablePojos =
+				new ArrayList<>(group.displayableTypes.length);
+
+		for (int i = 0; i < group.displayableTypes.length; i++) {
+			displayablePojos.add(
+					((DisplayablePojo) group.displayableTypes[i].newDisplayable()).setPojo(pojo)
+			);
+		}
+		return displayablePojos;
 	}
 
 	public static Displayable newDisplayable(Type type, App app) {

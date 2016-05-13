@@ -19,7 +19,7 @@ public class Displayables {
 	public Displayables() {
 	}
 
-	public void add(Collection<Displayable> collection) {
+	public void add(Collection<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
 			if (displayable instanceof DisplayableGroup) {
 				add(((DisplayableGroup) displayable).getChildren());

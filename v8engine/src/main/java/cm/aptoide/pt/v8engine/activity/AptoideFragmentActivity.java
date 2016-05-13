@@ -8,9 +8,7 @@ package cm.aptoide.pt.v8engine.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import java.lang.ref.WeakReference;
-
-import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 
 /**
  * Created by neuro on 05-05-2016.
@@ -61,9 +59,7 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.fragment_placeholder, createFragment())
-					.commit();
+			FragmentUtils.replaceFragment(this, createFragment());
 		}
 
 	}

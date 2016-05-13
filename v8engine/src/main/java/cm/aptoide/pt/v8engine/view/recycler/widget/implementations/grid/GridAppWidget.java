@@ -70,7 +70,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		itemView.setOnClickListener(
 				v -> {
 					// FIXME
-					((FragmentShower)v.getContext()).showFragment(
+					((FragmentShower)v.getContext()).pushFragment(
 							AppViewFragment.newInstance(appId)
 					);
 				}

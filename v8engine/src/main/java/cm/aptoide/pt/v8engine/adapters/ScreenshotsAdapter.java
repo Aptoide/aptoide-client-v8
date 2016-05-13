@@ -53,7 +53,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 	public ScreenshotsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View inflate =
 				LayoutInflater
-						.from(V8Engine.getContext())
+						.from(parent.getContext())
 						.inflate(R.layout.row_item_screenshots_gallery, parent, false);
 
 		return new ScreenshotsViewHolder(inflate);
@@ -163,7 +163,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 					v ->{
 						// FIXME
 						try {
-							((FragmentShower)v.getContext()).showFragment(
+							((FragmentShower)v.getContext()).pushFragment(
 									ScreenshotsViewerFragment.newInstance(
 											imagesUris,
 											position
