@@ -12,9 +12,11 @@ import lombok.Setter;
 
 /**
  * Created by sithengineer on 12/05/16.
+ *
+ * TODO create mapper POJO <> this
  */
-public class Repository  extends RealmObject {
-	@PrimaryKey @Getter @Setter private int id;
+public class Store extends RealmObject {
+	@PrimaryKey @Getter @Setter private int storeId;
 	@Getter @Setter private String url;
 	@Getter @Setter private String apkPath;
 	@Getter @Setter private String iconPath;
@@ -30,7 +32,7 @@ public class Repository  extends RealmObject {
 	@Getter @Setter private int topTimestamp;
 	@Getter @Setter private boolean isUser;
 	@Getter @Setter private boolean isFailed;
-	@Getter @Setter private String name;
+	@Getter @Setter private String storeName;
 	@Getter @Setter private String username;
 	@Getter @Setter private String password;
 

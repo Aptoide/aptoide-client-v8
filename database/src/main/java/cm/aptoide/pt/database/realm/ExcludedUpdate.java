@@ -13,11 +13,17 @@ import lombok.Setter;
 /**
  * Created by sithengineer on 12/05/16.
  */
-public class Excluded extends RealmObject {
-	@PrimaryKey @Getter @Setter private int id;
+public class ExcludedUpdate extends RealmObject {
+	@PrimaryKey @Getter @Setter private long id;
+
 	@Getter @Setter private String packageName;
 	@Getter @Setter private String name;
 	@Getter @Setter private String icon;
-	@Getter @Setter private String versionCode;
-	@Getter @Setter private String versionName;
+
+	//
+	// deprecated
+	//
+
+	@Deprecated @Getter @Setter private String versionName;
+	@Deprecated @Getter @Setter private String versionCode;
 }

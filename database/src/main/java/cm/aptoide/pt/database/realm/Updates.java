@@ -12,9 +12,13 @@ import lombok.Setter;
 
 /**
  * Created by sithengineer on 12/05/16.
+ *
+ * TODO check with dataprovider and models...
  */
 public class Updates extends RealmObject {
-	@PrimaryKey @Getter @Setter private int id;
+	@PrimaryKey @Getter @Setter private int appId;
+	@Getter @Setter private String icon;
+
 	@Getter @Setter private String packageName;
 	@Getter @Setter private int versionCode;
 	@Getter @Setter private String signature;
@@ -24,6 +28,5 @@ public class Updates extends RealmObject {
 	@Getter @Setter private double fileSize;
 	@Getter @Setter private String updateVersionName;
 	@Getter @Setter private String alternativeUrl;
-	@Getter @Setter private String icon;
 	@Getter @Setter private String updateVersionCode;
 }

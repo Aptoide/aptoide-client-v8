@@ -18,7 +18,7 @@ public class Rollback extends RealmObject {
 	@Getter @Setter private String action;
 	@Getter @Setter private String timestamp;
 	@Getter @Setter private String md5;
-	@Getter @Setter private String icon;
+	@Getter @Setter private String iconPath;
 	@Getter @Setter private String packageName;
 	@Getter @Setter private String version;
 	@Getter @Setter private String previousVersion;
