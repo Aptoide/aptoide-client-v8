@@ -65,24 +65,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static final String ACCOUNT_REMOVED_BROADCAST_KEY = "cm.aptoide.accountmanager" + "" +
 			".removedaccount.broadcast";
-	final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
-	final static String ARG_AUTH_TYPE = "AUTH_TYPE";
-	final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
-	final static String ARG_OPTIONS_BUNDLE = "BE";
-	/**
-	 * Auth token types
-	 */
-	static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Aptoide " +
-			"account";
-	static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL = "Read only access to an Aptoide " +
-			"account";
-	static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
-	static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
-	/**
-	 * Account type id
-	 */
-	static final String ACCOUNT_TYPE = cm.aptoide.pt.preferences.Application.getConfiguration()
-			.getAccountType();
+
 	private final static AptoideAccountManager instance = new AptoideAccountManager();
 	private static String TAG = AptoideAccountManager.class.getSimpleName();
 	/**
@@ -189,28 +172,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		}
 	}
 
-	private static String getRefreshToken(Context context) {
+	private static
+	@Nullable
+	String getRefreshToken() {
 		String refreshToken = AccountManagerPreferences.getRefreshToken();
-		// TODO: 12-05-2016 trinkes save access token on AccountManager userData
-//		if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
-//			AccountManager accountManager = AccountManager.get(cm.aptoide.pt.preferences
-//					.Application
-//					.getContext());
-//			Account[] accountsByType = accountManager.getAccountsByType(ACCOUNT_TYPE);
-//			//we only allow 1 aptoide account
-//
-//			if (accountsByType.length > 0) {
-//				AccountManagerFuture<Bundle> authToken = accountManager.getAuthToken
-//						(accountsByType[0], AUTHTOKEN_TYPE_FULL_ACCESS, null, context, null, null);
-//				try {
-//					Bundle result = authToken.getResult();
-//					refreshToken = result.getString(AccountManager.KEY_AUTHTOKEN);
-//					AccountManagerPreferences.setRefreshToken(refreshToken);
-//				} catch (OperationCanceledException | IOException | AuthenticatorException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
+			AccountManager manager = android.accounts.AccountManager.get(cm.aptoide.pt.preferences
+					.Application
+					.getContext());
+			Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+			refreshToken = manager.getUserData(accountsByType[0], SecureKeys.REFRESH_TOKEN);
+		}
+		AccountManagerPreferences.setRefreshToken(refreshToken);
 		return refreshToken;
 	}
 
@@ -236,7 +209,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			AccountManager accountManager = AccountManager.get(cm.aptoide.pt.preferences
 					.Application
 					.getContext());
-			Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);
+			Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 			if (accounts.length > 0) {
 				userName = accounts[0].name;
 				AccountManagerPreferences.setUserName(userName);
@@ -417,10 +390,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				throw new IllegalThreadStateException("This method shouldn't be called on ui " +
 						"thread.");
 			}
-			return getRefreshToken(context);
+			return getRefreshToken();
 		})
 				.subscribeOn(Schedulers.io())
-				.flatMap(s -> getNewAccessTokenFromRefreshToken(getRefreshToken(context),
+				.flatMap(s -> getNewAccessTokenFromRefreshToken(getRefreshToken(),
 						getOnErrorAction(context)));
 	}
 
@@ -435,7 +408,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			throw new IllegalThreadStateException("This method shouldn't be called on ui thread.");
 		}
-		String refreshToken = getRefreshToken(context);
+		String refreshToken = getRefreshToken();
 		final String[] stringToReturn = {""};
 		getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
 				.subscribe((token) -> {
@@ -631,17 +604,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			accountType = accountType != null ? accountType
 					// TODO: 4/21/16 trinkes if needed, account type has to match with partners
 					// version
-					: ACCOUNT_TYPE;
+					: Constants.ACCOUNT_TYPE;
 
 			final Account account = new Account(userName, accountType);
-
-			String authtokenType = AUTHTOKEN_TYPE_FULL_ACCESS;
 
 			// Creating the account on the device and setting the auth token we got
 			// (Not setting the auth token will cause another call to the server to authenticate
 			// the user)
 			accountManager.addAccountExplicitly(account, userPassword, null);
-			accountManager.setAuthToken(account, authtokenType, refreshToken);
+			accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
 			AccountManagerPreferences.setRefreshToken(refreshToken);
 			CheckUserCredentialsRequest.of(accessToken)
 					.observe()
