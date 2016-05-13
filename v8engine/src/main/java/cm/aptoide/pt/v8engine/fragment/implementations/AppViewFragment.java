@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.Locale;
 
+import cm.aptoide.pt.actions.Action1WithWeakRef;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -48,13 +49,13 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 	public static final int VIEW_ID = R.layout.fragment_app_view;
 	//private static final String TAG = AppViewFragment.class.getName();
-	private long appId;
 
 	//
 	// vars
 	//
 	private AppViewHeader header;
 	private GetAppMeta.App app;
+	private long appId;
 
 	//
 	// static fragment default new instance method
@@ -74,9 +75,16 @@ public class AppViewFragment extends GridRecyclerFragment {
 		if (refresh) {
 			loadAppInfo((int) appId)
 					.compose(ObservableUtils.applySchedulers())
-					.subscribe(pojo -> {
-						this.setApp(pojo.getNodes().getMeta().getData());
-						this.showAppInfo();
+					.subscribe(
+						new Action1WithWeakRef<GetApp, AppViewFragment>(this) {
+						@Override
+						public void call(GetApp pojo) {
+							AppViewFragment fragment = weakReference.get();
+							if(fragment!=null) {
+								fragment.setApp(pojo.getNodes().getMeta().getData());
+								fragment.showAppInfo();
+							}
+						}
 					});
 		}
 	}

@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by sithengineer on 06/05/16.
  */
-public class AppViewInstallDisplayable extends AppViewDisplayable<GetAppMeta.App> {
+public class AppViewInstallDisplayable extends AppViewDisplayable {
 
 	public AppViewInstallDisplayable() {
 	}

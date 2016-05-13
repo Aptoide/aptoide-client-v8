@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.List;
+
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -39,7 +41,12 @@ public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
 
 	@Override
 	public void bindView(AppViewImagesDisplayable displayable) {
-		final GetAppMeta.App app = displayable.getPojo();
+		final GetAppMeta.Media media = displayable.getPojo().getMedia();
+		if(!isMediaAvailable(media)) {
+			mediaList = null;
+			itemView.setVisibility(View.GONE);
+			return;
+		}
 
 		mediaList.addItemDecoration(new DividerItemDecoration(ScreenUtils.getPixels(V8Engine
 				.getContext(), 5))
@@ -49,7 +56,18 @@ public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
 		);
 		mediaList.setNestedScrollingEnabled(false); // because otherwise the AppBar won't be collapsed
 		mediaList.setAdapter(
-				new ScreenshotsAdapter(app.getMedia())
+				new ScreenshotsAdapter(media)
 		);
+	}
+
+	private boolean isMediaAvailable(GetAppMeta.Media media) {
+		if(media!=null) {
+			List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();
+			List<GetAppMeta.Media.Video> videos = media.getVideos();
+			boolean hasScreenShots = screenshots!=null && screenshots.size()>0;
+			boolean hasVideos = videos!=null && videos.size()>0;
+			return hasScreenShots || hasVideos;
+		}
+		return false;
 	}
 }

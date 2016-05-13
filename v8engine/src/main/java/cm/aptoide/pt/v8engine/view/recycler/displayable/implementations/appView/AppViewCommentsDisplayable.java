@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewCommentsDisplayable extends AppViewDisplayable<GetAppMeta.App> {
+public class AppViewCommentsDisplayable extends AppViewDisplayable {
 
 	public AppViewCommentsDisplayable() {
 	}

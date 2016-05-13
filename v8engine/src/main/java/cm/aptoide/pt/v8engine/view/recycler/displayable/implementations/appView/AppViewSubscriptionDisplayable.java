@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by sithengineer on 10/05/16.
  */
-public class AppViewSubscriptionDisplayable extends AppViewDisplayable<GetAppMeta.App> {
+public class AppViewSubscriptionDisplayable extends AppViewDisplayable {
 
 
 	public AppViewSubscriptionDisplayable() {
