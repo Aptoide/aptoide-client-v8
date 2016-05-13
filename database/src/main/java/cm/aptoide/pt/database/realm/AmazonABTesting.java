@@ -13,6 +13,7 @@ import lombok.Setter;
 /**
  * Created by sithengineer on 12/05/16.
  */
+@Deprecated
 public class AmazonABTesting extends RealmObject {
 	@PrimaryKey @Getter @Setter private String packageName;
 }
