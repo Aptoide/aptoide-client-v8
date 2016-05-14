@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 14/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -57,11 +57,11 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     //    Apagar
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-design:0.4.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0'
+    compile "com.jakewharton.rxbinding:rxbinding:${RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-design:${RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${RX_BINDING_VERSION}"
 
     // for unit tests
     testCompile 'junit:junit:4.12'
