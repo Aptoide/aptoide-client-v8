@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 14/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -8,7 +8,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import java.io.IOException;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
@@ -31,6 +30,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.preferences.Application;
 import lombok.Getter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
@@ -49,6 +49,7 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 	public static final String BASE_HOST = "http://ws75.aptoide.com/api/7/";
 	@Getter protected final B body;
 	private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
+	private boolean accessTokenRetry = false;
 
 	protected V7(boolean bypassCache, B body) {
 		super(Interfaces.class, bypassCache);
@@ -62,24 +63,27 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 	@Override
 	public Observable<U> observe() {
-		return super.observe().observeOn(Schedulers.io()).onErrorResumeNext(throwable -> {
+		return super.observe().subscribeOn(Schedulers.io()).onErrorResumeNext(throwable -> {
 			if (throwable instanceof HttpException) {
 				try {
 					BaseV7Response baseV7Response = objectMapper.readValue(((HttpException)
 							throwable)
-							.response()
-							.errorBody()
-							.string(), BaseV7Response.class);
+
+							.response().errorBody().string(), BaseV7Response.class);
 
 					if (INVALID_ACCESS_TOKEN_CODE.equals(baseV7Response.getErrors()
 							.get(0)
 							.getCode())) {
 
-						String s = AptoideAccountManager.invalidateAccessTokenSync(DataProvider
-								.getContext());
-
-						body.setAccess_token(s);
-						return V7.this.observe().observeOn(AndroidSchedulers.mainThread());
+						if (!accessTokenRetry) {
+							accessTokenRetry = true;
+							return AptoideAccountManager.invalidateAccessToken(Application
+									.getContext())
+									.flatMap(s -> {
+										this.body.setAccess_token(s);
+										return V7.this.observe();
+									});
+						}
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
