@@ -44,6 +44,9 @@ dependencies {
 
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
+    debugCompile project(path: ':model', configuration: 'debug')
+    releaseCompile project(path: ':model', configuration: 'release')
+
     // realm
     compile 'io.realm:realm-android:0.+'
     compile 'io.realm:android-adapters:1.+'

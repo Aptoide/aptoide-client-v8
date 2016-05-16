@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.realm;
 
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Getter;
@@ -29,4 +30,9 @@ public class Updates extends RealmObject {
 	@Getter @Setter private String updateVersionName;
 	@Getter @Setter private String alternativeUrl;
 	@Getter @Setter private String updateVersionCode;
+
+	public Updates from(GetAppMeta.App app) {
+
+		return null;
+	}
 }
