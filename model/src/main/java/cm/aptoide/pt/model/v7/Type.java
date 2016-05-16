@@ -41,6 +41,8 @@ public enum Type {
 	APP_VIEW_DESCRIPTION,
 	APP_VIEW_IMAGES,
 
+	GROUP,
+
 	// Client
 	SUBSCRIBED_STORE(2),
 	ADD_MORE_STORES(1, true);

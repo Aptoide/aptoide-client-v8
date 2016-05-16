@@ -21,9 +21,13 @@ public class DisplayableGroup extends Displayable {
 
 	@Getter private final List<Displayable> children;
 
-	public DisplayableGroup(List<Displayable> children) {
+	public DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
 		this.children = children;
-		computeLeftSpaces();
+		if(computeLeftSpaces) computeLeftSpaces();
+	}
+
+	public DisplayableGroup(List<Displayable> children) {
+		this(children, true);
 	}
 
 	private void computeLeftSpaces() {
@@ -45,18 +49,12 @@ public class DisplayableGroup extends Displayable {
 
 	@Override
 	public Type getType() {
-		throw new IllegalStateException("getType() on DisplayableGroup should not be called!");
+		return Type.GROUP;
 	}
 
 	@Override
 	public int getViewLayout() {
 		throw new IllegalStateException("getViewLayout() on DisplayableGroup should not be " +
 				"called!");
-	}
-
-	@Override
-	public int getDefaultPerLineCount() {
-		throw new IllegalStateException("getDefaultPerLineCount() on DisplayableGroup should not "
-				+ "be called!");
 	}
 }

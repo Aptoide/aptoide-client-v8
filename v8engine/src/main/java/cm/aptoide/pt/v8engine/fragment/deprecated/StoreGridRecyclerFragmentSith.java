@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 16/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragment.implementations;
+package cm.aptoide.pt.v8engine.fragment.deprecated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
  * Created by sithengineer on 02/05/16.
+ *
+ * Used for tests only
  */
+@Deprecated
 public class StoreGridRecyclerFragmentSith extends GridRecyclerFragment {
 
 	private List<Store> stores;

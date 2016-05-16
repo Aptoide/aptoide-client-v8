@@ -17,7 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragmentSith;
+import cm.aptoide.pt.v8engine.fragment.deprecated.StoreGridRecyclerFragmentSith;
 
 /**
  * Created by sithengineer on 02/05/16.

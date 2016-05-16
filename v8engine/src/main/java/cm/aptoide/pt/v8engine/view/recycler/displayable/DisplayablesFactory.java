@@ -72,28 +72,33 @@ public class DisplayablesFactory {
 	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {
 		ListApps listApps = (ListApps) wsWidget.getViewObject();
 		List<App> apps = listApps.getDatalist().getList();
-		List<Displayable> tmp = new ArrayList<>(apps.size());
+		//List<Displayable> displayables = new ArrayList<>(apps.size());
+		List<Displayable> displayables = new ArrayList<>();
 
 		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
-				tmp.add(DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(0))
+				displayables.add(DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(0))
 						.setDefaultPerLineCount(1));
 
+				List<Displayable> innerGroup = new ArrayList<>(apps.size() - 1);
 				for (int i = 1; i < apps.size(); i++) {
-					DisplayablePojo<App> appDisplayablePojo = (DisplayablePojo<App>)
-							DisplayableType
+					Displayable appDisplayablePojo =
+							DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(i));
 
-							.newDisplayable(Type.APP_BRICK, apps
-							.get(i));
-
-					tmp.add(appDisplayablePojo);
+					innerGroup.add(appDisplayablePojo);
 				}
 
-				tmp.add(new FooterDisplayable(wsWidget));
+				displayables.add(
+						new DisplayableGroup(innerGroup, true)
+								.setDefaultPerLineCount(4)
+								.setFixedPerLineCount(true)
+				);
+
+				displayables.add(new FooterDisplayable(wsWidget));
 			}
 		} else {
 			if (apps.size() > 0) {
-				tmp.add(new GridHeaderDisplayable(wsWidget));
+				displayables.add(new GridHeaderDisplayable(wsWidget));
 			}
 
 			for (App app : apps) {
@@ -101,10 +106,10 @@ public class DisplayablesFactory {
 						.newDisplayable((wsWidget
 						.getType()));
 				diplayable.setPojo(app);
-				tmp.add(diplayable);
+				displayables.add(diplayable);
 			}
 		}
-		return new DisplayableGroup(tmp);
+		return new DisplayableGroup(displayables);
 	}
 
 	private static Displayable getStores(Object viewObject) {
@@ -127,8 +132,8 @@ public class DisplayablesFactory {
 		List<Displayable> tmp = new ArrayList<>(getStoreDisplaysList.size());
 
 		for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
-			DisplayablePojo<GetStoreDisplays.EventImage> diplayable = (DisplayablePojo
-					<GetStoreDisplays.EventImage>) DisplayableType
+			DisplayablePojo<GetStoreDisplays.EventImage> diplayable =
+					(DisplayablePojo<GetStoreDisplays.EventImage>) DisplayableType
 					.newDisplayable(wsWidget.getType());
 			diplayable.setPojo(eventImage);
 			tmp.add(diplayable);

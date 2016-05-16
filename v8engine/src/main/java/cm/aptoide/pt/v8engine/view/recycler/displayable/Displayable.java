@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public abstract class Displayable {
 
-	private Boolean fixedPerLineCount;
+	@Setter private Boolean fixedPerLineCount;
 	@Setter private Integer defaultPerLineCount;
 
 	/**
