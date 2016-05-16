@@ -57,7 +57,7 @@ public enum Type {
 	}
 
 	Type(boolean fixedPerLineCount) {
-		this(DEFAULT_PER_LINE_COUNT, false);
+		this(DEFAULT_PER_LINE_COUNT, fixedPerLineCount);
 	}
 
 	Type(int defaultPerLineCount) {
