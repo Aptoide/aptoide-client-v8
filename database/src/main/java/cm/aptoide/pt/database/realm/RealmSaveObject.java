@@ -6,20 +6,17 @@
 package cm.aptoide.pt.database.realm;
 
 import io.realm.Realm;
-import io.realm.RealmObject;
+import io.realm.RealmModel;
 
 /**
  * Created by sithengineer on 16/05/16.
  */
-public abstract class RealmSaveObject extends RealmObject {
+public final class RealmSaveObject {
 
-	public void save() {
+	public static void save(final RealmModel realmModel) {
 		Realm.getDefaultInstance().executeTransactionAsync(
-			new Realm.Transaction() {
-				@Override
-				public void execute(Realm bgRealm) {
-					bgRealm.copyToRealmOrUpdate(RealmSaveObject.this);
-				}
+			(bgRealm) -> {
+				bgRealm.copyToRealmOrUpdate(realmModel);
 			}
 		);
 	}

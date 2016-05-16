@@ -16,6 +16,7 @@ import lombok.Setter;
  *
  * TODO check with dataprovider and models...
  */
+
 public class Updates extends RealmObject {
 	@PrimaryKey @Getter @Setter private int appId;
 	@Getter @Setter private String icon;

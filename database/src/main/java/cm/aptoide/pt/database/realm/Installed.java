@@ -13,7 +13,7 @@ import lombok.Setter;
 /**
  * Created by sithengineer on 12/05/16.
  */
-public class Installed  extends RealmObject {
+public class Installed extends RealmObject {
 	@PrimaryKey @Getter @Setter private int id;
 	@Getter @Setter private String packageName;
 	@Getter @Setter private String name;

@@ -15,6 +15,7 @@ import lombok.Setter;
  *
  * TODO create mapper POJO <> this
  */
+
 public class Store extends RealmObject {
 	@PrimaryKey @Getter @Setter private int storeId;
 	@Getter @Setter private String url;

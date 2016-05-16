@@ -13,6 +13,7 @@ import lombok.Setter;
 /**
  * Created by sithengineer on 12/05/16.
  */
+
 public class Rollback extends RealmObject {
 	@PrimaryKey @Getter @Setter private int id;
 	@Getter @Setter private String action;

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.realm;
 
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,8 @@ import lombok.Setter;
 /**
  * Created by sithengineer on 12/05/16.
  */
-public class Scheduled extends RealmSaveObject {
+
+public class Scheduled extends RealmObject {
 	@PrimaryKey @Getter @Setter private int appId;
 	@Getter @Setter private String name;
 	@Getter @Setter private String versionName;

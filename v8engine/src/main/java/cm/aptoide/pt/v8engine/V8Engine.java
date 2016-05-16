@@ -12,6 +12,8 @@ import android.util.Log;
 import com.squareup.leakcanary.LeakCanary;
 
 import cm.aptoide.pt.database.AptoideRealmMigration;
+import cm.aptoide.pt.database.realm.RealmSaveObject;
+import cm.aptoide.pt.database.realm.Updates;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.utils.SystemUtils;
 import io.realm.Realm;
@@ -35,6 +37,11 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		super.onCreate();
+
+		Updates updates = new Updates();
+		updates.setAppId(1);
+		RealmSaveObject.save(updates);
+
 
 		if (BuildConfig.DEBUG) {
 			LeakCanary.install(this);
