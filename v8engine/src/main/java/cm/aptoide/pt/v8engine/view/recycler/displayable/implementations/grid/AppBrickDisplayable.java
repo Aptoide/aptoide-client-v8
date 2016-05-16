@@ -29,6 +29,13 @@ public class AppBrickDisplayable extends DisplayablePojo<App> {
 		return Type.APP_BRICK;
 	}
 
+	/*
+	@Override
+	public boolean isFixedPerLineCount() {
+		return true;
+	}
+	*/
+
 	@LayoutRes
 	@Override
 	public int getViewLayout() {

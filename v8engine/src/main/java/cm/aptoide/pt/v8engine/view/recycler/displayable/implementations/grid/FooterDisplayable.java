@@ -28,6 +28,11 @@ public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget>
 	}
 
 	@Override
+	public boolean isFixedPerLineCount() {
+		return true;
+	}
+
+	@Override
 	public int getViewLayout() {
 		return R.layout.button;
 	}

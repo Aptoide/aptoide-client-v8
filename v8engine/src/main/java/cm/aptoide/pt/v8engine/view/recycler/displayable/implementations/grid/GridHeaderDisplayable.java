@@ -33,6 +33,11 @@ public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWid
 	}
 
 	@Override
+	public boolean isFixedPerLineCount() {
+		return true;
+	}
+
+	@Override
 	public int getDefaultPerLineCount() {
 		return 1;
 	}
