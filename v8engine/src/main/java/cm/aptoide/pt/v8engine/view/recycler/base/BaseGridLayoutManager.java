@@ -23,7 +23,8 @@ public class BaseGridLayoutManager extends GridLayoutManager {
 
 	private static class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 
-		private final Displayables displayables;
+		//private final List<Displayable> displayables;
+		private Displayables displayables;
 
 		public SpanSizeLookup(BaseAdapter baseAdapter) {
 			this.displayables = baseAdapter.getDisplayables();
@@ -31,7 +32,7 @@ public class BaseGridLayoutManager extends GridLayoutManager {
 
 		@Override
 		public int getSpanSize(int position) {
-			return displayables.get(position).getSpanSize();
+			return displayables!=null ? displayables.get(position).getSpanSize() : 0;
 		}
 	}
 }

@@ -22,13 +22,13 @@ import lombok.Getter;
  */
 public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
+	//@Getter private final ArrayList<Displayable> displayables = new ArrayList<>();
 	@Getter private final Displayables displayables = new Displayables();
 
-	public BaseAdapter() {
-	}
+	public BaseAdapter() { }
 
 	public BaseAdapter(List<Displayable> displayables) {
-		this.displayables.add(displayables);
+		this.displayables.addAll(displayables);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	}
 
 	public void addDisplayables(List<? extends Displayable> displayables) {
-		this.displayables.add(displayables);
+		this.displayables.addAll(displayables);
 		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
 	}
 

@@ -77,26 +77,34 @@ public class DisplayablesFactory {
 
 		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
+
+				boolean isPair = apps.size()%2==0;
+
 				displayables.add(
 						DisplayableType
 								.newDisplayable(Type.APP_BRICK, apps.get(0))
-								.setDefaultPerLineCount(1)
+								.setDefaultPerLineCount(isPair ? Type.APP_BRICK
+										.getDefaultPerLineCount() : 1 )
 				);
 
-				List<Displayable> innerGroup = new ArrayList<>(apps.size() - 1);
+				//List<Displayable> innerGroup = new ArrayList<>(apps.size() - 1);
 				for (int i = 1; i < apps.size(); i++) {
 					Displayable appDisplayablePojo =
 							DisplayableType
-									.newDisplayable(Type.APP_BRICK, apps.get(i));
+									.newDisplayable(Type.APP_BRICK, apps.get(i))
+									.setDefaultPerLineCount(isPair ? Type.APP_BRICK
+											.getDefaultPerLineCount() : 2 );
 
-					//displayables.add(appDisplayablePojo);
-					innerGroup.add(appDisplayablePojo);
+					displayables.add(appDisplayablePojo);
+					//innerGroup.add(appDisplayablePojo);
 				}
 
+				/*
 				displayables.add(
 						new DisplayableGroup(innerGroup)
 								.setDefaultPerLineCount(2)
 				);
+				*/
 
 				displayables.add(new FooterDisplayable(wsWidget));
 			}
