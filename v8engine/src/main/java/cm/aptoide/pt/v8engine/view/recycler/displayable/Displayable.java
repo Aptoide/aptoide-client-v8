@@ -27,15 +27,14 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public abstract class Displayable {
 
-	@Setter private boolean fixedPerLineCount = false;
-
-	private boolean useTypeDefaultCount = true;
-	private int defaultPerLineCount = 1;
+	private Boolean fixedPerLineCount;
+	@Setter private Integer defaultPerLineCount;
 
 	/**
 	 * Needed for reflective {@link Class#newInstance()}.
 	 */
-	public Displayable() { }
+	public Displayable() {
+	}
 
 	public Displayable(boolean fixedPerLineCount) {
 		this.fixedPerLineCount = fixedPerLineCount;
@@ -58,23 +57,23 @@ public abstract class Displayable {
 	}
 
 	public boolean isFixedPerLineCount() {
-		return getType() != null ?  getType().isFixedPerLineCount() : fixedPerLineCount;
+		return fixedPerLineCount == null ? getType() != null && getType().isFixedPerLineCount() :
+				fixedPerLineCount;
 	}
 
 	public int getDefaultPerLineCount() {
-		if (getType() != null && useTypeDefaultCount) {
-			return getType().getDefaultPerLineCount();
+		if (defaultPerLineCount == null) {
+			if (getType() != null) {
+				return getType().getDefaultPerLineCount();
+			} else {
+				return 1;
+			}
+		} else {
+			return defaultPerLineCount;
 		}
-		return defaultPerLineCount;
 	}
 
 	public int getSpanSize() {
 		return WidgetFactory.getColumnSize() / getPerLineCount();
-	}
-
-	public Displayable setDefaultPerLineCount(int defaultPerLineCount) {
-		this.defaultPerLineCount = defaultPerLineCount;
-		this.useTypeDefaultCount = false;
-		return this;
 	}
 }

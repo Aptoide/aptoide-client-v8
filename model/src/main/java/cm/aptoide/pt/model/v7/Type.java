@@ -26,8 +26,8 @@ public enum Type {
 	DISPLAYS(2, true),
 
 	// Server Complement
-	HEADER_ROW,
-	FOOTER_ROW,
+	HEADER_ROW(true),
+	FOOTER_ROW(true),
 
 	// App View
 	APP_VIEW_INSTALL,
@@ -45,13 +45,19 @@ public enum Type {
 
 	// Client
 	SUBSCRIBED_STORE(2),
-	ADD_MORE_STORES(1, true);
+	ADD_MORE_STORES(true);
+
+	private static final int DEFAULT_PER_LINE_COUNT = 1;
 
 	@Getter private int defaultPerLineCount;
 	@Getter private boolean fixedPerLineCount;
 
 	Type() {
-		this(1);
+		this(DEFAULT_PER_LINE_COUNT);
+	}
+
+	Type(boolean fixedPerLineCount) {
+		this(DEFAULT_PER_LINE_COUNT, false);
 	}
 
 	Type(int defaultPerLineCount) {

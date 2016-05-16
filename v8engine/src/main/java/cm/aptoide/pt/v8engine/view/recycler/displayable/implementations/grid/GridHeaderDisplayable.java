@@ -15,8 +15,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
-	public GridHeaderDisplayable() {
-	}
+	public GridHeaderDisplayable() { }
 
 	public GridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
 		super(pojo);
@@ -32,13 +31,4 @@ public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWid
 		return R.layout.displayable_grid_header;
 	}
 
-	@Override
-	public boolean isFixedPerLineCount() {
-		return true;
-	}
-
-	@Override
-	public int getDefaultPerLineCount() {
-		return 1;
-	}
 }

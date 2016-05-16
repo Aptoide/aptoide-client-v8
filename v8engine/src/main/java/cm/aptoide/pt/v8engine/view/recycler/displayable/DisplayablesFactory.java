@@ -17,6 +17,8 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
@@ -72,39 +74,40 @@ public class DisplayablesFactory {
 	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {
 		ListApps listApps = (ListApps) wsWidget.getViewObject();
 		List<App> apps = listApps.getDatalist().getList();
-		//List<Displayable> displayables = new ArrayList<>(apps.size());
-		List<Displayable> displayables = new ArrayList<>();
+		List<Displayable> displayables = new ArrayList<>(apps.size());
 
 		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
 
-				boolean isPair = apps.size()%2==0;
+				boolean useBigBrick =
+						V8Engine.getContext().getResources().getBoolean(R.bool.use_big_app_brick);
 
-				displayables.add(
-						DisplayableType
-								.newDisplayable(Type.APP_BRICK, apps.get(0))
-								.setDefaultPerLineCount(isPair ? Type.APP_BRICK
-										.getDefaultPerLineCount() : 1 )
-				);
+				/*
+				int nrAppBricks =
+						V8Engine.getContext().getResources().getInteger(R.integer.nr_app_bricks);
+				*/
 
-				//List<Displayable> innerGroup = new ArrayList<>(apps.size() - 1);
-				for (int i = 1; i < apps.size(); i++) {
+				if (useBigBrick) {
+					displayables.add(
+							DisplayableType
+									.newDisplayable(Type.APP_BRICK, apps.get(0))
+									.setDefaultPerLineCount(
+											useBigBrick ? 1 : Type.APP_BRICK.getDefaultPerLineCount()
+									)
+					);
+				}
+
+				for (int i = (useBigBrick ? 1 : 0); i < apps.size(); i++) {
 					Displayable appDisplayablePojo =
 							DisplayableType
 									.newDisplayable(Type.APP_BRICK, apps.get(i))
-									.setDefaultPerLineCount(isPair ? Type.APP_BRICK
-											.getDefaultPerLineCount() : 2 );
+									.setDefaultPerLineCount(
+											useBigBrick ?
+													2 : Type.APP_BRICK.getDefaultPerLineCount()
+									);
 
 					displayables.add(appDisplayablePojo);
-					//innerGroup.add(appDisplayablePojo);
 				}
-
-				/*
-				displayables.add(
-						new DisplayableGroup(innerGroup)
-								.setDefaultPerLineCount(2)
-				);
-				*/
 
 				displayables.add(new FooterDisplayable(wsWidget));
 			}

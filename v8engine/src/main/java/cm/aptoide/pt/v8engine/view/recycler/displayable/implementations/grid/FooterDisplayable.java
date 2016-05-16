@@ -15,8 +15,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
-	public FooterDisplayable() {
-	}
+	public FooterDisplayable() { }
 
 	public FooterDisplayable(GetStoreWidgets.WSWidget pojo) {
 		super(pojo);
@@ -25,11 +24,6 @@ public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget>
 	@Override
 	public Type getType() {
 		return Type.FOOTER_ROW;
-	}
-
-	@Override
-	public boolean isFixedPerLineCount() {
-		return true;
 	}
 
 	@Override
