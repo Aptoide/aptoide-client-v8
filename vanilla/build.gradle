@@ -4,7 +4,16 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'android-command'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'realm-android'
+
+/*
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'realm-android'
+*/
 
 retrolambda {
     jvmArgs '-noverify'

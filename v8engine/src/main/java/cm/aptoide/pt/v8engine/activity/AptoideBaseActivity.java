@@ -22,6 +22,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// https://fabric.io/downloads/gradle/ndk
+		// Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 		if (getIntent().getExtras() != null) {
 			loadExtras(getIntent().getExtras());
 		}

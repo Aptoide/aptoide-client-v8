@@ -29,18 +29,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	@Override
-	public void pushFragment(Fragment fragment) {
-		FragmentUtils.replaceFragment(this, fragment, "fragment_" + atomicInt.incrementAndGet());
-	}
-
-	@Override
-	public void popFragment() {
-		/*
-		FragmentManager.BackStackEntry backStackEntry = getSupportFragmentManager()
-				.getBackStackEntryAt(atomicInt
-				.get()-1);
-		*/
-
-		onBackPressed();
+	public void showFragment(Fragment fragment) {
+		FragmentUtils
+				.replaceFragment(this, fragment, "fragment_" + atomicInt.incrementAndGet());
 	}
 }
