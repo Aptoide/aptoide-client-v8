@@ -29,8 +29,13 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	@Override
-	public void showFragment(Fragment fragment) {
+	public void pushFragment(Fragment fragment) {
 		FragmentUtils
 				.replaceFragment(this, fragment, "fragment_" + atomicInt.incrementAndGet());
+	}
+
+	@Override
+	public void popFragment() {
+		// TODO
 	}
 }
