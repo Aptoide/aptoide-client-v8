@@ -12,10 +12,16 @@ import io.realm.RealmMigration;
 /**
  * Created by sithengineer on 12/05/16.
  */
-public class DatabaseMigration implements RealmMigration {
+class DatabaseMigration implements RealmMigration {
 
 	@Override
 	public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-		// TODO
+		// Migrate from version 1 to version 2
+		if (oldVersion == 1) {
+			// TODO
+		}
+
+		// FIXME
+		realm.deleteAll();
 	}
 }

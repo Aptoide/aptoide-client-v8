@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 17/05/2016.
  */
 
-package cm.aptoide.pt.database.module;
+package cm.aptoide.pt.database;
 
 import io.realm.annotations.RealmModule;
 
@@ -11,6 +11,6 @@ import io.realm.annotations.RealmModule;
  * Created by sithengineer on 17/05/16.
  */
 @RealmModule(library = true, allClasses = true)
-public class AllClassesModule {
+class AllClassesModule {
 
 }

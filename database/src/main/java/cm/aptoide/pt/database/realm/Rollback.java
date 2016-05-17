@@ -37,12 +37,12 @@ public class Rollback extends RealmObject {
 		this.id = id;
 	}
 
-	public Action getAction() {
-		return Action.values()[action];
+	public int getAction() {
+		return action;
 	}
 
-	public void setAction(Action action) {
-		this.action = action.ordinal();
+	public void setAction(int action) {
+		this.action = action;
 	}
 
 	public String getTimestamp() {
