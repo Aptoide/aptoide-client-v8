@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
 
 /**
@@ -19,11 +20,13 @@ import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
  */
 public abstract class BaseFragment extends Fragment implements Lifecycle {
 
+	protected Database database;
 	private final String TAG = getClass().getSimpleName();
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		if (getArguments() != null) {
 			loadExtras(getArguments());
 		}
@@ -32,7 +35,20 @@ public abstract class BaseFragment extends Fragment implements Lifecycle {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
 			savedInstanceState) {
+
+		database = new Database(getContext());
+		database.open();
+
 		return inflater.inflate(getContentViewId(), container, false);
+	}
+
+	@Override
+	public void onDestroyView() {
+
+		database.close();
+		database = null;
+
+		super.onDestroyView();
 	}
 
 	@Override

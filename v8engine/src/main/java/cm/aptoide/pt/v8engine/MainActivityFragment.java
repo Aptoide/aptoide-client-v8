@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 
 /**
  * Created by neuro on 06-05-2016.
@@ -29,9 +30,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
 	@Override
 	public void showFragment(Fragment fragment) {
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.fragment_placeholder, fragment)
-				.addToBackStack("fragment_" + atomicInt.incrementAndGet())
-				.commit();
+		FragmentUtils
+				.replaceFragment(this, fragment, "fragment_" + atomicInt.incrementAndGet());
 	}
 }

@@ -23,6 +23,8 @@ public abstract class V8Engine extends DataProvider {
 	@Override
 	public void onCreate() {
 
+		SystemUtils.context = this;
+
 		if (BuildConfig.DEBUG) {
 			setupStrictMode();
 			Log.w(TAG, "StrictMode setup");
@@ -34,9 +36,6 @@ public abstract class V8Engine extends DataProvider {
 			LeakCanary.install(this);
 			Log.w(TAG, "LeakCanary installed");
 		}
-
-		// app setups go here
-		SystemUtils.context = this;
 	}
 
 	private void setupStrictMode() {
