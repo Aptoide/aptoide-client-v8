@@ -5,11 +5,8 @@
 
 package cm.aptoide.pt.database.realm;
 
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Created by sithengineer on 12/05/16.
@@ -18,22 +15,113 @@ import lombok.Setter;
  */
 
 public class Updates extends RealmObject {
-	@PrimaryKey @Getter @Setter private int appId;
-	@Getter @Setter private String icon;
+	@PrimaryKey private int appId;
+	private String icon;
 
-	@Getter @Setter private String packageName;
-	@Getter @Setter private int versionCode;
-	@Getter @Setter private String signature;
-	@Getter @Setter private long timestamp;
-	@Getter @Setter private String md5;
-	@Getter @Setter private String url;
-	@Getter @Setter private double fileSize;
-	@Getter @Setter private String updateVersionName;
-	@Getter @Setter private String alternativeUrl;
-	@Getter @Setter private String updateVersionCode;
+	private String packageName;
+	private int versionCode;
+	private String signature;
+	private long timestamp;
+	private String md5;
+	private String url;
+	private double fileSize;
+	private String updateVersionName;
+	private String alternativeUrl;
+	private String updateVersionCode;
 
-	public Updates from(GetAppMeta.App app) {
+	public int getAppId() {
+		return appId;
+	}
 
-		return null;
+	public void setAppId(int appId) {
+		this.appId = appId;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public int getVersionCode() {
+		return versionCode;
+	}
+
+	public void setVersionCode(int versionCode) {
+		this.versionCode = versionCode;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getMd5() {
+		return md5;
+	}
+
+	public void setMd5(String md5) {
+		this.md5 = md5;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public double getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(double fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	public String getUpdateVersionName() {
+		return updateVersionName;
+	}
+
+	public void setUpdateVersionName(String updateVersionName) {
+		this.updateVersionName = updateVersionName;
+	}
+
+	public String getAlternativeUrl() {
+		return alternativeUrl;
+	}
+
+	public void setAlternativeUrl(String alternativeUrl) {
+		this.alternativeUrl = alternativeUrl;
+	}
+
+	public String getUpdateVersionCode() {
+		return updateVersionCode;
+	}
+
+	public void setUpdateVersionCode(String updateVersionCode) {
+		this.updateVersionCode = updateVersionCode;
 	}
 }

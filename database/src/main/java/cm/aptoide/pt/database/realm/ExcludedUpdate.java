@@ -7,23 +7,69 @@ package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Created by sithengineer on 12/05/16.
  */
 public class ExcludedUpdate extends RealmObject {
-	@PrimaryKey @Getter @Setter private long id;
+	@PrimaryKey private long id;
 
-	@Getter @Setter private String packageName;
-	@Getter @Setter private String name;
-	@Getter @Setter private String icon;
+	private String packageName;
+	private String name;
+	private String icon;
 
 	//
 	// deprecated
 	//
 
-	@Deprecated @Getter @Setter private String versionName;
-	@Deprecated @Getter @Setter private String versionCode;
+	@Deprecated private String versionName;
+	@Deprecated private String versionCode;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getVersionName() {
+		return versionName;
+	}
+
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
+
+	public String getVersionCode() {
+		return versionCode;
+	}
+
+	public void setVersionCode(String versionCode) {
+		this.versionCode = versionCode;
+	}
 }

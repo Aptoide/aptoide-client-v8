@@ -20,13 +20,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
-            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,13 +40,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    //provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
     debugCompile project(path: ':model', configuration: 'debug')
     releaseCompile project(path: ':model', configuration: 'release')
-
-    // realm
-    compile 'io.realm:realm-android:0.+'
-    compile 'io.realm:android-adapters:1.+'
-    compile 'io.reactivex:rxjava:1.+'
 }

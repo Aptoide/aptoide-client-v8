@@ -52,9 +52,4 @@ dependencies {
     debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
     releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
 
-    // realm
-    compile 'io.realm:realm-android:0.+'
-    compile 'io.realm:android-adapters:1.+'
-    compile 'io.reactivex:rxjava:1.+'
-
 }

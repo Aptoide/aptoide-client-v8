@@ -12,8 +12,7 @@ import io.realm.annotations.Required;
 /**
  * Created by sithengineer on 12/05/16.
  */
-public class AmazonABTesting extends RealmObject {
-
+public class ExcludedAd extends RealmObject {
 	@PrimaryKey @Required private String packageName;
 
 	public String getPackageName() {
