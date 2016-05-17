@@ -12,7 +12,7 @@ import io.realm.RealmMigration;
 /**
  * Created by sithengineer on 12/05/16.
  */
-public class AptoideRealmMigration implements RealmMigration {
+public class DatabaseMigration implements RealmMigration {
 
 	@Override
 	public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {

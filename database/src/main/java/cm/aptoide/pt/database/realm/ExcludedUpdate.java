@@ -13,17 +13,9 @@ import io.realm.annotations.PrimaryKey;
  */
 public class ExcludedUpdate extends RealmObject {
 	@PrimaryKey private long id;
-
 	private String packageName;
 	private String name;
 	private String icon;
-
-	//
-	// deprecated
-	//
-
-	@Deprecated private String versionName;
-	@Deprecated private String versionCode;
 
 	public long getId() {
 		return id;
@@ -55,21 +47,5 @@ public class ExcludedUpdate extends RealmObject {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
-	}
-
-	public String getVersionName() {
-		return versionName;
-	}
-
-	public void setVersionName(String versionName) {
-		this.versionName = versionName;
-	}
-
-	public String getVersionCode() {
-		return versionCode;
-	}
-
-	public void setVersionCode(String versionCode) {
-		this.versionCode = versionCode;
 	}
 }

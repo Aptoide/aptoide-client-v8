@@ -10,8 +10,6 @@ import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import cm.aptoide.pt.database.realm.Updates;
-import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.utils.SystemUtils;
 
@@ -33,18 +31,6 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		super.onCreate();
-
-		Database db = new Database(this);
-		// do this in activity.onCreate()
-		db.open();
-
-		Updates updates = new Updates();
-		updates.setAppId(1);
-		updates.setMd5("12kln31oh1o9j13m1pfn9hv");
-
-		db.save(updates);
-		// do this in activity.onDestroy()
-		db.close();
 
 		if (BuildConfig.DEBUG) {
 			LeakCanary.install(this);

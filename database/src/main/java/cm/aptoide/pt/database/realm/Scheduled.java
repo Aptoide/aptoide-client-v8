@@ -13,18 +13,11 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Scheduled extends RealmObject {
+
 	@PrimaryKey private int appId;
 	private String name;
 	private String versionName;
 	private String icon;
-
-	//
-	// deprecated
-	//
-
-	@Deprecated private String md5;
-	@Deprecated private String packageName;
-	@Deprecated private String repoName;
 
 	public int getAppId() {
 		return appId;
@@ -56,29 +49,5 @@ public class Scheduled extends RealmObject {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
-	}
-
-	public String getMd5() {
-		return md5;
-	}
-
-	public void setMd5(String md5) {
-		this.md5 = md5;
-	}
-
-	public String getPackageName() {
-		return packageName;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
-	public String getRepoName() {
-		return repoName;
-	}
-
-	public void setRepoName(String repoName) {
-		this.repoName = repoName;
 	}
 }

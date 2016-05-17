@@ -13,17 +13,21 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Rollback extends RealmObject {
+
+	public enum Action {
+		UPDATE, DOWNGRADE, UNINSTALL, INSTALL
+	}
+
 	@PrimaryKey private int id;
-	private String action;
+	private String versionName;
+	private String previousVersionName;
 	private String timestamp;
-	private String md5;
-	private String iconPath;
-	private String packageName;
-	private String version;
-	private String previousVersion;
 	private String name;
+	private String icon;
+	private int action;
+	private String storeName;
 	private int confirmed;
-	private String repositoryName;
+	private String previousVersionMd5;
 
 	public int getId() {
 		return id;
@@ -33,12 +37,12 @@ public class Rollback extends RealmObject {
 		this.id = id;
 	}
 
-	public String getAction() {
-		return action;
+	public Action getAction() {
+		return Action.values()[action];
 	}
 
-	public void setAction(String action) {
-		this.action = action;
+	public void setAction(Action action) {
+		this.action = action.ordinal();
 	}
 
 	public String getTimestamp() {
@@ -50,43 +54,35 @@ public class Rollback extends RealmObject {
 	}
 
 	public String getMd5() {
-		return md5;
+		return previousVersionMd5;
 	}
 
 	public void setMd5(String md5) {
-		this.md5 = md5;
+		this.previousVersionMd5 = md5;
 	}
 
 	public String getIconPath() {
-		return iconPath;
+		return icon;
 	}
 
 	public void setIconPath(String iconPath) {
-		this.iconPath = iconPath;
+		this.icon = iconPath;
 	}
 
-	public String getPackageName() {
-		return packageName;
+	public String getPreviousVersionMd5() {
+		return previousVersionMd5;
 	}
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public void setPreviousVersionMd5(String previousVersionMd5) {
+		this.previousVersionMd5 = previousVersionMd5;
 	}
 
-	public String getVersion() {
-		return version;
+	public String getPreviousVersionName() {
+		return previousVersionName;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getPreviousVersion() {
-		return previousVersion;
-	}
-
-	public void setPreviousVersion(String previousVersion) {
-		this.previousVersion = previousVersion;
+	public void setPreviousVersionName(String previousVersionName) {
+		this.previousVersionName = previousVersionName;
 	}
 
 	public String getName() {
@@ -105,11 +101,27 @@ public class Rollback extends RealmObject {
 		this.confirmed = confirmed;
 	}
 
-	public String getRepositoryName() {
-		return repositoryName;
+	public String getStoreName() {
+		return storeName;
 	}
 
-	public void setRepositoryName(String repositoryName) {
-		this.repositoryName = repositoryName;
+	public String getVersionName() {
+		return versionName;
+	}
+
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 }
