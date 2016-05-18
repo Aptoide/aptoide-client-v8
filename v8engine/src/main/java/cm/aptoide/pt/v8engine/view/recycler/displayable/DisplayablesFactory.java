@@ -17,8 +17,6 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
@@ -79,6 +77,7 @@ public class DisplayablesFactory {
 		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
 
+				/*
 				boolean useBigBrick =
 						V8Engine.getContext().getResources().getBoolean(R.bool.use_big_app_brick);
 
@@ -102,6 +101,15 @@ public class DisplayablesFactory {
 											useBigBrick ? nrAppBricks : Type.APP_BRICK
 													.getDefaultPerLineCount()
 									);
+
+					displayables.add(appDisplayablePojo);
+				}
+				*/
+
+				for (int i = 0; i < apps.size(); i++) {
+					Displayable appDisplayablePojo = DisplayableType.newDisplayable(Type
+							.APP_BRICK, apps
+							.get(i));
 
 					displayables.add(appDisplayablePojo);
 				}

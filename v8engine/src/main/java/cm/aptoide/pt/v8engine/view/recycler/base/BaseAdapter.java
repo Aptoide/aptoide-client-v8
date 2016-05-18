@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/05/2016.
+ * Modified by SithEngineer on 18/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -28,7 +28,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	public BaseAdapter() { }
 
 	public BaseAdapter(List<Displayable> displayables) {
-		this.displayables.addAll(displayables);
+		this.displayables.add(displayables);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	}
 
 	public void addDisplayables(List<? extends Displayable> displayables) {
-		this.displayables.addAll(displayables);
+		this.displayables.add(displayables);
 		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
 	}
 

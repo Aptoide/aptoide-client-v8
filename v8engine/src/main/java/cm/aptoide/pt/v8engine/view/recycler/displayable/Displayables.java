@@ -7,65 +7,37 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
- * Created by sithengineer on 16/05/16.
+ * Created by neuro on 18-04-2016.
  */
-public class Displayables extends LinkedList<Displayable> {
+public class Displayables {
 
-	@Override
-	public void add(int location, Displayable object) {
-		if (object instanceof DisplayableGroup) {
-			addAll(location, ((DisplayableGroup) object).getChildren());
-		} else {
-			super.add(location, object);
-		}
+	private final List<Displayable> displayables = new LinkedList<>();
+
+	public Displayables() {
 	}
 
-	@Override
-	public boolean add(Displayable object) {
-		if (object instanceof DisplayableGroup) {
-			return addAll(((DisplayableGroup) object).getChildren());
-		} else {
-			return super.add(object);
-		}
-	}
-
-	@Override
-	public boolean addAll(int location, Collection<? extends Displayable> collection) {
+	public void add(Collection<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
-			add(location, displayable);
-		}
-		return true;
-	}
-
-	@Override
-	public boolean addAll(Collection<? extends Displayable> collection) {
-		for (Displayable displayable : collection) {
-			add(displayable);
-		}
-		return true;
-	}
-
-	@Override
-	public void addFirst(Displayable object) {
-		if (object instanceof DisplayableGroup) {
-			for (Displayable displayable : ((DisplayableGroup) object).getChildren()) {
-				addFirst(displayable);
+			if (displayable instanceof DisplayableGroup) {
+				add(((DisplayableGroup) displayable).getChildren());
+			} else {
+				displayables.add(displayable);
 			}
-		} else {
-			super.addFirst(object);
 		}
 	}
 
-	@Override
-	public void addLast(Displayable object) {
-		if (object instanceof DisplayableGroup) {
-			for (Displayable displayable : ((DisplayableGroup) object).getChildren()) {
-				addLast(displayable);
-			}
-		} else {
-			super.addLast(object);
-		}
+	public Displayable get(Integer position) {
+		return displayables.get(position);
+	}
+
+	public int size() {
+		return displayables.size();
+	}
+
+	public void clear() {
+		displayables.clear();
 	}
 }
