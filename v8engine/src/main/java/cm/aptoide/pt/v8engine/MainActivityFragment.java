@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 18/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.util.FragmentUtils;
  */
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
 
-	private AtomicInteger atomicInt = new AtomicInteger(0);
+	private final AtomicInteger atomicInt = new AtomicInteger(0);
 
 	@Override
 	protected Fragment createFragment() {

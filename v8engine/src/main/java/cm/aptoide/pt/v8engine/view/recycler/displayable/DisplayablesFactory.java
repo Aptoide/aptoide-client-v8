@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by SithEngineer on 18/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -82,18 +82,15 @@ public class DisplayablesFactory {
 				boolean useBigBrick =
 						V8Engine.getContext().getResources().getBoolean(R.bool.use_big_app_brick);
 
-				/*
-				int nrAppBricks =
-						V8Engine.getContext().getResources().getInteger(R.integer.nr_app_bricks);
-				*/
+				int nrAppBricks = V8Engine.getContext()
+						.getResources()
+						.getInteger(R.integer.nr_small_app_bricks);
 
 				if (useBigBrick) {
 					displayables.add(
 							DisplayableType
 									.newDisplayable(Type.APP_BRICK, apps.get(0))
-									.setDefaultPerLineCount(
-											useBigBrick ? 1 : Type.APP_BRICK.getDefaultPerLineCount()
-									)
+									.setDefaultPerLineCount(1)
 					);
 				}
 
@@ -102,8 +99,8 @@ public class DisplayablesFactory {
 							DisplayableType
 									.newDisplayable(Type.APP_BRICK, apps.get(i))
 									.setDefaultPerLineCount(
-											useBigBrick ?
-													2 : Type.APP_BRICK.getDefaultPerLineCount()
+											useBigBrick ? nrAppBricks : Type.APP_BRICK
+													.getDefaultPerLineCount()
 									);
 
 					displayables.add(appDisplayablePojo);

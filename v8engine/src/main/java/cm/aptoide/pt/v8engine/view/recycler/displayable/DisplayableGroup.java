@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by SithEngineer on 18/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -49,7 +49,7 @@ public class DisplayableGroup extends Displayable {
 
 	@Override
 	public Type getType() {
-		return Type.GROUP;
+		throw new IllegalStateException("getType() on DisplayableGroup should not be called!");
 	}
 
 	@Override

@@ -1,10 +1,6 @@
 /*
  * Copyright (c) 2016.
-<<<<<<< HEAD
- * Modified by SithEngineer on 10/05/2016.
-=======
- * Modified by Neurophobic Animal on 11/05/2016.
->>>>>>> develop
+ * Modified by SithEngineer on 18/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -40,8 +36,6 @@ public enum Type {
 	APP_VIEW_SUBSCRIPTION,
 	APP_VIEW_DESCRIPTION,
 	APP_VIEW_IMAGES,
-
-	GROUP,
 
 	// Client
 	SUBSCRIBED_STORE(2),
