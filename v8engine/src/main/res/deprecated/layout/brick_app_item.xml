@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 10/05/2016.
+  ~ Modified by Neurophobic Animal on 18/05/2016.
   -->
 
-<RelativeLayout android:id="@+id/brick_app_item"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<FrameLayout android:id="@+id/brick_app_item"
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+    >
 
     <ImageView
         android:id="@+id/featured_graphic"
@@ -17,4 +17,4 @@
         android:adjustViewBounds="true"
         android:contentDescription="@null"/>
 
-</RelativeLayout>
+</FrameLayout>
