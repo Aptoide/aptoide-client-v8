@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 19/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -14,14 +14,15 @@ import android.view.ViewGroup;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import io.realm.Realm;
 
 /**
  * Created by neuro on 14-04-2016.
  */
 public abstract class BaseFragment extends Fragment implements Lifecycle {
 
-	protected Database database;
 	private final String TAG = getClass().getSimpleName();
+	protected Realm realm;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,19 +37,9 @@ public abstract class BaseFragment extends Fragment implements Lifecycle {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
 			savedInstanceState) {
 
-		database = new Database(getContext());
-		database.open();
+		realm = Database.get(getContext());
 
 		return inflater.inflate(getContentViewId(), container, false);
-	}
-
-	@Override
-	public void onDestroyView() {
-
-		database.close();
-		database = null;
-
-		super.onDestroyView();
 	}
 
 	@Override
@@ -56,6 +47,15 @@ public abstract class BaseFragment extends Fragment implements Lifecycle {
 		super.onViewCreated(view, savedInstanceState);
 		bindViews(view);
 		setupViews();
+	}
+
+	@Override
+	public void onDestroyView() {
+
+		realm.close();
+		realm = null;
+
+		super.onDestroyView();
 	}
 
 	/**
