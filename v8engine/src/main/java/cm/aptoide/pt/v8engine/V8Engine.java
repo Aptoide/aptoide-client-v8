@@ -10,9 +10,8 @@ import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.SystemUtils;
 
 /**
@@ -38,6 +37,7 @@ public abstract class V8Engine extends DataProvider {
 			LeakCanary.install(this);
 			Log.w(TAG, "LeakCanary installed");
 		}
+		AptoideDownloadManager.getInstance().init(this);
 	}
 
 	private void setupStrictMode() {

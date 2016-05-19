@@ -53,6 +53,10 @@ public class Database {
 		KEY = "";
 	}
 
+	public static String getUuid() {
+		return UUID.randomUUID().toString();
+	}
+
 	private String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
 	}
@@ -150,10 +154,6 @@ public class Database {
 			Logger.e(TAG, "runTransactionSync", e);
 		}
 		return this;
-	}
-
-	protected String getUuid() {
-		return UUID.randomUUID().toString();
 	}
 
 	private void checkOpen() {

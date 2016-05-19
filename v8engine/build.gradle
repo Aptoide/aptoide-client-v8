@@ -107,4 +107,7 @@ dependencies {
 
     debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
     releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
+
+    debugCompile project(path: ':downloadmanager', configuration: 'debug')
+    releaseCompile project(path: ':downloadmanager', configuration: 'release')
 }
