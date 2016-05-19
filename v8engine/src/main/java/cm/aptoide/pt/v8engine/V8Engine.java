@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
+import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.utils.SystemUtils;
 

@@ -7,6 +7,8 @@ package cm.aptoide.pt.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import java.util.UUID;
+
 import cm.aptoide.pt.logger.Logger;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -148,6 +150,10 @@ public class Database {
 			Logger.e(TAG, "runTransactionSync", e);
 		}
 		return this;
+	}
+
+	protected String getUuid() {
+		return UUID.randomUUID().toString();
 	}
 
 	private void checkOpen() {
