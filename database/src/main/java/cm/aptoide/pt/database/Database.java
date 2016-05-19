@@ -29,6 +29,8 @@ public class Database {
 	private final RealmConfiguration realmConfig;
 	private Realm realm;
 
+	private boolean isOpen = false;
+
 	public String KEY = "KRbjij20wgVCTJgjQEyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCaOTBL0JP6et";
 
 	public Database(Context context) {
@@ -62,14 +64,18 @@ public class Database {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
 	}
 
-	public void open() {
+	public Database open() {
 		// Don't use Realm.setDefaultInstance() in library projects. It is unsafe as app developers can override the
 		// default configuration. So always use explicit configurations in library projects.
 		realm = Realm.getInstance(realmConfig);
+		isOpen = true;
+		return this;
 	}
 
-	public void close() {
+	public Database close() {
 		realm.close();
+		isOpen = false;
+		return this;
 	}
 
 	public Realm getRealm() {
@@ -77,6 +83,11 @@ public class Database {
 	}
 
 	public <T extends RealmObject> boolean copyOrUpdate(T realmModel) {
+
+		if(!isOpen) {
+			throw new IllegalStateException("call method open() first");
+		}
+
 		if(realm!=null && !realm.isClosed()) {
 			realm.executeTransactionAsync(
 					new Realm.Transaction() {
@@ -97,6 +108,11 @@ public class Database {
 	}
 
 	public <T extends RealmObject> boolean runTransaction(Action0 toRun) {
+
+		if(!isOpen) {
+			throw new IllegalStateException("call method open() first");
+		}
+
 		if(realm!=null && !realm.isClosed()) {
 			realm.executeTransactionAsync(
 					new Realm.Transaction() {

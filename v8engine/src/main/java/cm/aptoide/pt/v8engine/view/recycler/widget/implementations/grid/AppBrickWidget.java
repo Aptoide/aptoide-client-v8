@@ -39,6 +39,7 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 				.placeholder(R.drawable.placeholder_705x345)
 				.into(graphic);
 
+
 //		itemView.setOnClickListener(new BaseAdapter.AppItemOnClickListener(appItem));
 	}
 }
