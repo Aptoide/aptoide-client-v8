@@ -15,7 +15,7 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Updates extends RealmObject {
-	@PrimaryKey private int appId;
+	@PrimaryKey private long appId;
 	private String icon;
 
 	private String packageName;
@@ -29,11 +29,11 @@ public class Updates extends RealmObject {
 	private String alternativeUrl;
 	private String updateVersionCode;
 
-	public int getAppId() {
+	public long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(int appId) {
+	public void setAppId(long appId) {
 		this.appId = appId;
 	}
 

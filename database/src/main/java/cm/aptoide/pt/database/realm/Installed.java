@@ -12,18 +12,18 @@ import io.realm.annotations.PrimaryKey;
  * Created by sithengineer on 12/05/16.
  */
 public class Installed extends RealmObject {
-	@PrimaryKey private int id;
+	@PrimaryKey private long id;
 	private String packageName;
 	private String name;
 	private String versionCode;
 	private String versionName;
 	private String signature;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

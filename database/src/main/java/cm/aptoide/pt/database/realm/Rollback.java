@@ -18,10 +18,10 @@ public class Rollback extends RealmObject {
 		UPDATE, DOWNGRADE, UNINSTALL, INSTALL
 	}
 
-	@PrimaryKey private int id;
+	@PrimaryKey private long id;
 	private String versionName;
 	private String previousVersionName;
-	private String timestamp;
+	private long timestamp;
 	private String name;
 	private String icon;
 	private int action;
@@ -29,11 +29,11 @@ public class Rollback extends RealmObject {
 	private int confirmed;
 	private String previousVersionMd5;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -45,11 +45,11 @@ public class Rollback extends RealmObject {
 		this.action = action;
 	}
 
-	public String getTimestamp() {
+	public long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(String timestamp) {
+	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
 

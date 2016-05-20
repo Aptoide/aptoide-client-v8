@@ -14,16 +14,16 @@ import io.realm.annotations.PrimaryKey;
 
 public class Scheduled extends RealmObject {
 
-	@PrimaryKey private int appId;
+	@PrimaryKey private long appId;
 	private String name;
 	private String versionName;
 	private String icon;
 
-	public int getAppId() {
+	public long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(int appId) {
+	public void setAppId(long appId) {
 		this.appId = appId;
 	}
 
