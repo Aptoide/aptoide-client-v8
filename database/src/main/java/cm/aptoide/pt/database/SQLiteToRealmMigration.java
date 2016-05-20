@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/05/2016.
+ * Modified by SithEngineer on 20/05/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -63,13 +63,27 @@ public class SQLiteToRealmMigration {
 		try {
 			Realm.deleteRealm(realm.getConfiguration());
 
-			migrateInstalled();
-			migrateRepo();
-			migrateRollbackTbl();
-			migrateExcluded();
-			migrateScheduled();
-			migrateUpdates();
-			migrateExcludedAds();
+			boolean success = true;
+
+//			if(!migrateInstalled()) success = false;
+			if (!migrateRepo()) {
+				success = false;
+			}
+			if (!migrateRollbackTbl()) {
+				success = false;
+			}
+			if (!migrateExcluded()) {
+				success = false;
+			}
+			if (!migrateExcludedAds()) {
+				success = false;
+			}
+			//if(!migrateScheduled()) success = false;
+			//if(!migrateUpdates()) success = false;
+
+			if (!success) {
+				throw new IllegalStateException("");
+			}
 
 			IS_MIGRATED = true;
 		}
@@ -122,7 +136,7 @@ public class SQLiteToRealmMigration {
 		update.setIcon(cursor.getString(cursor.getColumnIndex(Schema.Updates.COLUMN_ICON)));
 		update.setMd5(cursor.getString(cursor.getColumnIndex(Schema.Updates.COLUMN_MD5)));
 		update.setPackageName(cursor.getString(cursor.getColumnIndex(Schema.Updates.COLUMN_PACKAGE)));
-		update.setAppId(cursor.getInt(cursor.getColumnIndex(Schema.Updates.COLUMN_VERCODE)));
+		//update.setAppId(cursor.getInt(cursor.getColumnIndex(Schema.Updates.COLUMN_VERCODE)));
 		update.setAlternativeUrl(cursor.getString(cursor.getColumnIndex(Schema.Updates.COLUMN_ALT_URL)));
 		update.setFileSize(cursor.getDouble(cursor.getColumnIndex(Schema.Updates.COLUMN_FILESIZE)));
 		update.setSignature(cursor.getString(cursor.getColumnIndex(Schema.Updates.COLUMN_SIGNATURE)));
@@ -135,6 +149,7 @@ public class SQLiteToRealmMigration {
 	}
 
 	private boolean migrateUpdates() {
+		/*
 		String table_name = Schema.Updates.getName();
 		Cursor cursor = sqliteDb.query(table_name, null, null, null, null, null, null);
 
@@ -149,6 +164,8 @@ public class SQLiteToRealmMigration {
 		}
 
 		return migrate(table_name, updates);
+		*/
+		return true;
 	}
 
 	private Scheduled getScheduledFrom(Cursor cursor) {
@@ -210,6 +227,7 @@ public class SQLiteToRealmMigration {
 		return migrate(table_name, excludedUpdates);
 	}
 
+	private final IdUtils rollbackIdUtils = new IdUtils(0);
 	private Rollback getRollbackFrom(Cursor cursor) {
 		Rollback rollback = new Rollback();
 		rollback.setMd5(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_MD5)));
@@ -219,10 +237,14 @@ public class SQLiteToRealmMigration {
 		// rollback.setIcon(cursor.getInt(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ ?? )));
 		rollback.setAction(cursor.getInt(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION)));
 		rollback.setConfirmed(cursor.getInt(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_CONFIRMED)));
-		rollback.setId(cursor.getInt(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_APKID))); // FIXME is this
+
+		//rollback.setId(cursor.getInt(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_APKID))); // FIXME is this
 		// correct ?
+		rollback.setId(rollbackIdUtils.nextLong());
+
 		//rollback.setPreviousVersionMd5(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ ?? )));
-		rollback.setPreviousVersionName(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_PREVIOUS_VERSION)));
+		//rollback.setPreviousVersionName(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl
+//				.COLUMN_PREVIOUS_VERSION)));
 		rollback.setStoreName(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_REPO)));
 		rollback.setTimestamp(
 				Long.getLong(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_TIMESTAMP)), 0)

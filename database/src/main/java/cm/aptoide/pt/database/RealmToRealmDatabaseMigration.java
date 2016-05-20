@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/05/2016.
+ * Modified by SithEngineer on 20/05/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -16,9 +16,9 @@ import io.realm.RealmMigration;
 /**
  * Created by sithengineer on 12/05/16.
  */
-class RealmDatabaseMigration implements RealmMigration {
+class RealmToRealmDatabaseMigration implements RealmMigration {
 
-	private static final String TAG = RealmDatabaseMigration.class.getName();
+	private static final String TAG = RealmToRealmDatabaseMigration.class.getName();
 
 	@Override
 	public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {

@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by SithEngineer on 20/05/2016.
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'android-command'
+//apply plugin: 'android-command'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
