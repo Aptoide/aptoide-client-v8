@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.accountmanager;
@@ -26,10 +26,11 @@ import android.widget.Button;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import cm.aptoide.accountmanager.util.UserInfo;
+import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
+import cm.aptoide.accountmanager.ws.ChangeUserRepoSubscriptionRequest;
 import cm.aptoide.accountmanager.ws.ChangeUserSettingsRequest;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
@@ -37,13 +38,12 @@ import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
+import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ThreadUtils;
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -275,13 +275,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			@Override
 			public void onError(Throwable e) {
 				try {
-					String string = ((HttpException) e).response().errorBody().string();
-					OAuth oAuth = WebService.getObjectMapper().readValue(string, OAuth.class);
-					getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
-							.getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth
-									.getError())));
-				} catch (IOException e1) {
-					e1.printStackTrace();
+					if (e instanceof AptoideWsV3Exception) {
+						GenericResponseV3 oAuth = ((AptoideWsV3Exception) e).getBaseResponse();
+						getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
+								.getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError())));
+					}
 				} finally {
 					if (finalGenericPleaseWaitDialog != null) {
 						finalGenericPleaseWaitDialog.dismiss();
@@ -539,6 +537,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				openAccountManager(context);
 			}
 		};
+	}
+
+	public static void unsubscribeStore(String storeName) {
+		ChangeUserRepoSubscriptionRequest.of(storeName, false)
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully unsubscribed " + storeName));
+	}
+
+	public static void subscribeStore(String storeName) {
+		ChangeUserRepoSubscriptionRequest.of(storeName, true)
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName));
 	}
 
 	private void removeLocalAccount() {

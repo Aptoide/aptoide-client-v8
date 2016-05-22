@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 23/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -72,7 +72,7 @@ public class GetStoreRequest extends V7<GetStore, GetStoreRequest.Body> {
 
 	@Override
 	public Observable<GetStore> observe() {
-		// Todo: deprecated parece-me
+		// Todo: deprecated parece-me o recursive
 
 		if (recursive) {
 			return super.observe().observeOn(Schedulers.io()).doOnNext(getStore -> {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -16,7 +16,8 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Store extends RealmObject {
-	@PrimaryKey private int storeId;
+
+	@PrimaryKey private long storeId;
 	private String iconPath;
 	private String theme;
 	private long downloads;
@@ -24,11 +25,11 @@ public class Store extends RealmObject {
 	private String username;
 	private String passwordSha1;
 
-	public int getStoreId() {
+	public long getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(int storeId) {
+	public void setStoreId(long storeId) {
 		this.storeId = storeId;
 	}
 

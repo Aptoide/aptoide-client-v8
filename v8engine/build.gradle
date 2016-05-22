@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 14/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -66,6 +66,10 @@ dependencies {
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    compile 'com.trello:rxlifecycle:0.6.1'
+    // If you want pre-written Activities and Fragments you can subclass as providers
+    compile 'com.trello:rxlifecycle-components:0.6.1'
 
     //    Apagar
     compile "com.jakewharton.rxbinding:rxbinding:${RX_BINDING_VERSION}"

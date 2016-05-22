@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -22,7 +22,6 @@ import lombok.Getter;
  */
 public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
-	//@Getter private final ArrayList<Displayable> displayables = new ArrayList<>();
 	@Getter private final Displayables displayables = new Displayables();
 
 	public BaseAdapter() { }
@@ -50,6 +49,11 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	@Override
 	public int getItemCount() {
 		return displayables.size();
+	}
+
+	public void addDisplayable(Displayable displayable) {
+		this.displayables.add(displayable);
+		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
 	}
 
 	public void addDisplayables(List<? extends Displayable> displayables) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -35,6 +35,11 @@ public abstract class GridRecyclerFragment extends BaseRecyclerViewFragment<Base
 	@Override
 	protected RecyclerView.LayoutManager createLayoutManager() {
 		return new BaseGridLayoutManager(getContext(), adapter);
+	}
+
+	public void addDisplayable(Displayable displayable) {
+		adapter.addDisplayable(displayable);
+		finishLoading();
 	}
 
 	public void addDisplayables(List<? extends Displayable> displayables) {

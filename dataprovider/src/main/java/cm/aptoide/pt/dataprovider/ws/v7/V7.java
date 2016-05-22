@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 14/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import java.io.IOException;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
@@ -71,19 +72,17 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 							.response().errorBody().string(), BaseV7Response.class);
 
-					if (INVALID_ACCESS_TOKEN_CODE.equals(baseV7Response.getErrors()
-							.get(0)
-							.getCode())) {
+					if (INVALID_ACCESS_TOKEN_CODE.equals(baseV7Response.getError().getCode())) {
 
 						if (!accessTokenRetry) {
 							accessTokenRetry = true;
-							return AptoideAccountManager.invalidateAccessToken(Application
-									.getContext())
-									.flatMap(s -> {
-										this.body.setAccess_token(s);
-										return V7.this.observe();
-									});
+							return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s->{
+								this.body.setAccess_token(s);
+								return V7.this.observe();
+							});
 						}
+					} else {
+						return Observable.error(new AptoideWsV7Exception(throwable).setBaseResponse(baseV7Response));
 					}
 				} catch (IOException e) {
 					e.printStackTrace();

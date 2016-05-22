@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -50,6 +50,9 @@ dependencies {
 
     debugCompile project(path: ':utils', configuration: 'debug')
     releaseCompile project(path: ':utils', configuration: 'release')
+
+    debugCompile project(path: ':database', configuration: 'debug')
+    releaseCompile project(path: ':database', configuration: 'release')
 
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 }
