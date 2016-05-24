@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -8,9 +8,14 @@ package cm.aptoide.pt.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.model.Model;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
+import lombok.Cleanup;
 
 /**
  * Created by sithengineer on 16/05/16.
@@ -60,4 +65,35 @@ public class Database {
 		return Realm.getInstance(realmConfig);
 	}
 
+	public static void save(RealmObject realmObject) {
+		@Cleanup Realm realm = get(Model.getContext());
+		realm.beginTransaction();
+		realm.copyToRealmOrUpdate(realmObject);
+		realm.commitTransaction();
+	}
+
+	public static class StoreQ {
+
+		public static Store get(long storeId) {
+			@Cleanup Realm realm = Database.get(Model.getContext());
+			return realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst();
+		}
+
+		public static Store get(String storeName) {
+			@Cleanup Realm realm = Database.get(Model.getContext());
+			return realm.where(Store.class).equalTo(Store.STORE_NAME, storeName).findFirst();
+		}
+
+		public static RealmResults<Store> getAll() {
+			@Cleanup Realm realm = Database.get(Model.getContext());
+			return realm.where(Store.class).findAll();
+		}
+
+		public static void delete(long storeId) {
+			@Cleanup Realm realm = Database.get(Model.getContext());
+			realm.beginTransaction();
+			realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst().deleteFromRealm();
+			realm.commitTransaction();
+		}
+	}
 }

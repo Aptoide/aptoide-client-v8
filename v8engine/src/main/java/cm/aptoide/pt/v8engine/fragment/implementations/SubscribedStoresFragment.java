@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -9,6 +9,7 @@ import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
 
+import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -30,10 +31,7 @@ public class SubscribedStoresFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh) {
 
-		Observable<RealmResults<Store>> realmResultsObservable = realm
-				.where(Store.class)
-				.findAll()
-				.asObservable();
+		Observable<RealmResults<Store>> realmResultsObservable = Database.StoreQ.getAll().asObservable();
 
 		realmResultsObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(stores -> {

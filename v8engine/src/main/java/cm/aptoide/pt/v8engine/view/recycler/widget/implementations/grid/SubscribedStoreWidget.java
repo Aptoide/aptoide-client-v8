@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 23/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -97,12 +97,8 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 									AptoideAccountManager.unsubscribeStore(store.getStoreName());
 								}
 
-								realm.beginTransaction();
-								realm.where(Store.class)
-										.equalTo("storeId", store.getStoreId())
-										.findFirst()
-										.deleteFromRealm();
-								realm.commitTransaction();
+								Database.StoreQ.delete(store.getStoreId());
+
 								break;
 						}
 					});

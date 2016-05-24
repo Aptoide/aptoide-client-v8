@@ -85,9 +85,7 @@ public class StoreUtils {
 					AptoideAccountManager.subscribeStore(storeData.getName());
 				}
 
-				realm.beginTransaction();
-				realm.copyToRealmOrUpdate(store);
-				realm.commitTransaction();
+				Database.save(store);
 
 				if (successRequestListener != null) {
 					successRequestListener.onSuccess(getStoreMeta);

@@ -48,10 +48,10 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 		Store store = null;
 
 		if (body.getStoreId() != null) {
-			store = realm.where(Store.class).equalTo(Store.STORE_ID, body.getStoreId()).findFirst();
+			store = Database.StoreQ.get(body.getStoreId());
 		}
 		else if (body.getStoreName() != null) {
-			store = realm.where(Store.class).equalTo(Store.STORE_NAME, body.getStoreName()).findFirst();
+			store = Database.StoreQ.get(body.getStoreName());
 		}
 
 		if (store != null && store.getUsername() != null && store.getPasswordSha1() != null) {
