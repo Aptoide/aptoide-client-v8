@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 23/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -24,8 +24,10 @@ import lombok.Cleanup;
 /**
  * Created by neuro on 11-05-2016.
  */
-@Deprecated
 public class StoreUtils {
+
+	public static final String PRIVATE_STORE_ERROR = "STORE-3";
+	public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
 
 	@Deprecated
 	public static List<Store> getSubscribedStores() {
@@ -33,9 +35,7 @@ public class StoreUtils {
 
 		stores.add(new Store().setAppearance(new Store.Appearance("default", "void"))
 				.setName("apps")
-				.setId(15)
-				.setAvatar("http://pool.img.aptoide" +
-						".com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar" + ".jpg"));
+				.setId(15).setAvatar("http://pool.img.aptoide.com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar.jpg"));
 
 		return stores;
 	}

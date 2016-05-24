@@ -1,0 +1,71 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
+ */
+
+package cm.aptoide.pt.dataprovider.ws.v7;
+
+import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import io.realm.Realm;
+import lombok.Cleanup;
+
+/**
+ * Created by neuro on 23-05-2016.
+ */
+public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
+
+	protected final String url;
+
+	protected BaseRequestWithStore(V7Url v7Url, boolean bypassCache, B body) {
+		super(bypassCache, body);
+		setStoreIdentifierFromUrl(v7Url);
+		url = v7Url.get();
+	}
+
+	protected BaseRequestWithStore(String storeName, boolean bypassCache, B body) {
+		super(bypassCache, body);
+		body.setStoreName(storeName);
+		url = "";
+	}
+
+	protected BaseRequestWithStore(long storeId, boolean bypassCache, B body) {
+		super(bypassCache, body);
+		body.setStoreId(storeId);
+		url = "";
+	}
+
+	@Override
+	protected void onLoadDataFromNetwork() {
+		super.onLoadDataFromNetwork();
+		setPrivateCredentials();
+	}
+
+	protected void setPrivateCredentials() {
+		@Cleanup Realm realm = Database.get(DataProvider.getContext());
+
+		Store store = null;
+
+		if (body.getStoreId() != null) {
+			store = realm.where(Store.class).equalTo(Store.STORE_ID, body.getStoreId()).findFirst();
+		}
+		else if (body.getStoreName() != null) {
+			store = realm.where(Store.class).equalTo(Store.STORE_NAME, body.getStoreName()).findFirst();
+		}
+
+		if (store != null && store.getUsername() != null && store.getPasswordSha1() != null) {
+			body.setStoreUser(store.getUsername()).setStorePassSha1(store.getPasswordSha1());
+		}
+	}
+
+	private void setStoreIdentifierFromUrl(V7Url v7Url) {
+		Long storeId = v7Url.getStoreId();
+		if (storeId != null) {
+			body.setStoreId(storeId);
+		}
+		else {
+			body.setStoreName(v7Url.getStoreName());
+		}
+	}
+}

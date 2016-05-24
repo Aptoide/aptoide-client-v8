@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 23/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -36,7 +36,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 // // TODO: 19-05-2016 neuro IMPORTS TODOS MARADOS!
 public class AddStoreDialog extends DialogFragment {
 
-	private final String PRIVATE_STORE_ERROR = "STORE-3";
 	private final int PRIVATE_STORE_REQUEST_CODE = 20;
 	private String storeName;
 	private Dialog loadingDialog;
@@ -45,10 +44,12 @@ public class AddStoreDialog extends DialogFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		switch (resultCode) {
-			case Activity.RESULT_OK:
-				dismiss();
-				break;
+		if (requestCode == PRIVATE_STORE_REQUEST_CODE) {
+			switch (resultCode) {
+				case Activity.RESULT_OK:
+					dismiss();
+					break;
+			}
 		}
 	}
 
@@ -101,10 +102,10 @@ public class AddStoreDialog extends DialogFragment {
 			if (e instanceof AptoideWsV7Exception) {
 				BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
 
-				if (PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())) {
-					DialogFragment fragment = PrivateStoreDialog.newInstance(AddStoreDialog
+				if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())) {
+					DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
 							.this, PRIVATE_STORE_REQUEST_CODE, storeName);
-					fragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+					dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
 				}
 				dismissLoadingDialog();
 			} else {

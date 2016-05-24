@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -16,6 +16,14 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Store extends RealmObject {
+
+	public static final String STORE_ID = "storeId";
+	public static final String ICON_PATH = "iconPath";
+	public static final String THEME = "theme";
+	public static final String DOWNLOADS = "downloads";
+	public static final String STORE_NAME = "storeName";
+	public static final String USERNAME = "username";
+	public static final String PASSWORD_SHA1 = "passwordSha1";
 
 	@PrimaryKey private long storeId;
 	private String iconPath;

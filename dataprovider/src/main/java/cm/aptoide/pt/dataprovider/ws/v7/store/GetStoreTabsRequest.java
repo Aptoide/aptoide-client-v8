@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,26 +19,22 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreTabsRequest extends V7<GetStoreTabs, GetStoreTabsRequest.Body> {
+public class GetStoreTabsRequest extends BaseRequestWithStore<GetStoreTabs, GetStoreTabsRequest.Body> {
 
-	private GetStoreTabsRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	public GetStoreTabsRequest(String storeName, boolean bypassCache) {
+		super(storeName, bypassCache, new Body());
+	}
+
+	public GetStoreTabsRequest(long storeId, boolean bypassCache) {
+		super(storeId, bypassCache, new Body());
 	}
 
 	public static GetStoreTabsRequest of(String storeName, boolean bypassCache) {
-		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest(bypassCache);
-
-		getStoreDisplaysRequest.body.setStoreName(storeName);
-
-		return getStoreDisplaysRequest;
+		return new GetStoreTabsRequest(storeName, bypassCache);
 	}
 
 	public static GetStoreTabsRequest of(int storeId, boolean bypassCache) {
-		GetStoreTabsRequest getStoreDisplaysRequest = new GetStoreTabsRequest(bypassCache);
-
-		getStoreDisplaysRequest.body.setStoreId(storeId);
-
-		return getStoreDisplaysRequest;
+		return new GetStoreTabsRequest(storeId, bypassCache);
 	}
 
 	@Override
@@ -49,12 +45,8 @@ public class GetStoreTabsRequest extends V7<GetStoreTabs, GetStoreTabsRequest.Bo
 	@Data
 	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody {
+	public static class Body extends BaseBodyWithStore {
 
 		private String lang = Api.LANG;
-		private Integer storeId;
-		private String storeName;
-		private String storePassSha1;
-		private String storeUser;
 	}
 }

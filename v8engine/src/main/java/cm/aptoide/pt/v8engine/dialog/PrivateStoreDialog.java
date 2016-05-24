@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 23/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -33,7 +33,6 @@ import cm.aptoide.pt.v8engine.R;
 public class PrivateStoreDialog extends DialogFragment {
 
 	public static final String TAG = "PrivateStoreDialog";
-	private final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
 	private ProgressDialog loadingDialog;
 	private String storeName;
 	private String storeUser;
@@ -88,7 +87,7 @@ public class PrivateStoreDialog extends DialogFragment {
 					if (e instanceof AptoideWsV7Exception) {
 						BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
 
-						if (PRIVATE_STORE_WRONG_CREDENTIALS.equals(baseResponse.getError().getCode())) {
+						if (StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(baseResponse.getError().getCode())) {
 							storeUser = null;
 							storePassSha1 = null;
 							ShowMessage.show(rootView, R.string.ws_error_invalid_grant);
