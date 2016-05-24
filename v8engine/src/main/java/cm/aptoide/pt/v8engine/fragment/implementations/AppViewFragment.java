@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -22,18 +22,16 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.Locale;
 
 import cm.aptoide.pt.actions.Action1WithWeakRef;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ObservableUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import rx.Observable;
@@ -90,10 +88,13 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		header = new AppViewHeader(view);
-		setHasOptionsMenu(true);
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override
+	public int getContentViewId() {
+		return VIEW_ID;
 	}
 
 	@Override
@@ -109,13 +110,10 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-	}
-
-	@Override
-	public int getContentViewId() {
-		return VIEW_ID;
+	public void bindViews(View view) {
+		super.bindViews(view);
+		header = new AppViewHeader(view);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -218,18 +216,17 @@ public class AppViewFragment extends GridRecyclerFragment {
 		public void setup(@NonNull GetAppMeta.App pojo) {
 
 			if (pojo.getGraphic() != null) {
-				Glide.with(V8Engine.getContext()).load(pojo.getGraphic()).into(featuredGraphic);
+				ImageLoader.load(pojo.getGraphic(), featuredGraphic);
 			}
 			/*
 			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty
 			(screenshots.get(0).url)) {
-				Glide.with(V8Engine.getContext()).load(screenshots.get(0).url).into
-				(mFeaturedGraphic);
+				ImageLoader.load(screenshots.get(0).url, mFeaturedGraphic);
 			}
 			*/
 
 			if (pojo.getIcon() != null) {
-				Glide.with(V8Engine.getContext()).load(pojo.getIcon()).into(appIcon);
+				ImageLoader.load(pojo.getIcon(), appIcon);
 			}
 
 			// TODO add placeholders in image loading
@@ -261,7 +258,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 					break;
 			}
 
-			Glide.with(V8Engine.getContext()).load(badgeResId).into(badge);
+			ImageLoader.load(badgeResId, badge);
 			badgeText.setText(badgeMessageId);
 		}
 

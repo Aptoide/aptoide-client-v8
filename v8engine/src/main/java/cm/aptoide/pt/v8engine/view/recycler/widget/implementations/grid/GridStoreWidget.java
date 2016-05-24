@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -14,13 +14,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
-import cm.aptoide.pt.v8engine.util.CircleTransform;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -80,16 +78,9 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 				.newInstance(gridStoreDisplayable.getPojo().getName())));
 
 		if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
-			Glide.with(context)
-					.fromResource()
-					.load(R.drawable.ic_avatar_apps)
-					.transform(new CircleTransform(context))
-					.into(storeAvatar);
+			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
 		} else {
-			Glide.with(context)
-					.load(store.getAvatar())
-					.transform(new CircleTransform(context))
-					.into(storeAvatar);
+			ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatar);
 		}
 	}
 }

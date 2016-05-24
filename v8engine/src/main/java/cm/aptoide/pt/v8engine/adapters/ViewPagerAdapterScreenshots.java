@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.adapters;
@@ -13,10 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 
@@ -58,10 +57,7 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 
 		final ImageView imageView = (ImageView) rootView.findViewById(R.id.screenshot_image_big);
 
-		Glide.with(context)
-				.load(uris.get(position))
-				.placeholder(getPlaceholder(context))
-				.into(imageView);
+		ImageLoader.load(uris.get(position), getPlaceholder(context), imageView);
 
 		container.addView(rootView);
 

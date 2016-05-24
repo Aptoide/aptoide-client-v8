@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.adapters;
@@ -16,11 +16,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ScreenUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -110,10 +109,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 
 			Context mainContext = V8Engine.getContext();
 
-			Glide.with(mainContext)
-					.load(item.getThumbnail())
-					.placeholder(R.drawable.placeholder_300x300)
-					.into(screenshot);
+			ImageLoader.load(item.getThumbnail(), R.drawable.placeholder_300x300, screenshot);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				media_layout.setForeground(
@@ -154,10 +150,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 			media_layout.setForeground(null);
 			play_button.setVisibility(View.GONE);
 
-			Glide.with(mainContext)
-					.load(thumbnail)
-					.placeholder(getPlaceholder(item.getOrientation()))
-					.into(screenshot);
+			ImageLoader.load(thumbnail, getPlaceholder(item.getOrientation()), screenshot);
 
 			itemView.setOnClickListener(
 					v ->{

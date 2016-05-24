@@ -14,16 +14,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
-import cm.aptoide.pt.v8engine.util.CircleTransform;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
@@ -75,13 +73,9 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 				.newInstance(displayable.getPojo().getStoreName())));
 
 		if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
-			Glide.with(context)
-					.fromResource()
-					.load(R.drawable.ic_avatar_apps)
-					.transform(new CircleTransform(context))
-					.into(storeAvatar);
+			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
 		} else {
-			Glide.with(context).load(store.getIconPath()).transform(new CircleTransform(context)).into(storeAvatar);
+			ImageLoader.loadWithCircleTransform(store.getIconPath(), storeAvatar);
 		}
 
 		storeUnsubscribe.setOnClickListener(v->{
