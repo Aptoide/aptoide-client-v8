@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.accountmanager.ws;
@@ -12,6 +12,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.ChangeUserSettingsResponse;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
+import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
@@ -102,5 +103,9 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 		@POST("3/changeUserRepoSubscription")
 		@FormUrlEncoded
 		Observable<GenericResponseV3> changeUserRepoSubscription(@FieldMap HashMap<String, String> args);
+
+		@POST("3/getUserRepoSubscription")
+		@FormUrlEncoded
+		Observable<GetUserRepoSubscription> getUserRepos(@FieldMap HashMap<String, String> args);
 	}
 }

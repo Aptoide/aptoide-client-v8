@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.accountmanager;
@@ -27,6 +27,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import cm.aptoide.accountmanager.util.UserInfo;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
@@ -35,10 +36,12 @@ import cm.aptoide.accountmanager.ws.ChangeUserSettingsRequest;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
+import cm.aptoide.accountmanager.ws.GetUserRepoSubscriptionRequest;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
+import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -59,6 +62,11 @@ import rx.schedulers.Schedulers;
  * <li>{@link #ACCOUNT_REMOVED_BROADCAST_KEY}</li>
  */
 public class AptoideAccountManager implements Application.ActivityLifecycleCallbacks {
+
+	public static final String LOGIN = cm.aptoide.pt.preferences.Application.getConfiguration()
+			.getAppId() + ".accountmanager.broadcast.login";
+	public static final String LOGOUT = cm.aptoide.pt.preferences.Application.getConfiguration()
+			.getAppId() + ".accountmanager.broadcast.logout";
 
 	/**
 	 * This constant is used to send the broadcast when an account is removed
@@ -262,6 +270,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					if (finalGenericPleaseWaitDialog != null) {
 						finalGenericPleaseWaitDialog.dismiss();
 					}
+					sendLoginBroadcast();
 					return;
 				}
 			}
@@ -547,6 +556,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	public static void subscribeStore(String storeName) {
 		ChangeUserRepoSubscriptionRequest.of(storeName, true)
 				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName));
+	}
+
+	private static void sendLoginBroadcast() {
+		cm.aptoide.pt.preferences.Application.getContext().sendBroadcast(new Intent().setAction(LOGIN));
+	}
+
+	public static Observable<List<GetUserRepoSubscription.Subscription>> getUserRepos() {
+		return GetUserRepoSubscriptionRequest.of()
+				.observe()
+				.map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
 	}
 
 	private void removeLocalAccount() {

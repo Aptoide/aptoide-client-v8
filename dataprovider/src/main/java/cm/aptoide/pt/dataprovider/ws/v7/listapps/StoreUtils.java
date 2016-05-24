@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
+import android.support.annotation.Nullable;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,14 +37,20 @@ public class StoreUtils {
 
 		stores.add(new Store().setAppearance(new Store.Appearance("default", "void"))
 				.setName("apps")
-				.setId(15).setAvatar("http://pool.img.aptoide.com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar.jpg"));
+				.setId(15)
+				.setAvatar("http://pool.img.aptoide.com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar.jpg"));
 
 		return stores;
 	}
 
-	public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest, SuccessRequestListener<GetStoreMeta>
-			successRequestListener, ErrorRequestListener errorRequestListener) {
-		getStoreMetaRequest.execute(getStoreMeta->{
+	public static void subscribeStore(String storeName, @Nullable SuccessRequestListener<GetStoreMeta>
+			successRequestListener, @Nullable ErrorRequestListener errorRequestListener) {
+		subscribeStore(GetStoreMetaRequest.of(storeName, false), successRequestListener, errorRequestListener);
+	}
+
+	public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest, @Nullable
+	SuccessRequestListener<GetStoreMeta> successRequestListener, @Nullable ErrorRequestListener errorRequestListener) {
+		getStoreMetaRequest.execute(getStoreMeta -> {
 
 			if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
 
@@ -81,9 +89,15 @@ public class StoreUtils {
 				realm.copyToRealmOrUpdate(store);
 				realm.commitTransaction();
 
-				successRequestListener.onSuccess(getStoreMeta);
+				if (successRequestListener != null) {
+					successRequestListener.onSuccess(getStoreMeta);
+				}
 			}
-		}, errorRequestListener::onError);
+		}, (e) -> {
+			if (errorRequestListener != null) {
+				errorRequestListener.onError(e);
+			}
+		});
 	}
 
 	private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {

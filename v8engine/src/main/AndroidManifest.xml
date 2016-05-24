@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 10/05/2016.
+  ~ Modified by Neurophobic Animal on 24/05/2016.
   -->
 
 <manifest package="cm.aptoide.pt.v8engine"
@@ -19,6 +19,12 @@
         </activity>
 
         <activity android:name=".activities.StoreActivity"/>
+
+        <receiver android:name=".broadcastreceivers.LoginBroadcastReceiver">
+            <intent-filter>
+                <action android:name="${applicationId}.accountmanager.broadcast.login"/>
+            </intent-filter>
+        </receiver>
 
         <!--
         <activity android:name="cm.aptoide.pt.v8engine.MainActivityStoreList">
