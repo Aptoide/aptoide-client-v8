@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -12,6 +12,14 @@ import io.realm.annotations.PrimaryKey;
  * Created by sithengineer on 12/05/16.
  */
 public class Installed extends RealmObject {
+
+	public static final String ID = "id";
+	public static final String PACKAGE_NAME = "packageName";
+	public static final String NAME = "name";
+	public static final String VERSION_CODE = "versionCode";
+	public static final String VERSION_NAME = "versionName";
+	public static final String SIGNATURE = "signature";
+
 	@PrimaryKey private int id;
 	private String packageName;
 	private String name;

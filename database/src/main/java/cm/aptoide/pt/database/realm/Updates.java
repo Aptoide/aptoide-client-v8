@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -15,6 +15,20 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Updates extends RealmObject {
+
+	public static final String APP_ID = "appId";
+	public static final String ICON = "icon";
+	public static final String PACKAGE_NAME = "packageName";
+	public static final String VERSION_CODE = "versionCode";
+	public static final String SIGNATURE = "signature";
+	public static final String TIMESTAMP = "timestamp";
+	public static final String MD5 = "md5";
+	public static final String URL = "url";
+	public static final String FILE_SIZE = "fileSize";
+	public static final String UPDATE_VERSION_NAME = "updateVersionName";
+	public static final String ALTERNATIVE_URL = "alternativeUrl";
+	public static final String UPDATE_VERSION_CODE = "updateVersionCode";
+
 	@PrimaryKey private int appId;
 	private String icon;
 
