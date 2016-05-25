@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -48,10 +48,10 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 		Store store = null;
 
 		if (body.getStoreId() != null) {
-			store = Database.StoreQ.get(body.getStoreId());
+			store = Database.StoreQ.get(body.getStoreId(), realm);
 		}
 		else if (body.getStoreName() != null) {
-			store = Database.StoreQ.get(body.getStoreName());
+			store = Database.StoreQ.get(body.getStoreName(), realm);
 		}
 
 		if (store != null && store.getUsername() != null && store.getPasswordSha1() != null) {

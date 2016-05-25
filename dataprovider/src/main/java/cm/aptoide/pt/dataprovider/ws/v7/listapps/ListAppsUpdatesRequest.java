@@ -1,27 +1,27 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
-
-import android.content.pm.PackageInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
-import cm.aptoide.pt.dataprovider.util.AptoideUtils;
+import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.utils.AlgorithmUtils;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import lombok.AllArgsConstructor;
+import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -61,11 +61,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	private static List<ApksData> getInstalledApksData() {
 		LinkedList<ApksData> apksDatas = new LinkedList<>();
 
-		for (PackageInfo packageInfo : AptoideUtils.getInstalledApps()) {
-			apksDatas.add(new ApksData(packageInfo.packageName, packageInfo.versionCode,
-					AlgorithmUtils
-					.computeSHA1sumFromBytes(packageInfo.signatures[0].toByteArray())
-					.toUpperCase(Locale.ENGLISH)));
+		@Cleanup Realm realm = Database.get();
+
+		RealmResults<Installed> all = Database.InstalledQ.getAll(realm);
+		for (Installed installed : all) {
+			apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed.getSignature
+					()));
 		}
 
 		return apksDatas;

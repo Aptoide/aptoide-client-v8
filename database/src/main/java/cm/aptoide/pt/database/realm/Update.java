@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
 
+import cm.aptoide.pt.model.v7.listapp.App;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -14,7 +15,7 @@ import io.realm.annotations.PrimaryKey;
  * TODO check with dataprovider and models...
  */
 
-public class Updates extends RealmObject {
+public class Update extends RealmObject {
 
 	public static final String APP_ID = "appId";
 	public static final String ICON = "icon";
@@ -23,32 +24,60 @@ public class Updates extends RealmObject {
 	public static final String SIGNATURE = "signature";
 	public static final String TIMESTAMP = "timestamp";
 	public static final String MD5 = "md5";
-	public static final String URL = "url";
+	public static final String APK_PATH = "apkPath";
 	public static final String FILE_SIZE = "fileSize";
 	public static final String UPDATE_VERSION_NAME = "updateVersionName";
-	public static final String ALTERNATIVE_URL = "alternativeUrl";
+	public static final String ALTERNATIVE_URL = "alternativeApkPath";
 	public static final String UPDATE_VERSION_CODE = "updateVersionCode";
 
-	@PrimaryKey private int appId;
+	@PrimaryKey private long appId;
+	private String label;
 	private String icon;
-
 	private String packageName;
 	private int versionCode;
-	private String signature;
+	//	private String signature;
 	private long timestamp;
 	private String md5;
-	private String url;
+	private String apkPath;
 	private double fileSize;
 	private String updateVersionName;
-	private String alternativeUrl;
-	private String updateVersionCode;
+	private String alternativeApkPath;
+	private int updateVersionCode;
 
-	public int getAppId() {
+	public Update() {
+	}
+
+	public Update(App app) {
+		appId = app.getId();
+		label = app.getName();
+		icon = app.getIcon();
+
+		packageName = app.getPackageName();
+//		versionCode = app.getFile().getVercode();
+//		signature = app.get;
+//		timestamp = app.getModified();
+		md5 = app.getFile().getMd5sum();
+		apkPath = app.getFile().getPath();
+		fileSize = app.getFile().getFilesize();
+		updateVersionName = app.getFile().getVername();
+		alternativeApkPath = app.getFile().getPathAlt();
+		updateVersionCode = app.getFile().getVercode();
+	}
+
+	public long getAppId() {
 		return appId;
 	}
 
 	public void setAppId(int appId) {
 		this.appId = appId;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	public String getIcon() {
@@ -75,13 +104,13 @@ public class Updates extends RealmObject {
 		this.versionCode = versionCode;
 	}
 
-	public String getSignature() {
-		return signature;
-	}
-
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
+//	public String getSignature() {
+//		return signature;
+//	}
+//
+//	public void setSignature(String signature) {
+//		this.signature = signature;
+//	}
 
 	public long getTimestamp() {
 		return timestamp;
@@ -99,12 +128,12 @@ public class Updates extends RealmObject {
 		this.md5 = md5;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getApkPath() {
+		return apkPath;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setApkPath(String apkPath) {
+		this.apkPath = apkPath;
 	}
 
 	public double getFileSize() {
@@ -123,19 +152,19 @@ public class Updates extends RealmObject {
 		this.updateVersionName = updateVersionName;
 	}
 
-	public String getAlternativeUrl() {
-		return alternativeUrl;
+	public String getAlternativeApkPath() {
+		return alternativeApkPath;
 	}
 
-	public void setAlternativeUrl(String alternativeUrl) {
-		this.alternativeUrl = alternativeUrl;
+	public void setAlternativeApkPath(String alternativeApkPath) {
+		this.alternativeApkPath = alternativeApkPath;
 	}
 
-	public String getUpdateVersionCode() {
+	public int getUpdateVersionCode() {
 		return updateVersionCode;
 	}
 
-	public void setUpdateVersionCode(String updateVersionCode) {
+	public void setUpdateVersionCode(int updateVersionCode) {
 		this.updateVersionCode = updateVersionCode;
 	}
 }

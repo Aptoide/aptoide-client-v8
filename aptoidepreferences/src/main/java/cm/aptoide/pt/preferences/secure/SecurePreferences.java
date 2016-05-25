@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
@@ -32,7 +32,7 @@ public class SecurePreferences {
 	}
 
 	public static boolean isFirstRun() {
-		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.FIRST_RUN, false);
+		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.FIRST_RUN, true);
 	}
 
 	public static void setFirstRun() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -31,7 +31,7 @@ public class SubscribedStoresFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh) {
 
-		Observable<RealmResults<Store>> realmResultsObservable = Database.StoreQ.getAll().asObservable();
+		Observable<RealmResults<Store>> realmResultsObservable = Database.StoreQ.getAll(realm).asObservable();
 
 		realmResultsObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(stores -> {

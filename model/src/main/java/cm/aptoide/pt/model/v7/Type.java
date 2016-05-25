@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -39,7 +39,11 @@ public enum Type {
 
 	// Client
 	SUBSCRIBED_STORE(2),
-	ADD_MORE_STORES(true);
+	ADD_MORE_STORES(true),
+
+	// Updates
+	INSTALLED(1),
+	UPDATE(1);
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 

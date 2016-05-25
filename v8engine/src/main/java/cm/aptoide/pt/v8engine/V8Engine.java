@@ -1,20 +1,26 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.pm.PackageInfo;
 import android.os.StrictMode;
 import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
+import java.util.Collections;
+import java.util.List;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.util.AptoideUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.SystemUtils;
@@ -68,7 +74,7 @@ public abstract class V8Engine extends DataProvider {
 
 	@Override
 	public void onCreate() {
-
+		long l = System.currentTimeMillis();
 		SystemUtils.context = this;
 
 		if (BuildConfig.DEBUG) {
@@ -84,12 +90,32 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		if (SecurePreferences.isFirstRun()) {
+			loadInstalledApps();
+			AptoideUtils.checkUpdates();
+
 			if (AptoideAccountManager.isLoggedIn()) {
 				if (!SecurePreferences.isUserDataLoaded()) {
 					loadUserData();
 					SecurePreferences.setUserDataLoaded();
 				}
 			}
+		}
+		Log.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+	}
+
+	private void loadInstalledApps() {
+		@Cleanup Realm realm = Database.get(this);
+		Database.dropTable(Installed.class, realm);
+
+		List<PackageInfo> installedApps = AptoideUtils.getUserInstalledApps();
+		Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
+
+		// Installed apps are inserted in database based on their firstInstallTime. Older comes first.
+		Collections.sort(installedApps, (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
+
+		for (PackageInfo packageInfo : installedApps) {
+			Installed installed = new Installed(packageInfo, getPackageManager());
+			Database.save(installed, realm);
 		}
 	}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -34,9 +34,9 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 
 	private static final String TAG = "StoreFragment";
 	private final int PRIVATE_STORE_REQUEST_CODE = 20;
+	protected PagerSlidingTabStrip pagerSlidingTabStrip;
 	private String storeName;
 	private StoreContext storeContext;
-
 	private ViewPager mViewPager;
 	private GetStore getStore;
 
@@ -120,11 +120,11 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 		mViewPager = null;
 	}
 
-	private void setupViewPager(GetStore getStore) {
+	protected void setupViewPager(GetStore getStore) {
 		final PagerAdapter pagerAdapter = new StorePagerAdapter(getChildFragmentManager(), getStore);
 		mViewPager.setAdapter(pagerAdapter);
 
-		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
+		pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 		if (pagerSlidingTabStrip != null) {
 			pagerSlidingTabStrip.setViewPager(mViewPager);
 		}

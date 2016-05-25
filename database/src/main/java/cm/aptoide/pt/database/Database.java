@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -8,14 +8,16 @@ package cm.aptoide.pt.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.model.Model;
+import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
-import lombok.Cleanup;
 
 /**
  * Created by sithengineer on 16/05/16.
@@ -29,6 +31,10 @@ public class Database {
 
 	private static String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
+	}
+
+	public static Realm get() {
+		return get(Application.getContext());
 	}
 
 	public static Realm get(Context context) {
@@ -65,35 +71,93 @@ public class Database {
 		return Realm.getInstance(realmConfig);
 	}
 
-	public static void save(RealmObject realmObject) {
-		@Cleanup Realm realm = get(Model.getContext());
+	public static void save(RealmObject realmObject, Realm realm) {
 		realm.beginTransaction();
 		realm.copyToRealmOrUpdate(realmObject);
 		realm.commitTransaction();
 	}
 
+	public static void save(Installed installed, Realm realm) {
+		realm.beginTransaction();
+		installed.computeId();
+		realm.copyToRealmOrUpdate(installed);
+		realm.commitTransaction();
+	}
+
+	public static void delete(RealmObject realmObject, Realm realm) {
+		realm.beginTransaction();
+		realmObject.deleteFromRealm();
+		realm.commitTransaction();
+	}
+
+	public static void dropTable(Class<? extends RealmModel> aClass, Realm realm) {
+		realm.beginTransaction();
+		realm.delete(aClass);
+		realm.commitTransaction();
+	}
+
+	public static class InstalledQ {
+
+		public static RealmResults<Installed> getAll(Realm realm) {
+			return realm.where(Installed.class).findAll();
+		}
+
+		public static Installed get(String packageName, Realm realm) {
+			return realm.where(Installed.class).equalTo(Installed.PACKAGE_NAME, packageName).findFirst();
+		}
+
+		public static void delete(String packageName, Realm realm) {
+			Installed first = realm.where(Installed.class).equalTo(Installed.PACKAGE_NAME, packageName).findFirst();
+			if (first != null) {
+				realm.beginTransaction();
+				first.deleteFromRealm();
+				realm.commitTransaction();
+			}
+		}
+	}
+
 	public static class StoreQ {
 
-		public static Store get(long storeId) {
-			@Cleanup Realm realm = Database.get(Model.getContext());
+		public static Store get(long storeId, Realm realm) {
 			return realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst();
 		}
 
-		public static Store get(String storeName) {
-			@Cleanup Realm realm = Database.get(Model.getContext());
+		public static Store get(String storeName, Realm realm) {
 			return realm.where(Store.class).equalTo(Store.STORE_NAME, storeName).findFirst();
 		}
 
-		public static RealmResults<Store> getAll() {
-			@Cleanup Realm realm = Database.get(Model.getContext());
+		public static RealmResults<Store> getAll(Realm realm) {
 			return realm.where(Store.class).findAll();
 		}
 
-		public static void delete(long storeId) {
-			@Cleanup Realm realm = Database.get(Model.getContext());
+		public static void delete(long storeId, Realm realm) {
 			realm.beginTransaction();
 			realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst().deleteFromRealm();
 			realm.commitTransaction();
+		}
+	}
+
+	public static class UpdatesQ {
+
+		public static RealmResults<Update> getAll(Realm realm) {
+			return realm.where(Update.class).findAll();
+		}
+
+		public static boolean contains(String packageName, Realm realm) {
+			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst() != null;
+		}
+
+		public static void delete(String packageName, Realm realm) {
+			Update first = realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
+			if (first != null) {
+				realm.beginTransaction();
+				first.deleteFromRealm();
+				realm.commitTransaction();
+			}
+		}
+
+		public static Update get(String packageName, Realm realm) {
+			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
 		}
 	}
 }

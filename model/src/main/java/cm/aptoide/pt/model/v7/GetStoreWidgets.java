@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -9,11 +9,13 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 22-04-2016.
  */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreWidgets extends BaseV7Response {
 

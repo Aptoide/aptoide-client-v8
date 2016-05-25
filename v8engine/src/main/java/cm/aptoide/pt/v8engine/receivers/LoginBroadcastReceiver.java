@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.broadcastreceivers;
+package cm.aptoide.pt.v8engine.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

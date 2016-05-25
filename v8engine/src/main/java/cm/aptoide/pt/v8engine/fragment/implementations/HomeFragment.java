@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -12,10 +12,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.LinearLayout;
+
+import com.trello.rxlifecycle.FragmentEvent;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.BadgeView;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -24,6 +30,7 @@ public class HomeFragment extends StoreFragment {
 
 	private DrawerLayout mDrawerLayout;
 	private NavigationView mNavigationView;
+	private BadgeView updatesBadge;
 
 	public static HomeFragment newInstance(String storeName) {
 		return newInstance(storeName, StoreContext.store);
@@ -105,5 +112,34 @@ public class HomeFragment extends StoreFragment {
 
 		mDrawerLayout = null;
 		mNavigationView = null;
+	}
+
+	@Override
+	protected void setupViewPager(GetStore getStore) {
+		super.setupViewPager(getStore);
+
+		updatesBadge = new BadgeView(getContext(), ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
+
+		Database.UpdatesQ.getAll(realm)
+				.asObservable()
+				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+				.subscribe(updates -> {
+					refreshUpdatesBadge(updates.size());
+				});
+	}
+
+	public void refreshUpdatesBadge(int num) {
+		updatesBadge.setTextSize(11);
+
+		if (num > 0) {
+			updatesBadge.setText(String.valueOf(num));
+			if (!updatesBadge.isShown()) {
+				updatesBadge.show(true);
+			}
+		} else {
+			if (updatesBadge.isShown()) {
+				updatesBadge.hide(true);
+			}
+		}
 	}
 }

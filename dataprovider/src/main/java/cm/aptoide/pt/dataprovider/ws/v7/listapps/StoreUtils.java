@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -85,7 +85,7 @@ public class StoreUtils {
 					AptoideAccountManager.subscribeStore(storeData.getName());
 				}
 
-				Database.save(store);
+				Database.save(store, realm);
 
 				if (successRequestListener != null) {
 					successRequestListener.onSuccess(getStoreMeta);
