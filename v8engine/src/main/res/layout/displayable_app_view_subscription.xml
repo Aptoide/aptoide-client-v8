@@ -8,15 +8,14 @@
     android:id="@+id/store"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_margin="8dp"
+    android:layout_height="wrap_content"
     android:foreground="?attr/selectableItemBackground"
     >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="25dp"
+        android:layout_gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -69,7 +68,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="13dp"
         android:background="@drawable/button_border_orange"
         android:text="@string/appview_subscribe_store_button_text"
         android:textAppearance="?android:attr/textAppearanceSmallInverse"

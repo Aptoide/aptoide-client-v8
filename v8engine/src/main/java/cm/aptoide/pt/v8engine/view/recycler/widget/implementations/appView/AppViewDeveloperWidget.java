@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -46,19 +46,19 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 		if(!TextUtils.isEmpty(app.getDeveloper().getWebsite())) {
 			websiteLabel.setText(app.getDeveloper().getWebsite());
 		} else {
-			websiteLabel.setVisibility(View.GONE);
+//			websiteLabel.setVisibility(View.GONE);
 		}
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getEmail())) {
 			emailLabel.setText(app.getDeveloper().getEmail());
 		} else {
-			emailLabel.setVisibility(View.GONE);
+//			emailLabel.setVisibility(View.GONE);
 		}
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getPrivacy())) {
 			privacyPolicyLabel.setText(app.getDeveloper().getPrivacy());
 		} else {
-			privacyPolicyLabel.setVisibility(View.GONE);
+//			privacyPolicyLabel.setVisibility(View.GONE);
 		}
 
 		permissionsLabel.setOnClickListener(

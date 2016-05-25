@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -17,20 +17,19 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ScreenshotsAdapter;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewImagesDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 11/05/16.
  */
-@Displayables({AppViewImagesDisplayable.class})
-public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
+@Displayables({AppViewScreenshotsDisplayable.class})
+public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayable> {
 
 	private RecyclerView mediaList;
 
-	public AppViewImagesWidget(View itemView) {
+	public AppViewScreenshotsWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -40,7 +39,7 @@ public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
 	}
 
 	@Override
-	public void bindView(AppViewImagesDisplayable displayable) {
+	public void bindView(AppViewScreenshotsDisplayable displayable) {
 		final GetAppMeta.Media media = displayable.getPojo().getMedia();
 		if(!isMediaAvailable(media)) {
 			mediaList = null;

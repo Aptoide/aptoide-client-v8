@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -12,16 +12,16 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewRateThisDisplayable extends AppViewDisplayable {
+public class AppViewRatingDisplayable extends AppViewDisplayable {
 
-	public AppViewRateThisDisplayable() {
+	public AppViewRatingDisplayable() {
 	}
 
-	public AppViewRateThisDisplayable(GetAppMeta.App app) {
+	public AppViewRatingDisplayable(GetAppMeta.App app) {
 		super(app);
 	}
 
-	public AppViewRateThisDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
+	public AppViewRatingDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
 		super(pojo, fixedPerLineCount);
 	}
 
