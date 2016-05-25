@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 10/05/2016.
+  ~ Modified by Neurophobic Animal on 25/05/2016.
   -->
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/developer_title"
@@ -26,32 +26,32 @@
         android:id="@+id/website_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorSecondary"
         android:drawableLeft="@drawable/ic_map_appview"
         android:drawablePadding="8dp"
         android:padding="@dimen/appview_developer_padding"
+        android:textColor="?android:attr/textColorSecondary"
         />
 
     <TextView
         android:id="@+id/email_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorSecondary"
         android:drawableLeft="@drawable/ic_mail_appview"
         android:drawablePadding="8dp"
         android:padding="@dimen/appview_developer_padding"
+        android:textColor="?android:attr/textColorSecondary"
         />
 
     <TextView
         android:id="@+id/privacy_policy_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorSecondary"
         android:drawableLeft="@drawable/ic_locked_appview"
         android:drawablePadding="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="@dimen/appview_developer_padding"
+        android:textColor="?android:attr/textColorSecondary"
         />
 
     <TextView
@@ -60,11 +60,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:textColor="?android:attr/textColorSecondary"
         android:drawableLeft="@drawable/ic_permissions_appview"
         android:drawablePadding="8dp"
         android:padding="@dimen/appview_developer_padding"
         android:text="@string/permissions"
+        android:textColor="?android:attr/textColorSecondary"
         />
 
 </LinearLayout>

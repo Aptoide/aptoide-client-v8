@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/05/2016.
+  ~ Modified by Neurophobic Animal on 25/05/2016.
   -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     >
     <!-- progress bar while installing -->
@@ -51,8 +51,8 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            tools:text="80%"
             android:textColor="@color/default_color"
+            tools:text="80%"
             />
 
         <LinearLayout
@@ -100,8 +100,8 @@
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
-        android:weightSum="2"
         android:visibility="gone"
+        android:weightSum="2"
         >
 
         <LinearLayout
@@ -125,8 +125,8 @@
                 android:gravity="center"
                 android:maxLines="2"
                 android:maxWidth="70dp"
-                android:textColor="?android:attr/textColorSecondary"
                 android:text="@string/appview_latest_version_text"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/text_size_small"
                 android:textStyle="bold"
                 />

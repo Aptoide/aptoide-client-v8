@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 10/05/2016.
+  ~ Modified by Neurophobic Animal on 25/05/2016.
   -->
 
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/store"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_margin="8dp"
-    android:orientation="horizontal"
     android:foreground="?attr/selectableItemBackground"
     >
 
