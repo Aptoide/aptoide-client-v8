@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.layouthandler.SwipeLoaderLayoutHandler;
 /**
  * Created by neuro on 05-05-2016.
  */
-public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragment implements
+public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragmentWithDecorator implements
 		ReloadInterface {
 
 	@NonNull
