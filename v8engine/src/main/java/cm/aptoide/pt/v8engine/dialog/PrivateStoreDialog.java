@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -21,8 +21,8 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.MathUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 
@@ -74,7 +74,8 @@ public class PrivateStoreDialog extends DialogFragment {
 			b.setOnClickListener(view->{
 
 				storeUser = ((EditText) rootView.findViewById(R.id.edit_store_username)).getText().toString();
-				storePassSha1 = MathUtils.computeSHA1sum(((EditText) rootView.findViewById(R.id.edit_store_password))
+				storePassSha1 = AptoideUtils.AlgorithmU.computeSha1(((EditText) rootView.findViewById(R.id
+						.edit_store_password))
 						.getText()
 						.toString());
 

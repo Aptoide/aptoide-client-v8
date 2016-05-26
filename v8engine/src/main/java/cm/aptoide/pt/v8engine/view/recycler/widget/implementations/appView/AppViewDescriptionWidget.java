@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -56,8 +56,8 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 
 	@Override
 	public void bindView(AppViewDescriptionDisplayable displayable) {
-		final GetAppMeta.App pojo = displayable.getPojo();
-		final GetAppMeta.Media media = pojo.getMedia();
+		final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
+		final GetAppMeta.Media media = app.getMedia();
 
 		if(!TextUtils.isEmpty(media.getDescription())) {
 			description.setText(media.getDescription());
@@ -87,7 +87,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 				}
 		);
 
-		GetAppMeta.GetAppMetaFile.Malware malware = pojo.getFile().getMalware();
+		GetAppMeta.GetAppMetaFile.Malware malware = app.getFile().getMalware();
 		if(malware!=null) {
 
 			if (malware.getReason().getThirdpartyValidated() != null && GetAppMeta.GetAppMetaFile.Malware.GOOGLE_PLAY

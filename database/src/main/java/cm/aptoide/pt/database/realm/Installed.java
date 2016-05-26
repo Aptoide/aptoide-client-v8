@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -13,7 +13,7 @@ import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AlgorithmUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
@@ -45,10 +45,10 @@ public class Installed extends RealmObject {
 	}
 
 	public Installed(PackageInfo packageInfo, @NonNull PackageManager packageManager) {
-		setIcon("android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon);
-		setName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
+		setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
+		setName(AptoideUtils.SystemU.getApkLabel(packageInfo));
 		setPackageName(packageInfo.packageName);
-		setSignature(AlgorithmUtils.computeSHA1sumFromBytes(packageInfo.signatures[0].toByteArray())
+		setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray())
 				.toUpperCase(Locale.ENGLISH));
 		setVersionCode(packageInfo.versionCode);
 		setVersionName(packageInfo.versionName);
@@ -56,7 +56,7 @@ public class Installed extends RealmObject {
 
 	public void update(PackageInfo packageInfo, Realm realm) {
 		realm.beginTransaction();
-		setIcon("android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon);
+		setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
 		setVersionCode(packageInfo.versionCode);
 		setVersionName(packageInfo.versionName);
 		realm.commitTransaction();

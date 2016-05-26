@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import java.util.regex.Matcher;
 
-import cm.aptoide.pt.utils.RegexUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 
 /**
  * Created by neuro on 23-05-2016.
@@ -25,7 +25,7 @@ public class V7Url {
 	}
 
 	public String getStoreName() {
-		Matcher matcher = RegexUtils.getStoreNameFromGetUrlPattern().matcher(url);
+		Matcher matcher = AptoideUtils.RegexU.getStoreNameFromGetUrlPattern().matcher(url);
 		if (matcher.find()) {
 			return matcher.group(1);
 		}
@@ -34,7 +34,7 @@ public class V7Url {
 	}
 
 	public Long getStoreId() {
-		Matcher matcher = RegexUtils.getStoreIdFromGetUrlPattern().matcher(url);
+		Matcher matcher = AptoideUtils.RegexU.getStoreIdFromGetUrlPattern().matcher(url);
 		if (matcher.find()) {
 			return Long.parseLong(matcher.group(1));
 		}

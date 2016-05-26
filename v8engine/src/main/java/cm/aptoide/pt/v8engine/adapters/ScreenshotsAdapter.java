@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.adapters;
@@ -21,7 +21,7 @@ import java.util.List;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScreenshotsViewerFragment;
@@ -138,14 +138,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 				final ArrayList<String> imagesUris
 		) {
 
-			Context mainContext = V8Engine.getContext();
-
-			String thumbnail =
-					ScreenUtils.screenshotToThumb(
-							mainContext,
-							item.getUrl(),
-							item.getOrientation()
-					);
+			String thumbnail = AptoideUtils.ImageSizeU.screenshotToThumb(item.getUrl(), item.getOrientation());
 
 			media_layout.setForeground(null);
 			play_button.setVisibility(View.GONE);

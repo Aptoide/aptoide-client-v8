@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -122,6 +122,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		private List<ApksData> apksData = getInstalledApksData();
 		private String lang = Api.LANG;
 		private String q = Api.Q;
+		// TODO: 27-05-2016 neuro implement
 		private List<Long> storeIds = getSubscribedStoresIds();
 		private List<String> storeNames;
 		private List<StoreAuth> storesAuth;

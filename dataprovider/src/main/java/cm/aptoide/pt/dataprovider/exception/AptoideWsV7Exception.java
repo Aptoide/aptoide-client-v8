@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.exception;
@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class AptoideWsV7Exception extends Throwable {
+public class AptoideWsV7Exception extends IllegalStateException {
 
 	private BaseV7Response baseResponse;
 

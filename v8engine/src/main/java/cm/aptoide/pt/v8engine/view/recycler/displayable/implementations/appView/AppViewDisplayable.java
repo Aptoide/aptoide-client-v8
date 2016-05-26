@@ -1,29 +1,29 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.annotation.Ignore;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
 @Ignore
-public abstract class AppViewDisplayable extends DisplayablePojo<GetAppMeta.App> {
+public abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
 
 	public AppViewDisplayable() {
 	}
 
-	public AppViewDisplayable(GetAppMeta.App app) {
-		super(app);
+	public AppViewDisplayable(GetApp getApp) {
+		super(getApp);
 	}
 
-	public AppViewDisplayable(GetAppMeta.App app, boolean fixedPerLineCount) {
-		super(app, fixedPerLineCount);
+	public AppViewDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+		super(getApp, fixedPerLineCount);
 	}
 
 	@Override

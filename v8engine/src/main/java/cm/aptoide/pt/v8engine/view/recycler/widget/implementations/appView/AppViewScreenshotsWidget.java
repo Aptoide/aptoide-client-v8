@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -12,9 +12,8 @@ import android.view.View;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ScreenshotsAdapter;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
@@ -47,8 +46,7 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
 			return;
 		}
 
-		mediaList.addItemDecoration(new DividerItemDecoration(ScreenUtils.getPixels(V8Engine
-				.getContext(), 5))
+		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(5))
 		);
 		mediaList.setLayoutManager(new LinearLayoutManager(
 				itemView.getContext(), LinearLayoutManager.HORIZONTAL, false)

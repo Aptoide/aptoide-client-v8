@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 
@@ -17,12 +17,12 @@ public class AppViewRatingDisplayable extends AppViewDisplayable {
 	public AppViewRatingDisplayable() {
 	}
 
-	public AppViewRatingDisplayable(GetAppMeta.App app) {
-		super(app);
+	public AppViewRatingDisplayable(GetApp getApp) {
+		super(getApp);
 	}
 
-	public AppViewRatingDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
+	public AppViewRatingDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+		super(getApp, fixedPerLineCount);
 	}
 
 	@Override

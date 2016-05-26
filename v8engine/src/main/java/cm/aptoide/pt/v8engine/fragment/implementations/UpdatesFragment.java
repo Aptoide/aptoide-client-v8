@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -13,8 +13,9 @@ import java.util.List;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.AptoideUtils;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -50,7 +51,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void reload() {
 		super.reload();
-		AptoideUtils.checkUpdates(listAppsUpdates -> {
+		DataproviderUtils.checkUpdates(listAppsUpdates -> {
 			if (listAppsUpdates.getList().size() == 0) {
 				finishLoading();
 				ShowMessage.show(getView(), R.string.no_updates_available_retoric);
@@ -73,8 +74,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 							updatesDisplayablesList.clear();
 
 							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget()
-										.setTitle(AptoideUtils
+								updatesDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
@@ -96,8 +96,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 					.subscribe(installeds -> {
 						installedDisplayablesList.clear();
 
-						installedDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget()
-								.setTitle(AptoideUtils
+						installedDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
 								.getResString(R.string.installed_tab))));
 
 						RealmResults<Installed> all = realmResults;

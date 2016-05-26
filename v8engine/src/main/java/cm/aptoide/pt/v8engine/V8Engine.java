@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -20,10 +20,10 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.util.AptoideUtils;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.SystemUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
 
@@ -75,7 +75,7 @@ public abstract class V8Engine extends DataProvider {
 	@Override
 	public void onCreate() {
 		long l = System.currentTimeMillis();
-		SystemUtils.context = this;
+		AptoideUtils.setContext(this);
 
 		if (BuildConfig.DEBUG) {
 			setupStrictMode();
@@ -91,7 +91,7 @@ public abstract class V8Engine extends DataProvider {
 
 		if (SecurePreferences.isFirstRun()) {
 			loadInstalledApps();
-			AptoideUtils.checkUpdates();
+			DataproviderUtils.checkUpdates();
 
 			if (AptoideAccountManager.isLoggedIn()) {
 				if (!SecurePreferences.isUserDataLoaded()) {
@@ -107,7 +107,7 @@ public abstract class V8Engine extends DataProvider {
 		@Cleanup Realm realm = Database.get(this);
 		Database.dropTable(Installed.class, realm);
 
-		List<PackageInfo> installedApps = AptoideUtils.getUserInstalledApps();
+		List<PackageInfo> installedApps = AptoideUtils.SystemU.getUserInstalledApps();
 		Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
 
 		// Installed apps are inserted in database based on their firstInstallTime. Older comes first.
