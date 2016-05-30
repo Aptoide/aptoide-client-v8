@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 14/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -55,7 +55,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    // previous dependency added due to Glide. is this really necessary?
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
@@ -65,7 +64,9 @@ dependencies {
 
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
 
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.trello:rxlifecycle:0.6.1'
+    // If you want pre-written Activities and Fragments you can subclass as providers
+    compile 'com.trello:rxlifecycle-components:0.6.1'
 
     //    Apagar
     compile "com.jakewharton.rxbinding:rxbinding:${RX_BINDING_VERSION}"
@@ -107,4 +108,7 @@ dependencies {
 
     debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
     releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
+
+    debugCompile project(path: ':imageloader', configuration: 'debug')
+    releaseCompile project(path: ':imageloader', configuration: 'release')
 }

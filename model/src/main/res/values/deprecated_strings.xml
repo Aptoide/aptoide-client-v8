@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 30/04/2016.
+  ~ Modified by Neurophobic Animal on 25/05/2016.
   -->
 
 <resources>
@@ -556,6 +556,8 @@
     <string name="notification_timeline_posts">Your friends installed new apps!</string>
 
     <!-- Updates -->
+    <string name="no_updates_available_retoric">Everything is up to date!</string>
+    <string name="no_new_updates_available">No new updates available!</string>
     <string name="has_updates">%s has new updates available!</string>
     <string name="new_updates">There are %s new updates available!</string>
     <string name="one_new_update">There is %s new update available!</string>

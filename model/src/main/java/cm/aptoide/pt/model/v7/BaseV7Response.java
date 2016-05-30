@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -19,6 +19,14 @@ public class BaseV7Response {
 
 	private Info info;
 	private List<Error> errors;
+
+	public Error getError() {
+		if (errors.size() > 0) {
+			return errors.get(0);
+		} else {
+			return null;
+		}
+	}
 
 	@Data
 	@NoArgsConstructor

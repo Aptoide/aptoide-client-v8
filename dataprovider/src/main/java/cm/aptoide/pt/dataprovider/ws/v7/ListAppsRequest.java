@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -17,21 +17,22 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
+public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequest.Body> {
 
-	private final String url;
-
-	private ListAppsRequest(boolean bypassCache) {
-		this("", bypassCache);
+	protected ListAppsRequest(V7Url v7Url, boolean bypassCache) {
+		super(v7Url.remove("listApps"), bypassCache, new Body());
 	}
 
-	private ListAppsRequest(String url, boolean bypassCache) {
-		super(bypassCache, new Body());
-		this.url = url.replace("listApps", "");
+	protected ListAppsRequest(String storeName, boolean bypassCache) {
+		super(storeName, bypassCache, new Body());
+	}
+
+	protected ListAppsRequest(long storeId, boolean bypassCache) {
+		super(storeId, bypassCache, new Body());
 	}
 
 	public static ListAppsRequest ofAction(String url, boolean bypassCache) {
-		return new ListAppsRequest(url, bypassCache);
+		return new ListAppsRequest(new V7Url(url), bypassCache);
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 	@Data
 	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody {
+	public static class Body extends BaseBodyWithStore {
 
 		private String lang = Api.LANG;
 		private Integer limit;
@@ -51,10 +52,6 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 		private Order order;
 		private String q = Api.Q;
 		private Sort sort;
-		private Integer storeId;
-		private String storeName;
-		private String storePassSha1;
-		private String storeUser;
 		private Subgroups subgroups;
 
 		public enum Sort {

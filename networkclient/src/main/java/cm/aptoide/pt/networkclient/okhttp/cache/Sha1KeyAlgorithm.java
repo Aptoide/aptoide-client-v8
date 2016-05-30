@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 import cm.aptoide.pt.utils.MathUtils;
 import okhttp3.Request;
@@ -50,8 +49,8 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm {
 //			}
 //			return buffer.toString();
 			return MathUtils.computeSHA1sum(requestIdentifier);
-
-		}catch (IOException | NoSuchAlgorithmException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 

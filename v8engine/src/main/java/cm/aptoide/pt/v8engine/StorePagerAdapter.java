@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 
 /**
  * Created by neuro on 28-04-2016.
@@ -62,6 +63,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		switch (event.getName()) {
 			case myStores:
 				return SubscribedStoresFragment.newInstance();
+
+			case myUpdates:
+				return UpdatesFragment.newInstance();
 
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.

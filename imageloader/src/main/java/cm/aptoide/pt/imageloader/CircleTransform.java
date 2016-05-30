@@ -1,4 +1,9 @@
-package cm.aptoide.pt.v8engine.util;
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
+ */
+
+package cm.aptoide.pt.imageloader;
 
 import android.content.Context;
 import android.graphics.Bitmap;

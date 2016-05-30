@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -14,18 +14,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
-import cm.aptoide.pt.v8engine.util.CircleTransform;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
-		.SubscribedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import io.realm.Realm;
+import lombok.Cleanup;
 
 /**
  * Created by neuro on 11-05-2016. //todo: código duplicado, se cair a reflexão, deixa de o ser.
@@ -60,31 +63,39 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 		final Context context = itemView.getContext();
 		final Store store = displayable.getPojo();
 
-		storeName.setText(store.getName());
+		storeName.setText(store.getStoreName());
 		infoLayout.setVisibility(View.GONE);
 
-		@ColorInt int color = context.getResources()
-				.getColor(StoreThemeEnum.get(store.getAppearance().getTheme()).getStoreHeader());
+		@ColorInt int color = context.getResources().getColor(StoreThemeEnum.get(store.getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragment((FragmentActivity) v
-				.getContext(), StoreFragment
-				.newInstance(displayable.getPojo().getName())));
+		storeLayout.setOnClickListener(v->FragmentUtils.replaceFragment((FragmentActivity) v.getContext(),
+				StoreFragment
+				.newInstance(displayable.getPojo().getStoreName())));
 
-		if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
-			Glide.with(context)
-					.fromResource()
-					.load(R.drawable.ic_avatar_apps)
-					.transform(new CircleTransform(context))
-					.into(storeAvatar);
+		if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
+			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
 		} else {
-			Glide.with(context)
-					.load(store.getAvatar())
-					.transform(new CircleTransform(context))
-					.into(storeAvatar);
+			ImageLoader.loadWithCircleTransform(store.getIconPath(), storeAvatar);
 		}
 
-		storeUnsubscribe.setOnClickListener(v -> {
-			//todo
+		storeUnsubscribe.setOnClickListener(v->{
+			GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(), displayable.getPojo()
+					.getStoreName(), StringUtils.getFormattedString(itemView.getContext(), R.string
+					.unsubscribe_yes_no))
+					.subscribe(eResponse->{
+						switch (eResponse) {
+							case YES:
+								@Cleanup Realm realm = Database.get(itemView.getContext());
+
+								if (AptoideAccountManager.isLoggedIn()) {
+									AptoideAccountManager.unsubscribeStore(store.getStoreName());
+								}
+
+								Database.StoreQ.delete(store.getStoreId(), realm);
+
+								break;
+						}
+					});
 		});
 	}
 }

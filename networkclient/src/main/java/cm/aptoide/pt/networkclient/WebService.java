@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -84,8 +84,18 @@ public abstract class WebService<T, U> {
 
 	protected abstract Observable<U> loadDataFromNetwork(T t);
 
+	private Observable<U> prepareAndLoad(T t) {
+		onLoadDataFromNetwork();
+		return loadDataFromNetwork(t);
+	}
+
+	protected void onLoadDataFromNetwork() {
+	}
+
 	public Observable<U> observe() {
-		return getService().flatMap(this::loadDataFromNetwork).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+		return getService().flatMap(this::prepareAndLoad)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread());
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener) {

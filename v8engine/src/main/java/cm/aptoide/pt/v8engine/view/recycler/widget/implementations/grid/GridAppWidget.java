@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -11,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -58,7 +57,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		final App pojo = displayable.getPojo();
 		final long appId = pojo.getId();
 
-		Glide.with(V8Engine.getContext()).load(pojo.getIcon()).into(icon);
+		ImageLoader.load(pojo.getIcon(), icon);
 
 		name.setText(pojo.getName());
 		downloads.setText(StringUtils.withSuffix(pojo.getStats()

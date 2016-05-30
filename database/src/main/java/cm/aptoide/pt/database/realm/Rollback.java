@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -14,14 +14,20 @@ import io.realm.annotations.PrimaryKey;
 
 public class Rollback extends RealmObject {
 
-	public enum Action {
-		UPDATE, DOWNGRADE, UNINSTALL, INSTALL
-	}
-
-	@PrimaryKey private long id;
+	public static final String ID = "id";
+	public static final String VERSION_NAME = "versionName";
+	public static final String PREVIOUS_VERSION_NAME = "previousVersionName";
+	public static final String TIMESTAMP = "timestamp";
+	public static final String NAME = "name";
+	public static final String ICON = "icon";
+	public static final String ACTION = "action";
+	public static final String STORE_NAME = "storeName";
+	public static final String CONFIRMED = "confirmed";
+	public static final String PREVIOUS_VERSION_MD5 = "previousVersionMd5";
+	@PrimaryKey private int id;
 	private String versionName;
 	private String previousVersionName;
-	private long timestamp;
+	private String timestamp;
 	private String name;
 	private String icon;
 	private int action;
@@ -29,11 +35,11 @@ public class Rollback extends RealmObject {
 	private int confirmed;
 	private String previousVersionMd5;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -45,11 +51,11 @@ public class Rollback extends RealmObject {
 		this.action = action;
 	}
 
-	public long getTimestamp() {
+	public String getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(long timestamp) {
+	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -105,6 +111,10 @@ public class Rollback extends RealmObject {
 		return storeName;
 	}
 
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
 	public String getVersionName() {
 		return versionName;
 	}
@@ -121,7 +131,7 @@ public class Rollback extends RealmObject {
 		this.icon = icon;
 	}
 
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
+	public enum Action {
+		UPDATE, DOWNGRADE, UNINSTALL, INSTALL
 	}
 }

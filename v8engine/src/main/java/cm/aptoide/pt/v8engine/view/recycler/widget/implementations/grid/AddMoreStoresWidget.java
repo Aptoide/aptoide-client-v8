@@ -1,16 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
-		.AddMoreStoresDisplayable;
+import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -34,7 +35,10 @@ public class AddMoreStoresWidget extends Widget<AddMoreStoresDisplayable> {
 	@Override
 	public void bindView(AddMoreStoresDisplayable displayable) {
 		addMoreStores.setOnClickListener(v -> {
-			// todo: implementar
+			if (itemView.getContext() instanceof FragmentActivity) {
+				new AddStoreDialog().show(((FragmentActivity) itemView.getContext())
+						.getSupportFragmentManager(), "addStoreDialog");
+			}
 		});
 	}
 }

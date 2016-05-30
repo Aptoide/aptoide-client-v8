@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Mac;
@@ -71,11 +70,20 @@ public final class MathUtils {
 		return buffer.toString();
 	}
 
-	public static String computeSHA1sum(String text) throws NoSuchAlgorithmException,
-			UnsupportedEncodingException {
-		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		md.update(text.getBytes("iso-8859-1"), 0, text.length());
-		byte[] sha1hash = md.digest();
-		return convToHex(sha1hash);
+	public static String computeSHA1sum(String text) {
+		try {
+			java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-1");
+			md.update(text.getBytes("iso-8859-1"), 0, text.length());
+			byte[] sha1hash = md.digest();
+			return convToHex(sha1hash);
+		}
+		catch (java.security.NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (java.io.UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 }
