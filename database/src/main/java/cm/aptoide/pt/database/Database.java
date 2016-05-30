@@ -24,6 +24,9 @@ import io.realm.RealmResults;
  */
 public class Database {
 
+	private static final Object db_lock = new Object();
+	private static volatile boolean DELETE_DB = BuildConfig.DELETE_DB;
+
 	private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
 	private static final String DB_NAME = "aptoide.realm.db";
 	private static final AllClassesModule MODULE = new AllClassesModule();
@@ -65,8 +68,16 @@ public class Database {
 					.build();
 		}
 
-		// Reset Realm
-		//Realm.deleteRealm(realmConfig);
+		if(DELETE_DB) {
+			synchronized (db_lock) {
+				if(DELETE_DB) {
+					// Reset Realm
+					Realm.deleteRealm(realmConfig);
+					DELETE_DB = false;
+				}
+			}
+		}
+
 
 		return Realm.getInstance(realmConfig);
 	}

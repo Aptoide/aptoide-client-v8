@@ -20,10 +20,12 @@ android {
 
     buildTypes {
         release {
+            buildConfigField "boolean", "DELETE_DB", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            buildConfigField "boolean", "DELETE_DB", "true"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

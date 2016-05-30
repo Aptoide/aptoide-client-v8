@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
-import io.realm.Realm;
 import io.realm.RealmMigration;
 
 
@@ -32,6 +31,6 @@ class RealmDatabaseMigration implements RealmMigration {
 
 
 		// FIXME
-		Realm.deleteRealm(realm.getConfiguration());
+		// Realm.deleteRealm(realm.getConfiguration());
 	}
 }

@@ -17,7 +17,7 @@ public enum Type {
 
 	// Server
 	APPS_GROUP(3),
-	APP_BRICK(2),
+	APP_BRICK(2, true),
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
 
