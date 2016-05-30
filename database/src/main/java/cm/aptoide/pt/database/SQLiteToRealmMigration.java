@@ -240,14 +240,14 @@ public class SQLiteToRealmMigration {
 
 		//rollback.setId(cursor.getInt(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_APKID))); // FIXME is this
 		// correct ?
-		rollback.setId(rollbackIdUtils.nextLong());
+		rollback.setId((int)rollbackIdUtils.nextLong());
 
 		//rollback.setPreviousVersionMd5(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ ?? )));
 		//rollback.setPreviousVersionName(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl
 //				.COLUMN_PREVIOUS_VERSION)));
 		rollback.setStoreName(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_REPO)));
 		rollback.setTimestamp(
-				Long.getLong(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_TIMESTAMP)), 0)
+				cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_TIMESTAMP))
 		);
 
 		return rollback;
@@ -301,10 +301,12 @@ public class SQLiteToRealmMigration {
 
 	private Installed getInstalledFrom(Cursor cursor) {
 		Installed installed = new Installed();
-		installed.setId(cursor.getLong(cursor.getColumnIndex(Schema.Installed.COLUMN_ID)));
+		installed.setId(cursor.getInt(cursor.getColumnIndex(Schema.Installed.COLUMN_ID)));
 		installed.setName(cursor.getString(cursor.getColumnIndex(Schema.Installed.COLUMN_NAME)));
 		installed.setVersionName(cursor.getString(cursor.getColumnIndex(Schema.Installed.COLUMN_VERNAME)));
-		installed.setVersionCode(cursor.getString(cursor.getColumnIndex(Schema.Installed.COLUMN_VERCODE)));
+		installed.setVersionCode(
+				Integer.valueOf(cursor.getString(cursor.getColumnIndex(Schema.Installed.COLUMN_VERCODE)), 10 )
+		);
 		installed.setPackageName(cursor.getString(cursor.getColumnIndex(Schema.Installed.COLUMN_APKID))); // FIXME is
 		// this correct?
 		installed.setSignature(cursor.getString(cursor.getColumnIndex(Schema.Installed.COLUMN_SIGNATURE)));
