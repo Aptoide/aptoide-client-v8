@@ -36,6 +36,8 @@ android {
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
+            versionCode 1
+            versionName "8.0.0"
             minSdkVersion 21
 
             // Enabling multidex support.
