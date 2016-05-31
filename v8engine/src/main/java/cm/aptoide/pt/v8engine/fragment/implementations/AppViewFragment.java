@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 31/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -79,7 +79,6 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh) {
 		GetAppRequest.of(appId).execute(getApp -> {
-			long l = System.nanoTime();
 			header.setup(getApp);
 			setupDisplayables(getApp);
 			setupObservables(getApp);
@@ -307,18 +306,18 @@ public class AppViewFragment extends GridRecyclerFragment {
 			@DrawableRes int badgeResId = 0;
 			@StringRes int badgeMessageId = 0;
 			switch (getApp.getNodes().getMeta().getData().getFile().getMalware().getRank()) {
-				case GetAppMeta.GetAppMetaFile.Malware.TRUSTED:
+				case TRUSTED:
 					badgeResId = R.drawable.ic_badge_trusted;
 					badgeMessageId = R.string.appview_header_trusted_text;
 					break;
 
-				case GetAppMeta.GetAppMetaFile.Malware.WARNING:
+				case WARNING:
 					badgeResId = R.drawable.ic_badge_warning;
 					badgeMessageId = R.string.warning;
 					break;
 
 				default:
-				case GetAppMeta.GetAppMetaFile.Malware.UNKNOWN:
+				case UNKNOWN:
 					badgeResId = R.drawable.ic_badge_unknown;
 					badgeMessageId = R.string.unknown;
 					break;

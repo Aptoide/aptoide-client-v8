@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 31/05/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -15,11 +15,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.text.Html;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -612,6 +616,28 @@ public class AptoideUtils {
 
 		public static boolean isOnUiThread() {
 			return Looper.getMainLooper().getThread() == Thread.currentThread();
+		}
+	}
+
+	public static class HtmlU {
+
+		public static CharSequence parse(String text) {
+			return Html.fromHtml(text.replace("\n", "<br/>").replace("&", "&amp;"));
+		}
+	}
+
+	public static class ResourseU {
+
+		public static int getInt(@IntegerRes int resId) {
+			return context.getResources().getInteger(resId);
+		}
+
+		public static Drawable getDrawable(@DrawableRes int drawableId) {
+			return context.getResources().getDrawable(drawableId);
+		}
+
+		public static String getString(@StringRes int stringRes) {
+			return StringU.getResString(stringRes);
 		}
 	}
 }
