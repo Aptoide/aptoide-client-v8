@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 31/05/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -74,6 +74,7 @@ android {
                     def newName = output.outputFile.name
                     newName = newName.replace("vanilla-", "$project.ext.appName-") //"MyAppName" -> I set my app variables in the root project
                     newName = newName.replace("prod-release", versionName)
+                    newName = newName.replace("release", versionName)
                     //noinspection GroovyAssignabilityCheck
                     output.outputFile = new File(output.outputFile.parent, newName)
                 }
