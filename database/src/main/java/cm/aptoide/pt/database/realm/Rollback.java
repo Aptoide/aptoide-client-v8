@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 01/06/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -9,13 +9,10 @@ import android.content.pm.PackageInfo;
 
 import java.util.Calendar;
 
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import lombok.Cleanup;
 
 /**
  * Created by sithengineer on 12/05/16.
@@ -23,7 +20,7 @@ import lombok.Cleanup;
 
 public class Rollback extends RealmObject {
 
-	public static final String ID = "id";
+	//	public static final String ID = "id";
 	public static final String VERSION_NAME = "versionName";
 	public static final String VERSION_CODE = "versionCode";
 	public static final String PACKAGE_NAME = "packageName";
@@ -34,7 +31,7 @@ public class Rollback extends RealmObject {
 	public static final String MD5 = "md5";
 	public static final String CONFIRMED = "confirmed";
 
-	@PrimaryKey private int id = -1;
+	//	@PrimaryKey private int id = -1;
 	private String name;
 	private String packageName;
 	private String icon;
@@ -42,7 +39,7 @@ public class Rollback extends RealmObject {
 	private int versionCode;
 	private long timestamp;
 	private String action;
-	private String md5;
+	@PrimaryKey private String md5;
 	private boolean confirmed;
 
 	// TODO: 27-05-2016 neuro Nem sei o k fazer a isto..
@@ -61,7 +58,7 @@ public class Rollback extends RealmObject {
 		setVersionName(packageInfo.versionName);
 		setTimestamp(Calendar.getInstance().getTimeInMillis());
 		setMd5(AptoideUtils.AlgorithmU.computeMd5(packageInfo));
-		computeId();
+//		computeId();
 	}
 
 	public void confirm(Realm realm) {
@@ -70,13 +67,13 @@ public class Rollback extends RealmObject {
 		realm.commitTransaction();
 	}
 
-	public int getId() {
-		return id;
-	}
+//	public int getId() {
+//		return id;
+//	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
+//	public void setId(int id) {
+//		this.id = id;
+//	}
 
 	public String getPackageName() {
 		return packageName;
@@ -174,17 +171,17 @@ public class Rollback extends RealmObject {
 		this.versionCode = versionCode;
 	}
 
-	public void computeId() {
-		@Cleanup Realm realm = Database.get(Application.getContext());
-		int n;
-		Number max = realm.where(Rollback.class).max(Rollback.ID);
-		if (max != null) {
-			n = max.intValue() + 1;
-		} else {
-			n = 0;
-		}
-		id = n;
-	}
+//	public void computeId() {
+//		@Cleanup Realm realm = Database.get(Application.getContext());
+//		int n;
+//		Number max = realm.where(Rollback.class).max(Rollback.ID);
+//		if (max != null) {
+//			n = max.intValue() + 1;
+//		} else {
+//			n = 0;
+//		}
+//		id = n;
+//	}
 
 	public enum Action {
 		UPDATE, DOWNGRADE, UNINSTALL, INSTALL

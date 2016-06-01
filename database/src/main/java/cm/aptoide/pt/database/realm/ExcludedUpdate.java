@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 01/06/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -13,23 +13,23 @@ import io.realm.annotations.PrimaryKey;
  */
 public class ExcludedUpdate extends RealmObject {
 
-	public static final String ID = "id";
+	//	public static final String ID = "id";
 	public static final String PACKAGE_NAME = "packageName";
 	public static final String NAME = "name";
 	public static final String ICON = "icon";
 
-	@PrimaryKey private long id;
-	private String packageName;
+	//	@PrimaryKey private long id;
+	@PrimaryKey private String packageName;
 	private String name;
 	private String icon;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+//	public long getId() {
+//		return id;
+//	}
+//
+//	public void setId(long id) {
+//		this.id = id;
+//	}
 
 	public String getPackageName() {
 		return packageName;
