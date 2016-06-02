@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -59,7 +59,7 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null) {
-			FragmentUtils.replaceFragment(this, createFragment());
+			FragmentUtils.replaceFragmentV4(this, createFragment());
 		}
 
 	}

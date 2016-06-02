@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -68,7 +68,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 		@ColorInt int color = context.getResources().getColor(StoreThemeEnum.get(store.getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v->FragmentUtils.replaceFragment((FragmentActivity) v.getContext(),
+		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
 				StoreFragment
 				.newInstance(displayable.getPojo().getStoreName())));
 

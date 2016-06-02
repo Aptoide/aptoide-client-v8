@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -22,7 +22,9 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.AptoideUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.SystemUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -100,7 +102,27 @@ public abstract class V8Engine extends DataProvider {
 				}
 			}
 		}
-		Log.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+
+		final int validSignature = SecurityUtils.checkAppSignature(this);
+		if (validSignature != SecurityUtils.VALID_APP_SIGNATURE) {
+			Logger.e(TAG, "app signature is not valid!");
+		}
+
+		if (SecurityUtils.checkEmulator()) {
+			Logger.w(TAG, "application is running on an emulator");
+		}
+
+		if (SecurityUtils.checkDebuggable(this)) {
+			Logger.w(TAG, "application has debug flag active");
+		}
+
+		// just for curiosity...
+		Logger.i(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook.katana"));
+		Logger.i(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
+		Logger.i(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com.android" +
+				".browser"));
+
+		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
 	}
 
 	private void loadInstalledApps() {

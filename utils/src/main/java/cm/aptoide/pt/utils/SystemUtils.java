@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -22,7 +22,7 @@ import java.util.Locale;
 /**
  * Created by neuro on 21-04-2016.
  */
-public class SystemUtils {
+public final class SystemUtils {
 
 	public static Context context;
 
@@ -76,6 +76,11 @@ public class SystemUtils {
 	public static int getScreenSize() {
 		return context.getResources()
 				.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+	}
+
+	public static int getNumericScreenSize() {
+		int size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+		return (size + 1) * 100;
 	}
 
 	public static String getGlEsVer(Context context) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.adapters;
@@ -156,7 +156,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 					v ->{
 						// FIXME
 						try {
-							((FragmentShower)v.getContext()).pushFragment(
+							((FragmentShower) v.getContext()).pushFragmentV4(
 									ScreenshotsViewerFragment.newInstance(
 											imagesUris,
 											position

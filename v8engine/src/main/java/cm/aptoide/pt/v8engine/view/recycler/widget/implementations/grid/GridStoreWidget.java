@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -73,7 +73,7 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 		@ColorInt int color = context.getResources()
 				.getColor(StoreThemeEnum.get(store.getAppearance().getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragment((FragmentActivity) v
+		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v
 				.getContext(), StoreFragment
 				.newInstance(gridStoreDisplayable.getPojo().getName())));
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -69,7 +69,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		itemView.setOnClickListener(
 				v -> {
 					// FIXME
-					((FragmentShower)v.getContext()).pushFragment(
+					((FragmentShower) v.getContext()).pushFragmentV4(
 							AppViewFragment.newInstance(appId)
 					);
 				}
