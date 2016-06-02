@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import java.io.IOException;
 
-import cm.aptoide.pt.utils.MathUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.Request;
 import okio.Buffer;
 
@@ -48,7 +48,7 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm {
 //				buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
 //			}
 //			return buffer.toString();
-			return MathUtils.computeSHA1sum(requestIdentifier);
+			return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
 		}
 		catch (IOException e) {
 			e.printStackTrace();

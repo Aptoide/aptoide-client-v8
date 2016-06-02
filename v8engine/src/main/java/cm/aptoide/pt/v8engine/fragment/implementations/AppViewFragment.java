@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 31/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -22,18 +22,26 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle.FragmentEvent;
+
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
-import cm.aptoide.pt.actions.Action1WithWeakRef;
+import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.utils.ObservableUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import rx.Observable;
 
 /**
@@ -52,7 +60,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	// vars
 	//
 	private AppViewHeader header;
-	private GetAppMeta.App app;
+	//	private GetAppMeta.App app;
 	private long appId;
 
 	//
@@ -70,21 +78,74 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 	@Override
 	public void load(boolean refresh) {
-		if (refresh) {
-			loadAppInfo((int) appId)
-					.compose(ObservableUtils.applySchedulers())
-					.subscribe(
-						new Action1WithWeakRef<GetApp, AppViewFragment>(this) {
-						@Override
-						public void call(GetApp pojo) {
-							AppViewFragment fragment = weakReference.get();
-							if(fragment!=null) {
-								fragment.setApp(pojo.getNodes().getMeta().getData());
-								fragment.showAppInfo();
-							}
-						}
-					});
-		}
+		GetAppRequest.of(appId).execute(getApp -> {
+			header.setup(getApp);
+			setupDisplayables(getApp);
+			setupObservables(getApp);
+			finishLoading();
+		});
+
+//		if (refresh) {
+//			loadAppInfo((int) appId)
+//					.compose(ObservableUtils.applySchedulers())
+//					.subscribe(
+//						new Action1WithWeakRef<GetApp, AppViewFragment>(this) {
+//						@Override
+//						public void call(GetApp pojo) {
+//							AppViewFragment fragment = weakReference.get();
+//							if(fragment!=null) {
+//								fragment.setApp(pojo.getNodes().getMeta().getData());
+//								fragment.showAppInfo();
+//							}
+//						}
+//					});
+//		}
+	}
+
+	private void setupObservables(GetApp getApp) {
+		// For stores subscription
+		Database.StoreQ.getAll(realm)
+				.asObservable()
+				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+				.subscribe(stores -> {
+					if (Database.StoreQ.get(getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
+						adapter.notifyDataSetChanged();
+					}
+				});
+
+		// For install actions
+		Database.RollbackQ.getAll(realm)
+				.asObservable()
+				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+				.subscribe(rollbacks -> {
+					adapter.notifyDataSetChanged();
+				});
+
+		// // TODO: 27-05-2016 neuro install actions, not present in v7
+	}
+
+	private void setupDisplayables(GetApp getApp) {
+		LinkedList<Displayable> displayables = new LinkedList<>();
+
+		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+
+		displayables.add(new AppViewInstallDisplayable(getApp));
+		displayables.add(new AppViewDescriptionDisplayable(getApp));
+		displayables.add(new AppViewScreenshotsDisplayable(app));
+		displayables.add(new AppViewRatingDisplayable(getApp));
+		addComments(displayables, app);
+		addOtherVersions(displayables, app);
+		displayables.add(new AppViewDeveloperDisplayable(getApp));
+
+		setDisplayables(displayables);
+	}
+
+	private void addComments(List<Displayable> displayables, GetAppMeta.App app) {
+
+	}
+
+	private void addOtherVersions(List<Displayable> displayables, GetAppMeta.App app) {
+
 	}
 
 	@Override
@@ -100,7 +161,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	public void setupViews() {
 		super.setupViews();
-		this.showAppInfo();
+//		this.showAppInfo();
 
 		final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
 		ActionBar supportActionBar = parentActivity.getSupportActionBar();
@@ -158,19 +219,19 @@ public class AppViewFragment extends GridRecyclerFragment {
 		return GetAppRequest.of(appId).observe();
 	}
 
-	private void setApp(GetAppMeta.App app) {
-		this.app = app;
-	}
+//	private void setApp(GetAppMeta.App app) {
+//		this.app = app;
+//	}
 
-	private void showAppInfo() {
-		if(app==null) return;
-
-		// setup displayables in view
-		addDisplayables(DisplayableType.newDisplayables(DisplayableType.Group.APP_VIEW, app));
-
-		// setup header in view
-		header.setup(app);
-	}
+//	private void showAppInfo() {
+//		if(app==null) return;
+//
+//		// setup displayables in view
+//		addDisplayables(DisplayableType.newDisplayables(DisplayableType.Group.APP_VIEW, app));
+//
+//		// setup header in view
+//		header.setup(app);
+//	}
 
 	//
 	// bundle keys used internally in this fragment
@@ -213,10 +274,10 @@ public class AppViewFragment extends GridRecyclerFragment {
 		}
 
 		// setup methods
-		public void setup(@NonNull GetAppMeta.App pojo) {
+		public void setup(@NonNull GetApp getApp) {
 
-			if (pojo.getGraphic() != null) {
-				ImageLoader.load(pojo.getGraphic(), featuredGraphic);
+			if (getApp.getNodes().getMeta().getData().getGraphic() != null) {
+				ImageLoader.load(getApp.getNodes().getMeta().getData().getGraphic(), featuredGraphic);
 			}
 			/*
 			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty
@@ -225,34 +286,38 @@ public class AppViewFragment extends GridRecyclerFragment {
 			}
 			*/
 
-			if (pojo.getIcon() != null) {
-				ImageLoader.load(pojo.getIcon(), appIcon);
+			if (getApp.getNodes().getMeta().getData().getIcon() != null) {
+				ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
 			}
 
 			// TODO add placeholders in image loading
 
-			collapsingToolbar.setTitle(pojo.getName());
-			ratingBar.setRating(pojo.getStats().getRating().getAvg());
-			fileSize.setText(String.format(Locale.ROOT, "%d", pojo.getFile().getFilesize()));
-			versionName.setText(pojo.getFile().getVername());
-			downloadsCount.setText(String.format(Locale.ROOT, "%d", pojo.getStats()
+			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
+			ratingBar.setRating(getApp.getNodes().getMeta().getData().getStats().getRating().getAvg());
+			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes()
+					.getMeta()
+					.getData()
+					.getFile()
+					.getFilesize()));
+			versionName.setText(getApp.getNodes().getMeta().getData().getFile().getVername());
+			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats()
 					.getDownloads()));
 
 			@DrawableRes int badgeResId = 0;
 			@StringRes int badgeMessageId = 0;
-			switch (pojo.getFile().getMalware().getRank()) {
-				case GetAppMeta.GetAppMetaFile.Malware.TRUSTED:
+			switch (getApp.getNodes().getMeta().getData().getFile().getMalware().getRank()) {
+				case TRUSTED:
 					badgeResId = R.drawable.ic_badge_trusted;
 					badgeMessageId = R.string.appview_header_trusted_text;
 					break;
 
-				case GetAppMeta.GetAppMetaFile.Malware.WARNING:
+				case WARNING:
 					badgeResId = R.drawable.ic_badge_warning;
 					badgeMessageId = R.string.warning;
 					break;
 
 				default:
-				case GetAppMeta.GetAppMetaFile.Malware.UNKNOWN:
+				case UNKNOWN:
 					badgeResId = R.drawable.ic_badge_unknown;
 					badgeMessageId = R.string.unknown;
 					break;

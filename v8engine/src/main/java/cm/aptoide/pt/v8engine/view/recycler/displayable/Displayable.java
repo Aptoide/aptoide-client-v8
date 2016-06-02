@@ -1,10 +1,6 @@
 /*
  * Copyright (c) 2016.
-<<<<<<< HEAD
- * Modified by SithEngineer on 09/05/2016.
-=======
- * Modified by Neurophobic Animal on 10/05/2016.
->>>>>>> develop
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -12,11 +8,9 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.support.annotation.LayoutRes;
 
 import cm.aptoide.pt.annotation.Ignore;
-import cm.aptoide.pt.model.Model;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
-
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -51,9 +45,8 @@ public abstract class Displayable {
 	 * @return
 	 */
 	public int getPerLineCount() {
-		return isFixedPerLineCount() ? getDefaultPerLineCount() : (int) (ScreenUtils
-				.getScreenWidthInDip(Model
-				.getContext()) / ScreenUtils.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+		return isFixedPerLineCount() ? getDefaultPerLineCount() : (int) (AptoideUtils.ScreenU.getScreenWidthInDip() /
+				AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
 
 	public boolean isFixedPerLineCount() {

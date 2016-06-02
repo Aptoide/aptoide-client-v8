@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -12,25 +12,23 @@ import android.view.View;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ScreenshotsAdapter;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewImagesDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 11/05/16.
  */
-@Displayables({AppViewImagesDisplayable.class})
-public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
+@Displayables({AppViewScreenshotsDisplayable.class})
+public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayable> {
 
 	private RecyclerView mediaList;
 
-	public AppViewImagesWidget(View itemView) {
+	public AppViewScreenshotsWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -40,7 +38,7 @@ public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
 	}
 
 	@Override
-	public void bindView(AppViewImagesDisplayable displayable) {
+	public void bindView(AppViewScreenshotsDisplayable displayable) {
 		final GetAppMeta.Media media = displayable.getPojo().getMedia();
 		if(!isMediaAvailable(media)) {
 			mediaList = null;
@@ -48,8 +46,7 @@ public class AppViewImagesWidget extends Widget<AppViewImagesDisplayable> {
 			return;
 		}
 
-		mediaList.addItemDecoration(new DividerItemDecoration(ScreenUtils.getPixels(V8Engine
-				.getContext(), 5))
+		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(5))
 		);
 		mediaList.setLayoutManager(new LinearLayoutManager(
 				itemView.getContext(), LinearLayoutManager.HORIZONTAL, false)

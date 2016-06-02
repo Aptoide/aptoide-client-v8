@@ -46,7 +46,7 @@ public final class SecurityUtils {
 				md.update(signature.toByteArray());
 				final String currentSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT);
 
-				Logger.d(SystemUtils.class.getName(), "Include this string as a value for SIGNATURE:" +
+				Logger.d(SecurityUtils.class.getName(), "Include this string as a value for SIGNATURE:" +
 						currentSignature);
 
 				//compare signatures

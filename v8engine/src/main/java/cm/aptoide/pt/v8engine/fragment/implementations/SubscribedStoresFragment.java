@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
@@ -21,7 +21,7 @@ import rx.Observable;
 /**
  * Created by neuro on 11-05-2016.
  */
-public class SubscribedStoresFragment extends GridRecyclerFragment {
+public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator {
 
 	public static SubscribedStoresFragment newInstance() {
 		SubscribedStoresFragment fragment = new SubscribedStoresFragment();

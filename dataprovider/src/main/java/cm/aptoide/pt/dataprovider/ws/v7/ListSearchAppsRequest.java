@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 01/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -55,5 +55,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		//		Doesn't make sense without stores_auth_map
 //		private List<String> storeNames;
 		//  stores_auth_map implementation required
+		private Boolean trusted;
 	}
 }

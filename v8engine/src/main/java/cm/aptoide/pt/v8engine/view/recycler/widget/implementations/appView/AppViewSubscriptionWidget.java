@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -46,7 +46,7 @@ public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplay
 
 	@Override
 	public void bindView(AppViewSubscriptionDisplayable displayable) {
-		final Store store = displayable.getPojo().getStore();
+		final Store store = displayable.getPojo().getNodes().getMeta().getData().getStore();
 
 		if(!TextUtils.isEmpty(store.getAvatar())) {
 			ImageLoader.load(store.getAvatar(), storeAvatar);
