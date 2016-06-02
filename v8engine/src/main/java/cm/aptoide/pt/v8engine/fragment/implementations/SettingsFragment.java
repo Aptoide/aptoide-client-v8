@@ -37,9 +37,8 @@ import java.text.DecimalFormat;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.utils.StringUtils;
-import cm.aptoide.pt.utils.SystemUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
@@ -191,15 +190,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 				alertDialogBuilder.setTitle(getString(R.string.setting_hwspecstitle));
 				alertDialogBuilder.setIcon(android.R.drawable.ic_menu_info_details)
-						.setMessage(getString(R.string.setting_sdk_version) + ": " + SystemUtils.getSdkVer() + "\n" +
-										getString(R.string.setting_screen_size) + ": " + SystemUtils.getScreenSize() +
+						.setMessage(getString(R.string.setting_sdk_version) + ": " + AptoideUtils.SystemU.getSdkVer() + "\n" +
+										getString(R.string.setting_screen_size) + ": " + AptoideUtils.ScreenU.getScreenSize
+								() +
 								"\n" +
-										getString(R.string.setting_esgl_version) + ": " + SystemUtils.getGlEsVer
-								(context) + "\n" +
-										getString(R.string.screenCode) + ": " + SystemUtils.getNumericScreenSize() +
-								"/" + SystemUtils
-										.getDensityDpi() + "\n" +
-										getString(R.string.cpuAbi) + ": " + SystemUtils.getAbis()
+										getString(R.string.setting_esgl_version) + ": " + AptoideUtils.SystemU.getGlEsVer() + "\n" +
+										getString(R.string.screenCode) + ": " + AptoideUtils.ScreenU.getNumericScreenSize() +
+								"/" + AptoideUtils.ScreenU.getDensityDpi() + "\n" +
+										getString(R.string.cpuAbi) + ": " + AptoideUtils.SystemU.getAbis()
 								//                            + (ApplicationAptoide.PARTNERID!=null ? "\nPartner ID:"
 								// + ApplicationAptoide.PARTNERID : "")
 						)
@@ -344,20 +342,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		final Context ctx = getContext();
 		if (!Build.DEVICE.equals("alien_jolla_bionic")) {
 			findPreference(SettingsConstants.CLEAR_RANK).setSummary(getString(R.string.clearcontent_sum) + " (" +
-					StringUtils
-					.getFormattedString(ctx, R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0])) +
+					AptoideUtils.StringU
+					.getFormattedString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0])) +
 					")");
 			findPreference(SettingsConstants.CLEAR_CACHE).setSummary(getString(R.string.clearcache_sum) + " (" +
-					StringUtils.getFormattedString(ctx, R.string.cache_using_X_mb, new DecimalFormat("#.##").format
+					AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format
 							(size[1])) + ")");
 		} else {
 			findPreference(SettingsConstants.CLEAR_RANK).setSummary(getString(R.string.clearcontent_sum_jolla) + " ("
-					+ StringUtils
-					.getFormattedString(ctx, R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0])) +
+					+ AptoideUtils.StringU
+					.getFormattedString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0])) +
 					")");
 			findPreference(SettingsConstants.CLEAR_CACHE).setSummary(getString(R.string.clearcache_sum_jolla) + " (" +
-					StringUtils
-					.getFormattedString(ctx, R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[1])) +
+					AptoideUtils.StringU
+					.getFormattedString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[1])) +
 					")");
 		}
 	}

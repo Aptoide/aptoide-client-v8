@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by Neurophobic Animal on 31/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -110,27 +110,34 @@ public class GetAppMeta extends BaseV7Response {
 			public static final String WARN = "warn";
 			public static final String GOOGLE_PLAY = "Google Play";
 
-			private String rank;
-			private GetAppMetaFile.Malware.Reason reason;
+			private Rank rank;
+			private Reason reason;
 			private String added;
 			private String modified;
+
+			public enum Rank {
+				TRUSTED,
+				WARNING,
+				UNKNOWN
+			}
 
 			@Data
 			public static class Reason {
 
-				private GetAppMetaFile.Malware.Reason.SignatureValidated signatureValidated;
-				private GetAppMetaFile.Malware.Reason.ThirdPartyValidated thirdpartyValidated;
-				private GetAppMetaFile.Malware.Reason.Manual manual;
-				private GetAppMetaFile.Malware.Reason.Scanned scanned;
+				private Reason.SignatureValidated signatureValidated;
+				private Reason.ThirdPartyValidated thirdpartyValidated;
+				private Reason.Manual manual;
+				private Reason.Scanned scanned;
+
+				public enum Status {
+					passed, failed, blacklisted, warn
+				}
 
 				@Data
 				public static class SignatureValidated {
 
 					private String date;
-					/**
-					 * possible value: "unknown", "failed", "passed"
-					 */
-					private String status;
+					private Status status;
 					private String signatureFrom;
 				}
 
@@ -145,25 +152,21 @@ public class GetAppMeta extends BaseV7Response {
 				public static class Manual {
 
 					private String date;
-					private String status;
+					private Status status;
 					private List<String> av;
 				}
 
 				@Data
 				public static class Scanned {
 
-					/**
-					 * possible values: "passed", "warn"
-					 */
-					private String status;
+					private Status status;
 					private String date;
-					private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo> avInfo;
+					private List<AvInfo> avInfo;
 
 					@Data
 					public static class AvInfo {
 
-						private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo.Infection>
-								infections;
+						private List<Infection> infections;
 						private String name;
 
 						@Data

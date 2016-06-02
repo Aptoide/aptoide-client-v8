@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.utils.ThreadUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -53,12 +53,12 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
 	public void addDisplayable(Displayable displayable) {
 		this.displayables.add(displayable);
-		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
+		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 	}
 
 	public void addDisplayables(List<? extends Displayable> displayables) {
 		this.displayables.add(displayables);
-		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
+		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 	}
 
 	public void clearDisplayables() {
@@ -68,7 +68,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	public void clearDisplayables(boolean notifyDataSetChanged) {
 		displayables.clear();
 		if (notifyDataSetChanged) {
-			ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
+			AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 		}
 	}
 }

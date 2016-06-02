@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -19,7 +19,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.utils.IconSizeUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
 
@@ -63,13 +63,10 @@ public class StoreUtils {
 				store.setStoreName(storeData.getName());
 				store.setDownloads(storeData.getStats().getDownloads());
 
-				String sizeString = IconSizeUtils.generateSizeStringAvatar(DataProvider.getContext());
-
 				String avatar = storeData.getAvatar();
 
 				if (avatar != null) {
-					String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-					avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+					avatar = AptoideUtils.ImageSizeU.parseAvatarUrl(avatar);
 				}
 
 				store.setIconPath(avatar);
