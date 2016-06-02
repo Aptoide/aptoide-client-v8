@@ -42,7 +42,10 @@ public enum Type {
 
 	// Updates
 	INSTALLED(1),
-	UPDATE(1);
+	UPDATE(1),
+
+	// Search
+	SEARCH(1);
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 
