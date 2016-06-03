@@ -1,25 +1,27 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import com.trello.rxlifecycle.FragmentEvent;
+
 import java.util.LinkedList;
 
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
-		.AddMoreStoresDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
-		.SubscribedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
+import io.realm.RealmResults;
+import rx.Observable;
 
 /**
  * Created by neuro on 11-05-2016.
  */
-public class SubscribedStoresFragment extends GridRecyclerFragment {
+public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator {
 
 	public static SubscribedStoresFragment newInstance() {
 		SubscribedStoresFragment fragment = new SubscribedStoresFragment();
@@ -28,21 +30,22 @@ public class SubscribedStoresFragment extends GridRecyclerFragment {
 
 	@Override
 	public void load(boolean refresh) {
-		// todo: dummy
-		LinkedList<Displayable> displayables = new LinkedList<>();
 
-		Store store = StoreUtils.getSubscribedStores().get(0);
+		Observable<RealmResults<Store>> realmResultsObservable = Database.StoreQ.getAll(realm).asObservable();
 
-		SubscribedStoreDisplayable subscribedStoreDisplayable = new SubscribedStoreDisplayable
-				(store);
+		realmResultsObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+				.subscribe(stores -> {
 
-		displayables.add(subscribedStoreDisplayable);
+					LinkedList<Displayable> displayables = new LinkedList<>();
 
-		// Add the final row as a button
-		displayables.add(new AddMoreStoresDisplayable());
+					for (Store store : stores) {
+						displayables.add(new SubscribedStoreDisplayable(store));
+					}
 
-		setDisplayables(displayables);
+					// Add the final row as a button
+					displayables.add(new AddMoreStoresDisplayable());
 
-		finishLoading();
+					setDisplayables(displayables);
+				});
 	}
 }

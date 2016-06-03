@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -84,8 +85,18 @@ public abstract class WebService<T, U> {
 
 	protected abstract Observable<U> loadDataFromNetwork(T t);
 
+	private Observable<U> prepareAndLoad(T t) {
+		onLoadDataFromNetwork();
+		return loadDataFromNetwork(t);
+	}
+
+	protected void onLoadDataFromNetwork() {
+	}
+
 	public Observable<U> observe() {
-		return getService().flatMap(this::loadDataFromNetwork).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+		return getService().flatMap(this::prepareAndLoad)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread());
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener) {
@@ -100,6 +111,11 @@ public abstract class WebService<T, U> {
 		return (Throwable e) -> {
 			// TODO: Implementar
 			System.out.println("Erro por implementar");
+			e.printStackTrace();
 		};
+	}
+
+	protected boolean isNoNetworkException(Throwable throwable) {
+		return throwable instanceof UnknownHostException;
 	}
 }

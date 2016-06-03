@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 
@@ -17,12 +17,12 @@ public class AppViewSuggestedAppsDisplayable extends AppViewDisplayable {
 	public AppViewSuggestedAppsDisplayable() {
 	}
 
-	public AppViewSuggestedAppsDisplayable(GetAppMeta.App app) {
-		super(app);
+	public AppViewSuggestedAppsDisplayable(GetApp getApp) {
+		super(getApp);
 	}
 
-	public AppViewSuggestedAppsDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
+	public AppViewSuggestedAppsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+		super(getApp, fixedPerLineCount);
 	}
 
 	@Override

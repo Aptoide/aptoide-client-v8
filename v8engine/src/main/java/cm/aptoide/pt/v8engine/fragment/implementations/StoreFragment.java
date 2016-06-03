@@ -1,11 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +16,15 @@ import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
 
 /**
@@ -26,10 +33,10 @@ import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
 public class StoreFragment extends BaseLoaderToolbarFragment {
 
 	private static final String TAG = "StoreFragment";
-
+	private final int PRIVATE_STORE_REQUEST_CODE = 20;
+	protected PagerSlidingTabStrip pagerSlidingTabStrip;
 	private String storeName;
 	private StoreContext storeContext;
-
 	private ViewPager mViewPager;
 	private GetStore getStore;
 
@@ -70,7 +77,20 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 				this.getStore = getStore;
 				setupViewPager(getStore);
 			}, (throwable) -> {
-				finishLoading(throwable);
+				if (throwable instanceof AptoideWsV7Exception) {
+					BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
+
+					if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError()
+							.getCode()) || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(baseResponse.getError()
+							.getCode())) {
+						DialogFragment dialogFragment = PrivateStoreDialog.newInstance(this,
+								PRIVATE_STORE_REQUEST_CODE, storeName);
+						dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+					}
+				}
+				else {
+					finishLoading(throwable);
+				}
 			});
 		} else {
 			setupViewPager(getStore);
@@ -82,8 +102,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 		super.setupToolbar();
 		if (toolbar != null) {
 			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(storeName);
-			((AppCompatActivity) getActivity()).getSupportActionBar()
-					.setDisplayHomeAsUpEnabled(true);
+			((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			toolbar.setLogo(R.drawable.ic_store);
 		}
 	}
@@ -101,18 +120,29 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 		mViewPager = null;
 	}
 
-	private void setupViewPager(GetStore getStore) {
-		final PagerAdapter pagerAdapter = new StorePagerAdapter(getChildFragmentManager(),
-				getStore);
+	protected void setupViewPager(GetStore getStore) {
+		final PagerAdapter pagerAdapter = new StorePagerAdapter(getChildFragmentManager(), getStore);
 		mViewPager.setAdapter(pagerAdapter);
 
-		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById
-				(R.id.tabs);
+		pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 		if (pagerSlidingTabStrip != null) {
 			pagerSlidingTabStrip.setViewPager(mViewPager);
 		}
 
 		finishLoading();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == PRIVATE_STORE_REQUEST_CODE) {
+			switch (resultCode) {
+				case Activity.RESULT_OK:
+					load(true);
+					break;
+			}
+		}
 	}
 
 	protected static class BundleCons {

@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.model.v7;
 
-import cm.aptoide.pt.model.Model;
-import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Getter;
 
 /**
@@ -39,7 +38,11 @@ public enum Type {
 
 	// Client
 	SUBSCRIBED_STORE(2),
-	ADD_MORE_STORES(true);
+	ADD_MORE_STORES(true),
+
+	// Updates
+	INSTALLED(1),
+	UPDATE(1);
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 
@@ -64,9 +67,8 @@ public enum Type {
 	}
 
 	public int getPerLineCount() {
-		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils
-				.getScreenWidthInDip(Model
-				.getContext()) / ScreenUtils.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (AptoideUtils.ScreenU.getScreenWidthInDip() /
+				AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
 
 }

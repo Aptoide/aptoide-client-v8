@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-include ':vanilla', ':v8engine', ':dataprovider', ':model', ':networkclient', ':aptoidepreferences', ':utils', ':aptoide_accountmanager', ':database', ':downloadmanager'
+include ':vanilla', ':v8engine', ':dataprovider', ':model', ':networkclient', ':aptoidepreferences', ':utils', ':aptoide_accountmanager', ':database', ':imageloader', ':downloadmanager'

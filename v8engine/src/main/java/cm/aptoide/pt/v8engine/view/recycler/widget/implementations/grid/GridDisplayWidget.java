@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -8,8 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -36,6 +35,6 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 	public void bindView(GridDisplayDisplayable displayable) {
 		Object pojo = displayable.getPojo();
 		// TODO
-		Glide.with(itemView.getContext()).load(displayable.getPojo().graphic).into(imageView);
+		ImageLoader.load(displayable.getPojo().getGraphic(), imageView);
 	}
 }

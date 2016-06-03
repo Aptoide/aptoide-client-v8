@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -11,10 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.Locale;
 
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -47,10 +46,10 @@ public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplay
 
 	@Override
 	public void bindView(AppViewSubscriptionDisplayable displayable) {
-		final Store store = displayable.getPojo().getStore();
+		final Store store = displayable.getPojo().getNodes().getMeta().getData().getStore();
 
 		if(!TextUtils.isEmpty(store.getAvatar())) {
-			Glide.with(storeAvatar.getContext()).load(store.getAvatar()).into(storeAvatar);
+			ImageLoader.load(store.getAvatar(), storeAvatar);
 		}
 
 		if(!TextUtils.isEmpty(store.getName())) {

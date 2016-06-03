@@ -1,16 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
@@ -19,7 +20,7 @@ import io.realm.Realm;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseFragment extends Fragment implements Lifecycle {
+public abstract class BaseFragment extends RxFragment implements Lifecycle {
 
 	private final String TAG = getClass().getSimpleName();
 	protected Realm realm;
@@ -31,15 +32,6 @@ public abstract class BaseFragment extends Fragment implements Lifecycle {
 		if (getArguments() != null) {
 			loadExtras(getArguments());
 		}
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
-			savedInstanceState) {
-
-		realm = Database.get(getContext());
-
-		return inflater.inflate(getContentViewId(), container, false);
 	}
 
 	@Override
@@ -56,6 +48,14 @@ public abstract class BaseFragment extends Fragment implements Lifecycle {
 		realm = null;
 
 		super.onDestroyView();
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		realm = Database.get(getContext());
+
+		return inflater.inflate(getContentViewId(), container, false);
 	}
 
 	/**

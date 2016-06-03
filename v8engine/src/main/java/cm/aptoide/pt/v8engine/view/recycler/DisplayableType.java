@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -20,51 +20,38 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewCommentsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewImagesDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewOtherVersionsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewRateResultsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewRateThisDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewSubscriptionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
-		.AppViewSuggestedAppsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
-		.AddMoreStoresDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateResultsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSubscriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid
-		.SubscribedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDescriptionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewImagesWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewInstallWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
-		.AppViewOtherVersionsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
-		.AppViewSubscriptionWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView
-		.AppViewSuggestedAppsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRatingWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewScreenshotsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSubscriptionWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
@@ -72,7 +59,9 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppW
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisplayWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 
 /**
  * Created by neuro on 11-05-2016.
@@ -94,6 +83,10 @@ public enum DisplayableType {
 	GRID_HEADER(GridHeaderWidget.class, GridHeaderDisplayable.class),
 	GRID_STORE(GridStoreWidget.class, GridStoreDisplayable.class),
 
+	// Updates
+	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
+	UPDATE(UpdateWidget.class, UpdateDisplayable.class),
+
 	// appView widgets / displayables
 	APP_VIEW_COMMENTS(AppViewCommentsWidget.class, AppViewCommentsDisplayable.class),
 
@@ -101,7 +94,7 @@ public enum DisplayableType {
 
 	APP_VIEW_DEVELOPER(AppViewDeveloperWidget.class, AppViewDeveloperDisplayable.class),
 
-	APP_VIEW_IMAGES(AppViewImagesWidget.class, AppViewImagesDisplayable.class),
+	APP_VIEW_SCREENSHOTS(AppViewScreenshotsWidget.class, AppViewScreenshotsDisplayable.class),
 
 	APP_VIEW_INSTALL(AppViewInstallWidget.class, AppViewInstallDisplayable.class),
 
@@ -110,7 +103,7 @@ public enum DisplayableType {
 
 	APP_VIEW_RATE_RESULTS(AppViewRateResultsWidget.class, AppViewRateResultsDisplayable.class),
 
-	APP_VIEW_RATE_THIS(AppViewRateThisWidget.class, AppViewRateThisDisplayable.class),
+	APP_VIEW_RATING(AppViewRatingWidget.class, AppViewRatingDisplayable.class),
 
 	APP_VIEW_SUBSCRIPTION(AppViewSubscriptionWidget.class, AppViewSubscriptionDisplayable.class),
 
@@ -119,35 +112,12 @@ public enum DisplayableType {
 
 	;
 
-	public enum Group {
-		APP_VIEW(
-				APP_VIEW_INSTALL,
-				APP_VIEW_SUBSCRIPTION,
-				APP_VIEW_DESCRIPTION,
-				APP_VIEW_IMAGES,
-				APP_VIEW_RATE_THIS,
-				APP_VIEW_RATE_RESULTS,
-				APP_VIEW_COMMENTS,
-				APP_VIEW_OTHER_VERSIONS,
-				APP_VIEW_DEVELOPER
-		)
-		;
-
-		public final DisplayableType[] displayableTypes;
-
-		Group(DisplayableType... displayableTypes){
-			this.displayableTypes = displayableTypes;
-		}
-	}
-
 	private static final String TAG = DisplayableType.class.getName();
-
 	private static List<Displayable> cachedDisplayables;
 	private Displayable displayable;
 	private Widget widget;
 	private Class<? extends Displayable> displayableClass;
 	private Class<? extends Widget> widgetClass;
-
 	DisplayableType(Class<? extends Widget> widgetClass, Class<? extends Displayable>
 			displayableClass) {
 		this.displayableClass = displayableClass;
@@ -210,7 +180,7 @@ public enum DisplayableType {
 		}
 
 		throw new IllegalStateException(String.format("There's no widget for '%s' viewType",
-				viewType));
+				viewType) + "\nDid you forget to add the mapping to DisplayableType enum??");
 	}
 
 	public static List<Displayable> getCachedDisplayables() {
@@ -248,6 +218,27 @@ public enum DisplayableType {
 					.getName());
 			Logger.e(TAG, errMsg, e);
 			throw new RuntimeException(errMsg);
+		}
+	}
+
+	public enum Group {
+		APP_VIEW(
+				APP_VIEW_INSTALL,
+//				APP_VIEW_SUBSCRIPTION,
+				APP_VIEW_DESCRIPTION,
+				APP_VIEW_SCREENSHOTS,
+				APP_VIEW_RATING,
+//				APP_VIEW_RATE_RESULTS,
+				APP_VIEW_COMMENTS,
+//				APP_VIEW_OTHER_VERSIONS,
+				APP_VIEW_DEVELOPER
+		)
+		;
+
+		public final DisplayableType[] displayableTypes;
+
+		Group(DisplayableType... displayableTypes){
+			this.displayableTypes = displayableTypes;
 		}
 	}
 }

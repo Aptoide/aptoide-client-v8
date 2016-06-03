@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.layouthandler;
@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.ThreadUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import rx.Observable;
@@ -54,7 +54,7 @@ public class LoaderLayoutHandler {
 	public void finishLoading(Throwable throwable) {
 		Logger.printException(throwable);
 
-		ThreadUtils.runOnUiThread(() -> onFinishLoading(throwable));
+		AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
 	}
 
 	protected void onFinishLoading(Throwable throwable) {

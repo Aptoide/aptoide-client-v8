@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by Neurophobic Animal on 22/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -19,13 +19,17 @@ public class Displayables {
 	public Displayables() {
 	}
 
+	public void add(Displayable displayable) {
+		if (displayable instanceof DisplayableGroup) {
+			add(((DisplayableGroup) displayable).getChildren());
+		} else {
+			displayables.add(displayable);
+		}
+	}
+
 	public void add(Collection<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
-			if (displayable instanceof DisplayableGroup) {
-				add(((DisplayableGroup) displayable).getChildren());
-			} else {
-				displayables.add(displayable);
-			}
+			add(displayable);
 		}
 	}
 

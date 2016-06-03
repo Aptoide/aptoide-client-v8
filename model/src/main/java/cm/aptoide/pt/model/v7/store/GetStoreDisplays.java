@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.model.v7.store;
@@ -21,10 +21,11 @@ public class GetStoreDisplays extends BaseV7Response {
 
 	private List<EventImage> list;
 
+	@Data
 	public static class EventImage {
 
-		public String label;
-		public String graphic;
-		public Event event;
+		private String label;
+		private String graphic;
+		private Event event;
 	}
 }

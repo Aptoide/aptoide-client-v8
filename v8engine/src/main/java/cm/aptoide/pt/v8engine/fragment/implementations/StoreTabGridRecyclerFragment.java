@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.dataprovider.util.ObservableUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
@@ -111,7 +110,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private Subscription caseListApps(String url, boolean refresh) {
-		return ObservableUtils.retryOnTicket(ListAppsRequest.ofAction(url, refresh).observe())
+		return ListAppsRequest.ofAction(url, refresh).observe()
 				.observeOn(Schedulers.io())
 				.subscribe(listApps -> {
 
@@ -128,7 +127,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private Subscription caseGetStore(String url, boolean refresh) {
-		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url, refresh).observe())
+		return GetStoreRequest.ofAction(url, refresh).observe()
 				.observeOn(Schedulers.io())
 				.subscribe(getStore -> {
 
@@ -154,8 +153,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private Subscription caseGetStoreWidgets(String url, boolean refresh) {
-		return ObservableUtils.retryOnTicket(GetStoreWidgetsRequest.ofAction(url, refresh)
-				.observe())
+		return GetStoreWidgetsRequest.ofAction(url, refresh).observe()
 				.observeOn(Schedulers.io())
 				.subscribe(getStoreWidgets -> {
 

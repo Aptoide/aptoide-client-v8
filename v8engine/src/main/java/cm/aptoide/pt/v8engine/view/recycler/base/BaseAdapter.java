@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.utils.ThreadUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -22,7 +22,6 @@ import lombok.Getter;
  */
 public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
-	//@Getter private final ArrayList<Displayable> displayables = new ArrayList<>();
 	@Getter private final Displayables displayables = new Displayables();
 
 	public BaseAdapter() { }
@@ -52,9 +51,14 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		return displayables.size();
 	}
 
+	public void addDisplayable(Displayable displayable) {
+		this.displayables.add(displayable);
+		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
+	}
+
 	public void addDisplayables(List<? extends Displayable> displayables) {
 		this.displayables.add(displayables);
-		ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
+		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 	}
 
 	public void clearDisplayables() {
@@ -64,7 +68,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	public void clearDisplayables(boolean notifyDataSetChanged) {
 		displayables.clear();
 		if (notifyDataSetChanged) {
-			ThreadUtils.runOnUiThread(this::notifyDataSetChanged);
+			AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 		}
 	}
 }

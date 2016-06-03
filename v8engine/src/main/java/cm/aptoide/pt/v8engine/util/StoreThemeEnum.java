@@ -1,14 +1,18 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
 
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
  * Created by neuro on 05-05-2016.
@@ -165,6 +169,10 @@ public enum StoreThemeEnum {
 		return theme;
 	}
 
+	public static StoreThemeEnum get(Store store) {
+		return get(store.getAppearance().getTheme());
+	}
+
 	public static StoreThemeEnum get(int i) {
 
 		StoreThemeEnum theme;
@@ -189,6 +197,11 @@ public enum StoreThemeEnum {
 	@ColorRes
 	public int getStoreHeader() {
 		return storeHeader;
+	}
+
+	@ColorInt
+	public int getStoreHeaderInt() {
+		return V8Engine.getContext().getResources().getColor(getStoreHeader());
 	}
 
 	@ColorRes
@@ -219,6 +232,10 @@ public enum StoreThemeEnum {
 	@DrawableRes
 	public int getButtonLayout() {
 		return buttonLayout;
+	}
+
+	public Drawable getButtonLayoutDrawable() {
+		return V8Engine.getContext().getResources().getDrawable(getButtonLayout());
 	}
 
 	@DrawableRes

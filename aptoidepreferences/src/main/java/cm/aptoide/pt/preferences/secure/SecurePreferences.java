@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
@@ -21,6 +21,22 @@ public class SecurePreferences {
 		}
 
 		return sharedPreferences.getString(SecureKeys.APTOIDE_CLIENT_UUID, null);
+	}
+
+	public static boolean isUserDataLoaded() {
+		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.USER_DATA_LOADED, false);
+	}
+
+	public static void setUserDataLoaded() {
+		SecurePreferencesImplementation.getInstance().edit().putBoolean(SecureKeys.USER_DATA_LOADED, true).apply();
+	}
+
+	public static boolean isFirstRun() {
+		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.FIRST_RUN, true);
+	}
+
+	public static void setFirstRun() {
+		SecurePreferencesImplementation.getInstance().edit().putBoolean(SecureKeys.FIRST_RUN, true).apply();
 	}
 
     /**

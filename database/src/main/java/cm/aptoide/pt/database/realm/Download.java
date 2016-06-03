@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/05/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -14,8 +14,9 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Download extends RealmObject {
 
-	RealmList<RealmInteger> downloadId;
-	RealmList<RealmString> filePaths;
+	public static final String APP_ID = "appId";
+	public static final String DOWNLOAD_ID = "downloadId";
+
 	@PrimaryKey private int appId;
 
 	public int getAppId() {
