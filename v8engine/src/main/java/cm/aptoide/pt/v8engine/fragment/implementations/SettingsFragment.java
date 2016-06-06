@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by SithEngineer on 06/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -59,10 +59,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private static boolean isSetingPIN = false;
 	private final String aptoide_path = null;
 	private final String icon_path = aptoide_path + "icons/";
+	protected Toolbar toolbar;
 	private boolean unlocked = false;
 	private Context context;
-
-	protected Toolbar toolbar;
 
 	public static Fragment newInstance() {
 		return new SettingsFragment();
@@ -295,6 +294,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	}
 
 	public void disableSocialTimeline() {
+		/*
 		if (SecurePreferences.isTimelineActive()) {
 			findPreference(SettingsConstants.DISABLE_TIMELINE).setOnPreferenceClickListener(new Preference
 					.OnPreferenceClickListener() {
@@ -360,11 +360,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			((PreferenceScreen) findPreference(SettingsConstants.ROOT)).removePreference(findPreference
 					(SettingsConstants.SOCIAL_TIMELINE));
 		}
+		*/
+
+		((PreferenceScreen) findPreference(SettingsConstants.ROOT)).removePreference(findPreference(SettingsConstants
+				.SOCIAL_TIMELINE));
 	}
 
 	private void redrawSizes(Double[] size) {
 		final Context ctx = getContext();
-		if (!Build.DEVICE.equals("alien_jolla_bionic")) {
+		if (!Build.DEVICE.equals(AptoideUtils.SystemU.JOLLA_ALIEN_DEVICE)) {
 			findPreference(SettingsConstants.CLEAR_RANK).setSummary(getString(R.string.clearcontent_sum) + " (" +
 					AptoideUtils.StringU
 					.getFormattedString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0])) +
