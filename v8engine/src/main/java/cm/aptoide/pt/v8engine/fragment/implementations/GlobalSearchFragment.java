@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/06/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -108,7 +108,7 @@ public class GlobalSearchFragment extends BasePagerToolbarFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_search, menu);
 
-		SearchUtils.setupSearch(menu, getActivity().getSupportFragmentManager());
+		SearchUtils.setupGlobalSearch(menu, getActivity());
 	}
 
 	@Override

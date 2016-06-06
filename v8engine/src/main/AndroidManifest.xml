@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 02/06/2016.
+  ~ Modified by Neurophobic Animal on 07/06/2016.
   -->
 
 <manifest package="cm.aptoide.pt.v8engine"
@@ -16,6 +16,15 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.SearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
 
         <activity android:name=".activities.StoreActivity"/>
@@ -44,6 +53,11 @@
             </intent-filter>
         </activity>
         -->
+
+        <provider
+            android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+            android:authorities="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+            android:exported="false"/>
 
     </application>
 

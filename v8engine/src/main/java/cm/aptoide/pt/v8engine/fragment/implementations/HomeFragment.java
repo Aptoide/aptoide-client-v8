@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -11,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -19,9 +21,9 @@ import com.trello.rxlifecycle.FragmentEvent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 
 /**
@@ -101,23 +103,8 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
-		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
-		mDrawerLayout = null;
-		mNavigationView = null;
-	}
-
-	@Override
-	protected void setupViewPager(GetStore getStore) {
-		super.setupViewPager(getStore);
+	protected void setupViewPager() {
+		super.setupViewPager();
 
 		updatesBadge = new BadgeView(getContext(), ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
 
@@ -127,6 +114,23 @@ public class HomeFragment extends StoreFragment {
 				.subscribe(updates -> {
 					refreshUpdatesBadge(updates.size());
 				});
+	}
+
+	@Override
+	public void bindViews(View view) {
+		super.bindViews(view);
+		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
+		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		mDrawerLayout = null;
+		mNavigationView = null;
 	}
 
 	public void refreshUpdatesBadge(int num) {
@@ -142,5 +146,13 @@ public class HomeFragment extends StoreFragment {
 				updatesBadge.hide(true);
 			}
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_search, menu);
+
+		SearchUtils.setupGlobalSearch(menu, getActivity());
 	}
 }

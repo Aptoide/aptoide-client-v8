@@ -1,106 +1,93 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/06/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
 
-import android.os.Build;
-import android.os.Handler;
-import android.support.v4.app.FragmentManager;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.database.Cursor;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activities.SearchActivity;
 import cm.aptoide.pt.v8engine.fragment.implementations.GlobalSearchFragment;
+import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 
 /**
  * Created by neuro on 01-06-2016.
  */
 public class SearchUtils {
 
-	public static void setupSearch(Menu menu, FragmentManager fragmentManager) {
-		setupSearch(menu.findItem(R.id.action_search), fragmentManager);
+	public static void setupGlobalSearch(Menu menu, FragmentActivity fragmentActivity) {
+		setupGlobalSearch(menu.findItem(R.id.action_search), fragmentActivity);
 	}
 
-	public static void setupSearch(MenuItem searchItem, FragmentManager fragmentManager) {
-//		final MenuItem searchItem = menu.findItem(R.id.action_search);
+	public static void setupGlobalSearch(MenuItem searchItem, FragmentActivity fragmentActivity) {
+
+		// Get the SearchView and set the searchable configuration
+		final SearchManager searchManager = (SearchManager) V8Engine.getContext()
+				.getSystemService(Context.SEARCH_SERVICE);
 		final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//		final android.app.SearchManager searchManager = (android.app.SearchManager) activity.getSystemService(Context
-// .SEARCH_SERVICE);
+		ComponentName cn = new ComponentName(V8Engine.getContext(), SearchActivity.class);
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
 
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String s) {
 				MenuItemCompat.collapseActionView(searchItem);
-				System.out.println("onQueryTextSubmit: " + s);
 
 				boolean validQueryLenght = s.length() > 1;
 
 				if (validQueryLenght) {
-					FragmentUtils.replaceFragment(fragmentManager, GlobalSearchFragment.newInstance(s));
+					FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(s));
 				} else {
 					ShowMessage.toast(V8Engine.getContext(), R.string.search_minimum_chars);
 				}
 
-				return validQueryLenght;
+				return true;
 			}
 
 			@Override
 			public boolean onQueryTextChange(String s) {
-				System.out.println("onQueryTextChange: " + s);
 				return false;
 			}
 		});
 
-		searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+		searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public boolean onSuggestionSelect(int position) {
+				return false;
+			}
 
-				if (!hasFocus) {
-					MenuItemCompat.collapseActionView(searchItem);
-//					isSocketDisconnect = true;
+			@Override
+			public boolean onSuggestionClick(int position) {
+				Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
 
-					if (Build.VERSION.SDK_INT > 7) {
+				FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(item.getString(1)));
 
-						new Handler().postDelayed(new Runnable() {
-							@Override
-							public void run() {
-
-//								if (isSocketDisconnect) {
-//									WebSocketSingleton.getInstance().disconnect();
-//								}
-
-							}
-						}, 10000);
-					}
-				}
+				return true;
 			}
 		});
 
-		searchView.setOnSearchClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//				isSocketDisconnect = false;
+		searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
 
-//                FlurryAgent.logEvent("Clicked_On_Search_Button");
+			if (!hasFocus) {
+				MenuItemCompat.collapseActionView(searchItem);
 
-				if (Build.VERSION.SDK_INT > 7) {
-//					WebSocketSingleton.getInstance().connect();
-				} else {
-//					activity.onSearchRequested();
-					MenuItemCompat.collapseActionView(searchItem);
-				}
+				WebSocketSingleton.getInstance().disconnect();
 			}
 		});
 
-		if (Build.VERSION.SDK_INT > 7) {
-//			searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
-		}
+		searchView.setOnSearchClickListener(v -> WebSocketSingleton.getInstance().connect());
+
 	}
 }
