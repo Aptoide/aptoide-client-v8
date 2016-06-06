@@ -116,13 +116,34 @@ public abstract class V8Engine extends DataProvider {
 			Logger.w(TAG, "application has debug flag active");
 		}
 
-		// just for curiosity...
-		Logger.i(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook.katana"));
-		Logger.i(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
-		Logger.i(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com.android" +
-				".browser"));
+		// FIXME remove this line
+		getInstalledApksInfo();
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+	}
+
+	/**
+	 * 	just for curiosity...
+	 */
+	private void getInstalledApksInfo() {
+		try{
+			Logger.i(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com.android" +
+					".browser"));
+		}catch (Exception e) {
+			Logger.w(TAG, "browser (system) not installed", e);
+		}
+
+		try {
+			Logger.i(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
+		}catch (Exception e) {
+			Logger.w(TAG, "aptoide not installed", e);
+		}
+
+		try{
+			Logger.i(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook.katana"));
+		}catch (Exception e){
+			Logger.w(TAG, "facebook not installed", e);
+		}
 	}
 
 	private void loadInstalledApps() {

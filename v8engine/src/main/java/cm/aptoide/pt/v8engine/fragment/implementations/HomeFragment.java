@@ -69,7 +69,6 @@ public class HomeFragment extends StoreFragment {
 							.show();
 				} else if (itemId == R.id.navigation_item_settings) {
 					((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
-//					Snackbar.make(mNavigationView, "Settings", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_facebook) {
 					Snackbar.make(mNavigationView, "Facebook", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_twitter) {

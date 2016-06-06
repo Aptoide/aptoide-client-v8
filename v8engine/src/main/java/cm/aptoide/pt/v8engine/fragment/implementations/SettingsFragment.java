@@ -18,12 +18,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -35,6 +38,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.text.DecimalFormat;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -47,7 +51,7 @@ import cm.aptoide.pt.v8engine.util.SettingsConstants;
  * Created by fabio on 26-10-2015.
  *
  * @author fabio
- * @author sithengineerß
+ * @author sithengineer
  */
 public class SettingsFragment extends PreferenceFragmentCompat
 		implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -57,6 +61,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private final String icon_path = aptoide_path + "icons/";
 	private boolean unlocked = false;
 	private Context context;
+
+	protected Toolbar toolbar;
 
 	public static Fragment newInstance() {
 		return new SettingsFragment();
@@ -95,6 +101,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		context = getContext();
+		toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+		final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
+		if(toolbar!=null) {
+			parentActivity.setSupportActionBar(toolbar);
+
+			toolbar.setTitle(R.string.settings);
+			toolbar.setNavigationOnClickListener( v -> getActivity().onBackPressed() );
+
+			ActionBar supportActionBar = parentActivity.getSupportActionBar();
+			if (supportActionBar != null) {
+				supportActionBar.setDisplayHomeAsUpEnabled(true);
+			}
+		}
 		setupClickHandlers();
 	}
 
@@ -130,9 +150,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == DialogInterface.BUTTON_POSITIVE) {
 								cb.setChecked(true);
+								AptoideAccountManager.updateMatureSwitch(true);
 							}
 						}
 					}).show();
+				}
+				else {
+					AptoideAccountManager.updateMatureSwitch(false);
 				}
 
 				return true;

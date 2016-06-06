@@ -21,7 +21,7 @@
         <item name="toolbarTheme">@style/Toolbar</item>
 
         <!--for settings preference theme -->
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
         <!--background-->
         <item name="backgroundMain">@color/white</item>
@@ -132,7 +132,7 @@
         <item name="toolbarTheme">@style/ToolbarDark</item>
 
         <!--for settings preference theme -->
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
         <!--background-->
         <item name="backgroundMain">@color/black</item>
