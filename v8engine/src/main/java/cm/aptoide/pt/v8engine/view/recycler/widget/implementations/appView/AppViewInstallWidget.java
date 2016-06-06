@@ -238,7 +238,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			return v -> {
 				long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
 
-				FragmentUtils.replaceFragment(fragmentActivity, AppViewFragment.newInstance(latestAppId));
+				FragmentUtils.replaceFragmentV4(fragmentActivity, AppViewFragment.newInstance(latestAppId));
 			};
 		}
 
@@ -251,7 +251,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		private View.OnClickListener newOpenStoreListener(View itemView, String storeName) {
 			return v -> {
-				FragmentUtils.replaceFragment((FragmentActivity) itemView.getContext(), StoreFragment.newInstance
+				FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreFragment.newInstance
 						(storeName));
 			};
 		}

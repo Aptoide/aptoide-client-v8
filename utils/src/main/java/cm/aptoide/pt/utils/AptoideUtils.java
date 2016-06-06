@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by SithEngineer on 06/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -417,6 +417,11 @@ public class AptoideUtils {
 			return context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 		}
 
+		public static int getNumericScreenSize() {
+			int size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+			return (size + 1) * 100;
+		}
+
 		public static String getScreenSize() {
 			return Size.values()[getScreenSizeInt()].name().toLowerCase(Locale.ENGLISH);
 		}
@@ -516,6 +521,8 @@ public class AptoideUtils {
 	}
 
 	public static class SystemU {
+
+		public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
 
 		public static int getSdkVer() {
 			return Build.VERSION.SDK_INT;

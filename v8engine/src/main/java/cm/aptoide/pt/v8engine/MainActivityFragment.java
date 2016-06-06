@@ -1,13 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
-
-import android.support.v4.app.Fragment;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
@@ -20,18 +16,19 @@ import cm.aptoide.pt.v8engine.util.FragmentUtils;
  */
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
 
-	private final AtomicInteger atomicInt = new AtomicInteger(0);
-
 	@Override
-	protected Fragment createFragment() {
-		return HomeFragment
-				.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home);
+	protected android.support.v4.app.Fragment createFragment() {
+		return HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home);
 	}
 
 	@Override
-	public void pushFragment(Fragment fragment) {
-		FragmentUtils
-				.replaceFragment(this, fragment, "fragment_" + atomicInt.incrementAndGet());
+	public void pushFragment(android.app.Fragment fragment) {
+		FragmentUtils.replaceFragment(this, fragment);
+	}
+
+	@Override
+	public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
+		FragmentUtils.replaceFragmentV4(this, fragment);
 	}
 
 	@Override

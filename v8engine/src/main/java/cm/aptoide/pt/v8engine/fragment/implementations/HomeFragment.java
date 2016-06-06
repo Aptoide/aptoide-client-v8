@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by SithEngineer on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -21,6 +21,7 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 
 /**
@@ -67,7 +68,7 @@ public class HomeFragment extends StoreFragment {
 					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
 							.show();
 				} else if (itemId == R.id.navigation_item_settings) {
-					Snackbar.make(mNavigationView, "Settings", Snackbar.LENGTH_SHORT).show();
+					((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_facebook) {
 					Snackbar.make(mNavigationView, "Facebook", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_twitter) {

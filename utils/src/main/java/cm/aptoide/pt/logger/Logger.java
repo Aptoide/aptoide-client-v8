@@ -47,6 +47,12 @@ public class Logger {
 		}
 	}
 
+	public static void w(String TAG, String msg, Throwable tr) {
+		if (DBG) {
+			Log.w(TAG, msg, tr);
+		}
+	}
+
 	public static void d(String TAG, String msg) {
 		if (DBG) {
 			Log.d(TAG, msg);

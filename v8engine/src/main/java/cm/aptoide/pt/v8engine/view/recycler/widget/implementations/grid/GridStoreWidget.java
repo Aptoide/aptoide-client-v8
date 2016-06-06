@@ -70,9 +70,12 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 		storeUnsubscribe.setVisibility(View.GONE);
 
 		storeLayout.setBackgroundColor(StoreThemeEnum.get(store).getStoreHeaderInt());
-		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragment((FragmentActivity) v
-				.getContext(), StoreFragment
-				.newInstance(gridStoreDisplayable.getPojo().getName())));
+		storeLayout.setOnClickListener(
+				v -> FragmentUtils.replaceFragmentV4(
+							(FragmentActivity) v.getContext(),
+							StoreFragment.newInstance(gridStoreDisplayable.getPojo().getName())
+					)
+		);
 
 		if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
 			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
