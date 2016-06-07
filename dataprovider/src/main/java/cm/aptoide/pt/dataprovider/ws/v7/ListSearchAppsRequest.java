@@ -56,12 +56,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	@Data
 	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody {
+	public static class Body extends BaseBody implements OffsetInterface<Body> {
 
 		private String lang = Api.LANG;
 		private Integer limit;
 		private boolean mature;
-		private Integer offset;
+		private int offset;
 		private String q = Api.Q;
 		private String query;
 		private List<Long> storeIds;

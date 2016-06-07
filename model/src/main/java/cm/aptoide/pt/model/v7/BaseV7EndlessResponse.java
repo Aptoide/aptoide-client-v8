@@ -3,17 +3,17 @@
  * Modified by Neurophobic Animal on 07/06/2016.
  */
 
-package cm.aptoide.pt.model.v7.store;
+package cm.aptoide.pt.model.v7;
 
-import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Created by neuro on 27-04-2016.
+ * Created by neuro on 20-04-2016.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListStores extends BaseV7EndlessResponse<Store> {
+public class BaseV7EndlessResponse<T> extends BaseV7Response {
 
+	private Datalist<T> datalist;
 }

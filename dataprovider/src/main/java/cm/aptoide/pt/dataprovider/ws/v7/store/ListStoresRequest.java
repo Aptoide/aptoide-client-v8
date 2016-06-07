@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.Order;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -46,11 +47,11 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 	@Data
 	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody {
+	public static class Body extends BaseBody implements OffsetInterface<Body> {
 
 		private Group group;
 		private Integer limit;
-		private Integer offset;
+		private int offset;
 		private Order order;
 		private Sort sort;
 
