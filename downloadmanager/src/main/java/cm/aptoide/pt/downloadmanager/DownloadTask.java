@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.RealmInteger;
-import cm.aptoide.pt.database.realm.RealmString;
 import cm.aptoide.pt.downloadmanager.model.DownloadState;
 import cm.aptoide.pt.downloadmanager.model.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -88,8 +87,9 @@ public class DownloadTask extends FileDownloadListener {
 		Download download = new Download();
 		download.setAppId(appId);
 		download.setDownloadId(downloadIds);
-		database.copyOrUpdate(download);
-		database.close();
+
+//		database.copyOrUpdate(download);
+//		database.close();
 		return (int) Math.floor((float) progress / downloads.size());
 	}
 
@@ -123,7 +123,7 @@ public class DownloadTask extends FileDownloadListener {
 			downloadDb.setDownloadId(downloadIdsToAdd);
 		}
 
-		AptoideDownloadManager.getInstance().getDatabase().copyOrUpdate(downloadDb);
+//		AptoideDownloadManager.getInstance().getDatabase().copyOrUpdate(downloadDb);
 	}
 
 	private String getFilePath(FileToDownload download) {
@@ -179,15 +179,15 @@ public class DownloadTask extends FileDownloadListener {
 
 				final int appId = download.getAppId();
 				Database database = AptoideDownloadManager.getInstance().getDatabase();
-				database.runTransaction((realm) -> {
-					RealmString realmString = new RealmString(task.getPath());
-
-					AptoideDownloadManager.getInstance()
-							.getDownloadFromDb(realm, appId)
-							.getFilePaths()
-							.add(realm.copyToRealmOrUpdate(realmString));
-				});
-				database.close();
+//				database.runTransaction((realm) -> {
+//					RealmString realmString = new RealmString(task.getPath());
+//
+//					AptoideDownloadManager.getInstance()
+//							.getDownloadFromDb(realm, appId)
+//							.getFilePaths()
+//							.add(realm.copyToRealmOrUpdate(realmString));
+//				});
+//				database.close();
 			}
 		}
 	}

@@ -34,7 +34,7 @@ public class AptoideDownloadManager {
 	}
 
 	public Database getDatabase() {
-		return new Database(context).open();
+		return new Database();
 	}
 
 	public void init(Context context) {
@@ -103,7 +103,7 @@ public class AptoideDownloadManager {
 		return Observable.fromCallable(() -> {
 			Database open = getDatabase();
 			Download downloadToCheck = getDownloadFromDb(open, appId);
-			open.close();
+//			open.close();
 			DownloadState downloadStatus = DownloadState.INVALID_STATUS;
 			downloadStatus = checkStateIfIsDownloaded(downloadToCheck);
 			if (downloadStatus.equals(DownloadState.COMPLETED)) {
@@ -114,7 +114,8 @@ public class AptoideDownloadManager {
 	}
 
 	Download getDownloadFromDb(Database database, int appId) {
-		return getDownloadFromDb(database.getRealm(), appId);
+		return getDownloadFromDb(database, appId);
+
 	}
 
 	Download getDownloadFromDb(Realm realm, int appId) {

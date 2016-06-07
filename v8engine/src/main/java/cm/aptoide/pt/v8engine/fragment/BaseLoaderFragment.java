@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -25,20 +25,26 @@ public abstract class BaseLoaderFragment extends BaseFragment implements LoadInt
 	private LoaderLayoutHandler loaderLayoutHandler;
 	@Getter private boolean created = false;
 
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
-	Bundle savedInstanceState) {
-		if (!created) {
-			loaderLayoutHandler = createLoaderLayoutHandler();
-		}
-		return super.onCreateView(inflater, container, savedInstanceState);
-	}
-
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		load(!created);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if (loaderLayoutHandler != null) {
+			loaderLayoutHandler = null;
+		}
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+	Bundle savedInstanceState) {
+		loaderLayoutHandler = createLoaderLayoutHandler();
+		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
@@ -53,14 +59,6 @@ public abstract class BaseLoaderFragment extends BaseFragment implements LoadInt
 	public void onStop() {
 		super.onStop();
 		created = true;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		if (loaderLayoutHandler != null) {
-			loaderLayoutHandler = null;
-		}
 	}
 
 	@NonNull

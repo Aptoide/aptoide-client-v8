@@ -68,7 +68,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 		@ColorInt int color = context.getResources().getColor(StoreThemeEnum.get(store.getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v->FragmentUtils.replaceFragment((FragmentActivity) v.getContext(),
+		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
 				StoreFragment
 				.newInstance(displayable.getPojo().getStoreName())));
 

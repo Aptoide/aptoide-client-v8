@@ -14,9 +14,8 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Download extends RealmObject {
 
-	public static final String APP_ID = "appId";
-	public static final String DOWNLOAD_ID = "downloadId";
-
+	RealmList<RealmInteger> downloadId;
+	RealmList<RealmString> filePaths;
 	@PrimaryKey private int appId;
 
 	public int getAppId() {

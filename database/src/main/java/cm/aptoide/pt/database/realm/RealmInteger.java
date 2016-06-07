@@ -1,6 +1,6 @@
 package cm.aptoide.pt.database.realm;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -13,7 +13,7 @@ public class RealmInteger extends RealmObject {
 	private Integer integer;
 
 	public RealmInteger(Integer downloadId) {
-		this.id = Database.getUuid();
+		this.id = IdUtils.randomString();
 		this.integer = downloadId;
 	}
 

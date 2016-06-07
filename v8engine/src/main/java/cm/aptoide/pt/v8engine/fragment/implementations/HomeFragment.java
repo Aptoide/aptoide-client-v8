@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -11,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -25,6 +27,8 @@ import cm.aptoide.pt.downloadmanager.model.DownloadState;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import rx.Observable;
 import rx.Subscription;
@@ -97,7 +101,7 @@ public class HomeFragment extends StoreFragment {
 					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
 							.show();
 				} else if (itemId == R.id.navigation_item_settings) {
-					Snackbar.make(mNavigationView, "Settings", Snackbar.LENGTH_SHORT).show();
+					((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_facebook) {
 					Snackbar.make(mNavigationView, "Facebook", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.navigation_item_twitter) {
@@ -130,23 +134,8 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
-		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
-		mDrawerLayout = null;
-		mNavigationView = null;
-	}
-
-	@Override
-	protected void setupViewPager(GetStore getStore) {
-		super.setupViewPager(getStore);
+	protected void setupViewPager() {
+		super.setupViewPager();
 
 		updatesBadge = new BadgeView(getContext(), ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
 
@@ -156,6 +145,23 @@ public class HomeFragment extends StoreFragment {
 				.subscribe(updates -> {
 					refreshUpdatesBadge(updates.size());
 				});
+	}
+
+	@Override
+	public void bindViews(View view) {
+		super.bindViews(view);
+		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
+		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		mDrawerLayout = null;
+		mNavigationView = null;
 	}
 
 	public void refreshUpdatesBadge(int num) {
@@ -171,5 +177,13 @@ public class HomeFragment extends StoreFragment {
 				updatesBadge.hide(true);
 			}
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_search, menu);
+
+		SearchUtils.setupGlobalSearchView(menu, getActivity());
 	}
 }

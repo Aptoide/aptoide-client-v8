@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -67,7 +67,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		private String packageName;
 		private String q = Api.Q;
 		private Integer storeId;
-		private List<Integer> storeIds;
+		private List<Long> storeIds;
 		private String storeName;
 		//		Doesn't make sense without stores_auth_map
 //		private List<String> storeNames;

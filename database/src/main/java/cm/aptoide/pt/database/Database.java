@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 01/06/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -80,14 +80,14 @@ public class Database {
 
 	public static void save(Installed installed, Realm realm) {
 		realm.beginTransaction();
-		installed.computeId();
+//		installed.computeId();
 		realm.copyToRealmOrUpdate(installed);
 		realm.commitTransaction();
 	}
 
 	public static void save(Rollback rollback, Realm realm) {
 		realm.beginTransaction();
-		rollback.computeId();
+//		rollback.computeId();
 		realm.copyToRealmOrUpdate(rollback);
 		realm.commitTransaction();
 	}
