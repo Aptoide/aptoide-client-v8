@@ -19,18 +19,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sea
 /**
  * Created by neuro on 01-06-2016.
  */
-public class SearchPagerFragment extends GridRecyclerFragmentWithDecorator {
+public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 	private String query;
 	private boolean subscribedStores;
 
-	public static SearchPagerFragment newInstance(String query, boolean subscribedStores) {
+	public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores) {
 		Bundle args = new Bundle();
 
 		args.putString(BundleCons.QUERY, query);
 		args.putBoolean(BundleCons.SUBSCRIBED_STORES, subscribedStores);
 
-		SearchPagerFragment fragment = new SearchPagerFragment();
+		SearchPagerTabFragment fragment = new SearchPagerTabFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}

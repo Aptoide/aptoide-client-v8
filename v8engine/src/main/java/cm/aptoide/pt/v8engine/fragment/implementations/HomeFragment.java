@@ -153,6 +153,6 @@ public class HomeFragment extends StoreFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_search, menu);
 
-		SearchUtils.setupGlobalSearch(menu, getActivity());
+		SearchUtils.setupGlobalSearchView(menu, getActivity());
 	}
 }

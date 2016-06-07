@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 02/06/2016.
+  ~ Modified by Neurophobic Animal on 07/06/2016.
   -->
 
 <FrameLayout
@@ -15,6 +15,8 @@
     <include layout="@layout/partial_view_error"/>
 
     <include layout="@layout/partial_view_progress_bar"/>
+
+    <include layout="@layout/incl_no_search_results_layout"/>
 
     <RelativeLayout
         android:id="@+id/search_results_layout"
@@ -36,13 +38,15 @@
                 android:id="@+id/subscribed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/subscribed"/>
+                android:text="@string/subscribed"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/everywhere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/everywhere"/>
+                android:text="@string/everywhere"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

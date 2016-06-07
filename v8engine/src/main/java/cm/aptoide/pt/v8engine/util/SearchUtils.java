@@ -27,11 +27,16 @@ import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
  */
 public class SearchUtils {
 
-	public static void setupGlobalSearch(Menu menu, FragmentActivity fragmentActivity) {
-		setupGlobalSearch(menu.findItem(R.id.action_search), fragmentActivity);
+	public static void setupGlobalSearchView(Menu menu, FragmentActivity fragmentActivity) {
+		setupSearchView(menu.findItem(R.id.action_search), fragmentActivity, true);
 	}
 
-	public static void setupGlobalSearch(MenuItem searchItem, FragmentActivity fragmentActivity) {
+	public static void setupStoreSearchView(Menu menu, FragmentActivity fragmentActivity) {
+		setupSearchView(menu.findItem(R.id.action_search), fragmentActivity, false);
+	}
+
+	public static void setupSearchView(MenuItem searchItem, FragmentActivity fragmentActivity, boolean
+			searchInOtherStores) {
 
 		// Get the SearchView and set the searchable configuration
 		final SearchManager searchManager = (SearchManager) V8Engine.getContext()
@@ -48,7 +53,8 @@ public class SearchUtils {
 				boolean validQueryLenght = s.length() > 1;
 
 				if (validQueryLenght) {
-					FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(s));
+					FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(s,
+							searchInOtherStores));
 				} else {
 					ShowMessage.toast(V8Engine.getContext(), R.string.search_minimum_chars);
 				}
@@ -72,7 +78,8 @@ public class SearchUtils {
 			public boolean onSuggestionClick(int position) {
 				Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
 
-				FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(item.getString(1)));
+				FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(item.getString(1),
+						searchInOtherStores));
 
 				return true;
 			}
