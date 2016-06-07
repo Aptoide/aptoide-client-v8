@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
@@ -74,27 +75,25 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 	}
 
 	private void handleDescriptionBadges(GetAppMeta.App app) {
-		GetAppMeta.GetAppMetaFile.Malware malware = app.getFile().getMalware();
-		if(malware!=null) {
+		Malware malware = app.getFile().getMalware();
+		if (malware != null && malware.getReason() != null) {
 
-			if (malware.getReason().getThirdpartyValidated() != null && GetAppMeta.GetAppMetaFile.Malware.GOOGLE_PLAY
+			if (malware.getReason().getThirdpartyValidated() != null && Malware.GOOGLE_PLAY
 					.equalsIgnoreCase(malware.getReason().getThirdpartyValidated().getStore())) {
 				badgeMarketImage.setVisibility(View.VISIBLE);
 			}
 
-			if (malware.getReason()
-					.getSignatureValidated() != null && GetAppMeta.GetAppMetaFile.Malware.Reason.Status.passed
+			if (malware.getReason().getSignatureValidated() != null && Malware.Reason.Status.passed
 					.equals(malware.getReason().getSignatureValidated().getStatus())) {
 				badgeSignatureImage.setVisibility(View.VISIBLE);
 			}
 
-			if (malware.getReason()
-					.getScanned() != null && GetAppMeta.GetAppMetaFile.Malware.Reason.Status.passed.equals
+			if (malware.getReason().getScanned() != null && Malware.Reason.Status.passed.equals
 					(malware.getReason().getScanned().getStatus())) {
 				badgeAntivirusImage.setVisibility(View.VISIBLE);
 			}
 
-			if (malware.getReason().getManual() != null && GetAppMeta.GetAppMetaFile.Malware.Reason.Status.passed.equals
+			if (malware.getReason().getManual() != null && Malware.Reason.Status.passed.equals
 					(malware.getReason().getManual().getStatus())) {
 				badgeFlagImage.setVisibility(View.VISIBLE);
 			}

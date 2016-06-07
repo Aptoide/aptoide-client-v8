@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/06/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -24,6 +24,7 @@ import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -37,6 +38,10 @@ import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -645,6 +650,343 @@ public class AptoideUtils {
 
 		public static String getString(@StringRes int stringRes) {
 			return StringU.getResString(stringRes);
+		}
+	}
+
+	public static class DateTimeU extends DateUtils {
+
+		private static final long millisInADay = 1000 * 60 * 60 * 24;
+		private static String mTimestampLabelYesterday;
+		private static String mTimestampLabelToday;
+		private static String mTimestampLabelJustNow;
+		private static String mTimestampLabelMinutesAgo;
+		private static String mTimestampLabelHoursAgo;
+		private static String mTimestampLabelHourAgo;
+		private static String mTimestampLabelDaysAgo;
+		private static String mTimestampLabelWeekAgo;
+		private static String mTimestampLabelWeeksAgo;
+		private static String mTimestampLabelMonthAgo;
+		private static String mTimestampLabelMonthsAgo;
+		private static String mTimestampLabelYearAgo;
+		private static String mTimestampLabelYearsAgo;
+		private static DateTimeU instance;
+		private static String[] weekdays = new DateFormatSymbols().getWeekdays(); // get day names
+
+		/**
+		 * Singleton constructor, needed to get access to the application context & strings for i18n
+		 *
+		 * @param context Context
+		 *
+		 * @return DateTimeUtils singleton instance
+		 *
+		 * @throws Exception
+		 */
+		public static DateTimeU getInstance(Context context) {
+			if (instance == null) {
+				instance = new DateTimeU();
+				mTimestampLabelYesterday = context.getResources()
+						.getString(R.string.WidgetProvider_timestamp_yesterday);
+				mTimestampLabelToday = context.getResources().getString(R.string.WidgetProvider_timestamp_today);
+				mTimestampLabelJustNow = context.getResources().getString(R.string.WidgetProvider_timestamp_just_now);
+				mTimestampLabelMinutesAgo = context.getResources()
+						.getString(R.string.WidgetProvider_timestamp_minutes_ago);
+				mTimestampLabelHoursAgo = context.getResources().getString(R.string
+						.WidgetProvider_timestamp_hours_ago);
+				mTimestampLabelHourAgo = context.getResources().getString(R.string.WidgetProvider_timestamp_hour_ago);
+				mTimestampLabelDaysAgo = context.getResources().getString(R.string.WidgetProvider_timestamp_days_ago);
+				mTimestampLabelWeekAgo = context.getResources().getString(R.string.WidgetProvider_timestamp_week_ago2);
+				mTimestampLabelWeeksAgo = context.getResources().getString(R.string
+						.WidgetProvider_timestamp_weeks_ago);
+				mTimestampLabelMonthAgo = context.getResources().getString(R.string
+						.WidgetProvider_timestamp_month_ago);
+				mTimestampLabelMonthsAgo = context.getResources()
+						.getString(R.string.WidgetProvider_timestamp_months_ago);
+				mTimestampLabelYearAgo = context.getResources().getString(R.string.WidgetProvider_timestamp_year_ago);
+				mTimestampLabelYearsAgo = context.getResources().getString(R.string
+						.WidgetProvider_timestamp_years_ago);
+			}
+			return instance;
+		}
+
+		/**
+		 * Checks if the given date is yesterday.
+		 *
+		 * @param date - Date to check.
+		 *
+		 * @return TRUE if the date is yesterday, FALSE otherwise.
+		 */
+		private static boolean isYesterday(long date) {
+
+			final Calendar currentDate = Calendar.getInstance();
+			currentDate.setTimeInMillis(date);
+
+			final Calendar yesterdayDate = Calendar.getInstance();
+			yesterdayDate.add(Calendar.DATE, -1);
+
+			return yesterdayDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) && yesterdayDate.get(Calendar
+					.DAY_OF_YEAR) == currentDate
+					.get(Calendar.DAY_OF_YEAR);
+		}
+
+		/**
+		 * Displays a user-friendly date difference string
+		 *
+		 * @param timedate Timestamp to format as date difference from now
+		 *
+		 * @return Friendly-formatted date diff string
+		 */
+		public String getTimeDiffString(Context context, long timedate) {
+			Calendar startDateTime = Calendar.getInstance();
+			Calendar endDateTime = Calendar.getInstance();
+			endDateTime.setTimeInMillis(timedate);
+			long milliseconds1 = startDateTime.getTimeInMillis();
+			long milliseconds2 = endDateTime.getTimeInMillis();
+			long diff = milliseconds1 - milliseconds2;
+
+			long hours = diff / (60 * 60 * 1000);
+			long minutes = diff / (60 * 1000);
+			minutes = minutes - 60 * hours;
+			long seconds = diff / (1000);
+
+			boolean isToday = DateTimeU.isToday(timedate);
+			boolean isYesterday = DateTimeU.isYesterday(timedate);
+
+			if (hours > 0 && hours < 12) {
+				return hours == 1 ? AptoideUtils.StringU.getFormattedString(R.string
+						.WidgetProvider_timestamp_hour_ago, hours) : AptoideUtils.StringU
+						.getFormattedString(R.string.WidgetProvider_timestamp_hours_ago, hours);
+			} else if (hours <= 0) {
+				if (minutes > 0) {
+					return AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_minutes_ago,
+							minutes);
+				} else {
+					return mTimestampLabelJustNow;
+				}
+			} else if (isToday) {
+				return mTimestampLabelToday;
+			} else if (isYesterday) {
+				return mTimestampLabelYesterday;
+			} else if (startDateTime.getTimeInMillis() - timedate < millisInADay * 6) {
+				return weekdays[endDateTime.get(Calendar.DAY_OF_WEEK)];
+			} else {
+				return formatDateTime(context, timedate, DateUtils.FORMAT_NUMERIC_DATE);
+			}
+		}
+
+		public String getTimeDiffAll(Context context, long time) {
+
+			long diffTime = new Date().getTime() - time;
+
+			if (isYesterday(time) || isToday(time)) {
+				getTimeDiffString(context, time);
+			} else {
+				if (diffTime < DateUtils.WEEK_IN_MILLIS) {
+					int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay)).intValue();
+					return diffDays == 1 ? mTimestampLabelYesterday : AptoideUtils.StringU.getFormattedString(R.string
+							.WidgetProvider_timestamp_days_ago, diffDays);
+				} else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
+					int diffDays = Double.valueOf(Math.ceil(diffTime / WEEK_IN_MILLIS)).intValue();
+					return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(R.string
+							.WidgetProvider_timestamp_months_ago, diffDays);
+				} else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
+					int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4))).intValue();
+					return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(R.string
+							.WidgetProvider_timestamp_months_ago, diffDays);
+				} else {
+					int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4 * 12))).intValue();
+					return diffDays == 1 ? mTimestampLabelYearAgo : AptoideUtils.StringU.getFormattedString(R.string
+							.WidgetProvider_timestamp_years_ago, diffDays);
+				}
+			}
+
+			return getTimeDiffString(context, time);
+		}
+	}
+
+	/**
+	 * Created with IntelliJ IDEA. User: rmateus Date: 03-12-2013 Time: 12:58 To change this template use File |
+	 * Settings | File Templates.
+	 */
+	public static class IconSizeU {
+
+		public static final int DEFAULT_SCREEN_DENSITY = -1;
+		public static final HashMap<Integer, String> mStoreIconSizes;
+		public static final int ICONS_SIZE_TYPE = 0;
+		public static final HashMap<Integer, String> mIconSizes;
+		public static final int STORE_ICONS_SIZE_TYPE = 1;
+		static final private int baseLine = 96;
+		static final private int baseLineAvatar = 150;
+		static final private int baseLineXNotification = 320;
+		static final private int baseLineYNotification = 180;
+		private static int baseLineScreenshotLand = 256;
+		private static int baseLineScreenshotPort = 96;
+
+		static {
+			mStoreIconSizes = new HashMap<>();
+			mStoreIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "");
+			mStoreIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "450x450");
+			mStoreIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "300x300");
+			mStoreIconSizes.put(DisplayMetrics.DENSITY_HIGH, "225x225");
+			mStoreIconSizes.put(DisplayMetrics.DENSITY_MEDIUM, "150x150");
+			mStoreIconSizes.put(DisplayMetrics.DENSITY_LOW, "113x113");
+		}
+
+		static {
+			mIconSizes = new HashMap<>();
+			mIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "");
+			mIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "288x288");
+			mIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "192x192");
+			mIconSizes.put(DisplayMetrics.DENSITY_HIGH, "144x144");
+			mIconSizes.put(DisplayMetrics.DENSITY_MEDIUM, "127x127");
+			mIconSizes.put(DisplayMetrics.DENSITY_LOW, "96x96");
+		}
+
+		public static String generateSizeStringNotification() {
+			if (context == null) {
+				return "";
+			}
+			float densityMultiplier = densityMultiplier();
+
+			int sizeX = (int) (baseLineXNotification * densityMultiplier);
+			int sizeY = (int) (baseLineYNotification * densityMultiplier);
+
+			//Log.d("Aptoide-IconSize", "Size is " + size);
+
+			return sizeX + "x" + sizeY;
+		}
+
+		public static String generateSizeStoreString() {
+			String iconRes = mStoreIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
+			return iconRes != null ? iconRes : getDefaultSize(STORE_ICONS_SIZE_TYPE);
+		}
+
+		public static String generateSizeString() {
+			String iconRes = mIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
+			return iconRes != null ? iconRes : getDefaultSize(ICONS_SIZE_TYPE);
+		}
+
+		public static String generateSizeStringAvatar() {
+			if (context == null) {
+				return "";
+			}
+			float densityMultiplier = densityMultiplier();
+
+			int size = Math.round(baseLineAvatar * densityMultiplier);
+
+			//Log.d("Aptoide-IconSize", "Size is " + size);
+
+			return size + "x" + size;
+		}
+
+		public static String generateSizeStringScreenshots(String orient) {
+			if (context == null) {
+				return "";
+			}
+			boolean isPortrait = orient != null && orient.equals("portrait");
+			int dpi = ScreenU.getDensityDpi();
+			return getThumbnailSize(dpi, isPortrait);
+		}
+
+		private static String getThumbnailSize(int density, boolean isPortrait) {
+			if (!isPortrait) {
+				if (density >= 640) {
+					return "1024x640";
+				} else if (density >= 480) {
+					return "768x480";
+				} else if (density >= 320) {
+					return "512x320";
+				} else if (density >= 240) {
+					return "384x240";
+				} else if (density >= 213) {
+					return "340x213";
+				} else if (density >= 160) {
+					return "256x160";
+				} else {
+					return "192x120";
+				}
+			} else {
+				if (density >= 640) {
+					return "384x640";
+				} else if (density >= 480) {
+					return "288x480";
+				} else if (density >= 320) {
+					return "192x320";
+				} else if (density >= 240) {
+					return "144x240";
+				} else if (density >= 213) {
+					return "127x213";
+				} else if (density >= 160) {
+					return "96x160";
+				} else {
+					return "72x120";
+				}
+			}
+		}
+
+		private static Float densityMultiplier() {
+			if (context == null) {
+				return 0f;
+			}
+
+			float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+			if (densityMultiplier <= 0.75f) {
+				densityMultiplier = 0.75f;
+			} else if (densityMultiplier <= 1) {
+				densityMultiplier = 1f;
+			} else if (densityMultiplier <= 1.333f) {
+				densityMultiplier = 1.3312500f;
+			} else if (densityMultiplier <= 1.5f) {
+				densityMultiplier = 1.5f;
+			} else if (densityMultiplier <= 2f) {
+				densityMultiplier = 2f;
+			} else if (densityMultiplier <= 3f) {
+				densityMultiplier = 3f;
+			} else {
+				densityMultiplier = 4f;
+			}
+			return densityMultiplier;
+		}
+
+		public static String getDefaultSize(int varType) {
+
+			switch (varType) {
+				case STORE_ICONS_SIZE_TYPE:
+					if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
+						return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
+					} else {
+						return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+					}
+				case ICONS_SIZE_TYPE:
+					if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
+						return mIconSizes.get(DisplayMetrics.DENSITY_LOW);
+					} else {
+						return mIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+					}
+			}
+			return null;
+		}
+
+		/**
+		 * On v7 webservices there is no attribute of HD icon. <br />Instead,
+		 * the logic is that if the filename ends with <b>_icon</b> it is an HD icon.
+		 *
+		 * @param iconUrl The String with the URL of the icon
+		 * @return A String with
+		 */
+		public static String parseIcon(String iconUrl) {
+			try {
+				if (iconUrl.contains("_icon")) {
+					String sizeString = IconSizeU.generateSizeString();
+					if (sizeString != null && !sizeString.isEmpty()) {
+						String[] splittedUrl = iconUrl.split("\\.(?=[^\\.]+$)");
+						iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+					}
+				}
+			} catch (Exception e) {
+				Logger.printException(e);
+			}
+			return iconUrl;
 		}
 	}
 }

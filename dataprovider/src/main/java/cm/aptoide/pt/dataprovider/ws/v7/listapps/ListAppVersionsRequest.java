@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -50,7 +50,7 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
 		private Integer packageId;
 		private String packageName;
 		private String q = Api.Q;
-		private List<Integer> storeIds;
+		private List<Long> storeIds;
 		private List<String> storeNames;
 		// Honestly don't know lol
 //		private List<StoreAuth> storesAuth;

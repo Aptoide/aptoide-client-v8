@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.model.v7.listapp;
 
+import cm.aptoide.pt.model.v7.Malware;
 import lombok.Data;
 
 /**
@@ -19,4 +20,5 @@ public class File {
 	private String path;
 	private String pathAlt;
 	private long filesize;
+	private Malware malware;
 }

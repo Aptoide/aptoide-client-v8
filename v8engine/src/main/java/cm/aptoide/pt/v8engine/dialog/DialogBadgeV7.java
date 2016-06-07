@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -17,22 +17,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.v8engine.R;
 
-import static cm.aptoide.pt.model.v7.GetAppMeta.GetAppMetaFile.Malware.Reason.Status;
+import static cm.aptoide.pt.model.v7.Malware.Reason.Status;
 
 /**
  * Created by hsousa on 18/11/15.
  */
 public class DialogBadgeV7 extends DialogFragment {
 
-	protected GetAppMeta.GetAppMetaFile.Malware malware;
+	protected Malware malware;
 	protected String appName;
-	protected GetAppMeta.GetAppMetaFile.Malware.Rank rank;
+	protected Malware.Rank rank;
 
-	public static DialogBadgeV7 newInstance(GetAppMeta.GetAppMetaFile.Malware malware, String appName, GetAppMeta
-			.GetAppMetaFile.Malware.Rank rank) {
+	public static DialogBadgeV7 newInstance(Malware malware, String appName, Malware.Rank rank) {
 
 		DialogBadgeV7 dialog = new DialogBadgeV7();
 		dialog.malware = malware;
@@ -89,8 +88,7 @@ public class DialogBadgeV7 extends DialogFragment {
 				}
 			}
 
-			if (malware.getReason()
-					.getThirdpartyValidated() != null && GetAppMeta.GetAppMetaFile.Malware.GOOGLE_PLAY
+			if (malware.getReason().getThirdpartyValidated() != null && Malware.GOOGLE_PLAY
 					.equalsIgnoreCase(malware
 					.getReason()
 					.getThirdpartyValidated()

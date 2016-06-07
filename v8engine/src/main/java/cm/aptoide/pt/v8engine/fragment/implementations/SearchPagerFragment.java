@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/06/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -37,7 +37,7 @@ public class SearchPagerFragment extends GridRecyclerFragmentWithDecorator {
 
 	@Override
 	public void load(boolean refresh) {
-		ListSearchAppsRequest.of(query).execute(listSearchApps -> {
+		ListSearchAppsRequest.of(query, subscribedStores).execute(listSearchApps -> {
 			LinkedList<Displayable> displayables = new LinkedList<>();
 
 			for (ListSearchApps.SearchAppsApp searchAppsApp : listSearchApps.getDatalist().getList()) {
