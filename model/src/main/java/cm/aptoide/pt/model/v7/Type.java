@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/06/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -45,7 +45,10 @@ public enum Type {
 	UPDATE(1),
 
 	// Search
-	SEARCH(1);
+	SEARCH(1),
+
+	// Progress
+	PROGRESS_DISPLAYABLE;
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 

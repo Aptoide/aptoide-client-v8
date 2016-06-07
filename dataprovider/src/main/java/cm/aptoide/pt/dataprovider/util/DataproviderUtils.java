@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.util;
@@ -33,7 +33,7 @@ public class DataproviderUtils {
 			}
 
 			if (successRequestListener != null) {
-				successRequestListener.onSuccess(listAppsUpdates);
+				successRequestListener.call(listAppsUpdates);
 			}
 		}, Throwable::printStackTrace);
 	}

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.networkclient;
@@ -104,7 +104,7 @@ public abstract class WebService<T, U> {
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener, ErrorRequestListener errorRequestListener) {
-		observe().subscribe(successRequestListener::onSuccess, errorRequestListener::onError);
+		observe().subscribe(successRequestListener::call, errorRequestListener::onError);
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
