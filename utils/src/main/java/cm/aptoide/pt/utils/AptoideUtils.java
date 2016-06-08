@@ -989,4 +989,5 @@ public class AptoideUtils {
 			return iconUrl;
 		}
 	}
+
 }
