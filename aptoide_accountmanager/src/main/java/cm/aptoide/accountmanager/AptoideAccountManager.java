@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.accountmanager;
@@ -45,8 +45,8 @@ import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ThreadUtils;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -393,7 +393,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static Observable<String> invalidateAccessToken(@NonNull Context context) {
 		return Observable.fromCallable(() -> {
-			if (ThreadUtils.isOnUiThread()) {
+			if (AptoideUtils.ThreadU.isOnUiThread()) {
 				throw new IllegalThreadStateException("This method shouldn't be called on ui " +
 						"thread.");
 			}

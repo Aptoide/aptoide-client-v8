@@ -1,12 +1,14 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
+ */
+
 package cm.aptoide.accountmanager.ws;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.utils.MathUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -34,9 +36,9 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
 	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces) {
 
 		HashMap<String, String> parameters = new HashMap<String, String>();
-		try {
-			String passhash = null;
-			passhash = MathUtils.computeSHA1sum(password);
+
+		String passhash;
+		passhash = AptoideUtils.AlgorithmU.computeSha1(password);
 			parameters.put("mode", "json");
 			parameters.put("email", email);
 			parameters.put("passhash", passhash);
@@ -46,11 +48,8 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
 //            parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
 //        }
 
-			parameters.put("hmac", MathUtils.computeHmacSha1(email + passhash + name,
+		parameters.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name,
 					"bazaar_hmac"));
-		} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
 
 		return interfaces.createUser(parameters);
 	}

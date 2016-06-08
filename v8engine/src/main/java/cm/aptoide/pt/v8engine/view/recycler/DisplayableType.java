@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -20,14 +20,15 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewImagesDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateResultsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSubscriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
@@ -38,6 +39,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -45,11 +47,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDescriptionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewImagesWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewInstallWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRatingWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewScreenshotsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSubscriptionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
@@ -60,6 +62,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisp
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 
@@ -87,6 +91,12 @@ public enum DisplayableType {
 	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
 	UPDATE(UpdateWidget.class, UpdateDisplayable.class),
 
+	// Search
+	SEARCH(SearchWidget.class, SearchDisplayable.class),
+
+	// Loading
+	PROGRESS(ProgressBarWidget.class, ProgressBarDisplayable.class),
+
 	// appView widgets / displayables
 	APP_VIEW_COMMENTS(AppViewCommentsWidget.class, AppViewCommentsDisplayable.class),
 
@@ -94,7 +104,7 @@ public enum DisplayableType {
 
 	APP_VIEW_DEVELOPER(AppViewDeveloperWidget.class, AppViewDeveloperDisplayable.class),
 
-	APP_VIEW_IMAGES(AppViewImagesWidget.class, AppViewImagesDisplayable.class),
+	APP_VIEW_SCREENSHOTS(AppViewScreenshotsWidget.class, AppViewScreenshotsDisplayable.class),
 
 	APP_VIEW_INSTALL(AppViewInstallWidget.class, AppViewInstallDisplayable.class),
 
@@ -103,7 +113,7 @@ public enum DisplayableType {
 
 	APP_VIEW_RATE_RESULTS(AppViewRateResultsWidget.class, AppViewRateResultsDisplayable.class),
 
-	APP_VIEW_RATE_THIS(AppViewRateThisWidget.class, AppViewRateThisDisplayable.class),
+	APP_VIEW_RATING(AppViewRatingWidget.class, AppViewRatingDisplayable.class),
 
 	APP_VIEW_SUBSCRIPTION(AppViewSubscriptionWidget.class, AppViewSubscriptionDisplayable.class),
 
@@ -224,13 +234,13 @@ public enum DisplayableType {
 	public enum Group {
 		APP_VIEW(
 				APP_VIEW_INSTALL,
-				APP_VIEW_SUBSCRIPTION,
+//				APP_VIEW_SUBSCRIPTION,
 				APP_VIEW_DESCRIPTION,
-				APP_VIEW_IMAGES,
-				APP_VIEW_RATE_THIS,
-				APP_VIEW_RATE_RESULTS,
+				APP_VIEW_SCREENSHOTS,
+				APP_VIEW_RATING,
+//				APP_VIEW_RATE_RESULTS,
 				APP_VIEW_COMMENTS,
-				APP_VIEW_OTHER_VERSIONS,
+//				APP_VIEW_OTHER_VERSIONS,
 				APP_VIEW_DEVELOPER
 		)
 		;

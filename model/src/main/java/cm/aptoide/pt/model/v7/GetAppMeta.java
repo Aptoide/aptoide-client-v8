@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -59,7 +59,7 @@ public class GetAppMeta extends BaseV7Response {
 
 		private GetAppMetaFile.Signature signature;
 		private GetAppMetaFile.Hardware hardware;
-		private GetAppMetaFile.Malware malware;
+		private Malware malware;
 		private GetAppMetaFile.Flags flags;
 		private List<String> usedFeatures;
 		private List<String> usedPermissions;
@@ -84,97 +84,6 @@ public class GetAppMeta extends BaseV7Response {
 			 * density
 			 */
 			private List<List<Integer>> densities;
-		}
-
-		/**
-		 * List of various malware reasons http://ws2.aptoide
-		 * .com/api/7/getApp/apk_md5sum/7de07d96488277d8d76eafa2ef66f5a8
-		 * <p>
-		 * <p>
-		 * RANK2: http://ws2.aptoide.com/api/7/getApp/apk_md5sum/7de07d96488277d8d76eafa2ef66f5a8
-		 * http://ws2.aptoide.com/api/7/getApp/apk_md5sum/06c9eb56b787b6d3b606d68473a38f47
-		 * <p>
-		 * RANK3: http://ws2.aptoide.com/api/7/getApp/apk_md5sum/18f0d5bdb9df1e0e27604890113c3331
-		 * http://ws2.aptoide.com/api/7/getApp/apk_md5sum/74cbfde9dc6da43d3d14f4df9cdb9f2f
-		 * <p>
-		 * Rank can be: TRUSTED, WARNING, UNKNOWN
-		 */
-		@Data
-		public static class Malware {
-
-			public static final String TRUSTED = "TRUSTED";
-			public static final String WARNING = "WARNING";
-			public static final String UNKNOWN = "UNKNOWN";
-
-			public static final String PASSED = "passed";
-			public static final String WARN = "warn";
-			public static final String GOOGLE_PLAY = "Google Play";
-
-			private String rank;
-			private GetAppMetaFile.Malware.Reason reason;
-			private String added;
-			private String modified;
-
-			@Data
-			public static class Reason {
-
-				private GetAppMetaFile.Malware.Reason.SignatureValidated signatureValidated;
-				private GetAppMetaFile.Malware.Reason.ThirdPartyValidated thirdpartyValidated;
-				private GetAppMetaFile.Malware.Reason.Manual manual;
-				private GetAppMetaFile.Malware.Reason.Scanned scanned;
-
-				@Data
-				public static class SignatureValidated {
-
-					private String date;
-					/**
-					 * possible value: "unknown", "failed", "passed"
-					 */
-					private String status;
-					private String signatureFrom;
-				}
-
-				@Data
-				public static class ThirdPartyValidated {
-
-					private String date;
-					private String store;
-				}
-
-				@Data
-				public static class Manual {
-
-					private String date;
-					private String status;
-					private List<String> av;
-				}
-
-				@Data
-				public static class Scanned {
-
-					/**
-					 * possible values: "passed", "warn"
-					 */
-					private String status;
-					private String date;
-					private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo> avInfo;
-
-					@Data
-					public static class AvInfo {
-
-						private List<GetAppMetaFile.Malware.Reason.Scanned.AvInfo.Infection>
-								infections;
-						private String name;
-
-						@Data
-						public static class Infection {
-
-							private String name;
-							private String description;
-						}
-					}
-				}
-			}
 		}
 
 		@Data

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -10,9 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -25,19 +23,18 @@ import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
-import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
+import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 
 /**
  * Created by neuro on 06-05-2016.
  */
-public class StoreFragment extends BaseLoaderToolbarFragment {
+public class StoreFragment extends BasePagerToolbarFragment {
 
 	private static final String TAG = "StoreFragment";
 	private final int PRIVATE_STORE_REQUEST_CODE = 20;
 	protected PagerSlidingTabStrip pagerSlidingTabStrip;
 	private String storeName;
 	private StoreContext storeContext;
-	private ViewPager mViewPager;
 	private GetStore getStore;
 
 	public static StoreFragment newInstance(String storeName) {
@@ -75,7 +72,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 		if (refresh) {
 			GetStoreRequest.of(storeName, storeContext, refresh).execute((getStore) -> {
 				this.getStore = getStore;
-				setupViewPager(getStore);
+				setupViewPager();
 			}, (throwable) -> {
 				if (throwable instanceof AptoideWsV7Exception) {
 					BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
@@ -93,7 +90,7 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 				}
 			});
 		} else {
-			setupViewPager(getStore);
+			setupViewPager();
 		}
 	}
 
@@ -108,28 +105,19 @@ public class StoreFragment extends BaseLoaderToolbarFragment {
 	}
 
 	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-
-		mViewPager = (ViewPager) view.findViewById(R.id.pager);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		mViewPager = null;
-	}
-
-	protected void setupViewPager(GetStore getStore) {
-		final PagerAdapter pagerAdapter = new StorePagerAdapter(getChildFragmentManager(), getStore);
-		mViewPager.setAdapter(pagerAdapter);
-
+	protected void setupViewPager() {
+		super.setupViewPager();
 		pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 		if (pagerSlidingTabStrip != null) {
 			pagerSlidingTabStrip.setViewPager(mViewPager);
 		}
 
 		finishLoading();
+	}
+
+	@Override
+	protected PagerAdapter createPagerAdapter() {
+		return new StorePagerAdapter(getChildFragmentManager(), getStore);
 	}
 
 	@Override

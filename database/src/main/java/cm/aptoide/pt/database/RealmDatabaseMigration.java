@@ -26,6 +26,10 @@ class RealmDatabaseMigration implements RealmMigration {
 			// TODO
 		}
 
+		if (oldVersion == 2) {
+			// TODO
+		}
+
 		Logger.w(TAG, String.format(Locale.ROOT, "realm database migration from version %d to %d",
 				oldVersion, newVersion));
 

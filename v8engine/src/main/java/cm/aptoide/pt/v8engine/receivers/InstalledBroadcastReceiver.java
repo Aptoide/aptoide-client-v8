@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.receivers;
@@ -13,8 +13,9 @@ import android.util.Log;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.AptoideUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import io.realm.Realm;
 
@@ -79,7 +80,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void databaseOnPackageAdded(String packageName) {
-		PackageInfo packageInfo = AptoideUtils.getPackageInfo(packageName);
+		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
 		Database.save(new Installed(packageInfo, V8Engine.getContext().getPackageManager()), realm);
 	}
@@ -87,7 +88,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	private void databaseOnPackageReplaced(String packageName) {
 		Update update = Database.UpdatesQ.get(packageName, realm);
 
-		PackageInfo packageInfo = AptoideUtils.getPackageInfo(packageName);
+		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 		if (update != null) {
 			if (packageInfo.versionCode >= update.getVersionCode()) {
 				Database.delete(update, realm);
@@ -105,5 +106,10 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	private void databaseOnPackageRemoved(String packageName) {
 		Database.InstalledQ.delete(packageName, realm);
 		Database.UpdatesQ.delete(packageName, realm);
+
+		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
+		if (rollback != null) {
+			rollback.confirm(realm);
+		}
 	}
 }

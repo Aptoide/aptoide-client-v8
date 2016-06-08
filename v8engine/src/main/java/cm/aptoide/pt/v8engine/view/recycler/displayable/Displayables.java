@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -30,6 +30,14 @@ public class Displayables {
 	public void add(Collection<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
 			add(displayable);
+		}
+	}
+
+	public Displayable pop() {
+		if (displayables.size() > 0) {
+			return displayables.remove(displayables.size() - 1);
+		} else {
+			return null;
 		}
 	}
 

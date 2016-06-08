@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 12/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -26,11 +26,11 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		super(bypassCache, new Body());
 	}
 
-	public static GetAppRequest of(int appId) {
+	public static GetAppRequest of(long appId) {
 		return of(appId, false);
 	}
 
-	public static GetAppRequest of(int appId, boolean bypassCache) {
+	public static GetAppRequest of(long appId, boolean bypassCache) {
 		GetAppRequest getAppRequest = new GetAppRequest(bypassCache);
 
 		getAppRequest.body.appId = appId;
@@ -58,7 +58,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
 		private Integer apkId;
 		private String apkMd5sum;
-		private Integer appId;
+		private Long appId;
 		private String lang = Api.LANG;
 		private Integer limit;
 		private List<AppNodes> nodes;
@@ -67,7 +67,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		private String packageName;
 		private String q = Api.Q;
 		private Integer storeId;
-		private List<Integer> storeIds;
+		private List<Long> storeIds;
 		private String storeName;
 		//		Doesn't make sense without stores_auth_map
 //		private List<String> storeNames;

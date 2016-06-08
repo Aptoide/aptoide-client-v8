@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 31/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -31,4 +32,8 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 	protected abstract void assignViews(View itemView);
 
 	public abstract void bindView(T displayable);
+
+	public FragmentActivity getContext() {
+		return (FragmentActivity) itemView.getContext();
+	}
 }

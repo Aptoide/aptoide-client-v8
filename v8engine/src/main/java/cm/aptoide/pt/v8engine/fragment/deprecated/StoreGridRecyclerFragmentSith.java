@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/05/2016.
+ * Modified by Neurophobic Animal on 25/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.deprecated;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -21,7 +21,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  * Used for tests only
  */
 @Deprecated
-public class StoreGridRecyclerFragmentSith extends GridRecyclerFragment {
+public class StoreGridRecyclerFragmentSith extends GridRecyclerFragmentWithDecorator {
 
 	private List<Store> stores;
 

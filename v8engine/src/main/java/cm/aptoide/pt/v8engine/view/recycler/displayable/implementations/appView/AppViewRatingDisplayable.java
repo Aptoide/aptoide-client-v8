@@ -1,28 +1,28 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 26/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewRateThisDisplayable extends AppViewDisplayable {
+public class AppViewRatingDisplayable extends AppViewDisplayable {
 
-	public AppViewRateThisDisplayable() {
+	public AppViewRatingDisplayable() {
 	}
 
-	public AppViewRateThisDisplayable(GetAppMeta.App app) {
-		super(app);
+	public AppViewRatingDisplayable(GetApp getApp) {
+		super(getApp);
 	}
 
-	public AppViewRateThisDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
+	public AppViewRatingDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+		super(getApp, fixedPerLineCount);
 	}
 
 	@Override

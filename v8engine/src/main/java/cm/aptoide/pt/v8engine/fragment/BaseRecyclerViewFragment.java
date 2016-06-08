@@ -1,28 +1,27 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.View;
 
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import lombok.Getter;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> extends
+public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 		BaseLoaderToolbarFragment {
 
-	protected T adapter;
-	private RecyclerView recyclerView;
+	@Getter protected T adapter;
+	protected RecyclerView recyclerView;
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -41,28 +40,6 @@ public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> e
 		super.setupViews();
 		recyclerView.setAdapter(adapter);
 		recyclerView.setLayoutManager(createLayoutManager());
-
-		recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-			@Override
-			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView
-					.State state) {
-
-				int offset = 0;
-				FragmentActivity activity = getActivity();
-				if (activity != null) {
-					offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
-							activity
-							.getResources()
-							.getDisplayMetrics());
-				}
-
-				if (view.getId() == R.id.brick_app_item) {
-					offset /= 2;
-				}
-
-				outRect.set(offset, offset, offset, offset);
-			}
-		});
 	}
 
 	@Override

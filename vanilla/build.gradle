@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by Neurophobic Animal on 31/05/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -45,6 +45,8 @@ android {
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
+            versionCode 41
+            versionName "8.0.0.08062016"
             minSdkVersion 21
             resValue "string", "authenticatorAccountType", applicationId
             // Enabling multidex support.
@@ -72,6 +74,7 @@ android {
                     def newName = output.outputFile.name
                     newName = newName.replace("vanilla-", "$project.ext.appName-") //"MyAppName" -> I set my app variables in the root project
                     newName = newName.replace("prod-release", versionName)
+                    newName = newName.replace("release", versionName)
                     //noinspection GroovyAssignabilityCheck
                     output.outputFile = new File(output.outputFile.parent, newName)
                 }
@@ -135,3 +138,16 @@ if (propFile.canRead()) {
     println 'signing.properties not found'
     android.buildTypes.release.signingConfig = null
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

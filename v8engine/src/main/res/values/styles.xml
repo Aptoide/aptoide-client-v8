@@ -47,7 +47,6 @@
         <item name="android:focusable">true</item>
     </style>
 
-
     <style name="RatingBarSmallAptoide">
         <item name="android:progressDrawable">@drawable/rating_bar</item>
         <item name="android:isIndicator">true</item>
@@ -358,6 +357,10 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="Aptoide.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="android:layout">@layout/fragment_aptoide_preferences</item>
     </style>
 
 </resources>

@@ -1,11 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.model.v7;
-
-import java.util.List;
 
 import cm.aptoide.pt.model.v7.listapp.App;
 import lombok.Data;
@@ -16,9 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListSearchApps extends BaseV7Response {
-
-	private List<SearchAppsApp> list;
+public class ListSearchApps extends BaseV7EndlessResponse<ListSearchApps.SearchAppsApp> {
 
 	@Data
 	@EqualsAndHashCode(callSuper = true)
