@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 07/06/2016.
+  ~ Modified by Neurophobic Animal on 08/06/2016.
   -->
 
 <resources>
@@ -456,6 +456,7 @@
     <string name="appview_other_versions_in_others_stores">Other versions in other stores</string>
     <string name="appview_rate_Success">App Rated</string>
     <string name="ignoreUpdateText">Ignore Update</string>
+    <string name="ignored">Ignored</string>
     <string name="noIgnoreUpdateText">The new version of an app doesn’t work on your device or some feature is missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop updating.</string>
     <string name="createReviewButtonText">Create \nReview</string>
     <string name="navigation_drawer_signup_login">Sign Up or Login</string>

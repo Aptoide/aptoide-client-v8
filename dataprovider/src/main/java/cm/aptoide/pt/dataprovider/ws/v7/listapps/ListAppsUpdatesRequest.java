@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -58,15 +59,18 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		return storesIds;
 	}
 
-	private static List<ApksData> getInstalledApksData() {
+	private static List<ApksData> getInstalledApksDataWithoutExcluded() {
 		LinkedList<ApksData> apksDatas = new LinkedList<>();
 
 		@Cleanup Realm realm = Database.get();
 
-		RealmResults<Installed> all = Database.InstalledQ.getAll(realm);
-		for (Installed installed : all) {
-			apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed.getSignature
-					()));
+		RealmResults<ExcludedUpdate> excludedUpdates = Database.ExcludedUpdatesQ.getAll(realm);
+		RealmResults<Installed> installeds = Database.InstalledQ.getAll(realm);
+		for (Installed installed : installeds) {
+			if (!Database.ExcludedUpdatesQ.contains(installed.getPackageName(), realm)) {
+				apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed
+						.getSignature()));
+			}
 		}
 
 		return apksDatas;
@@ -119,7 +123,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private List<ApksData> apksData = getInstalledApksData();
+		private List<ApksData> apksData = getInstalledApksDataWithoutExcluded();
 		private String lang = Api.LANG;
 		private String q = Api.Q;
 		// TODO: 27-05-2016 neuro implement

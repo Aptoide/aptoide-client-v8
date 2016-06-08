@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -49,11 +50,12 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 		ImageLoader.load(pojo.getIcon(), iconImageView);
 
 		installedItemFrame.setOnClickListener(v -> {
-			// TODO: 25-05-2016 neuro uninstall on long press
+			// TODO: 25-05-2016 neuro apagar em principio
 		});
 
 		createReviewLayout.setOnClickListener(v -> {
 			// TODO: 25-05-2016 neuro create review
+			ShowMessage.toast(getContext(), "Create Review");
 		});
 	}
 }
