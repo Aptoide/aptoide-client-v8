@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -26,8 +26,11 @@ import rx.functions.Action0;
 public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle {
 
 	private static final String TAG = AptoideBaseActivity.class.getName();
-
+	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
+	private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
 	@Getter private boolean _resumed = false;
+	private Action0 toRunWhenAccessToFileSystemIsGranted;
+	private Action0 toRunWhenAccessToAccountsIsGranted;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,10 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	@LayoutRes
 	public abstract int getContentViewId();
 
+	//
+	// code to support android M permission system
+	//
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -76,17 +83,51 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		super.onStart();
 	}
 
+	@TargetApi(Build.VERSION_CODES.M)
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+			grantResults) {
+
+		switch (requestCode) {
+
+			case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// Permission Granted
+					Logger.i(TAG, "access to read and write to external storage was granted");
+					if (toRunWhenAccessToFileSystemIsGranted != null) {
+						toRunWhenAccessToFileSystemIsGranted.call();
+					}
+				} else {
+					// FIXME what should I do here?
+					ShowMessage.show(findViewById(android.R.id.content), "access to read and write to external storage" +
+							" was denied");
+				}
+				break;
+
+			case ACCESS_TO_ACCOUNTS_REQUEST_ID:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// Permission Granted
+					Logger.i(TAG, "access to get accounts was granted");
+					if (toRunWhenAccessToAccountsIsGranted != null) {
+						toRunWhenAccessToAccountsIsGranted.call();
+					}
+				} else {
+					// FIXME what should I do here?
+					ShowMessage.show(findViewById(android.R.id.content), "access to get accounts was denied");
+				}
+				break;
+
+			default:
+				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+				break;
+		}
+	}
+
 	/**
 	 * @return o nome so monitor associado a esta activity, para efeitos de Analytics.
 	 */
 	protected abstract String getAnalyticsScreenName();
 
-	//
-	// code to support android M permission system
-	//
-
-	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
-	private Action0 toRunWhenAccessToFileSystemIsGranted;
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
 		int hasPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -105,31 +146,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-			grantResults) {
-
-		switch (requestCode) {
-
-			case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					// Permission Granted
-					Logger.i(TAG, "access to read and Write to external storage was granted");
-					if(toRunWhenAccessToFileSystemIsGranted !=null) {
-						toRunWhenAccessToFileSystemIsGranted.call();
-					}
-				}else {
-					// FIXME what should I do here?
-					ShowMessage.show(
-							findViewById(android.R.id.content),
-							"access to read and Write to external storage was denied"
-					);
-				}
-				break;
-
-			default:
-				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-				break;
+	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
+		int hasPermission = checkSelfPermission(Manifest.permission.GET_ACCOUNTS);
+		if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+			this.toRunWhenAccessToAccountsIsGranted = toRunWhenAccessIsGranted;
+			requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, ACCESS_TO_ACCOUNTS_REQUEST_ID);
+			return;
 		}
+		toRunWhenAccessIsGranted.call();
 	}
 }
