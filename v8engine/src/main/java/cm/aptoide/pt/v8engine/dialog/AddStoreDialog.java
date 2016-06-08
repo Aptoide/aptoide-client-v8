@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -102,10 +102,13 @@ public class AddStoreDialog extends DialogFragment {
 			if (e instanceof AptoideWsV7Exception) {
 				BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
 
-				if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())) {
+				BaseV7Response.Error error = baseResponse.getError();
+				if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
 					DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
 							.this, PRIVATE_STORE_REQUEST_CODE, storeName);
 					dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+				} else {
+					ShowMessage.show(getView(), error.getDescription());
 				}
 				dismissLoadingDialog();
 			} else {
