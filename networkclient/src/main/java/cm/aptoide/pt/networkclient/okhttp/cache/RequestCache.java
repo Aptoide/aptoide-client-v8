@@ -112,7 +112,15 @@ public class RequestCache {
 	@Nullable
 	public Response put(@NonNull Request request, @NonNull Response response) {
 
-		if ((response.code() / 100) != 2) return response;
+		if (diskLruCache == null || diskLruCache.isClosed()) {
+			Logger.e(TAG, "Unable to use Disk Cache because it's null or closed. Not caching.");
+			return response;
+		}
+
+		if ((response.code() / 100) != 2) {
+			Logger.w(TAG, "Response wasn't 2xx. Not caching.");
+			return response;
+		}
 //		String header = request.headers().get(BYPASS_HEADER_KEY);
 //		if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
 //			return response;
@@ -123,7 +131,7 @@ public class RequestCache {
 			final String reqKey = keyAlgorithm.getKeyFrom(request);
 
 			if (TextUtils.isEmpty(reqKey)) {
-				Logger.e(TAG, String.format("request key for url '%s' is null or empty. not caching request.", request
+				Logger.e(TAG, String.format("Request key for url '%s' is null or empty. Not caching.", request
 						.url()));
 				return response;
 			}
