@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 09/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -51,18 +51,6 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	public static ListAppsUpdatesRequest of() {
 		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
-	}
-
-	// // TODO: 12-05-2016 neuro check deprecated
-	@Deprecated
-	private static List<Long> getSubscribedStoresIds() {
-		LinkedList<Long> storesIds = new LinkedList<>();
-
-		for (Store store : StoreUtils.getSubscribedStores()) {
-			storesIds.add(store.getId());
-		}
-
-		return storesIds;
 	}
 
 	private static List<ApksData> getInstalledApksDataWithoutExcluded() {
@@ -132,7 +120,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		private String lang = Api.LANG;
 		private String q = Api.Q;
 		// TODO: 27-05-2016 neuro implement
-		private List<Long> storeIds = getSubscribedStoresIds();
+		private List<Long> storeIds = StoreUtils.getSubscribedStoresIds();
 		private List<String> storeNames;
 		private List<StoreAuth> storesAuth;
 
