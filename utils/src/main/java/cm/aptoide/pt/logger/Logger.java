@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 09/06/2016.
  */
 
 package cm.aptoide.pt.logger;
@@ -24,6 +24,12 @@ public class Logger {
 	public static void printException(Throwable e) {
 		if (DBG && e != null) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void v(String TAG, String msg) {
+		if (DBG) {
+			Log.v(TAG, msg);
 		}
 	}
 

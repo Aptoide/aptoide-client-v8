@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 09/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -111,6 +111,8 @@ public class AptoideUtils {
 
 	public static class AlgorithmU {
 
+		private static final String TAG = AlgorithmU.class.getName();
+
 		public static byte[] computeSha1(byte[] bytes) {
 			MessageDigest md;
 			try {
@@ -128,7 +130,7 @@ public class AptoideUtils {
 			try {
 				return convToHex(computeSha1(text.getBytes("iso-8859-1")));
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				Logger.e(TAG, "computeSha1(String)", e);
 			}
 			return "";
 		}

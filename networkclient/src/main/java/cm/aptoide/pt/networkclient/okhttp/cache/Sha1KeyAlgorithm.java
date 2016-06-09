@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 09/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import java.io.IOException;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.Request;
 import okio.Buffer;
@@ -23,12 +24,15 @@ import okio.Buffer;
  */
 public class Sha1KeyAlgorithm implements KeyAlgorithm {
 
+	private static final String TAG = Sha1KeyAlgorithm.class.getName();
+
 	@Override
 	public String getKeyFrom(Request request)  {
 		try {
-			String requestIdentifier;
 			final Buffer bodyBuffer = new Buffer();
 			final Request clonedRequest = request.newBuilder().build();
+
+			String requestIdentifier;
 
 			if (clonedRequest.body() != null && clonedRequest.body().contentLength() > 0) {
 				// best scenario: use request body as key
@@ -51,7 +55,7 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm {
 			return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			Logger.e(TAG, "getKeyFrom(Request)", e);
 		}
 
 		return null;

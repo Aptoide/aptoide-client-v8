@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 09/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.jakewharton.disklrucache.DiskLruCache;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -119,6 +121,13 @@ public class RequestCache {
 		DiskLruCache.Editor editor = null;
 		try {
 			final String reqKey = keyAlgorithm.getKeyFrom(request);
+
+			if (TextUtils.isEmpty(reqKey)) {
+				Logger.e(TAG, String.format("request key for url '%s' is null or empty. not caching request.", request
+						.url()));
+				return response;
+			}
+
 			synchronized (diskCacheLock) {
 				editor = diskLruCache.edit(reqKey);
 				// create cache entry building from the previous response so that we don't modify it

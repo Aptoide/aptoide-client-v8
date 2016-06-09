@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by SithEngineer on 09/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -13,13 +13,16 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSubscriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import io.realm.Realm;
+import lombok.Cleanup;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -27,8 +30,9 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 @Displayables({AppViewSubscriptionDisplayable.class})
 public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplayable> {
 
+	boolean containsThisStore;
 	private ImageView storeAvatar;
-	private TextView storeName;
+	private TextView storeNameTextView;
 	private TextView storeNumberUsers;
 	private Button buttonSubscribe;
 
@@ -39,7 +43,7 @@ public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplay
 	@Override
 	protected void assignViews(View itemView) {
 		storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar);
-		storeName = (TextView) itemView.findViewById(R.id.store_name);
+		storeNameTextView = (TextView) itemView.findViewById(R.id.store_name);
 		storeNumberUsers = (TextView) itemView.findViewById(R.id.store_number_users);
 		buttonSubscribe = (Button) itemView.findViewById(R.id.btn_subscribe);
 	}
@@ -52,18 +56,33 @@ public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplay
 			ImageLoader.load(store.getAvatar(), storeAvatar);
 		}
 
-		if(!TextUtils.isEmpty(store.getName())) {
-			storeName.setText(store.getName());
+		final String storeName = store.getName();
+		if (!TextUtils.isEmpty(storeName)) {
+			storeNameTextView.setText(storeName);
 		} else {
-			storeName.setVisibility(View.GONE);
+			storeNameTextView.setVisibility(View.GONE);
 		}
 
 		storeNumberUsers.setText(
 				String.format(Locale.ROOT, "%d", store.getStats().getSubscribers())
 		);
 
-		buttonSubscribe.setOnClickListener(
-				v -> ShowMessage.show(v, "TO DO")
+		@Cleanup Realm realm = Realm.getDefaultInstance();
+		containsThisStore = Database.StoreQ.contains(storeName, realm);
+
+		buttonSubscribe.setText(containsThisStore ? R.string.unsubscribe : R.string.subscribe);
+
+		buttonSubscribe.setOnClickListener(v -> {
+
+					if (containsThisStore) {
+						AptoideAccountManager.unsubscribeStore(storeName);
+					} else {
+						AptoideAccountManager.subscribeStore(storeName);
+					}
+
+					containsThisStore = !containsThisStore;
+					buttonSubscribe.setText(containsThisStore ? R.string.unsubscribe : R.string.subscribe);
+				}
 		);
 
 	}

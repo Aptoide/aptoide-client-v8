@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 09/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -75,6 +75,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
+
 		// bind "download" views
 		downloadProgressLayout = (RelativeLayout) itemView.findViewById(R.id.download_progress_layout);
 		btinstallshare = (CheckBox) itemView.findViewById(R.id.btinstallshare);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 07/06/2016.
+  ~ Modified by SithEngineer on 09/06/2016.
   -->
 
 <resources>
@@ -264,6 +264,7 @@
     <string name="search_other_stores">Or search for others…</string>
     <string name="see_top_stores">See Top Stores</string>
     <string name="subscribe">Subscribe</string>
+    <string name="unsubscribe">Unsubscribe</string>
     <string name="store_name">Store Name</string>
     <string name="insert_store_name">Insert store name:</string>
     <string name="subscribe_pvt_store">Subscribe private store</string>
