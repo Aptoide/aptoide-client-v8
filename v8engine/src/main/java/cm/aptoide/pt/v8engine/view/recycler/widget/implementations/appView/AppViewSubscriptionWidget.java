@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified by Neurophobic Animal on 24/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,7 +31,8 @@ import lombok.Cleanup;
 @Displayables({AppViewSubscriptionDisplayable.class})
 public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplayable> {
 
-	boolean containsThisStore;
+	private String TAG = AppViewSubscriptionWidget.class.getSimpleName();
+
 	private ImageView storeAvatar;
 	private TextView storeNameTextView;
 	private TextView storeNumberUsers;
@@ -48,42 +50,49 @@ public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplay
 		buttonSubscribe = (Button) itemView.findViewById(R.id.btn_subscribe);
 	}
 
+	boolean containsThisStore;
 	@Override
 	public void bindView(AppViewSubscriptionDisplayable displayable) {
-		final Store store = displayable.getPojo().getNodes().getMeta().getData().getStore();
+		try {
+			final Store appMeta = displayable.getPojo().getNodes().getMeta().getData().getStore();
 
-		if(!TextUtils.isEmpty(store.getAvatar())) {
-			ImageLoader.load(store.getAvatar(), storeAvatar);
-		}
+			if(!TextUtils.isEmpty(appMeta.getAvatar())) {
+				ImageLoader.load(appMeta.getAvatar(), storeAvatar);
+			}
 
-		final String storeName = store.getName();
-		if (!TextUtils.isEmpty(storeName)) {
-			storeNameTextView.setText(storeName);
-		} else {
-			storeNameTextView.setVisibility(View.GONE);
-		}
+			final String storeName = appMeta.getName();
+			if(!TextUtils.isEmpty(storeName)) {
+				storeNameTextView.setText(storeName);
+			} else {
+				storeNameTextView.setVisibility(View.GONE);
+			}
 
-		storeNumberUsers.setText(
-				String.format(Locale.ROOT, "%d", store.getStats().getSubscribers())
-		);
+			storeNumberUsers.setText(
+					String.format(Locale.ROOT, "%d", appMeta.getStats().getSubscribers())
+			);
 
-		@Cleanup Realm realm = Realm.getDefaultInstance();
-		containsThisStore = Database.StoreQ.contains(storeName, realm);
+			@Cleanup Realm realm = Realm.getDefaultInstance();
+			containsThisStore = Database.StoreQ.contains(storeName, realm);
 
-		buttonSubscribe.setText(containsThisStore ? R.string.unsubscribe : R.string.subscribe);
+			buttonSubscribe.setText(containsThisStore ? R.string.unsubscribe : R.string.subscribe);
 
-		buttonSubscribe.setOnClickListener(v -> {
+			buttonSubscribe.setOnClickListener(
+					v -> {
 
-					if (containsThisStore) {
-						AptoideAccountManager.unsubscribeStore(storeName);
-					} else {
-						AptoideAccountManager.subscribeStore(storeName);
+						if(containsThisStore){
+							AptoideAccountManager.unsubscribeStore(storeName);
+						}
+						else {
+							AptoideAccountManager.subscribeStore(storeName);
+						}
+
+						containsThisStore = !containsThisStore;
+						buttonSubscribe.setText(containsThisStore ? R.string.unsubscribe : R.string.subscribe);
 					}
-
-					containsThisStore = !containsThisStore;
-					buttonSubscribe.setText(containsThisStore ? R.string.unsubscribe : R.string.subscribe);
-				}
-		);
+			);
+		} catch (NullPointerException ex) {
+			Log.e(TAG, "", ex);
+		}
 
 	}
 }

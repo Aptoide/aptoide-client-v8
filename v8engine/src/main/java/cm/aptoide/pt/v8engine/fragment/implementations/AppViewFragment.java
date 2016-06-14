@@ -40,7 +40,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import rx.Observable;
 
@@ -132,7 +132,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 		displayables.add(new AppViewInstallDisplayable(getApp));
 		displayables.add(new AppViewDescriptionDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
-		displayables.add(new AppViewRatingDisplayable(getApp));
+		displayables.add(new AppViewRateThisDisplayable(getApp));
 		addComments(displayables, app);
 		addOtherVersions(displayables, app);
 		displayables.add(new AppViewDeveloperDisplayable(getApp));

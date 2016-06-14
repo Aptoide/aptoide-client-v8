@@ -8,17 +8,17 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.view.View;
 
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-@Displayables({AppViewOtherVersionsDisplayable.class})
-public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDisplayable> {
+@Displayables({AppViewRateThisDisplayable.class})
+public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 
-	public AppViewOtherVersionsWidget(View itemView) {
+	public AppViewRateThisWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -28,7 +28,7 @@ public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDispl
 	}
 
 	@Override
-	public void bindView(AppViewOtherVersionsDisplayable displayable) {
+	public void bindView(AppViewRateThisDisplayable displayable) {
 		final GetApp pojo = displayable.getPojo();
 		// TODO
 	}
