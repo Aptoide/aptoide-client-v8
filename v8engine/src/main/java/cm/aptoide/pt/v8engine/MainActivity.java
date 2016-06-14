@@ -5,12 +5,7 @@
 
 package cm.aptoide.pt.v8engine;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -22,16 +17,12 @@ import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import java.util.LinkedList;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
-import rx.functions.Action0;
 
 public class MainActivity extends AptoideBaseLoaderActivity {
 
@@ -102,9 +93,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 
 	@Override
 	public void load(boolean refresh) {
-		requestAccessToExternalFileSystem(() -> {
-			GetStoreRequest.of("apps", StoreContext.home, refresh).execute(this::setupViewPager);
-		});
+		GetStoreRequest.of("apps", StoreContext.home, refresh).execute(this::setupViewPager);
 	}
 
 	private void setupNavigationView() {

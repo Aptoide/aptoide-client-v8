@@ -23,12 +23,16 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
 	@Override
 	public void pushFragment(android.app.Fragment fragment) {
-		FragmentUtils.replaceFragment(this, fragment);
+		requestAccessToExternalFileSystem( () ->
+				FragmentUtils.replaceFragment(this, fragment)
+		);
 	}
 
 	@Override
 	public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
-		FragmentUtils.replaceFragmentV4(this, fragment);
+		requestAccessToExternalFileSystem( () ->
+				FragmentUtils.replaceFragmentV4(this, fragment)
+		);
 	}
 
 	@Override
