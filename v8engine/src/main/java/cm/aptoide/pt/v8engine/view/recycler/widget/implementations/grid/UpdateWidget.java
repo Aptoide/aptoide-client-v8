@@ -13,6 +13,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -53,8 +54,9 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		installedVernameTextView.setText(Database.InstalledQ.get(pojo.getPackageName(), realm).getVersionName());
 		updateVernameTextView.setText(pojo.getUpdateVersionName());
 		ImageLoader.load(pojo.getIcon(), iconImageView);
-		updateButtonLayout.setOnClickListener(v -> {
+		updateButtonLayout.setOnClickListener(view -> {
 			// TODO: 24-05-2016 neuro implementar
+			ShowMessage.show(view, "TO DO");
 		});
 	}
 }

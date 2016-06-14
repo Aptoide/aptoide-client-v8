@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified by Neurophobic Animal on 09/06/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Store;
@@ -156,6 +157,19 @@ public class Database {
 			realm.beginTransaction();
 			realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst().deleteFromRealm();
 			realm.commitTransaction();
+		}
+	}
+
+	public static class ExcludedUpdatesQ {
+
+		public static RealmResults<ExcludedUpdate> getAll(Realm realm) {
+			return realm.where(ExcludedUpdate.class).findAll();
+		}
+
+		public static boolean contains(String packageName, Realm realm) {
+			return realm.where(ExcludedUpdate.class)
+					.equalTo(ExcludedUpdate.PACKAGE_NAME, packageName)
+					.findFirst() != null;
 		}
 	}
 

@@ -13,4 +13,7 @@
     <string name="updates_filter_setting_title">Just show me stable app version updates</string>
     <string name="aptoide_email">aptoide@aptoide.com</string>
     <string name="aptoide_url">http://www.aptoide.com/</string>
+    <string name="access_to_external_storage_rationale">You need to allow access to External Storage</string>
+    <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>
