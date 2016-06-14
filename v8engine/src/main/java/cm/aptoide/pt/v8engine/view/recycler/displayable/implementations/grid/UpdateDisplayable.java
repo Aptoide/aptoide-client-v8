@@ -15,8 +15,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class UpdateDisplayable extends DisplayablePojo<Update> {
 
-	public UpdateDisplayable() {
-	}
+	public UpdateDisplayable() { }
 
 	public UpdateDisplayable(Update pojo) {
 		super(pojo);

@@ -293,6 +293,7 @@
     <string name="rollback_installed">Installed</string>
     <string name="rollback_uninstalled">Uninstalled</string>
     <string name="rollback_updated">Updated</string>
+    <string name="rollback_updated_at">Updated at %1$s</string>
     <string name="rollback_downgraded">Downgraded</string>
     <string name="install">Install</string>
     <string name="cannot_uninstall_self">Cannot uninstall installer.</string>
