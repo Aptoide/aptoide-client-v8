@@ -36,7 +36,7 @@ import lombok.Cleanup;
 @Displayables({SubscribedStoreDisplayable.class})
 public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
-	private static final String TAG = GridStoreWidget.class.getSimpleName();
+	private static final String TAG = SubscribedStoreWidget.class.getSimpleName();
 
 	private ImageView storeAvatar;
 	private TextView storeName;

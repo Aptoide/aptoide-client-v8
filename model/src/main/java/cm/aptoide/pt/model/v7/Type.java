@@ -44,6 +44,7 @@ public enum Type {
 	INSTALLED(1),
 	UPDATE(1),
 	ROLLBACK(1),
+	SCHEDULED_DOWNLOAD(1),
 
 	// Search
 	SEARCH(1),
