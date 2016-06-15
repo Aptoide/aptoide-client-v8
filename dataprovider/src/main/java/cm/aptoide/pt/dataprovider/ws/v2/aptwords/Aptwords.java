@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by Neurophobic Animal on 16/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
@@ -21,14 +21,23 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory) {
-		super(Interfaces.class, httpClient, factory, "http://webservices.aptwords.net");
+	public Aptwords() {
+		super(Interfaces.class, "http://webservices.aptwords.net/api/2");
 	}
+
+	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory) {
+		super(Interfaces.class, httpClient, factory, "http://webservices.aptwords.net/api/2");
+	}
+
 
 	interface Interfaces {
 
-		@POST("/api/2/getAds")
+		@POST("/getAds")
 		@FormUrlEncoded
-		Observable<GetAdsResponse> getAds(@FieldMap HashMap<String, String> arg);
+		Observable<GetAdsResponse> getAds(@FieldMap Map<String, String> arg);
+
+		@POST("/registerAdReferer")
+		@FormUrlEncoded
+		Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap Map<String, String> arg);
 	}
 }

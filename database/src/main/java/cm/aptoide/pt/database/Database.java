@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -197,6 +198,13 @@ public class Database {
 				return null;
 			}
 		}
+
+		public static void setReferrer(String packageName, String referrer, Realm realm) {
+			Rollback rollback = get(packageName, Rollback.Action.INSTALL, realm);
+			if (rollback != null) {
+				rollback.setReferrer(referrer);
+			}
+		}
 	}
 
 	public static class ExcludedUpdatesQ {
@@ -209,6 +217,13 @@ public class Database {
 			return realm.where(ExcludedUpdate.class)
 					.equalTo(ExcludedUpdate.PACKAGE_NAME, packageName)
 					.findFirst() != null;
+		}
+	}
+
+	public static class ExcludedAdsQ {
+
+		public static RealmResults<ExcludedAd> getAll(Realm realm) {
+			return realm.where(ExcludedAd.class).findAll();
 		}
 	}
 }

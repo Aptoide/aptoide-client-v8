@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -55,7 +55,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 		badgeAntivirusImage = (ImageView) itemView.findViewById(R.id.iv_antivirus_badge);
 
 		seeMoreLayout = itemView.findViewById(R.id.see_more_layout);
-		if(seeMoreLayout!=null){
+		if (seeMoreLayout != null) {
 			seeMoreTextView = (TextView) seeMoreLayout.findViewById(R.id.see_more_button);
 			arrowImageView = (ImageView) seeMoreLayout.findViewById(R.id.iv_arrow);
 		}

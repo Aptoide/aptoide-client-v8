@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -9,10 +9,13 @@ import android.content.pm.PackageInfo;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.squareup.leakcanary.LeakCanary;
 
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
@@ -92,6 +95,7 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		if (SecurePreferences.isFirstRun()) {
+			setAdvertisingId();
 			loadInstalledApps();
 			DataproviderUtils.checkUpdates();
 
@@ -122,6 +126,29 @@ public abstract class V8Engine extends DataProvider {
 		getInstalledApksInfo();
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+	}
+
+	private void setAdvertisingId() {
+		AptoideUtils.ThreadU.runOnIoThread(() -> {
+			String aaid = "";
+			if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()) {
+				try {
+					aaid = AdvertisingIdClient.getAdvertisingIdInfo(V8Engine.this).getId();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				byte[] data = new byte[16];
+				String deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android
+						.provider.Settings.Secure.ANDROID_ID);
+				SecureRandom secureRandom = new SecureRandom();
+				secureRandom.setSeed(deviceId.hashCode());
+				secureRandom.nextBytes(data);
+				aaid = UUID.nameUUIDFromBytes(data).toString();
+			}
+
+			SecurePreferences.setAdvertisingId(aaid);
+		});
 	}
 
 	private void addDefaultStore() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -16,9 +16,12 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
@@ -57,6 +60,10 @@ import lombok.Setter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static android.net.ConnectivityManager.TYPE_ETHERNET;
+import static android.net.ConnectivityManager.TYPE_MOBILE;
+import static android.net.ConnectivityManager.TYPE_WIFI;
 
 /**
  * Created by neuro on 26-05-2016.
@@ -523,11 +530,30 @@ public class AptoideUtils {
 			}
 			return result;
 		}
+
+		public static String commaSeparatedValues(List<?> list) {
+			String s = new String();
+
+			if (list.size() > 0) {
+				s = list.get(0).toString();
+
+				for (int i = 1; i < list.size(); i++) {
+					s += "," + list.get(i).toString();
+				}
+			}
+
+			return s;
+		}
 	}
 
 	public static class SystemU {
 
 		public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
+
+		public static String getAndroidId() {
+			// TODO: 15-06-2016 neuro lazzy may not be a bad idea.
+			return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		}
 
 		public static int getSdkVer() {
 			return Build.VERSION.SDK_INT;
@@ -604,6 +630,24 @@ public class AptoideUtils {
 			Intent intent = new Intent(Intent.ACTION_DELETE, uri);
 			context.startActivity(intent);
 		}
+
+		public static String getConnectionType() {
+			final ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context
+					.CONNECTIVITY_SERVICE);
+			final NetworkInfo info = manager.getActiveNetworkInfo();
+
+			if (info.getTypeName() != null) {
+				switch (info.getType()) {
+					case TYPE_ETHERNET:
+						return "ethernet";
+					case TYPE_WIFI:
+						return "mobile";
+					case TYPE_MOBILE:
+						return "mobile";
+				}
+			}
+			return "unknown";
+		}
 	}
 
 	public static final class ThreadU {
@@ -626,7 +670,7 @@ public class AptoideUtils {
 			}
 		}
 
-		public static boolean isOnUiThread() {
+		public static boolean isUiThread() {
 			return Looper.getMainLooper().getThread() == Thread.currentThread();
 		}
 	}

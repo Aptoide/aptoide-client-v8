@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 buildscript {
@@ -45,6 +45,7 @@ task clean(type: Delete) {
 ext {
     BUILD_TOOLS_VERSION = '23.0.3'
     SUPPORT_LIB_VERSION = '23.4.0'
+    GMS_VERSION = '8.3.0'
     LOMBOK_VERSION = '1.16.8'
 
     // RxJava
