@@ -16,6 +16,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -23,6 +24,7 @@ import lombok.Cleanup;
 /**
  * Created by neuro on 17-05-2016.
  */
+@Displayables({UpdateDisplayable.class})
 public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	private TextView labelTextView;
