@@ -33,6 +33,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
@@ -56,6 +57,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisplayWidget;
@@ -90,6 +92,7 @@ public enum DisplayableType {
 	// Updates
 	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
 	UPDATE(UpdateWidget.class, UpdateDisplayable.class),
+	EXCLUDED_UPDATE(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class),
 
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),
