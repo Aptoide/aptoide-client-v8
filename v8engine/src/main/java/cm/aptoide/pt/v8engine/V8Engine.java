@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -100,6 +100,8 @@ public abstract class V8Engine extends DataProvider {
 					loadUserData();
 					SecurePreferences.setUserDataLoaded();
 				}
+			} else {
+				addDefaultStore();
 			}
 		}
 
@@ -120,6 +122,10 @@ public abstract class V8Engine extends DataProvider {
 		getInstalledApksInfo();
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+	}
+
+	private void addDefaultStore() {
+		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
 	}
 
 	/**

@@ -43,6 +43,7 @@ public enum Type {
 	// Updates
 	INSTALLED(1),
 	UPDATE(1),
+	ROLLBACK(1),
 
 	// Search
 	SEARCH(1),

@@ -31,7 +31,10 @@ public class Event {
 		getApkComments,
 
 		// Client
+		myStores,
 		myUpdates,
-		myStores
+		myExcludedUpdates,
+		myScheduledDownloads,
+		myRollbacks
 	}
 }

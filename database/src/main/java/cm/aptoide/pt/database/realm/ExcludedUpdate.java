@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/06/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -22,6 +22,15 @@ public class ExcludedUpdate extends RealmObject {
 	@PrimaryKey private String packageName;
 	private String name;
 	private String icon;
+
+	public ExcludedUpdate() {
+	}
+
+	public ExcludedUpdate(Update pojo) {
+		setName(pojo.getLabel());
+		setPackageName(pojo.getPackageName());
+		setIcon(pojo.getIcon());
+	}
 
 //	public long getId() {
 //		return id;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/06/2016.
+ * Modified by SithEngineer on 12/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -12,10 +12,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
 import lombok.Getter;
 import rx.functions.Action0;
@@ -128,31 +133,97 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	 */
 	protected abstract String getAnalyticsScreenName();
 
+	//
+	// android 6 permission system
+	// consider using https://github.com/hotchemi/PermissionsDispatcher
+	//
+
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
-		int hasPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		if(hasPermission!= PackageManager.PERMISSION_GRANTED) {
+		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		if(hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
-			requestPermissions(
+
+			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+				Logger.i(TAG, "showing rationale and requesting permission to access external storage");
+				// FIXME improve this rationale messages
+				showMessageOKCancel(getString(R.string.access_to_external_storage_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+					@Override
+					public void onNext(GenericDialogs.EResponse eResponse) {
+						super.onNext(eResponse);
+						if(eResponse!= GenericDialogs.EResponse.YES) return;
+
+						ActivityCompat.requestPermissions(
+								AptoideBaseActivity.this,
+								new String[]{
+										Manifest.permission.WRITE_EXTERNAL_STORAGE,
+										Manifest.permission.READ_EXTERNAL_STORAGE
+								},
+								ACCESS_TO_EXTERNAL_FS_REQUEST_ID
+						);
+					}
+				});
+				return;
+			}
+
+			ActivityCompat.requestPermissions(
+					this,
 					new String[]{
 							Manifest.permission.WRITE_EXTERNAL_STORAGE,
 							Manifest.permission.READ_EXTERNAL_STORAGE
 					},
 					ACCESS_TO_EXTERNAL_FS_REQUEST_ID
 			);
+			Logger.i(TAG, "requesting permission to access external storage");
 			return;
 		}
+		Logger.i(TAG, "already has permission to access external storage");
 		toRunWhenAccessIsGranted.call();
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
-		int hasPermission = checkSelfPermission(Manifest.permission.GET_ACCOUNTS);
+		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
 		if (hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToAccountsIsGranted = toRunWhenAccessIsGranted;
-			requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, ACCESS_TO_ACCOUNTS_REQUEST_ID);
+
+			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.GET_ACCOUNTS)) {
+				Logger.i(TAG, "showing rationale and requesting permission to access accounts");
+				// FIXME improve this rationale messages
+				showMessageOKCancel(getString(R.string.access_to_get_accounts_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+					@Override
+					public void onNext(GenericDialogs.EResponse eResponse) {
+						super.onNext(eResponse);
+						if(eResponse!= GenericDialogs.EResponse.YES) return;
+
+
+						ActivityCompat.requestPermissions(
+								AptoideBaseActivity.this,
+								new String[]{
+										Manifest.permission.GET_ACCOUNTS
+								},
+								ACCESS_TO_ACCOUNTS_REQUEST_ID
+						);
+					}
+				});
+				return;
+			}
+
+			ActivityCompat.requestPermissions(
+					this, new String[]{Manifest.permission.GET_ACCOUNTS}, ACCESS_TO_ACCOUNTS_REQUEST_ID);
+			Logger.i(TAG, "requesting permission to access accounts");
 			return;
 		}
+		Logger.i(TAG, "already has permission to access accounts");
 		toRunWhenAccessIsGranted.call();
+	}
+
+	private void showMessageOKCancel(
+			String message,
+			SimpleSubscriber<GenericDialogs.EResponse> subscriber
+	) {
+		GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
 	}
 }
