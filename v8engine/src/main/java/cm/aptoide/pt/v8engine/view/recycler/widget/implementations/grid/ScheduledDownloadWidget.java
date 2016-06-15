@@ -13,6 +13,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduleDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -52,6 +53,7 @@ public class ScheduledDownloadWidget extends Widget<ScheduleDownloadDisplayable>
 			appVersion.setText(app.getFile().getVername());
 			checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
 				// TODO
+				ShowMessage.show(buttonView, "TO DO");
 			});
 
 		}catch (Exception ex) {
