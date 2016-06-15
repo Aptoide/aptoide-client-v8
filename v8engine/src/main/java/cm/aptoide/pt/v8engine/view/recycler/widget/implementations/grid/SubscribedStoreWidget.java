@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -18,8 +18,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -68,7 +68,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 		@ColorInt int color = context.getResources().getColor(StoreThemeEnum.get(store.getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v->FragmentUtils.replaceFragment((FragmentActivity) v.getContext(),
+		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
 				StoreFragment
 				.newInstance(displayable.getPojo().getStoreName())));
 
@@ -80,7 +80,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 		storeUnsubscribe.setOnClickListener(v->{
 			GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(), displayable.getPojo()
-					.getStoreName(), StringUtils.getFormattedString(itemView.getContext(), R.string
+					.getStoreName(), AptoideUtils.StringU.getFormattedString(R.string
 					.unsubscribe_yes_no))
 					.subscribe(eResponse->{
 						switch (eResponse) {

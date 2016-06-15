@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by SithEngineer on 06/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -17,6 +17,8 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
@@ -77,13 +79,14 @@ public class DisplayablesFactory {
 		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
 
-				/*
 				boolean useBigBrick =
 						V8Engine.getContext().getResources().getBoolean(R.bool.use_big_app_brick);
 
 				int nrAppBricks = V8Engine.getContext()
 						.getResources()
 						.getInteger(R.integer.nr_small_app_bricks);
+
+				nrAppBricks += useBigBrick ? 1 : 0;
 
 				if (useBigBrick) {
 					displayables.add(
@@ -93,26 +96,19 @@ public class DisplayablesFactory {
 					);
 				}
 
-				for (int i = (useBigBrick ? 1 : 0); i < apps.size(); i++) {
-					Displayable appDisplayablePojo =
-							DisplayableType
-									.newDisplayable(Type.APP_BRICK, apps.get(i))
-									.setDefaultPerLineCount(
-											useBigBrick ? nrAppBricks : Type.APP_BRICK
-													.getDefaultPerLineCount()
-									);
+				for (int i = (useBigBrick ? 1 : 0); i < apps.size() && i < nrAppBricks; i++) {
+					Displayable appDisplayablePojo = DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(i));
 
 					displayables.add(appDisplayablePojo);
 				}
-				*/
 
-				for (int i = 0; i < apps.size(); i++) {
-					Displayable appDisplayablePojo = DisplayableType.newDisplayable(Type
-							.APP_BRICK, apps
-							.get(i));
-
-					displayables.add(appDisplayablePojo);
-				}
+//				for (int i = 0; i < apps.size(); i++) {
+//					Displayable appDisplayablePojo = DisplayableType.newDisplayable(Type
+//							.APP_BRICK, apps
+//							.get(i));
+//
+//					displayables.add(appDisplayablePojo);
+//				}
 
 				displayables.add(new FooterDisplayable(wsWidget));
 			}

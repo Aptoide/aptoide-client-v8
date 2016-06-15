@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -20,10 +20,12 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.util.AptoideUtils;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.SystemUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.SecurityUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
 
@@ -75,7 +77,7 @@ public abstract class V8Engine extends DataProvider {
 	@Override
 	public void onCreate() {
 		long l = System.currentTimeMillis();
-		SystemUtils.context = this;
+		AptoideUtils.setContext(this);
 
 		if (BuildConfig.DEBUG) {
 			setupStrictMode();
@@ -91,23 +93,70 @@ public abstract class V8Engine extends DataProvider {
 
 		if (SecurePreferences.isFirstRun()) {
 			loadInstalledApps();
-			AptoideUtils.checkUpdates();
+			DataproviderUtils.checkUpdates();
 
 			if (AptoideAccountManager.isLoggedIn()) {
 				if (!SecurePreferences.isUserDataLoaded()) {
 					loadUserData();
 					SecurePreferences.setUserDataLoaded();
 				}
+			} else {
+				addDefaultStore();
 			}
 		}
-		Log.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+
+		final int validSignature = SecurityUtils.checkAppSignature(this);
+		if (validSignature != SecurityUtils.VALID_APP_SIGNATURE) {
+			Logger.e(TAG, "app signature is not valid!");
+		}
+
+		if (SecurityUtils.checkEmulator()) {
+			Logger.w(TAG, "application is running on an emulator");
+		}
+
+		if (SecurityUtils.checkDebuggable(this)) {
+			Logger.w(TAG, "application has debug flag active");
+		}
+
+		// FIXME remove this line
+		getInstalledApksInfo();
+
+		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+	}
+
+	private void addDefaultStore() {
+		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
+	}
+
+	/**
+	 * 	just for curiosity...
+	 */
+	private void getInstalledApksInfo() {
+		try{
+			Logger.i(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com.android" +
+					".browser"));
+		}catch (Exception e) {
+			Logger.w(TAG, "browser (system) not installed", e);
+		}
+
+		try {
+			Logger.i(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
+		}catch (Exception e) {
+			Logger.w(TAG, "aptoide not installed", e);
+		}
+
+		try{
+			Logger.i(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook.katana"));
+		}catch (Exception e){
+			Logger.w(TAG, "facebook not installed", e);
+		}
 	}
 
 	private void loadInstalledApps() {
 		@Cleanup Realm realm = Database.get(this);
 		Database.dropTable(Installed.class, realm);
 
-		List<PackageInfo> installedApps = AptoideUtils.getUserInstalledApps();
+		List<PackageInfo> installedApps = AptoideUtils.SystemU.getUserInstalledApps();
 		Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
 
 		// Installed apps are inserted in database based on their firstInstallTime. Older comes first.

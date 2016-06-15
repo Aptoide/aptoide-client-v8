@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 25/05/2016.
+  ~ Modified by Neurophobic Animal on 08/06/2016.
   -->
 
 <resources>
@@ -191,23 +191,6 @@
     <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
     <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
 
-    <!-- DateUtils -->
-    <string name="WidgetProvider_timestamp_today">Today</string>
-    <string name="WidgetProvider_timestamp_yesterday">Yesterday</string>
-    <string name="WidgetProvider_timestamp_hour_ago">%s hour ago</string>
-    <string name="WidgetProvider_timestamp_hours_ago">%s hours ago</string>
-    <string name="WidgetProvider_timestamp_minutes_ago">%s minutes ago</string>
-    <string name="WidgetProvider_timestamp_just_now">Just now</string>
-    <string name="WidgetProvider_timestamp_weeks_ago">%s weeks ago</string>
-    <string name="WidgetProvider_timestamp_week_ago">%s week ago</string>
-    <string name="WidgetProvider_timestamp_week_ago2">1 week ago</string>
-    <string name="WidgetProvider_timestamp_this_week">This week</string>
-    <string name="WidgetProvider_timestamp_days_ago">%s days ago</string>
-    <string name="WidgetProvider_timestamp_month_ago">1 month ago</string>
-    <string name="WidgetProvider_timestamp_months_ago">%s months ago</string>
-    <string name="WidgetProvider_timestamp_year_ago">1 year ago</string>
-    <string name="WidgetProvider_timestamp_years_ago">%s years ago</string>
-
     <!-- Vote -->
     <string name="reply">Reply</string>
     <string name="vote_down">Vote Down</string>
@@ -310,6 +293,7 @@
     <string name="rollback_installed">Installed</string>
     <string name="rollback_uninstalled">Uninstalled</string>
     <string name="rollback_updated">Updated</string>
+    <string name="rollback_updated_at">Updated at %1$s</string>
     <string name="rollback_downgraded">Downgraded</string>
     <string name="install">Install</string>
     <string name="cannot_uninstall_self">Cannot uninstall installer.</string>
@@ -473,6 +457,7 @@
     <string name="appview_other_versions_in_others_stores">Other versions in other stores</string>
     <string name="appview_rate_Success">App Rated</string>
     <string name="ignoreUpdateText">Ignore Update</string>
+    <string name="ignored">Ignored</string>
     <string name="noIgnoreUpdateText">The new version of an app doesn’t work on your device or some feature is missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop updating.</string>
     <string name="createReviewButtonText">Create \nReview</string>
     <string name="navigation_drawer_signup_login">Sign Up or Login</string>
@@ -619,4 +604,9 @@
     <string name="email_copied">E-mail copied to clipboard</string>
     <string name="privacy_copied">Privacy link copied to clipboard</string>
     <string name="subscribing_store_message">Unsubscribing %s</string>
+
+    <!-- Search Fragment -->
+    <string name="subscribed">Subscribed</string>
+    <string name="everywhere">Everywhere</string>
+    <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
 </resources>

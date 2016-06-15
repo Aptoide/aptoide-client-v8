@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -22,9 +22,9 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.utils.StringUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 
@@ -93,7 +93,7 @@ public class AddStoreDialog extends DialogFragment {
 
 	private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
 		StoreUtils.subscribeStore(getStoreMetaRequest, getStoreMeta1->{
-			ShowMessage.show(getView(), StringUtils.getFormattedString(getContext(), R.string.store_subscribed,
+			ShowMessage.show(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_subscribed,
 					storeName));
 
 			dismissLoadingDialog();
@@ -102,10 +102,13 @@ public class AddStoreDialog extends DialogFragment {
 			if (e instanceof AptoideWsV7Exception) {
 				BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
 
-				if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())) {
+				BaseV7Response.Error error = baseResponse.getError();
+				if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
 					DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
 							.this, PRIVATE_STORE_REQUEST_CODE, storeName);
 					dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+				} else {
+					ShowMessage.show(getView(), error.getDescription());
 				}
 				dismissLoadingDialog();
 			} else {

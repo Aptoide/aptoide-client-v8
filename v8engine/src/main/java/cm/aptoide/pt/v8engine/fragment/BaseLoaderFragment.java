@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -23,17 +24,9 @@ import lombok.Getter;
 public abstract class BaseLoaderFragment extends BaseFragment implements LoadInterface {
 
 	private LoaderLayoutHandler loaderLayoutHandler;
+	// Just a convenient reuse option.
+	protected ErrorRequestListener errorRequestListener = e -> finishLoading(e);
 	@Getter private boolean created = false;
-
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
-	Bundle savedInstanceState) {
-		if (!created) {
-			loaderLayoutHandler = createLoaderLayoutHandler();
-		}
-		return super.onCreateView(inflater, container, savedInstanceState);
-	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -42,8 +35,26 @@ public abstract class BaseLoaderFragment extends BaseFragment implements LoadInt
 	}
 
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if (loaderLayoutHandler != null) {
+			loaderLayoutHandler = null;
+		}
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+	Bundle savedInstanceState) {
+		loaderLayoutHandler = createLoaderLayoutHandler();
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+	@Override
 	public void bindViews(View view) {
-		if (loaderLayoutHandler != null) loaderLayoutHandler.bindViews(view);
+		if (loaderLayoutHandler != null) {
+			loaderLayoutHandler.bindViews(view);
+		}
 		if (created) {
 			finishLoading();
 		}
@@ -53,14 +64,6 @@ public abstract class BaseLoaderFragment extends BaseFragment implements LoadInt
 	public void onStop() {
 		super.onStop();
 		created = true;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		if (loaderLayoutHandler != null) {
-			loaderLayoutHandler = null;
-		}
 	}
 
 	@NonNull

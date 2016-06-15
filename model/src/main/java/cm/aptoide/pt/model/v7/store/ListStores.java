@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.model.v7.store;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.Datalist;
+import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +14,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListStores extends BaseV7Response {
+public class ListStores extends BaseV7EndlessResponse<Store> {
 
-	private Datalist<Store> datalist;
 }

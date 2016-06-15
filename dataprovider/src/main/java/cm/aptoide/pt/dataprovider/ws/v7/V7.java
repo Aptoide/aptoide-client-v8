@@ -1,14 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
+import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
@@ -39,7 +42,6 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -64,32 +66,63 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 	@Override
 	public Observable<U> observe() {
-		return super.observe().subscribeOn(Schedulers.io()).onErrorResumeNext(throwable -> {
-			if (throwable instanceof HttpException) {
-				try {
-					BaseV7Response baseV7Response = objectMapper.readValue(((HttpException)
-							throwable)
+		return handleToken(retryOnTicket(super.observe()));
+	}
 
-							.response().errorBody().string(), BaseV7Response.class);
+	private Observable<U> retryOnTicket(Observable<U> observable) {
+		return observable.subscribeOn(Schedulers.io()).flatMap(t -> {
+			if (((BaseV7Response) t).getInfo().getStatus().equals(BaseV7Response.Info.Status.QUEUED)) {
+				return Observable.error(new ToRetryThrowable());
+			} else {
+				return Observable.just(t);
+			}
+		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (n, i) -> {
+			if ((n instanceof ToRetryThrowable) && i < 3) {
+				return i;
+			} else {
+				// Todo: quando nao é erro de net, isto induz em erro lol
+				if (isNoNetworkException(n)) {
+					// Don't retry
+					throw new NoNetworkConnectionException(n);
+				} else {
+					try {
+						if (n instanceof HttpException) {
+							BaseV7Response baseV7Response = objectMapper.readValue(((HttpException) n).response()
+									.errorBody()
+									.string(), BaseV7Response.class);
 
-					if (INVALID_ACCESS_TOKEN_CODE.equals(baseV7Response.getError().getCode())) {
-
-						if (!accessTokenRetry) {
-							accessTokenRetry = true;
-							return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s->{
-								this.body.setAccess_token(s);
-								return V7.this.observe();
-							});
+							throw new AptoideWsV7Exception(n).setBaseResponse(baseV7Response);
 						}
-					} else {
-						return Observable.error(new AptoideWsV7Exception(throwable).setBaseResponse(baseV7Response));
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
+
+					return Observable.error(n);
+				}
+			}
+		}).delay(500, TimeUnit.MILLISECONDS));
+	}
+
+	private Observable<U> handleToken(Observable<U> observable) {
+		return observable.onErrorResumeNext(throwable -> {
+			if (throwable instanceof AptoideWsV7Exception) {
+				if (INVALID_ACCESS_TOKEN_CODE.equals(((AptoideWsV7Exception) throwable).getBaseResponse()
+						.getError()
+						.getCode())) {
+
+					if (!accessTokenRetry) {
+						accessTokenRetry = true;
+						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s -> {
+							this.body.setAccess_token(s);
+							return V7.this.observe();
+						});
+					}
+				} else {
+					return Observable.error(throwable);
 				}
 			}
 			return Observable.error(throwable);
-		}).observeOn(AndroidSchedulers.mainThread());
+		});
 	}
 
 	public interface Interfaces {

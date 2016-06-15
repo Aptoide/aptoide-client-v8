@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 01/06/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -30,10 +30,10 @@ public class Update extends RealmObject {
 	public static final String ALTERNATIVE_URL = "alternativeApkPath";
 	public static final String UPDATE_VERSION_CODE = "updateVersionCode";
 
-	@PrimaryKey private long appId;
+	@PrimaryKey private String packageName;
+	private long appId;
 	private String label;
 	private String icon;
-	private String packageName;
 	private int versionCode;
 	//	private String signature;
 	private long timestamp;

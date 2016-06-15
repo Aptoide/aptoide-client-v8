@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -12,9 +12,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import cm.aptoide.pt.utils.MathUtils;
-import cm.aptoide.pt.utils.ScreenUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
@@ -39,8 +37,8 @@ public class WidgetFactory {
 	}
 
 	private static void computeColumnSize() {
-		columnSize = MathUtils.leastCommonMultiple(getDisplayablesSizes());
-		orientation = ScreenUtils.getCurrentOrientation(V8Engine.getContext());
+		columnSize = AptoideUtils.MathU.leastCommonMultiple(getDisplayablesSizes());
+		orientation = AptoideUtils.ScreenU.getCurrentOrientation();
 	}
 
 	public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
@@ -66,7 +64,7 @@ public class WidgetFactory {
 	}
 
 	public static int getColumnSize() {
-		if (orientation != ScreenUtils.getCurrentOrientation(V8Engine.getContext())) {
+		if (orientation != AptoideUtils.ScreenU.getCurrentOrientation()) {
 			computeColumnSize();
 		}
 

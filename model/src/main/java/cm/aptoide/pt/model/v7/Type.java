@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.model.v7;
 
-import cm.aptoide.pt.model.Model;
-import cm.aptoide.pt.utils.ScreenUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Getter;
 
 /**
@@ -17,7 +16,7 @@ public enum Type {
 
 	// Server
 	APPS_GROUP(3),
-	APP_BRICK(2),
+	APP_BRICK(2, true),
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
 
@@ -43,7 +42,14 @@ public enum Type {
 
 	// Updates
 	INSTALLED(1),
-	UPDATE(1);
+	UPDATE(1),
+	ROLLBACK(1),
+
+	// Search
+	SEARCH(1),
+
+	// Progress
+	PROGRESS_DISPLAYABLE;
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 
@@ -68,9 +74,8 @@ public enum Type {
 	}
 
 	public int getPerLineCount() {
-		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (ScreenUtils
-				.getScreenWidthInDip(Model
-				.getContext()) / ScreenUtils.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (AptoideUtils.ScreenU.getScreenWidthInDip() /
+				AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
 	}
 
 }

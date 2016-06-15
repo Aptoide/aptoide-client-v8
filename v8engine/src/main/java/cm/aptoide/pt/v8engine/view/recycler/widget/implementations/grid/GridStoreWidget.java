@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 27/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
-import android.support.annotation.ColorInt;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.utils.StringUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -63,19 +62,20 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 		final Store store = gridStoreDisplayable.getPojo();
 
 		storeName.setText(store.getName());
-		storeDownloads.setText(StringUtils.withSuffix(store.getStats().getDownloads()));
-		storeSubscribers.setText(StringUtils.withSuffix(store.getStats().getSubscribers()));
+		storeDownloads.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
+		storeSubscribers.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
 
 		// in order to re-use the row_store_item layout, we hide the unsubscribe button and
 		// increase the padding
 		storeUnsubscribe.setVisibility(View.GONE);
 
-		@ColorInt int color = context.getResources()
-				.getColor(StoreThemeEnum.get(store.getAppearance().getTheme()).getStoreHeader());
-		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragment((FragmentActivity) v
-				.getContext(), StoreFragment
-				.newInstance(gridStoreDisplayable.getPojo().getName())));
+		storeLayout.setBackgroundColor(StoreThemeEnum.get(store).getStoreHeaderInt());
+		storeLayout.setOnClickListener(
+				v -> FragmentUtils.replaceFragmentV4(
+							(FragmentActivity) v.getContext(),
+							StoreFragment.newInstance(gridStoreDisplayable.getPojo().getName())
+					)
+		);
 
 		if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
 			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);

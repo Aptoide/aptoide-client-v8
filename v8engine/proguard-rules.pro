@@ -16,6 +16,11 @@
 #   public *;
 #}
 
+-keep class cm.aptoide.pt.** {*;}
+#-keep class cm.aptoide.pt.preferences.** {*;}
+#-keep class cm.aptoide.pt.dataprovider.** {*;}
+-keep class android.support.v7.appcompat.** { *; }
+
 ## Retrolambda specific rules ##
 
 # as per official recommendation: https://github.com/evant/gradle-retrolambda#proguard
@@ -27,12 +32,12 @@
 # For example:
 # -keep class com.yourcompany.realm.** { *; }
 
--keep class io.realm.annotations.RealmModule
--keep @io.realm.annotations.RealmModule class *
--keep class io.realm.internal.Keep
--keep @io.realm.internal.Keep class *
--dontwarn javax.**
--dontwarn io.realm.**
+#-keep class io.realm.annotations.RealmModule
+#-keep @io.realm.annotations.RealmModule class *
+#-keep class io.realm.internal.Keep
+#-keep @io.realm.internal.Keep class *
+#-dontwarn javax.**
+#-dontwarn io.realm.**
 
 # RxJava 0.21
 

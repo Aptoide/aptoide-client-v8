@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 02/06/2016.
+  -->
+<resources>
+
+    <array name="themes">
+        <item>dark</item>
+        <item>light</item>
+    </array>
+
+    <array name="theme_names">
+        <item>@string/dark</item>
+        <item>@string/light</item>
+    </array>
+</resources>

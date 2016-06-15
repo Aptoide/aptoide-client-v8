@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -8,7 +8,9 @@ package cm.aptoide.pt.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.preferences.Application;
@@ -79,8 +81,15 @@ public class Database {
 
 	public static void save(Installed installed, Realm realm) {
 		realm.beginTransaction();
-		installed.computeId();
+//		installed.computeId();
 		realm.copyToRealmOrUpdate(installed);
+		realm.commitTransaction();
+	}
+
+	public static void save(Rollback rollback, Realm realm) {
+		realm.beginTransaction();
+//		rollback.computeId();
+		realm.copyToRealmOrUpdate(rollback);
 		realm.commitTransaction();
 	}
 
@@ -158,6 +167,39 @@ public class Database {
 
 		public static Update get(String packageName, Realm realm) {
 			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
+		}
+	}
+
+	public static class RollbackQ {
+
+		public static RealmResults<Rollback> getAll(Realm realm) {
+			return realm.where(Rollback.class).findAll();
+		}
+
+		public static Rollback get(String packageName, Rollback.Action action, Realm realm) {
+			RealmResults<Rollback> allSorted = realm.where(Rollback.class)
+					.equalTo(Rollback.PACKAGE_NAME, packageName)
+					.equalTo(Rollback.ACTION, action.name())
+					.findAllSorted(Rollback.TIMESTAMP);
+
+			if (allSorted.size() > 0) {
+				return allSorted.get(allSorted.size() - 1);
+			} else {
+				return null;
+			}
+		}
+	}
+
+	public static class ExcludedUpdatesQ {
+
+		public static RealmResults<ExcludedUpdate> getAll(Realm realm) {
+			return realm.where(ExcludedUpdate.class).findAll();
+		}
+
+		public static boolean contains(String packageName, Realm realm) {
+			return realm.where(ExcludedUpdate.class)
+					.equalTo(ExcludedUpdate.PACKAGE_NAME, packageName)
+					.findFirst() != null;
 		}
 	}
 }

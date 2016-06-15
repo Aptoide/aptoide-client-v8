@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 25/05/2016.
+  -->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -61,34 +65,22 @@
 
     </RelativeLayout>
 
-    <!-- comment 1 -->
-    <FrameLayout
-        android:id="@+id/comment_1"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        tools:background="@color/red"
-        />
-
-    <include layout="@layout/partial_view_comment_separator"/>
-
-    <!-- comment 2 -->
-    <FrameLayout
-        android:id="@+id/comment_2"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        tools:background="@color/blue"
-        />
-
-    <include layout="@layout/partial_view_comment_separator"/>
-
-    <!-- comment 3 -->
-    <FrameLayout
-        android:id="@+id/comment_3"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        tools:background="@color/green"
-        />
-
     <!-- see more button -->
+    <TextView
+        android:id="@+id/see_more_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/backgroundMain"
+        android:drawablePadding="15dp"
+        android:drawableRight="@drawable/ic_see_more_comments"
+        android:gravity="right"
+        android:paddingBottom="10dp"
+        android:paddingRight="13dp"
+        android:paddingTop="15dp"
+        android:text="@string/see_more"
+        android:textAllCaps="true"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        />
 
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 10/05/2016.
+  ~ Modified by SithEngineer on 02/06/2016.
   -->
 
 <resources>
@@ -19,6 +19,9 @@
 
         <!--toolbar-->
         <item name="toolbarTheme">@style/Toolbar</item>
+
+        <!--for settings preference theme -->
+        <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
         <!--background-->
         <item name="backgroundMain">@color/white</item>
@@ -127,6 +130,9 @@
 
         <!--toolbar-->
         <item name="toolbarTheme">@style/ToolbarDark</item>
+
+        <!--for settings preference theme -->
+        <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
         <!--background-->
         <item name="backgroundMain">@color/black</item>

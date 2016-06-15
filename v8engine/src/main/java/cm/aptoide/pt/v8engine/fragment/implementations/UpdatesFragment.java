@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -13,8 +13,9 @@ import java.util.List;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.AptoideUtils;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -50,16 +51,19 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void reload() {
 		super.reload();
-		AptoideUtils.checkUpdates(listAppsUpdates -> {
+		DataproviderUtils.checkUpdates(listAppsUpdates -> {
 			if (listAppsUpdates.getList().size() == 0) {
 				finishLoading();
 				ShowMessage.show(getView(), R.string.no_updates_available_retoric);
+			}
+			if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
+				ShowMessage.show(getView(), R.string.no_new_updates_available);
 			}
 		});
 	}
 
 	private void fetchUpdates() {
-		if (updatesSubscription == null) {
+		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
 			updatesSubscription = Database.UpdatesQ.getAll(realm)
 					.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -68,13 +72,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 						if (updates.size() == updatesDisplayablesList.size() - 1) {
 							finishLoading();
-							ShowMessage.show(getView(), R.string.no_new_updates_available);
 						} else {
 							updatesDisplayablesList.clear();
 
 							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget()
-										.setTitle(AptoideUtils
+								updatesDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
@@ -89,15 +91,14 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void fetchInstalled() {
-		if (installedSubscription == null) {
+		if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
 			RealmResults<Installed> realmResults = Database.InstalledQ.getAll(realm);
 			installedSubscription = realmResults.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.subscribe(installeds -> {
 						installedDisplayablesList.clear();
 
-						installedDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget()
-								.setTitle(AptoideUtils
+						installedDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
 								.getResString(R.string.installed_tab))));
 
 						RealmResults<Installed> all = realmResults;
@@ -111,7 +112,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 					});
 			if (realmResults.size() == 0) {
 				finishLoading();
-				ShowMessage.show(getView(), R.string.no_new_updates_available);
 			}
 			finishLoading();
 		}

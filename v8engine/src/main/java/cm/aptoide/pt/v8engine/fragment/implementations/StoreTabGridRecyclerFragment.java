@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.dataprovider.util.ObservableUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
@@ -21,14 +20,17 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
+import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -110,25 +112,28 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 	}
 
-	private Subscription caseListApps(String url, boolean refresh) {
-		return ObservableUtils.retryOnTicket(ListAppsRequest.ofAction(url, refresh).observe())
-				.observeOn(Schedulers.io())
-				.subscribe(listApps -> {
+	private void caseListApps(String url, boolean refresh) {
+		ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url, refresh);
+		Action1<ListApps> listAppsAction = listApps -> {
 
-					// Load sub nodes
-					List<App> list = listApps.getDatalist().getList();
+			// Load sub nodes
+			List<App> list = listApps.getDatalist().getList();
 
-					displayables = new LinkedList<>();
-					for (App app : list) {
-						displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
-					}
+			displayables = new LinkedList<>();
+			for (App app : list) {
+				displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
+			}
 
-					setDisplayables(displayables);
-				}, throwable -> finishLoading(throwable));
+			addDisplayables(displayables);
+		};
+
+		recyclerView.clearOnScrollListeners();
+		recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(this, listAppsRequest, listAppsAction,
+				errorRequestListener));
 	}
 
 	private Subscription caseGetStore(String url, boolean refresh) {
-		return ObservableUtils.retryOnTicket(GetStoreRequest.ofAction(url, refresh).observe())
+		return GetStoreRequest.ofAction(url, refresh).observe()
 				.observeOn(Schedulers.io())
 				.subscribe(getStore -> {
 
@@ -154,8 +159,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private Subscription caseGetStoreWidgets(String url, boolean refresh) {
-		return ObservableUtils.retryOnTicket(GetStoreWidgetsRequest.ofAction(url, refresh)
-				.observe())
+		return GetStoreWidgetsRequest.ofAction(url, refresh).observe()
 				.observeOn(Schedulers.io())
 				.subscribe(getStoreWidgets -> {
 
