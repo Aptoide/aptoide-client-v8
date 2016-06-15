@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.networkclient;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,9 +21,8 @@ import java.util.Locale;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
+import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -38,38 +39,67 @@ import rx.schedulers.Schedulers;
  */
 public abstract class WebService<T, U> {
 
-	protected final static OkHttpClient client = OkHttpClientFactory.newClient();
-	@Getter protected static ObjectMapper objectMapper;
-	protected final static Converter.Factory factory = createConverter();
-	@Getter @Setter protected boolean bypassCache;
-	private Class<T> clazz;
+	private static OkHttpClient defaultHttpClient;
+	private static Converter.Factory defaultConverterFactory;
+	private static Retrofit retrofit;
+
+	protected boolean bypassCache;
+	protected final Converter.Factory converterFactory;
+
+	private final Class<T> clazz;
+	private final String baseHost;
+	private final OkHttpClient httpClient;
+
 	private Observable<T> service;
 
-	protected WebService(Class<T> clazz) {
-		this.clazz = clazz;
+	private static Retrofit getRetrofit(OkHttpClient httpClient, Converter.Factory converterFactory, CallAdapter.Factory factory, String baseHost) {
+		if (retrofit == null) {
+			retrofit =  new Retrofit.Builder().baseUrl(baseHost)
+					.client(httpClient)
+					.addCallAdapterFactory(factory)
+					.addConverterFactory(converterFactory)
+					.build();
+		}
+		return retrofit;
 	}
 
-	protected WebService(Class<T> clazz, boolean bypassCache) {
+	public static Converter.Factory getDefaultConverter() {
+		if (defaultConverterFactory == null) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+			objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
+
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+			objectMapper.setDateFormat(df);
+			defaultConverterFactory = JacksonConverterFactory.create(objectMapper);
+		}
+		return defaultConverterFactory;
+	}
+
+	public static OkHttpClient getDefaultHttpClient() {
+		if (defaultHttpClient == null) {
+			defaultHttpClient = OkHttpClientFactory.newClient();
+		}
+		return defaultHttpClient;
+	}
+
+	protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		this.httpClient = httpClient;
+		this.converterFactory= converterFactory;
+		this.clazz = clazz;
+		this.baseHost = baseHost;
+	}
+
+	protected WebService(Class<T> clazz, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		this.httpClient = httpClient;
+		this.converterFactory= converterFactory;
 		this.clazz = clazz;
 		this.bypassCache = bypassCache;
+		this.baseHost = baseHost;
 	}
-
-	protected static Converter.Factory createConverter() {
-
-		objectMapper = new ObjectMapper();
-		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-		objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
-
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-		objectMapper.setDateFormat(df);
-
-		return JacksonConverterFactory.create(objectMapper);
-	}
-
-	protected abstract String getBaseHost();
 
 	protected Observable<T> getService() {
 		return service == null ? createServiceObservable() : service;
@@ -80,7 +110,7 @@ public abstract class WebService<T, U> {
 	}
 
 	protected T createService() {
-		return new Retrofit.Builder().baseUrl(getBaseHost()).client(client).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).addConverterFactory(factory).build().create(clazz);
+		return getRetrofit(httpClient, converterFactory, RxJavaCallAdapterFactory.create(), baseHost).create(clazz);
 	}
 
 	protected abstract Observable<U> loadDataFromNetwork(T t);

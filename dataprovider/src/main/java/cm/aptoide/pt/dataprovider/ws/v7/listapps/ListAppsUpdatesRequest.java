@@ -19,6 +19,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -39,12 +43,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	private static final int SPLIT_SIZE = 100;
 
-	private ListAppsUpdatesRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListAppsUpdatesRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory) {
+		super(bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static ListAppsUpdatesRequest of(boolean bypassCache) {
-		return new ListAppsUpdatesRequest(bypassCache);
+		return new ListAppsUpdatesRequest(bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	// // TODO: 12-05-2016 neuro check deprecated

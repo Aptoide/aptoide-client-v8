@@ -11,9 +11,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -23,28 +27,31 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets, GetStoreWidgetsRequest.Body> {
 
-	protected GetStoreWidgetsRequest(V7Url v7Url, boolean bypassCache) {
-		super(v7Url.remove("getStoreWidgets"), bypassCache, new Body());
+	protected GetStoreWidgetsRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(v7Url.remove("getStoreWidgets"), bypassCache, new Body(), httpClient, converterFactory);
 	}
 
-	protected GetStoreWidgetsRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
+	protected GetStoreWidgetsRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeName, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
-	protected GetStoreWidgetsRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
+	protected GetStoreWidgetsRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeId, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static GetStoreWidgetsRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(storeName, bypassCache);
+		return new GetStoreWidgetsRequest(storeName, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	public static GetStoreWidgetsRequest of(int storeId, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(storeId, bypassCache);
+		return new GetStoreWidgetsRequest(storeId, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	public static GetStoreWidgetsRequest ofAction(String url, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(new V7Url(url), bypassCache);
+		return new GetStoreWidgetsRequest(new V7Url(url), bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	@Override

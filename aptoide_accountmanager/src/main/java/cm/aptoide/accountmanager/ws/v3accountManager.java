@@ -18,6 +18,8 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -36,14 +38,9 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 	private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
 	private boolean accessTokenRetry = false;
 
-	protected v3accountManager() {
-		super(Interfaces.class);
+	protected v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory) {
+		super(Interfaces.class, httpClient, converterFactory, "https://webservices.aptoide.com/webservices/");
 		this.map = new BaseBody();
-	}
-
-	@Override
-	protected String getBaseHost() {
-		return "https://webservices.aptoide.com/webservices/";
 	}
 
 	@Override
@@ -51,9 +48,11 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 		return super.observe().subscribeOn(Schedulers.io()).onErrorResumeNext(throwable->{
 			if (throwable instanceof HttpException) {
 				try {
-					GenericResponseV3 genericResponseV3 = objectMapper.readValue(((HttpException) throwable).response()
-							.errorBody()
-							.string(), GenericResponseV3.class);
+
+					GenericResponseV3 genericResponseV3 = (GenericResponseV3) converterFactory.responseBodyConverter(GenericResponseV3
+							.class, null, null).convert(((HttpException) throwable)
+							.response()
+							.errorBody());
 
 					if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
 

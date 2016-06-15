@@ -10,9 +10,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.Order;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -22,21 +26,22 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
 	private final String url;
 
-	private ListStoresRequest(boolean bypassCache) {
-		this("", bypassCache);
+	private ListStoresRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory) {
+		this("", bypassCache, httpClient, converterFactory);
 	}
 
-	private ListStoresRequest(String url, boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListStoresRequest(String url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(bypassCache, new Body(), httpClient, converterFactory);
 		this.url = url.replace("listStores", "");
 	}
 
 	public static ListStoresRequest of(boolean bypassCache) {
-		return new ListStoresRequest(bypassCache);
+		return new ListStoresRequest(bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	public static ListStoresRequest ofAction(String url, boolean bypassCache) {
-		return new ListStoresRequest(url, bypassCache);
+		return new ListStoresRequest(url, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	@Override

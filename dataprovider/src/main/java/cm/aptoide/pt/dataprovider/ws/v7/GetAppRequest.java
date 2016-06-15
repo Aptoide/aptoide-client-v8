@@ -10,9 +10,13 @@ import java.util.List;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -22,8 +26,8 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
-	private GetAppRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private GetAppRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory) {
+		super(bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static GetAppRequest of(long appId) {
@@ -31,7 +35,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 	}
 
 	public static GetAppRequest of(long appId, boolean bypassCache) {
-		GetAppRequest getAppRequest = new GetAppRequest(bypassCache);
+		GetAppRequest getAppRequest = new GetAppRequest(bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 
 		getAppRequest.body.appId = appId;
 

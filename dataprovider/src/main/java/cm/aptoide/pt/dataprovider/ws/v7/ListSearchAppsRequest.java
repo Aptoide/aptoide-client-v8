@@ -12,11 +12,15 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,8 +28,8 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-	private ListSearchAppsRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListSearchAppsRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory) {
+		super(bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean subscribedStores) {
@@ -33,7 +37,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean subscribedStores, boolean bypassCache) {
-		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(bypassCache);
+		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 
 		listSearchAppsRequest.body.setQuery(query);
 		if (subscribedStores) {

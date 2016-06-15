@@ -7,9 +7,13 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -19,20 +23,23 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequest.Body> {
 
-	protected ListAppsRequest(V7Url v7Url, boolean bypassCache) {
-		super(v7Url.remove("listApps"), bypassCache, new Body());
+	protected ListAppsRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(v7Url.remove("listApps"), bypassCache, new Body(), httpClient, converterFactory);
 	}
 
-	protected ListAppsRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
+	protected ListAppsRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeName, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
-	protected ListAppsRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
+	protected ListAppsRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeId, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static ListAppsRequest ofAction(String url, boolean bypassCache) {
-		return new ListAppsRequest(new V7Url(url), bypassCache);
+		return new ListAppsRequest(new V7Url(url), bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	@Override

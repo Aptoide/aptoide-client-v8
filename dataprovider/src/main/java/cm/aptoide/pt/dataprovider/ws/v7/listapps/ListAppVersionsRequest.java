@@ -12,9 +12,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,12 +28,12 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsRequest.Body> {
 
-	private ListAppVersionsRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListAppVersionsRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory) {
+		super(bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static ListAppVersionsRequest of(boolean bypassCache) {
-		return new ListAppVersionsRequest(bypassCache);
+		return new ListAppVersionsRequest(bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	@Override

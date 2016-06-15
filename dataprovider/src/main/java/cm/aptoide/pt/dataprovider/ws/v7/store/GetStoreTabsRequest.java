@@ -9,9 +9,13 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -21,20 +25,22 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreTabsRequest extends BaseRequestWithStore<GetStoreTabs, GetStoreTabsRequest.Body> {
 
-	public GetStoreTabsRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
+	public GetStoreTabsRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeName, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
-	public GetStoreTabsRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
+	public GetStoreTabsRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeId, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static GetStoreTabsRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreTabsRequest(storeName, bypassCache);
+		return new GetStoreTabsRequest(storeName, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	public static GetStoreTabsRequest of(int storeId, boolean bypassCache) {
-		return new GetStoreTabsRequest(storeId, bypassCache);
+		return new GetStoreTabsRequest(storeId, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	@Override

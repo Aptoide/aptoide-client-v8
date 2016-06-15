@@ -18,11 +18,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -36,24 +40,27 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 
 	private boolean recursive = false;
 
-	protected GetStoreRequest(V7Url v7Url, boolean bypassCache) {
-		super(v7Url.remove("getStore"), bypassCache, new Body());
+	protected GetStoreRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(v7Url.remove("getStore"), bypassCache, new Body(), httpClient, converterFactory);
 	}
 
-	protected GetStoreRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
+	protected GetStoreRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeName, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
-	protected GetStoreRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
+	protected GetStoreRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
+			converterFactory) {
+		super(storeId, bypassCache, new Body(), httpClient, converterFactory);
 	}
 
 	public static GetStoreRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreRequest(storeName, bypassCache);
+		return new GetStoreRequest(storeName, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	public static GetStoreRequest of(String storeName, StoreContext storeContext, boolean bypassCache) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, bypassCache);
+		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 
 		getStoreRequest.body.setContext(storeContext);
 
@@ -61,7 +68,7 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest ofAction(String url, boolean bypassCache) {
-		return new GetStoreRequest(new V7Url(url), bypassCache);
+		return new GetStoreRequest(new V7Url(url), bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
 	}
 
 	@Override
