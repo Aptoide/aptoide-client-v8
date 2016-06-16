@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -22,6 +23,8 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -40,27 +43,29 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 
 	private boolean recursive = false;
 
-	protected GetStoreRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory) {
-		super(v7Url.remove("getStore"), bypassCache, new Body(), httpClient, converterFactory);
+	private GetStoreRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(v7Url.remove("getStore"), bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	protected GetStoreRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory) {
-		super(storeName, bypassCache, new Body(), httpClient, converterFactory);
+	private GetStoreRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeName, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	protected GetStoreRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory) {
-		super(storeId, bypassCache, new Body(), httpClient, converterFactory);
+	private GetStoreRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeId, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
 	public static GetStoreRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreRequest(storeName, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
+		return new GetStoreRequest(storeName, bypassCache, OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	public static GetStoreRequest of(String storeName, StoreContext storeContext, boolean bypassCache) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
+		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, bypassCache,
+				OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
 		getStoreRequest.body.setContext(storeContext);
 
@@ -68,7 +73,9 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest ofAction(String url, boolean bypassCache) {
-		return new GetStoreRequest(new V7Url(url), bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
+		return new GetStoreRequest(new V7Url(url), bypassCache, OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
@@ -98,7 +105,7 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 				}
 			}).observeOn(AndroidSchedulers.mainThread());
 		} else {
-			return super.observe();
+			return super.observe().observeOn(AndroidSchedulers.mainThread());
 		}
 	}
 
@@ -135,5 +142,9 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 		private String q = Api.Q;
 		private String widget;
 		private WidgetsArgs widgetsArgs = WidgetsArgs.createDefault();
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+			super(aptoideId, accessToken, aptoideVercode, cdn);
+		}
 	}
 }

@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Type;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -58,7 +59,9 @@ public class WSWidgetsUtils {
 	}
 
 	private static <T> Observable<T> ioScheduler(@NonNull Observable<T> observable) {
-		return observable.subscribeOn(Schedulers.io());
+		return observable
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribeOn(Schedulers.io());
 	}
 
 	private static void setObjectView(GetStoreWidgets.WSWidget wsWidget, CountDownLatch

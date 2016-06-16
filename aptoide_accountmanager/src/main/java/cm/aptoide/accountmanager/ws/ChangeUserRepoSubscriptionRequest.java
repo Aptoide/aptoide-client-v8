@@ -27,7 +27,7 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
 
 	public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe) {
 		ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest = new ChangeUserRepoSubscriptionRequest
-				(WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
+				(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter());
 
 		changeUserRepoSubscriptionRequest.storeName = storeName;
 		changeUserRepoSubscriptionRequest.subscribe = subscribe;

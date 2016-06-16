@@ -56,8 +56,9 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 	private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
 	private boolean accessTokenRetry = false;
 
-	protected V7(boolean bypassCache, B body, OkHttpClient httpClient, Converter.Factory converterFactory) {
-		super(Interfaces.class, bypassCache, httpClient, converterFactory, BASE_HOST);
+	protected V7(boolean bypassCache, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String
+			baseHost) {
+		super(Interfaces.class, bypassCache, httpClient, converterFactory, baseHost);
 		this.body = body;
 	}
 
@@ -108,7 +109,7 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 					if (!accessTokenRetry) {
 						accessTokenRetry = true;
 						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s -> {
-							this.body.setAccess_token(s);
+							this.body.setAccessToken(s);
 							return V7.this.observe();
 						});
 					}

@@ -8,10 +8,13 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import java.util.Arrays;
 import java.util.List;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -26,8 +29,9 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
-	private GetAppRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory) {
-		super(bypassCache, new Body(), httpClient, converterFactory);
+	private GetAppRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String
+			baseHost, String cdn, int versionCode, String accessToken, String aptoideId) {
+		super(bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
 	public static GetAppRequest of(long appId) {
@@ -35,7 +39,9 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 	}
 
 	public static GetAppRequest of(long appId, boolean bypassCache) {
-		GetAppRequest getAppRequest = new GetAppRequest(bypassCache, WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
+		GetAppRequest getAppRequest = new GetAppRequest(bypassCache, OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, "pool", AptoideUtils.Core.getVerCode(),
+				AptoideAccountManager.getAccessToken(), SecurePreferences.getAptoideClientUUID());
 
 		getAppRequest.body.appId = appId;
 
@@ -73,10 +79,11 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		private Integer storeId;
 		private List<Long> storeIds;
 		private String storeName;
-		//		Doesn't make sense without stores_auth_map
-//		private List<String> storeNames;
 		private String storePassSha1;
 		private String storeUser;
-		//  stores_auth_map implementation required
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+			super(aptoideId, accessToken, aptoideVercode, cdn);
+		}
 	}
 }

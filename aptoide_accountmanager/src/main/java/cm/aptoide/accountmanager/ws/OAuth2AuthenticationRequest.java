@@ -40,7 +40,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 
 	public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,
 												 @Nullable String nameForGoogle) {
-		return new OAuth2AuthenticationRequest(WebService.getDefaultHttpClient(), WebService.getDefaultConverter()).setUsername(username)
+		return new OAuth2AuthenticationRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter()).setUsername(username)
 				.setPassword(password)
 				.setMode(mode)
 				.setGrantType("password")
@@ -49,7 +49,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 
 	public static OAuth2AuthenticationRequest of(String refreshToken) {
 
-		return new OAuth2AuthenticationRequest(WebService.getDefaultHttpClient(), WebService.getDefaultConverter()).setGrantType("refresh_token")
+		return new OAuth2AuthenticationRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter()).setGrantType("refresh_token")
 				.setRefreshToken(refreshToken);
 	}
 

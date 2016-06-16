@@ -45,7 +45,9 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 
 	@Override
 	public Observable<U> observe() {
-		return super.observe().subscribeOn(Schedulers.io()).onErrorResumeNext(throwable->{
+		return super.observe()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribeOn(Schedulers.io()).onErrorResumeNext(throwable->{
 			if (throwable instanceof HttpException) {
 				try {
 
@@ -60,7 +62,7 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 							accessTokenRetry = true;
 							return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s->{
 								this.map.setAccess_token(s);
-								return v3accountManager.this.observe();
+								return v3accountManager.this.observe().observeOn(AndroidSchedulers.mainThread());
 							});
 						}
 					} else {

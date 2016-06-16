@@ -374,6 +374,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			if (isLogin) {
 				ChangeUserSettingsRequest.of(matureSwitch1)
 						.observe()
+						.observeOn(AndroidSchedulers.mainThread())
 						.subscribeOn(Schedulers.io())
 						.doOnError(throwable -> {
 							Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
@@ -429,6 +430,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 																				action1) {
 		return OAuth2AuthenticationRequest.of(refreshToken)
 				.observe()
+				.observeOn(AndroidSchedulers.mainThread())
 				.map(OAuth::getAccessToken)
 				.subscribeOn(Schedulers.io())
 				.doOnNext(AccountManagerPreferences::setAccessToken)
@@ -565,6 +567,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	public static Observable<List<GetUserRepoSubscription.Subscription>> getUserRepos() {
 		return GetUserRepoSubscriptionRequest.of()
 				.observe()
+				.observeOn(AndroidSchedulers.mainThread())
 				.map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
 	}
 
@@ -643,6 +646,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			AccountManagerPreferences.setRefreshToken(refreshToken);
 			CheckUserCredentialsRequest.of(accessToken)
 					.observe()
+					.observeOn(AndroidSchedulers.mainThread())
 					.subscribeOn(Schedulers.io())
 					.subscribe(AptoideAccountManager::saveUserInfo);
 			toReturn = true;

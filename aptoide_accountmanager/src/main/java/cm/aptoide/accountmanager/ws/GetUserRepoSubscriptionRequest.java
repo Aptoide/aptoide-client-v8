@@ -25,7 +25,7 @@ public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepo
 	}
 
 	public static GetUserRepoSubscriptionRequest of() {
-		return new GetUserRepoSubscriptionRequest(WebService.getDefaultHttpClient(), WebService.getDefaultConverter());
+		return new GetUserRepoSubscriptionRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter());
 	}
 
 	@Override

@@ -39,29 +39,18 @@ import rx.schedulers.Schedulers;
  */
 public abstract class WebService<T, U> {
 
-	private static OkHttpClient defaultHttpClient;
 	private static Converter.Factory defaultConverterFactory;
-	private static Retrofit retrofit;
-
 	protected boolean bypassCache;
-	protected final Converter.Factory converterFactory;
 
+	protected final Converter.Factory converterFactory;
 	private final Class<T> clazz;
+
 	private final String baseHost;
 	private final OkHttpClient httpClient;
 
-	private Observable<T> service;
 
-	private static Retrofit getRetrofit(OkHttpClient httpClient, Converter.Factory converterFactory, CallAdapter.Factory factory, String baseHost) {
-		if (retrofit == null) {
-			retrofit =  new Retrofit.Builder().baseUrl(baseHost)
-					.client(httpClient)
-					.addCallAdapterFactory(factory)
-					.addConverterFactory(converterFactory)
-					.build();
-		}
-		return retrofit;
-	}
+	private Retrofit retrofit;
+	private Observable<T> service;
 
 	public static Converter.Factory getDefaultConverter() {
 		if (defaultConverterFactory == null) {
@@ -77,13 +66,6 @@ public abstract class WebService<T, U> {
 			defaultConverterFactory = JacksonConverterFactory.create(objectMapper);
 		}
 		return defaultConverterFactory;
-	}
-
-	public static OkHttpClient getDefaultHttpClient() {
-		if (defaultHttpClient == null) {
-			defaultHttpClient = OkHttpClientFactory.newClient();
-		}
-		return defaultHttpClient;
 	}
 
 	protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
@@ -113,6 +95,17 @@ public abstract class WebService<T, U> {
 		return getRetrofit(httpClient, converterFactory, RxJavaCallAdapterFactory.create(), baseHost).create(clazz);
 	}
 
+	private Retrofit getRetrofit(OkHttpClient httpClient, Converter.Factory converterFactory, CallAdapter.Factory factory, String baseHost) {
+		if (retrofit == null) {
+			retrofit =  new Retrofit.Builder().baseUrl(baseHost)
+					.client(httpClient)
+					.addCallAdapterFactory(factory)
+					.addConverterFactory(converterFactory)
+					.build();
+		}
+		return retrofit;
+	}
+
 	protected abstract Observable<U> loadDataFromNetwork(T t);
 
 	private Observable<U> prepareAndLoad(T t) {
@@ -125,8 +118,7 @@ public abstract class WebService<T, U> {
 
 	public Observable<U> observe() {
 		return getService().flatMap(this::prepareAndLoad)
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread());
+				.subscribeOn(Schedulers.io());
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener) {
@@ -134,7 +126,9 @@ public abstract class WebService<T, U> {
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener, ErrorRequestListener errorRequestListener) {
-		observe().subscribe(successRequestListener::call, errorRequestListener::onError);
+		observe()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(successRequestListener::call, errorRequestListener::onError);
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
