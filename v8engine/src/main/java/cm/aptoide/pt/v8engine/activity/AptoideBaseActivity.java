@@ -22,13 +22,14 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import lombok.Getter;
 import rx.functions.Action0;
 
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle {
+public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle, PermissionRequest {
 
 	private static final String TAG = AptoideBaseActivity.class.getName();
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -140,7 +141,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
-		requestAccessToAccounts(false, toRunWhenAccessIsGranted);
+		requestAccessToExternalFileSystem(false, toRunWhenAccessIsGranted);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)

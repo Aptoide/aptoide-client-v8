@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 16/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -29,6 +30,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -215,15 +217,39 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private static class Listeners {
 
 		private View.OnClickListener newBuyListener() {
-			return null;
+			return v -> {
+				ContextWrapper ctx = (ContextWrapper) v.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+				permissionRequest.requestAccessToExternalFileSystem(() -> {
+
+					// TODO
+					ShowMessage.show(v, "TO DO");
+				});
+			};
 		}
 
 		private View.OnClickListener newInstallListener() {
-			return null;
+			return v -> {
+				ContextWrapper ctx = (ContextWrapper) v.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+				permissionRequest.requestAccessToExternalFileSystem(() -> {
+
+					// TODO
+					ShowMessage.show(v, "TO DO");
+				});
+			};
 		}
 
 		private View.OnClickListener newUpdateListener() {
-			return null;
+			return v -> {
+				ContextWrapper ctx = (ContextWrapper) v.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+				permissionRequest.requestAccessToExternalFileSystem(() -> {
+
+					// TODO
+					ShowMessage.show(v, "TO DO");
+				});
+			};
 		}
 
 		private View.OnClickListener newDowngradeListener() {

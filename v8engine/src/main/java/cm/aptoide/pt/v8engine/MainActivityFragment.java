@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by SithEngineer on 16/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -23,16 +23,12 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
 	@Override
 	public void pushFragment(android.app.Fragment fragment) {
-		requestAccessToExternalFileSystem( () ->
-				FragmentUtils.replaceFragment(this, fragment)
-		);
+		FragmentUtils.replaceFragment(this, fragment);
 	}
 
 	@Override
 	public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
-		requestAccessToExternalFileSystem( () ->
-				FragmentUtils.replaceFragmentV4(this, fragment)
-		);
+		FragmentUtils.replaceFragmentV4(this, fragment);
 	}
 
 	@Override
