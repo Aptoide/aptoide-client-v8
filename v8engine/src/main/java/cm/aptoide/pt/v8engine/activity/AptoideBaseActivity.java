@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 16/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -140,11 +140,17 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
+		requestAccessToAccounts(false, toRunWhenAccessIsGranted);
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToExternalFileSystem(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 		if(hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
 
-			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+					.WRITE_EXTERNAL_STORAGE)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access external storage");
 				// FIXME improve this rationale messages
 				showMessageOKCancel(getString(R.string.access_to_external_storage_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
@@ -184,11 +190,17 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
+		requestAccessToAccounts(false, toRunWhenAccessIsGranted);
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToAccounts(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
 		if (hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToAccountsIsGranted = toRunWhenAccessIsGranted;
 
-			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.GET_ACCOUNTS)) {
+			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+					.GET_ACCOUNTS)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access accounts");
 				// FIXME improve this rationale messages
 				showMessageOKCancel(getString(R.string.access_to_get_accounts_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
