@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/06/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -105,7 +105,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 					}
 				} else {
 					// FIXME what should I do here?
-					ShowMessage.show(findViewById(android.R.id.content), "access to read and write to external storage" +
+					ShowMessage.asSnack(findViewById(android.R.id.content), "access to read and write to external " +
+							"storage" +
 							" was denied");
 				}
 				break;
@@ -119,7 +120,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 					}
 				} else {
 					// FIXME what should I do here?
-					ShowMessage.show(findViewById(android.R.id.content), "access to get accounts was denied");
+					ShowMessage.asSnack(findViewById(android.R.id.content), "access to get accounts was denied");
 				}
 				break;
 

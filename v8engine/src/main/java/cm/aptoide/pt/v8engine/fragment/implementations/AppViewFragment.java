@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -192,14 +192,14 @@ public class AppViewFragment extends GridRecyclerFragment {
 			return true;
 
 		} else if (i == R.id.menu_share) {
-			ShowMessage.show(item.getActionView(), "TO DO");
+			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
 			// TODO
 
 			return true;
 
 		} else if (i == R.id.menu_schedule) {
-			ShowMessage.show(item.getActionView(), "TO DO");
+			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
 			// TODO
 			return true;

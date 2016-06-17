@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 25/05/2016.
+  ~ Modified by SithEngineer on 17/06/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -25,12 +25,12 @@
         <include layout="@layout/partial_view_progress_bar"/>
 
         <android.support.v7.widget.RecyclerView
-
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            />
 
     </FrameLayout>
 
