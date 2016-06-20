@@ -27,28 +27,26 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta, GetStoreMetaRequest.Body> {
 
-	private GetStoreMetaRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeName, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private GetStoreMetaRequest(String storeName, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeName, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	private GetStoreMetaRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeId, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private GetStoreMetaRequest(long storeId, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeId, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	public static GetStoreMetaRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreMetaRequest(storeName, bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
+	public static GetStoreMetaRequest of(String storeName) {
+		return new GetStoreMetaRequest(storeName, OkHttpClientFactory.getSingletoneClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
-	public static GetStoreMetaRequest of(int storeId, boolean bypassCache) {
-		return new GetStoreMetaRequest(storeId, bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
+	public static GetStoreMetaRequest of(int storeId) {
+		return new GetStoreMetaRequest(storeId, OkHttpClientFactory.getSingletoneClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
-	protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getStoreMeta(body, bypassCache);
 	}
 

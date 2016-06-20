@@ -84,23 +84,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 			setupDisplayables(getApp);
 			setupObservables(getApp);
 			finishLoading();
-		});
-
-//		if (refresh) {
-//			loadAppInfo((int) appId)
-//					.compose(ObservableUtils.applySchedulers())
-//					.subscribe(
-//						new Action1WithWeakRef<GetApp, AppViewFragment>(this) {
-//						@Override
-//						public void call(GetApp pojo) {
-//							AppViewFragment fragment = weakReference.get();
-//							if(fragment!=null) {
-//								fragment.setApp(pojo.getNodes().getMeta().getData());
-//								fragment.showAppInfo();
-//							}
-//						}
-//					});
-//		}
+		}, refresh);
 	}
 
 	private void setupObservables(GetApp getApp) {
@@ -215,29 +199,6 @@ public class AppViewFragment extends GridRecyclerFragment {
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
 	}
-
-	private Observable<GetApp> loadAppInfo(int appId) {
-		return GetAppRequest.of(appId).observe()
-				.observeOn(AndroidSchedulers.mainThread());
-	}
-
-//	private void setApp(GetAppMeta.App app) {
-//		this.app = app;
-//	}
-
-//	private void showAppInfo() {
-//		if(app==null) return;
-//
-//		// setup displayables in view
-//		addDisplayables(DisplayableType.newDisplayables(DisplayableType.Group.APP_VIEW, app));
-//
-//		// setup header in view
-//		header.setup(app);
-//	}
-
-	//
-	// bundle keys used internally in this fragment
-	//
 
 	private enum BundleKeys {
 		APP_ID

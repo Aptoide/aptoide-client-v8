@@ -40,7 +40,6 @@ import rx.schedulers.Schedulers;
 public abstract class WebService<T, U> {
 
 	private static Converter.Factory defaultConverterFactory;
-	protected boolean bypassCache;
 
 	protected final Converter.Factory converterFactory;
 	private final Class<T> clazz;
@@ -75,14 +74,6 @@ public abstract class WebService<T, U> {
 		this.baseHost = baseHost;
 	}
 
-	protected WebService(Class<T> clazz, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		this.httpClient = httpClient;
-		this.converterFactory= converterFactory;
-		this.clazz = clazz;
-		this.bypassCache = bypassCache;
-		this.baseHost = baseHost;
-	}
-
 	protected Observable<T> getService() {
 		return service == null ? createServiceObservable() : service;
 	}
@@ -106,27 +97,38 @@ public abstract class WebService<T, U> {
 		return retrofit;
 	}
 
-	protected abstract Observable<U> loadDataFromNetwork(T t);
+	protected abstract Observable<U> loadDataFromNetwork(T t, boolean bypassCache);
 
-	private Observable<U> prepareAndLoad(T t) {
+	private Observable<U> prepareAndLoad(T t, boolean bypassCache) {
 		onLoadDataFromNetwork();
-		return loadDataFromNetwork(t);
+		return loadDataFromNetwork(t, bypassCache);
 	}
 
-	protected void onLoadDataFromNetwork() {
-	}
+	protected void onLoadDataFromNetwork() {}
 
-	public Observable<U> observe() {
-		return getService().flatMap(this::prepareAndLoad)
+	public Observable<U> observe(boolean bypassCache) {
+		return getService().flatMap(response -> prepareAndLoad(response, bypassCache))
 				.subscribeOn(Schedulers.io());
 	}
 
+	public Observable<U> observe() {
+		return observe(false);
+	}
+
 	public void execute(SuccessRequestListener<U> successRequestListener) {
-		execute(successRequestListener, defaultErrorRequestListener());
+		execute(successRequestListener, false);
+	}
+
+	public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
+		execute(successRequestListener, defaultErrorRequestListener(), bypassCache);
 	}
 
 	public void execute(SuccessRequestListener<U> successRequestListener, ErrorRequestListener errorRequestListener) {
-		observe()
+		execute(successRequestListener, errorRequestListener, false);
+	}
+
+	public void execute(SuccessRequestListener<U> successRequestListener, ErrorRequestListener errorRequestListener, boolean bypassCache) {
+		observe(bypassCache)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(successRequestListener::call, errorRequestListener::onError);
 	}

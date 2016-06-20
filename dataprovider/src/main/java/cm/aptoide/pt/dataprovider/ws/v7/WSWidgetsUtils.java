@@ -34,18 +34,18 @@ public class WSWidgetsUtils {
 			}
 			switch (wsWidget.getType()) {
 				case APPS_GROUP:
-					ioScheduler(ListAppsRequest.ofAction(url, refresh)
-							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+					ioScheduler(ListAppsRequest.ofAction(url)
+							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				case STORES_GROUP:
-					ioScheduler(ListStoresRequest.ofAction(url, refresh)
-							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+					ioScheduler(ListStoresRequest.ofAction(url)
+							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				case DISPLAYS:
-					ioScheduler(GetStoreDisplaysRequest.ofAction(url, refresh)
-							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
+							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				default:

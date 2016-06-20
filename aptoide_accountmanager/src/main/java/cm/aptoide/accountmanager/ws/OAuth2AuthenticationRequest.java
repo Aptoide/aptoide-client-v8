@@ -54,7 +54,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 	}
 
 	@Override
-	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		HashMap<String, String> parameters = new HashMap<>();
 
 		parameters.put("grant_type", grantType);

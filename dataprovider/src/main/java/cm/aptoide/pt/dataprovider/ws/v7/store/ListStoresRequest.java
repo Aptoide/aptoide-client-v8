@@ -29,29 +29,28 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
 	private final String url;
 
-	private ListStoresRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
-		this("", bypassCache, httpClient, converterFactory, aptoideId, accessToken, versionCode, cdn);
+	private ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		this("", httpClient, converterFactory, aptoideId, accessToken, versionCode, cdn);
 	}
 
-	private ListStoresRequest(String url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
+	private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 		this.url = url.replace("listStores", "");
 	}
 
-	public static ListStoresRequest of(boolean bypassCache) {
-		return new ListStoresRequest(bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
+	public static ListStoresRequest of() {
+		return new ListStoresRequest(OkHttpClientFactory.getSingletoneClient(), WebService
 				.getDefaultConverter(), SecurePreferences
 				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
-	public static ListStoresRequest ofAction(String url, boolean bypassCache) {
-		return new ListStoresRequest(url, bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
+	public static ListStoresRequest ofAction(String url) {
+		return new ListStoresRequest(url, OkHttpClientFactory.getSingletoneClient(), WebService
 				.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
-	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.listStores(url, body, bypassCache);
 	}
 

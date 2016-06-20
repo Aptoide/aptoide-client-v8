@@ -52,9 +52,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 	@Override
 	public void load(boolean refresh) {
 		recyclerView.clearOnScrollListeners();
-		recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(this, listSearchAppsRequest =
-				ListSearchAppsRequest
-				.of(query, subscribedStores, refresh), listSearchAppsSuccessRequestListener, errorRequestListener));
+		final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this,
+				listSearchAppsRequest = ListSearchAppsRequest.of(query, subscribedStores),
+				listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
+		recyclerView.addOnScrollListener(listener);
+		listener.onLoadMore(refresh);
 	}
 
 	@Override

@@ -31,16 +31,12 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-	private ListSearchAppsRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
+	private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean subscribedStores) {
-		return of(query, subscribedStores, false);
-	}
-
-	public static ListSearchAppsRequest of(String query, boolean subscribedStores, boolean bypassCache) {
-		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences
+		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences
 				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
 		listSearchAppsRequest.body.setQuery(query);
@@ -57,7 +53,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	}
 
 	@Override
-	protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.listSearchApps(body, bypassCache);
 	}
 

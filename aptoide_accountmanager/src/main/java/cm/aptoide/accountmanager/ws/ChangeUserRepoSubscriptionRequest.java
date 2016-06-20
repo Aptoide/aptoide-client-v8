@@ -36,7 +36,7 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
 	}
 
 	@Override
-	protected Observable<GenericResponseV3> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GenericResponseV3> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
 		map.put("mode", "json");
 		map.put("repo", storeName);

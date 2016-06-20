@@ -45,12 +45,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	private static final int SPLIT_SIZE = 100;
 
-	private ListAppsUpdatesRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
+	private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
-	public static ListAppsUpdatesRequest of(boolean bypassCache) {
-		return new ListAppsUpdatesRequest(bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+	public static ListAppsUpdatesRequest of() {
+		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	// // TODO: 12-05-2016 neuro check deprecated
@@ -83,7 +83,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	}
 
 	@Override
-	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		ListAppsUpdates resultListAppsUpdates = new ListAppsUpdates();
 
 		if (body.getApksData().size() > SPLIT_SIZE) {

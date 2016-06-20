@@ -565,7 +565,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
 	@NonNull
 	private GetUserTimelineRequest getGetUserTimelineRequest(String baseHost, String aptoideId, String accessToken, int aptoideVercode, String cdn, String language, String q) {
-		return new GetUserTimelineRequest(true,
+		return new GetUserTimelineRequest(
 				new GetUserTimelineRequest.Body(aptoideId, accessToken, aptoideVercode, cdn, language, q),
 				OkHttpClientFactory.newClient(),
 				WebService.getDefaultConverter(), baseHost);

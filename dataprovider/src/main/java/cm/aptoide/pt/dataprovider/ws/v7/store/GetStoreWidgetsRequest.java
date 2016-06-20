@@ -30,35 +30,32 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets, GetStoreWidgetsRequest.Body> {
 
-	private GetStoreWidgetsRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(v7Url.remove("getStoreWidgets"), bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private GetStoreWidgetsRequest(V7Url v7Url, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(v7Url.remove("getStoreWidgets"), new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	private GetStoreWidgetsRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeName, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private GetStoreWidgetsRequest(String storeName, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeName, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	private GetStoreWidgetsRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory
-			converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeId, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private GetStoreWidgetsRequest(long storeId, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeId, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	public static GetStoreWidgetsRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(storeName, bypassCache, OkHttpClientFactory.getSingletoneClient(),
+	public static GetStoreWidgetsRequest of(String storeName) {
+		return new GetStoreWidgetsRequest(storeName, OkHttpClientFactory.getSingletoneClient(),
 				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
-				AptoideAccountManager
-						.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
-	public static GetStoreWidgetsRequest ofAction(String url, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(new V7Url(url), bypassCache, OkHttpClientFactory.getSingletoneClient(),
-				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+	public static GetStoreWidgetsRequest ofAction(String url) {
+		return new GetStoreWidgetsRequest(new V7Url(url), OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
-	protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getStoreWidgets(url, body, bypassCache);
 	}
 

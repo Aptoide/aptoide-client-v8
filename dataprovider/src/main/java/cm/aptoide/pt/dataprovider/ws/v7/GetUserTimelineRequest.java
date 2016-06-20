@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,17 +19,17 @@ import rx.Observable;
  */
 public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineRequest.Body> {
 
-	public GetUserTimelineRequest(boolean bypassCache, Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(bypassCache, body, httpClient, converterFactory, baseHost);
+	public GetUserTimelineRequest(Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 	}
 
 	@Override
-	protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getUserTimeline(body, bypassCache);
 	}
 
-	public static GetUserTimelineRequest of(boolean bypassCache) {
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(bypassCache,
+	public static GetUserTimelineRequest of() {
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(
 				new Body("1", AptoideAccountManager.getAccessToken(),
 						AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.Q),
 				OkHttpClientFactory.newClient(),
