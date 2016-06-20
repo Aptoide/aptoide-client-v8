@@ -45,6 +45,8 @@ public enum Type {
 	UPDATE(1),
 	ROLLBACK(1),
 
+	SOCIAL_TIMELINE(1),
+
 	// Search
 	SEARCH(1),
 
