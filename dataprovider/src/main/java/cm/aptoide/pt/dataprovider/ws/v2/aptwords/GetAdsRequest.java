@@ -1,23 +1,27 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by Neurophobic Animal on 23/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
 import rx.Observable;
 
 /**
@@ -28,6 +32,10 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
+	private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
+			.connectTimeout(2, TimeUnit.SECONDS)
+			.build();
+
 	private Location location;
 	private String keyword;
 	private int limit;
@@ -35,6 +43,10 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 	private String repo;
 	private String categories;
 	private String excludedNetworks;
+
+	public GetAdsRequest() {
+		super(client, WebService.getDefaultConverter());
+	}
 
 	private static GetAdsRequest of(Location location, String keyword, int limit) {
 		return new GetAdsRequest().setLocation(location).setKeyword(keyword).setLimit(limit);
@@ -58,12 +70,12 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
 	public static GetAdsRequest ofHomepage() {
 		// TODO: 09-06-2016 neuro limit based on max colums
-		return of(Location.homepage, 1);
+		return of(Location.homepage, Type.ADS.getPerLineCount());
 	}
 
 	public static GetAdsRequest ofHomepageMore() {
 		// TODO: 09-06-2016 neuro limit based on max colums
-		return of(Location.homepage, 1);
+		return of(Location.homepage, 50);
 	}
 
 	public static GetAdsRequest ofAppview(String packageName, String storeName) {
@@ -88,7 +100,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 	}
 
 	@Override
-	protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
 		Map<String, String> parameters = new HashMapNotNull<>();
 

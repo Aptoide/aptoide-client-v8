@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 21/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -55,6 +55,11 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		Displayable pop = displayables.pop();
 		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRangeRemoved(displayables.size(), 1));
 		return pop;
+	}
+
+	public void addDisplayable(int position, Displayable displayable) {
+		this.displayables.add(position, displayable);
+		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 	}
 
 	public void addDisplayable(Displayable displayable) {

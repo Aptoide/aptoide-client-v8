@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 21/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -160,7 +160,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 		store.setText(pojo.getStore().getName());
 		ImageLoader.load(AptoideUtils.IconSizeU.parseIcon(pojo.getIcon()), icon);
 
-		if (Malware.Rank.TRUSTED.equals(pojo.getFile().getMalware())) {
+		if (Malware.Rank.TRUSTED.equals(pojo.getFile().getMalware().getRank())) {
 			icTrusted.setVisibility(View.VISIBLE);
 		} else {
 			icTrusted.setVisibility(View.GONE);

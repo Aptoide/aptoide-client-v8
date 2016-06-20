@@ -35,12 +35,16 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
 		extractAndSetTracker(clickUrl);
 	}
 
+	public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success) {
+		return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
+	}
+
 	public static RegisterAdRefererRequest of(GetAdsResponse.Ad ad, boolean success) {
 		long appId = ad.getData().getId();
 		long adId = ad.getInfo().getAdId();
 		String clickUrl = DataproviderUtils.AdNetworksUtils.parseMacros(ad.getPartner().getData().getClickUrl());
 
-		return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
+		return of(adId, appId, clickUrl, success);
 	}
 
 	public void execute() {
@@ -60,7 +64,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
 	}
 
 	@Override
-	protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
 		Map<String, String> map = new HashMap<>();
 

@@ -13,16 +13,19 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -102,6 +105,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					case getApkComments:
 						//todo
 						break;
+					case getAds:
+						caseGetAds(refresh);
+						break;
 				}
 			} else {
 				// todo: rebenta quando não conhece, é mesmo para ficar assim??
@@ -110,6 +116,21 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		} else {
 			setDisplayables(displayables);
 		}
+	}
+
+	private void caseGetAds(boolean refresh) {
+		GetAdsRequest.ofHomepageMore().execute(getAdsResponse -> {
+			List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
+
+			displayables = new LinkedList<>();
+			for (GetAdsResponse.Ad ad : list) {
+				displayables.add(DisplayableType.newDisplayable(Type.ADS, ad));
+			}
+
+			addDisplayables(displayables);
+		}, e -> finishLoading());
+
+		getView().findViewById(R.id.swipe_container).setEnabled(false);
 	}
 
 	private void caseListApps(String url, boolean refresh) {
