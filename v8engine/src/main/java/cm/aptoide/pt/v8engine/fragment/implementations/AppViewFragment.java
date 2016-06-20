@@ -43,6 +43,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 04/05/16.
@@ -216,7 +217,8 @@ public class AppViewFragment extends GridRecyclerFragment {
 	}
 
 	private Observable<GetApp> loadAppInfo(int appId) {
-		return GetAppRequest.of(appId).observe();
+		return GetAppRequest.of(appId).observe()
+				.observeOn(AndroidSchedulers.mainThread());
 	}
 
 //	private void setApp(GetAppMeta.App app) {

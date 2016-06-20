@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -56,11 +56,14 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 				finishLoading();
 				ShowMessage.show(getView(), R.string.no_updates_available_retoric);
 			}
+			if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
+				ShowMessage.show(getView(), R.string.no_new_updates_available);
+			}
 		});
 	}
 
 	private void fetchUpdates() {
-		if (updatesSubscription == null) {
+		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
 			updatesSubscription = Database.UpdatesQ.getAll(realm)
 					.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -69,7 +72,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 						if (updates.size() == updatesDisplayablesList.size() - 1) {
 							finishLoading();
-							ShowMessage.show(getView(), R.string.no_new_updates_available);
 						} else {
 							updatesDisplayablesList.clear();
 
@@ -89,7 +91,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void fetchInstalled() {
-		if (installedSubscription == null) {
+		if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
 			RealmResults<Installed> realmResults = Database.InstalledQ.getAll(realm);
 			installedSubscription = realmResults.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -110,7 +112,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 					});
 			if (realmResults.size() == 0) {
 				finishLoading();
-				ShowMessage.show(getView(), R.string.no_new_updates_available);
 			}
 			finishLoading();
 		}

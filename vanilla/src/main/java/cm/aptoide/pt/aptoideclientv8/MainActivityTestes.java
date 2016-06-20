@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivityTestes extends AppCompatActivity {
 
@@ -61,7 +62,7 @@ public class MainActivityTestes extends AppCompatActivity {
 				"D5:90:A7:D7:92:FD:03:31:54:2D:99:FA:F9:99:76:41:79:07:73:A9"));
 		ListAppsUpdatesRequest listAppsUpdatesRequest = ListAppsUpdatesRequest.of(false);
 		listAppsUpdatesRequest.getBody().setApksData(apksData);
-		listAppsUpdatesRequest.observe().subscribe(System.out::println, System.out::println);
+		listAppsUpdatesRequest.observe().observeOn(AndroidSchedulers.mainThread()).subscribe(System.out::println, System.out::println);
 
 		ListAppVersionsRequest listAppVersionsRequest = ListAppVersionsRequest.of(false);
 		listAppVersionsRequest.getBody().setAppId(18711899);
@@ -85,7 +86,7 @@ public class MainActivityTestes extends AppCompatActivity {
 		GetStoreWidgetsRequest.of("apps", false)
 				.execute(new SuccessRequestListener<GetStoreWidgets>() {
 					@Override
-					public void onSuccess(GetStoreWidgets getStoreWidgets) {
+					public void call(GetStoreWidgets getStoreWidgets) {
 						System.out.println(getStoreRequest);
 					}
 				});

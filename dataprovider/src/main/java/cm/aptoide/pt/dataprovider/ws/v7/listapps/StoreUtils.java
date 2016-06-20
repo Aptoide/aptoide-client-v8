@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -85,7 +85,7 @@ public class StoreUtils {
 				Database.save(store, realm);
 
 				if (successRequestListener != null) {
-					successRequestListener.onSuccess(getStoreMeta);
+					successRequestListener.call(getStoreMeta);
 				}
 			}
 		}, (e) -> {

@@ -55,8 +55,10 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 		badgeAntivirusImage = (ImageView) itemView.findViewById(R.id.iv_antivirus_badge);
 
 		seeMoreLayout = itemView.findViewById(R.id.see_more_layout);
-		seeMoreTextView = (TextView) seeMoreLayout.findViewById(R.id.see_more_button);
-		arrowImageView = (ImageView) seeMoreLayout.findViewById(R.id.iv_arrow);
+		if(seeMoreLayout!=null){
+			seeMoreTextView = (TextView) seeMoreLayout.findViewById(R.id.see_more_button);
+			arrowImageView = (ImageView) seeMoreLayout.findViewById(R.id.iv_arrow);
+		}
 
 		badgeLayout = itemView.findViewById(R.id.badge_layout);
 	}

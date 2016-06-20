@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 07/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -9,19 +9,27 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -35,24 +43,29 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 
 	private boolean recursive = false;
 
-	protected GetStoreRequest(V7Url v7Url, boolean bypassCache) {
-		super(v7Url.remove("getStore"), bypassCache, new Body());
+	private GetStoreRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(v7Url.remove("getStore"), bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	protected GetStoreRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
+	private GetStoreRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeName, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	protected GetStoreRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
+	private GetStoreRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeId, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
 	public static GetStoreRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreRequest(storeName, bypassCache);
+		return new GetStoreRequest(storeName, bypassCache, OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	public static GetStoreRequest of(String storeName, StoreContext storeContext, boolean bypassCache) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, bypassCache);
+		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, bypassCache,
+				OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
 		getStoreRequest.body.setContext(storeContext);
 
@@ -60,7 +73,9 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest ofAction(String url, boolean bypassCache) {
-		return new GetStoreRequest(new V7Url(url), bypassCache);
+		return new GetStoreRequest(new V7Url(url), bypassCache, OkHttpClientFactory.getSingletoneClient(),
+				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
@@ -90,7 +105,7 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 				}
 			}).observeOn(AndroidSchedulers.mainThread());
 		} else {
-			return super.observe();
+			return super.observe().observeOn(AndroidSchedulers.mainThread());
 		}
 	}
 
@@ -116,16 +131,20 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	@Data
 	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBodyWithStore {
+	public static class Body extends BaseBodyWithStore implements OffsetInterface<Body> {
 
 		private StoreContext context;
 		private String lang = Api.LANG;
 		private Integer limit;
 		private Boolean mature = Api.MATURE;
 		private List<StoreNodes> nodes;
-		private Integer offset;
+		private int offset;
 		private String q = Api.Q;
 		private String widget;
 		private WidgetsArgs widgetsArgs = WidgetsArgs.createDefault();
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+			super(aptoideId, accessToken, aptoideVercode, cdn);
+		}
 	}
 }

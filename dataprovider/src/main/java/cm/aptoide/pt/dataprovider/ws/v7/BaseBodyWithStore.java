@@ -21,4 +21,8 @@ public class BaseBodyWithStore extends BaseBody {
 	private String storeName;
 	private String storeUser;
 	private String storePassSha1;
+
+	public BaseBodyWithStore(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+		super(aptoideId, accessToken, aptoideVercode, cdn);
+	}
 }

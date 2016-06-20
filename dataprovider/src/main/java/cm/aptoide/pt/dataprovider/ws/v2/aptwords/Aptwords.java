@@ -9,6 +9,8 @@ import java.util.HashMap;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -19,13 +21,8 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-	protected Aptwords() {
-		super(Interfaces.class);
-	}
-
-	@Override
-	protected String getBaseHost() {
-		return "http://webservices.aptwords.net";
+	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory) {
+		super(Interfaces.class, httpClient, factory, "http://webservices.aptwords.net");
 	}
 
 	interface Interfaces {

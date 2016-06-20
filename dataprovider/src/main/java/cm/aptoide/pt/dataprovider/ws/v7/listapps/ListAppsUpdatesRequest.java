@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -11,21 +11,28 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -38,12 +45,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	private static final int SPLIT_SIZE = 100;
 
-	private ListAppsUpdatesRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListAppsUpdatesRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
 	public static ListAppsUpdatesRequest of(boolean bypassCache) {
-		return new ListAppsUpdatesRequest(bypassCache);
+		return new ListAppsUpdatesRequest(bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	// // TODO: 12-05-2016 neuro check deprecated
@@ -58,15 +65,18 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		return storesIds;
 	}
 
-	private static List<ApksData> getInstalledApksData() {
+	private static List<ApksData> getInstalledApksDataWithoutExcluded() {
 		LinkedList<ApksData> apksDatas = new LinkedList<>();
 
 		@Cleanup Realm realm = Database.get();
 
-		RealmResults<Installed> all = Database.InstalledQ.getAll(realm);
-		for (Installed installed : all) {
-			apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed.getSignature
-					()));
+		RealmResults<ExcludedUpdate> excludedUpdates = Database.ExcludedUpdatesQ.getAll(realm);
+		RealmResults<Installed> installeds = Database.InstalledQ.getAll(realm);
+		for (Installed installed : installeds) {
+			if (!Database.ExcludedUpdatesQ.contains(installed.getPackageName(), realm)) {
+				apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed
+						.getSignature()));
+			}
 		}
 
 		return apksDatas;
@@ -115,11 +125,10 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	@Data
 	@Accessors(chain = true)
-	@NoArgsConstructor
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private List<ApksData> apksData = getInstalledApksData();
+		private List<ApksData> apksData = getInstalledApksDataWithoutExcluded();
 		private String lang = Api.LANG;
 		private String q = Api.Q;
 		// TODO: 27-05-2016 neuro implement
@@ -127,7 +136,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		private List<String> storeNames;
 		private List<StoreAuth> storesAuth;
 
+		public Body(String aptoideId, String accessToken, int versionCode, String cdn) {
+			super(aptoideId, accessToken, versionCode, cdn);
+		}
+
 		public Body(Body body) {
+			this(body.getAptoideId(), body.getAccessToken(), body.getAptoideVercode(), body.getCdn());
 			if (body.getApksData() != null) {
 				this.apksData = new LinkedList<>(body.getApksData());
 			}

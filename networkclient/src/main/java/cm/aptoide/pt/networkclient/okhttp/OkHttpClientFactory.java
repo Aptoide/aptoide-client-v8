@@ -27,25 +27,24 @@ import okhttp3.Response;
 public class OkHttpClientFactory {
 
 	private static final String TAG = OkHttpClientFactory.class.getName();
+	private static OkHttpClient httpClientInstance;
+
+	public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize, Interceptor interceptor) {
+		return new OkHttpClient.Builder()
+				.cache(new Cache(cacheDirectory, cacheMaxSize)) // 10 MiB
+				.addInterceptor(interceptor)
+				.build();
+	}
 
 	public static OkHttpClient newClient() {
-		return newClient(new File("/"));
+		return new OkHttpClient.Builder().build();
 	}
 
-	public static OkHttpClient newClient(File cacheDirectory) {
-		final long cacheSize = 10 * 1024 * 1024; // 10 MiB
-
-		return newClient(cacheDirectory, cacheSize);
-	}
-
-	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
-
-		return new OkHttpClient.Builder()
-									.cache(new Cache(cacheDirectory, cacheSize))
-									.addInterceptor(new AptoideCacheInterceptor())
-									.build();
-
-		//return new OkHttpClient.Builder().build();
+	public static OkHttpClient getSingletoneClient() {
+		if (httpClientInstance == null) {
+			httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor());
+		}
+		return httpClientInstance;
 	}
 
 	private static final class AptoideCacheInterceptor implements Interceptor {

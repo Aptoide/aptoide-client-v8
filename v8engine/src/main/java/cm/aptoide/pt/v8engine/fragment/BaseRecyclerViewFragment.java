@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by Neurophobic Animal on 08/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -11,14 +11,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import lombok.Getter;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseRecyclerViewFragment<T extends RecyclerView.Adapter> extends
+public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 		BaseLoaderToolbarFragment {
 
-	protected T adapter;
+	@Getter protected T adapter;
 	protected RecyclerView recyclerView;
 
 	@Override
