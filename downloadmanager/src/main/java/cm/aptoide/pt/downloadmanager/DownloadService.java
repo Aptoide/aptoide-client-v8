@@ -28,7 +28,7 @@ public class DownloadService extends Service {
 	}
 
 	public Observable startDownload(String url, int appId) {
-		return AptoideDownloadManager.getInstance().startDownload(url, appId);
+		return AptoideDownloadManager.getInstance().startDownload(null);
 	}
 
 	public class LocalBinder extends Binder {

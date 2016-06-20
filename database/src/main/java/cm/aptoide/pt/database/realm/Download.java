@@ -16,13 +16,13 @@ public class Download extends RealmObject {
 
 	RealmList<RealmInteger> downloadId;
 	RealmList<RealmString> filePaths;
-	@PrimaryKey private int appId;
+	@PrimaryKey private long appId;
 
-	public int getAppId() {
+	public long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(int appId) {
+	public void setAppId(long appId) {
 		this.appId = appId;
 	}
 
@@ -40,5 +40,24 @@ public class Download extends RealmObject {
 
 	public void setDownloadId(RealmList<RealmInteger> downloadId) {
 		this.downloadId = downloadId;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder toReturn = new StringBuilder();
+		toReturn.append("appid = ").append(appId);
+		if (downloadId != null) {
+			toReturn.append("\nDownloadIds: ");
+			for (int i = 0; i < downloadId.size(); i++) {
+				toReturn.append(" Download n").append(i).append(": ").append(downloadId.get(i).getInteger());
+			}
+		}
+		if (filePaths != null) {
+			toReturn.append("\nFile Paths: ");
+			for (int i = 0; i < filePaths.size(); i++) {
+				toReturn.append(" Download n").append(i).append(": ").append(filePaths.get(i).getString());
+			}
+		}
+		return toReturn.toString();
 	}
 }

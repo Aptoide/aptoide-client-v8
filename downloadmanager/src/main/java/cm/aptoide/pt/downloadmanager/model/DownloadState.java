@@ -17,7 +17,8 @@ public enum DownloadState {
 	STARTED,
 	ERROR,
 	FILE_MISSING,
-	RETRY;
+	RETRY,
+	NOT_DOWNLOADED;
 
 	public static DownloadState getEnumState(int state) {
 		DownloadState status = DownloadState.INVALID_STATUS;

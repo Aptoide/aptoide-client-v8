@@ -20,6 +20,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -122,7 +123,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				installButton.setOnClickListener(new Listeners().newBuyListener());
 			} else {
 				installButton.setText(R.string.install);
-				installButton.setOnClickListener(new Listeners().newInstallListener());
+				installButton.setOnClickListener(new Listeners().newInstallListener(app));
 			}
 		} else {
 			if (app.getFile().getVercode() > installed.getVersionCode()) {
@@ -218,8 +219,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			return null;
 		}
 
-		private View.OnClickListener newInstallListener() {
-			return null;
+		private View.OnClickListener newInstallListener(GetAppMeta.App app) {
+			return v -> AptoideDownloadManager.getInstance().startDownload(app);
 		}
 
 		private View.OnClickListener newUpdateListener() {

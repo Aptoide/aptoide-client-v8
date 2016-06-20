@@ -49,4 +49,7 @@ dependencies {
     debugCompile project(path: ':database', configuration: 'debug')
     releaseCompile project(path: ':database', configuration: 'release')
 
+    debugCompile project(path: ':model', configuration: 'debug')
+    releaseCompile project(path: ':model', configuration: 'release')
+
 }

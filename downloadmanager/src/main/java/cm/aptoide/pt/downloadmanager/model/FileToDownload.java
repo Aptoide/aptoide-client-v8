@@ -1,7 +1,9 @@
 package cm.aptoide.pt.downloadmanager.model;
 
 import android.os.Environment;
+import android.text.TextUtils;
 
+import cm.aptoide.pt.utils.IdUtils;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -26,7 +28,7 @@ public class FileToDownload {
 	String packageName;
 	String filePath;
 	int downloadId;
-	int appId;
+	long appId;
 	FileType fileType = FileType.GENERIC;
 	/**
 	 * download progress between 0 and
@@ -34,6 +36,14 @@ public class FileToDownload {
 	 */
 	int progress;
 	String md5;    //mandatory
+	private String fileName;
+
+	public String getFileName() {
+		if (TextUtils.isEmpty(fileName)) {
+			fileName = TextUtils.isEmpty(getMd5()) ? IdUtils.randomString() : getMd5();
+		}
+		return fileName;
+	}
 
 	public enum FileType {
 		APK(APK_PATH), OBB(OBB_PATH), GENERIC(GENERIC_PATH),;

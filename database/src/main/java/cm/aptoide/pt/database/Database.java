@@ -26,6 +26,7 @@ import io.realm.RealmResults;
  */
 public class Database {
 
+	private static final String TAG = Database.class.getSimpleName();
 	private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
 	private static final String DB_NAME = "aptoide.realm.db";
 	private static final AllClassesModule MODULE = new AllClassesModule();

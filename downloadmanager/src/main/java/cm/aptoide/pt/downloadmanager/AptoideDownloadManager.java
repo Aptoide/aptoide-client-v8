@@ -2,6 +2,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
@@ -15,8 +16,11 @@ import cm.aptoide.pt.database.realm.RealmInteger;
 import cm.aptoide.pt.database.realm.RealmString;
 import cm.aptoide.pt.downloadmanager.model.DownloadState;
 import cm.aptoide.pt.downloadmanager.model.FileToDownload;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
+import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
 
@@ -26,15 +30,11 @@ import rx.Observable;
 public class AptoideDownloadManager {
 
 	@Getter private final static AptoideDownloadManager instance = new AptoideDownloadManager();
-	private static HashMap<Integer, DownloadTask> currentDownloads = new HashMap<>();
+	private static HashMap<Long, DownloadTask> currentDownloads = new HashMap<>();
 	private static Context context;
 
 	public static Context getContext() {
 		return context;
-	}
-
-	public Database getDatabase() {
-		return new Database();
 	}
 
 	public void init(Context context) {
@@ -42,27 +42,68 @@ public class AptoideDownloadManager {
 		AptoideDownloadManager.context = context;
 	}
 
-	public Observable startDownload(String url, int appId) {
+	/**
+	 * @param appToDownload info about the download to be made, there are 2 mandatory arguments:<p> {@link
+	 *                      GetAppMeta.App#id}: which will identify the download</p <p> {@link
+	 *                      cm.aptoide.pt.model.v7.listapp.File#path} or
+	 *                      {@link cm.aptoide.pt.model.v7.listapp.File#path}:
+	 *                      which will give the link for the download </p>
+	 *
+	 * @return Observable to be subscribed if download updates needed
+	 *
+	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this exception will be
+	 *                                  thrown with the cause in the detail message.
+	 */
+	public Observable startDownload(GetAppMeta.App appToDownload) throws IllegalArgumentException {
 
+		validateApp(appToDownload);
+
+		GetAppMeta.GetAppMetaFile file = appToDownload.getFile();
 		ArrayList<FileToDownload> downloads = new ArrayList<>();
 
-		downloads.add(new FileToDownload().setLink(url).setMd5("teste1"));
-		downloads.add(new FileToDownload().setLink("http://cdn4.aptoide" + "" +
-				".com/imgs/d/6/3/d637cde3051bdd981eadf0516797f7c5_icon.png").setMd5("teste2"));
-		downloads.add(new FileToDownload().setLink("http://cdn4.aptoide" + "" +
-				".com/imgs/2/b/3/2b343cc60cd92ee2548828114ac0f9d3_icon.png").setMd5("teste3"));
-		downloads.add(new FileToDownload().setLink("http://8ace.apk.aptoide" +
-				".com/glispastore/com-fshareapps-android-10001226-18925085" +
-				"-c0280b5144420856c21d861339514791.apk").setMd5("teste4"));
-		downloads.add(new FileToDownload().setLink("http://8ace.apk.aptoide" + "" +
-				".com/glispastore/com-fshareapps-android-10001226-18925085" +
-				"-c0280b5144420856c21d861339514791.apk").setMd5("teste5"));
-		downloads.add(new FileToDownload().setLink("http://8ace.apk.aptoide" + "" +
-				".com/glispastore/com-fshareapps-android-10001226-18925085" +
-				"-c0280b5144420856c21d861339514791.apk").setMd5("teste6"));
+		downloads.add(new FileToDownload().setLink(file.getPath())
+				.setAppId(appToDownload.getId())
+				.setMd5(file.getMd5sum())
+				.setFileType(FileToDownload.FileType.APK));
 
-		DownloadTask downloadTask = new DownloadTask(appId, downloads);
-		currentDownloads.put(appId, downloadTask);
+//		downloads.add(new FileToDownload().setLink(file.getPathAlt())
+//				.setAppId(appToDownload.getId())
+//				.setMd5(file.getMd5sum())
+//				.setFileType(FileToDownload.FileType.APK));
+		if (appToDownload.getObb() != null) {
+			if (appToDownload.getObb().getMain() != null) {
+
+				downloads.add(new FileToDownload().setLink(appToDownload.getObb().getMain().getPath())
+						.setAppId(appToDownload.getId())
+						.setMd5(file.getMd5sum())
+						.setFileType(FileToDownload.FileType.OBB));
+			}
+
+			if (appToDownload.getObb().getMain() != null) {
+				downloads.add(new FileToDownload().setLink(appToDownload.getObb().getPatch().getPath())
+						.setAppId(appToDownload.getId())
+						.setMd5(file.getMd5sum())
+						.setFileType(FileToDownload.FileType.OBB));
+			}
+		}
+
+//		downloads.add(new FileToDownload().setLink(url).setMd5("teste1"));
+//		downloads.add(new FileToDownload().setLink("http://cdn4.aptoide" + "" +
+//				".com/imgs/d/6/3/d637cde3051bdd981eadf0516797f7c5_icon.png").setMd5("teste2"));
+//		downloads.add(new FileToDownload().setLink("http://cdn4.aptoide" + "" +
+//				".com/imgs/2/b/3/2b343cc60cd92ee2548828114ac0f9d3_icon.png").setMd5("teste3"));
+//		downloads.add(new FileToDownload().setLink("http://8ace.apk.aptoide" +
+//				".com/glispastore/com-fshareapps-android-10001226-18925085" +
+//				"-c0280b5144420856c21d861339514791.apk").setMd5("teste4"));
+//		downloads.add(new FileToDownload().setLink("http://8ace.apk.aptoide" + "" +
+//				".com/glispastore/com-fshareapps-android-10001226-18925085" +
+//				"-c0280b5144420856c21d861339514791.apk").setMd5("teste5"));
+//		downloads.add(new FileToDownload().setLink("http://8ace.apk.aptoide" + "" +
+//				".com/glispastore/com-fshareapps-android-10001226-18925085" +
+//				"-c0280b5144420856c21d861339514791.apk").setMd5("teste6"));
+
+		DownloadTask downloadTask = new DownloadTask(appToDownload.getId(), downloads);
+		currentDownloads.put(appToDownload.getId(), downloadTask);
 
 //		Database db = new Database(context);
 //
@@ -85,27 +126,41 @@ public class AptoideDownloadManager {
 		return downloadTask.getObservable();
 	}
 
-	DownloadState checkStateIfIsDownloaded(Download downloadToCheck) {
-		DownloadState state = DownloadState.INVALID_STATUS;
-		if (downloadToCheck != null) {
-			for (RealmInteger realmInteger : downloadToCheck.getDownloadId()) {
-				int status = FileDownloader.getImpl().getStatus(realmInteger.getInteger());
-				if (!(status == FileDownloadStatus.completed)) {
-					return DownloadState.getEnumState(status);
+	private void validateApp(GetAppMeta.App appToDownload) throws IllegalArgumentException {
+		if (appToDownload.getId() <= 0) {
+			throw new IllegalArgumentException("Invalid AppId");
+		} else if (appToDownload.getFile() == null) {
+			throw new IllegalArgumentException("The object GetAppMetaFile can't be null");
+		} else if (TextUtils.isEmpty(appToDownload.getFile().getPath()) && TextUtils.isEmpty(appToDownload.getFile()
+				.getPathAlt())) {
+			throw new IllegalArgumentException("No download link provided");
+		}
+	}
+
+	private DownloadState checkStateIfIsDownloaded(Download downloadToCheck) {
+		DownloadState state = DownloadState.NOT_DOWNLOADED;
+		try {
+			if (downloadToCheck != null) {
+				for (RealmInteger realmInteger : downloadToCheck.getDownloadId()) {
+					int status = FileDownloader.getImpl().getStatus(realmInteger.getInteger());
+					if (!(status == FileDownloadStatus.completed)) {
+						return DownloadState.getEnumState(status);
+					}
 				}
+				state = DownloadState.COMPLETED;
 			}
-			state = DownloadState.COMPLETED;
+		} catch (NullPointerException e) {
+			Logger.printException(e);
+			state = DownloadState.NOT_DOWNLOADED;
 		}
 		return state;
 	}
 
 	public Observable<DownloadState> getDownloadStatus(int appId) {
 		return Observable.fromCallable(() -> {
-			Database open = getDatabase();
-			Download downloadToCheck = getDownloadFromDb(open, appId);
-//			open.close();
-			DownloadState downloadStatus = DownloadState.INVALID_STATUS;
-			downloadStatus = checkStateIfIsDownloaded(downloadToCheck);
+			@Cleanup Realm realm = Database.get();
+			Download downloadToCheck = getDownloadFromDb(realm, appId);
+			DownloadState downloadStatus = checkStateIfIsDownloaded(downloadToCheck);
 			if (downloadStatus.equals(DownloadState.COMPLETED)) {
 				downloadStatus = getStateIfFileExists(downloadToCheck);
 			}
@@ -113,22 +168,20 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	Download getDownloadFromDb(Database database, int appId) {
-		return getDownloadFromDb(database, appId);
-
-	}
-
-	Download getDownloadFromDb(Realm realm, int appId) {
+	Download getDownloadFromDb(Realm realm, long appId) {
 		return realm.where(Download.class).equalTo("appId", appId).findFirst();
 	}
 
 	@NonNull
 	DownloadState getStateIfFileExists(Download downloadToCheck) {
 		DownloadState downloadStatus = DownloadState.COMPLETED;
-		if (downloadToCheck != null) {
+		if (downloadToCheck == null || downloadToCheck.getFilePaths().size() <= 0) {
+			downloadStatus = DownloadState.FILE_MISSING;
+		} else {
 			for (RealmString path : downloadToCheck.getFilePaths()) {
 				if (!FileUtils.fileExists(path.getString())) {
 					downloadStatus = DownloadState.FILE_MISSING;
+					break;
 				}
 			}
 		}

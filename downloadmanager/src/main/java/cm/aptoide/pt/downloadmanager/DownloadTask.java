@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
@@ -12,11 +13,14 @@ import java.util.concurrent.TimeUnit;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.RealmInteger;
+import cm.aptoide.pt.database.realm.RealmString;
 import cm.aptoide.pt.downloadmanager.model.DownloadState;
 import cm.aptoide.pt.downloadmanager.model.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
+import io.realm.Realm;
 import io.realm.RealmList;
 import lombok.AccessLevel;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -33,7 +37,7 @@ public class DownloadTask extends FileDownloadListener {
 	private static final String TAG = DownloadTask.class.getSimpleName();
 
 	final List<FileToDownload> downloads;
-	private final int appId;
+	private final long appId;
 	/**
 	 * Downloaded file path
 	 */
@@ -43,16 +47,18 @@ public class DownloadTask extends FileDownloadListener {
 	 * the default value is true
 	 */
 	@Setter boolean isSerial = true;
+	private Integer overAllProgress = 0;
 	@Setter(AccessLevel.MODULE) @Getter private DownloadState status = DownloadState.STARTED;
 	private ConnectableObservable<Integer> observable;
 
-	public DownloadTask(int appId, List<FileToDownload> downloads) {
+	public DownloadTask(long appId, List<FileToDownload> downloads) {
 		this.downloads = downloads;
 		this.appId = appId;
 
 		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
 				.map(aLong -> updateProgress(downloads))
 				.filter(integer -> {
+					this.overAllProgress = integer;
 					if (integer <= 100 && status == DownloadState.PROGRESS) {
 						if (integer == 100) {
 							status = DownloadState.COMPLETED;
@@ -76,6 +82,10 @@ public class DownloadTask extends FileDownloadListener {
 	 */
 	@NonNull
 	public Integer updateProgress(List<FileToDownload> downloads) {
+		if (overAllProgress >= 100) {
+			return overAllProgress;
+		}
+
 		int progress = 0;
 		RealmList<RealmInteger> downloadIds = new RealmList<>();
 		for (int i = 0; i < downloads.size(); i++) {
@@ -83,13 +93,12 @@ public class DownloadTask extends FileDownloadListener {
 			downloadIds.add(new RealmInteger(downloads.get(i).getDownloadId()));
 		}
 
-		Database database = AptoideDownloadManager.getInstance().getDatabase();
 		Download download = new Download();
 		download.setAppId(appId);
 		download.setDownloadId(downloadIds);
-
-//		database.copyOrUpdate(download);
-//		database.close();
+		@Cleanup Realm realm = Database.get();
+		Database.save(download, realm);
+		Logger.d(TAG, "updateProgress: " + download.toString());
 		return (int) Math.floor((float) progress / downloads.size());
 	}
 
@@ -122,35 +131,17 @@ public class DownloadTask extends FileDownloadListener {
 		if (downloadIdsToAdd.size() > 0) {
 			downloadDb.setDownloadId(downloadIdsToAdd);
 		}
-
-//		AptoideDownloadManager.getInstance().getDatabase().copyOrUpdate(downloadDb);
+		@Cleanup Realm realm = Database.get();
+		Database.save(downloadDb, realm);
 	}
 
 	private String getFilePath(FileToDownload download) {
-		return download.getFileType().getPath() + download.getMd5();
+		return download.getFileType().getPath() + download.getFileName();
 	}
 
 	public Observable<Integer> getObservable() {
 		return observable;
 	}
-
-//	void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-//		for (FileToDownload download : downloads) {
-//			if (download.getInteger() == task.getId()) {
-//				download.setProgress((int) Math.floor((float) soFarBytes / totalBytes *
-//						DownloadTask.PROGRESS_MAX_VALUE));
-//			}
-//		}
-//	}
-
-//	void completed(BaseDownloadTask task) {
-//		for (FileToDownload download : downloads) {
-//			if (download.getInteger() == task.getId()) {
-//				download.setProgress(DownloadTask.PROGRESS_MAX_VALUE);
-//				download.setFilePath(task.getPath());
-//			}
-//		}
-//	}
 
 	@Override
 	protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
@@ -174,20 +165,20 @@ public class DownloadTask extends FileDownloadListener {
 	protected void completed(BaseDownloadTask task) {
 		for (FileToDownload download : downloads) {
 			if (download.getDownloadId() == task.getId()) {
+
+				moveObbToRightPlace(download);
 				download.setProgress(DownloadTask.PROGRESS_MAX_VALUE);
 				download.setFilePath(task.getPath());
 
-				final int appId = download.getAppId();
-				Database database = AptoideDownloadManager.getInstance().getDatabase();
-//				database.runTransaction((realm) -> {
-//					RealmString realmString = new RealmString(task.getPath());
-//
-//					AptoideDownloadManager.getInstance()
-//							.getDownloadFromDb(realm, appId)
-//							.getFilePaths()
-//							.add(realm.copyToRealmOrUpdate(realmString));
-//				});
-//				database.close();
+				final long appId = download.getAppId();
+				@Cleanup Realm realm = Database.get();
+				realm.beginTransaction();
+
+				RealmString realmString = new RealmString(task.getPath());
+
+				AptoideDownloadManager.getInstance().getDownloadFromDb(realm, appId).getFilePaths().add(realmString);
+
+				realm.commitTransaction();
 			}
 		}
 	}
@@ -208,6 +199,10 @@ public class DownloadTask extends FileDownloadListener {
 	@Override
 	protected void warn(BaseDownloadTask task) {
 		Logger.d(TAG, "warn() called with: " + "task = [" + task + "]");
+	}
+
+	private void moveObbToRightPlace(FileToDownload fileToDownload) {
+		Toast.makeText(AptoideDownloadManager.getContext(), "move obbs not implemented!!!", Toast.LENGTH_LONG).show();
 	}
 
 	private DownloadTask getDownloadTask(BaseDownloadTask task) {
