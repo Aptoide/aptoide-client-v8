@@ -129,6 +129,6 @@
     <color name="background_holo_light">#fff3f3f3</color>
     <color name="appview_rating_text">#FAB000</color>
 
-    <color name="separators_grey">#DDD</color>
+    <color name="separators_grey">#1f000000</color>
 
 </resources>

@@ -35,6 +35,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
@@ -60,6 +61,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAdWidget;
@@ -69,6 +71,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHead
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
@@ -99,6 +102,9 @@ public enum DisplayableType {
 	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
 	UPDATE(UpdateWidget.class, UpdateDisplayable.class),
 	EXCLUDED_UPDATE(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class),
+
+	// Social Timeline
+	SOCIAL_TIMELINE_ARTICLE(ArticleWidget.class, ArticleDisplayable.class),
 
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),

@@ -12,6 +12,22 @@
         <item name="android:titleTextStyle" tools:ignore="NewApi">@style/titleStyle</item>
     </style>
 
+    <style name="Widget.Aptoide.Card" parent="">
+        <item name="android:background">@drawable/dialog_bg</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Title" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Thumbnail" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Subtitle" parent="Base.TextAppearance.AppCompat.Caption"/>
+
+
     <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
     </style>
