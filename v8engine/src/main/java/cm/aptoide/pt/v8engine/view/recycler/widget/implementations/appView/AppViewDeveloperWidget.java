@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by SithEngineer on 20/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -42,23 +43,29 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 	@Override
 	public void bindView(AppViewDeveloperDisplayable displayable) {
 		final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
+		final Context ctx = getContext();
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getWebsite())) {
-			websiteLabel.setText(app.getDeveloper().getWebsite());
+			websiteLabel.setText(String.format(ctx.getString(R.string.developer_website), app.getDeveloper()
+					.getWebsite()));
 		} else {
-//			websiteLabel.setVisibility(View.GONE);
+			websiteLabel.setText(String.format(ctx.getString(R.string.developer_website), ctx.getString(R.string
+					.not_available)));
 		}
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getEmail())) {
-			emailLabel.setText(app.getDeveloper().getEmail());
+			emailLabel.setText(String.format(ctx.getString(R.string.developer_email), app.getDeveloper().getEmail()));
 		} else {
-//			emailLabel.setVisibility(View.GONE);
+			emailLabel.setText(String.format(ctx.getString(R.string.developer_email), ctx.getString(R.string
+					.not_available)));
 		}
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getPrivacy())) {
-			privacyPolicyLabel.setText(app.getDeveloper().getPrivacy());
+			privacyPolicyLabel.setText(String.format(ctx.getString(R.string.developer_privacy_policy), app.getDeveloper()
+					.getPrivacy()));
 		} else {
-//			privacyPolicyLabel.setVisibility(View.GONE);
+			privacyPolicyLabel.setText(String.format(ctx.getString(R.string.developer_privacy_policy), ctx.getString(R
+					.string.not_available)));
 		}
 
 		permissionsLabel.setOnClickListener(

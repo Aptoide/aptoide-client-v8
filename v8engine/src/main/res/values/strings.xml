@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 02/06/2016.
+  ~ Modified by SithEngineer on 20/06/2016.
   -->
 
 <resources>
@@ -16,4 +16,8 @@
     <string name="access_to_external_storage_rationale">You need to allow access to External Storage</string>
     <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
     <string name="unsubscribe">Unsubscribe</string>
+    <string name="developer_website">Website: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">Email: %s</string>
+    <string name="developer_privacy_policy">Privacy Policy: %s</string>
 </resources>

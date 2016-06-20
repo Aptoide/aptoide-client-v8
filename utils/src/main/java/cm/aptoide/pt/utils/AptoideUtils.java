@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified by SithEngineer on 20/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
 
@@ -63,6 +64,7 @@ import rx.schedulers.Schedulers;
  */
 public class AptoideUtils {
 
+	private static final Random random = new Random();
 	@Getter @Setter private static Context context;
 
 	public static class Core {
@@ -220,6 +222,14 @@ public class AptoideUtils {
 			String sourceDir = packageInfo.applicationInfo.sourceDir;
 			File apkFile = new File(sourceDir);
 			return computeMd5(apkFile);
+		}
+
+		public static int randomBetween(int min, int max) {
+			int skewedMax = max - min;
+			if (skewedMax <= 0) {
+				throw new IllegalStateException("Minimum < maximum");
+			}
+			return random.nextInt(skewedMax + 1) + min;
 		}
 	}
 
