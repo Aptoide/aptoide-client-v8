@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 20/06/2016.
+  ~ Modified by SithEngineer on 21/06/2016.
   -->
 
 <LinearLayout android:id="@+id/app_view_middle_sugested"

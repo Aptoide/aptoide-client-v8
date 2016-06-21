@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by SithEngineer on 21/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
@@ -37,12 +36,14 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
-import rx.Observable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 
 /**
  * Created by sithengineer on 04/05/16.
@@ -133,19 +134,12 @@ public class AppViewFragment extends GridRecyclerFragment {
 		displayables.add(new AppViewDescriptionDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
 		displayables.add(new AppViewRateThisDisplayable(getApp));
-		addComments(displayables, app);
-		addOtherVersions(displayables, app);
+		displayables.add(new AppViewSuggestedAppsDisplayable(getApp));
+		displayables.add(new AppViewCommentsDisplayable(getApp));
+		displayables.add(new AppViewOtherVersionsDisplayable(getApp));
 		displayables.add(new AppViewDeveloperDisplayable(getApp));
 
 		setDisplayables(displayables);
-	}
-
-	private void addComments(List<Displayable> displayables, GetAppMeta.App app) {
-
-	}
-
-	private void addOtherVersions(List<Displayable> displayables, GetAppMeta.App app) {
-
 	}
 
 	@Override
@@ -215,9 +209,9 @@ public class AppViewFragment extends GridRecyclerFragment {
 		appId = args.getLong(BundleKeys.APP_ID.name());
 	}
 
-	private Observable<GetApp> loadAppInfo(int appId) {
-		return GetAppRequest.of(appId).observe();
-	}
+//	private Observable<GetApp> loadAppInfo(int appId) {
+//		return GetAppRequest.of(appId).observe();
+//	}
 
 //	private void setApp(GetAppMeta.App app) {
 //		this.app = app;
