@@ -26,18 +26,17 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequest.Body> {
 
-	private ListAppsRequest(V7Url v7Url, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory,
-	                  String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(v7Url.remove("listApps"), bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private ListAppsRequest(V7Url v7Url, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(v7Url.remove("listApps"), new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	public static ListAppsRequest ofAction(String url, boolean bypassCache) {
-		return new ListAppsRequest(new V7Url(url), bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
+	public static ListAppsRequest ofAction(String url) {
+		return new ListAppsRequest(new V7Url(url), OkHttpClientFactory.getSingletoneClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
-	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.listApps(url, body, bypassCache);
 	}
 

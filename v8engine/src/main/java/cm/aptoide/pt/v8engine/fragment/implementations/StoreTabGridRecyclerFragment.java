@@ -113,7 +113,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void caseListApps(String url, boolean refresh) {
-		ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url, refresh);
+		ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url);
 		Action1<ListApps> listAppsAction = listApps -> {
 
 			// Load sub nodes
@@ -128,12 +128,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		};
 
 		recyclerView.clearOnScrollListeners();
-		recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(this, listAppsRequest, listAppsAction,
-				errorRequestListener));
+		EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this, listAppsRequest,
+				listAppsAction, errorRequestListener, refresh);
+		recyclerView.addOnScrollListener(listener);
+		listener.onLoadMore(refresh);
 	}
 
 	private Subscription caseGetStore(String url, boolean refresh) {
-		return GetStoreRequest.ofAction(url, refresh).observe()
+		return GetStoreRequest.ofAction(url).observe(refresh)
 				.observeOn(Schedulers.io())
 				.subscribe(getStore -> {
 
@@ -159,7 +161,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private Subscription caseGetStoreWidgets(String url, boolean refresh) {
-		return GetStoreWidgetsRequest.ofAction(url, refresh).observe()
+		return GetStoreWidgetsRequest.ofAction(url).observe(refresh)
 				.observeOn(Schedulers.io())
 				.subscribe(getStoreWidgets -> {
 

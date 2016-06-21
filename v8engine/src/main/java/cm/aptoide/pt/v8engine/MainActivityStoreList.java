@@ -48,7 +48,7 @@ public class MainActivityStoreList extends AptoideBaseActivity {
 
 	@Override
 	public void setupViews() {
-		ListStoresRequest.of(false).execute(this::setupStoreList);
+		ListStoresRequest.of().execute(this::setupStoreList);
 	}
 
 	@Override

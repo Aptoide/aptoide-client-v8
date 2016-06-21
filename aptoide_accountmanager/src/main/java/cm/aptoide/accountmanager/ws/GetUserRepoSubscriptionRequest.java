@@ -29,7 +29,7 @@ public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepo
 	}
 
 	@Override
-	protected Observable<GetUserRepoSubscription> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetUserRepoSubscription> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		HashMap<String, String> parameters = new HashMap<>();
 
 		parameters.put("mode", "json");

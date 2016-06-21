@@ -28,26 +28,21 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreTabsRequest extends BaseRequestWithStore<GetStoreTabs, GetStoreTabsRequest.Body> {
 
-	public GetStoreTabsRequest(String storeName, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeName, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	public GetStoreTabsRequest(String storeName, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeName, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	public GetStoreTabsRequest(long storeId, boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeId, bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	public GetStoreTabsRequest(long storeId, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(storeId, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
-	public static GetStoreTabsRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreTabsRequest(storeName, bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
-				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
-	}
-
-	public static GetStoreTabsRequest of(int storeId, boolean bypassCache) {
-		return new GetStoreTabsRequest(storeId, bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
+	public static GetStoreTabsRequest of(String storeName) {
+		return new GetStoreTabsRequest(storeName, OkHttpClientFactory.getSingletoneClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
-	protected Observable<GetStoreTabs> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetStoreTabs> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getStoreTabs(body, bypassCache);
 	}
 

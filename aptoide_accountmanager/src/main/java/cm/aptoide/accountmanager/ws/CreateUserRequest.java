@@ -41,7 +41,7 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
 
 
 	@Override
-	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
 		HashMap<String, String> parameters = new HashMap<String, String>();
 

@@ -72,7 +72,7 @@ public class CheckUserCredentialsRequest extends v3accountManager<CheckUserCrede
 	}
 
 	@Override
-	protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		HashMap<String, String> parameters = new HashMap<>();
 
 		parameters.put("access_token", token);

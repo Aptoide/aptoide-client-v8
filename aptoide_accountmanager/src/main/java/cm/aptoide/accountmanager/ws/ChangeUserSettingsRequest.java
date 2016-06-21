@@ -44,7 +44,7 @@ public class ChangeUserSettingsRequest extends v3accountManager<ChangeUserSettin
 	}
 
 	@Override
-	protected Observable<ChangeUserSettingsResponse> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ChangeUserSettingsResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("mode", "json");
 		ArrayList<String> parametersList = setupParameters();

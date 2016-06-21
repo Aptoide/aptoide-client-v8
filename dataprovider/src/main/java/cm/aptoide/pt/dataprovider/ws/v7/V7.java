@@ -23,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
@@ -56,15 +57,14 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 	private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
 	private boolean accessTokenRetry = false;
 
-	protected V7(boolean bypassCache, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String
-			baseHost) {
-		super(Interfaces.class, bypassCache, httpClient, converterFactory, baseHost);
+	protected V7(B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(Interfaces.class, httpClient, converterFactory, baseHost);
 		this.body = body;
 	}
 
 	@Override
-	public Observable<U> observe() {
-		return handleToken(retryOnTicket(super.observe()));
+	public Observable<U> observe(boolean bypassCache) {
+		return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
 	}
 
 	private Observable<U> retryOnTicket(Observable<U> observable) {
@@ -99,7 +99,7 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		}).delay(500, TimeUnit.MILLISECONDS));
 	}
 
-	private Observable<U> handleToken(Observable<U> observable) {
+	private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
 		return observable.onErrorResumeNext(throwable -> {
 			if (throwable instanceof AptoideWsV7Exception) {
 				if (INVALID_ACCESS_TOKEN_CODE.equals(((AptoideWsV7Exception) throwable).getBaseResponse()
@@ -110,7 +110,7 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 						accessTokenRetry = true;
 						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s -> {
 							this.body.setAccessToken(s);
-							return V7.this.observe();
+							return V7.this.observe(bypassCache);
 						});
 					}
 				} else {
@@ -167,5 +167,8 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 
+		@POST("getUserTimeline")
+		Observable<GetUserTimeline> getUserTimeline(@Body GetUserTimelineRequest.Body body, @Header(RequestCache
+				.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }

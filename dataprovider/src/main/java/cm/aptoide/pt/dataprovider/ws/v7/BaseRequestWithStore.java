@@ -20,20 +20,20 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 
 	protected final String url;
 
-	protected BaseRequestWithStore(V7Url v7Url, boolean bypassCache, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(bypassCache, body, httpClient, converterFactory, baseHost);
+	protected BaseRequestWithStore(V7Url v7Url, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 		setStoreIdentifierFromUrl(v7Url);
 		url = v7Url.get();
 	}
 
-	protected BaseRequestWithStore(String storeName, boolean bypassCache, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(bypassCache, body, httpClient, converterFactory, baseHost);
+	protected BaseRequestWithStore(String storeName, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 		body.setStoreName(storeName);
 		url = "";
 	}
 
-	protected BaseRequestWithStore(long storeId, boolean bypassCache, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(bypassCache, body, httpClient, converterFactory, baseHost);
+	protected BaseRequestWithStore(long storeId, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 		body.setStoreId(storeId);
 		url = "";
 	}

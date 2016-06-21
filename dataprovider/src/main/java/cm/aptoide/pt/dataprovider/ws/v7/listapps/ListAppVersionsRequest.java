@@ -31,17 +31,17 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsRequest.Body> {
 
-	private ListAppVersionsRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
+	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
-	public static ListAppVersionsRequest of(boolean bypassCache) {
-		return new ListAppVersionsRequest(bypassCache, OkHttpClientFactory.getSingletoneClient(), WebService
+	public static ListAppVersionsRequest of() {
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletoneClient(), WebService
 				.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	@Override
-	protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.listAppVersions(body, bypassCache);
 	}
 

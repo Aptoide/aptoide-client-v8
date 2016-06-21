@@ -29,17 +29,12 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
-	private GetAppRequest(boolean bypassCache, OkHttpClient httpClient, Converter.Factory converterFactory, String
-			baseHost, String cdn, int versionCode, String accessToken, String aptoideId) {
-		super(bypassCache, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String cdn, int versionCode, String accessToken, String aptoideId) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
 	}
 
 	public static GetAppRequest of(long appId) {
-		return of(appId, false);
-	}
-
-	public static GetAppRequest of(long appId, boolean bypassCache) {
-		GetAppRequest getAppRequest = new GetAppRequest(bypassCache, OkHttpClientFactory.getSingletoneClient(),
+		GetAppRequest getAppRequest = new GetAppRequest(OkHttpClientFactory.getSingletoneClient(),
 				WebService.getDefaultConverter(), BASE_HOST, "pool", AptoideUtils.Core.getVerCode(),
 				AptoideAccountManager.getAccessToken(), SecurePreferences.getAptoideClientUUID());
 
@@ -49,7 +44,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 	}
 
 	@Override
-	protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getApp(body, bypassCache);
 	}
 

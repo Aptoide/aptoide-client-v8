@@ -295,7 +295,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					}
 				}
 			}
-		});
+		}, true);
 	}
 
 	/**
@@ -483,7 +483,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					callback.onRegisterSuccess(bundle);
 					genericPleaseWaitDialog.dismiss();
 				}
-			});
+			}, true);
 		}
 	}
 
@@ -552,12 +552,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
 	public static void unsubscribeStore(String storeName) {
 		ChangeUserRepoSubscriptionRequest.of(storeName, false)
-				.execute(genericResponseV3->Logger.d(TAG, "Successfully unsubscribed " + storeName));
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully unsubscribed " + storeName), true);
 	}
 
 	public static void subscribeStore(String storeName) {
 		ChangeUserRepoSubscriptionRequest.of(storeName, true)
-				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName));
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName), true);
 	}
 
 	private static void sendLoginBroadcast() {

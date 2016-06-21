@@ -26,7 +26,7 @@ public class DataproviderUtils {
 	}
 
 	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
-		ListAppsUpdatesRequest.of(true).execute(listAppsUpdates -> {
+		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
 			@Cleanup Realm realm = Database.get();
 			for (App app : listAppsUpdates.getList()) {
 				Database.save(new Update(app), realm);
@@ -35,6 +35,6 @@ public class DataproviderUtils {
 			if (successRequestListener != null) {
 				successRequestListener.call(listAppsUpdates);
 			}
-		}, Throwable::printStackTrace);
+		}, Throwable::printStackTrace, true);
 	}
 }
