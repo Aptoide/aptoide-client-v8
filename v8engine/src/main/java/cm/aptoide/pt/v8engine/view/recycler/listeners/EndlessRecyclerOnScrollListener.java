@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 21/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.listeners;
@@ -28,6 +28,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	private int previousTotal = 0; // The total number of items in the dataset after the last load
 	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before
 	private boolean bypassCache;
+	private int offset;
+	private int totalCountResponse;
 	private ErrorRequestListener errorRequestListener;
 	// loading more.
 
@@ -64,8 +66,10 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 			}
 		}
 		if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-			// End has been reached, load more items
-			onLoadMore(bypassCache);
+			if (offset < totalCountResponse) {
+				// End has been reached, load more items
+				onLoadMore(bypassCache);
+			}
 		}
 	}
 
@@ -76,7 +80,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 		baseRecyclerViewFragment.getAdapter().addDisplayable(new ProgressBarDisplayable());
 
 		v7request.execute(response -> {
-			v7request.getBody().setOffset(response.getDatalist().getNext());
+			totalCountResponse = response.getDatalist().getTotal();
+			v7request.getBody().setOffset(offset = response.getDatalist().getNext());
 			if (baseRecyclerViewFragment.getAdapter().getDisplayables().size() > 0) {
 				baseRecyclerViewFragment.getAdapter().popDisplayable();
 			}
