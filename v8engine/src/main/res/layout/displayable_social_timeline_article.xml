@@ -90,50 +90,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
-
-        <RelativeLayout
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="48dp">
-
-            <View
-                android:background="@color/separators_grey"
-                android:layout_height="1dp"
-                android:layout_width="match_parent"/>
-
-            <ImageButton
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_toStartOf="@+id/card_comment"
-                android:id="@+id/card_share"
-                tools:ignore="contentDescription"
-                android:src="@drawable/icon_closed_eye"
-                android:background="@android:color/transparent"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"/>
-
-            <ImageButton
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_toStartOf="@+id/card_like"
-                android:id="@+id/card_comment"
-                tools:ignore="contentDescription"
-                android:src="@drawable/ic_action_comments_light"
-                android:background="@android:color/transparent"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"/>
-
-            <ImageButton
-                android:layout_alignParentEnd="true"
-                android:id="@+id/card_like"
-                tools:ignore="contentDescription"
-                android:src="@drawable/ic_action_facebook_like"
-                android:background="@android:color/transparent"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"/>
-        </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
 

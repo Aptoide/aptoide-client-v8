@@ -48,7 +48,7 @@ public enum Type {
 	EXCLUDED_UPDATE(1),
 	ROLLBACK(1),
 
-	SOCIAL_TIMELINE(1),
+	SOCIAL_TIMELINE(1, true),
 
 	// Search
 	SEARCH(1),
