@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
- * Created by marcelobenites on 6/17/16.
+ * Created by marcelobenites on 6/21/16.
  */
-public class ArticleWidget extends Widget<ArticleDisplayable> {
+public class FeatureWidget extends Widget<FeatureDisplayable> {
 
 	private TextView title;
 	private TextView subtitle;
@@ -25,7 +25,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 	private View url;
 	private Toolbar toolbar;
 
-	public ArticleWidget(View itemView) {
+	public FeatureWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -41,11 +41,11 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 	}
 
 	@Override
-	public void bindView(ArticleDisplayable displayable) {
-		title.setText(displayable.getPublisher());
+	public void bindView(FeatureDisplayable displayable) {
+		title.setText(displayable.getAptoideTeamResId());
 		subtitle.setText(getContext().getString(R.string.fragment_social_timeline_hours_since_last_update, displayable.getHoursSinceLastUpdate()));
 		articleTitle.setText(displayable.getTitle());
-		ImageLoader.load(R.drawable.img_people_mockup, image);
+		ImageLoader.loadWithCircleTransform(displayable.getAvatart(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
 		toolbar.inflateMenu(R.menu.menu_card_timeline);

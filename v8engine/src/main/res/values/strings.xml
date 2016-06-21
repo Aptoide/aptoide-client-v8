@@ -32,5 +32,5 @@
 
     <string name="fragment_social_timeline_hours_since_last_update">%1$d hours ago</string>
     <string name="menu_card_timeline_clear">Clear</string>
-
+    <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
 </resources>

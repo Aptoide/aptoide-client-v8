@@ -16,12 +16,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 public class ArticleDisplayable extends Displayable {
 
 	private Article article;
+	private DateCalculator dateCalculator;
 
 	public ArticleDisplayable() {
 	}
 
-	public ArticleDisplayable(Article article) {
+	public ArticleDisplayable(Article article, DateCalculator dateCalculator) {
 		this.article = article;
+		this.dateCalculator = dateCalculator;
 	}
 
 	public String getTitle() {
@@ -40,9 +42,8 @@ public class ArticleDisplayable extends Displayable {
 		return article.getThumbnailUrl();
 	}
 
-	public int getHoursSinceLastUpdate(Date currentDate) {
-		long interval = currentDate.getTime() - article.getDate().getTime();
-		return (int)(interval/(1000 * 60 * 60));
+	public int getHoursSinceLastUpdate() {
+		return dateCalculator.getHoursSinceDate(article.getDate());
 	}
 
 	@Override

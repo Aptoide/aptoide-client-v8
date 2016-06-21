@@ -10,11 +10,13 @@ import java.util.List;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.timeline.Article;
+import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -22,10 +24,17 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 
+	private DateCalculator dateCalculator;
 
 	public static SocialTimelineFragment newInstance() {
 		SocialTimelineFragment fragment = new SocialTimelineFragment();
 		return fragment;
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		dateCalculator = new DateCalculator();
 	}
 
 	@Override
@@ -34,8 +43,8 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 				.<GetUserTimeline>compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.flatMapIterable(getUserTimeline -> getUserTimeline.getList())
 				.flatMapIterable(timelineItem -> timelineItem.getItems())
-				.filter(item -> item instanceof Article)
-				.map(item -> itemToDisplayable(item))
+				.filter(item -> (item instanceof Article || item instanceof Feature))
+				.map(item -> itemToDisplayable(item, dateCalculator))
 				.toList()
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(
@@ -45,7 +54,13 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@NonNull
-	private Displayable itemToDisplayable(Object item) {
-		return new ArticleDisplayable((Article) item);
+	private Displayable itemToDisplayable(Object item, DateCalculator dateCalculator) {
+
+		if (item instanceof Article) {
+			return new ArticleDisplayable((Article) item, dateCalculator);
+		} else if (item instanceof Feature) {
+			return new FeatureDisplayable((Feature) item, dateCalculator);
+		}
+		throw new IllegalArgumentException("Only Articles and Features supported.");
 	}
 }
