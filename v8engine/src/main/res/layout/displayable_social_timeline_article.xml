@@ -61,35 +61,48 @@
                 android:layout_width="match_parent"/>
         </RelativeLayout>
 
-
-
         <RelativeLayout
             android:id="@+id/article_url"
             android:clickable="true"
             android:layout_width="match_parent"
-            android:layout_height="144dp">
+            android:layout_height="wrap_content">
 
             <ImageView
+                android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
                 android:layout_centerVertical="true"
                 android:id="@+id/article_thumbnail"
                 tools:ignore="contentDescription"
                 android:layout_marginStart="72dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 tools:src="@drawable/icon_brand_aptoide"
-                android:layout_width="144dp"
-                android:layout_height="120dp"/>
+                android:layout_width="120dp"
+                android:layout_height="72dp"/>
 
             <TextView
                 android:layout_alignTop="@id/article_thumbnail"
                 tools:text="Best backup apps: save all your Android's innards"
                 android:id="@+id/article_title"
                 android:layout_marginEnd="16dp"
+                android:lines="4"
+                android:ellipsize="end"
                 style="@style/Widget.Aptoide.Card.Thumbnail"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@id/article_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
+
+        <Button
+            style="@style/Widget.Aptoide.Card.Button"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="72dp"
+            android:gravity="center_vertical"
+            tools:text="Get app Game of War"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
     </LinearLayout>
 </android.support.v7.widget.CardView>
 
