@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -80,6 +80,8 @@ public class HomeFragment extends StoreFragment {
 				} else if (itemId == R.id.send_feedback) {
 					Snackbar.make(mNavigationView, "Send Feedback", Snackbar.LENGTH_SHORT).show();
 				}
+
+				mDrawerLayout.closeDrawer(mNavigationView);
 
 				return false;
 			});
