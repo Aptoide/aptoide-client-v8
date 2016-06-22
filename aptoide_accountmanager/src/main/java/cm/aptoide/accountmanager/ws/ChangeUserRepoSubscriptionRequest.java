@@ -7,6 +7,10 @@ package cm.aptoide.accountmanager.ws;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -17,11 +21,13 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
 	private String storeName;
 	private boolean subscribe;
 
-	protected ChangeUserRepoSubscriptionRequest() {
+	protected ChangeUserRepoSubscriptionRequest(OkHttpClient client, Converter.Factory converterFactory) {
+		super(client, converterFactory);
 	}
 
 	public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe) {
-		ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest = new ChangeUserRepoSubscriptionRequest();
+		ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest = new ChangeUserRepoSubscriptionRequest
+				(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter());
 
 		changeUserRepoSubscriptionRequest.storeName = storeName;
 		changeUserRepoSubscriptionRequest.subscribe = subscribe;
@@ -30,7 +36,7 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
 	}
 
 	@Override
-	protected Observable<GenericResponseV3> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GenericResponseV3> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
 		map.put("mode", "json");
 		map.put("repo", storeName);

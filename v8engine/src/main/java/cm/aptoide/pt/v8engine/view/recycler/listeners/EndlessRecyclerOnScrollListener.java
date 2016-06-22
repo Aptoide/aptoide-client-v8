@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 21/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.listeners;
@@ -27,29 +27,27 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	private boolean loading;
 	private int previousTotal = 0; // The total number of items in the dataset after the last load
 	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before
+	private boolean bypassCache;
+	private int offset;
+	private int totalCountResponse;
 	private ErrorRequestListener errorRequestListener;
 	// loading more.
 
-	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseRecyclerViewFragment
-			                                                                         baseRecyclerViewFragment, V7<T, ?
+	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseRecyclerViewFragment baseRecyclerViewFragment, V7<T, ?
 			extends
-			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener
-			errorRequestListener) {
-		this(baseRecyclerViewFragment, v7request, successRequestListener, errorRequestListener, 6);
+			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, boolean bypassCache) {
+		this(baseRecyclerViewFragment, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
 	}
 
-	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseRecyclerViewFragment
-			                                                                         baseRecyclerViewFragment, V7<T, ?
+	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseRecyclerViewFragment baseRecyclerViewFragment, V7<T, ?
 			extends
-			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener
-			errorRequestListener, int visibleThreshold) {
+			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache) {
 		this.baseRecyclerViewFragment = baseRecyclerViewFragment;
 		this.v7request = v7request;
 		this.successRequestListener = successRequestListener;
 		this.errorRequestListener = errorRequestListener;
 		this.visibleThreshold = visibleThreshold;
-
-		onLoadMore();
+		this.bypassCache = bypassCache;
 	}
 
 	@Override
@@ -68,19 +66,22 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 			}
 		}
 		if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-			// End has been reached, load more items
-			onLoadMore();
+			if (offset < totalCountResponse) {
+				// End has been reached, load more items
+				onLoadMore(bypassCache);
+			}
 		}
 	}
 
 	// Protected against in the constructor, hopefully..
 	@SuppressWarnings("unchecked")
-	public void onLoadMore() {
+	public void onLoadMore(boolean bypassCache) {
 		loading = true;
 		baseRecyclerViewFragment.getAdapter().addDisplayable(new ProgressBarDisplayable());
 
 		v7request.execute(response -> {
-			v7request.getBody().setOffset(response.getDatalist().getNext());
+			totalCountResponse = response.getDatalist().getTotal();
+			v7request.getBody().setOffset(offset = response.getDatalist().getNext());
 			if (baseRecyclerViewFragment.getAdapter().getDisplayables().size() > 0) {
 				baseRecyclerViewFragment.getAdapter().popDisplayable();
 			}
@@ -88,6 +89,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 			successRequestListener.call(response);
 
 			loading = false;
-		}, errorRequestListener);
+		}, errorRequestListener, bypassCache);
 	}
 }

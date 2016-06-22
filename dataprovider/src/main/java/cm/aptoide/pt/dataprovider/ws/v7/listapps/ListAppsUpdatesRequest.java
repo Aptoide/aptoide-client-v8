@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
@@ -19,14 +20,19 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -39,12 +45,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	private static final int SPLIT_SIZE = 100;
 
-	private ListAppsUpdatesRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
-	public static ListAppsUpdatesRequest of(boolean bypassCache) {
-		return new ListAppsUpdatesRequest(bypassCache);
+	public static ListAppsUpdatesRequest of() {
+		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	// // TODO: 12-05-2016 neuro check deprecated
@@ -77,7 +83,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	}
 
 	@Override
-	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		ListAppsUpdates resultListAppsUpdates = new ListAppsUpdates();
 
 		if (body.getApksData().size() > SPLIT_SIZE) {
@@ -119,7 +125,6 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	@Data
 	@Accessors(chain = true)
-	@NoArgsConstructor
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
@@ -131,7 +136,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		private List<String> storeNames;
 		private List<StoreAuth> storesAuth;
 
+		public Body(String aptoideId, String accessToken, int versionCode, String cdn) {
+			super(aptoideId, accessToken, versionCode, cdn);
+		}
+
 		public Body(Body body) {
+			this(body.getAptoideId(), body.getAccessToken(), body.getAptoideVercode(), body.getCdn());
 			if (body.getApksData() != null) {
 				this.apksData = new LinkedList<>(body.getApksData());
 			}

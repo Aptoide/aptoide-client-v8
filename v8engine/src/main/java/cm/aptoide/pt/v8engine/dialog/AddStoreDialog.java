@@ -119,7 +119,7 @@ public class AddStoreDialog extends DialogFragment {
 	}
 
 	private GetStoreMetaRequest buildRequest(String storeName) {
-		return GetStoreMetaRequest.of(storeName, true);
+		return GetStoreMetaRequest.of(storeName);
 	}
 
 	private GetStoreMetaRequest buildRequest(String storeName, String storeUser, String storePassSha1) {

@@ -10,6 +10,8 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import io.realm.Realm;
 import lombok.Cleanup;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by neuro on 23-05-2016.
@@ -18,20 +20,20 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 
 	protected final String url;
 
-	protected BaseRequestWithStore(V7Url v7Url, boolean bypassCache, B body) {
-		super(bypassCache, body);
+	protected BaseRequestWithStore(V7Url v7Url, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 		setStoreIdentifierFromUrl(v7Url);
 		url = v7Url.get();
 	}
 
-	protected BaseRequestWithStore(String storeName, boolean bypassCache, B body) {
-		super(bypassCache, body);
+	protected BaseRequestWithStore(String storeName, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 		body.setStoreName(storeName);
 		url = "";
 	}
 
-	protected BaseRequestWithStore(long storeId, boolean bypassCache, B body) {
-		super(bypassCache, body);
+	protected BaseRequestWithStore(long storeId, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 		body.setStoreId(storeId);
 		url = "";
 	}
