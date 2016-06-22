@@ -9,7 +9,7 @@ import java.util.List;
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = ArticleTimelineItem.class, name = "ARTICLES"),
 		@JsonSubTypes.Type(value = FeatureTimelineItem.class, name = "FEATURES"),
-		@JsonSubTypes.Type(value = LatestAppsTimelineItem.class, name = "APPS_LATEST"),
+		@JsonSubTypes.Type(value = StoreLatestAppsTimelineItem.class, name = "APPS_LATEST"),
 		@JsonSubTypes.Type(value = AppsUpdatesTimelineItem.class, name = "APPS_UPDATES")
 })
 public interface TimelineItem<T> {

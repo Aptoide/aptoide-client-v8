@@ -46,6 +46,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -76,6 +77,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Progress
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 
@@ -108,6 +110,7 @@ public enum DisplayableType {
 	// Social Timeline
 	SOCIAL_TIMELINE_ARTICLE(ArticleWidget.class, ArticleDisplayable.class),
 	SOCIAL_TIMELINE_FEATURE(FeatureWidget.class, FeatureDisplayable.class),
+	SOCIAL_TIMELINE_STORE_LATEST_APPS(StoreLatestAppsWidget.class, StoreLatestAppsDisplayable.class),
 
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),

@@ -20,8 +20,13 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="Widget.Aptoide.Card.Title.Aptoide">
+    <style name="Widget.Aptoide.Card.Title.Feature">
         <item name="android:textColor">@color/aptoide_orange</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Title.LatestApps">
+        <item name="android:textColor">@color/orange_700</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -42,6 +47,9 @@
 
     <style name="Widget.Aptoide.Card.Subtitle" parent="Base.TextAppearance.AppCompat.Caption"/>
 
+    <style name="Widget.Aptoide.Card.Headline" parent="Base.TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/black</item>
+    </style>
 
     <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>

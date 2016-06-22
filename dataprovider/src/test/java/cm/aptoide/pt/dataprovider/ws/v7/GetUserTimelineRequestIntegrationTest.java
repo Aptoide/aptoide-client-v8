@@ -23,8 +23,8 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.FeatureTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
-import cm.aptoide.pt.model.v7.timeline.LatestApps;
-import cm.aptoide.pt.model.v7.timeline.LatestAppsTimelineItem;
+import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
+import cm.aptoide.pt.model.v7.timeline.StoreLatestAppsTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -300,8 +300,8 @@ public class GetUserTimelineRequestIntegrationTest {
 				seconds,
 				human,
 				Arrays.asList(
-						new LatestAppsTimelineItem(Arrays.asList(
-								new LatestApps(
+						new StoreLatestAppsTimelineItem(Arrays.asList(
+								new StoreLatestApps(
 										getStore(
 												id,
 												name,

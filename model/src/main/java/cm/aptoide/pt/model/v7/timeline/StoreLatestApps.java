@@ -10,12 +10,12 @@ import cm.aptoide.pt.model.v7.store.Store;
 import lombok.Data;
 
 @Data
-public class LatestApps {
+public class StoreLatestApps {
 
 	private Store store;
 	private List<App> apps;
 
-	@JsonCreator public LatestApps(@JsonProperty("store") Store store, @JsonProperty("apps") List<App> apps) {
+	@JsonCreator public StoreLatestApps(@JsonProperty("store") Store store, @JsonProperty("apps") List<App> apps) {
 		this.store = store;
 		this.apps = apps;
 	}
