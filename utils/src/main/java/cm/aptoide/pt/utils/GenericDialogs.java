@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 17/06/2016.
+ */
+
 package cm.aptoide.pt.utils;
 
 import android.app.ProgressDialog;
@@ -22,7 +27,7 @@ public class GenericDialogs {
 	 * "yes" button and a "no" button.
 	 *
 	 * @param title   Title to apply on AlertDialog
-	 * @param message Message to show on AlertDialog
+	 * @param message Message to asSnack on AlertDialog
 	 * @return A Observable that shows the dialog when subscribed and return the action made by
 	 * user. This action is represented by EResponse
 	 * @see EResponse
@@ -57,7 +62,7 @@ public class GenericDialogs {
 	 * "ok" button.
 	 *
 	 * @param title   Title to apply on AlertDialog
-	 * @param message Message to show on AlertDialog
+	 * @param message Message to asSnack on AlertDialog
 	 * @return A Observable that shows the dialog when subscribed and return the action made by
 	 * user. This action is represented by EResponse
 	 * @see EResponse

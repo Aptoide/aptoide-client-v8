@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 17/06/2016.
+ */
+
 package cm.aptoide.accountmanager;
 
 import android.app.Activity;
@@ -32,7 +37,7 @@ class AptoideLoginUtils {
 
 				if (username == null || password == null || (username.length() == 0 || password
 						.length() == 0)) {
-					ShowMessage.show(v, R.string.fields_cannot_empty);
+					ShowMessage.asSnack(v, R.string.fields_cannot_empty);
 					return;
 				}
 
