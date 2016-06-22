@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -8,7 +8,6 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.jakewharton.disklrucache.DiskLruCache;
@@ -19,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -63,20 +61,14 @@ public class RequestCache {
 			if( BuildConfig.DEBUG && cachePath.exists() ) {
 				int deletedFiles = 0;
 				File[] cacheFiles = cachePath.listFiles();
-				if(cacheFiles!=null && cacheFiles.length>0) {
-					for(File f : cacheFiles) {
+				if (cacheFiles != null && cacheFiles.length > 0) {
+					for (File f : cacheFiles) {
 						deletedFiles += f.delete() ? 1 : 0;
 					}
 					deletedFiles += cachePath.delete() ? 1 : 0;
 				}
 
-				Log.w(
-						TAG,
-						String.format(
-								"cache running in debug mode : cleaned %d disk cache files",
-								deletedFiles
-						)
-				);
+				Log.w(TAG, String.format("cache running in debug mode : cleaned %d disk cache files", deletedFiles));
 			}
 
 			diskLruCache = DiskLruCache.open(
@@ -120,15 +112,7 @@ public class RequestCache {
 	@Nullable
 	public Response put(@NonNull Request request, @NonNull Response response) {
 
-		if (diskLruCache == null || diskLruCache.isClosed()) {
-			Logger.e(TAG, "Unable to use Disk Cache because it's null or closed. Not caching.");
-			return response;
-		}
-
-		if ((response.code() / 100) != 2) {
-			Logger.w(TAG, "Response wasn't 2xx. Not caching.");
-			return response;
-		}
+		if ((response.code() / 100) != 2) return response;
 //		String header = request.headers().get(BYPASS_HEADER_KEY);
 //		if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
 //			return response;
@@ -137,13 +121,6 @@ public class RequestCache {
 		DiskLruCache.Editor editor = null;
 		try {
 			final String reqKey = keyAlgorithm.getKeyFrom(request);
-
-			if (TextUtils.isEmpty(reqKey)) {
-				Logger.e(TAG, String.format("Request key for url '%s' is null or empty. Not caching.", request
-						.url()));
-				return response;
-			}
-
 			synchronized (diskCacheLock) {
 				editor = diskLruCache.edit(reqKey);
 				// create cache entry building from the previous response so that we don't modify it
