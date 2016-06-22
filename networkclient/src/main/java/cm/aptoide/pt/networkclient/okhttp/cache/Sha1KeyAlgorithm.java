@@ -7,6 +7,7 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import java.io.IOException;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.Request;
 import okio.Buffer;
@@ -22,6 +23,8 @@ import okio.Buffer;
  * </ol>
  */
 public class Sha1KeyAlgorithm implements KeyAlgorithm {
+
+	private static final String TAG = Sha1KeyAlgorithm.class.getSimpleName();
 
 	@Override
 	public String getKeyFrom(Request request)  {
@@ -50,8 +53,8 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm {
 //			return buffer.toString();
 			return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException ex) {
+			Logger.e(TAG, "", ex);
 		}
 
 		return null;

@@ -112,6 +112,11 @@ public class RequestCache {
 	@Nullable
 	public Response put(@NonNull Request request, @NonNull Response response) {
 
+		if(diskLruCache==null) {
+			Log.d(TAG, "disk LRU cache is not properly initialized");
+			return response;
+		}
+
 		if ((response.code() / 100) != 2) return response;
 //		String header = request.headers().get(BYPASS_HEADER_KEY);
 //		if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
@@ -121,6 +126,11 @@ public class RequestCache {
 		DiskLruCache.Editor editor = null;
 		try {
 			final String reqKey = keyAlgorithm.getKeyFrom(request);
+			if(reqKey==null || reqKey.isEmpty()) {
+				Log.w(TAG, "Request generated key is null");
+				return response;
+			}
+
 			synchronized (diskCacheLock) {
 				editor = diskLruCache.edit(reqKey);
 				// create cache entry building from the previous response so that we don't modify it
@@ -150,6 +160,11 @@ public class RequestCache {
 	 */
 	@Nullable
 	public Response get(@NonNull Request request) {
+
+		if(diskLruCache==null) {
+			Log.d(TAG, "disk LRU cache is not properly initialized");
+			return null;
+		}
 
 		DiskLruCache.Snapshot snapshot = null;
 		try {
