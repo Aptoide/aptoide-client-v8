@@ -39,7 +39,7 @@ public class FeatureDisplayable extends Displayable {
 	}
 
 	@DrawableRes public int getAvatart() {
-		return R.drawable.icon_brand_aptoide;
+		return R.mipmap.ic_launcher;
 	}
 
 	public String getThumbnailUrl() {
