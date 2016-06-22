@@ -1,15 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 16/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
 
-import android.util.Log;
-
 import java.io.File;
 import java.io.IOException;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.Cache;
@@ -62,18 +61,17 @@ public class OkHttpClientFactory {
 			if (response != null) {
 
 				if(BuildConfig.DEBUG) {
-					Log.v(TAG, "cache hit: " + request.url());
+					Logger.v(TAG, String.format("cache hit '%s'", request.url()));
 				}
 
 				return response;
 			}
 
 			if(BuildConfig.DEBUG) {
-				Log.v(TAG, "cache miss: " + request.url());
+				Logger.v(TAG, String.format("cache miss '%s'", request.url()));
 			}
 
-			Response cachedResponse = customCache.put(request, chain.proceed(request));
-			return cachedResponse;
+			return customCache.put(request, chain.proceed(request));
 		}
 	}
 }

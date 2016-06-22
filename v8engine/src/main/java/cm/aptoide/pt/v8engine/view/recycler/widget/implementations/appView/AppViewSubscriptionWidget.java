@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -62,8 +62,7 @@ public class AppViewSubscriptionWidget extends Widget<AppViewSubscriptionDisplay
 				String.format(Locale.ROOT, "%d", store.getStats().getSubscribers())
 		);
 
-		buttonSubscribe.setOnClickListener(
-				v -> ShowMessage.show(v, "TO DO")
+		buttonSubscribe.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO")
 		);
 
 	}

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -34,6 +34,6 @@ public class AppViewCommentsWidget extends Widget<AppViewCommentsDisplayable> {
 	public void bindView(AppViewCommentsDisplayable displayable) {
 		// TODO
 
-		writeCommentView.setOnClickListener(v -> ShowMessage.show(v, "TO DO"));
+		writeCommentView.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
 	}
 }

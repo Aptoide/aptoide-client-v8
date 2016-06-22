@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -57,7 +57,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
 		createReviewLayout.setOnClickListener(v -> {
 			// TODO: 25-05-2016 neuro create review
-			ShowMessage.toast(getContext(), "Create Review");
+			ShowMessage.asToast(getContext(), "Create Review");
 		});
 	}
 }

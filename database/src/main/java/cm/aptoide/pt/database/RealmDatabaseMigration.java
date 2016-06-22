@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
-import io.realm.Realm;
 import io.realm.RealmMigration;
 
 
@@ -27,17 +26,21 @@ class RealmDatabaseMigration implements RealmMigration {
 			// TODO
 		}
 
+		if (oldVersion == 2) {
+			// TODO
+		}
+
 		Logger.w(TAG, String.format(Locale.ROOT, "realm database migration from version %d to %d",
 				oldVersion, newVersion));
 
-		// FIXME
-		if (BuildConfig.DEBUG) {
-			if (!realm.isClosed()) {
-				realm.close();
-			}
-			if (Realm.deleteRealm(realm.getConfiguration())) {
-				Logger.i(TAG, "deleted database");
-			}
+		// FIXME remove this lines
+//		RealmConfiguration realmConfiguration = realm.getConfiguration();
+//		if(!realm.isClosed()) {
+//			realm.close();
+//		}
+//		Realm.deleteRealm(realmConfiguration);
+		if(realm.isClosed()) {
+			realm.deleteAll();
 		}
 	}
 }

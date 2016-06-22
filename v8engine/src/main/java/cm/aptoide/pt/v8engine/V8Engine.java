@@ -105,8 +105,8 @@ public abstract class V8Engine extends DataProvider {
 			}
 		}
 
-		final int validSignature = SecurityUtils.checkAppSignature(this);
-		if (validSignature != SecurityUtils.VALID_APP_SIGNATURE) {
+		final int appSignature = SecurityUtils.checkAppSignature(this);
+		if (appSignature != SecurityUtils.VALID_APP_SIGNATURE) {
 			Logger.e(TAG, "app signature is not valid!");
 		}
 
@@ -133,22 +133,24 @@ public abstract class V8Engine extends DataProvider {
 	 */
 	private void getInstalledApksInfo() {
 		try{
-			Logger.i(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com.android" +
+			Logger.v(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com" +
+					".android" +
 					".browser"));
 		}catch (Exception e) {
-			Logger.w(TAG, "browser (system) not installed", e);
+			Logger.v(TAG, "browser (system) not installed", e);
 		}
 
 		try {
-			Logger.i(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
+			Logger.v(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
 		}catch (Exception e) {
-			Logger.w(TAG, "aptoide not installed", e);
+			Logger.v(TAG, "aptoide not installed", e);
 		}
 
 		try{
-			Logger.i(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook.katana"));
+			Logger.v(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook" +
+					".katana"));
 		}catch (Exception e){
-			Logger.w(TAG, "facebook not installed", e);
+			Logger.v(TAG, "facebook not installed", e);
 		}
 	}
 

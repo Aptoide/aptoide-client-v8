@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -91,11 +91,11 @@ public class PrivateStoreDialog extends DialogFragment {
 						if (StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(baseResponse.getError().getCode())) {
 							storeUser = null;
 							storePassSha1 = null;
-							ShowMessage.show(rootView, R.string.ws_error_invalid_grant);
+							ShowMessage.asSnack(rootView, R.string.ws_error_invalid_grant);
 						}
 					} else {
 						e.printStackTrace();
-						ShowMessage.show(getView(), R.string.error_occured);
+						ShowMessage.asSnack(getView(), R.string.error_occured);
 						dismiss();
 					}
 				});

@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.ContextWrapper;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,6 +31,8 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
+import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -212,18 +216,80 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						.getVercode());
 	}
 
+	private static class SubscribeStoreSnack extends ShowMessage.CustomSnackViewHolder {
+
+		private ImageView storeImage;
+		private TextView storeName;
+		private Button dismiss;
+		private Button subscribe;
+
+		@Override
+		public void assignViews(View view) {
+			storeImage = (ImageView) view.findViewById(R.id.snackbar_image);
+			storeName = (TextView) view.findViewById(R.id.snackbar_text);
+			dismiss = (Button) view.findViewById(R.id.snackbar_dismiss_action);
+			subscribe = (Button) view.findViewById(R.id.snackbar_action);
+		}
+
+		@Override
+		public void setupBehaviour(Snackbar snackbar) {
+
+//			dismiss.setOnClickListener( v-> {
+//				snackbar.dismiss();
+//			});
+
+			subscribe.setOnClickListener(v -> {
+
+				// TODO
+
+				snackbar.dismiss();
+			});
+
+			storeName.setText("TO DO");
+			//storeImage.setImageResource( ?? ); // TODO
+		}
+	}
+
 	private static class Listeners {
 
 		private View.OnClickListener newBuyListener() {
-			return null;
+			return v -> {
+				ContextWrapper ctx = (ContextWrapper) v.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+				permissionRequest.requestAccessToExternalFileSystem(() -> {
+					// TODO
+				});
+			};
 		}
 
 		private View.OnClickListener newInstallListener() {
-			return null;
+			return v -> {
+				ContextWrapper ctx = (ContextWrapper) v.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+
+				final ShowSnackbar showSnackbar = ((ShowSnackbar) ctx.getBaseContext());
+
+				permissionRequest.requestAccessToExternalFileSystem(() -> {
+
+//					ShowMessage.asSnack(v, new SubscribeStoreSnack(), R.layout.custom_snackbar, Snackbar
+//							.LENGTH_INDEFINITE);
+
+					showSnackbar.make().show();
+
+					// TODO
+
+				});
+			};
 		}
 
 		private View.OnClickListener newUpdateListener() {
-			return null;
+			return v -> {
+				ContextWrapper ctx = (ContextWrapper) v.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+				permissionRequest.requestAccessToExternalFileSystem(() -> {
+					// TODO
+				});
+			};
 		}
 
 		private View.OnClickListener newDowngradeListener() {
@@ -259,7 +325,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		private View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
 			return v -> {
 				StoreUtils.subscribeStore(storeName, getStoreMeta -> {
-					ShowMessage.toast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string
+					ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string
 							.store_subscribed, storeName));
 				}, Throwable::printStackTrace);
 			};

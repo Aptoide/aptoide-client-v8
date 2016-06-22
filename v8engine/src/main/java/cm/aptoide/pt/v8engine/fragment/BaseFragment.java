@@ -1,10 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by SithEngineer on 16/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,12 +17,14 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import io.realm.Realm;
+import rx.functions.Action0;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseFragment extends RxFragment implements Lifecycle {
+public abstract class BaseFragment extends RxFragment implements Lifecycle, PermissionRequest {
 
 	private final String TAG = getClass().getSimpleName();
 	protected Realm realm;
@@ -76,5 +80,51 @@ public abstract class BaseFragment extends RxFragment implements Lifecycle {
 	@Override
 	public void setupToolbar() {
 		// optional method
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
+		try {
+			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(toRunWhenAccessIsGranted);
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
+					.class
+					.getName());
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToExternalFileSystem(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
+		try {
+			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
+					toRunWhenAccessIsGranted);
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
+					.class
+					.getName());
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
+		try {
+			((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted);
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
+					.class
+					.getName());
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToAccounts(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
+		try {
+			((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale,
+					toRunWhenAccessIsGranted);
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
+					.class
+					.getName());
+		}
 	}
 }

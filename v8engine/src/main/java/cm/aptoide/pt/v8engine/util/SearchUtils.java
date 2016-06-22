@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
@@ -56,7 +56,7 @@ public class SearchUtils {
 					FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(s,
 							searchInOtherStores));
 				} else {
-					ShowMessage.toast(V8Engine.getContext(), R.string.search_minimum_chars);
+					ShowMessage.asToast(V8Engine.getContext(), R.string.search_minimum_chars);
 				}
 
 				return true;
