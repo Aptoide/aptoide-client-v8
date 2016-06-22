@@ -35,6 +35,7 @@ public class Event {
 		myUpdates,
 		myExcludedUpdates,
 		myScheduledDownloads,
-		myRollbacks
+		myRollbacks,
+		mySocialTimeline
 	}
 }

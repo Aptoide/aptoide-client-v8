@@ -63,4 +63,9 @@ ext {
 
     // Retrofit
     RETROFIT_VERSION = '2.0.2'
+
+    // Test
+    MOCK_WEB_SERVER_VERSION = '3.3.1'
+    JUNIT_VERSION = '4.12'
+    MOCKITO_CORE_VERSION = '1.10.19'
 }

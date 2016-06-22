@@ -46,6 +46,8 @@ public enum Type {
 	EXCLUDED_UPDATE(1),
 	ROLLBACK(1),
 
+	SOCIAL_TIMELINE(1),
+
 	// Search
 	SEARCH(1),
 
@@ -75,8 +77,9 @@ public enum Type {
 	}
 
 	public int getPerLineCount() {
-		return fixedPerLineCount ? getDefaultPerLineCount() : (int) (AptoideUtils.ScreenU.getScreenWidthInDip() /
+		int n = isFixedPerLineCount() ? getDefaultPerLineCount() : (int) (AptoideUtils.ScreenU.getScreenWidthInDip() /
 				AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+		return n > 0 ? n : 1;
 	}
 
 }

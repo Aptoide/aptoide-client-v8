@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -60,13 +60,15 @@ public class RequestCache {
 
 			if( BuildConfig.DEBUG && cachePath.exists() ) {
 				int deletedFiles = 0;
-				for(File f : cachePath.listFiles()) {
-					deletedFiles += f.delete() ? 1 : 0;
+				File[] cacheFiles = cachePath.listFiles();
+				if (cacheFiles != null && cacheFiles.length > 0) {
+					for (File f : cacheFiles) {
+						deletedFiles += f.delete() ? 1 : 0;
+					}
+					deletedFiles += cachePath.delete() ? 1 : 0;
 				}
-				deletedFiles += cachePath.delete() ? 1 : 0;
-				Log.w(TAG, String.format("cache running in debug mode : cleaned %d disk cache " +
-						"files",
-						deletedFiles));
+
+				Log.w(TAG, String.format("cache running in debug mode : cleaned %d disk cache files", deletedFiles));
 			}
 
 			diskLruCache = DiskLruCache.open(

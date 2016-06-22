@@ -70,7 +70,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 	@Override
 	public void load(boolean refresh) {
 		if (refresh) {
-			GetStoreRequest.of(storeName, storeContext, refresh).execute((getStore) -> {
+			GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
 				this.getStore = getStore;
 				setupViewPager();
 			}, (throwable) -> {
@@ -88,7 +88,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 				else {
 					finishLoading(throwable);
 				}
-			});
+			}, refresh);
 		} else {
 			setupViewPager();
 		}
