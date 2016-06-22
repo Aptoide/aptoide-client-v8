@@ -56,7 +56,7 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 
 		isExcluded.setOnCheckedChangeListener((buttonView, isChecked) -> {
 			// TODO
-			ShowMessage.show(buttonView, "TO DO");
+			ShowMessage.asSnack(buttonView, "TO DO");
 		});
 	}
 }
