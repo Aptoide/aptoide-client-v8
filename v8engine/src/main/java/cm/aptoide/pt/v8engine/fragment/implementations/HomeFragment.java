@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -67,8 +67,7 @@ public class HomeFragment extends StoreFragment {
 					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
 							.show();
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
-					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
-							.show();
+					((FragmentShower) getActivity()).pushFragmentV4(ExcludedUpdatesFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_settings) {
 					((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_facebook) {

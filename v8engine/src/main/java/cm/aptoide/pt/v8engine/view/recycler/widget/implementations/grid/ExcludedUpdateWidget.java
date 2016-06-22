@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/06/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -10,9 +10,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Locale;
+
+import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
@@ -46,13 +47,13 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 
 	@Override
 	public void bindView(ExcludedUpdateDisplayable displayable) {
-		final GetApp pojo = displayable.getPojo();
-		GetAppMeta.App app = pojo.getNodes().getMeta().getData();
+		final ExcludedUpdate excludedUpdate = displayable.getPojo();
 
-		ImageLoader.load(app.getIcon(), icon);
-		name.setText(app.getName());
-		versionCode.setText(app.getFile().getVercode());
-		apkId.setText(app.getObb().getMain().getFilename()); // FIXME ??
+		ImageLoader.load(excludedUpdate.getIcon(), icon);
+		name.setText(excludedUpdate.getName());
+		versionCode.setText(String.format(Locale.getDefault(), "%d", excludedUpdate.getVersionCode()));
+		apkId.setText(String.format(Locale.getDefault(), "%d", excludedUpdate.getApkId()));
+
 		isExcluded.setOnCheckedChangeListener((buttonView, isChecked) -> {
 			// TODO
 			ShowMessage.show(buttonView, "TO DO");
