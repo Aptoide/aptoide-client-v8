@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.util;
@@ -21,9 +21,36 @@ import lombok.Cleanup;
  */
 public class DataproviderUtils {
 
+	private static final String TAG = DataproviderUtils.class.getName();
+
 	public static void checkUpdates() {
 		checkUpdates(null);
 	}
+
+	/*
+	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
+		ListAppsUpdatesRequest.of(true).execute(listAppsUpdates -> {
+
+			if(listAppsUpdates!=null) {
+				List<App> apps = listAppsUpdates.getList();
+				if(apps!=null && apps.size()>0) {
+					@Cleanup Realm realm = Database.get();
+					for (App app : apps) {
+						Database.save(new Update(app), realm);
+					}
+
+					if (successRequestListener != null) {
+						successRequestListener.call(listAppsUpdates);
+					}
+					return;
+				}
+			}
+
+			Logger.w(TAG, "List app updates response was null or empty.");
+
+		}, Throwable::printStackTrace);
+	}
+	*/
 
 	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
 		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
