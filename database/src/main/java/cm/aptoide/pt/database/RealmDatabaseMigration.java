@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/05/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -32,15 +32,5 @@ class RealmDatabaseMigration implements RealmMigration {
 
 		Logger.w(TAG, String.format(Locale.ROOT, "realm database migration from version %d to %d",
 				oldVersion, newVersion));
-
-		// FIXME remove this lines
-//		RealmConfiguration realmConfiguration = realm.getConfiguration();
-//		if(!realm.isClosed()) {
-//			realm.close();
-//		}
-//		Realm.deleteRealm(realmConfiguration);
-		if(realm.isClosed()) {
-			realm.deleteAll();
-		}
 	}
 }

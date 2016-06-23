@@ -3,14 +3,6 @@
  * Modified by Neurophobic Animal on 07/06/2016.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-
-// Don't cache SNAPSHOT (changing) dependencies.
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
 buildscript {
     repositories {
         jcenter()

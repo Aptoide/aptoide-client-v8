@@ -67,8 +67,7 @@ public class HomeFragment extends StoreFragment {
 					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
 							.show();
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
-					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
-							.show();
+					((FragmentShower) getActivity()).pushFragmentV4(ExcludedUpdatesFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_settings) {
 					((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_facebook) {
@@ -99,8 +98,7 @@ public class HomeFragment extends StoreFragment {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
 			toolbar.setNavigationIcon(R.drawable.ic_drawer);
-			toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
-					.START));
+			toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
 		}
 	}
 
