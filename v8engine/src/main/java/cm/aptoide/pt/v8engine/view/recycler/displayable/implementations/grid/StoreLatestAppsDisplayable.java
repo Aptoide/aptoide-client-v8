@@ -1,6 +1,9 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.Type;
@@ -50,7 +53,7 @@ public class StoreLatestAppsDisplayable extends Displayable {
 	}
 
 	public int getHoursSinceLastUpdate() {
-		return 0;
+		return dateCalculator.getHoursSinceDate(storeLatestApps.getLatestUpdate());
 	}
 
 	@Override
