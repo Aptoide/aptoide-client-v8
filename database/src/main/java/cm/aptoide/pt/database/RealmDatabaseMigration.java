@@ -32,15 +32,5 @@ class RealmDatabaseMigration implements RealmMigration {
 
 		Logger.w(TAG, String.format(Locale.ROOT, "realm database migration from version %d to %d",
 				oldVersion, newVersion));
-
-		// FIXME remove this lines
-//		RealmConfiguration realmConfiguration = realm.getConfiguration();
-//		if(!realm.isClosed()) {
-//			realm.close();
-//		}
-//		Realm.deleteRealm(realmConfiguration);
-		if(realm.isClosed()) {
-			realm.deleteAll();
-		}
 	}
 }

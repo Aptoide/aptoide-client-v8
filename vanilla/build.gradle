@@ -48,7 +48,7 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-           minSdkVersion 15
+            minSdkVersion 15
             applicationId "cm.aptoide.pt"
             resValue "string", "authenticatorAccountType", applicationId
         }
