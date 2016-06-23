@@ -47,9 +47,10 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				.map(aLong -> updateProgress())
 				.filter(integer -> {
 					download.setOverallProgress(integer);
-					if (integer <= 100 && download.getOverallDownloadStatus() == Download.PROGRESS) {
-						if (integer == 100) {
+					if (integer <= PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() == Download.PROGRESS) {
+						if (integer == PROGRESS_MAX_VALUE) {
 							download.setOverallDownloadStatus(Download.COMPLETED);
+							saveDownloadInDb(download);
 						}
 						return true;
 					} else {

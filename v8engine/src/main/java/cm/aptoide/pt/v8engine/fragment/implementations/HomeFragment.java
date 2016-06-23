@@ -70,7 +70,7 @@ public class HomeFragment extends StoreFragment {
 
 					Observable<Integer> downloadStatus = AptoideDownloadManager.getInstance()
 							.getDownloadStatus(12312);
-					downloadStatus.subscribe(downloadState -> ShowMessage.show(mNavigationView,
+					downloadStatus.subscribe(downloadState -> ShowMessage.asSnack(mNavigationView,
 							downloadState
 							.toString()), Throwable::printStackTrace);
 

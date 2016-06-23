@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
-import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -291,6 +291,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				});
 			};
+		}
 
 		private void onDownloadComplete(Integer progress, long appId) {
 			Logger.d(TAG, "onClick: " + progress);
