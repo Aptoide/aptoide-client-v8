@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/displayable_social_timeline_latest_apps_headline"/>
+            android:text="@string/displayable_social_timeline_store_latest_apps_headline"/>
 
         <HorizontalScrollView
             android:layout_marginStart="8dp"
@@ -79,7 +79,7 @@
             android:layout_height="match_parent">
             <LinearLayout
                 android:padding="4dp"
-                android:id="@+id/displayable_social_timeline_latest_apps_container"
+                android:id="@+id/displayable_social_timeline_store_latest_apps_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">

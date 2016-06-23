@@ -37,7 +37,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 		title = (TextView)itemView.findViewById(R.id.card_title);
 		image = (ImageView)itemView.findViewById(R.id.card_image);
 		subtitle = (TextView)itemView.findViewById(R.id.card_subtitle);
-		appsContaner = (LinearLayout)itemView.findViewById(R.id.displayable_social_timeline_latest_apps_container);
+		appsContaner = (LinearLayout)itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_container);
 	}
 
 	@Override

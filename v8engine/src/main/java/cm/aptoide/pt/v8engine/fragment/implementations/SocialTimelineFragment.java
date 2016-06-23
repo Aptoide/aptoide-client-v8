@@ -9,12 +9,14 @@ import com.trello.rxlifecycle.FragmentEvent;
 import java.util.List;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
+import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
@@ -65,7 +67,9 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 			return new FeatureDisplayable((Feature) item, dateCalculator);
 		} else if (item instanceof StoreLatestApps) {
 			return new StoreLatestAppsDisplayable((StoreLatestApps) item, dateCalculator);
+		} else if (item instanceof App) {
+			return new AppUpdateDisplayable((App) item, dateCalculator);
 		}
-		throw new IllegalArgumentException("Only Articles, Features and Store Latest Apps supported.");
+		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
 	}
 }

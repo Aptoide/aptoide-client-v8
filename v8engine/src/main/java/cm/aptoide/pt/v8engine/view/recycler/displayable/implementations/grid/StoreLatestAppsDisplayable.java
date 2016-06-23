@@ -60,7 +60,7 @@ public class StoreLatestAppsDisplayable extends Displayable {
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.displayable_social_timeline_latest_apps;
+		return R.layout.displayable_social_timeline_store_latest_apps;
 	}
 
 	@Data

@@ -17,8 +17,7 @@ import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.AppUpdate;
-import cm.aptoide.pt.model.v7.timeline.AppsUpdatesTimelineItem;
+import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Feature;
@@ -40,7 +39,7 @@ import static junit.framework.TestCase.assertEquals;
 public class GetUserTimelineRequestIntegrationTest {
 
 	@Test
-	public void shouldReturnAppsUpdates() throws Exception {
+	public void shouldReturnAppUpdate() throws Exception {
 		final MockWebServer server = new MockWebServer();
 
 		server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
@@ -60,10 +59,8 @@ public class GetUserTimelineRequestIntegrationTest {
 				"      \"hidden\":0,\n" +
 				"      \"loaded\":true, " +
 				"      \"list\": [{  \n" +
-				"         \"type\":\"APPS_UPDATES\",\n" +
+				"         \"type\":\"APP_UPDATE\",\n" +
 				"         \"data\":  \n" +
-				"            {  \n" +
-				"               \"apps\":[  \n" +
 				"                  {  \n" +
 				"                     \"id\":18849509,\n" +
 				"                     \"name\":\"Home Budget with Sync Lite\",\n" +
@@ -133,8 +130,6 @@ public class GetUserTimelineRequestIntegrationTest {
 				"                        }\n" +
 				"                     },\n" +
 				"                     \"obb\":null\n" +
-				"                  }" +
-				"               ]" +
 				"           }" +
 				"         " +
 				"       }" +
@@ -151,9 +146,8 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.awaitTerminalEvent();
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
-		final List<TimelineItem> appsUpdatesTimelineItems = Arrays.asList(new AppsUpdatesTimelineItem
-				(getAppsUpdates(Arrays
-				.asList(getStoreApp(18849509, "Home Budget " + "with Sync Lite", "com.anishu.homebudget.lite",
+		final List<TimelineItem> items = Arrays.asList(new AppUpdateTimelineItem
+				(getApp(18849509, "Home Budget " + "with Sync Lite", "com.anishu.homebudget.lite",
 						2372649, "http://pool.img.aptoide" +
 						".com/apps/db4d92cd5e5d1df2fa8d679853db4810_icon" + ".png", "2016-05-05 17:29:34",
 						"2016-05-05" + " 17:29:34", "2016-06-16 03:21:48", "webservice", getFile("3" + ".2.2", 39,
@@ -164,26 +158,13 @@ public class GetUserTimelineRequestIntegrationTest {
 						.asList(getVote(5, 1), getVote(4, 0), getVote(3, 0), getVote(2, 0), getVote(1, 1)))), getStore
 								(15, "apps", "http://pool.img.aptoide" +
 						".com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar" + ".jpg", null, null, getAppearance
-										("Aptoide Official App Store", "default"), getStats(15, 15, 1000944445)))))));
-		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 milliseconds", getDataList(appsUpdatesTimelineItems, true, 0, 25, 25, 0, 9, 11)));
+										("Aptoide Official App Store", "default"), getStats(15, 15, 1000944445)))));
+		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 milliseconds", getDataList(items, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
 		final RecordedRequest recordedRequest = server.takeRequest();
 		checkRequest(recordedRequest, "/getUserTimeline", "POST");
 
 		server.shutdown();
-	}
-
-	@NonNull
-	private AppUpdate getAppsUpdates(List<App> apps) throws ParseException {
-		return new AppUpdate(apps);
-	}
-
-	@NonNull
-	App getStoreApp(int id, String name, String packageName, int size, String icon, String added, String modified,
-	                String updated, String uptype, File file, App.Stats stats, Store store) throws ParseException {
-		App app = getApp(id, name, packageName, size, icon, null, added, modified, updated, uptype, file, stats);
-		app.setStore(store);
-		return app;
 	}
 
 	@Test
@@ -468,6 +449,59 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.shutdown();
 	}
 
+	@Test
+	public void shouldReturnEmptyList() throws Exception {
+
+		final MockWebServer server = new MockWebServer();
+
+		server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+				"   \"info\": {\n" +
+				"      \"status\": \"OK\",\n" +
+				"      \"time\": {\n" +
+				"         \"seconds\": 0.0098769664764404,\n" +
+				"         \"human\": \"9 milliseconds\"\n" +
+				"      }\n" +
+				"   },\n" +
+				"   \"datalist\":{  \n" +
+				"      \"total\":11,\n" +
+				"      \"count\":9,\n" +
+				"      \"offset\":0,\n" +
+				"      \"limit\":25,\n" +
+				"      \"next\":25,\n" +
+				"      \"hidden\":0,\n" +
+				"      \"loaded\":true, " +
+				"      \"list\": [ ]}\n" +
+				"}"));
+
+		server.start();
+
+		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ");
+
+		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
+		request.observe().subscribe(testSubscriber);
+		testSubscriber.awaitTerminalEvent();
+		testSubscriber.assertNoErrors();
+		testSubscriber.assertValueCount(1);
+		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 " +
+				"milliseconds", getDataList(Collections
+				.emptyList(), true, 0, 25, 25, 0, 9, 11)));
+		testSubscriber.assertCompleted();
+
+		final RecordedRequest recordedRequest = server.takeRequest();
+		checkRequest(recordedRequest, "/getUserTimeline", "POST");
+
+		server.shutdown();
+	}
+
+	@NonNull
+	private App getApp(int id, String name, String packageName, int size, String icon, String added, String modified,
+	                   String updated, String uptype, File file, App.Stats stats, Store store) throws ParseException {
+		App app = getApp(id, name, packageName, size, icon, null, added, modified, updated, uptype, file, stats);
+		app.setStore(store);
+		return app;
+	}
+
 	@NonNull
 	private App getApp(int id, String name, String packageName, int size, String icon, String graphic, String added,
 	                   String modified, String updated, String uptype, File file, App.Stats stats) throws
@@ -479,9 +513,9 @@ public class GetUserTimelineRequestIntegrationTest {
 		app.setSize(size);
 		app.setIcon(icon);
 		app.setGraphic(graphic);
-		app.setAdded(added);
-		app.setModified(modified);
-		app.setUpdated(updated);
+		app.setAdded(getDate("UTC", added, "yyyy-MM-dd HH:mm:ss"));
+		app.setModified(getDate("UTC", modified, "yyyy-MM-dd HH:mm:ss"));
+		app.setUpdated(getDate("UTC", updated, "yyyy-MM-dd HH:mm:ss"));
 		app.setUptype(uptype);
 		app.setFile(file);
 		app.setStats(stats);
@@ -596,65 +630,21 @@ public class GetUserTimelineRequestIntegrationTest {
 		return datalist;
 	}
 
-	public Date getDate(String timezone, String date, String dateFormat) throws ParseException {
+	private Date getDate(String timezone, String date, String dateFormat) throws ParseException {
 		SimpleDateFormat df = new SimpleDateFormat(dateFormat);
 		df.setTimeZone(TimeZone.getTimeZone(timezone));
 		return df.parse(date);
 	}
 
-	public App.Stats.Rating.Vote getVote(int value, int count) {
+	private App.Stats.Rating.Vote getVote(int value, int count) {
 		App.Stats.Rating.Vote vote = new App.Stats.Rating.Vote();
 		vote.setValue(value);
 		vote.setCount(count);
 		return vote;
 	}
 
-	@Test
-	public void shouldReturnEmptyList() throws Exception {
-
-		final MockWebServer server = new MockWebServer();
-
-		server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
-				"   \"info\": {\n" +
-				"      \"status\": \"OK\",\n" +
-				"      \"time\": {\n" +
-				"         \"seconds\": 0.0098769664764404,\n" +
-				"         \"human\": \"9 milliseconds\"\n" +
-				"      }\n" +
-				"   },\n" +
-				"   \"datalist\":{  \n" +
-				"      \"total\":11,\n" +
-				"      \"count\":9,\n" +
-				"      \"offset\":0,\n" +
-				"      \"limit\":25,\n" +
-				"      \"next\":25,\n" +
-				"      \"hidden\":0,\n" +
-				"      \"loaded\":true, " +
-				"      \"list\": [ ]}\n" +
-				"}"));
-
-		server.start();
-
-		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ");
-
-		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
-		request.observe().subscribe(testSubscriber);
-		testSubscriber.awaitTerminalEvent();
-		testSubscriber.assertNoErrors();
-		testSubscriber.assertValueCount(1);
-		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 " +
-				"milliseconds", getDataList(Collections
-				.emptyList(), true, 0, 25, 25, 0, 9, 11)));
-		testSubscriber.assertCompleted();
-
-		final RecordedRequest recordedRequest = server.takeRequest();
-		checkRequest(recordedRequest, "/getUserTimeline", "POST");
-
-		server.shutdown();
-	}
-
 	private Publisher getPublisher(String publisher, String avatarUrl) {
 		return new Publisher(publisher, avatarUrl);
 	}
+
 }

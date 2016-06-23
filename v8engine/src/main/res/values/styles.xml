@@ -20,6 +20,11 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="Widget.Aptoide.Card.Title.Large" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="Widget.Aptoide.Card.Title.Feature">
         <item name="android:textColor">@color/aptoide_orange</item>
         <item name="android:textStyle">bold</item>

@@ -34,8 +34,9 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
@@ -63,6 +64,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
@@ -74,7 +76,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHead
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
@@ -111,6 +112,7 @@ public enum DisplayableType {
 	SOCIAL_TIMELINE_ARTICLE(ArticleWidget.class, ArticleDisplayable.class),
 	SOCIAL_TIMELINE_FEATURE(FeatureWidget.class, FeatureDisplayable.class),
 	SOCIAL_TIMELINE_STORE_LATEST_APPS(StoreLatestAppsWidget.class, StoreLatestAppsDisplayable.class),
+	SOCIAL_TIMELINE_STORE_APP_UPDATE(AppUpdateWidget.class, AppUpdateDisplayable.class),
 
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),
