@@ -22,17 +22,12 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.model.DownloadState;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -73,7 +68,7 @@ public class HomeFragment extends StoreFragment {
 					AptoideAccountManager.openAccountManager(getContext());
 				} else if (itemId == R.id.navigation_item_rollback) {
 
-					Observable<DownloadState> downloadStatus = AptoideDownloadManager.getInstance()
+					Observable<Integer> downloadStatus = AptoideDownloadManager.getInstance()
 							.getDownloadStatus(12312);
 					downloadStatus.subscribe(downloadState -> ShowMessage.show(mNavigationView,
 							downloadState
@@ -82,26 +77,7 @@ public class HomeFragment extends StoreFragment {
 
 
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
-					GetAppMeta.App app = new GetAppMeta.App();
-					app.setId(19356461);
-					app.setFile(new GetAppMeta.GetAppMetaFile());
-					app.getFile().setMd5sum("04370ac1016c7edc1bbd4b7ae29e3662");
-					app.getFile()
-							.setPath("http://pool.apk.aptoide" + "" +
-									".com/rmota/cm-aptoide-pt-484-19356461-04370ac1016c7edc1bbd4b7ae29e3662.apk");
-
-					Observable observable = AptoideDownloadManager.getInstance().startDownload(app);
-					if (observable != null) {
-
-						final Subscription subscribe = observable.subscribe(o -> {
-							Logger.d(TAG, "setupNavigationView: " + o);
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								throwable.printStackTrace();
-							}
-						});
-					}
+					((FragmentShower) getActivity()).pushFragmentV4(AppViewFragment.newInstance(19067731));
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
 					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
 							.show();
@@ -116,7 +92,6 @@ public class HomeFragment extends StoreFragment {
 				} else if (itemId == R.id.send_feedback) {
 					Snackbar.make(mNavigationView, "Send Feedback", Snackbar.LENGTH_SHORT).show();
 				}
-
 				return false;
 			});
 		}
