@@ -295,7 +295,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					}
 				}
 			}
-		});
+		}, true);
 	}
 
 	/**
@@ -374,6 +374,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			if (isLogin) {
 				ChangeUserSettingsRequest.of(matureSwitch1)
 						.observe()
+						.observeOn(AndroidSchedulers.mainThread())
 						.subscribeOn(Schedulers.io())
 						.doOnError(throwable -> {
 							Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
@@ -429,6 +430,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 																				action1) {
 		return OAuth2AuthenticationRequest.of(refreshToken)
 				.observe()
+				.observeOn(AndroidSchedulers.mainThread())
 				.map(OAuth::getAccessToken)
 				.subscribeOn(Schedulers.io())
 				.doOnNext(AccountManagerPreferences::setAccessToken)
@@ -481,7 +483,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					callback.onRegisterSuccess(bundle);
 					genericPleaseWaitDialog.dismiss();
 				}
-			});
+			}, true);
 		}
 	}
 
@@ -550,12 +552,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
 	public static void unsubscribeStore(String storeName) {
 		ChangeUserRepoSubscriptionRequest.of(storeName, false)
-				.execute(genericResponseV3->Logger.d(TAG, "Successfully unsubscribed " + storeName));
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully unsubscribed " + storeName), true);
 	}
 
 	public static void subscribeStore(String storeName) {
 		ChangeUserRepoSubscriptionRequest.of(storeName, true)
-				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName));
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName), true);
 	}
 
 	private static void sendLoginBroadcast() {
@@ -565,6 +567,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	public static Observable<List<GetUserRepoSubscription.Subscription>> getUserRepos() {
 		return GetUserRepoSubscriptionRequest.of()
 				.observe()
+				.observeOn(AndroidSchedulers.mainThread())
 				.map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
 	}
 
@@ -643,6 +646,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			AccountManagerPreferences.setRefreshToken(refreshToken);
 			CheckUserCredentialsRequest.of(accessToken)
 					.observe()
+					.observeOn(AndroidSchedulers.mainThread())
 					.subscribeOn(Schedulers.io())
 					.subscribe(AptoideAccountManager::saveUserInfo);
 			toReturn = true;

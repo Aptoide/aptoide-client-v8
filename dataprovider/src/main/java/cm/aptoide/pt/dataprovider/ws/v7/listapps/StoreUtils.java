@@ -45,7 +45,7 @@ public class StoreUtils {
 
 	public static void subscribeStore(String storeName, @Nullable SuccessRequestListener<GetStoreMeta>
 			successRequestListener, @Nullable ErrorRequestListener errorRequestListener) {
-		subscribeStore(GetStoreMetaRequest.of(storeName, false), successRequestListener, errorRequestListener);
+		subscribeStore(GetStoreMetaRequest.of(storeName), successRequestListener, errorRequestListener);
 	}
 
 	public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest, @Nullable

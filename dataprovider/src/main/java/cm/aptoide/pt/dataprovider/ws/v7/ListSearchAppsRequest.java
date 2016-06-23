@@ -8,15 +8,22 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,16 +31,13 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-	private ListSearchAppsRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean subscribedStores) {
-		return of(query, subscribedStores, false);
-	}
-
-	public static ListSearchAppsRequest of(String query, boolean subscribedStores, boolean bypassCache) {
-		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(bypassCache);
+		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences
+				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
 		listSearchAppsRequest.body.setQuery(query);
 		if (subscribedStores) {
@@ -49,7 +53,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	}
 
 	@Override
-	protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.listSearchApps(body, bypassCache);
 	}
 
@@ -65,9 +69,10 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		private String q = Api.Q;
 		private String query;
 		private List<Long> storeIds;
-		//		Doesn't make sense without stores_auth_map
-//		private List<String> storeNames;
-		//  stores_auth_map implementation required
 		private Boolean trusted;
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+			super(aptoideId, accessToken, aptoideVercode, cdn);
+		}
 	}
 }

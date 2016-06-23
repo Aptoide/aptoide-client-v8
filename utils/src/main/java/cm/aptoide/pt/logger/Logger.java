@@ -70,4 +70,16 @@ public class Logger {
 			Log.e(TAG, msg, tr);
 		}
 	}
+
+	public static void v(String TAG, String msg) {
+		if (DBG) {
+			Log.v(TAG, msg);
+		}
+	}
+
+	public static void v(String TAG, String msg, Throwable tr) {
+		if (DBG) {
+			Log.v(TAG, msg, tr);
+		}
+	}
 }

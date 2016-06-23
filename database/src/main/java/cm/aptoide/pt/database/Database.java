@@ -39,38 +39,47 @@ public class Database {
 		return get(Application.getContext());
 	}
 
+	// FIXME remove the synchronized used here to improve performance
+	private static volatile boolean isInitialized = false;
+	private static final Object BARRIER = new Object();
 	public static Realm get(Context context) {
-		StringBuilder strBuilder = new StringBuilder(KEY);
-		strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
-		strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
-		strBuilder.append(extract(cm.aptoide.pt.database.BuildConfig.APPLICATION_ID));
-		strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
+		if(isInitialized) return Realm.getDefaultInstance();
 
-		// Beware this is the app context
-		// So always use a unique name
-		// Always use explicit modules in library projects
-		RealmConfiguration realmConfig;
-		if (BuildConfig.DEBUG) {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
-					// Must be bumped when the schema changes
-					.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
-					// Migration to run instead of throwing an exception
-					.migration(MIGRATION).build();
-		} else {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-					.modules(MODULE)
-					.encryptionKey(strBuilder.toString().substring(0, 64).getBytes())
-					// Must be bumped when the schema changes
-					.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
-					// Migration to run instead of throwing an exception
-					.migration(MIGRATION)
-					.build();
+		synchronized (BARRIER) {
+			StringBuilder strBuilder = new StringBuilder(KEY);
+			strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
+			strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
+			strBuilder.append(extract(cm.aptoide.pt.database.BuildConfig.APPLICATION_ID));
+			strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
+
+			// Beware this is the app context
+			// So always use a unique name
+			// Always use explicit modules in library projects
+			RealmConfiguration realmConfig;
+			if (BuildConfig.DEBUG) {
+				realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+						// Must be bumped when the schema changes
+						.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
+						// Migration to run instead of throwing an exception
+						.migration(MIGRATION).build();
+			} else {
+				realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
+						.modules(MODULE)
+						.encryptionKey(strBuilder.toString().substring(0, 64).getBytes())
+						// Must be bumped when the schema changes
+						.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
+						// Migration to run instead of throwing an exception
+						.migration(MIGRATION)
+						.build();
+			}
+
+			if (cm.aptoide.pt.database.BuildConfig.DELETE_DB) {
+				Realm.deleteRealm(realmConfig);
+			}
+			Realm.setDefaultConfiguration(realmConfig);
+			isInitialized = true;
+			return Realm.getDefaultInstance();
 		}
-
-		// Reset Realm
-		//Realm.deleteRealm(realmConfig);
-
-		return Realm.getInstance(realmConfig);
 	}
 
 	public static void save(RealmObject realmObject, Realm realm) {

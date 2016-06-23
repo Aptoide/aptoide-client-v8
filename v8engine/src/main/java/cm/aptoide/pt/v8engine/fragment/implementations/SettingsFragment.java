@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/06/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -201,7 +201,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				ShowMessage.show(getView(), getString(R.string.restart_aptoide));
+				ShowMessage.asSnack(getView(), getString(R.string.restart_aptoide));
 				return true;
 			}
 		});
@@ -306,9 +306,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 					pd = new ProgressDialog(context);
 					pd.setMessage(getString(R.string.please_wait));
-					pd.show();
+					pd.asSnack();
 
-					ShowMessage.show(getView(), "TO DO");
+					ShowMessage.asSnack(getView(), "TO DO");
 					// TODO implement this call to the server
 
 //					ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
@@ -469,7 +469,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			pd.dismiss();
-			ShowMessage.show(getView(), getString(R.string.clear_cache_sucess));
+			ShowMessage.asSnack(getView(), getString(R.string.clear_cache_sucess));
 			new GetDirSize().execute(new File(aptoide_path), new File(icon_path));
 		}
 	}

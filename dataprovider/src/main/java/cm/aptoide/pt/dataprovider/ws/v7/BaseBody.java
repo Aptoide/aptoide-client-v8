@@ -5,21 +5,29 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.utils.AptoideUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * Created by neuro on 20-04-2016.
+ * Base body that every request should use. If more information should be provided this class should be extended.
  */
 @Getter
 @Setter
 @Accessors(chain = true)
 public class BaseBody {
 
-	private String access_token = AptoideAccountManager.getAccessToken();
-	private int aptoide_vercode = AptoideUtils.Core.getVerCode();
-	private String cdn = "pool";
+	@JsonProperty("aptoide_uid") private String aptoideId;
+	@JsonProperty("access_token") private String accessToken;
+	@JsonProperty("aptoide_vercode") private int aptoideVercode;
+	private String cdn;
+
+	public BaseBody(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+		this.aptoideId = aptoideId;
+		this.accessToken = accessToken;
+		this.aptoideVercode = aptoideVercode;
+		this.cdn = cdn;
+	}
 }

@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivityTestes extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class MainActivityTestes extends AppCompatActivity {
 //				.commit();
 
 		final GetStore[] gaga = new GetStore[1];
-		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps", false);
+		GetStoreRequest getStoreRequest = GetStoreRequest.of("apps");
 		getStoreRequest.execute(getStoreResponse -> {
 			System.out.println("Ss: " + getStoreResponse.getNodes().getMeta());
 		}, System.out::println);
@@ -59,11 +60,11 @@ public class MainActivityTestes extends AppCompatActivity {
 		LinkedList<ListAppsUpdatesRequest.ApksData> apksData = new LinkedList<>();
 		apksData.add(new ListAppsUpdatesRequest.ApksData("cm.aptoide.pt", 300,
 				"D5:90:A7:D7:92:FD:03:31:54:2D:99:FA:F9:99:76:41:79:07:73:A9"));
-		ListAppsUpdatesRequest listAppsUpdatesRequest = ListAppsUpdatesRequest.of(false);
+		ListAppsUpdatesRequest listAppsUpdatesRequest = ListAppsUpdatesRequest.of();
 		listAppsUpdatesRequest.getBody().setApksData(apksData);
-		listAppsUpdatesRequest.observe().subscribe(System.out::println, System.out::println);
+		listAppsUpdatesRequest.observe().observeOn(AndroidSchedulers.mainThread()).subscribe(System.out::println, System.out::println);
 
-		ListAppVersionsRequest listAppVersionsRequest = ListAppVersionsRequest.of(false);
+		ListAppVersionsRequest listAppVersionsRequest = ListAppVersionsRequest.of();
 		listAppVersionsRequest.getBody().setAppId(18711899);
 		listAppVersionsRequest.execute(System.out::println);
 
@@ -71,18 +72,18 @@ public class MainActivityTestes extends AppCompatActivity {
 		of.execute(listSearchApps -> System.out.println("ListSearchAppsRequest: " +
 				listAppsUpdatesRequest));
 
-		GetStoreMetaRequest.of("apps", false)
+		GetStoreMetaRequest.of("apps")
 				.execute(getStoreMeta -> System.out.println("getStoreMeta: " +
 						listAppsUpdatesRequest));
 
-		GetStoreDisplaysRequest.of("apps", false)
+		GetStoreDisplaysRequest.of("apps")
 				.execute(getStoreMeta -> System.out.println("GetStoreDisplaysRequest: " +
 						listAppsUpdatesRequest));
 
-		GetStoreTabsRequest.of("apps", false).execute(System.out::println);
-		GetStoreWidgetsRequest.of("apps", false).execute(System.out::println);
+		GetStoreTabsRequest.of("apps").execute(System.out::println);
+		GetStoreWidgetsRequest.of("apps").execute(System.out::println);
 
-		GetStoreWidgetsRequest.of("apps", false)
+		GetStoreWidgetsRequest.of("apps")
 				.execute(new SuccessRequestListener<GetStoreWidgets>() {
 					@Override
 					public void call(GetStoreWidgets getStoreWidgets) {

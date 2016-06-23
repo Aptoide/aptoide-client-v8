@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -16,6 +16,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -23,6 +24,7 @@ import lombok.Cleanup;
 /**
  * Created by neuro on 17-05-2016.
  */
+@Displayables({UpdateDisplayable.class})
 public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	private TextView labelTextView;
@@ -56,7 +58,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		ImageLoader.load(pojo.getIcon(), iconImageView);
 		updateButtonLayout.setOnClickListener(view -> {
 			// TODO: 24-05-2016 neuro implementar
-			ShowMessage.show(view, "TO DO");
+			ShowMessage.asSnack(view, "TO DO");
 		});
 	}
 }

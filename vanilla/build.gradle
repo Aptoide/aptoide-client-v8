@@ -39,8 +39,8 @@ android {
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
-            versionCode 48
-            versionName "8.0.0.15062016"
+            versionCode 56
+            versionName "8.0.0.23062016"
             minSdkVersion 21
             resValue "string", "authenticatorAccountType", applicationId
             // Enabling multidex support.
@@ -48,7 +48,7 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-           minSdkVersion 15
+            minSdkVersion 15
             applicationId "cm.aptoide.pt"
             resValue "string", "authenticatorAccountType", applicationId
         }
@@ -132,6 +132,14 @@ if (propFile.canRead()) {
     println 'signing.properties not found'
     android.buildTypes.release.signingConfig = null
 }
+
+
+
+
+
+
+
+
 
 
 

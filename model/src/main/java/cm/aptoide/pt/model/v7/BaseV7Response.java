@@ -41,7 +41,7 @@ public class BaseV7Response {
 		}
 
 		@Data
-		private static class Time {
+		public static class Time {
 
 			private double seconds;
 			private String human;
@@ -53,5 +53,6 @@ public class BaseV7Response {
 
 		private String code;
 		private String description;
+
 	}
 }

@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.model.v7.store;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +24,9 @@ public class Store {
 	private long id;
 	private String name;
 	private String avatar;
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
 	private Date added;
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
 	private Date modified;
 	private Appearance appearance;
 	private Stats stats;

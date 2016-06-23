@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 02/06/2016.
+  ~ Modified by SithEngineer on 22/06/2016.
   -->
 
 <resources>
@@ -13,6 +13,21 @@
     <string name="updates_filter_setting_title">Just show me stable app version updates</string>
     <string name="aptoide_email">aptoide@aptoide.com</string>
     <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <!-- Permission pop-ups messages -->
     <string name="access_to_external_storage_rationale">You need to allow access to External Storage</string>
     <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
+
+    <!-- Common (menu) -->
+    <string name="menu_select_all">Select All</string>
+    <string name="menu_select_none">Select None</string>
+
+    <!-- Excluded Updates Fragment -->
+    <string name="no_excluded_updates_msg">The new version of an app doesn’t work on your device or some feature is
+        missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop
+        updating.</string>
+
+    <!-- Excluded Updates Fragment (menu) -->
+    <string name="restore_updates">Restore Updates</string>
+
 </resources>

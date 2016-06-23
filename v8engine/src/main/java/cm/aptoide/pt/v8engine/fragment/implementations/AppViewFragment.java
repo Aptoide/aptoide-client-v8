@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -43,6 +43,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 04/05/16.
@@ -83,23 +84,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 			setupDisplayables(getApp);
 			setupObservables(getApp);
 			finishLoading();
-		});
-
-//		if (refresh) {
-//			loadAppInfo((int) appId)
-//					.compose(ObservableUtils.applySchedulers())
-//					.subscribe(
-//						new Action1WithWeakRef<GetApp, AppViewFragment>(this) {
-//						@Override
-//						public void call(GetApp pojo) {
-//							AppViewFragment fragment = weakReference.get();
-//							if(fragment!=null) {
-//								fragment.setApp(pojo.getNodes().getMeta().getData());
-//								fragment.showAppInfo();
-//							}
-//						}
-//					});
-//		}
+		}, refresh);
 	}
 
 	private void setupObservables(GetApp getApp) {
@@ -192,14 +177,14 @@ public class AppViewFragment extends GridRecyclerFragment {
 			return true;
 
 		} else if (i == R.id.menu_share) {
-			ShowMessage.show(item.getActionView(), "TO DO");
+			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
 			// TODO
 
 			return true;
 
 		} else if (i == R.id.menu_schedule) {
-			ShowMessage.show(item.getActionView(), "TO DO");
+			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
 			// TODO
 			return true;
@@ -214,28 +199,6 @@ public class AppViewFragment extends GridRecyclerFragment {
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
 	}
-
-	private Observable<GetApp> loadAppInfo(int appId) {
-		return GetAppRequest.of(appId).observe();
-	}
-
-//	private void setApp(GetAppMeta.App app) {
-//		this.app = app;
-//	}
-
-//	private void showAppInfo() {
-//		if(app==null) return;
-//
-//		// setup displayables in view
-//		addDisplayables(DisplayableType.newDisplayables(DisplayableType.Group.APP_VIEW, app));
-//
-//		// setup header in view
-//		header.setup(app);
-//	}
-
-	//
-	// bundle keys used internally in this fragment
-	//
 
 	private enum BundleKeys {
 		APP_ID
@@ -266,7 +229,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 			badgeLayout = (RelativeLayout) view.findViewById(R.id.badge_layout);
 			badge = (ImageView) view.findViewById(R.id.badge_img);
 			badgeText = (TextView) view.findViewById(R.id.badge_text);
-			appIcon = (ImageView) view.findViewById(R.id.app_icon);
+			appIcon = (ImageView) view.findViewById(R.id.icon);
 			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar_top);
 			fileSize = (TextView) view.findViewById(R.id.file_size);
 			versionName = (TextView) view.findViewById(R.id.version_name);

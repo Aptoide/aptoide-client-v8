@@ -3,14 +3,6 @@
  * Modified by Neurophobic Animal on 07/06/2016.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-
-// Don't cache SNAPSHOT (changing) dependencies.
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
 buildscript {
     repositories {
         jcenter()
@@ -63,4 +55,9 @@ ext {
 
     // Retrofit
     RETROFIT_VERSION = '2.0.2'
+
+    // Test
+    MOCK_WEB_SERVER_VERSION = '3.3.1'
+    JUNIT_VERSION = '4.12'
+    MOCKITO_CORE_VERSION = '1.10.19'
 }
