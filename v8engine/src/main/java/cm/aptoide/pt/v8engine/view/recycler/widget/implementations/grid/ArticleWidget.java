@@ -45,7 +45,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		title.setText(displayable.getPublisher());
 		subtitle.setText(getContext().getString(R.string.fragment_social_timeline_hours_since_last_update, displayable.getHoursSinceLastUpdate()));
 		articleTitle.setText(displayable.getTitle());
-		ImageLoader.load(R.drawable.img_people_mockup, image);
+		ImageLoader.load(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
 		toolbar.inflateMenu(R.menu.menu_card_timeline);

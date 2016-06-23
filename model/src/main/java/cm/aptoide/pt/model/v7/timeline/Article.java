@@ -6,22 +6,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
 public class Article extends Feature {
 
-	private final String publisher;
+	@Getter private final Publisher publisher;
 
 	@JsonCreator
 	public Article(@JsonProperty("title") String title,
 	               @JsonProperty("thumbnail") String thumbnailUrl,
-	               @JsonProperty("publisher") String publisher,
+	               @JsonProperty("publisher") Publisher publisher,
 	               @JsonProperty("url") String url,
 	               @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date) {
 		super(title, thumbnailUrl, url, date);
 		this.publisher = publisher;
+	}
+
+	protected boolean canEqual(Object other) {
+		return other instanceof Article;
 	}
 }

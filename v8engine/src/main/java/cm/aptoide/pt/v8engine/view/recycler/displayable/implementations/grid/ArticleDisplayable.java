@@ -35,7 +35,7 @@ public class ArticleDisplayable extends Displayable {
 	}
 
 	public String getPublisher() {
-		return article.getPublisher();
+		return article.getPublisher().getName();
 	}
 
 	public String getThumbnailUrl() {
@@ -44,6 +44,10 @@ public class ArticleDisplayable extends Displayable {
 
 	public int getHoursSinceLastUpdate() {
 		return dateCalculator.getHoursSinceDate(article.getDate());
+	}
+
+	public String getAvatarUrl() {
+		return article.getPublisher().getLogoUrl();
 	}
 
 	@Override

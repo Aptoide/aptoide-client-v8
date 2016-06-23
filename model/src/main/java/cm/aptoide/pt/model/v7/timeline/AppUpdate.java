@@ -12,12 +12,12 @@ import lombok.Data;
  * Created by marcelobenites on 6/20/16.
  */
 @Data
-public class AppsUpdates {
+public class AppUpdate {
 
 	private final List<App> apps;
 
 	@JsonCreator
-	public AppsUpdates(@JsonProperty("apps") List<App> apps) {
+	public AppUpdate(@JsonProperty("apps") List<App> apps) {
 		this.apps = apps;
 	}
 }

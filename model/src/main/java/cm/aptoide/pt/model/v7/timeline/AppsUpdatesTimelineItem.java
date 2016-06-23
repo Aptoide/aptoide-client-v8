@@ -11,16 +11,16 @@ import lombok.Data;
  * Created by marcelobenites on 6/17/16.
  */
 @Data
-public class AppsUpdatesTimelineItem implements TimelineItem<AppsUpdates> {
+public class AppsUpdatesTimelineItem implements TimelineItem<AppUpdate> {
 
-	private final List<AppsUpdates> updates;
+	private final AppUpdate updates;
 
-	@JsonCreator public AppsUpdatesTimelineItem(@JsonProperty("items") List<AppsUpdates> updates) {
+	@JsonCreator public AppsUpdatesTimelineItem(@JsonProperty("data") AppUpdate updates) {
 		this.updates = updates;
 	}
 
 	@Override
-	public List<AppsUpdates> getItems() {
+	public AppUpdate getData() {
 		return updates;
 	}
 }

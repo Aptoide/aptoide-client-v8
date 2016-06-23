@@ -10,14 +10,14 @@ import lombok.Data;
 @Data
 public class FeatureTimelineItem implements TimelineItem<Feature> {
 
-	private final List<Feature> features;
+	private final Feature feature;
 
-	@JsonCreator public FeatureTimelineItem(@JsonProperty("items") List<Feature> features) {
-		this.features = features;
+	@JsonCreator public FeatureTimelineItem(@JsonProperty("data") Feature feature) {
+		this.feature = feature;
 	}
 
 	@Override
-	public List<Feature> getItems() {
-		return features;
+	public Feature getData() {
+		return feature;
 	}
 }

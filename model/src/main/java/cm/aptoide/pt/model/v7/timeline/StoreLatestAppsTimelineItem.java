@@ -10,14 +10,14 @@ import lombok.Data;
 @Data
 public class StoreLatestAppsTimelineItem implements TimelineItem<StoreLatestApps> {
 
-	private List<StoreLatestApps> latestAppsList;
+	private StoreLatestApps latestApps;
 
-	@JsonCreator public StoreLatestAppsTimelineItem(@JsonProperty("items") List<StoreLatestApps> latestAppsList) {
-		this.latestAppsList = latestAppsList;
+	@JsonCreator public StoreLatestAppsTimelineItem(@JsonProperty("data") StoreLatestApps latestApps) {
+		this.latestApps = latestApps;
 	}
 
 	@Override
-	public List<StoreLatestApps> getItems() {
-		return latestAppsList;
+	public StoreLatestApps getData() {
+		return latestApps;
 	}
 }

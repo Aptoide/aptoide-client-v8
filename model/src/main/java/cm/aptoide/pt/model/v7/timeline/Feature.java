@@ -7,14 +7,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Data
+@EqualsAndHashCode
 public class Feature  {
 
-	private final String title;
-	private final String thumbnailUrl;
-	private final String url;
-	private final Date date;
+	@Getter private final String title;
+	@Getter private final String thumbnailUrl;
+	@Getter private final String url;
+	@Getter private final Date date;
 
 	@JsonCreator
 	public Feature(@JsonProperty("title") String title,

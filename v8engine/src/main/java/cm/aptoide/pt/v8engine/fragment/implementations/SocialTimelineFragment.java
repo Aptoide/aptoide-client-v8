@@ -43,8 +43,9 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 	public void load(boolean refresh) {
 		GetUserTimelineRequest.of().observe(refresh)
 				.<GetUserTimeline>compose(bindUntilEvent(FragmentEvent.PAUSE))
-				.flatMapIterable(getUserTimeline -> getUserTimeline.getList())
-				.flatMapIterable(timelineItem -> timelineItem.getItems())
+				.flatMapIterable(getUserTimeline -> getUserTimeline.getDatalist().getList())
+				.filter(timelineItem -> timelineItem != null)
+				.map(timelineItem -> timelineItem.getData())
 				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps))
 				.map(item -> itemToDisplayable(item, dateCalculator))
 				.toList()
