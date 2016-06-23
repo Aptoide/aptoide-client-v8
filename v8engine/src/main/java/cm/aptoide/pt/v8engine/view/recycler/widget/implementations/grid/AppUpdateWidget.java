@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
  */
 public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
-	private Toolbar toolbar;
 	private TextView appName;
 	private TextView appVersion;
 	private ImageView appIcon;
@@ -34,7 +33,6 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
-		toolbar = (Toolbar) itemView.findViewById(R.id.card_toolbar);
 		appName = (TextView)itemView.findViewById(R.id.displayable_social_timeline_app_update_name);
 		appIcon = (ImageView)itemView.findViewById(R.id.displayable_social_timeline_app_update_icon);
 		appVersion = (TextView)itemView.findViewById(R.id.displayable_social_timeline_app_update_version);
@@ -62,10 +60,5 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId()));
 			}
 		});
-
-		if (toolbar.getMenu() == null
-				|| toolbar.getMenu().findItem(R.id.menu_card_timeline_clear) == null) {
-			toolbar.inflateMenu(R.menu.menu_card_timeline);
-		}
 	}
 }

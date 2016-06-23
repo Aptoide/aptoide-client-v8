@@ -23,7 +23,6 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 	private TextView articleTitle;
 	private ImageView thumbnail;
 	private View url;
-	private Toolbar toolbar;
 
 	public FeatureWidget(View itemView) {
 		super(itemView);
@@ -31,7 +30,6 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
-		toolbar = (Toolbar) itemView.findViewById(R.id.card_toolbar);
 		title = (TextView)itemView.findViewById(R.id.card_title);
 		subtitle = (TextView)itemView.findViewById(R.id.card_subtitle);
 		image = (ImageView) itemView.findViewById(R.id.card_image);
@@ -48,7 +46,6 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 		ImageLoader.loadWithCircleTransform(displayable.getAvatart(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
-		toolbar.inflateMenu(R.menu.menu_card_timeline);
 		url.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

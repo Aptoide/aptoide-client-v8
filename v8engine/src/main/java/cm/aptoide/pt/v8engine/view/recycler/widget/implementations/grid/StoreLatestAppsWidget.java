@@ -22,7 +22,6 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 	private final LayoutInflater inflater;
 	private TextView title;
 	private TextView subtitle;
-	private Toolbar toolbar;
 	private LinearLayout appsContaner;
 	private ImageView image;
 
@@ -33,7 +32,6 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
-		toolbar = (Toolbar) itemView.findViewById(R.id.card_toolbar);
 		title = (TextView)itemView.findViewById(R.id.card_title);
 		image = (ImageView)itemView.findViewById(R.id.card_image);
 		subtitle = (TextView)itemView.findViewById(R.id.card_subtitle);
@@ -61,8 +59,5 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 			ImageLoader.load(latestApp.getIconUrl(), latestAppIcon);
 			appsContaner.addView(latestAppView);
 		}
-		toolbar.inflateMenu(R.menu.menu_card_timeline);
 	}
-
-
 }

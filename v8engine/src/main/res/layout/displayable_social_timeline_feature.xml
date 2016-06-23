@@ -16,12 +16,6 @@
             android:layout_height="72dp"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/card_toolbar"
-                android:theme="@style/AppBaseTheme"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"/>
-
             <ImageView
                 tools:ignore="contentDescription"
                 tools:src="@drawable/img_people_mockup"

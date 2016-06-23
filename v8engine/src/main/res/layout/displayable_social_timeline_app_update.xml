@@ -12,12 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/card_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:theme="@style/AppBaseTheme"/>
-
         <ImageView
             android:id="@+id/displayable_social_timeline_app_update_icon"
             android:layout_width="96dp"
