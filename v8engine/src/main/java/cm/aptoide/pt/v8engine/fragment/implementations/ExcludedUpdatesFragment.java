@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/06/2016.
+ * Modified by SithEngineer on 23/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -19,6 +19,7 @@ import java.util.List;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.ExcludedUpdate;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -31,6 +32,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 
+	private static final String TAG = ExcludedUpdatesFragment.class.getSimpleName();
+
 	private TextView emptyData;
 	private Subscription subscription;
 
@@ -40,6 +43,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 
 	@Override
 	public void load(boolean refresh) {
+		Logger.d(TAG, String.format("refresh excluded updates? %s", refresh ? "yes" : "no"));
 		fetchExcludedUpdates();
 	}
 
@@ -62,8 +66,6 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 			((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 	}
-
-	// FIXME on home selected, go home
 
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {

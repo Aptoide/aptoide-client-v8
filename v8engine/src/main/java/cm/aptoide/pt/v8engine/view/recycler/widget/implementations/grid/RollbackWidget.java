@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 14/06/2016.
+ * Modified by SithEngineer on 23/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -62,7 +62,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
 		rollbackAction.setOnClickListener( view -> {
 			// TODO
-			ShowMessage.show(view, "TO DO");
+			ShowMessage.asSnack(view, "TO DO");
 		});
 	}
 }

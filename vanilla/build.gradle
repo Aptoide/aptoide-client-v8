@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by SithEngineer on 23/06/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -21,13 +21,6 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "8.0.0"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
     signingConfigs { release }
@@ -59,6 +52,8 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
+            multiDexEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
@@ -79,6 +74,7 @@ android {
             zipAlignEnabled false
             minifyEnabled false
             shrinkResources false
+            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -106,7 +102,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
     debugCompile project(path: ':v8engine', configuration: 'debug')
     releaseCompile project(path: ':v8engine', configuration: 'release')
 }

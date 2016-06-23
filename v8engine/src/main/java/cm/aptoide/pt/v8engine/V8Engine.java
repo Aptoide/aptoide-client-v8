@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 23/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.Collections;
@@ -120,6 +121,9 @@ public abstract class V8Engine extends DataProvider {
 
 		// FIXME remove this line
 		getInstalledApksInfo();
+		if (BuildConfig.DEBUG) {
+			Stetho.initializeWithDefaults(this);
+		}
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
 	}

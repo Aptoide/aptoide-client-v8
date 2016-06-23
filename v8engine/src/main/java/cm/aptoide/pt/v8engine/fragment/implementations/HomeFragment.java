@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/06/2016.
+ * Modified by SithEngineer on 23/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -62,7 +62,7 @@ public class HomeFragment extends StoreFragment {
 				if (itemId == R.id.navigation_item_my_account) {
 					AptoideAccountManager.openAccountManager(getContext());
 				} else if (itemId == R.id.navigation_item_rollback) {
-					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
+					((FragmentShower) getActivity()).pushFragmentV4(RollbackFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
 					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
 							.show();

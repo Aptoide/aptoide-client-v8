@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 22/06/2016.
+  ~ Modified by SithEngineer on 23/06/2016.
   -->
 
 <resources>
@@ -243,7 +243,6 @@
     <string name="updates_tab">Updates</string>
 
     <string name="feedback_send_button">Send Feedback</string>
-    <string name="clear">Clear</string>
 
     <!-- NavDrawer List items -->
     <string name="my_account">My Account</string>
