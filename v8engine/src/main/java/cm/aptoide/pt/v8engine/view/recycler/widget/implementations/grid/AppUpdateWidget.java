@@ -45,7 +45,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 		appVersion.setText(displayable.getVersionText(getContext()));
 		updateButton.setText(displayable.updateAppText(getContext()));
 
-		ImageLoader.load(displayable.getIconUrl(), appIcon);
+		ImageLoader.load(displayable.getAppIconUrl(), appIcon);
 
 		updateButton.setOnClickListener(new View.OnClickListener() {
 			@Override

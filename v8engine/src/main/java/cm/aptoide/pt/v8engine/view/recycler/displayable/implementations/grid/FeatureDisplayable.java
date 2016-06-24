@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentActivity;
 
 import java.util.Date;
 
@@ -11,47 +10,39 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Created by marcelobenites on 6/17/16.
  */
+@AllArgsConstructor
 public class FeatureDisplayable extends Displayable {
 
+	@Getter private int avatarResource;
+	@Getter private int titleResource;
+	@Getter private String thumbnailUrl;
+	@Getter private String url;
+
+	private String title;
+	private Date date;
 	private DateCalculator dateCalculator;
-	private Feature feature;
+
+	public static FeatureDisplayable from(Feature feature, DateCalculator dateCalculator) {
+		return new FeatureDisplayable(R.mipmap.ic_launcher, R.string.fragment_social_timeline_aptoide_team,
+				feature.getThumbnailUrl(), feature.getUrl(), feature.getTitle(), feature.getDate(), dateCalculator);
+	}
 
 	public FeatureDisplayable() {
 	}
 
-	public FeatureDisplayable(Feature feature, DateCalculator dateCalculator) {
-		this.dateCalculator = dateCalculator;
-		this.feature = feature;
+	public String getTitle(Context context) {
+		return context.getString(titleResource);
 	}
-
-	public String getTitle() {
-		return feature.getTitle();
-	}
-
-	public String getUrl() {
-		return feature.getUrl();
-	}
-
-	public String getAptoideText(Context context) {
-		return context.getString(R.string.fragment_social_timeline_aptoide_team);
-	}
-
-	@DrawableRes public int getAvatart() {
-		return R.mipmap.ic_launcher;
-	}
-
-	public String getThumbnailUrl() {
-		return feature.getThumbnailUrl();
-	}
-
 
 	public String getHoursSinceLastUpdate(Context context) {
 		return context.getString(R.string.fragment_social_timeline_hours_since_last_update, dateCalculator
-				.getHoursSinceDate(feature.getDate()));
+				.getHoursSinceDate(date));
 	}
 
 	@Override

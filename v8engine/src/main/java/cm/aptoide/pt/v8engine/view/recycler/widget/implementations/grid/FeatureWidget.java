@@ -39,10 +39,10 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 
 	@Override
 	public void bindView(FeatureDisplayable displayable) {
-		title.setText(displayable.getAptoideText(getContext()));
+		title.setText(displayable.getTitle(getContext()));
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
-		articleTitle.setText(displayable.getTitle());
-		ImageLoader.loadWithCircleTransform(displayable.getAvatart(), image);
+		articleTitle.setText(displayable.getTitleResource());
+		ImageLoader.loadWithCircleTransform(displayable.getAvatarResource(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
 		url.setOnClickListener(new View.OnClickListener() {

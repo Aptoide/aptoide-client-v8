@@ -52,7 +52,7 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 	public void load(boolean refresh) {
 		GetUserTimelineRequest.of().observe(refresh)
 				.<GetUserTimeline>compose(bindUntilEvent(FragmentEvent.PAUSE))
-				.flatMapIterable(getUserTimeline -> getUserTimeline.getDatalist().getList())
+				.flatMapIterable(getUserTimeline -> getListWithMockedAppUpdate(getUserTimeline))
 				.filter(timelineItem -> timelineItem != null)
 				.map(timelineItem -> timelineItem.getData())
 				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof
@@ -66,17 +66,30 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 				);
 	}
 
+	private List<TimelineItem> getListWithMockedAppUpdate(GetUserTimeline getUserTimeline) {
+		App app = new App();
+		app.setId(19347406);
+		app.setName("Clash of Clans");
+		File file = new File();
+		file.setVername("8.3332.14");
+		app.setFile(file);
+		app.setUpdated(new Date());
+		app.setIcon("http://cdn6.aptoide.com/imgs/a/a/e/aae8e02f62bf4a4008769ddb14b8fd89_icon_96x96.png");
+		getUserTimeline.getDatalist().getList().add(new AppUpdateTimelineItem(app));
+		return getUserTimeline.getDatalist().getList();
+	}
+
 	@NonNull
 	private Displayable itemToDisplayable(Object item, DateCalculator dateCalculator, SpannableFactory spannableFactory) {
 
 		if (item instanceof Article) {
-			return new ArticleDisplayable((Article) item, dateCalculator, spannableFactory);
+			return ArticleDisplayable.from((Article) item, dateCalculator, spannableFactory);
 		} else if (item instanceof Feature) {
-			return new FeatureDisplayable((Feature) item, dateCalculator);
+			return FeatureDisplayable.from((Feature) item, dateCalculator);
 		} else if (item instanceof StoreLatestApps) {
-			return new StoreLatestAppsDisplayable((StoreLatestApps) item, dateCalculator);
+			return StoreLatestAppsDisplayable.from((StoreLatestApps) item, dateCalculator);
 		} else if (item instanceof App) {
-			return new AppUpdateDisplayable((App) item, spannableFactory);
+			return AppUpdateDisplayable.fromApp((App) item, spannableFactory);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
 	}

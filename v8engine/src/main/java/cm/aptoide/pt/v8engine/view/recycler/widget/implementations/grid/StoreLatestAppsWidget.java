@@ -42,12 +42,12 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 	public void bindView(StoreLatestAppsDisplayable displayable) {
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
-		ImageLoader.loadWithCircleTransform(displayable.getAvatartUrl(), image);
+		ImageLoader.loadWithCircleTransform(displayable.getAvatarUrl(), image);
 
 		appsContaner.removeAllViews();
 		View latestAppView;
 		ImageView latestAppIcon;
-		for (StoreLatestAppsDisplayable.LatestApp latestApp: displayable.getStoreLatestApps()) {
+		for (StoreLatestAppsDisplayable.LatestApp latestApp: displayable.getLatestApps()) {
 			latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContaner, false);
 			latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
 			latestAppIcon.setOnClickListener(new View.OnClickListener() {

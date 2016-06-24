@@ -44,9 +44,9 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 
 	@Override
 	public void bindView(ArticleDisplayable displayable) {
-		title.setText(displayable.getPublisher());
+		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
-		articleTitle.setText(displayable.getTitle());
+		articleTitle.setText(displayable.getArticleTitle());
 		ImageLoader.load(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
