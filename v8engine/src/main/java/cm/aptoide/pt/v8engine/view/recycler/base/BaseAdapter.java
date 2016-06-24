@@ -72,6 +72,11 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 	}
 
+	public void addDisplayables(int position, List<? extends Displayable> displayables) {
+		this.displayables.add(position, displayables);
+		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
+	}
+
 	public void clearDisplayables() {
 		clearDisplayables(true);
 	}

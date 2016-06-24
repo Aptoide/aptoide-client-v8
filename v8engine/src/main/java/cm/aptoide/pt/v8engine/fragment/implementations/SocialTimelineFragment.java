@@ -3,8 +3,12 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.LifecycleTransformer;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +30,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Art
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -33,8 +38,10 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 
+	public static final int SEARCH_LIMIT = 2;
 	private SpannableFactory spannableFactory;
 	private DateCalculator dateCalculator;
+	private int offset;
 
 	public static SocialTimelineFragment newInstance() {
 		SocialTimelineFragment fragment = new SocialTimelineFragment();
@@ -50,8 +57,9 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 
 	@Override
 	public void load(boolean refresh) {
-		GetUserTimelineRequest.of(50, 0).observe(refresh)
+		GetUserTimelineRequest.of(SEARCH_LIMIT, offset).observe(refresh)
 				.<GetUserTimeline>compose(bindUntilEvent(FragmentEvent.PAUSE))
+				.filter(item -> item.getDatalist() != null? setOffset(item.getDatalist().getNext()): false)
 				.flatMapIterable(getUserTimeline -> getListWithMockedAppUpdate(getUserTimeline))
 				.filter(timelineItem -> timelineItem != null)
 				.map(timelineItem -> timelineItem.getData())
@@ -61,9 +69,14 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 				.toList()
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(
-						displayables -> setDisplayables((List<? extends Displayable>) displayables),
+						displayables -> updateTimeline((List<? extends Displayable>) displayables),
 						throwable -> finishLoading((Throwable) throwable)
 				);
+	}
+
+	private void updateTimeline(List<? extends Displayable> displayables) {
+		addDisplayables(0, displayables);
+		recyclerView.smoothScrollToPosition(0);
 	}
 
 	private List<TimelineItem> getListWithMockedAppUpdate(GetUserTimeline getUserTimeline) {
@@ -92,5 +105,10 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 			return AppUpdateDisplayable.fromApp((App) item, spannableFactory);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
+	}
+
+	public boolean setOffset(int offset) {
+		this.offset = offset;
+		return true;
 	}
 }

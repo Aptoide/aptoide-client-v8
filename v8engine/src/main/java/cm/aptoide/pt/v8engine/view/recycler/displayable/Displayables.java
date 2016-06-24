@@ -21,9 +21,15 @@ public class Displayables {
 
 	public void add(int position, Displayable displayable) {
 		if (displayable instanceof DisplayableGroup) {
-			add(((DisplayableGroup) displayable).getChildren());
+			add(position, ((DisplayableGroup) displayable).getChildren());
 		} else {
 			displayables.add(position, displayable);
+		}
+	}
+
+	public void add(int position, Collection<? extends Displayable> collection) {
+		for (Displayable displayable : collection) {
+			add(position, displayable);
 		}
 	}
 
@@ -34,6 +40,7 @@ public class Displayables {
 			displayables.add(displayable);
 		}
 	}
+
 
 	public void add(Collection<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
