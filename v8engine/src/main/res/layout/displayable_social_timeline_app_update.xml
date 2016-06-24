@@ -65,7 +65,7 @@
                 android:id="@+id/displayable_social_timeline_app_update_button"
                 android:text="@string/displayable_social_timeline_app_update_button"
                 style="@style/Widget.Aptoide.Card.Button"
-                android:drawableStart="@drawable/ic_update_version"
+                android:drawableStart="@drawable/timeline_update_app"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginEnd="16dp"
