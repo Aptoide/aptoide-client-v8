@@ -73,7 +73,8 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 		storeLayout.setOnClickListener(
 				v -> FragmentUtils.replaceFragmentV4(
 							(FragmentActivity) v.getContext(),
-							StoreFragment.newInstance(gridStoreDisplayable.getPojo().getName())
+							StoreFragment.newInstance(gridStoreDisplayable.getPojo().getName(), store.getAppearance()
+									.getTheme())
 					)
 		);
 
