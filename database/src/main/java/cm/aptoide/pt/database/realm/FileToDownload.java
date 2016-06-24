@@ -25,6 +25,9 @@ public class FileToDownload extends RealmObject {
 	private long appId;
 	private int fileType = GENERIC;
 	private int progress;
+	private
+	@Download.DownloadState
+	int status;
 	private String md5;
 	private String fileName;
 
@@ -37,8 +40,7 @@ public class FileToDownload extends RealmObject {
 	 *
 	 * @return
 	 */
-	public static FileToDownload createFileToDownload(String link, long appId, String md5, String fileName, int
-			fileType) {
+	public static FileToDownload createFileToDownload(String link, long appId, String md5, String fileName, int fileType) {
 		FileToDownload fileToDownload = new FileToDownload();
 		fileToDownload.setLink(link);
 		fileToDownload.setAppId(appId);
@@ -51,11 +53,20 @@ public class FileToDownload extends RealmObject {
 		return fileToDownload;
 	}
 
-	public static FileToDownload createFileToDownload(String link, long appId, String md5, String fileName, int
-			fileType, String packageName) {
+	public static FileToDownload createFileToDownload(String link, long appId, String md5, String fileName, int fileType, String packageName) {
 		FileToDownload fileToDownload = createFileToDownload(link, appId, md5, fileName, fileType);
 		fileToDownload.setPackageName(packageName);
 		return fileToDownload;
+	}
+
+	public
+	@Download.DownloadState
+	int getStatus() {
+		return status;
+	}
+
+	public void setStatus(@Download.DownloadState int status) {
+		this.status = status;
 	}
 
 	public String getFileName() {
@@ -137,6 +148,33 @@ public class FileToDownload extends RealmObject {
 
 	public String getFilePath() {
 		return path + fileName;
+	}
+
+	@Override
+	protected FileToDownload clone() throws CloneNotSupportedException {
+		FileToDownload clone = new FileToDownload();
+		clone.setAppId(getAppId());
+		if (this.getLink() != null) {
+			clone.setLink(new String(this.getLink()));
+		}
+		clone.setStatus(this.getStatus());
+		if (this.getPath() != null) {
+			clone.setPath(new String(this.getPath()));
+		}
+		if (this.getPackageName() != null) {
+			clone.setPackageName(new String(this.getPackageName()));
+		}
+		clone.setDownloadId(this.getDownloadId());
+		clone.setFileType(this.getFileType());
+		clone.setProgress(this.getProgress());
+		if (this.getMd5() != null) {
+			clone.setMd5(new String(this.getMd5()));
+		}
+		if (this.getFileName() != null) {
+			clone.setFileName(new String(this.getFileName()));
+		}
+
+		return clone;
 	}
 
 	@IntDef({APK, OBB, GENERIC})

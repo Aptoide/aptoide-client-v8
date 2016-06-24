@@ -6,6 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import cm.aptoide.pt.database.realm.Download;
 import rx.Observable;
 
 /**
@@ -28,7 +29,7 @@ public class DownloadService extends Service {
 	}
 
 	public Observable startDownload(String url, int appId) {
-		return AptoideDownloadManager.getInstance().startDownload(null);
+		return AptoideDownloadManager.getInstance().startDownload(new Download());
 	}
 
 	public class LocalBinder extends Binder {
