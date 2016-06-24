@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -8,9 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,8 +46,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	protected Event.Name name;
 	protected String action;
 	protected String title;
-	private List<Displayable> displayables;
 	protected String storeTheme;
+	private List<Displayable> displayables;
 
 	public static StoreTabGridRecyclerFragment newInstance(Event event, String title, String storeTheme) {
 		Bundle args = buildBundle(event, title, storeTheme);
@@ -163,7 +161,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 						e.printStackTrace();
 					}
 
-					displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets());
+					displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), getStore.getNodes()
+							.getMeta()
+							.getData()
+							.getAppearance()
+							.getTheme());
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
 	}
@@ -186,7 +188,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 						e.printStackTrace();
 					}
 
-					displayables = DisplayablesFactory.parse(getStoreWidgets);
+					displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme);
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
 	}
@@ -196,6 +198,15 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	}
 
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		if (storeTheme != null) {
+			ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+		}
+	}
+
 	private static class BundleCons {
 
 		public static final String TYPE = "type";
@@ -203,14 +214,5 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		public static final String TITLE = "title";
 		public static final String ACTION = "action";
 		public static final String STORE_THEME = "storeTheme";
-	}
-
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		if(storeTheme != null) {
-			ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-		}
 	}
 }

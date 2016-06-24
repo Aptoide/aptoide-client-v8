@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/06/2016.
+ * Modified by Neurophobic Animal on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -28,7 +28,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
  */
 public class DisplayablesFactory {
 
-	public static List<Displayable> parse(GetStoreWidgets getStoreWidgets) {
+	public static List<Displayable> parse(GetStoreWidgets getStoreWidgets, String storeTheme) {
 
 		LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -44,7 +44,7 @@ public class DisplayablesFactory {
 						break;
 
 					case STORES_GROUP:
-						displayables.add(new GridHeaderDisplayable(wsWidget));
+						displayables.add(new GridHeaderDisplayable(wsWidget, storeTheme));
 						displayables.add(getStores(wsWidget.getViewObject()));
 						break;
 
