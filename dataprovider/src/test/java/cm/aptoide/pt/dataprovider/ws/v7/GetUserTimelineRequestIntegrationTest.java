@@ -139,7 +139,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ");
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -295,7 +295,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ");
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -357,7 +357,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ");
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -432,7 +432,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ");
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -476,7 +476,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ");
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -583,11 +583,9 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private GetUserTimelineRequest getGetUserTimelineRequest(String baseHost, String aptoideId, String accessToken,
-	                                                         int aptoideVercode, String cdn, String language, String
-			                                                             q) {
+	private GetUserTimelineRequest getGetUserTimelineRequest(String baseHost, String aptoideId, String accessToken, int aptoideVercode, String cdn, String language, String q, int limit, boolean mature, int offset) {
 		return new GetUserTimelineRequest(new GetUserTimelineRequest.Body(aptoideId, accessToken, aptoideVercode, cdn,
-				language, q), OkHttpClientFactory
+				language, limit, mature, offset, q), OkHttpClientFactory
 				.newClient(), WebService.getDefaultConverter(), baseHost);
 	}
 

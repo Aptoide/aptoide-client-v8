@@ -50,7 +50,7 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 
 	@Override
 	public void load(boolean refresh) {
-		GetUserTimelineRequest.of().observe(refresh)
+		GetUserTimelineRequest.of(50, 0).observe(refresh)
 				.<GetUserTimeline>compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.flatMapIterable(getUserTimeline -> getListWithMockedAppUpdate(getUserTimeline))
 				.filter(timelineItem -> timelineItem != null)
