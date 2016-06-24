@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -19,9 +19,9 @@ crashlytics {
 
 android {
     // Websockets
-    useLibrary 'org.apache.http.legacy'
+    useLibrary 'org.apache.http.legacy' // ??
 
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
@@ -32,14 +32,15 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
             shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            useProguard false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -53,54 +54,17 @@ android {
             res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-
-    compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-
-    compile 'com.trello:rxlifecycle:0.6.1'
-    // If you want pre-written Activities and Fragments you can subclass as providers
-    compile 'com.trello:rxlifecycle-components:0.6.1'
-
-    //    Apagar
-    compile "com.jakewharton.rxbinding:rxbinding:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-design:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${RX_BINDING_VERSION}"
-
-    // for unit tests
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
-
-    // for leak detection
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${STETHO_VERSION}"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${STETHO_VERSION}"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${STETHO_VERSION}"
-
-    /*
-    // Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true
-    }
-    // NDK Kit
-    compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
-        transitive = true
-    }
-    */
-
-    // Internal dependencies
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':database', configuration: 'debug')
     releaseCompile project(path: ':database', configuration: 'release')
@@ -116,6 +80,58 @@ dependencies {
 
     debugCompile project(path: ':imageloader', configuration: 'debug')
     releaseCompile project(path: ':imageloader', configuration: 'release')
+
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
+
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+
+    compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
+
+    compile "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
+    // If you want pre-written Activities and Fragments you can subclass as providers
+    compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
+
+    //    Apagar
+    compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
+
+    // for leak detection
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+
+    /*
+    // Crashlytics Kit
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true
+    }
+    // NDK Kit
+    compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
+        transitive = true
+    }
+    */
 
     debugCompile "com.facebook.stetho:stetho:${STETHO_VERSION}"
     debugCompile "com.facebook.stetho:stetho-js-rhino:${STETHO_VERSION}"

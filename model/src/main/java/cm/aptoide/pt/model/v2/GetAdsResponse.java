@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.model.v2;
@@ -24,7 +24,8 @@ public class GetAdsResponse {
 		private long id;
 		private String name;
 		private String repo;
-		@JsonProperty("package") private String packageName;
+		@JsonProperty("package")
+		private String packageName;
 		private String md5sum;
 		private long size;
 		private int vercode;

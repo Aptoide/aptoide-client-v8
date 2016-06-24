@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 buildscript {
@@ -43,16 +43,34 @@ task clean(type: Delete) {
 }
 
 ext {
+
+    //JW stands for Jake Wharton
+
+    //
+    // gradle build script vars
+    //
+
+    COMPILE_SDK_VERSION = 23
     BUILD_TOOLS_VERSION = '23.0.3'
+
+    //
+    // gradle build script dependecies versions
+    //
+
+    // Google Android Support
     SUPPORT_LIB_VERSION = '23.4.0'
-    LOMBOK_VERSION = '1.16.8'
+
+    // Google Play Services
     PLAY_SERVICES_VERSION = '8.3.0'
 
-    // RxJava
-    RXJAVA_VERSION = '1.1.5'
-    RXANDROID_VERSION = '1.2.0'
-    RX_BINDING_VERSION = '0.4.0'
-    RXJAVA_PROGUARD_RULES_VERSION = '1.1.3.0'
+    JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
+
+    // Rx
+    RXJAVA_VERSION = '1.1.6'
+    RXANDROID_VERSION = '1.2.1'
+    JW_RX_BINDING_VERSION = '0.4.0'
+    RXJAVA_PROGUARD_RULES_VERSION = '1.1.6.0'
+    TRELLO_RX_LIFECYCLE_VERSION = '0.6.1'
 
     // Retrofit
     RETROFIT_VERSION = '2.0.2'
@@ -64,8 +82,25 @@ ext {
     ROBOELECTRIC_VERSION = '3.0'
 
     // Leak Canary
-    STETHO_VERSION = '1.3.1'
+    LEAK_CANARY_VERSION = '1.4-beta2'
 
     // Debug only
     STETHO_VERSION = '1.3.1'
+
+    // Lombok plugin
+    LOMBOK_VERSION = '1.16.8'
+
+    JACKSON_ANNOTATIONS_VERSION = '2.7.3'
+
+    // Material tab strip
+    MATERIAL_TAB_STRIP_VERSION = '1.1.0'
+
+    // https://github.com/JakeWharton/DiskLruCache
+    JW_LRU_CACHE_VERSION = '2.0.2'
+
+    // Glide
+    GLIDE_VERSION = '3.7.0'
+
+    // Facebook Android SDK
+    FACEBOOK_ANDROID_SDK_VERSION = '4.11.0'
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -37,7 +37,8 @@ public class StoreUtils {
 	public static List<Long> getSubscribedStoresIds() {
 
 		List<Long> storesNames = new LinkedList<>();
-		@Cleanup Realm realm = Database.get();
+		@Cleanup
+		Realm realm = Database.get();
 		for (cm.aptoide.pt.database.realm.Store store : Database.StoreQ.getAll(realm)) {
 			storesNames.add(store.getStoreId());
 		}
@@ -48,7 +49,8 @@ public class StoreUtils {
 	public static List<String> getSubscribedStoresNames() {
 
 		List<String> storesNames = new LinkedList<>();
-		@Cleanup Realm realm = Database.get();
+		@Cleanup
+		Realm realm = Database.get();
 		for (cm.aptoide.pt.database.realm.Store store : Database.StoreQ.getAll(realm)) {
 			storesNames.add(store.getStoreName());
 		}
@@ -56,13 +58,13 @@ public class StoreUtils {
 		return storesNames;
 	}
 
-	public static Map<String, List<String>> getSubscribedStoresAuthMap() {
-		@Cleanup Realm realm = Database.get();
-		Map<String, List<String>> storesAuthMap = new HashMap<>();
+	public static Map<String,List<String>> getSubscribedStoresAuthMap() {
+		@Cleanup
+		Realm realm = Database.get();
+		Map<String,List<String>> storesAuthMap = new HashMap<>();
 		for (cm.aptoide.pt.database.realm.Store store : Database.StoreQ.getAll(realm)) {
 			if (store.getPasswordSha1() != null) {
-				storesAuthMap.put(store.getStoreName(), new LinkedList<>(Arrays.asList(store.getUsername(), store
-						.getPasswordSha1())));
+				storesAuthMap.put(store.getStoreName(), new LinkedList<>(Arrays.asList(store.getUsername(), store.getPasswordSha1())));
 			}
 		}
 		return storesAuthMap.size() > 0 ? storesAuthMap : null;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
@@ -66,7 +66,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
 	@Override
 	protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
-		Map<String, String> map = new HashMap<>();
+		Map<String,String> map = new HashMap<>();
 
 		map.put("success", success);
 		map.put("adid", Long.toString(adId));

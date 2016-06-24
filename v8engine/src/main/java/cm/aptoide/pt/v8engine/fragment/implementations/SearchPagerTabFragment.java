@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 23/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -31,7 +31,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 	private String query;
 	private boolean subscribedStores;
-	private Map<String, Void> mapPackages = new HashMap<>();
+	private Map<String,Void> mapPackages = new HashMap<>();
 
 	private transient ListSearchAppsRequest listSearchAppsRequest;
 	private SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {
@@ -73,9 +73,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		});
 
 		recyclerView.clearOnScrollListeners();
-		final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this,
-				listSearchAppsRequest = ListSearchAppsRequest
-				.of(query, subscribedStores), listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
+		final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this, listSearchAppsRequest = ListSearchAppsRequest.of(query,
+				subscribedStores), listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
 		recyclerView.addOnScrollListener(listener);
 		listener.onLoadMore(refresh);
 	}

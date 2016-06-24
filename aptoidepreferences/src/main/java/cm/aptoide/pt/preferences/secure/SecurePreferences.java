@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
@@ -102,8 +102,7 @@ public class SecurePreferences {
 	}
 
 	public static void setAdultSwitch(boolean active) {
-		SecurePreferencesImplementation.getInstance()
-				.edit().putBoolean(SecureKeys.ADULT_CONTENT_SWITCH, active)
+		SecurePreferencesImplementation.getInstance().edit().putBoolean(SecureKeys.ADULT_CONTENT_SWITCH, active)
 				.apply();
 	}
 

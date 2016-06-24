@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -9,8 +9,8 @@ import android.content.pm.PackageInfo;
 import android.os.StrictMode;
 import android.util.Log;
 
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.facebook.stetho.Stetho;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.security.SecureRandom;

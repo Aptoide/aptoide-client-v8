@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -537,7 +537,7 @@ public class AptoideUtils {
 			if (list.size() > 0) {
 				s = list.get(0).toString();
 
-				for (int i = 1; i < list.size(); i++) {
+				for (int i = 1 ; i < list.size() ; i++) {
 					s += "," + list.get(i).toString();
 				}
 			}
@@ -632,8 +632,7 @@ public class AptoideUtils {
 		}
 
 		public static String getConnectionType() {
-			final ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context
-					.CONNECTIVITY_SERVICE);
+			final ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			final NetworkInfo info = manager.getActiveNetworkInfo();
 
 			if (info.getTypeName() != null) {

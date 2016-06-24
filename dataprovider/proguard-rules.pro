@@ -15,3 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class cm.aptoide.pt.** {*;}
+#-keep class cm.aptoide.pt.preferences.** {*;}
+#-keep class cm.aptoide.pt.dataprovider.** {*;}
+-keep class android.support.v7.appcompat.** { *; }
+
+## Retrolambda specific rules ##
+
+# as per official recommendation: https://github.com/evant/gradle-retrolambda#proguard
+-dontwarn java.lang.invoke.*

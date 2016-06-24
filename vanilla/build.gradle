@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -14,7 +14,7 @@ retrolambda {
 }
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
@@ -23,42 +23,37 @@ android {
         versionName "8.0.0"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
     signingConfigs { release }
 
     productFlavors {
         // Define separate dev and prod product flavors.
         dev {
             applicationId "cm.aptoide.pt.aptoideclientv8"
+            versionCode 57
+            versionName "8.0.0.24062016"
+            resValue "string", "authenticatorAccountType", applicationId
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
-            versionCode 57
-            versionName "8.0.0.24062016"
             minSdkVersion 21
-            resValue "string", "authenticatorAccountType", applicationId
-            // Enabling multidex support.
-//            multiDexEnabled true
         }
         prod {
-            // The actual minSdkVersion for the application.
-            minSdkVersion 15
             applicationId "cm.aptoide.pt"
             resValue "string", "authenticatorAccountType", applicationId
+            minSdkVersion 15
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     buildTypes {
         release {
             zipAlignEnabled true
             minifyEnabled true
-            shrinkResources true
+            shrinkResources false
+            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
@@ -76,10 +71,11 @@ android {
         }
 
         debug {
+            multiDexEnabled true
+            shrinkResources false
             zipAlignEnabled false
             minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -102,12 +98,26 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':v8engine', configuration: 'debug')
     releaseCompile project(path: ':v8engine', configuration: 'release')
+
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 }
 
 def File propFile = new File('signing.properties')

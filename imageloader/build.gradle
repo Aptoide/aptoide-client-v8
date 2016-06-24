@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/05/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
@@ -18,11 +18,16 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {
 
+        debug {
+            shrinkResources false
+            minifyEnabled false
+            useProguard false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -33,12 +38,27 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
     releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
+
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+
+    compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
 }

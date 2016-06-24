@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 20/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -43,7 +43,6 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 		name.setText(pojo.getData().getName());
 		ImageLoader.load(pojo.getData().getIcon(), icon);
 
-		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance
-				(pojo)));
+		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo)));
 	}
 }

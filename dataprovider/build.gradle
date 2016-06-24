@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -22,10 +22,16 @@ android {
 
     buildTypes {
         release {
-
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'boolean', 'DELETE_DB', 'false'
         }
         debug {
-
+            shrinkResources false
+            minifyEnabled false
+            useProguard false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -36,10 +42,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile "com.google.android.gms:play-services-base:${GMS_VERSION}"
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':model', configuration: 'debug')
     releaseCompile project(path: ':model', configuration: 'release')
@@ -59,9 +65,24 @@ dependencies {
     debugCompile project(path: ':database', configuration: 'debug')
     releaseCompile project(path: ':database', configuration: 'release')
 
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
     testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
+
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    // Just for lombok not to complain
+    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

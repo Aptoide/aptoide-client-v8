@@ -15,3 +15,21 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class cm.aptoide.pt.** {*;}
+#-keep class cm.aptoide.pt.preferences.** {*;}
+#-keep class cm.aptoide.pt.dataprovider.** {*;}
+-keep class android.support.v7.appcompat.** { *; }
+
+## Retrolambda specific rules ##
+
+# as per official recommendation: https://github.com/evant/gradle-retrolambda#proguard
+-dontwarn java.lang.invoke.*
+
+# Jackson
+-keepattributes *Annotation*,EnclosingMethod,Signature
+-keepnames class com.fasterxml.jackson.** { *; }
+ -dontwarn com.fasterxml.jackson.databind.**
+ -keep class org.codehaus.** { *; }
+ -keepclassmembers public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
+ public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *; }
+
