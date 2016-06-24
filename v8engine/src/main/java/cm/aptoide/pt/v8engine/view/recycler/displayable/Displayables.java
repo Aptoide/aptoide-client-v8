@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 21/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -17,6 +17,14 @@ public class Displayables {
 	private final List<Displayable> displayables = new LinkedList<>();
 
 	public Displayables() {
+	}
+
+	public void add(int position, Displayable displayable) {
+		if (displayable instanceof DisplayableGroup) {
+			add(((DisplayableGroup) displayable).getChildren());
+		} else {
+			displayables.add(position, displayable);
+		}
 	}
 
 	public void add(Displayable displayable) {

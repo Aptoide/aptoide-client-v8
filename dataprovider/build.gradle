@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -8,6 +8,9 @@ apply plugin: 'me.tatarka.retrolambda'
 
 
 android {
+    // Websockets
+    useLibrary 'org.apache.http.legacy'
+
     compileSdkVersion 23
     buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -35,6 +38,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+
+    compile "com.google.android.gms:play-services-base:${GMS_VERSION}"
 
     debugCompile project(path: ':model', configuration: 'debug')
     releaseCompile project(path: ':model', configuration: 'release')
