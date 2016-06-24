@@ -7,6 +7,10 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +28,8 @@ import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
@@ -43,17 +49,17 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	protected String action;
 	protected String title;
 	private List<Displayable> displayables;
+	protected String storeTheme;
 
-	public static StoreTabGridRecyclerFragment newInstance(Event event, String title) {
-		Bundle args = buildBundle(event, title);
-
+	public static StoreTabGridRecyclerFragment newInstance(Event event, String title, String storeTheme) {
+		Bundle args = buildBundle(event, title, storeTheme);
 		StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
 
 	@NonNull
-	protected static Bundle buildBundle(Event event, String title) {
+	protected static Bundle buildBundle(Event event, String title, String storeTheme) {
 		Bundle args = new Bundle();
 
 		if (event.getType() != null) {
@@ -64,6 +70,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 		args.putString(BundleCons.TITLE, title);
 		args.putString(BundleCons.ACTION, event.getAction());
+		args.putString(BundleCons.STORE_THEME, storeTheme);
 		return args;
 	}
 
@@ -77,6 +84,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 		title = args.getString(BundleCons.TITLE);
 		action = args.getString(BundleCons.ACTION);
+		storeTheme = args.getString(BundleCons.STORE_THEME);
 	}
 
 	@Override
@@ -194,5 +202,15 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		public static final String NAME = "name";
 		public static final String TITLE = "title";
 		public static final String ACTION = "action";
+		public static final String STORE_THEME = "storeTheme";
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		if(storeTheme != null) {
+			ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+		}
 	}
 }

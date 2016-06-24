@@ -18,8 +18,8 @@ import cm.aptoide.pt.v8engine.R;
 public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
 	public static StoreGridRecyclerFragment newInstance(Event event, String
-			title) {
-		Bundle args = buildBundle(event, title);
+			title, String theme) {
+		Bundle args = buildBundle(event, title, theme);
 
 		StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
 		fragment.setArguments(args);

@@ -25,10 +25,12 @@ import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 	private final List<GetStoreTabs.Tab> tabs;
+	private String storeTheme;
 
 	public StorePagerAdapter(FragmentManager fm, GetStore getStore) {
 		super(fm);
 		tabs = getStore.getNodes().getTabs().getList();
+		storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
 		validateGetStore();
 	}
 
@@ -50,7 +52,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		switch (event.getType()) {
 			case API:
 				return StoreTabGridRecyclerFragment.newInstance(event, tabs.get(position)
-						.getLabel());
+						.getLabel(), storeTheme);
 			case CLIENT:
 				return caseClient(event);
 			default:
