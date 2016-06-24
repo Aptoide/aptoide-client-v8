@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,8 +39,8 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 
 	@Override
 	public void bindView(FeatureDisplayable displayable) {
-		title.setText(displayable.getAptoideTeamResId());
-		subtitle.setText(getContext().getString(R.string.fragment_social_timeline_hours_since_last_update, displayable.getHoursSinceLastUpdate()));
+		title.setText(displayable.getAptoideText(getContext()));
+		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
 		articleTitle.setText(displayable.getTitle());
 		ImageLoader.loadWithCircleTransform(displayable.getAvatart(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);

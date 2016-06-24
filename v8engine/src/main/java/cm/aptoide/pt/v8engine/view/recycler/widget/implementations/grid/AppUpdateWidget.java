@@ -1,7 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,7 +9,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -43,14 +40,10 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 	@Override
 	public void bindView(AppUpdateDisplayable displayable) {
 
-		appName.setText(getContext().getString(R.string.displayable_social_timeline_app_update_name,
-				displayable.getAppName()));
-		appUpdate.setText(getContext().getString(R.string.displayable_social_timeline_app_has_update,
-				getContext().getString(R.string.displayable_social_timeline_app_update)));
-		appVersion.setText(getContext().getString(R.string.displayable_social_timeline_app_update_version,
-				displayable.getVersion()));
-		updateButton.setText(getContext().getString(R.string.displayable_social_timeline_app_update_button,
-				getContext().getString(R.string.displayable_social_timeline_app_update_application)));
+		appName.setText(displayable.getAppTitle(getContext()));
+		appUpdate.setText(displayable.getHasUpdateText(getContext()));
+		appVersion.setText(displayable.getVersionText(getContext()));
+		updateButton.setText(displayable.updateAppText(getContext()));
 
 		ImageLoader.load(displayable.getIconUrl(), appIcon);
 

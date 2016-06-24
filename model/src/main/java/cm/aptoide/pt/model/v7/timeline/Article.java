@@ -1,11 +1,16 @@
 package cm.aptoide.pt.model.v7.timeline;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
+import cm.aptoide.pt.model.R;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,9 +30,5 @@ public class Article extends Feature {
 	               @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date) {
 		super(title, thumbnailUrl, url, date);
 		this.publisher = publisher;
-	}
-
-	protected boolean canEqual(Object other) {
-		return other instanceof Article;
 	}
 }

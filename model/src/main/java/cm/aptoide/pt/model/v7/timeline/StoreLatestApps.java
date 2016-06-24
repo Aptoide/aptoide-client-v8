@@ -27,7 +27,8 @@ public class StoreLatestApps {
 	public Date getLatestUpdate() {
 		if (latestUpdate == null) {
 			for (App app : apps) {
-				if (latestUpdate == null || app.getUpdated().getTime() > latestUpdate.getTime()) {
+				if (latestUpdate == null || (app.getUpdated() != null && app.getUpdated().getTime() > latestUpdate
+						.getTime())) {
 					latestUpdate = app.getUpdated();
 				}
 			}

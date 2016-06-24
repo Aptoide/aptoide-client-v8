@@ -1,7 +1,9 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.Date;
 
@@ -34,8 +36,8 @@ public class FeatureDisplayable extends Displayable {
 		return feature.getUrl();
 	}
 
-	@StringRes public int getAptoideTeamResId() {
-		return R.string.fragment_social_timeline_aptoide_team;
+	public String getAptoideText(Context context) {
+		return context.getString(R.string.fragment_social_timeline_aptoide_team);
 	}
 
 	@DrawableRes public int getAvatart() {
@@ -46,8 +48,10 @@ public class FeatureDisplayable extends Displayable {
 		return feature.getThumbnailUrl();
 	}
 
-	public int getHoursSinceLastUpdate() {
-		return dateCalculator.getHoursSinceDate(feature.getDate());
+
+	public String getHoursSinceLastUpdate(Context context) {
+		return context.getString(R.string.fragment_social_timeline_hours_since_last_update, dateCalculator
+				.getHoursSinceDate(feature.getDate()));
 	}
 
 	@Override

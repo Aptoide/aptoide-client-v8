@@ -41,7 +41,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 	@Override
 	public void bindView(StoreLatestAppsDisplayable displayable) {
 		title.setText(displayable.getTitle());
-		subtitle.setText(getContext().getString(R.string.fragment_social_timeline_hours_since_last_update, displayable.getHoursSinceLastUpdate()));
+		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
 		ImageLoader.loadWithCircleTransform(displayable.getAvatartUrl(), image);
 
 		appsContaner.removeAllViews();

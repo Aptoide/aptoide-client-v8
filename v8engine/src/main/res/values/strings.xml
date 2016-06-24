@@ -40,4 +40,5 @@
     <string name="displayable_social_timeline_app_update_application">application</string>
     <string name="displayable_social_timeline_app_update_version">Version: %1$s</string>
     <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
+    <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
 </resources>

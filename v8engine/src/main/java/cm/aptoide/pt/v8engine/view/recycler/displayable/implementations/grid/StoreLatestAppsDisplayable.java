@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -52,8 +53,9 @@ public class StoreLatestAppsDisplayable extends Displayable {
 		return storeLatestApps.getStore().getAvatar();
 	}
 
-	public int getHoursSinceLastUpdate() {
-		return dateCalculator.getHoursSinceDate(storeLatestApps.getLatestUpdate());
+	public String getHoursSinceLastUpdate(Context context) {
+		return context.getString(R.string.fragment_social_timeline_hours_since_last_update, dateCalculator
+				.getHoursSinceDate(storeLatestApps.getLatestUpdate()));
 	}
 
 	@Override
