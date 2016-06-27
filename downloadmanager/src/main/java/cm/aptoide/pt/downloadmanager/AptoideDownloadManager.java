@@ -183,7 +183,7 @@ public class AptoideDownloadManager {
 		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 			FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 		}
-		downloadQueue.add(appId);
+//		downloadQueue.add(appId);
 	}
 
 	/**
@@ -191,10 +191,7 @@ public class AptoideDownloadManager {
 	 */
 	public void pauseAllDownloads() {
 		Logger.d(TAG, "pauseAllDownloads() called");
-		for (final Long appId : downloadTasks.keySet()) {
-			downloadQueue.add(appId);
-		}
-		
+
 		FileDownloader.getImpl().pauseAll();
 	}
 
