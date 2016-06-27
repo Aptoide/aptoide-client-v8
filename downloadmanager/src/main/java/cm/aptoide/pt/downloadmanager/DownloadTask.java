@@ -224,7 +224,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 					}
 				}
 			});
-			if (!AptoideUtils.ThreadU.isOnUiThread()) {
+			if (!AptoideUtils.ThreadU.isUiThread()) {
 				mLooper.quit();
 			}
 			return null;

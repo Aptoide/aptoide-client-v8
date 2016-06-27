@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.pt;
@@ -98,5 +98,10 @@ public class VanillaConfiguration implements AptoideConfiguration {
 	public Class<?> getPushNotificationReceiverClass() {
 		throw new IllegalArgumentException("getPushNotificationReceiverClass not implemented " +
 				"yet!");
+	}
+
+	@Override
+	public String getPartnerId() {
+		return null;
 	}
 }

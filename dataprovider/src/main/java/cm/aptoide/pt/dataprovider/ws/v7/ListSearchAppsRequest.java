@@ -1,17 +1,18 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 09/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -41,12 +42,9 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
 		listSearchAppsRequest.body.setQuery(query);
 		if (subscribedStores) {
-			@Cleanup Realm realm = Database.get();
-			LinkedList<Long> ids = new LinkedList<>();
-			for (Store store : Database.StoreQ.getAll(realm)) {
-				ids.add(store.getStoreId());
-			}
-			listSearchAppsRequest.body.setStoreIds(ids);
+			listSearchAppsRequest.body.setStoreIds(StoreUtils.getSubscribedStoresIds());
+			Map<String, List<String>> storesAuthMap = StoreUtils.getSubscribedStoresAuthMap();
+			listSearchAppsRequest.body.setStoresAuthMap(storesAuthMap != null ? storesAuthMap : null);
 		}
 
 		return listSearchAppsRequest;
@@ -63,12 +61,15 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	public static class Body extends BaseBody implements OffsetInterface<Body> {
 
 		private String lang = Api.LANG;
-		private Integer limit;
+		private Integer limit = 10;
 		private boolean mature;
 		private int offset;
 		private String q = Api.Q;
 		private String query;
 		private List<Long> storeIds;
+		// Ideally, should never be used
+		private List<String> storeNames;
+		private Map<String, List<String>> storesAuthMap;
 		private Boolean trusted;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {

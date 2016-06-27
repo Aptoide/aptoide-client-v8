@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 14/05/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -79,8 +79,8 @@ dependencies {
     releaseCompile project(path: ':utils', configuration: 'release')
 
     compile 'com.facebook.android:facebook-android-sdk:4.11.0'
-    compile 'com.google.android.gms:play-services-basement:8.3.0'
-    compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile "com.google.android.gms:play-services-basement:${GMS_VERSION}"
+    compile "com.google.android.gms:play-services-auth:${GMS_VERSION}"
 
     compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
     // And ProGuard rules for RxJava!

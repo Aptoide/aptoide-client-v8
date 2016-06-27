@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -33,14 +33,14 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
 	}
 
 	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-	}
-
-	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		toolbar = null;
+	}
+
+	@Override
+	public void bindViews(View view) {
+		super.bindViews(view);
+		toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 	}
 }

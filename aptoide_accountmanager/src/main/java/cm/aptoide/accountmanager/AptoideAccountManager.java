@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.accountmanager;
@@ -394,7 +394,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static Observable<String> invalidateAccessToken(@NonNull Context context) {
 		return Observable.fromCallable(() -> {
-			if (AptoideUtils.ThreadU.isOnUiThread()) {
+			if (AptoideUtils.ThreadU.isUiThread()) {
 				throw new IllegalThreadStateException("This method shouldn't be called on ui " +
 						"thread.");
 			}

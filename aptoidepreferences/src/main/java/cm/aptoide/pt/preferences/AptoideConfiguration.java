@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.pt.preferences;
@@ -45,4 +45,11 @@ public interface AptoideConfiguration {
 
 	// Classes
 	Class<?> getPushNotificationReceiverClass();
+
+	// Partners
+
+	/**
+	 * @return partner id. null for vanilla.
+	 */
+	String getPartnerId();
 }

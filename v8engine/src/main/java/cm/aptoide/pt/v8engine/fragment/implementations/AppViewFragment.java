@@ -31,19 +31,19 @@ import java.util.Locale;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 04/05/16.
@@ -63,6 +63,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
+	private MinimalAd minimalAd;
 
 	//
 	// static fragment default new instance method
@@ -74,6 +75,17 @@ public class AppViewFragment extends GridRecyclerFragment {
 
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
+		return fragment;
+	}
+
+	public static AppViewFragment newInstance(GetAdsResponse.Ad ad) {
+		Bundle bundle = new Bundle();
+		bundle.putLong(BundleKeys.APP_ID.name(), ad.getData().getId());
+		bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), new MinimalAd(ad));
+
+		AppViewFragment fragment = new AppViewFragment();
+		fragment.setArguments(bundle);
+
 		return fragment;
 	}
 
@@ -198,10 +210,12 @@ public class AppViewFragment extends GridRecyclerFragment {
 	public void loadExtras(Bundle args) {
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
+		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 	}
 
 	private enum BundleKeys {
-		APP_ID
+		APP_ID,
+		MINIMAL_AD
 	}
 
 	//
@@ -229,7 +243,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 			badgeLayout = (RelativeLayout) view.findViewById(R.id.badge_layout);
 			badge = (ImageView) view.findViewById(R.id.badge_img);
 			badgeText = (TextView) view.findViewById(R.id.badge_text);
-			appIcon = (ImageView) view.findViewById(R.id.app_icon);
+			appIcon = (ImageView) view.findViewById(R.id.icon);
 			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar_top);
 			fileSize = (TextView) view.findViewById(R.id.file_size);
 			versionName = (TextView) view.findViewById(R.id.version_name);

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -39,8 +39,8 @@ android {
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
-            versionCode 56
-            versionName "8.0.0.23062016"
+            versionCode 60
+            versionName "8.0.0.27062016"
             minSdkVersion 21
             resValue "string", "authenticatorAccountType", applicationId
             // Enabling multidex support.
@@ -48,7 +48,7 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-           minSdkVersion 15
+            minSdkVersion 15
             applicationId "cm.aptoide.pt"
             resValue "string", "authenticatorAccountType", applicationId
         }
@@ -106,7 +106,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile 'com.google.android.gms:play-services-auth:8.3.0'
     debugCompile project(path: ':v8engine', configuration: 'debug')
     releaseCompile project(path: ':v8engine', configuration: 'release')
 }
@@ -132,6 +131,10 @@ if (propFile.canRead()) {
     println 'signing.properties not found'
     android.buildTypes.release.signingConfig = null
 }
+
+
+
+
 
 
 

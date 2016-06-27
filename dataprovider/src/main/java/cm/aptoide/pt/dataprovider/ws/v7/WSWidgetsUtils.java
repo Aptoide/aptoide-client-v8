@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -46,6 +47,11 @@ public class WSWidgetsUtils {
 				case DISPLAYS:
 					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
 							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
+							countDownLatch, listApps), action1);
+					break;
+				case ADS:
+					ioScheduler(GetAdsRequest.ofHomepage()
+							.observe()).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				default:

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by Neurophobic Animal on 15/06/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
@@ -86,7 +86,7 @@ public class SecurePreferences {
 	}
 
 	public static int getAdultContentPin() {
-		return SecurePreferencesImplementation.getInstance().getInt(SecureKeys.ADULT_CONTENT_PIN, -1);
+		return SecurePreferencesImplementation.getInstance().getInt(SecureKeys.ADULT_CONTENT_PIN, 0);
 	}
 
 	public static void setAdultContentPin(int pin) {
@@ -97,14 +97,29 @@ public class SecurePreferences {
 		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.IS_TIMELINE_ACTIVE, false);
 	}
 
-	public static void setAdultContentCheckBox(boolean active) {
+	public static int getMatureSwitch() {
+		return isAdultSwitchActive() ? 1 : 0;
+	}
+
+	public static void setAdultSwitch(boolean active) {
 		SecurePreferencesImplementation.getInstance()
-				.edit()
-				.putBoolean(SecureKeys.ADULT_CONTENT_CHECK_BOX, active)
+				.edit().putBoolean(SecureKeys.ADULT_CONTENT_SWITCH, active)
 				.apply();
 	}
 
-	public static boolean isAdultContentCheckBoxActive() {
-		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.ADULT_CONTENT_CHECK_BOX, false);
+	public static boolean isAdultSwitchActive() {
+		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
+	}
+
+	public static String getAdvertisingId() {
+		return SecurePreferencesImplementation.getInstance().getString(SecureKeys.ADVERTISING_ID_CLIENT, null);
+	}
+
+	public static void setAdvertisingId(String aaid) {
+		if (getAdvertisingId() != null) {
+			throw new RuntimeException("Advertising ID already set!");
+		}
+
+		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ADVERTISING_ID_CLIENT, aaid).apply();
 	}
 }

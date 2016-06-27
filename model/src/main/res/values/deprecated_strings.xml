@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 08/06/2016.
+  ~ Modified by SithEngineer on 22/06/2016.
   -->
 
 <resources>
@@ -257,8 +257,6 @@
 
     <string name="menu_context_reparse">Reload</string>
     <string name="menu_context_remove">Remove</string>
-    <string name="menu_select_all">Select All</string>
-    <string name="menu_select_none">Select None</string>
 
     <!-- Stores -->
     <string name="search_other_stores">Or search for others…</string>
@@ -271,7 +269,6 @@
     <!-- Network -->
     <string name="no_excluded_updates">No Excluded Updates</string>
     <string name="no_excluded_updates_selected">No Excluded Updates selected</string>
-    <string name="restore_updates">Restore Updates</string>
     <string name="exclude_update">Ignore Update</string>
     <string name="install_update">Install Update</string>
 
