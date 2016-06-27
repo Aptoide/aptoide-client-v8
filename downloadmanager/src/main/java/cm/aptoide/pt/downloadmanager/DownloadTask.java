@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -15,7 +14,6 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.database.Database;
@@ -23,13 +21,11 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Setter;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 
 /**
@@ -45,34 +41,38 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	final Download download;
 	private final long appId;
 	/**
-	 * this boolean is used to change between serial and parallel download (in this downloadTask) the default value is true
+	 * this boolean is used to change between serial and parallel download (in this downloadTask) the default value is
+	 * true
 	 */
-	@Setter
-	boolean isSerial = true;
+	@Setter boolean isSerial = true;
 	NotificationCompat.Builder builder;
 	Intent pauseDownloadsIntent;
 	Intent openAppsManagerIntent;
 	Intent resumeDownloadIntent;
 	private ConnectableObservable<Integer> observable;
 	private NotificationManager notificationManager;
-	private Looper mLooper;
 
 	public DownloadTask(Download download) {
 		this.download = download;
 		this.appId = download.getAppId();
 
-		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS).map(aLong -> updateProgress()).filter(integer -> {
-			if (integer <= PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() == Download.PROGRESS) {
-				if (integer == PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() != Download.COMPLETED) {
-					setDownloadStatus(Download.COMPLETED, download);
-					removeNotification(download);
-					AptoideDownloadManager.getInstance().startNextDownload();
-				}
-				return true;
-			} else {
-				return false;
-			}
-		}).publish();
+		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
+				.map(aLong -> updateProgress())
+				.filter(integer -> {
+					if (integer <= PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() == Download.PROGRESS) {
+						if (integer == PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() != Download
+								.COMPLETED) {
+							setDownloadStatus(Download.COMPLETED, download);
+							removeNotification(download);
+							AptoideDownloadManager.getInstance().currentDownloadFinished(download.getAppId());
+						}
+						return true;
+					} else {
+						return false;
+					}
+				})
+//				.takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.COMPLETED)
+				.publish();
 		observable.connect();
 	}
 
@@ -105,7 +105,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	 */
 	@NonNull
 	public Integer updateProgress() {
-		if (download.getOverallProgress() >= PROGRESS_MAX_VALUE || download.getOverallDownloadStatus() != Download.PROGRESS) {
+		if (download.getOverallProgress() >= PROGRESS_MAX_VALUE || download.getOverallDownloadStatus() != Download
+				.PROGRESS) {
 			return download.getOverallProgress();
 		}
 
@@ -115,6 +116,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		}
 		download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload().size()));
 		saveDownloadInDb(download);
+		updateNotification(download);
 		return download.getOverallProgress();
 	}
 
@@ -149,91 +151,75 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	}
 
 	private void buildNotification() {
-		mLooper = Looper.myLooper();
-		if (mLooper == null) {
-			Looper.prepare();
-			Looper.loop();
-		}
+		pauseDownloadsIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+		pauseDownloadsIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_PAUSE);
+		openAppsManagerIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+		openAppsManagerIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_OPEN);
+		resumeDownloadIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+		resumeDownloadIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_RESUME);
+		resumeDownloadIntent.putExtra(NotificationEventReceiver.APP_ID_EXTRA, download.getAppId());
+		PendingIntent pPause = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download
+				.getFilesToDownload()
+				.get(0)
+				.getDownloadId(), pauseDownloadsIntent, 0);
+		PendingIntent pOpenAppsManager = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download
+				.getFilesToDownload()
+				.get(0)
+				.getDownloadId(), openAppsManagerIntent, 0);
 
-		Observable.fromCallable((Callable<Void>) () -> {
-			pauseDownloadsIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-			pauseDownloadsIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_PAUSE);
-			openAppsManagerIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-			openAppsManagerIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_OPEN);
-			resumeDownloadIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-			resumeDownloadIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_RESUME);
-			resumeDownloadIntent.putExtra(NotificationEventReceiver.APP_ID_EXTRA, download.getAppId());
-			PendingIntent pPause = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download.getFilesToDownload()
-					.get(0)
-					.getDownloadId(), pauseDownloadsIntent, 0);
-			PendingIntent pOpenAppsManager = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download.getFilesToDownload()
-					.get(0)
-					.getDownloadId(), openAppsManagerIntent, 0);
-			PendingIntent pResume = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download.getFilesToDownload()
-					.get(0)
-					.getDownloadId(), resumeDownloadIntent, 0);
+		builder = new NotificationCompat.Builder(AptoideDownloadManager.getContext()).setSmallIcon(android.R.drawable
+				.ic_menu_edit)
+				.setAutoCancel(false)
+				.setOngoing(true)
+				.setContentTitle(String.format(AptoideDownloadManager.getContext()
+						.getResources()
+						.getString(R.string.aptoide_downloading), Application.getConfiguration().getMarketName()))
+				.setContentText(new StringBuilder().append(download.getAppName())
+						.append(AptoideDownloadManager.getContext().getResources().getString(R.string.status))
+						.append(download.getOverallDownloadStatus()))
+				.setContentIntent(pOpenAppsManager)
+				.setProgress(PROGRESS_MAX_VALUE, 0, false)
+				.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getContext()
+						.getString(R.string.pause_download), pPause)
+				.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getContext()
+						.getString(R.string.open_apps_manager), pOpenAppsManager);
+		Notification notification = builder.build();
 
-			builder = new NotificationCompat.Builder(AptoideDownloadManager.getContext()).setSmallIcon(android.R.drawable.ic_menu_edit)
-					.setAutoCancel(false)
-					.setOngoing(true)
-					.setContentTitle(String.format(AptoideDownloadManager.getContext()
-							.getResources()
-							.getString(R.string.aptoide_downloading), Application.getConfiguration().getMarketName()))
-					.setContentText(new StringBuilder().append(download.getAppName())
-							.append(AptoideDownloadManager.getContext().getResources().getString(R.string.status))
-							.append(download.getOverallDownloadStatus()))
-					.setContentIntent(pOpenAppsManager)
-					.setProgress(PROGRESS_MAX_VALUE, 0, false)
-					.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getContext().getString(R.string.pause_download), pPause)
-					.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getContext().getString(R.string.open_apps_manager), pOpenAppsManager);
-			Notification notification = builder.build();
+		notificationManager = (NotificationManager) AptoideDownloadManager.getContext()
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 
-			notificationManager = (NotificationManager) AptoideDownloadManager.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(download.getFilesToDownload().get(0).getDownloadId(), notification);
+	}
 
-			notificationManager.notify(download.getFilesToDownload().get(0).getDownloadId(), notification);
-
-			final boolean[] isOngoing = {true};
-			@Cleanup
-			Realm realm = Database.get();
-			realm.where(Download.class).equalTo("appId", appId).findAll().asObservable().subscribe(res -> {
-				if ((res.size() > 0) && notificationManager != null) {
-					Download download1 = res.get(0);
-					boolean isToggled = false;
-					if (download1.getOverallDownloadStatus() == Download.PROGRESS && !isOngoing[0]) {
-						isOngoing[0] = !isOngoing[0];
-						isToggled = true;
-					} else if (download1.getOverallDownloadStatus() != Download.PROGRESS && isOngoing[0]) {
-						isOngoing[0] = !isOngoing[0];
-						isToggled = true;
-					}
-					if (isOngoing[0]) {
-						builder.mActions.get(0).title = AptoideDownloadManager.getContext().getString(R.string.pause_download);
-						builder.mActions.get(0).actionIntent = pPause;
-					} else {
-						builder.mActions.get(0).title = AptoideDownloadManager.getContext().getString(R.string.resume_download);
-						builder.mActions.get(0).actionIntent = pResume;
-					}
-
-					if (isToggled) {
-						builder.setProgress(PROGRESS_MAX_VALUE, download1.getOverallProgress(), false)
-								.setContentText(new StringBuilder().append(download1.getAppName())
-										.append(AptoideDownloadManager.getContext().getString(R.string.status))
-										.append(Download.getStatusName(download1.getOverallDownloadStatus(), AptoideDownloadManager.getContext())))
-								.setOngoing(isOngoing[0]);
-						notificationManager.notify(download1.getFilesToDownload().get(0).getDownloadId(), builder.build());
-					}
-				}
-			});
-			if (!AptoideUtils.ThreadU.isUiThread()) {
-				mLooper.quit();
+	private void updateNotification(Download download1) {
+		if (notificationManager != null) {
+			boolean isOngoing = ((builder.build().flags & Notification.FLAG_ONGOING_EVENT) == Notification
+					.FLAG_ONGOING_EVENT);
+			boolean isToggled = false;
+			if (download1.getOverallDownloadStatus() == Download.PROGRESS && !isOngoing) {
+				isOngoing = !isOngoing;
+				isToggled = true;
+			} else if (download1.getOverallDownloadStatus() != Download.PROGRESS && isOngoing) {
+				isOngoing = !isOngoing;
+				isToggled = true;
 			}
-			return null;
-		}).subscribeOn(AndroidSchedulers.from(mLooper)).subscribe();
+			if (isToggled || download1.getOverallDownloadStatus() == Download.PROGRESS) {
+				builder.setProgress(PROGRESS_MAX_VALUE, this.download.getOverallProgress(), false)
+						.setContentText(new StringBuilder().append(download1.getAppName())
+								.append(AptoideDownloadManager.getContext().getString(R.string.status))
+								.append(Download.getStatusName(download1.getOverallDownloadStatus(),
+										AptoideDownloadManager
+										.getContext())));
+				if (isToggled) {
+					builder.setOngoing(isOngoing);
+				}
+				notificationManager.notify(download1.getFilesToDownload().get(0).getDownloadId(), builder.build());
+			}
+		}
 	}
 
 	private void saveDownloadInDb(Download download) {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = Database.get();
 		Database.save(download, realm);
 	}
 
@@ -243,8 +229,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	@Override
 	protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-		Logger.d(TAG, "pending() called with: " + "task = [" + task + "], soFarBytes = [" +
-				soFarBytes + "], totalBytes = [" + totalBytes + "]");
+		pending(task, (long) soFarBytes, (long) totalBytes);
 		setDownloadStatus(Download.PENDING, download, task);
 	}
 
@@ -255,27 +240,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	@Override
 	protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-		Logger.d(TAG, "paused() called with: " + "task = [" + task + "], soFarBytes = [" +
-				soFarBytes + "], totalBytes = [" + totalBytes + "]");
-		download.setOverallDownloadStatus(Download.PAUSED);
-		saveDownloadInDb(download);
-	}
-
-	private void setDownloadStatus(@Download.DownloadState int status, Download download) {
-		setDownloadStatus(status, download, null);
-	}
-
-	private void setDownloadStatus(@Download.DownloadState int status, Download download, @Nullable BaseDownloadTask task) {
-		if (task != null) {
-			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-				if (fileToDownload.getDownloadId() == task.getId()) {
-					fileToDownload.setStatus(status);
-				}
-			}
-		}
-
-		this.download.setOverallDownloadStatus(status);
-		saveDownloadInDb(download);
+		paused(task, (long) soFarBytes, (long) totalBytes);
 	}
 
 	@Override
@@ -291,10 +256,12 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				"totalBytes = [" + totalBytes + "]");
 		for (FileToDownload fileToDownload : download.getFilesToDownload()) {
 			if (fileToDownload.getDownloadId() == task.getId()) {
-				fileToDownload.setProgress((int) Math.floor((float) soFarBytes / totalBytes * DownloadTask.PROGRESS_MAX_VALUE));
+				fileToDownload.setProgress((int) Math.floor((float) soFarBytes / totalBytes * DownloadTask
+						.PROGRESS_MAX_VALUE));
 			}
 		}
 		setDownloadStatus(Download.PROGRESS, download, task);
+		AptoideDownloadManager.getInstance().setDownloading(true);
 	}
 
 	@Override
@@ -314,6 +281,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 			}
 		}
 		saveDownloadInDb(download);
+		AptoideDownloadManager.getInstance().setDownloading(false);
 	}
 
 	@Override
@@ -322,6 +290,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				"totalBytes" +
 				" = [" + totalBytes + "]");
 		setDownloadStatus(Download.PAUSED, download, task);
+		setupOnDownloadPausedNotification(download);
 	}
 
 	@Override
@@ -330,12 +299,46 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		Logger.printException(e);
 		AptoideDownloadManager.getInstance().pauseDownload(download.getAppId());
 		setDownloadStatus(Download.ERROR, download, task);
+		setupOnDownloadPausedNotification(download);
 	}
 
 	@Override
 	protected void warn(BaseDownloadTask task) {
 		Logger.d(TAG, "warn() called with: " + "task = [" + task + "]");
 		setDownloadStatus(Download.WARN, download, task);
+	}
+
+	private void setupOnDownloadPausedNotification(Download downloadToStop) {
+		PendingIntent pResume = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download
+				.getFilesToDownload()
+				.get(0)
+				.getDownloadId(), resumeDownloadIntent, 0);
+		builder.mActions.get(0).title = AptoideDownloadManager.getContext().getString(R.string.resume_download);
+		builder.mActions.get(0).actionIntent = pResume;
+		updateNotification(downloadToStop);
+	}
+
+	private void setDownloadStatus(@Download.DownloadState int status, Download download) {
+		setDownloadStatus(status, download, null);
+	}
+
+	private void setDownloadStatus(@Download.DownloadState int status, Download download, @Nullable BaseDownloadTask
+			task) {
+		if (task != null) {
+			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+				if (fileToDownload.getDownloadId() == task.getId()) {
+					fileToDownload.setStatus(status);
+				}
+			}
+		}
+
+		this.download.setOverallDownloadStatus(status);
+		saveDownloadInDb(download);
+		if (status == Download.PROGRESS) {
+			AptoideDownloadManager.getInstance().setDownloading(true);
+		} else {
+			AptoideDownloadManager.getInstance().setDownloading(false);
+		}
 	}
 
 	private void moveFileToRightPlace(Download download) {
@@ -346,7 +349,9 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		}
 
 		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-			if (!FileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, fileToDownload.getPath(), fileToDownload.getFileName())) {
+			if (!FileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, fileToDownload.getPath(),
+					fileToDownload
+					.getFileName())) {
 				setDownloadStatus(Download.ERROR, download);
 				AptoideDownloadManager.getInstance().pauseDownload(download.getAppId());
 			}

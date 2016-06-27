@@ -20,7 +20,6 @@ import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import io.realm.RealmList;
 import lombok.Cleanup;
-import lombok.Getter;
 import rx.Observable;
 
 /**
@@ -36,15 +35,22 @@ public class AptoideDownloadManager {
 	public static final String APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
 	public static final String OBB_PATH = EXTERNAL_ABSOLUTE_PATH + "/Android/obb/";
 	public static final String GENERIC_PATH = DOWNLOADS_STORAGE_PATH + "generic/";
-	@Getter
-	private final static AptoideDownloadManager instance = new AptoideDownloadManager();
 	private static final String TAG = AptoideDownloadManager.class.getSimpleName();
+	private static AptoideDownloadManager instance;
 	private static Context context;
-	private Queue<DownloadTask> downloadTaskStack = new LinkedList<>();
-	private HashMap<Long,Observable> observableHashMap = new HashMap<>();
+	private Queue<Long> downloadQueue = new LinkedList<>();
+	private HashMap<Long, DownloadTask> downloadTasks = new HashMap<>();
+	private boolean isDownloading = false;
 
 	public static Context getContext() {
 		return context;
+	}
+
+	public static AptoideDownloadManager getInstance() {
+		if (instance == null) {
+			instance = new AptoideDownloadManager();
+		}
+		return instance;
 	}
 
 	public void init(Context context) {
@@ -60,36 +66,44 @@ public class AptoideDownloadManager {
 	}
 
 	/**
-	 * @param appToDownload info about the download to be made, there are 2 mandatory arguments:<p> {@link GetAppMeta.App#id}: which will identify the
-	 *                      download</p <p> {@link cm.aptoide.pt.model.v7.listapp.File#path} or {@link cm.aptoide.pt.model.v7.listapp.File#path}: which will
-	 *                      give the link for the download </p>
+	 * @param appToDownload info about the download to be made, there are 2 mandatory arguments:<p> {@link
+	 *                      GetAppMeta.App#id}: which will identify the download</p <p> {@link
+	 *                      cm.aptoide.pt.model.v7.listapp.File#path} or
+	 *                      {@link cm.aptoide.pt.model.v7.listapp.File#path}:
+	 *                      which will give the link for the download </p>
 	 *
 	 * @return Observable to be subscribed if download updates needed or null if download is done already
 	 *
-	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this exception will be thrown with the cause in the detail
-	 *                                  message.
+	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this exception will be
+	 *                                  thrown with the cause in the detail message.
 	 * @see #startDownload(Download)
 	 */
-	public Observable startDownload(GetAppMeta.App appToDownload) throws IllegalArgumentException {
+	public Observable<Integer> startDownload(GetAppMeta.App appToDownload) throws IllegalArgumentException {
 		if (getDownloadStatus(appToDownload.getId()).toBlocking().first() == Download.COMPLETED) {
 			return Observable.fromCallable(() -> 100);
 		}
 		validateApp(appToDownload);
 
-		Download download = new Download();
-		download.setAppId(appToDownload.getId());
-		download.setAppName(appToDownload.getName());
-		download.setFilesToDownload(createDownloadsListFromApp(appToDownload));
-
-		DownloadTask downloadTask = new DownloadTask(download);
+		DownloadTask downloadTask;
+		if (downloadTasks.containsKey(appToDownload.getId())) {
+			downloadTask = downloadTasks.get(appToDownload.getId());
+		} else {
+			Download download = new Download();
+			download.setAppId(appToDownload.getId());
+			download.setAppName(appToDownload.getName());
+			download.setFilesToDownload(createDownloadsListFromApp(appToDownload));
+			downloadTask = new DownloadTask(download);
+			downloadTasks.put(appToDownload.getId(), downloadTask);
+		}
 		startDownloadTask(downloadTask);
-		//		observableHashMap.put(appToDownload.getId(), downloadTask.getObservable());
 		return downloadTask.getObservable();
 	}
 
 	private void startDownloadTask(DownloadTask downloadTask) {
 		if (isDownloading()) {
-			downloadTaskStack.add(downloadTask);
+			if (!isDownloadOnStack(downloadTask.download.getAppId())) {
+				downloadQueue.add(downloadTask.download.getAppId());
+			}
 		} else {
 			downloadTask.startDownload();
 		}
@@ -100,34 +114,48 @@ public class AptoideDownloadManager {
 	 *
 	 * @return Observable to be subscribed if download updates needed or null if download is done already
 	 *
-	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this exception will be thrown with the cause in the detail
-	 *                                  message.
+	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this exception will be
+	 *                                  thrown with the cause in the detail message.
 	 * @see #startDownload(GetAppMeta.App)
 	 */
-	public Observable startDownload(Download download) throws IllegalArgumentException {
+	public Observable<Integer> startDownload(Download download) throws IllegalArgumentException {
 		if (getDownloadStatus(download.getAppId()).toBlocking().first() == Download.COMPLETED) {
 			return Observable.fromCallable(() -> 100);
 		}
-		DownloadTask downloadTask = new DownloadTask(download);
+
+		DownloadTask downloadTask;
+		if (downloadTasks.containsKey(download.getAppId())) {
+			downloadTask = downloadTasks.get(download.getAppId());
+		} else {
+			downloadTask = new DownloadTask(download);
+			downloadTasks.put(download.getAppId(), downloadTask);
+		}
+
 		startDownloadTask(downloadTask);
-		//		observableHashMap.put(download.getAppId(), downloadTask.getObservable());
 		return downloadTask.getObservable();
 	}
 
 	private RealmList<FileToDownload> createDownloadsListFromApp(GetAppMeta.App appToDownload) {
 		RealmList<FileToDownload> downloads = new RealmList<>();
-		downloads.add(FileToDownload.createFileToDownload(appToDownload.getFile().getPath(), appToDownload.getId(), appToDownload.getFile().getMd5sum(), null, FileToDownload.APK));
+		downloads.add(FileToDownload.createFileToDownload(appToDownload.getFile()
+				.getPath(), appToDownload.getId(), appToDownload.getFile().getMd5sum(), null, FileToDownload.APK));
 		if (appToDownload.getObb() != null) {
 			if (appToDownload.getObb().getMain() != null) {
-				downloads.add(FileToDownload.createFileToDownload(appToDownload.getObb().getMain().getPath(), appToDownload.getId(), appToDownload.getObb()
+				downloads.add(FileToDownload.createFileToDownload(appToDownload.getObb()
+						.getMain().getPath(), appToDownload.getId(), appToDownload.getObb()
 						.getMain()
-						.getMd5sum(), appToDownload.getObb().getMain().getFilename(), FileToDownload.OBB, appToDownload.getPackageName()));
+						.getMd5sum(), appToDownload.getObb()
+						.getMain()
+						.getFilename(), FileToDownload.OBB, appToDownload.getPackageName()));
 			}
 
 			if (appToDownload.getObb().getPatch() != null) {
-				downloads.add(FileToDownload.createFileToDownload(appToDownload.getObb().getPatch().getPath(), appToDownload.getId(), appToDownload.getObb()
+				downloads.add(FileToDownload.createFileToDownload(appToDownload.getObb()
+						.getPatch().getPath(), appToDownload.getId(), appToDownload.getObb()
 						.getPatch()
-						.getMd5sum(), appToDownload.getObb().getPatch().getFilename(), FileToDownload.OBB, appToDownload.getPackageName()));
+						.getMd5sum(), appToDownload.getObb().getPatch().getFilename(), FileToDownload.OBB,
+						appToDownload
+						.getPackageName()));
 			}
 		}
 
@@ -139,7 +167,8 @@ public class AptoideDownloadManager {
 			throw new IllegalArgumentException("Invalid AppId");
 		} else if (appToDownload.getFile() == null) {
 			throw new IllegalArgumentException("The object GetAppMetaFile can't be null");
-		} else if (TextUtils.isEmpty(appToDownload.getFile().getPath()) && TextUtils.isEmpty(appToDownload.getFile().getPathAlt())) {
+		} else if (TextUtils.isEmpty(appToDownload.getFile().getPath()) && TextUtils.isEmpty(appToDownload.getFile()
+				.getPathAlt())) {
 			throw new IllegalArgumentException("No download link provided");
 		} else if (appToDownload.getObb() != null && TextUtils.isEmpty(appToDownload.getPackageName())) {
 			throw new IllegalArgumentException("This app has an OBB and doesn't have the package name specified");
@@ -149,12 +178,12 @@ public class AptoideDownloadManager {
 	}
 
 	public void pauseDownload(long appId) {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = Database.get();
 		Download download = getDownloadFromDb(realm, appId);
 		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 			FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 		}
+		downloadQueue.add(appId);
 	}
 
 	/**
@@ -162,16 +191,18 @@ public class AptoideDownloadManager {
 	 */
 	public void pauseAllDownloads() {
 		Logger.d(TAG, "pauseAllDownloads() called");
+		for (final Long appId : downloadTasks.keySet()) {
+			downloadQueue.add(appId);
+		}
+		
 		FileDownloader.getImpl().pauseAll();
 	}
 
 	public Observable<Integer> getDownloadStatus(long appId) {
 		return Observable.fromCallable(() -> {
-			@Cleanup
-			Realm realm = Database.get();
+			@Cleanup Realm realm = Database.get();
 			Download downloadToCheck = getDownloadFromDb(realm, appId);
-			@Download.DownloadState
-			int downloadStatus = Download.NOT_DOWNLOADED;
+			@Download.DownloadState int downloadStatus = Download.NOT_DOWNLOADED;
 			if (downloadToCheck != null) {
 				downloadStatus = downloadToCheck.getOverallDownloadStatus();
 				if (downloadStatus == Download.COMPLETED) {
@@ -190,8 +221,7 @@ public class AptoideDownloadManager {
 	@NonNull
 	@Download.DownloadState
 	int getStateIfFileExists(Download downloadToCheck) {
-		@Download.DownloadState
-		int downloadStatus = Download.COMPLETED;
+		@Download.DownloadState int downloadStatus = Download.COMPLETED;
 		for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
 			if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
 				downloadStatus = Download.FILE_MISSING;
@@ -201,13 +231,14 @@ public class AptoideDownloadManager {
 		return downloadStatus;
 	}
 
-	void currentDownloadFinished() {
+	void currentDownloadFinished(long appId) {
+		downloadTasks.remove(appId);
 		startNextDownload();
 	}
 
 	void startNextDownload() {
-		Logger.d(TAG, "startNextDownload() called with: " + "");
-		DownloadTask nextDownload = downloadTaskStack.poll();
+		Logger.d(TAG, "startNextDownload() called with: ");
+		DownloadTask nextDownload = downloadTasks.get(downloadQueue.poll());
 		if (nextDownload != null) {
 			nextDownload.startDownload();
 		}
@@ -215,8 +246,7 @@ public class AptoideDownloadManager {
 
 	public void stopDownload(long appId) {
 		Logger.d(TAG, "stopDownload() called with: " + "appId = [" + appId + "]");
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = Database.get();
 		Download download = getDownloadFromDb(realm, appId);
 
 		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
@@ -235,8 +265,29 @@ public class AptoideDownloadManager {
 	 * @return true if there is at least 1 download in progress, false otherwise
 	 */
 	public boolean isDownloading() {
-		@Cleanup
-		Realm realm = Database.get();
-		return realm.where(Download.class).equalTo("overallDownloadStatus", Download.PROGRESS).findFirst() != null;
+		return isDownloading;
+	}
+
+	public void setDownloading(boolean downloading) {
+		isDownloading = downloading;
+	}
+
+	/**
+	 * Check if the download is in queue already
+	 *
+	 * @param appId App id that identifies the download
+	 *
+	 * @return true if the download is on queue already, false otherwise
+	 */
+	public boolean isDownloadOnStack(long appId) {
+//		boolean toReturn = false;
+//		for (final DownloadTask downloadTask : downloadQueue) {
+//			if (downloadTask.download.getAppId() == appId) {
+//				toReturn = true;
+//				break;
+//			}
+//		}
+//		return toReturn;
+		return downloadQueue.contains(appId);
 	}
 }
