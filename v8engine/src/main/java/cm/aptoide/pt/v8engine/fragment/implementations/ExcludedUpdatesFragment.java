@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,9 +34,11 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 
 	private static final String TAG = ExcludedUpdatesFragment.class.getSimpleName();
-
 	private TextView emptyData;
 	private Subscription subscription;
+
+	public ExcludedUpdatesFragment() {
+	}
 
 	public static ExcludedUpdatesFragment newInstance() {
 		return new ExcludedUpdatesFragment();
@@ -56,14 +59,16 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 
 	@Override
 	public int getContentViewId() {
-		return R.layout.fragment_excluded_updates;
+		return R.layout.fragment_with_toolbar;
 	}
 
 	@Override
 	public void setupToolbar() {
 		super.setupToolbar();
 		if (toolbar != null) {
-			((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+			bar.setDisplayHomeAsUpEnabled(true);
+			bar.setTitle(R.string.excluded_updates);
 		}
 	}
 
@@ -103,7 +108,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 					finishLoading();
 
 					if (excludedUpdates == null || excludedUpdates.isEmpty()) {
-
+						emptyData.setText(R.string.no_excluded_updates_msg);
 						emptyData.setVisibility(View.VISIBLE);
 					} else {
 

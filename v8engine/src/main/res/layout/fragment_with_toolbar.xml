@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 22/06/2016.
+  ~ Modified by SithEngineer on 27/06/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -43,10 +43,10 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?android:actionBarSize"
         android:padding="@dimen/label_padding"
-        android:text="@string/no_excluded_updates_msg"
         android:textAlignment="center"
         android:textSize="16sp"
         android:visibility="gone"
+        tools:text="@string/no_excluded_updates_msg"
         tools:visibility="visible"
         />
 

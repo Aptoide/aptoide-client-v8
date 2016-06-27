@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 23/06/2016.
+  ~ Modified by SithEngineer on 27/06/2016.
   -->
 
 <resources>
@@ -24,11 +24,17 @@
     <string name="clear">Clear</string>
 
     <!-- Excluded Updates Fragment -->
+    <string name="excluded_updates">Excluded Updates</string>
     <string name="no_excluded_updates_msg">The new version of an app doesn’t work on your device or some feature is
         missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop
         updating.</string>
 
     <!-- Excluded Updates Fragment (menu) -->
     <string name="restore_updates">Restore Updates</string>
+
+    <!-- Rollback Fragment -->
+    <string name="rollback">Rollback</string>
+    <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
+        apps (via Aptoide) including version and install date.</string>
 
 </resources>
