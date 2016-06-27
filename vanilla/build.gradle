@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
 
 retrolambda {
     jvmArgs '-noverify'
@@ -21,12 +21,13 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "8.0.0"
-    }
+        testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        // Enable the experimental Jack build tools.
+        jackOptions {
+            enabled false
         }
     }
 
@@ -57,9 +58,9 @@ android {
     buildTypes {
         release {
             zipAlignEnabled true
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexEnabled true
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->
@@ -79,7 +80,7 @@ android {
             zipAlignEnabled false
             minifyEnabled false
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexEnabled true
         }
     }
 
@@ -102,6 +103,7 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"

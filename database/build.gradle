@@ -1,11 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION
@@ -21,9 +25,15 @@ android {
     buildTypes {
         release {
             buildConfigField 'boolean', 'DELETE_DB', 'false'
+            shrinkResources false
+            minifyEnabled false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             buildConfigField 'boolean', 'DELETE_DB', 'true'
+            shrinkResources false
+            minifyEnabled false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 

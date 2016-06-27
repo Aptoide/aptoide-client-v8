@@ -1,10 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION
@@ -18,6 +22,7 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 23
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
     lintOptions {
@@ -28,9 +33,12 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled false
+            shrinkResources true
         }
         debug {
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources false
+            minifyEnabled false
         }
     }
 }

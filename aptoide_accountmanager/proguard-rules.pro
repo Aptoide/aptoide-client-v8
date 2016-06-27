@@ -15,10 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep public class cm.aptoide.accountmanager.** {
-  public void set*(***);
-  public *** get*();
-}
+#-keep public class cm.aptoide.accountmanager.** {
+#  public void set*(***);
+#  public *** get*();
+#}
+
+-keep class cm.aptoide.accountmanager.** { *; }
 
 -keep class cm.aptoide.pt.** {*;}
 #-keep class cm.aptoide.pt.preferences.** {*;}

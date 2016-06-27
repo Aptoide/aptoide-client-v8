@@ -1,10 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION

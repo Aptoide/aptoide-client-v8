@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 buildscript {
@@ -16,7 +16,7 @@ buildscript {
         classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
 
         classpath 'io.fabric.tools:gradle:1.21.6'

@@ -1,10 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 
 android {
@@ -16,15 +20,19 @@ android {
 
     defaultConfig {
         minSdkVersion 15
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-            buildConfigField 'boolean', 'DELETE_DB', 'false'
+            minifyEnabled false
+            shrinkResources true
         }
         debug {
+            shrinkResources false
+            minifyEnabled false
         }
     }
 

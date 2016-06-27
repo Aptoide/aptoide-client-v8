@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
+import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
@@ -32,6 +32,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.functions.Action1;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -42,21 +43,24 @@ public abstract class V8Engine extends DataProvider {
 
 	public static void loadStores() {
 
-		AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
-			@Cleanup Realm realm = Database.get(getContext());
-			for (GetUserRepoSubscription.Subscription subscription : subscriptions) {
-				Store store = new Store();
+		AptoideAccountManager.getUserRepos().subscribe(new Action1<List<Subscription>>() {
+			@Override
+			public void call(List<Subscription> subscriptions) {
+				@Cleanup
+				Realm realm = Database.get(getContext());
+				for (Subscription subscription : subscriptions) {
+					Store store = new Store();
 
-				store.setDownloads(Long.parseLong(subscription.getDownloads()));
-				store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription
-						.getAvatar());
-				store.setStoreId(subscription.getId().longValue());
-				store.setStoreName(subscription.getName());
-				store.setTheme(subscription.getTheme());
+					store.setDownloads(Long.parseLong(subscription.getDownloads()));
+					store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar());
+					store.setStoreId(subscription.getId().longValue());
+					store.setStoreName(subscription.getName());
+					store.setTheme(subscription.getTheme());
 
-				realm.beginTransaction();
-				realm.copyToRealmOrUpdate(store);
-				realm.commitTransaction();
+					realm.beginTransaction();
+					realm.copyToRealmOrUpdate(store);
+					realm.commitTransaction();
+				}
 			}
 		});
 	}
