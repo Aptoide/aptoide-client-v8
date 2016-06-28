@@ -1,10 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +34,32 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
-	public static ListSearchAppsRequest of(String query, boolean subscribedStores) {
+	public static ListSearchAppsRequest of(String query, String storeName) {
+		LinkedList<String> stores = new LinkedList<>();
+		stores.add(storeName);
+
+		ListSearchAppsRequest of = of(query, false);
+		of.body.setStoreNames(stores);
+		Map<String, List<String>> subscribedStoresAuthMap = StoreUtils.getSubscribedStoresAuthMap();
+		if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
+			Map<String, List<String>> storesAuthMap = new HashMap<>();
+			storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
+			of.body.setStoresAuthMap(storesAuthMap);
+		}
+
+		return of;
+	}
+
+	public static ListSearchAppsRequest of(String query) {
+		return of(query, true);
+	}
+
+	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
 		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences
 				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
 		listSearchAppsRequest.body.setQuery(query);
-		if (subscribedStores) {
+		if (addSubscribedStores) {
 			listSearchAppsRequest.body.setStoreIds(StoreUtils.getSubscribedStoresIds());
 			Map<String, List<String>> storesAuthMap = StoreUtils.getSubscribedStoresAuthMap();
 			listSearchAppsRequest.body.setStoresAuthMap(storesAuthMap != null ? storesAuthMap : null);

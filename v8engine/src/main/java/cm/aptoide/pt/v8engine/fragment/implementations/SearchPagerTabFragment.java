@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -30,8 +30,8 @@ import rx.Observable;
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 	private String query;
-	private boolean subscribedStores;
-	private Map<String,Void> mapPackages = new HashMap<>();
+	private boolean addSubscribedStores;
+	private Map<String, Void> mapPackages = new HashMap<>();
 
 	private transient ListSearchAppsRequest listSearchAppsRequest;
 	private SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {
@@ -41,7 +41,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 		Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
-		if (subscribedStores) {
+		if (addSubscribedStores) {
 			from = from.filter(searchAppsApp -> !mapPackages.containsKey(searchAppsApp.getPackageName()));
 		}
 
@@ -57,7 +57,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		Bundle args = new Bundle();
 
 		args.putString(BundleCons.QUERY, query);
-		args.putBoolean(BundleCons.SUBSCRIBED_STORES, subscribedStores);
+		args.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, subscribedStores);
 
 		SearchPagerTabFragment fragment = new SearchPagerTabFragment();
 		fragment.setArguments(args);
@@ -73,8 +73,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		});
 
 		recyclerView.clearOnScrollListeners();
-		final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this, listSearchAppsRequest = ListSearchAppsRequest.of(query,
-				subscribedStores), listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
+		final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this,
+				listSearchAppsRequest = ListSearchAppsRequest.of(query, addSubscribedStores),
+				listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
 		recyclerView.addOnScrollListener(listener);
 		listener.onLoadMore(refresh);
 	}
@@ -84,7 +85,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		super.loadExtras(args);
 
 		query = args.getString(BundleCons.QUERY);
-		subscribedStores = args.getBoolean(BundleCons.SUBSCRIBED_STORES);
+		addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		super.onSaveInstanceState(outState);
 
 		outState.putString(BundleCons.QUERY, query);
-		outState.putBoolean(BundleCons.SUBSCRIBED_STORES, subscribedStores);
+		outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
 	}
 
 	@Override
@@ -103,6 +104,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 	protected static class BundleCons {
 
 		public static final String QUERY = "query";
-		public static final String SUBSCRIBED_STORES = "subscribedStores";
+		public static final String ADD_SUBSCRIBED_STORES = "addSubscribedStores";
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -11,6 +11,25 @@ apply plugin: 'me.tatarka.retrolambda'
 
 retrolambda {
     jvmArgs '-noverify'
+}
+
+// Should be moved to application module when possible
+Properties localProperties = new Properties()
+localProperties.load(new FileInputStream("local.properties"))
+
+def fabricApiKey = localProperties.FABRIC_API_KEY
+def fabricConfigured = fabricApiKey != null
+if (fabricConfigured) {
+    task fabricGenerateProperties {
+        doFirst {
+            def fabricProperties = project.file("fabric.properties")
+            fabricProperties.delete()
+            fabricProperties.append("# Do not modify this file -- YOUR CHANGES WILL BE ERASED!\n")
+            fabricProperties.append("apiKey=" + fabricApiKey)
+        }
+    }
+    preBuild.dependsOn(fabricGenerateProperties)
+    apply plugin: 'io.fabric'
 }
 
 android {
@@ -36,16 +55,14 @@ android {
     productFlavors {
         // Define separate dev and prod product flavors.
         dev {
-            applicationId "cm.aptoide.pt.aptoideclientv8"
+            applicationId "cm.aptoide.pt.dev"
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
-            versionCode 60
-            versionName "8.0.0.27062016"
+            versionCode 61
+            versionName "8.0.0.28062016"
             minSdkVersion 21
             resValue "string", "authenticatorAccountType", applicationId
-            // Enabling multidex support.
-//            multiDexEnabled true
         }
         prod {
             // The actual minSdkVersion for the application.

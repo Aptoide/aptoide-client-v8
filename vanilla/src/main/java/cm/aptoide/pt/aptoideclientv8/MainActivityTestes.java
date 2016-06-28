@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.aptoideclientv8;
@@ -68,7 +68,7 @@ public class MainActivityTestes extends AppCompatActivity {
 		listAppVersionsRequest.getBody().setAppId(18711899);
 		listAppVersionsRequest.execute(System.out::println);
 
-		ListSearchAppsRequest of = ListSearchAppsRequest.of("hay day", false);
+		ListSearchAppsRequest of = ListSearchAppsRequest.of("hay day");
 		of.execute(listSearchApps -> System.out.println("ListSearchAppsRequest: " +
 				listAppsUpdatesRequest));
 

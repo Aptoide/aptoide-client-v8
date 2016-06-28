@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -9,6 +9,8 @@ import android.content.pm.PackageInfo;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.squareup.leakcanary.LeakCanary;
@@ -30,6 +32,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
 import rx.functions.Action1;
@@ -127,13 +130,18 @@ public abstract class V8Engine extends DataProvider {
 			Logger.w(TAG, "application has debug flag active");
 		}
 
-		// FIXME remove this line
-		getInstalledApksInfo();
 		if (BuildConfig.DEBUG) {
 			Stetho.initializeWithDefaults(this);
 		}
 
+		setupCrashlytics();
+
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+	}
+
+	private void setupCrashlytics() {
+		Crashlytics crashlyticsKit = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(!BuildConfig.FABRIC_CONFIGURED).build()).build();
+		Fabric.with(this, crashlyticsKit);
 	}
 
 	private void setAdvertisingId() {
@@ -161,32 +169,6 @@ public abstract class V8Engine extends DataProvider {
 
 	private void addDefaultStore() {
 		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
-	}
-
-	/**
-	 * 	just for curiosity...
-	 */
-	private void getInstalledApksInfo() {
-		try{
-			Logger.v(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com" +
-					".android" +
-					".browser"));
-		}catch (Exception e) {
-			Logger.v(TAG, "browser (system) not installed", e);
-		}
-
-		try {
-			Logger.v(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
-		}catch (Exception e) {
-			Logger.v(TAG, "aptoide not installed", e);
-		}
-
-		try{
-			Logger.v(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook" +
-					".katana"));
-		}catch (Exception e){
-			Logger.v(TAG, "facebook not installed", e);
-		}
 	}
 
 	private void loadInstalledApps() {
