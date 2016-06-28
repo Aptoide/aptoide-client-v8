@@ -2,9 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.listeners;
 
 import android.support.v7.widget.RecyclerView;
 
-import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import rx.Observable;
 

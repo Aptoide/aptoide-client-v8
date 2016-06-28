@@ -1,21 +1,13 @@
 package cm.aptoide.pt.v8engine.view.recycler.listeners;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.jakewharton.rxbinding.internal.Preconditions;
-import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent;
 
-import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;
-import rx.functions.Action1;
-import rx.observables.SyncOnSubscribe;
 
 /**
  * Created by marcelobenites on 6/27/16.

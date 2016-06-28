@@ -38,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 
-	public static final int SEARCH_LIMIT = 4;
+	public static final int SEARCH_LIMIT = 7;
 	private SpannableFactory spannableFactory;
 	private DateCalculator dateCalculator;
 	private boolean loading;
@@ -63,15 +63,16 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 			subscription.unsubscribe();
 		}
 		subscription = Observable.concat(
-				GetUserTimelineRequest.of(SEARCH_LIMIT, 0).observe(refresh)
-					.observeOn(AndroidSchedulers.mainThread())
-					.doOnNext(item -> adapter.clearDisplayables()),
+				GetUserTimelineRequest.of(SEARCH_LIMIT, 0)
+						.observe(refresh)
+						.doOnNext(item -> adapter.clearDisplayables()),
 				RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
 						.filter(item -> !isLoading())
 						.doOnNext(item -> addLoading())
 						.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset).observe())
 						.delay(1, TimeUnit.SECONDS)
-						.retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
+						.retryWhen(errors -> errors
+								.delay(1, TimeUnit.SECONDS)
 								.observeOn(AndroidSchedulers.mainThread())
 								.doOnNext(error -> showErrorSnackbar(error)))
 						.subscribeOn(AndroidSchedulers.mainThread()))
@@ -83,7 +84,7 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 				.map(timelineItem -> timelineItem.getData())
 				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps || item instanceof App))
 				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory))
-				.buffer(2, TimeUnit.SECONDS, SEARCH_LIMIT)
+				.buffer(1, TimeUnit.SECONDS, SEARCH_LIMIT)
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnNext(item -> removeLoading())
 				.subscribe(displayables -> addDisplayables((List<Displayable>) displayables),

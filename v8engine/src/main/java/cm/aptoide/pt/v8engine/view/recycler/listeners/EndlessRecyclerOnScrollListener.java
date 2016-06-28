@@ -25,11 +25,9 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	private final Action1 successRequestListener;
 
 	private boolean loading;
-	private int previousTotal = 0; // The total number of items in the dataset after the last load
-	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before
+	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before load
 	private boolean bypassCache;
 	private ErrorRequestListener errorRequestListener;
-	// loading more.
 
 	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
 			extends
@@ -54,16 +52,11 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
 		LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-		int visibleItemCount = recyclerView.getChildCount();
 		int totalItemCount = mLinearLayoutManager.getItemCount();
-		int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+		int lastVisibleItemPosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-		if (loading) {
-			if (totalItemCount > previousTotal) {
-				previousTotal = totalItemCount;
-			}
-		}
-		if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+		if (!loading && (((totalItemCount - 1) == lastVisibleItemPosition)
+						|| ((totalItemCount - 1) == (lastVisibleItemPosition + visibleThreshold)))) {
 			// End has been reached, load more items
 			onLoadMore(bypassCache);
 		}
