@@ -242,7 +242,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 	@Override
 	public void load(boolean refresh) {
-		executeSearchRequests();
+		if (refresh) {
+			executeSearchRequests();
+		} else {
+			handleFinishLoading();
+		}
 	}
 
 	protected static class BundleCons {
