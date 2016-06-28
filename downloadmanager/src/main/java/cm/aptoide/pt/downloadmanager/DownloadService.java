@@ -20,7 +20,7 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		AptoideDownloadManager.getInstance().init(this);
+		AptoideDownloadManager.getInstance().initDownloadService(this);
 	}
 
 	@Nullable

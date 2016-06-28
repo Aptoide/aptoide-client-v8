@@ -1,6 +1,8 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -14,7 +16,8 @@ import java.util.Queue;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.downloadmanager.interfaces.NotificationInterface;
+import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
+import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.FileUtils;
@@ -23,7 +26,6 @@ import io.realm.RealmList;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
-import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -45,7 +47,8 @@ public class AptoideDownloadManager {
 	private Queue<Long> downloadQueue = new LinkedList<>();
 	private HashMap<Long, DownloadTask> downloadTasks = new HashMap<>();
 	private boolean isDownloading = false;
-	@Getter(AccessLevel.MODULE) @Setter private NotificationInterface notificationInterface;
+	@Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface downloadNotificationActionsInterface;
+	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
 
 	public static Context getContext() {
 		return context;
@@ -58,7 +61,18 @@ public class AptoideDownloadManager {
 		return instance;
 	}
 
-	public void init(Context context) {
+	public void init(Context context, ServiceConnection serviceConnection, DownloadNotificationActionsInterface
+			downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface) {
+		Intent intent = new Intent(context, DownloadService.class);
+		if (!context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)) {
+			throw new RuntimeException("Download service bound failed");
+		}
+		context.startService(intent);
+		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
+		this.settingsInterface = settingsInterface;
+	}
+
+	void initDownloadService(Context context) {
 		FileDownloader.init(context);
 		AptoideDownloadManager.context = context;
 		createDownloadDirs();
@@ -149,8 +163,7 @@ public class AptoideDownloadManager {
 		if (appToDownload.getObb() != null) {
 			if (appToDownload.getObb().getMain() != null) {
 				downloads.add(FileToDownload.createFileToDownload(appToDownload.getObb()
-						.getMain().getPath(), appToDownload.getId(), appToDownload.getObb()
-						.getMain()
+						.getMain().getPath(), appToDownload.getId(), appToDownload.getObb().getMain()
 						.getMd5sum(), appToDownload.getObb()
 						.getMain()
 						.getFilename(), FileToDownload.OBB, appToDownload.getPackageName()));
@@ -158,7 +171,8 @@ public class AptoideDownloadManager {
 
 			if (appToDownload.getObb().getPatch() != null) {
 				downloads.add(FileToDownload.createFileToDownload(appToDownload.getObb()
-						.getPatch().getPath(), appToDownload.getId(), appToDownload.getObb()
+								.getPatch()
+								.getPath(), appToDownload.getId(), appToDownload.getObb()
 						.getPatch()
 						.getMd5sum(), appToDownload.getObb().getPatch().getFilename(), FileToDownload.OBB,
 						appToDownload

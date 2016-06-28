@@ -29,5 +29,6 @@
 
     <!-- Excluded Updates Fragment (menu) -->
     <string name="restore_updates">Restore Updates</string>
+    <string name="open_apps_manager">Open Apps Manager</string>
 
 </resources>

@@ -10,20 +10,17 @@ import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import cm.aptoide.pt.downloadmanager.interfaces.NotificationInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
 import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import lombok.Getter;
@@ -32,8 +29,7 @@ import rx.functions.Action0;
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class AptoideBaseActivity extends AppCompatActivity
-		implements Lifecycle, PermissionRequest, NotificationInterface {
+public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle, PermissionRequest {
 
 	private static final String TAG = AptoideBaseActivity.class.getName();
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -91,7 +87,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 	@Override
 	protected void onStart() {
 		super.onStart();
-		V8Engine.setDownloadServiceNotificationI(this);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
@@ -246,20 +241,4 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 		GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
 	}
 
-	@Override
-	public void button1Pressed() {
-		Logger.d(TAG, "button1Pressed() called with: " + "");
-	}
-
-	@Override
-	public void notificationPressed(long appId) {
-		Logger.d(TAG, "notificationPressed() called with: " + "appId = [" + appId + "]");
-	}
-
-	@Override
-	public
-	@DrawableRes
-	int getMainIcon() {
-		return V8Engine.getConfiguration().getIcon();
-	}
 }

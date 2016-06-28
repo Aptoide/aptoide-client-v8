@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine;
 
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.os.IBinder;
@@ -32,7 +31,6 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadService;
-import cm.aptoide.pt.downloadmanager.interfaces.NotificationInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -63,10 +61,6 @@ public abstract class V8Engine extends DataProvider {
 		public void onServiceDisconnected(ComponentName arg0) {
 		}
 	};
-
-	public static void setDownloadServiceNotificationI(NotificationInterface notificationI) {
-		AptoideDownloadManager.getInstance().setNotificationInterface(notificationI);
-	}
 
 	public static Observable<Download> startDownload(GetAppMeta.App app) {
 		return downloadService.startDownload(app);
@@ -160,11 +154,9 @@ public abstract class V8Engine extends DataProvider {
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
 
-		Intent intent = new Intent(this, DownloadService.class);
-		if (!bindService(intent, downloadServiceConnection, BIND_AUTO_CREATE)) {
-			throw new RuntimeException("Download service bound failed");
-		}
-		startService(intent);
+		AptoideDownloadManager.getInstance()
+				.init(context, downloadServiceConnection, new DownloadNotificationActionsActionsInterface(), new
+						DownloadManagerSettingsI());
 	}
 
 	private void setAdvertisingId() {

@@ -60,12 +60,12 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		this.appId = download.getAppId();
 
 		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
-				.map(aLong -> updateProgress()).subscribeOn(Schedulers.io()).filter(updatedDownload -> {
+				.map(aLong -> updateProgress())
+				.subscribeOn(Schedulers.io())
+				.filter(updatedDownload -> {
 					if (updatedDownload.getOverallProgress() <= PROGRESS_MAX_VALUE && download
 							.getOverallDownloadStatus() == Download.PROGRESS) {
-						if (updatedDownload.getOverallProgress() == PROGRESS_MAX_VALUE && download
-								.getOverallDownloadStatus() != Download
-								.COMPLETED) {
+						if (updatedDownload.getOverallProgress() == PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() != Download.COMPLETED) {
 							setDownloadStatus(Download.COMPLETED, download);
 							removeNotification(download);
 							AptoideDownloadManager.getInstance().currentDownloadFinished(download.getAppId());
@@ -74,7 +74,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 					} else {
 						return false;
 					}
-				}).subscribeOn(Schedulers.io())
+				})
+				.subscribeOn(Schedulers.io())
 //				.takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.COMPLETED)
 				.publish();
 		observable.connect();
@@ -173,8 +174,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 		builder = new NotificationCompat.Builder(AptoideDownloadManager.getContext()).setSmallIcon
 				(AptoideDownloadManager
-				.getInstance()
-				.getNotificationInterface()
+				.getInstance().getSettingsInterface()
 				.getMainIcon())
 				.setAutoCancel(false)
 				.setOngoing(true)
@@ -188,8 +188,9 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				.setProgress(PROGRESS_MAX_VALUE, 0, false)
 				.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getContext()
 						.getString(R.string.pause_download), pPause)
-				.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getContext()
-						.getString(R.string.open_apps_manager), pOpenAppsManager);
+				.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getInstance()
+						.getSettingsInterface()
+						.getButton1Text(AptoideDownloadManager.getContext()), pOpenAppsManager);
 		Notification notification = builder.build();
 
 		notificationManager = (NotificationManager) AptoideDownloadManager.getContext()

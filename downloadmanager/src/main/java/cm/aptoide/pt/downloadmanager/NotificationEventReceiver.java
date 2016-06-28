@@ -31,8 +31,9 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					AptoideDownloadManager.getInstance().pauseAllDownloads();
 					break;
 				case DOWNLOADMANAGER_ACTION_OPEN:
-					if (AptoideDownloadManager.getInstance().getNotificationInterface() != null) {
-						AptoideDownloadManager.getInstance().getNotificationInterface().button1Pressed();
+					if (AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface() != null) {
+						AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface()
+								.button1Pressed();
 					}
 					break;
 				case DOWNLOADMANAGER_ACTION_RESUME:
@@ -52,10 +53,9 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					}
 					break;
 				case DOWNLOADMANAGER_ACTION_NOTIFICATION:
-					if (AptoideDownloadManager.getInstance().getNotificationInterface() != null) {
+					if (AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface() != null) {
 						if (intent.hasExtra(APP_ID_EXTRA)) {
-							AptoideDownloadManager.getInstance()
-									.getNotificationInterface()
+							AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface()
 									.notificationPressed(intent.getLongExtra(APP_ID_EXTRA, 0));
 						}
 						break;
