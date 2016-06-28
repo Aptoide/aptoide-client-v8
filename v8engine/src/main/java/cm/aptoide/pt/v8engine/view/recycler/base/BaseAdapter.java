@@ -22,7 +22,7 @@ import lombok.Getter;
  */
 public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
-	@Getter private final Displayables displayables = new Displayables();
+	private final Displayables displayables = new Displayables();
 
 	public BaseAdapter() { }
 
@@ -53,8 +53,12 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 
 	public Displayable popDisplayable() {
 		Displayable pop = displayables.pop();
-		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRangeRemoved(displayables.size(), 1));
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRemoved(displayables.size()));
 		return pop;
+	}
+
+	public Displayable getDisplayable(int position) {
+		return this.displayables.get(position);
 	}
 
 	public void addDisplayable(int position, Displayable displayable) {

@@ -41,4 +41,6 @@
     <string name="displayable_social_timeline_app_update_version">Version: %1$s</string>
     <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
     <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
+    <string name="fragment_social_timeline_no_connection">No network connection</string>
+    <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
 </resources>

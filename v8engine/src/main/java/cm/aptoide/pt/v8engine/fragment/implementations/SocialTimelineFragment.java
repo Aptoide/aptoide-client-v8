@@ -3,34 +3,34 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 
-import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.trello.rxlifecycle.FragmentEvent;
-import com.trello.rxlifecycle.LifecycleTransformer;
 
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.File;
-import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
-import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -38,10 +38,12 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 
-	public static final int SEARCH_LIMIT = 2;
+	public static final int SEARCH_LIMIT = 4;
 	private SpannableFactory spannableFactory;
 	private DateCalculator dateCalculator;
+	private boolean loading;
 	private int offset;
+	private Subscription subscription;
 
 	public static SocialTimelineFragment newInstance() {
 		SocialTimelineFragment fragment = new SocialTimelineFragment();
@@ -57,43 +59,71 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 
 	@Override
 	public void load(boolean refresh) {
-		GetUserTimelineRequest.of(SEARCH_LIMIT, offset).observe(refresh)
-				.<GetUserTimeline>compose(bindUntilEvent(FragmentEvent.PAUSE))
-				.filter(item -> item.getDatalist() != null? setOffset(item.getDatalist().getNext()): false)
-				.flatMapIterable(getUserTimeline -> getListWithMockedAppUpdate(getUserTimeline))
+		if (subscription != null) {
+			subscription.unsubscribe();
+		}
+		subscription = Observable.concat(
+				GetUserTimelineRequest.of(SEARCH_LIMIT, 0).observe(refresh)
+					.observeOn(AndroidSchedulers.mainThread())
+					.doOnNext(item -> adapter.clearDisplayables()),
+				RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
+						.filter(item -> !isLoading())
+						.doOnNext(item -> addLoading())
+						.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset).observe())
+						.delay(1, TimeUnit.SECONDS)
+						.retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
+								.observeOn(AndroidSchedulers.mainThread())
+								.doOnNext(error -> showErrorSnackbar(error)))
+						.subscribeOn(AndroidSchedulers.mainThread()))
+				.<GetUserTimeline> compose(bindUntilEvent(FragmentEvent.PAUSE))
+				.filter(item -> item.getDatalist() != null)
+				.doOnNext(item -> setOffset(item))
+				.flatMapIterable(getUserTimeline -> getUserTimeline.getDatalist().getList())
 				.filter(timelineItem -> timelineItem != null)
 				.map(timelineItem -> timelineItem.getData())
-				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof
-						StoreLatestApps || item instanceof App))
+				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps || item instanceof App))
 				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory))
-				.toList()
+				.buffer(2, TimeUnit.SECONDS, SEARCH_LIMIT)
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(
-						displayables -> updateTimeline((List<? extends Displayable>) displayables),
-						throwable -> finishLoading((Throwable) throwable)
-				);
+				.doOnNext(item -> removeLoading())
+				.subscribe(displayables -> addDisplayables((List<Displayable>) displayables),
+						throwable -> finishLoading((Throwable) throwable));
 	}
 
-	private void updateTimeline(List<? extends Displayable> displayables) {
-		addDisplayables(0, displayables);
-		recyclerView.smoothScrollToPosition(0);
+	private void showErrorSnackbar(Throwable error) {
+		removeLoading();
+		@StringRes int errorString;
+		if (ErrorUtils.isNoNetworkConnection(error)) {
+			errorString = R.string.fragment_social_timeline_no_connection;
+		} else {
+			errorString = R.string.fragment_social_timeline_general_error;
+		}
+		Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
 	}
 
-	private List<TimelineItem> getListWithMockedAppUpdate(GetUserTimeline getUserTimeline) {
-		App app = new App();
-		app.setId(19347406);
-		app.setName("Clash of Clans");
-		File file = new File();
-		file.setVername("8.3332.14");
-		app.setFile(file);
-		app.setUpdated(new Date());
-		app.setIcon("http://cdn6.aptoide.com/imgs/a/a/e/aae8e02f62bf4a4008769ddb14b8fd89_icon_96x96.png");
-		getUserTimeline.getDatalist().getList().add(new AppUpdateTimelineItem(app));
-		return getUserTimeline.getDatalist().getList();
+	private void setOffset(GetUserTimeline item) {
+		offset = item.getDatalist().getNext();
+	}
+
+	private void addLoading() {
+		this.loading = true;
+		adapter.addDisplayable(new ProgressBarDisplayable());
+	}
+
+	private void removeLoading() {
+		if (loading) {
+			this.loading = false;
+			adapter.popDisplayable();
+		}
+	}
+
+	private boolean isLoading() {
+		return loading;
 	}
 
 	@NonNull
-	private Displayable itemToDisplayable(Object item, DateCalculator dateCalculator, SpannableFactory spannableFactory) {
+	private Displayable itemToDisplayable(Object item, DateCalculator dateCalculator, SpannableFactory
+			spannableFactory) {
 
 		if (item instanceof Article) {
 			return ArticleDisplayable.from((Article) item, dateCalculator, spannableFactory);
@@ -105,10 +135,5 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 			return AppUpdateDisplayable.fromApp((App) item, spannableFactory);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
-	}
-
-	public boolean setOffset(int offset) {
-		this.offset = offset;
-		return true;
 	}
 }

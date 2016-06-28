@@ -149,7 +149,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		};
 
 		recyclerView.clearOnScrollListeners();
-		EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this, listAppsRequest,
+		EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(getAdapter(), listAppsRequest,
 				listAppsAction, errorRequestListener, refresh);
 		recyclerView.addOnScrollListener(listener);
 		listener.onLoadMore(refresh);

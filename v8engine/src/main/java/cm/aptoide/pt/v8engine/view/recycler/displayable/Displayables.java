@@ -57,7 +57,11 @@ public class Displayables {
 	}
 
 	public Displayable get(Integer position) {
-		return displayables.get(position);
+		if (displayables.size() > position) {
+			return displayables.get(position);
+		} else {
+			return null;
+		}
 	}
 
 	public int size() {
