@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -27,6 +28,7 @@ import lombok.Cleanup;
 import lombok.Setter;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 5/13/16.
@@ -49,7 +51,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	Intent pauseDownloadsIntent;
 	Intent openAppsManagerIntent;
 	Intent resumeDownloadIntent;
-	private ConnectableObservable<Integer> observable;
+	Intent notificationClickIntent;
+	private ConnectableObservable<Download> observable;
 	private NotificationManager notificationManager;
 
 	public DownloadTask(Download download) {
@@ -57,10 +60,11 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		this.appId = download.getAppId();
 
 		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
-				.map(aLong -> updateProgress())
-				.filter(integer -> {
-					if (integer <= PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() == Download.PROGRESS) {
-						if (integer == PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() != Download
+				.map(aLong -> updateProgress()).subscribeOn(Schedulers.io()).filter(updatedDownload -> {
+					if (updatedDownload.getOverallProgress() <= PROGRESS_MAX_VALUE && download
+							.getOverallDownloadStatus() == Download.PROGRESS) {
+						if (updatedDownload.getOverallProgress() == PROGRESS_MAX_VALUE && download
+								.getOverallDownloadStatus() != Download
 								.COMPLETED) {
 							setDownloadStatus(Download.COMPLETED, download);
 							removeNotification(download);
@@ -70,7 +74,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 					} else {
 						return false;
 					}
-				})
+				}).subscribeOn(Schedulers.io())
 //				.takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.COMPLETED)
 				.publish();
 		observable.connect();
@@ -104,10 +108,10 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	 * @return new current progress
 	 */
 	@NonNull
-	public Integer updateProgress() {
+	public Download updateProgress() {
 		if (download.getOverallProgress() >= PROGRESS_MAX_VALUE || download.getOverallDownloadStatus() != Download
 				.PROGRESS) {
-			return download.getOverallProgress();
+			return download;
 		}
 
 		int progress = 0;
@@ -117,7 +121,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload().size()));
 		saveDownloadInDb(download);
 		updateNotification(download);
-		return download.getOverallProgress();
+		return download;
 	}
 
 	/**
@@ -151,33 +155,36 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	}
 
 	private void buildNotification() {
-		pauseDownloadsIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-		pauseDownloadsIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_PAUSE);
-		openAppsManagerIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-		openAppsManagerIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_OPEN);
-		resumeDownloadIntent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-		resumeDownloadIntent.setAction(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_RESUME);
-		resumeDownloadIntent.putExtra(NotificationEventReceiver.APP_ID_EXTRA, download.getAppId());
-		PendingIntent pPause = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download
-				.getFilesToDownload()
-				.get(0)
-				.getDownloadId(), pauseDownloadsIntent, 0);
-		PendingIntent pOpenAppsManager = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download
-				.getFilesToDownload()
-				.get(0)
-				.getDownloadId(), openAppsManagerIntent, 0);
+		Bundle bundle = new Bundle();
+		bundle.putLong(NotificationEventReceiver.APP_ID_EXTRA, download.getAppId());
+		notificationClickIntent = createNotificationIntent(NotificationEventReceiver
+				.DOWNLOADMANAGER_ACTION_NOTIFICATION, bundle);
+		pauseDownloadsIntent = createNotificationIntent(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_PAUSE, null);
+		openAppsManagerIntent = createNotificationIntent(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_OPEN, null);
 
-		builder = new NotificationCompat.Builder(AptoideDownloadManager.getContext()).setSmallIcon(android.R.drawable
-				.ic_menu_edit)
+		bundle = new Bundle();
+		bundle.putLong(NotificationEventReceiver.APP_ID_EXTRA, download.getAppId());
+		resumeDownloadIntent = createNotificationIntent(NotificationEventReceiver.DOWNLOADMANAGER_ACTION_RESUME,
+				bundle);
+
+		PendingIntent pPause = getPendingIntent(pauseDownloadsIntent);
+		PendingIntent pOpenAppsManager = getPendingIntent(openAppsManagerIntent);
+		PendingIntent pNotificationClick = getPendingIntent(notificationClickIntent);
+
+		builder = new NotificationCompat.Builder(AptoideDownloadManager.getContext()).setSmallIcon
+				(AptoideDownloadManager
+				.getInstance()
+				.getNotificationInterface()
+				.getMainIcon())
 				.setAutoCancel(false)
 				.setOngoing(true)
 				.setContentTitle(String.format(AptoideDownloadManager.getContext()
 						.getResources()
 						.getString(R.string.aptoide_downloading), Application.getConfiguration().getMarketName()))
 				.setContentText(new StringBuilder().append(download.getAppName())
-						.append(AptoideDownloadManager.getContext().getResources().getString(R.string.status))
-						.append(download.getOverallDownloadStatus()))
-				.setContentIntent(pOpenAppsManager)
+						.append(Download.getStatusName(download.getOverallDownloadStatus(), AptoideDownloadManager
+								.getContext())))
+				.setContentIntent(pNotificationClick)
 				.setProgress(PROGRESS_MAX_VALUE, 0, false)
 				.addAction(android.R.drawable.ic_menu_edit, AptoideDownloadManager.getContext()
 						.getString(R.string.pause_download), pPause)
@@ -191,7 +198,22 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		notificationManager.notify(download.getFilesToDownload().get(0).getDownloadId(), notification);
 	}
 
-	private void updateNotification(Download download1) {
+	private PendingIntent getPendingIntent(Intent intent) {
+		return PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download.getFilesToDownload()
+				.get(0)
+				.getDownloadId(), intent, 0);
+	}
+
+	private Intent createNotificationIntent(String intentAction, @Nullable Bundle bundle) {
+		Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+		intent.setAction(intentAction);
+		if (bundle != null) {
+			intent.putExtras(bundle);
+		}
+		return intent;
+	}
+
+	synchronized private void updateNotification(Download download1) {
 		if (notificationManager != null) {
 			boolean isOngoing = ((builder.build().flags & Notification.FLAG_ONGOING_EVENT) == Notification
 					.FLAG_ONGOING_EVENT);
@@ -206,7 +228,6 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 			if (isToggled || download1.getOverallDownloadStatus() == Download.PROGRESS) {
 				builder.setProgress(PROGRESS_MAX_VALUE, this.download.getOverallProgress(), false)
 						.setContentText(new StringBuilder().append(download1.getAppName())
-								.append(AptoideDownloadManager.getContext().getString(R.string.status))
 								.append(Download.getStatusName(download1.getOverallDownloadStatus(),
 										AptoideDownloadManager
 										.getContext())));
@@ -223,7 +244,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		Database.save(download, realm);
 	}
 
-	public Observable<Integer> getObservable() {
+	public Observable<Download> getObservable() {
 		return observable;
 	}
 
@@ -309,10 +330,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	}
 
 	private void setupOnDownloadPausedNotification(Download downloadToStop) {
-		PendingIntent pResume = PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download
-				.getFilesToDownload()
-				.get(0)
-				.getDownloadId(), resumeDownloadIntent, 0);
+		PendingIntent pResume = getPendingIntent(resumeDownloadIntent);
 		builder.mActions.get(0).title = AptoideDownloadManager.getContext().getString(R.string.resume_download);
 		builder.mActions.get(0).actionIntent = pResume;
 		updateNotification(downloadToStop);

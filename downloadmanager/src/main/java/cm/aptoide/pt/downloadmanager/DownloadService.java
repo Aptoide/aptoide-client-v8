@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import rx.Observable;
 
 /**
@@ -17,9 +18,9 @@ public class DownloadService extends Service {
 	IBinder binder = new LocalBinder();
 
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public void onCreate() {
+		super.onCreate();
 		AptoideDownloadManager.getInstance().init(this);
-		return super.onStartCommand(intent, flags, startId);
 	}
 
 	@Nullable
@@ -28,13 +29,13 @@ public class DownloadService extends Service {
 		return binder;
 	}
 
-	public Observable startDownload(String url, int appId) {
-		return AptoideDownloadManager.getInstance().startDownload(new Download());
+	public Observable<Download> startDownload(GetAppMeta.App appToDownload) {
+		return AptoideDownloadManager.getInstance().startDownload(appToDownload);
 	}
 
 	public class LocalBinder extends Binder {
 
-		DownloadService getService() {
+		public DownloadService getService() {
 			// Return this instance of LocalService so clients can call public methods
 			return DownloadService.this;
 		}

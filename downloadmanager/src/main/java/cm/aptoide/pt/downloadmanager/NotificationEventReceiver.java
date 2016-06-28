@@ -18,6 +18,7 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 	public static final String DOWNLOADMANAGER_ACTION_PAUSE = "cm.aptoide.downloadmanager.action.pause";
 	public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
 	public static final String DOWNLOADMANAGER_ACTION_RESUME = "cm.aptoide.downloadmanager.action.resume";
+	public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION = "cm.aptoide.downloadmanager.action.notification";
 	private static final String TAG = NotificationEventReceiver.class.getSimpleName();
 
 	public void onReceive(Intent intent) {
@@ -30,21 +31,34 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					AptoideDownloadManager.getInstance().pauseAllDownloads();
 					break;
 				case DOWNLOADMANAGER_ACTION_OPEN:
-					AptoideDownloadManager.getInstance().openAppsManager();
+					if (AptoideDownloadManager.getInstance().getNotificationInterface() != null) {
+						AptoideDownloadManager.getInstance().getNotificationInterface().button1Pressed();
+					}
 					break;
 				case DOWNLOADMANAGER_ACTION_RESUME:
 					if (intent.hasExtra(APP_ID_EXTRA)) {
 						long appid = intent.getLongExtra(APP_ID_EXTRA, -1);
 						if (appid > 0) {
-							@Cleanup
-							Realm realm = Database.get();
+							@Cleanup Realm realm = Database.get();
 							try {
 								AptoideDownloadManager.getInstance()
-										.startDownload(AptoideDownloadManager.getInstance().getDownloadFromDb(realm, appid).clone());
+										.startDownload(AptoideDownloadManager.getInstance()
+												.getDownloadFromDb(realm, appid)
+												.clone());
 							} catch (CloneNotSupportedException e) {
 								e.printStackTrace();
 							}
 						}
+					}
+					break;
+				case DOWNLOADMANAGER_ACTION_NOTIFICATION:
+					if (AptoideDownloadManager.getInstance().getNotificationInterface() != null) {
+						if (intent.hasExtra(APP_ID_EXTRA)) {
+							AptoideDownloadManager.getInstance()
+									.getNotificationInterface()
+									.notificationPressed(intent.getLongExtra(APP_ID_EXTRA, 0));
+						}
+						break;
 					}
 			}
 		}

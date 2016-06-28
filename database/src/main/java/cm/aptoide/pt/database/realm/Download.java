@@ -48,26 +48,26 @@ public class Download extends RealmObject {
 			case COMPLETED:
 				toReturn = context.getString(R.string.download_completed);
 				break;
-			case ERROR:
-				toReturn = context.getString(R.string.simple_error_occured);
-				break;
 			case PAUSED:
 				toReturn = context.getString(R.string.download_paused);
 				break;
 			case PROGRESS:
 				toReturn = context.getString(R.string.download_progress);
 				break;
+			case WARN:
 			case BLOCK_COMPLETE:
 			case CONNECTED:
-			case FILE_MISSING:
-			case INVALID_STATUS:
-			case NOT_DOWNLOADED:
-			case PENDING:
 			case RETRY:
 			case STARTED:
-			case WARN:
-			default:
+			case PENDING:
+			case NOT_DOWNLOADED:
 				toReturn = "";
+				break;
+			case ERROR:
+			case FILE_MISSING:
+			case INVALID_STATUS:
+			default:
+				toReturn = context.getString(R.string.simple_error_occured);
 		}
 		return toReturn;
 	}

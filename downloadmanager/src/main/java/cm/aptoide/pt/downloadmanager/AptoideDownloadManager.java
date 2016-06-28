@@ -14,12 +14,16 @@ import java.util.Queue;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.downloadmanager.interfaces.NotificationInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import io.realm.RealmList;
+import lombok.AccessLevel;
 import lombok.Cleanup;
+import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -41,6 +45,7 @@ public class AptoideDownloadManager {
 	private Queue<Long> downloadQueue = new LinkedList<>();
 	private HashMap<Long, DownloadTask> downloadTasks = new HashMap<>();
 	private boolean isDownloading = false;
+	@Getter(AccessLevel.MODULE) @Setter private NotificationInterface notificationInterface;
 
 	public static Context getContext() {
 		return context;
@@ -78,9 +83,11 @@ public class AptoideDownloadManager {
 	 *                                  thrown with the cause in the detail message.
 	 * @see #startDownload(Download)
 	 */
-	public Observable<Integer> startDownload(GetAppMeta.App appToDownload) throws IllegalArgumentException {
-		if (getDownloadStatus(appToDownload.getId()).toBlocking().first() == Download.COMPLETED) {
-			return Observable.fromCallable(() -> 100);
+	public Observable<Download> startDownload(GetAppMeta.App appToDownload) throws IllegalArgumentException {
+		@Cleanup Realm realm = Database.get();
+		Download downloadFromDb = getDownloadFromDb(realm, appToDownload.getId());
+		if (downloadFromDb != null && downloadFromDb.getOverallDownloadStatus() == Download.COMPLETED) {
+			return Observable.fromCallable(() -> downloadFromDb);
 		}
 		validateApp(appToDownload);
 
@@ -118,9 +125,9 @@ public class AptoideDownloadManager {
 	 *                                  thrown with the cause in the detail message.
 	 * @see #startDownload(GetAppMeta.App)
 	 */
-	public Observable<Integer> startDownload(Download download) throws IllegalArgumentException {
+	public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
 		if (getDownloadStatus(download.getAppId()).toBlocking().first() == Download.COMPLETED) {
-			return Observable.fromCallable(() -> 100);
+			return Observable.fromCallable(() -> download);
 		}
 
 		DownloadTask downloadTask;

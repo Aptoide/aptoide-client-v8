@@ -15,6 +15,7 @@
                 <action android:name="cm.aptoide.downloadmanager.action.resume"/>
             </intent-filter>
         </receiver>
+        <service android:name=".DownloadService"/>
     </application>
 
 </manifest>

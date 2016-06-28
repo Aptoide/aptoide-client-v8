@@ -36,6 +36,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
@@ -284,10 +285,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 //							.LENGTH_INDEFINITE);
 
 					showSnackbar.make().show();
-					AptoideDownloadManager.getInstance()
-							.startDownload(app)
-							.subscribe(progress -> onDownloadComplete((Integer) progress, app.getId()));
+//					AptoideDownloadManager.getInstance()
+//							.startDownload(app)
+//							.subscribe(progress -> onDownloadComplete((Integer) progress, app.getId()));
 					// TODO
+					V8Engine.startDownload(app)
+							.subscribe(progress -> onDownloadComplete(progress.getOverallProgress(), app.getId()));
 
 				});
 			};
