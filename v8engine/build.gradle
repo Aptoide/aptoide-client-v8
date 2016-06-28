@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -17,7 +17,16 @@ crashlytics {
     androidNdkLibsOut 'src/main/libs'
 }
 
+// Should be moved to application module when possible
+Properties localProperties = new Properties()
+localProperties.load(new FileInputStream("local.properties"))
+
+def fabricApiKey = localProperties.FABRIC_API_KEY
+
 android {
+    def BOOLEAN = "boolean"
+    def FABRIC_CONFIGURED = "FABRIC_CONFIGURED"
+
     // Websockets
     useLibrary 'org.apache.http.legacy'
 
@@ -26,6 +35,8 @@ android {
 
     defaultConfig {
         minSdkVersion 15
+
+        buildConfigField BOOLEAN, FABRIC_CONFIGURED, (fabricApiKey != null).toString()
     }
 
     publishNonDefault true
@@ -89,11 +100,11 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 
-    /*
     // Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
         transitive = true
     }
+    /*
     // NDK Kit
     compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
         transitive = true
