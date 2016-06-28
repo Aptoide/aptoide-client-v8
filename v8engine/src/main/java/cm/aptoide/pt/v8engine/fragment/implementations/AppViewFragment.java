@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -38,6 +38,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
+import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -178,6 +179,8 @@ public class AppViewFragment extends GridRecyclerFragment {
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_appview_fragment, menu);
+
+		SearchUtils.setupGlobalSearchView(menu, getActivity());
 	}
 
 	@Override

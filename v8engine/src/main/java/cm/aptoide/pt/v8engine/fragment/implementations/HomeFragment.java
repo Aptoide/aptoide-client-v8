@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -12,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -46,12 +45,6 @@ public class HomeFragment extends StoreFragment {
 		HomeFragment fragment = new HomeFragment();
 		fragment.setArguments(args);
 		return fragment;
-	}
-
-	@Override
-	public void setupViews() {
-		super.setupViews();
-		setupNavigationView();
 	}
 
 	private void setupNavigationView() {
@@ -117,6 +110,17 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	@Override
+	protected void setupSearch(Menu menu) {
+		SearchUtils.setupGlobalSearchView(menu, getActivity());
+	}
+
+	@Override
+	public void setupViews() {
+		super.setupViews();
+		setupNavigationView();
+	}
+
+	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
@@ -146,13 +150,5 @@ public class HomeFragment extends StoreFragment {
 				updatesBadge.hide(true);
 			}
 		}
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_search, menu);
-
-		SearchUtils.setupGlobalSearchView(menu, getActivity());
 	}
 }

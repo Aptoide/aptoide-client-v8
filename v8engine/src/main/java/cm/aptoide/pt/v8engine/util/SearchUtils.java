@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
@@ -19,7 +19,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activities.SearchActivity;
-import cm.aptoide.pt.v8engine.fragment.implementations.GlobalSearchFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 
 /**
@@ -28,15 +28,16 @@ import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 public class SearchUtils {
 
 	public static void setupGlobalSearchView(Menu menu, FragmentActivity fragmentActivity) {
-		setupSearchView(menu.findItem(R.id.action_search), fragmentActivity, true);
+		setupSearchView(menu.findItem(R.id.action_search), fragmentActivity, s -> SearchFragment.newInstance(s));
 	}
 
-	public static void setupStoreSearchView(Menu menu, FragmentActivity fragmentActivity) {
-		setupSearchView(menu.findItem(R.id.action_search), fragmentActivity, false);
+	public static void setupInsideStoreSearchView(Menu menu, FragmentActivity fragmentActivity, String storeName) {
+		setupSearchView(menu.findItem(R.id.action_search), fragmentActivity, s -> SearchFragment.newInstance(s,
+				storeName));
 	}
 
-	public static void setupSearchView(MenuItem searchItem, FragmentActivity fragmentActivity, boolean
-			searchInOtherStores) {
+	public static void setupSearchView(MenuItem searchItem, FragmentActivity fragmentActivity,
+	                                   CreateQueryFragmentInterface createSearchFragmentInterface) {
 
 		// Get the SearchView and set the searchable configuration
 		final SearchManager searchManager = (SearchManager) V8Engine.getContext()
@@ -53,8 +54,7 @@ public class SearchUtils {
 				boolean validQueryLenght = s.length() > 1;
 
 				if (validQueryLenght) {
-					FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(s,
-							searchInOtherStores));
+					FragmentUtils.replaceFragmentV4(fragmentActivity, createSearchFragmentInterface.create(s));
 				} else {
 					ShowMessage.asToast(V8Engine.getContext(), R.string.search_minimum_chars);
 				}
@@ -78,8 +78,8 @@ public class SearchUtils {
 			public boolean onSuggestionClick(int position) {
 				Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
 
-				FragmentUtils.replaceFragmentV4(fragmentActivity, GlobalSearchFragment.newInstance(item.getString(1),
-						searchInOtherStores));
+				FragmentUtils.replaceFragmentV4(fragmentActivity, createSearchFragmentInterface.create(item.getString
+						(1)));
 
 				return true;
 			}
@@ -95,6 +95,5 @@ public class SearchUtils {
 		});
 
 		searchView.setOnSearchClickListener(v -> WebSocketSingleton.getInstance().connect());
-
 	}
 }
