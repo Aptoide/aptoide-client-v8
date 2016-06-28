@@ -41,14 +41,11 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 						long appid = intent.getLongExtra(APP_ID_EXTRA, -1);
 						if (appid > 0) {
 							@Cleanup Realm realm = Database.get();
-							try {
-								AptoideDownloadManager.getInstance()
-										.startDownload(AptoideDownloadManager.getInstance()
-												.getDownloadFromDb(realm, appid)
-												.clone());
-							} catch (CloneNotSupportedException e) {
-								e.printStackTrace();
-							}
+							AptoideDownloadManager.getInstance()
+									.startDownload(AptoideDownloadManager.getInstance()
+											.getDownloadFromDb(realm, appid)
+											.clone());
+
 						}
 					}
 					break;

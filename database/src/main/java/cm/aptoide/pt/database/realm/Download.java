@@ -115,10 +115,11 @@ public class Download extends RealmObject {
 	}
 
 	@Override
-	public Download clone() throws CloneNotSupportedException {
+	public Download clone() {
 		Download clone = new Download();
 		clone.setAppId(this.getAppId());
 		clone.setOverallDownloadStatus(this.getOverallDownloadStatus());
+		clone.setOverallProgress(this.getOverallProgress());
 		if (this.getAppName() != null) {
 			clone.setAppName(new String(this.getAppName()));
 		}
@@ -129,11 +130,7 @@ public class Download extends RealmObject {
 	private RealmList<FileToDownload> cloneDownloadFiles(RealmList<FileToDownload> filesToDownload) {
 		RealmList<FileToDownload> clone = new RealmList<>();
 		for (final FileToDownload fileToDownload : filesToDownload) {
-			try {
-				clone.add(fileToDownload.clone());
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
+			clone.add(fileToDownload.clone());
 		}
 		return clone;
 	}

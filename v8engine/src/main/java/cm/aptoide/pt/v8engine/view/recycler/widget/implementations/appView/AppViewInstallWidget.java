@@ -298,13 +298,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		private void onDownloadComplete(Integer progress, long appId) {
 			Logger.d(TAG, "onClick: " + progress);
-			Logger.d(TAG, "onClick: " + AptoideDownloadManager.getInstance()
-					.getDownloadFromDb(Database.get(), appId)
+			Logger.d(TAG, "onClick: " + AptoideDownloadManager.getInstance().getDownloadFromDb(appId)
 					.getOverallProgress());
 			if (progress == 100) {
 				try {
-					@Cleanup Realm realm = Database.get();
-					Download downloadedApp = AptoideDownloadManager.getInstance().getDownloadFromDb(realm, appId);
+					Download downloadedApp = AptoideDownloadManager.getInstance().getDownloadFromDb(appId);
 					Intent install = new Intent(Intent.ACTION_VIEW);
 					install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, AptoideDownloadManager.getContext()

@@ -151,7 +151,7 @@ public class FileToDownload extends RealmObject {
 	}
 
 	@Override
-	protected FileToDownload clone() throws CloneNotSupportedException {
+	protected FileToDownload clone() {
 		FileToDownload clone = new FileToDownload();
 		clone.setAppId(getAppId());
 		if (this.getLink() != null) {

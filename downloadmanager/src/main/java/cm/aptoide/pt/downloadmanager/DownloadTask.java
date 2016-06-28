@@ -22,6 +22,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -60,8 +61,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		this.appId = download.getAppId();
 
 		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
-				.map(aLong -> updateProgress())
 				.subscribeOn(Schedulers.io())
+				.map(aLong -> updateProgress())
 				.filter(updatedDownload -> {
 					if (updatedDownload.getOverallProgress() <= PROGRESS_MAX_VALUE && download
 							.getOverallDownloadStatus() == Download.PROGRESS) {
@@ -110,6 +111,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	 */
 	@NonNull
 	public Download updateProgress() {
+		AptoideUtils.Benchmarking benchmarking = AptoideUtils.Benchmarking.start("updateProgress");
 		if (download.getOverallProgress() >= PROGRESS_MAX_VALUE || download.getOverallDownloadStatus() != Download
 				.PROGRESS) {
 			return download;
@@ -122,6 +124,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload().size()));
 		saveDownloadInDb(download);
 		updateNotification(download);
+		benchmarking.end();
 		return download;
 	}
 
@@ -240,9 +243,19 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		}
 	}
 
-	private void saveDownloadInDb(Download download) {
-		@Cleanup Realm realm = Database.get();
-		Database.save(download, realm);
+	private synchronized void saveDownloadInDb(Download download) {
+		Observable<Object> ob = Observable.fromCallable(() -> {
+			AptoideUtils.Benchmarking benchmarking = AptoideUtils.Benchmarking.start("saveDownloadInDb");
+			@Cleanup Realm realm = Database.get();
+			Database.save(download, realm);
+			benchmarking.end();
+			return null;
+		});
+		if (AptoideUtils.ThreadU.isUiThread()) {
+			ob.subscribeOn(Schedulers.io()).subscribe();
+		} else {
+			ob.subscribe();
+		}
 	}
 
 	public Observable<Download> getObservable() {
@@ -282,8 +295,10 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 						.PROGRESS_MAX_VALUE));
 			}
 		}
-		setDownloadStatus(Download.PROGRESS, download, task);
-		AptoideDownloadManager.getInstance().setDownloading(true);
+		if (download.getOverallDownloadStatus() != Download.PROGRESS) {
+			setDownloadStatus(Download.PROGRESS, download, task);
+			AptoideDownloadManager.getInstance().setDownloading(true);
+		}
 	}
 
 	@Override

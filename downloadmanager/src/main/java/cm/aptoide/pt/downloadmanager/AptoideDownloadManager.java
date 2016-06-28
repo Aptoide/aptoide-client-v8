@@ -100,7 +100,7 @@ public class AptoideDownloadManager {
 	public Observable<Download> startDownload(GetAppMeta.App appToDownload) throws IllegalArgumentException {
 		@Cleanup Realm realm = Database.get();
 		Download downloadFromDb = getDownloadFromDb(realm, appToDownload.getId());
-		if (downloadFromDb != null && downloadFromDb.getOverallDownloadStatus() == Download.COMPLETED) {
+		if (downloadFromDb != null && getStateIfFileExists(downloadFromDb) == Download.COMPLETED) {
 			return Observable.fromCallable(() -> downloadFromDb);
 		}
 		validateApp(appToDownload);
@@ -231,8 +231,12 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	// TODO: 6/22/16 trinkes add method to access this one
-	public Download getDownloadFromDb(Realm realm, long appId) {
+	public Download getDownloadFromDb(long appId) {
+		@Cleanup Realm realm = Database.get();
+		return getDownloadFromDb(realm, appId).clone();
+	}
+
+	Download getDownloadFromDb(Realm realm, long appId) {
 		return realm.where(Download.class).equalTo("appId", appId).findFirst();
 	}
 

@@ -1050,7 +1050,9 @@ public class AptoideUtils {
 
 		public void end() {
 			long endTime = System.currentTimeMillis();
-			Logger.d(TAG, methodName + " - Total execution time: " + (endTime - startTime) + "ms");
+			Logger.d(TAG, "Thread: " + Thread.currentThread()
+					.getId() + " Method:" + methodName + " - Total execution time: " + (endTime - startTime) +
+					"ms");
 		}
 	}
 }
