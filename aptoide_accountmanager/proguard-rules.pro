@@ -22,10 +22,12 @@
 
 -keep class cm.aptoide.accountmanager.** { *; }
 
--keep class cm.aptoide.pt.** {*;}
 #-keep class cm.aptoide.pt.preferences.** {*;}
 #-keep class cm.aptoide.pt.dataprovider.** {*;}
 -keep class android.support.v7.appcompat.** { *; }
+-keepattributes Exceptions, InnerClasses
+-keep class cm.aptoide.pt.** {*;}
+-keep class cm.aptoide.pt.**$* {*;}
 
 ## Retrolambda specific rules ##
 

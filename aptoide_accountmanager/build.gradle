@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by SithEngineer on 28/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -50,7 +50,7 @@ android {
         }
         debug {
             shrinkResources false
-            minifyEnabled false
+            minifyEnabled true
         }
 
         lintOptions {

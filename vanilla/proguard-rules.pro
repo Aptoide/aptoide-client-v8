@@ -16,11 +16,15 @@
 #   public *;
 #}
 
--keep class cm.aptoide.pt.** {*;}
 #-keep class cm.aptoide.pt.preferences.** {*;}
 #-keep class cm.aptoide.pt.dataprovider.** {*;}
 -keep class android.support.v7.appcompat.** { *; }
 -keep class android.support.v7.widget.SearchView { *; }
+-keepattributes Exceptions, InnerClasses
+#-keep class cm.aptoide.pt.** {*;}
+-keep class cm.aptoide.pt.**$* {
+    *;
+}
 
 ####### RetroLambda #######
 -dontwarn java.lang.invoke.*

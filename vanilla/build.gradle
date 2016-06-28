@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by SithEngineer on 28/06/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -75,9 +75,9 @@ android {
     buildTypes {
         release {
             zipAlignEnabled true
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
-            multiDexEnabled true
+            multiDexEnabled false
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->
@@ -93,11 +93,18 @@ android {
             }
         }
 
+        nightly {
+            zipAlignEnabled true
+            minifyEnabled true
+            shrinkResources true
+            multiDexEnabled false
+        }
+
         debug {
             zipAlignEnabled false
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources false
-            multiDexEnabled true
+            multiDexEnabled false
         }
     }
 
@@ -120,7 +127,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:multidex:1.0.1'
+    //compile 'com.android.support:multidex:1.0.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
