@@ -5,18 +5,23 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -33,9 +38,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -63,15 +71,18 @@ public class AppViewFragment extends GridRecyclerFragment {
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
+	private String storeTheme;
 
 	//
 	// static fragment default new instance method
 	//
 
-	public static AppViewFragment newInstance(long appId) {
+	public static AppViewFragment newInstance(long appId, String storeTheme) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(BundleKeys.APP_ID.name(), appId);
-
+		if(!storeTheme.equals("none")) {
+			bundle.putString(BundleCons.STORE_THEME, storeTheme);
+		}
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
 		return fragment;
@@ -80,10 +91,11 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh) {
 		GetAppRequest.of(appId).execute(getApp -> {
-			header.setup(getApp);
+			header.setup(getActivity(), getApp);
 			setupDisplayables(getApp);
 			setupObservables(getApp);
 			finishLoading();
+			storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 		}, refresh);
 	}
 
@@ -198,10 +210,15 @@ public class AppViewFragment extends GridRecyclerFragment {
 	public void loadExtras(Bundle args) {
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
+		storeTheme = args.getString(BundleCons.STORE_THEME);
 	}
 
 	private enum BundleKeys {
 		APP_ID
+	}
+
+	private static class BundleCons{
+		private static final String STORE_THEME = "storeTheme";
 	}
 
 	//
@@ -221,6 +238,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 		private TextView fileSize;
 		private TextView versionName;
 		private TextView downloadsCount;
+		private String storeTheme;
 
 		// ctor
 		public AppViewHeader(@NonNull View view) {
@@ -237,7 +255,10 @@ public class AppViewFragment extends GridRecyclerFragment {
 		}
 
 		// setup methods
-		public void setup(@NonNull GetApp getApp) {
+		public void setup(Activity activity, @NonNull GetApp getApp) {
+
+			storeTheme = getApp.getNodes().getMeta().getData().getStore()
+					.getAppearance().getTheme();
 
 			if (getApp.getNodes().getMeta().getData().getGraphic() != null) {
 				ImageLoader.load(getApp.getNodes().getMeta().getData().getGraphic(), featuredGraphic);
@@ -256,6 +277,12 @@ public class AppViewFragment extends GridRecyclerFragment {
 			// TODO add placeholders in image loading
 
 			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
+			StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
+			collapsingToolbar.setBackgroundColor(ContextCompat.getColor(activity, storeThemeEnum
+					.getStoreHeader()));
+			collapsingToolbar.setContentScrimColor(ContextCompat.getColor(activity, storeThemeEnum
+					.getStoreHeader()));
+			ThemeUtils.setStatusBarThemeColor(activity, StoreThemeEnum.get(storeTheme));
 			ratingBar.setRating(getApp.getNodes().getMeta().getData().getStats().getRating().getAvg());
 			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes()
 					.getMeta()
@@ -290,6 +317,14 @@ public class AppViewFragment extends GridRecyclerFragment {
 			badgeText.setText(badgeMessageId);
 		}
 
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if(storeTheme != null) {
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+		}
 	}
 }
 

@@ -184,7 +184,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			subscribeButton.setElevation(0);
 		}
 		subscribeButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName()));
+		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(), store
+				.getAppearance().getTheme()));
 
 		@Cleanup Realm realm = Database.get();
 		boolean subscribed = Database.StoreQ.get(store.getId(), realm) != null;
@@ -193,7 +194,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
 			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
 			subscribeButton.setText(R.string.appview_subscribed_store_button_text);
-			subscribeButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName()));
+			subscribeButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(), store
+					.getAppearance().getTheme()));
 		} else {
 			int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
 			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
@@ -238,7 +240,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			return v -> {
 				long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
 
-				FragmentUtils.replaceFragmentV4(fragmentActivity, AppViewFragment.newInstance(latestAppId));
+				FragmentUtils.replaceFragmentV4(fragmentActivity, AppViewFragment.newInstance(latestAppId,
+						getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme()));
 			};
 		}
 
@@ -249,10 +252,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newOpenStoreListener(View itemView, String storeName) {
+		private View.OnClickListener newOpenStoreListener(View itemView, String storeName, String storeTheme) {
 			return v -> {
 				FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreFragment.newInstance
-						(storeName));
+						(storeName, storeTheme));
 			};
 		}
 

@@ -34,6 +34,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 	private RatingBar ratingBar;
 	private TextView tvStoreName;
 	private TextView tvAddedTime;
+	private String storeTheme;
 
 	//private static final SimpleDateFormat dateFormatter =
 	//		new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -65,12 +66,17 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
 		tvAddedTime.setText(pojo.getAdded());
+		try {
+			storeTheme = pojo.getStore().getAppearance().getTheme();
+		} catch (NullPointerException e) {
+			storeTheme = "none";
+		}
 
 		itemView.setOnClickListener(
 				v -> {
 					// FIXME
 					((FragmentShower) v.getContext()).pushFragmentV4(
-							AppViewFragment.newInstance(appId)
+							AppViewFragment.newInstance(appId, storeTheme)
 					);
 				}
 		);

@@ -40,7 +40,7 @@ public class DisplayablesFactory {
 				switch (wsWidget.getType()) {
 
 					case APPS_GROUP:
-						displayables.add(getApps(wsWidget));
+						displayables.add(getApps(wsWidget, storeTheme));
 						break;
 
 					case STORES_GROUP:
@@ -71,7 +71,7 @@ public class DisplayablesFactory {
 		return displayables;
 	}
 
-	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {
+	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
 		ListApps listApps = (ListApps) wsWidget.getViewObject();
 		List<App> apps = listApps.getDatalist().getList();
 		List<Displayable> displayables = new ArrayList<>(apps.size());
@@ -114,7 +114,7 @@ public class DisplayablesFactory {
 			}
 		} else {
 			if (apps.size() > 0) {
-				displayables.add(new GridHeaderDisplayable(wsWidget));
+				displayables.add(new GridHeaderDisplayable(wsWidget, storeTheme));
 			}
 
 			for (App app : apps) {

@@ -49,7 +49,7 @@ public class ThemeUtils {
 	}
 
 	/**
-	 * Sets Store themes when opening a Store
+	 * Sets Store themes
 	 * @param activity
 	 * @param theme
 	 */
@@ -58,6 +58,14 @@ public class ThemeUtils {
 		StoreThemeEnum storeTheme = StoreThemeEnum.get(theme);
 		activity.setTheme(storeTheme.getThemeResource());
 
+	}
+
+	/**
+	 * Returns applied theme
+	 */
+	public static StoreThemeEnum getAppliedTheme(Activity activity) {
+		StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(activity.getTheme().toString());
+		return storeThemeEnum;
 	}
 	
 }

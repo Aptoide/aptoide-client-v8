@@ -201,10 +201,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		if (storeTheme != null) {
-			ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-		}
 	}
 
 	private static class BundleCons {

@@ -96,7 +96,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 					@Override
 					public boolean onMenuItemClick(MenuItem menuItem) {
 						FragmentUtils.replaceFragmentV4(getContext(), StoreFragment.newInstance(pojo.getStore()
-								.getName()));
+								.getName(), pojo.getStore().getAppearance().getTheme()));
 						return true;
 					}
 				});
@@ -164,6 +164,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 			icTrusted.setVisibility(View.GONE);
 		}
 
-		itemView.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(pojo.getId())));
+		itemView.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance
+				(pojo.getId(), pojo.getStore().getAppearance().getTheme())));
 	}
 }
