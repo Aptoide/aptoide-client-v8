@@ -3,11 +3,14 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -22,6 +25,7 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 	private TextView articleTitle;
 	private ImageView thumbnail;
 	private View url;
+	private Button getAppButton;
 
 	public FeatureWidget(View itemView) {
 		super(itemView);
@@ -35,6 +39,7 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 		articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
 		thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
 		url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
+		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
 	}
 
 	@Override
@@ -44,6 +49,15 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 		articleTitle.setText(displayable.getTitleResource());
 		ImageLoader.loadWithCircleTransform(displayable.getAvatarResource(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+
+		if (displayable.isGetApp()) {
+			getAppButton.setVisibility(View.VISIBLE);
+			getAppButton.setText(displayable.getAppText(getContext()));
+			getAppButton.setOnClickListener(view -> ((FragmentShower) getContext())
+					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
+		} else {
+			getAppButton.setVisibility(View.GONE);
+		}
 
 		url.setOnClickListener(new View.OnClickListener() {
 			@Override

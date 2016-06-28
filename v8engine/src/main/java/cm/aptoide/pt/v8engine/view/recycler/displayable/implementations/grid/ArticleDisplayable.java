@@ -26,18 +26,24 @@ public class ArticleDisplayable extends Displayable {
 	@Getter private String title;
 	@Getter private String thumbnailUrl;
 	@Getter private String avatarUrl;
-	@Getter private int getAppId;
+	@Getter private long appId;
 
-	private String getAppName;
+	private String appName;
 	private Date date;
 	private DateCalculator dateCalculator;
 	private SpannableFactory spannableFactory;
 
 	public static ArticleDisplayable from(Article article, DateCalculator dateCalculator, SpannableFactory
 			spannableFactory) {
+		String appName = null;
+		long appId = 0;
+		if (article.getApps() != null && article.getApps().size() > 0) {
+			appName = article.getApps().get(0).getName();
+			appId = article.getApps().get(0).getId();
+		}
 		return new ArticleDisplayable(article.getTitle(), article.getUrl(), article
 				.getPublisher().getName(), article.getThumbnailUrl(), article.getPublisher()
-				.getLogoUrl(), 19347406, "Clash of Clans", article.getDate(), dateCalculator, spannableFactory);
+				.getLogoUrl(), appId, appName, article.getDate(), dateCalculator, spannableFactory);
 	}
 
 	public ArticleDisplayable() {
@@ -48,14 +54,14 @@ public class ArticleDisplayable extends Displayable {
 				.getHoursSinceDate(date));
 	}
 
-	public Spannable getAppText(Context context) {
-		return spannableFactory.create(context
-				.getString(R.string.displayable_social_timeline_article_get_app_button, getAppName), getAppName, new
-				StyleSpan(Typeface.BOLD));
+	public boolean isGetApp() {
+		return appName != null && appId != 0;
 	}
 
-	public long getAppId() {
-		return getAppId;
+	public Spannable getAppText(Context context) {
+		return spannableFactory.create(context
+				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), appName, new
+				StyleSpan(Typeface.BOLD));
 	}
 
 	@Override

@@ -367,7 +367,8 @@ public class GetUserTimelineRequestIntegrationTest {
 		final List<TimelineItem> items = Arrays.asList(new FeatureTimelineItem(new Feature("Here, have a Xiaomi " +
 				"Redmi Note 3 pro on us", "https://d36eyd5j1kt1m6.cloudfront" +
 				".net/user-assets/127178/tXbdAxcnnJSp852q/01.png?1461237960", "http://blog.aptoide" +
-				".com/here-have-a-xiaomi-redmi-note-3-pro-on-us/", getDate("UTC", "2016-04-20", "yyyy-MM-dd"))));
+				".com/here-have-a-xiaomi-redmi-note-3-pro-on-us/", getDate("UTC", "2016-04-20", "yyyy-MM-dd"),
+				null)));
 		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 " +
 				"milliseconds", getDataList(items, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
@@ -440,7 +441,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
 		final List<TimelineItem> items = Arrays.asList(new ArticleTimelineItem(new Article(title, thumbnail,
-				getPublisher(publisher, avatarUrl), url, getDate("UTC", date, "yyyy-MM-dd"))));
+				getPublisher(publisher, avatarUrl), url, getDate("UTC", date, "yyyy-MM-dd"), null)));
 		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, seconds, human, getDataList(items, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
 

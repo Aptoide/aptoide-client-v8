@@ -129,7 +129,7 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 		if (item instanceof Article) {
 			return ArticleDisplayable.from((Article) item, dateCalculator, spannableFactory);
 		} else if (item instanceof Feature) {
-			return FeatureDisplayable.from((Feature) item, dateCalculator);
+			return FeatureDisplayable.from((Feature) item, dateCalculator, spannableFactory);
 		} else if (item instanceof StoreLatestApps) {
 			return StoreLatestAppsDisplayable.from((StoreLatestApps) item, dateCalculator);
 		} else if (item instanceof App) {

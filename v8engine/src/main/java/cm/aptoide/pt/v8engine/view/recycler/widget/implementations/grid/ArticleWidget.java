@@ -39,7 +39,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
 		thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
 		url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-		getAppButton = (Button) itemView.findViewById(R.id.displayable_social_timeline_article_get_app_button);
+		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
 	}
 
 	@Override
@@ -50,9 +50,14 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		ImageLoader.load(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
-		getAppButton.setText(displayable.getAppText(getContext()));
-		getAppButton.setOnClickListener(view -> ((FragmentShower)getContext()).pushFragmentV4(AppViewFragment
-				.newInstance(displayable.getAppId())));
+		if (displayable.isGetApp()) {
+			getAppButton.setVisibility(View.VISIBLE);
+			getAppButton.setText(displayable.getAppText(getContext()));
+			getAppButton.setOnClickListener(view -> ((FragmentShower) getContext())
+					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
+		} else {
+			getAppButton.setVisibility(View.GONE);
+		}
 
 		url.setOnClickListener(new View.OnClickListener() {
 			@Override
