@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -46,6 +46,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	protected String action;
 	protected String title;
 	private List<Displayable> displayables;
+	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
 	public static StoreTabGridRecyclerFragment newInstance(Event event, String title) {
 		Bundle args = buildBundle(event, title);
@@ -84,6 +85,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	@Override
 	public void load(boolean refresh) {
+		super.load(refresh);
 		if (refresh) {
 			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
@@ -114,7 +116,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				throw new RuntimeException("StoreTabGridRecyclerFragment unknown request!");
 			}
 		} else {
-			setDisplayables(displayables);
+			// Not all requests are endless so..
+			if (endlessRecyclerOnScrollListener != null) {
+				recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+			}
 		}
 	}
 
@@ -149,10 +154,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		};
 
 		recyclerView.clearOnScrollListeners();
-		EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(getAdapter(), listAppsRequest,
-				listAppsAction, errorRequestListener, refresh);
-		recyclerView.addOnScrollListener(listener);
-		listener.onLoadMore(refresh);
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listAppsRequest, listAppsAction, errorRequestListener,
+				refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
 	}
 
 	private Subscription caseGetStore(String url, boolean refresh) {
