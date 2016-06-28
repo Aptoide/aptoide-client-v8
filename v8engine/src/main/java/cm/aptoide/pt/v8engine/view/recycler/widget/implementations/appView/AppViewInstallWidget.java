@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified by SithEngineer on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -17,6 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
@@ -27,6 +29,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -179,7 +182,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		storeNameView.setText(store.getName());
 		storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeNumberUsersView.setText(String.valueOf(store.getStats().getSubscribers()));
+		storeNumberUsersView.setText(String.format(Locale.getDefault(), V8Engine.getContext().getString(R.string.appview_followers_count_text), store
+				.getStats()
+				.getSubscribers()));
 		subscribeButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			subscribeButton.setElevation(0);

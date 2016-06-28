@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
@@ -107,8 +108,8 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 		});
 	}
 
-	private void handleSeeMore(GetAppMeta.App app) {
-		seeMoreLayout.setOnClickListener(new View.OnClickListener() {
+	private View.OnClickListener seeMoreHandler(GetAppMeta.App app) {
+		return new View.OnClickListener() {
 
 			private boolean extended = false;
 
@@ -145,6 +146,18 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 				seeMoreTextView.setText(text);
 				extended = !extended;
 			}
-		});
+		};
+	}
+
+	private View.OnClickListener seeMoreHandler2(final GetAppMeta.App app) {
+		return v -> {
+			ShowMessage.show(seeMoreTextView, "TO DO");
+			//DescriptionFragment descriptionFragment = DescriptionFragment.newInstance(app.getId());
+			//((FragmentShower)getContext()).pushFragment(descriptionFragment);
+		};
+	}
+
+	private void handleSeeMore(GetAppMeta.App app) {
+		seeMoreLayout.setOnClickListener(seeMoreHandler(app));
 	}
 }

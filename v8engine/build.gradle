@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 28/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -88,9 +88,12 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 
+    // round image lib
+    compile 'com.makeramen:roundedimageview:2.2.1'
+
     /*
     // Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile('com.crashlyti<fcs.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true
     }
     // NDK Kit

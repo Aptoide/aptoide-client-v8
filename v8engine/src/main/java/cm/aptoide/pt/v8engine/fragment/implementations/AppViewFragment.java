@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 31/05/2016.
+ * Modified by SithEngineer on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -106,7 +106,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 					adapter.notifyDataSetChanged();
 				});
 
-		// // TODO: 27-05-2016 neuro install actions, not present in v7
+		// TODO: 27-05-2016 neuro install actions, not present in v7
 	}
 
 	private void setupDisplayables(GetApp getApp) {

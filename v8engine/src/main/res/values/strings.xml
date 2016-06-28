@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 20/06/2016.
+  ~ Modified by SithEngineer on 28/06/2016.
   -->
 
 <resources>
@@ -20,4 +20,19 @@
     <string name="not_available">N/A</string>
     <string name="developer_email">Email: %s</string>
     <string name="developer_privacy_policy">Privacy Policy: %s</string>
+
+
+    <string name="action_settings">Settings</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="button_header_more">more</string>
+    <string name="search">Search</string>
+
+    <string name="update">Update</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="downgrade">Downgrade</string>
+    <string name="reinstall">Reinstall</string>
+    <string name="get_app">get app</string>
+    <string name="appview_follow_store_button_text">follow store</string>
+    <string name="appview_followers_count_text">%d   Followers</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 08/06/2016.
+  ~ Modified by SithEngineer on 28/06/2016.
   -->
 
 <resources>
@@ -221,16 +221,6 @@
     <string name="dont_show_again">Don\'t show this dialog again</string>
 
     <!-- App View -->
-    <string name="action_settings">Settings</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
-    <string name="button_header_more">more</string>
-    <string name="search">Search</string>
-
-    <string name="update">Update</string>
-    <string name="uninstall">Uninstall</string>
-    <string name="downgrade">Downgrade</string>
-    <string name="reinstall">Reinstall</string>
 
     <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
 
