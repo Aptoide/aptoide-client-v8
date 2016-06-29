@@ -15,7 +15,7 @@ import java.util.List;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
-import cm.aptoide.pt.v8engine.fragment.implementations.SocialTimelineFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
@@ -78,7 +78,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 				return UpdatesFragment.newInstance();
 
 			case mySocialTimeline:
-				return SocialTimelineFragment.newInstance();
+				return AppsTimelineFragment.newInstance();
 
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Marcelo Benites on 29/06/2016.
+ */
+
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
@@ -36,7 +41,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
+public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	public static final int SEARCH_LIMIT = 7;
 	private SpannableFactory spannableFactory;
@@ -45,8 +50,8 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 	private int offset;
 	private Subscription subscription;
 
-	public static SocialTimelineFragment newInstance() {
-		SocialTimelineFragment fragment = new SocialTimelineFragment();
+	public static AppsTimelineFragment newInstance() {
+		AppsTimelineFragment fragment = new AppsTimelineFragment();
 		return fragment;
 	}
 
@@ -58,24 +63,30 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (getAdapter().getItemCount() > 0 && (subscription == null || subscription.isUnsubscribed())) {
+			subscription = getUpdateTimelineSubscription(getLoadMoreObservable());
+		}
+	}
+
+	@Override
 	public void load(boolean refresh) {
 		if (subscription != null) {
 			subscription.unsubscribe();
 		}
-		subscription = Observable.concat(
-				GetUserTimelineRequest.of(SEARCH_LIMIT, 0)
-						.observe(refresh)
-						.doOnNext(item -> adapter.clearDisplayables()),
-				RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
-						.filter(item -> !isLoading())
-						.doOnNext(item -> addLoading())
-						.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset).observe())
-						.delay(1, TimeUnit.SECONDS)
-						.retryWhen(errors -> errors
-								.delay(1, TimeUnit.SECONDS)
-								.observeOn(AndroidSchedulers.mainThread())
-								.doOnNext(error -> showErrorSnackbar(error)))
-						.subscribeOn(AndroidSchedulers.mainThread()))
+		subscription = getUpdateTimelineSubscription(Observable.concat(getFreshLoadObservable(refresh), getLoadMoreObservable()));
+	}
+
+	@NonNull
+	private Observable<GetUserTimeline> getFreshLoadObservable(boolean refresh) {
+		return GetUserTimelineRequest.of(SEARCH_LIMIT, 0)
+				.observe(refresh)
+				.doOnNext(item -> getAdapter().clearDisplayables());
+	}
+
+	private Subscription getUpdateTimelineSubscription(Observable<GetUserTimeline> timelineUpdateSource) {
+		return timelineUpdateSource
 				.<GetUserTimeline> compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.filter(item -> item.getDatalist() != null)
 				.doOnNext(item -> setOffset(item))
@@ -89,6 +100,19 @@ public class SocialTimelineFragment extends GridRecyclerSwipeFragment {
 				.doOnNext(item -> removeLoading())
 				.subscribe(displayables -> addDisplayables((List<Displayable>) displayables),
 						throwable -> finishLoading((Throwable) throwable));
+	}
+
+	private Observable<GetUserTimeline> getLoadMoreObservable() {
+		return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
+				.filter(item -> !isLoading())
+				.doOnNext(item -> addLoading())
+				.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset).observe())
+				.delay(1, TimeUnit.SECONDS)
+				.retryWhen(errors -> errors
+						.delay(1, TimeUnit.SECONDS)
+						.observeOn(AndroidSchedulers.mainThread())
+						.doOnNext(error -> showErrorSnackbar(error)))
+				.subscribeOn(AndroidSchedulers.mainThread());
 	}
 
 	private void showErrorSnackbar(Throwable error) {
