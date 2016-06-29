@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by Neurophobic Animal on 29/06/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -27,6 +27,7 @@ public class Event {
 	public enum Name {
 		// Api
 		listApps,
+		listStores,
 		getStore,
 		getStoreWidgets,
 		getReviews,
