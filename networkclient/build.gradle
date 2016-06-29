@@ -16,20 +16,24 @@ android {
 
     defaultConfig {
         minSdkVersion 9
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        consumerProguardFiles 'proguard-rules.pro'
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
         }
-
         debug {
-            shrinkResources false
             minifyEnabled false
+            shrinkResources false
         }
     }
 
@@ -61,6 +65,7 @@ dependencies {
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
 
+    //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
     compile "io.reactivex:rxjava:${RXJAVA_VERSION}"

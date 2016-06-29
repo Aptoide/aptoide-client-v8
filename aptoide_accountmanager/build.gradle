@@ -38,28 +38,25 @@ android {
         facebookAppId = facebookAppIdExists ? facebookAppId.toString() : "0"
         resValue "string", "facebook_app_id", "\"" + facebookAppId + "\""
 
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        consumerProguardFiles 'proguard-rules.pro'
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-            shrinkResources true
             minifyEnabled true
+            shrinkResources true
         }
         debug {
+            minifyEnabled false
             shrinkResources false
-            minifyEnabled true
         }
-
-        lintOptions {
-            abortOnError false
-        }
-    }
-
-    repositories {
-        jcenter()
     }
 
     compileOptions {
@@ -95,10 +92,14 @@ dependencies {
 
     testCompile "junit:junit:${JUNIT_VERSION}"
 
+    //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
     compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
 
+    //noinspection GradleDependency
     compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
+    //noinspection GradleDependency
     compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
 
     compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"

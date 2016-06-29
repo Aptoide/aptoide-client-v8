@@ -17,7 +17,9 @@ public class Aptoide extends V8Engine {
 
 	@Override
 	protected void attachBaseContext(Context base) {
-		//MultiDex.install(this);
+		if(BuildConfig.DEBUG) {
+			MultiDex.install(this);
+		}
 		super.attachBaseContext(base);
 	}
 

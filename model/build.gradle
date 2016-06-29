@@ -16,22 +16,23 @@ android {
 
     defaultConfig {
         minSdkVersion 9
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        consumerProguardFiles 'proguard-rules.pro'
     }
-
-    publishNonDefault true
 
     lintOptions {
         abortOnError false
     }
 
+    publishNonDefault true
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources false
         }
     }
@@ -66,6 +67,7 @@ dependencies {
 
     testCompile "junit:junit:${JUNIT_VERSION}"
 
+    //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
     compile "com.fasterxml.jackson.core:jackson-annotations:${JACKSON_ANNOTATIONS_VERSION}"

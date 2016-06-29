@@ -1033,4 +1033,25 @@ public class AptoideUtils {
 		}
 	}
 
+	public static class Benchmarking {
+
+		private static final String TAG = Benchmarking.class.getSimpleName();
+
+		private String methodName;
+		private long startTime;
+
+		public static Benchmarking start(String methodName) {
+			Benchmarking benchmarking = new Benchmarking();
+			benchmarking.methodName = methodName;
+			benchmarking.startTime = System.currentTimeMillis();
+			return benchmarking;
+		}
+
+		public void end() {
+			long endTime = System.currentTimeMillis();
+			Logger.d(TAG, "Thread: " + Thread.currentThread()
+					.getId() + " Method:" + methodName + " - Total execution time: " + (endTime - startTime) +
+					"ms");
+		}
+	}
 }

@@ -240,4 +240,5 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	) {
 		GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
 	}
+
 }

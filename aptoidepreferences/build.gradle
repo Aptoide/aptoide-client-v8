@@ -16,7 +16,8 @@ android {
 
     defaultConfig {
         minSdkVersion 9
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        consumerProguardFiles 'proguard-rules.pro'
     }
 
     compileOptions {
@@ -28,15 +29,12 @@ android {
 
     buildTypes {
         release {
-            buildConfigField 'boolean', 'DELETE_DB', 'false'
-            shrinkResources false
-            minifyEnabled false
-            //
+            shrinkResources true
+            minifyEnabled true
         }
         debug {
-            buildConfigField 'boolean', 'DELETE_DB', 'true'
             shrinkResources false
-            minifyEnabled true
+            minifyEnabled false
         }
     }
 
@@ -63,6 +61,7 @@ dependencies {
     //
 
     testCompile "junit:junit:${JUNIT_VERSION}"
+    //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
