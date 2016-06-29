@@ -34,7 +34,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
@@ -45,6 +48,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Ins
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -61,7 +65,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppWidget;
@@ -73,6 +80,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Progress
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 
@@ -102,7 +110,14 @@ public enum DisplayableType {
 	UPDATE(UpdateWidget.class, UpdateDisplayable.class),
 	EXCLUDED_UPDATE(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class),
 
+	// Social Timeline
+	SOCIAL_TIMELINE_ARTICLE(ArticleWidget.class, ArticleDisplayable.class),
+	SOCIAL_TIMELINE_FEATURE(FeatureWidget.class, FeatureDisplayable.class),
+	SOCIAL_TIMELINE_STORE_LATEST_APPS(StoreLatestAppsWidget.class, StoreLatestAppsDisplayable.class),
+	SOCIAL_TIMELINE_STORE_APP_UPDATE(AppUpdateWidget.class, AppUpdateDisplayable.class),
+
 	ROLLBACK(RollbackWidget.class, RollbackDisplayable.class),
+
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),
 	SEARCH_ADD(SearchAdWidget.class, SearchAdDisplayable.class),

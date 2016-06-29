@@ -24,6 +24,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import lombok.Cleanup;
 
 /**
@@ -39,7 +40,8 @@ public class StoreUtils {
 		List<Long> storesNames = new LinkedList<>();
 		@Cleanup
 		Realm realm = Database.get();
-		for (cm.aptoide.pt.database.realm.Store store : Database.StoreQ.getAll(realm)) {
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		for (cm.aptoide.pt.database.realm.Store store : stores) {
 			storesNames.add(store.getStoreId());
 		}
 
@@ -51,7 +53,8 @@ public class StoreUtils {
 		List<String> storesNames = new LinkedList<>();
 		@Cleanup
 		Realm realm = Database.get();
-		for (cm.aptoide.pt.database.realm.Store store : Database.StoreQ.getAll(realm)) {
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		for (cm.aptoide.pt.database.realm.Store store : stores) {
 			storesNames.add(store.getStoreName());
 		}
 
@@ -62,7 +65,8 @@ public class StoreUtils {
 		@Cleanup
 		Realm realm = Database.get();
 		Map<String,List<String>> storesAuthMap = new HashMap<>();
-		for (cm.aptoide.pt.database.realm.Store store : Database.StoreQ.getAll(realm)) {
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		for (cm.aptoide.pt.database.realm.Store store : stores) {
 			if (store.getPasswordSha1() != null) {
 				storesAuthMap.put(store.getStoreName(), new LinkedList<>(Arrays.asList(store.getUsername(), store.getPasswordSha1())));
 			}

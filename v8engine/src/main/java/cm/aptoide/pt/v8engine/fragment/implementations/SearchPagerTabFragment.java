@@ -33,8 +33,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 	private boolean addSubscribedStores;
 	private Map<String, Void> mapPackages = new HashMap<>();
 
+	private transient EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 	private transient ListSearchAppsRequest listSearchAppsRequest;
-	private SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {
+	private transient SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {
 
 		LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -66,18 +67,27 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 	@Override
 	public void load(boolean refresh) {
-		GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
-			if (getAdsResponse.getAds().size() > 0) {
-				addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));
-			}
-		});
+		super.load(refresh);
+		if (refresh) {
+			GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
+				if (getAdsResponse.getAds().size() > 0) {
+					addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));
+				}
+			});
 
-		recyclerView.clearOnScrollListeners();
-		final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this,
-				listSearchAppsRequest = ListSearchAppsRequest.of(query, addSubscribedStores),
-				listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
-		recyclerView.addOnScrollListener(listener);
-		listener.onLoadMore(refresh);
+			recyclerView.clearOnScrollListeners();
+			endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = ListSearchAppsRequest.of(query,
+					addSubscribedStores), listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
+			recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+			endlessRecyclerOnScrollListener.onLoadMore(refresh);
+		} else {
+			recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		}
+	}
+
+	@Override
+	public int getContentViewId() {
+		return R.layout.recycler_fragment;
 	}
 
 	@Override
@@ -94,11 +104,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 		outState.putString(BundleCons.QUERY, query);
 		outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
-	}
-
-	@Override
-	public int getContentViewId() {
-		return R.layout.recycler_fragment;
 	}
 
 	protected static class BundleCons {

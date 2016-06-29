@@ -5,8 +5,10 @@
 
 package cm.aptoide.pt.model.v7.listapp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.store.Store;
@@ -24,9 +26,9 @@ public class App {
 	private long size;
 	private String icon;
 	private String graphic;
-	private String added;
-	private String modified;
-	private String updated;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date added;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date modified;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date updated;
 	private String uptype;
 	private Store store;
 	private File file;

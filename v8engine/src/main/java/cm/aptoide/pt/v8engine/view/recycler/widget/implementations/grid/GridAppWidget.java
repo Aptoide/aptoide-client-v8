@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -35,8 +38,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 	private TextView tvStoreName;
 	private TextView tvAddedTime;
 
-	//private static final SimpleDateFormat dateFormatter =
-	//		new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
 	public GridAppWidget(View itemView) {
 		super(itemView);
@@ -64,7 +66,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 				.getDownloads()) + V8Engine.getContext().getString(R.string._downloads));
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
-		tvAddedTime.setText(pojo.getAdded());
+		tvAddedTime.setText(dateFormatter.format(pojo.getAdded()));
 
 		itemView.setOnClickListener(
 				v -> {

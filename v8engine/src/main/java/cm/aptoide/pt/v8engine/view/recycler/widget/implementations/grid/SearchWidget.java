@@ -120,18 +120,12 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 			ratingBar.setRating(avg);
 		}
 
-		Date modified = null;
-		try {
-			modified = dateFormatter.parse(pojo.getModified());
-		} catch (ParseException e) {
-			Logger.printException(e);
-		} finally {
-			if (modified != null) {
-				String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
-						.getTimeDiffAll(itemView.getContext(), modified.getTime());
-				if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
-					time.setText(timeSinceUpdate);
-				}
+		Date modified = pojo.getModified();
+		if (modified != null) {
+			String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
+					.getTimeDiffAll(itemView.getContext(), modified.getTime());
+			if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
+				time.setText(timeSinceUpdate);
 			}
 		}
 

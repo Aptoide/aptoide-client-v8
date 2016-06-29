@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.base;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 
@@ -23,16 +24,16 @@ public class BaseGridLayoutManager extends GridLayoutManager {
 
 	private static class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 
-		//private final List<Displayable> displayables;
-		private Displayables displayables;
+		private BaseAdapter baseAdapter;
 
 		public SpanSizeLookup(BaseAdapter baseAdapter) {
-			this.displayables = baseAdapter.getDisplayables();
+			this.baseAdapter = baseAdapter;
 		}
 
 		@Override
 		public int getSpanSize(int position) {
-			return displayables!=null ? displayables.get(position).getSpanSize() : 0;
+			final Displayable displayable = baseAdapter.getDisplayable(position);
+			return displayable != null? displayable.getSpanSize() : 1;
 		}
 	}
 }

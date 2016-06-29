@@ -15,6 +15,7 @@ import java.util.List;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
+import cm.aptoide.pt.v8engine.fragment.implementations.SocialTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
@@ -36,6 +37,15 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		Iterator<GetStoreTabs.Tab> iterator = tabs.iterator();
 		while (iterator.hasNext()) {
 			GetStoreTabs.Tab next = iterator.next();
+
+			//TODO Do NOT push this, only for testing while web service is not ready.
+			if (next.getLabel().equals("Social Timeline")) {
+				final Event event = new Event();
+				event.setName(Event.Name.mySocialTimeline);
+				event.setType(Event.Type.CLIENT);
+				next.setEvent(event);
+			}
+
 			if (next.getEvent().getName() == null || next.getEvent().getType() == null) {
 				iterator.remove();
 			}
@@ -66,6 +76,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 			case myUpdates:
 				return UpdatesFragment.newInstance();
+
+			case mySocialTimeline:
+				return SocialTimelineFragment.newInstance();
 
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.

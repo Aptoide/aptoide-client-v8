@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
 
 retrolambda {
     jvmArgs '-noverify'
@@ -40,13 +40,12 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "8.0.0"
-        testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
+    }
 
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-        // Enable the experimental Jack build tools.
-        jackOptions {
-            enabled false
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -59,10 +58,12 @@ android {
             // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
-            versionCode 61
-            versionName "8.0.0.28062016"
+            versionCode 62
+            versionName "8.0.0.29062016"
             minSdkVersion 21
             resValue "string", "authenticatorAccountType", applicationId
+            // Enabling multidex support.
+            multiDexEnabled true
         }
         prod {
             // The actual minSdkVersion for the application.
@@ -77,7 +78,7 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            multiDexEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->
@@ -93,18 +94,11 @@ android {
             }
         }
 
-        nightly {
-            zipAlignEnabled true
-            minifyEnabled true
-            shrinkResources true
-            multiDexEnabled false
-        }
-
         debug {
             zipAlignEnabled false
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources false
-            multiDexEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -127,7 +121,6 @@ android {
 }
 
 dependencies {
-    //compile 'com.android.support:multidex:1.0.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
@@ -157,6 +150,8 @@ if (propFile.canRead()) {
     println 'signing.properties not found'
     android.buildTypes.release.signingConfig = null
 }
+
+
 
 
 
