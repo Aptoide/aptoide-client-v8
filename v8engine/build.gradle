@@ -127,4 +127,7 @@ dependencies {
 
     debugCompile project(path: ':imageloader', configuration: 'debug')
     releaseCompile project(path: ':imageloader', configuration: 'release')
+
+    debugCompile project(path: ':downloadmanager', configuration: 'debug')
+    releaseCompile project(path: ':downloadmanager', configuration: 'release')
 }

@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -19,16 +21,22 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
+
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
@@ -126,7 +134,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				installButton.setOnClickListener(new Listeners().newBuyListener());
 			} else {
 				installButton.setText(R.string.install);
-				installButton.setOnClickListener(new Listeners().newInstallListener());
+				installButton.setOnClickListener(new Listeners().newInstallListener(app));
 			}
 		} else {
 			if (app.getFile().getVercode() > installed.getVersionCode()) {
@@ -252,6 +260,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	private static class Listeners {
 
+		private static final String TAG = Listeners.class.getSimpleName();
+
 		private View.OnClickListener newBuyListener() {
 			return v -> {
 				ContextWrapper ctx = (ContextWrapper) v.getContext();
@@ -262,7 +272,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newInstallListener() {
+		private View.OnClickListener newInstallListener(GetAppMeta.App app) {
 			return v -> {
 				ContextWrapper ctx = (ContextWrapper) v.getContext();
 				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
@@ -275,11 +285,38 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 //							.LENGTH_INDEFINITE);
 
 					showSnackbar.make().show();
-
+//					AptoideDownloadManager.getInstance()
+//							.startDownload(app)
+//							.subscribe(progress -> onDownloadComplete((Integer) progress, app.getId()));
 					// TODO
+					V8Engine.startDownload(app)
+							.subscribe(progress -> onDownloadComplete(progress.getOverallProgress(), app.getId()));
 
 				});
 			};
+		}
+
+		private void onDownloadComplete(Integer progress, long appId) {
+			Logger.d(TAG, "onClick: " + progress);
+			Logger.d(TAG, "onClick: " + AptoideDownloadManager.getInstance().getDownloadFromDb(appId)
+					.getOverallProgress());
+			if (progress == 100) {
+				try {
+					Download downloadedApp = AptoideDownloadManager.getInstance().getDownloadFromDb(appId);
+					Intent install = new Intent(Intent.ACTION_VIEW);
+					install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, AptoideDownloadManager.getContext()
+							.getPackageName());
+					String filePath = downloadedApp.getFilesToDownload().get(0).getFilePath();
+					install.setDataAndType(Uri.fromFile(new File(filePath)), "application/vnd" +
+							".android" +
+							".package-archive");
+					Logger.d("Aptoide", "Installing app: " + filePath);
+					AptoideDownloadManager.getContext().startActivity(install);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		private View.OnClickListener newUpdateListener() {

@@ -20,15 +20,20 @@ import com.trello.rxlifecycle.FragmentEvent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
+import rx.Observable;
 
 /**
  * Created by neuro on 09-05-2016.
  */
 public class HomeFragment extends StoreFragment {
+
+	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private DrawerLayout mDrawerLayout;
 	private NavigationView mNavigationView;
@@ -55,10 +60,17 @@ public class HomeFragment extends StoreFragment {
 				if (itemId == R.id.navigation_item_my_account) {
 					AptoideAccountManager.openAccountManager(getContext());
 				} else if (itemId == R.id.navigation_item_rollback) {
-					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
+
+					Observable<Integer> downloadStatus = AptoideDownloadManager.getInstance()
+							.getDownloadStatus(12312);
+					downloadStatus.subscribe(downloadState -> ShowMessage.asSnack(mNavigationView,
+							downloadState
+							.toString()), Throwable::printStackTrace);
+
+
+
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
-					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
-							.show();
+					((FragmentShower) getActivity()).pushFragmentV4(AppViewFragment.newInstance(19067731));
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
 					((FragmentShower) getActivity()).pushFragmentV4(ExcludedUpdatesFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_settings) {
