@@ -43,7 +43,7 @@ public class GetStoreDisplaysRequest extends BaseRequestWithStore<GetStoreDispla
 	}
 
 	public static GetStoreDisplaysRequest of(String storeName) {
-		return new GetStoreDisplaysRequest(storeName, OkHttpClientFactory.getSingletoneClient(),
+		return new GetStoreDisplaysRequest(storeName, OkHttpClientFactory.getSingletonClient(),
 				WebService.getDefaultConverter(), BASE_HOST, "pool", AptoideUtils.Core.getVerCode(),
 				AptoideAccountManager.getAccessToken(), SecurePreferences.getAptoideClientUUID());
 	}
@@ -51,7 +51,7 @@ public class GetStoreDisplaysRequest extends BaseRequestWithStore<GetStoreDispla
 	public static GetStoreDisplaysRequest ofAction(String url) {
 		return new GetStoreDisplaysRequest(
 				new V7Url(url),
-				OkHttpClientFactory.getSingletoneClient(),
+				OkHttpClientFactory.getSingletonClient(),
 				WebService.getDefaultConverter(),
 				BASE_HOST,
 				SecurePreferences.getAptoideClientUUID(),

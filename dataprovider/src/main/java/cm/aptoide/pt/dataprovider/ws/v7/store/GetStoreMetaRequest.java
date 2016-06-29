@@ -36,12 +36,12 @@ public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta, GetS
 	}
 
 	public static GetStoreMetaRequest of(String storeName) {
-		return new GetStoreMetaRequest(storeName, OkHttpClientFactory.getSingletoneClient(), WebService
+		return new GetStoreMetaRequest(storeName, OkHttpClientFactory.getSingletonClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	public static GetStoreMetaRequest of(int storeId) {
-		return new GetStoreMetaRequest(storeId, OkHttpClientFactory.getSingletoneClient(), WebService
+		return new GetStoreMetaRequest(storeId, OkHttpClientFactory.getSingletonClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 

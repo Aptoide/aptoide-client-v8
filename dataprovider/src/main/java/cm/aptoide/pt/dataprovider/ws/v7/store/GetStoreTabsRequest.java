@@ -37,7 +37,7 @@ public class GetStoreTabsRequest extends BaseRequestWithStore<GetStoreTabs, GetS
 	}
 
 	public static GetStoreTabsRequest of(String storeName) {
-		return new GetStoreTabsRequest(storeName, OkHttpClientFactory.getSingletoneClient(), WebService
+		return new GetStoreTabsRequest(storeName, OkHttpClientFactory.getSingletonClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 

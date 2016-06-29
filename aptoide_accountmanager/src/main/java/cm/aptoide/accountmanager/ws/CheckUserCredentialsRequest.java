@@ -60,7 +60,7 @@ public class CheckUserCredentialsRequest extends v3accountManager<CheckUserCrede
 	 */
 	public static CheckUserCredentialsRequest of(String accessToken) {
 		CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application
-				.getContext(), OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter());
+				.getContext(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter());
 		request.setToken(accessToken);
 		return request;
 	}

@@ -10,19 +10,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cm.aptoide.pt.dataprovider.PackageRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
+import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
+import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -49,6 +53,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private boolean loading;
 	private int offset;
 	private Subscription subscription;
+	private PackageRepository packageRespository;
+	private List<String> packages;
+	private Observable<String> latestInstalledAppsObservable;
 
 	public static AppsTimelineFragment newInstance() {
 		AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -60,13 +67,15 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		super.onCreate(savedInstanceState);
 		dateCalculator = new DateCalculator();
 		spannableFactory = new SpannableFactory();
+		packageRespository = new PackageRepository(getContext().getPackageManager());
+		latestInstalledAppsObservable = packageRespository.getLatestInstalledPackages(5).cache();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (getAdapter().getItemCount() > 0 && (subscription == null || subscription.isUnsubscribed())) {
-			subscription = getUpdateTimelineSubscription(getLoadMoreObservable());
+		if (getAdapter().getItemCount() > 0 && (subscription == null || subscription.isUnsubscribed()) && packages != null) {
+			subscription = getUpdateTimelineSubscription(getLoadMoreObservable(packages));
 		}
 	}
 
@@ -75,12 +84,20 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		if (subscription != null) {
 			subscription.unsubscribe();
 		}
-		subscription = getUpdateTimelineSubscription(Observable.concat(getFreshLoadObservable(refresh), getLoadMoreObservable()));
+		subscription = getUpdateTimelineSubscription(getPackagesObservable(latestInstalledAppsObservable)
+				.flatMap(packages -> Observable.concat(getFreshLoadObservable(refresh, packages), getLoadMoreObservable(packages))));
 	}
 
 	@NonNull
-	private Observable<GetUserTimeline> getFreshLoadObservable(boolean refresh) {
-		return GetUserTimelineRequest.of(SEARCH_LIMIT, 0)
+	private Observable<List<String>> getPackagesObservable(Observable<String> latestInstalledAppsObservable) {
+		return Observable.concat(latestInstalledAppsObservable, packageRespository.getRandomInstalledPackages(5))
+				.toList()
+				.doOnNext(packages -> setPackages(packages));
+	}
+
+	@NonNull
+	private Observable<GetUserTimeline> getFreshLoadObservable(boolean refresh, List<String> packages) {
+		return GetUserTimelineRequest.of(SEARCH_LIMIT, 0, packages)
 				.observe(refresh)
 				.doOnNext(item -> getAdapter().clearDisplayables());
 	}
@@ -89,7 +106,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return timelineUpdateSource
 				.<GetUserTimeline> compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.filter(item -> item.getDatalist() != null)
-				.doOnNext(item -> setOffset(item))
+				.doOnNext(item -> setOffset(item.getDatalist()))
 				.flatMapIterable(getUserTimeline -> getUserTimeline.getDatalist().getList())
 				.filter(timelineItem -> timelineItem != null)
 				.map(timelineItem -> timelineItem.getData())
@@ -98,15 +115,14 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.buffer(1, TimeUnit.SECONDS, SEARCH_LIMIT)
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnNext(item -> removeLoading())
-				.subscribe(displayables -> addDisplayables((List<Displayable>) displayables),
-						throwable -> finishLoading((Throwable) throwable));
+				.subscribe(displayables -> addDisplayables(displayables), throwable -> finishLoading((Throwable) throwable));
 	}
 
-	private Observable<GetUserTimeline> getLoadMoreObservable() {
+	private Observable<GetUserTimeline> getLoadMoreObservable(List<String> packages) {
 		return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
 				.filter(item -> !isLoading())
 				.doOnNext(item -> addLoading())
-				.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset).observe())
+				.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset, packages).observe())
 				.delay(1, TimeUnit.SECONDS)
 				.retryWhen(errors -> errors
 						.delay(1, TimeUnit.SECONDS)
@@ -126,8 +142,8 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
 	}
 
-	private void setOffset(GetUserTimeline item) {
-		offset = item.getDatalist().getNext();
+	private void setOffset(Datalist<TimelineItem> datalist) {
+		offset = datalist.getNext();
 	}
 
 	private void addLoading() {
@@ -160,5 +176,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 			return AppUpdateDisplayable.fromApp((App) item, spannableFactory);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
+	}
+
+	public void setPackages(List<String> packages) {
+		this.packages = packages;
 	}
 }

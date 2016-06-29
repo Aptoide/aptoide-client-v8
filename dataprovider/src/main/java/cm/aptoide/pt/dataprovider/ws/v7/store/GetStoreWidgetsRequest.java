@@ -43,13 +43,13 @@ public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets
 	}
 
 	public static GetStoreWidgetsRequest of(String storeName) {
-		return new GetStoreWidgetsRequest(storeName, OkHttpClientFactory.getSingletoneClient(),
+		return new GetStoreWidgetsRequest(storeName, OkHttpClientFactory.getSingletonClient(),
 				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	public static GetStoreWidgetsRequest ofAction(String url) {
-		return new GetStoreWidgetsRequest(new V7Url(url), OkHttpClientFactory.getSingletoneClient(),
+		return new GetStoreWidgetsRequest(new V7Url(url), OkHttpClientFactory.getSingletonClient(),
 				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
