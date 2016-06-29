@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 buildscript {
@@ -51,10 +51,12 @@ ext {
 
     //JW stands for Jake Wharton
 
+    APPLICATION_ID = 'cm.aptoide.pt'
+
     //
     // gradle build script vars
     //
-
+    TARGET_SDK_VERSION = 23
     COMPILE_SDK_VERSION = 23
     BUILD_TOOLS_VERSION = '23.0.3'
 
@@ -110,4 +112,7 @@ ext {
 
     // Facebook Android SDK
     FACEBOOK_ANDROID_SDK_VERSION = '4.11.0'
+
+    // File Downloader lib
+    FILE_DOWNLOADER_VERSION = '0.3.2'
 }

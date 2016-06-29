@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -33,13 +33,23 @@ if (fabricConfigured) {
 }
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        targetSdkVersion 23
-        versionCode 1
+        applicationId "${APPLICATION_ID}"
         versionName "8.0.0"
+        versionCode 1
+        minSdkVersion 15
+        resValue "string", "authenticatorAccountType", APPLICATION_ID
+        targetSdkVersion TARGET_SDK_VERSION
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
+
+        // common proguard files to append and configure proguard for the whole project
         proguardFile 'libs/proguard/proguard-androidannotations.pro'
         proguardFile 'libs/proguard/proguard-android-gif-drawable.pro'
         proguardFile 'libs/proguard/proguard-support-v7-appcompat.pro'
@@ -59,7 +69,7 @@ android {
         proguardFile 'libs/proguard/proguard-fabric-twitter-kit.pro'
         proguardFile 'libs/proguard/proguard-facebook.pro'
         proguardFile 'libs/proguard/proguard-facebook-stetho.pro'
-        proguardFile 'proguard-rules.pro'
+        proguardFile 'proguard-rules.txt'
         proguardFile getDefaultProguardFile('proguard-android.txt')
         testProguardFile 'proguard-test-rules.pro'
     }
@@ -71,22 +81,13 @@ android {
     signingConfigs { release }
 
     productFlavors {
-        // Define separate dev and prod product flavors.
         dev {
-            applicationId "cm.aptoide.pt.dev"
-            // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
-            // to pre-dex each module and produce an APK that can be tested on
-            // Android Lollipop without time consuming dex merging processes.
+            applicationIdSuffix ".dev"
             versionCode 62
-            versionName "8.0.0.29062016"
             minSdkVersion 21
-            resValue "string", "authenticatorAccountType", applicationId
         }
+
         prod {
-            // The actual minSdkVersion for the application.
-            minSdkVersion 15
-            applicationId "cm.aptoide.pt"
-            resValue "string", "authenticatorAccountType", applicationId
         }
     }
 
@@ -112,6 +113,7 @@ android {
         }
 
         nightly {
+            versionNameSuffix "." + getDate()
             multiDexEnabled false
             zipAlignEnabled true
             minifyEnabled true
@@ -162,11 +164,17 @@ dependencies {
     //
     // from remote repos
     //
-    compile "com.android.support:multidex:${MULTIDEX_VERSION}"
 
     testCompile "junit:junit:${JUNIT_VERSION}"
     //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:multidex:${MULTIDEX_VERSION}"
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('ddMMyyyy')
+    return formattedDate
 }
 
 def File propFile = new File('signing.properties')

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -37,8 +37,12 @@ android {
         minSdkVersion 15
 
         buildConfigField BOOLEAN, FABRIC_CONFIGURED, (fabricApiKey != null).toString()
-        //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        consumerProguardFiles 'proguard-rules.pro'
+        consumerProguardFiles "proguard-rules.txt"
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
     }
 
     lintOptions {
@@ -49,7 +53,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
         }
         debug {
@@ -90,6 +94,9 @@ dependencies {
 
     debugCompile project(path: ':imageloader', configuration: 'debug')
     releaseCompile project(path: ':imageloader', configuration: 'release')
+
+    debugCompile project(path: ':downloadmanager', configuration: 'debug')
+    releaseCompile project(path: ':downloadmanager', configuration: 'release')
 
     //
     // custom libs in folders

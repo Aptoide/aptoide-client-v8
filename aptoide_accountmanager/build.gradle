@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -28,7 +28,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        consumerProguardFiles 'proguard-rules.pro'
+        consumerProguardFiles 'proguard-rules.txt'
         buildConfigField BOOLEAN, GMS_CONFIGURED, (gmsServerId != null).toString()
         buildConfigField STRING, GMS_SERVER_ID, "\"" + gmsServerId.toString() + "\""
 
@@ -38,8 +38,12 @@ android {
         facebookAppId = facebookAppIdExists ? facebookAppId.toString() : "0"
         resValue "string", "facebook_app_id", "\"" + facebookAppId + "\""
 
-        //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        consumerProguardFiles 'proguard-rules.pro'
+        consumerProguardFiles "proguard-rules.txt"
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
     }
 
     lintOptions {
@@ -50,7 +54,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
         }
         debug {

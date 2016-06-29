@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -657,8 +657,9 @@ public class AptoideUtils {
 
 		public static void runOnUiThread(Runnable runnable) {
 			Observable.just(null)
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(o -> runnable.run(), Logger::printException);
+					.observeOn(AndroidSchedulers.mainThread()).subscribe(o -> runnable.run(), e -> {
+				e.printStackTrace();
+			});
 		}
 
 		public static void sleep(long l) {
