@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -45,6 +45,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
@@ -76,6 +77,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHead
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
@@ -113,6 +115,8 @@ public enum DisplayableType {
 	SOCIAL_TIMELINE_FEATURE(FeatureWidget.class, FeatureDisplayable.class),
 	SOCIAL_TIMELINE_STORE_LATEST_APPS(StoreLatestAppsWidget.class, StoreLatestAppsDisplayable.class),
 	SOCIAL_TIMELINE_STORE_APP_UPDATE(AppUpdateWidget.class, AppUpdateDisplayable.class),
+
+	ROLLBACK(RollbackWidget.class, RollbackDisplayable.class),
 
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),

@@ -1,33 +1,43 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
         versionCode 3
+        consumerProguardFiles "proguard-rules.txt"
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'boolean', 'DELETE_DB', 'false'
+            shrinkResources true
+            minifyEnabled false
         }
         debug {
+            buildConfigField 'boolean', 'DELETE_DB', 'true'
+            shrinkResources false
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'boolean', 'DELETE_DB', 'false'
         }
     }
 
@@ -38,12 +48,29 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':model', configuration: 'debug')
     releaseCompile project(path: ':model', configuration: 'release')
+
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    // Just for lombok not to complain
+    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

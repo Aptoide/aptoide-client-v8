@@ -1,31 +1,43 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
-    // Websockets
-    useLibrary 'org.apache.http.legacy'
-
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
+        consumerProguardFiles "proguard-rules.txt"
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-
+            minifyEnabled false
+            shrinkResources true
         }
         debug {
-
+            minifyEnabled false
+            shrinkResources false
         }
     }
 
@@ -33,13 +45,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // Websockets
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile "com.google.android.gms:play-services-base:${GMS_VERSION}"
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':model', configuration: 'debug')
     releaseCompile project(path: ':model', configuration: 'release')
@@ -59,9 +74,26 @@ dependencies {
     debugCompile project(path: ':database', configuration: 'debug')
     releaseCompile project(path: ':database', configuration: 'release')
 
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
     testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
+    //noinspection GradleDependency
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
+
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    // Just for lombok not to complain
+    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/06/2016.
+ * Modified by SithEngineer on 23/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
+
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +31,13 @@ public class OkHttpClientFactory {
 	private static OkHttpClient httpClientInstance;
 
 	public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize, Interceptor interceptor) {
-		return new OkHttpClient.Builder()
+		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+		if (BuildConfig.DEBUG) {
+			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
+		}
+
+		return clientBuilder
 				.cache(new Cache(cacheDirectory, cacheMaxSize)) // 10 MiB
 				.addInterceptor(interceptor)
 				.build();

@@ -1,17 +1,27 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/05/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
+retrolambda {
+    jvmArgs '-noverify'
+}
+
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 9
+        consumerProguardFiles "proguard-rules.txt"
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
     }
 
     compileOptions {
@@ -23,18 +33,42 @@ android {
 
     buildTypes {
         release {
-
+            minifyEnabled false
+            shrinkResources true
         }
         debug {
-
+            minifyEnabled false
+            shrinkResources false
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
+
+    //
+    // inter-projects dependencies
+    //
+
+    //
+    // custom libs in folders
+    //
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    // Just for lombok not to complain
+    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

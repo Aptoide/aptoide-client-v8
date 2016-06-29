@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 23/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
@@ -37,10 +37,10 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
 		@POST("getAds")
 		@FormUrlEncoded
-		Observable<GetAdsResponse> getAds(@FieldMap Map<String, String> arg);
+		Observable<GetAdsResponse> getAds(@FieldMap Map<String,String> arg);
 
 		@POST("registerAdReferer")
 		@FormUrlEncoded
-		Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap Map<String, String> arg);
+		Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap Map<String,String> arg);
 	}
 }

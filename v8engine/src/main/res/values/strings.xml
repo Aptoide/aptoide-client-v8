@@ -21,8 +21,10 @@
     <!-- Common (menu) -->
     <string name="menu_select_all">Select All</string>
     <string name="menu_select_none">Select None</string>
+    <string name="clear">Clear</string>
 
     <!-- Excluded Updates Fragment -->
+    <string name="excluded_updates">Excluded Updates</string>
     <string name="no_excluded_updates_msg">The new version of an app doesn’t work on your device or some feature is
         missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop
         updating.</string>
@@ -31,6 +33,12 @@
     <string name="restore_updates">Restore Updates</string>
     <string name="open_apps_manager">Open Apps Manager</string>
 
+    <!-- Rollback Fragment -->
+    <string name="rollback">Rollback</string>
+    <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
+        apps (via Aptoide) including version and install date.</string>
+
+    <!-- Timeline Fragment -->
     <string name="fragment_social_timeline_hours_since_last_update">%1$d hours ago</string>
     <string name="menu_card_timeline_clear">Clear</string>
     <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
@@ -44,4 +52,5 @@
     <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
     <string name="fragment_social_timeline_no_connection">No network connection</string>
     <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
+
 </resources>

@@ -60,15 +60,7 @@ public class HomeFragment extends StoreFragment {
 				if (itemId == R.id.navigation_item_my_account) {
 					AptoideAccountManager.openAccountManager(getContext());
 				} else if (itemId == R.id.navigation_item_rollback) {
-
-					Observable<Integer> downloadStatus = AptoideDownloadManager.getInstance()
-							.getDownloadStatus(12312);
-					downloadStatus.subscribe(downloadState -> ShowMessage.asSnack(mNavigationView,
-							downloadState
-							.toString()), Throwable::printStackTrace);
-
-
-
+					((FragmentShower) getActivity()).pushFragmentV4(RollbackFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
 					((FragmentShower) getActivity()).pushFragmentV4(AppViewFragment.newInstance(19067731));
 				} else if (itemId == R.id.navigation_item_excluded_updates) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 20/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.util.referrer;
@@ -43,7 +43,7 @@ import lombok.Cleanup;
 /**
  * Created by neuro on 20-06-2016.
  */
-public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils{
+public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
 
 	public static void extractReferrer(MinimalAd minimalAd, final int retries, boolean broadcastReferrer) {
 
@@ -65,9 +65,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
 			WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 			WindowManager.LayoutParams params;
-			params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager
-					.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY, WindowManager
-					.LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.TRANSLUCENT);
+			params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager
+					.LayoutParams.TYPE_SYSTEM_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.TRANSLUCENT);
 
 			params.gravity = Gravity.TOP | Gravity.LEFT;
 			params.x = 0;
@@ -76,8 +75,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 			params.height = 0;
 
 			LinearLayout view = new LinearLayout(context);
-			view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-					RelativeLayout.LayoutParams.MATCH_PARENT));
+			view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
 			AptoideUtils.ThreadU.runOnIoThread(() -> {
 				internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl);
@@ -86,8 +84,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 			});
 			clickUrlFuture.get();
 			WebView wv = new WebView(context);
-			wv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout
-					.LayoutParams.MATCH_PARENT));
+			wv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 			view.addView(wv);
 			wv.getSettings().setJavaScriptEnabled(true);
 			wv.setWebViewClient(new WebViewClient() {
@@ -101,15 +98,16 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 							clickUrl.startsWith("http://play.google.com")) {
 						Logger.d("ExtractReferrer", "Clickurl landed on market");
 						final String referrer = getReferrer(clickUrl);
-//                        if (simpleFuture != null) {
-//                            simpleFuture.set(referrer);
-//                        }
+						//                        if (simpleFuture != null) {
+						//                            simpleFuture.set(referrer);
+						//                        }
 						Logger.d("ExtractReferrer", "Referrer successfully extracted");
 
 						if (broadcastReferrer) {
 							broadcastReferrer(packageName, referrer);
 						} else {
-							@Cleanup Realm realm = Database.get();
+							@Cleanup
+							Realm realm = Database.get();
 							Database.RollbackQ.setReferrer(packageName, referrer, realm);
 						}
 
@@ -139,16 +137,13 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 					return postponeReferrerExtraction(delta, success, 0);
 				}
 
-				private ScheduledFuture<Void> postponeReferrerExtraction(int delta, final boolean success, final int
-						retries) {
+				private ScheduledFuture<Void> postponeReferrerExtraction(int delta, final boolean success, final int retries) {
 					Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
 					Callable<Void> callable = () -> {
 						Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
-						RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(), minimalAd.getClickUrl()
-								, success)
-								.execute();
+						RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(), minimalAd.getClickUrl(), success).execute();
 
 						Log.d("ExtractReferrer", "Retries left: " + retries);
 
@@ -159,8 +154,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
 								if (retries > 0) {
 									GetAdsRequest.ofSecondTry(packageName)
-											.execute(getAdsResponse -> extractReferrer(minimalAd, retries - 1,
-													broadcastReferrer));
+											.execute(getAdsResponse -> extractReferrer(minimalAd, retries - 1, broadcastReferrer));
 								} else {
 									// A lista de excluded networks deve ser limpa a cada "ronda"
 									excludedNetworks.remove(packageName);
@@ -185,7 +179,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 			windowManager.addView(view, params);
 		} catch (Exception e) {
 			// TODO: 09-06-2016 neuro
-//            Crashlytics.logException(e);
+			//            Crashlytics.logException(e);
 		}
 	}
 

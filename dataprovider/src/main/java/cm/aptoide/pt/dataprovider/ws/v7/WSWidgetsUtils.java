@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -46,12 +46,10 @@ public class WSWidgetsUtils {
 					break;
 				case DISPLAYS:
 					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
-							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
-							countDownLatch, listApps), action1);
+							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
 					break;
 				case ADS:
-					ioScheduler(GetAdsRequest.ofHomepage()
-							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+					ioScheduler(GetAdsRequest.ofHomepage().observe()).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				default:

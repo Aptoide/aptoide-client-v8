@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -12,9 +12,8 @@ localProperties.load(new FileInputStream("local.properties"))
 def gmsServerId = localProperties.GMS_SERVER_ID
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
-
 
     def GMS_CONFIGURED = "GMS_CONFIGURED"
     def GMS_SERVER_ID = "GMS_SERVER_ID"
@@ -29,7 +28,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        consumerProguardFiles 'proguard-rules.pro'
+        consumerProguardFiles 'proguard-rules.txt'
         buildConfigField BOOLEAN, GMS_CONFIGURED, (gmsServerId != null).toString()
         buildConfigField STRING, GMS_SERVER_ID, "\"" + gmsServerId.toString() + "\""
 
@@ -38,19 +37,30 @@ android {
         buildConfigField BOOLEAN, FACEBOOK_CONFIGURED, facebookAppIdExists.toString()
         facebookAppId = facebookAppIdExists ? facebookAppId.toString() : "0"
         resValue "string", "facebook_app_id", "\"" + facebookAppId + "\""
+
+        consumerProguardFiles "proguard-rules.txt"
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
+            minifyEnabled false
+            shrinkResources true
         }
         debug {
+            minifyEnabled false
+            shrinkResources false
         }
-    }
-
-    repositories {
-        jcenter()
     }
 
     compileOptions {
@@ -60,14 +70,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-
-    testCompile 'junit:junit:4.12'
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
     releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
@@ -78,15 +84,36 @@ dependencies {
     debugCompile project(path: ':utils', configuration: 'debug')
     releaseCompile project(path: ':utils', configuration: 'release')
 
-    compile 'com.facebook.android:facebook-android-sdk:4.11.0'
-    compile "com.google.android.gms:play-services-basement:${GMS_VERSION}"
-    compile "com.google.android.gms:play-services-auth:${GMS_VERSION}"
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+
+    //noinspection GradleDependency
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+
+    //noinspection GradleDependency
+    compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
+    //noinspection GradleDependency
+    compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
+
+    compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
 
     compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+    compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"
     // And ProGuard rules for RxJava!
     compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-    compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
 
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
     // Just for lombok not to complain
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

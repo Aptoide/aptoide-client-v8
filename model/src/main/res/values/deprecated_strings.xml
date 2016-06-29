@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 22/06/2016.
+  ~ Modified by SithEngineer on 27/06/2016.
   -->
 
 <resources>
@@ -243,13 +243,10 @@
     <string name="updates_tab">Updates</string>
 
     <string name="feedback_send_button">Send Feedback</string>
-    <string name="clear">Clear</string>
 
     <!-- NavDrawer List items -->
     <string name="my_account">My Account</string>
-    <string name="rollback">Rollback</string>
     <string name="setting_schdwntitle">Scheduled Downloads</string>
-    <string name="excluded_updates">Excluded Updates</string>
     <string name="settings">Settings</string>
     <string name="facebook">Facebook</string>
     <string name="twitter">Twitter</string>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 buildscript {
@@ -16,7 +16,7 @@ buildscript {
         classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
 
         classpath 'io.fabric.tools:gradle:1.21.6'
@@ -48,16 +48,38 @@ task wrapper(type: Wrapper) {
 }
 
 ext {
-    BUILD_TOOLS_VERSION = '23.0.3'
-    SUPPORT_LIB_VERSION = '23.4.0'
-    GMS_VERSION = '8.3.0'
-    LOMBOK_VERSION = '1.16.8'
 
-    // RxJava
-    RXJAVA_VERSION = '1.1.5'
-    RXANDROID_VERSION = '1.2.0'
-    RX_BINDING_VERSION = '0.4.0'
-    RXJAVA_PROGUARD_RULES_VERSION = '1.1.3.0'
+    //JW stands for Jake Wharton
+
+    APPLICATION_ID = 'cm.aptoide.pt'
+
+    //
+    // gradle build script vars
+    //
+    TARGET_SDK_VERSION = 23
+    COMPILE_SDK_VERSION = 23
+    BUILD_TOOLS_VERSION = '23.0.3'
+
+    //
+    // gradle build script dependecies versions
+    //
+
+    // Google Android Support
+    SUPPORT_LIB_VERSION = '23.4.0'
+
+    // Google Play Services
+    PLAY_SERVICES_VERSION = '8.3.0'
+
+    JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
+
+    MULTIDEX_VERSION = '1.0.1'
+
+    // Rx
+    RXJAVA_VERSION = '1.1.6'
+    RXANDROID_VERSION = '1.2.1'
+    JW_RX_BINDING_VERSION = '0.4.0'
+    RXJAVA_PROGUARD_RULES_VERSION = '1.1.6.0'
+    TRELLO_RX_LIFECYCLE_VERSION = '0.6.1'
 
     // Retrofit
     RETROFIT_VERSION = '2.0.2'
@@ -66,4 +88,31 @@ ext {
     MOCK_WEB_SERVER_VERSION = '3.3.1'
     JUNIT_VERSION = '4.12'
     MOCKITO_CORE_VERSION = '1.10.19'
+    ROBOELECTRIC_VERSION = '3.0'
+
+    // Leak Canary
+    LEAK_CANARY_VERSION = '1.4-beta2'
+
+    // Debug only
+    STETHO_VERSION = '1.3.1'
+
+    // Lombok plugin
+    LOMBOK_VERSION = '1.16.8'
+
+    JACKSON_ANNOTATIONS_VERSION = '2.7.3'
+
+    // Material tab strip
+    MATERIAL_TAB_STRIP_VERSION = '1.1.0'
+
+    // https://github.com/JakeWharton/DiskLruCache
+    JW_LRU_CACHE_VERSION = '2.0.2'
+
+    // Glide
+    GLIDE_VERSION = '3.7.0'
+
+    // Facebook Android SDK
+    FACEBOOK_ANDROID_SDK_VERSION = '4.11.0'
+
+    // File Downloader lib
+    FILE_DOWNLOADER_VERSION = '0.3.2'
 }

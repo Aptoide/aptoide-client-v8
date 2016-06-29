@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/05/2016.
+ * Modified by SithEngineer on 29/06/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -11,21 +11,33 @@ retrolambda {
 }
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 9
+        consumerProguardFiles "proguard-rules.txt"
+
+        // http://tools.android.com/tech-docs/jackandjill
+        jackOptions {
+            enabled false
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-
+            minifyEnabled false
+            shrinkResources true
         }
         debug {
-
+            minifyEnabled false
+            shrinkResources false
         }
     }
 
@@ -36,20 +48,36 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
-
-    // Just for lombok not to complain
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':utils', configuration: 'debug')
     releaseCompile project(path: ':utils', configuration: 'release')
 
     debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
     releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
+
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+
+    //noinspection GradleDependency
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+
+    compile "com.fasterxml.jackson.core:jackson-annotations:${JACKSON_ANNOTATIONS_VERSION}"
+
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    // Just for lombok not to complain
+    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
 }

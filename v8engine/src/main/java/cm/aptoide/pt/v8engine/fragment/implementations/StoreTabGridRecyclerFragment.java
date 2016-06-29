@@ -120,6 +120,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			if (endlessRecyclerOnScrollListener != null) {
 				recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 			}
+			//setDisplayables(displayables);
 		}
 	}
 

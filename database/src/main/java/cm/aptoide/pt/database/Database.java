@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 15/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -32,6 +32,9 @@ public class Database {
 	private static final String DB_NAME = "aptoide.realm.db";
 	private static final AllClassesModule MODULE = new AllClassesModule();
 	private static final RealmMigration MIGRATION = new RealmDatabaseMigration();
+	private static final Object BARRIER = new Object();
+	// FIXME remove the synchronized used here to improve performance
+	private static volatile boolean isInitialized = false;
 
 	private static String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
@@ -41,9 +44,6 @@ public class Database {
 		return get(Application.getContext());
 	}
 
-	// FIXME remove the synchronized used here to improve performance
-	private static volatile boolean isInitialized = false;
-	private static final Object BARRIER = new Object();
 	public static Realm get(Context context) {
 		if(isInitialized) return Realm.getDefaultInstance();
 

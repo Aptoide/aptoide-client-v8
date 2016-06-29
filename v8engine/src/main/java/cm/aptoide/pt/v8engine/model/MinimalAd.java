@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 20/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.model;
@@ -15,8 +15,19 @@ import lombok.Data;
  * Created by neuro on 20-06-2016.
  */
 @Data
-public class MinimalAd implements Parcelable{
+public class MinimalAd implements Parcelable {
 
+	public static final Creator<MinimalAd> CREATOR = new Creator<MinimalAd>() {
+		@Override
+		public MinimalAd createFromParcel(Parcel in) {
+			return new MinimalAd(in);
+		}
+
+		@Override
+		public MinimalAd[] newArray(int size) {
+			return new MinimalAd[size];
+		}
+	};
 	private final String packageName;
 	private final long networkId;
 	private final String clickUrl;
@@ -38,18 +49,6 @@ public class MinimalAd implements Parcelable{
 		appId = in.readLong();
 		adId = in.readLong();
 	}
-
-	public static final Creator<MinimalAd> CREATOR = new Creator<MinimalAd>() {
-		@Override
-		public MinimalAd createFromParcel(Parcel in) {
-			return new MinimalAd(in);
-		}
-
-		@Override
-		public MinimalAd[] newArray(int size) {
-			return new MinimalAd[size];
-		}
-	};
 
 	@Override
 	public int describeContents() {

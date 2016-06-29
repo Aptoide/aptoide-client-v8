@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -23,7 +23,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
@@ -33,6 +32,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
@@ -45,6 +45,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -108,9 +109,12 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 					if (!accessTokenRetry) {
 						accessTokenRetry = true;
-						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s -> {
-							this.body.setAccessToken(s);
-							return V7.this.observe(bypassCache);
+						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(new Func1<String,Observable<? extends U>>() {
+							@Override
+							public Observable<? extends U> call(String s) {
+								V7.this.body.setAccessToken(s);
+								return V7.this.observe(bypassCache);
+							}
 						});
 					}
 				} else {

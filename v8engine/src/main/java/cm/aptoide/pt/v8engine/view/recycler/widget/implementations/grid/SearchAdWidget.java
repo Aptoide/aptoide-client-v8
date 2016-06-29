@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -58,7 +58,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
 		itemView.setOnClickListener(view -> {
 			// TODO: 20-06-2016 neuro
-//	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
+			//	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
 			((FragmentShower) view.getContext()).pushFragmentV4(AppViewFragment.newInstance(ad));
 		});
 	}

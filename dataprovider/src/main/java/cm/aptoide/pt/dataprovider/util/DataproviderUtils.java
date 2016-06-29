@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.util;
@@ -116,8 +116,7 @@ public class DataproviderUtils {
 		}
 
 		public static boolean isGooglePlayServicesAvailable() {
-			return GoogleApiAvailability.getInstance()
-					.isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
+			return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
 		}
 	}
 }

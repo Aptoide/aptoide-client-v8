@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 23/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
@@ -32,9 +32,7 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
-	private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
-			.connectTimeout(2, TimeUnit.SECONDS)
-			.build();
+	private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS).connectTimeout(2, TimeUnit.SECONDS).build();
 
 	private Location location;
 	private String keyword;
@@ -61,8 +59,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
 		// Add excluded networks
 		if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
-			getAdsRequest.excludedNetworks = AptoideUtils.StringU.commaSeparatedValues(ReferrerUtils.excludedNetworks
-					.get(packageName));
+			getAdsRequest.excludedNetworks = AptoideUtils.StringU.commaSeparatedValues(ReferrerUtils.excludedNetworks.get(packageName));
 		}
 
 		return getAdsRequest;
@@ -102,7 +99,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 	@Override
 	protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
-		Map<String, String> parameters = new HashMapNotNull<>();
+		Map<String,String> parameters = new HashMapNotNull<>();
 
 		parameters.put("q", Api.Q);
 		parameters.put("lang", Api.LANG);
@@ -154,13 +151,13 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 	private String getExcludedPackages() {
 		// TODO: 09-06-2016 neuro excluded, not implemented until v8 getAds
 
-//		@Cleanup Realm realm = Database.get();
-//		RealmResults<ExcludedAd> excludedAdsRealm = Database.ExcludedAdsQ.getAll(realm);
-//
-//		final ArrayList<String> excludedAds = new ArrayList<>();
-//		for (ExcludedAd excludedAd : excludedAdsRealm) {
-//			excludedAds.add(excludedAd.getPackageName());
-//		}
+		//		@Cleanup Realm realm = Database.get();
+		//		RealmResults<ExcludedAd> excludedAdsRealm = Database.ExcludedAdsQ.getAll(realm);
+		//
+		//		final ArrayList<String> excludedAds = new ArrayList<>();
+		//		for (ExcludedAd excludedAd : excludedAdsRealm) {
+		//			excludedAds.add(excludedAd.getPackageName());
+		//		}
 
 		return null;
 	}
