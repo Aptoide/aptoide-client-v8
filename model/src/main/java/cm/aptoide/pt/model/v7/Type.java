@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by Neurophobic Animal on 30/06/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -20,6 +20,9 @@ public enum Type {
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
 	ADS(3),
+
+	// Multi Layout
+	APPS_GROUP_LIST(1),
 
 	// Server Complement
 	HEADER_ROW(true),

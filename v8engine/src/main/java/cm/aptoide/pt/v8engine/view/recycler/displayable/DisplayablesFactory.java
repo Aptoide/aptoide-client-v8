@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by Neurophobic Animal on 30/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -145,6 +145,14 @@ public class DisplayablesFactory {
 //				}
 
 				displayables.add(new FooterDisplayable(wsWidget));
+			}
+		} else if (Layout.LIST.equals(wsWidget.getData().getLayout())) {
+			if (apps.size() > 0) {
+				displayables.add(new GridHeaderDisplayable(wsWidget));
+			}
+
+			for (App app : apps) {
+				displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP_LIST, app));
 			}
 		} else {
 			if (apps.size() > 0) {

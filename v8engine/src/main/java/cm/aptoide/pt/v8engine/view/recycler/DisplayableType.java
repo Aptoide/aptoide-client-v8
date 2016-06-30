@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 29/06/2016.
+ * Modified by Neurophobic Animal on 30/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Fea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -72,6 +73,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Excluded
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAdWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppListWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisplayWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHeaderWidget;
@@ -105,6 +107,9 @@ public enum DisplayableType {
 	GRID_HEADER(GridHeaderWidget.class, GridHeaderDisplayable.class),
 	GRID_STORE(GridStoreWidget.class, GridStoreDisplayable.class),
 	ADS(GridAdWidget.class, GridAdDisplayable.class),
+
+	// Multi Layout
+	APPS_GROUP_LIST(GridAppListWidget.class, GridAppListDisplayable.class),
 
 	// Updates
 	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
