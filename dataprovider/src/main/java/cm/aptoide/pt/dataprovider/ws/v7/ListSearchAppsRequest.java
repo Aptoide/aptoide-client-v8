@@ -1,24 +1,23 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import io.realm.Realm;
-import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -35,18 +34,35 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
-	public static ListSearchAppsRequest of(String query, boolean subscribedStores) {
+	public static ListSearchAppsRequest of(String query, String storeName) {
+		LinkedList<String> stores = new LinkedList<>();
+		stores.add(storeName);
+
+		ListSearchAppsRequest of = of(query, false);
+		of.body.setStoreNames(stores);
+		Map<String, List<String>> subscribedStoresAuthMap = StoreUtils.getSubscribedStoresAuthMap();
+		if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
+			Map<String, List<String>> storesAuthMap = new HashMap<>();
+			storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
+			of.body.setStoresAuthMap(storesAuthMap);
+		}
+
+		return of;
+	}
+
+	public static ListSearchAppsRequest of(String query) {
+		return of(query, true);
+	}
+
+	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
 		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences
 				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
 		listSearchAppsRequest.body.setQuery(query);
-		if (subscribedStores) {
-			@Cleanup Realm realm = Database.get();
-			LinkedList<Long> ids = new LinkedList<>();
-			for (Store store : Database.StoreQ.getAll(realm)) {
-				ids.add(store.getStoreId());
-			}
-			listSearchAppsRequest.body.setStoreIds(ids);
+		if (addSubscribedStores) {
+			listSearchAppsRequest.body.setStoreIds(StoreUtils.getSubscribedStoresIds());
+			Map<String, List<String>> storesAuthMap = StoreUtils.getSubscribedStoresAuthMap();
+			listSearchAppsRequest.body.setStoresAuthMap(storesAuthMap != null ? storesAuthMap : null);
 		}
 
 		return listSearchAppsRequest;
@@ -63,12 +79,15 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	public static class Body extends BaseBody implements OffsetInterface<Body> {
 
 		private String lang = Api.LANG;
-		private Integer limit;
+		private Integer limit = 10;
 		private boolean mature;
 		private int offset;
 		private String q = Api.Q;
 		private String query;
 		private List<Long> storeIds;
+		// Ideally, should never be used
+		private List<String> storeNames;
+		private Map<String, List<String>> storesAuthMap;
 		private Boolean trusted;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {

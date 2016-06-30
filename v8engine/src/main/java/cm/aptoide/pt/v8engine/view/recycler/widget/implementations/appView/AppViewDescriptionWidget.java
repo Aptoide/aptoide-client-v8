@@ -56,7 +56,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 		badgeAntivirusImage = (ImageView) itemView.findViewById(R.id.iv_antivirus_badge);
 
 		seeMoreLayout = itemView.findViewById(R.id.see_more_layout);
-		if(seeMoreLayout!=null){
+		if (seeMoreLayout != null) {
 			seeMoreTextView = (TextView) seeMoreLayout.findViewById(R.id.see_more_button);
 			arrowImageView = (ImageView) seeMoreLayout.findViewById(R.id.iv_arrow);
 		}
@@ -151,7 +151,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 
 	private View.OnClickListener seeMoreHandler2(final GetAppMeta.App app) {
 		return v -> {
-			ShowMessage.show(seeMoreTextView, "TO DO");
+			ShowMessage.asSnack(seeMoreTextView, "TO DO");
 			//DescriptionFragment descriptionFragment = DescriptionFragment.newInstance(app.getId());
 			//((FragmentShower)getContext()).pushFragment(descriptionFragment);
 		};

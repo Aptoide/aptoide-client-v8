@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -12,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -21,15 +20,20 @@ import com.trello.rxlifecycle.FragmentEvent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
+import rx.Observable;
 
 /**
  * Created by neuro on 09-05-2016.
  */
 public class HomeFragment extends StoreFragment {
+
+	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private DrawerLayout mDrawerLayout;
 	private NavigationView mNavigationView;
@@ -48,12 +52,6 @@ public class HomeFragment extends StoreFragment {
 		return fragment;
 	}
 
-	@Override
-	public void setupViews() {
-		super.setupViews();
-		setupNavigationView();
-	}
-
 	private void setupNavigationView() {
 		if (mNavigationView != null) {
 			mNavigationView.setNavigationItemSelectedListener(menuItem -> {
@@ -62,13 +60,11 @@ public class HomeFragment extends StoreFragment {
 				if (itemId == R.id.navigation_item_my_account) {
 					AptoideAccountManager.openAccountManager(getContext());
 				} else if (itemId == R.id.navigation_item_rollback) {
-					Snackbar.make(mNavigationView, "Rollback", Snackbar.LENGTH_SHORT).show();
+					((FragmentShower) getActivity()).pushFragmentV4(RollbackFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
-					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
-							.show();
+					((FragmentShower) getActivity()).pushFragmentV4(AppViewFragment.newInstance(19067731));
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
-					Snackbar.make(mNavigationView, "Excluded Updates", Snackbar.LENGTH_SHORT)
-							.show();
+					((FragmentShower) getActivity()).pushFragmentV4(ExcludedUpdatesFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_settings) {
 					((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_facebook) {
@@ -80,6 +76,8 @@ public class HomeFragment extends StoreFragment {
 				} else if (itemId == R.id.send_feedback) {
 					Snackbar.make(mNavigationView, "Send Feedback", Snackbar.LENGTH_SHORT).show();
 				}
+
+				mDrawerLayout.closeDrawer(mNavigationView);
 
 				return false;
 			});
@@ -97,8 +95,7 @@ public class HomeFragment extends StoreFragment {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
 			toolbar.setNavigationIcon(R.drawable.ic_drawer);
-			toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat
-					.START));
+			toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
 		}
 	}
 
@@ -114,6 +111,17 @@ public class HomeFragment extends StoreFragment {
 				.subscribe(updates -> {
 					refreshUpdatesBadge(updates.size());
 				});
+	}
+
+	@Override
+	protected void setupSearch(Menu menu) {
+		SearchUtils.setupGlobalSearchView(menu, getActivity());
+	}
+
+	@Override
+	public void setupViews() {
+		super.setupViews();
+		setupNavigationView();
 	}
 
 	@Override
@@ -146,13 +154,5 @@ public class HomeFragment extends StoreFragment {
 				updatesBadge.hide(true);
 			}
 		}
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_search, menu);
-
-		SearchUtils.setupGlobalSearchView(menu, getActivity());
 	}
 }

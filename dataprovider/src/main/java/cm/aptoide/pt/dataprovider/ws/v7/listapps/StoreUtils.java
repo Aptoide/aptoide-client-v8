@@ -1,14 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.support.annotation.Nullable;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
@@ -21,6 +24,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import lombok.Cleanup;
 
 /**
@@ -31,16 +35,43 @@ public class StoreUtils {
 	public static final String PRIVATE_STORE_ERROR = "STORE-3";
 	public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
 
-	@Deprecated
-	public static List<Store> getSubscribedStores() {
-		LinkedList<Store> stores = new LinkedList<>();
+	public static List<Long> getSubscribedStoresIds() {
 
-		stores.add(new Store().setAppearance(new Store.Appearance("default", "void"))
-				.setName("apps")
-				.setId(15)
-				.setAvatar("http://pool.img.aptoide.com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar.jpg"));
+		List<Long> storesNames = new LinkedList<>();
+		@Cleanup
+		Realm realm = Database.get();
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		for (cm.aptoide.pt.database.realm.Store store : stores) {
+			storesNames.add(store.getStoreId());
+		}
 
-		return stores;
+		return storesNames;
+	}
+
+	public static List<String> getSubscribedStoresNames() {
+
+		List<String> storesNames = new LinkedList<>();
+		@Cleanup
+		Realm realm = Database.get();
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		for (cm.aptoide.pt.database.realm.Store store : stores) {
+			storesNames.add(store.getStoreName());
+		}
+
+		return storesNames;
+	}
+
+	public static Map<String,List<String>> getSubscribedStoresAuthMap() {
+		@Cleanup
+		Realm realm = Database.get();
+		Map<String,List<String>> storesAuthMap = new HashMap<>();
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		for (cm.aptoide.pt.database.realm.Store store : stores) {
+			if (store.getPasswordSha1() != null) {
+				storesAuthMap.put(store.getStoreName(), new LinkedList<>(Arrays.asList(store.getUsername(), store.getPasswordSha1())));
+			}
+		}
+		return storesAuthMap.size() > 0 ? storesAuthMap : null;
 	}
 
 	public static void subscribeStore(String storeName, @Nullable SuccessRequestListener<GetStoreMeta>

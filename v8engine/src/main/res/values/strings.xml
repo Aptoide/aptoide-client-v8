@@ -13,6 +13,8 @@
     <string name="updates_filter_setting_title">Just show me stable app version updates</string>
     <string name="aptoide_email">aptoide@aptoide.com</string>
     <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <!-- Permission pop-ups messages -->
     <string name="access_to_external_storage_rationale">You need to allow access to External Storage</string>
     <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
     <string name="unsubscribe">Unsubscribe</string>
@@ -35,4 +37,39 @@
     <string name="get_app">get app</string>
     <string name="appview_follow_store_button_text">follow store</string>
     <string name="appview_followers_count_text">%d   Followers</string>
+
+    <!-- Common (menu) -->
+    <string name="menu_select_all">Select All</string>
+    <string name="menu_select_none">Select None</string>
+    <string name="clear">Clear</string>
+
+    <!-- Excluded Updates Fragment -->
+    <string name="excluded_updates">Excluded Updates</string>
+    <string name="no_excluded_updates_msg">The new version of an app doesn’t work on your device or some feature is
+        missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop
+        updating.</string>
+
+    <!-- Excluded Updates Fragment (menu) -->
+    <string name="restore_updates">Restore Updates</string>
+    <string name="open_apps_manager">Open Apps Manager</string>
+
+    <!-- Rollback Fragment -->
+    <string name="rollback">Rollback</string>
+    <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
+        apps (via Aptoide) including version and install date.</string>
+
+    <!-- Timeline Fragment -->
+    <string name="fragment_social_timeline_hours_since_last_update">%1$d hours ago</string>
+    <string name="menu_card_timeline_clear">Clear</string>
+    <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
+    <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
+    <string name="displayable_social_timeline_app_update_name">App %1$s</string>
+    <string name="displayable_social_timeline_app_has_update">has an %1$s</string>
+    <string name="displayable_social_timeline_app_update">update</string>
+    <string name="displayable_social_timeline_app_update_application">application</string>
+    <string name="displayable_social_timeline_app_update_version">Version: %1$s</string>
+    <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
+    <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
+    <string name="fragment_social_timeline_no_connection">No network connection</string>
+    <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
 </resources>

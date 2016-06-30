@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
@@ -16,5 +16,6 @@ class SecureKeys {
 	
 	public static final String ADULT_CONTENT_PIN = "Maturepin";
 	public static final String IS_TIMELINE_ACTIVE = "TLA";
-	public static final String ADULT_CONTENT_CHECK_BOX = "matureChkBox";
+	public static final String ADULT_CONTENT_SWITCH = "aptoide_account_manager_mature_switch";
+	public static final String ADVERTISING_ID_CLIENT = "advertisingIdClient";
 }

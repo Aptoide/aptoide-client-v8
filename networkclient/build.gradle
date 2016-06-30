@@ -1,27 +1,37 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 14/05/2016.
+ * Modified by SithEngineer on 30/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 9
+        consumerProguardFiles "proguard-rules.txt"
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-
+            minifyEnabled false
+            shrinkResources true
         }
         debug {
-
+            minifyEnabled false
+            shrinkResources false
         }
     }
 
@@ -32,7 +42,28 @@ android {
 }
 
 dependencies {
+
+    //
+    // inter-projects dependencies
+    //
+
+    debugCompile project(path: ':utils', configuration: 'debug')
+    releaseCompile project(path: ':utils', configuration: 'release')
+
+    //
+    // custom libs in folders
+    //
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+
+    //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
     compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
@@ -42,13 +73,11 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
     compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
 
-    compile 'com.jakewharton:disklrucache:2.0.2'
+    compile "com.jakewharton:disklrucache:${JW_LRU_CACHE_VERSION}"
 
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    // Just for lombok not to complain
+    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
-    // for unit tests
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.0'
-    debugCompile project(path: ':utils', configuration: 'debug')
-    releaseCompile project(path: ':utils', configuration: 'release')
+    compile "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
 }

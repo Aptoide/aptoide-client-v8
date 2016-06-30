@@ -12,7 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.v8engine.fragment.BaseRecyclerViewFragment;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import rx.functions.Action1;
 
@@ -20,29 +20,25 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
 	public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
 
-	private final BaseRecyclerViewFragment baseRecyclerViewFragment;
+	private final BaseAdapter adapter;
 	private final V7<? extends BaseV7EndlessResponse, ? extends OffsetInterface<?>> v7request;
 	private final Action1 successRequestListener;
 
 	private boolean loading;
-	private int previousTotal = 0; // The total number of items in the dataset after the last load
-	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before
+	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before load
 	private boolean bypassCache;
-	private int offset;
-	private int totalCountResponse;
 	private ErrorRequestListener errorRequestListener;
-	// loading more.
 
-	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseRecyclerViewFragment baseRecyclerViewFragment, V7<T, ?
+	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
 			extends
 			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, boolean bypassCache) {
-		this(baseRecyclerViewFragment, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
+		this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
 	}
 
-	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseRecyclerViewFragment baseRecyclerViewFragment, V7<T, ?
+	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
 			extends
 			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache) {
-		this.baseRecyclerViewFragment = baseRecyclerViewFragment;
+		this.adapter = baseAdapter;
 		this.v7request = v7request;
 		this.successRequestListener = successRequestListener;
 		this.errorRequestListener = errorRequestListener;
@@ -56,20 +52,13 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
 		LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-		int visibleItemCount = recyclerView.getChildCount();
 		int totalItemCount = mLinearLayoutManager.getItemCount();
-		int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+		int lastVisibleItemPosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-		if (loading) {
-			if (totalItemCount > previousTotal) {
-				previousTotal = totalItemCount;
-			}
-		}
-		if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-			if (offset < totalCountResponse) {
-				// End has been reached, load more items
-				onLoadMore(bypassCache);
-			}
+		if (!loading && (((totalItemCount - 1) == lastVisibleItemPosition)
+						|| ((totalItemCount - 1) == (lastVisibleItemPosition + visibleThreshold)))) {
+			// End has been reached, load more items
+			onLoadMore(bypassCache);
 		}
 	}
 
@@ -77,15 +66,16 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	@SuppressWarnings("unchecked")
 	public void onLoadMore(boolean bypassCache) {
 		loading = true;
-		baseRecyclerViewFragment.getAdapter().addDisplayable(new ProgressBarDisplayable());
+		adapter.addDisplayable(new ProgressBarDisplayable());
 
 		v7request.execute(response -> {
-			totalCountResponse = response.getDatalist().getTotal();
-			v7request.getBody().setOffset(offset = response.getDatalist().getNext());
-			if (baseRecyclerViewFragment.getAdapter().getDisplayables().size() > 0) {
-				baseRecyclerViewFragment.getAdapter().popDisplayable();
+			if (adapter.getItemCount() > 0) {
+				adapter.popDisplayable();
 			}
 
+			if (response.getDatalist() != null) {
+				v7request.getBody().setOffset(response.getDatalist().getNext());
+			}
 			successRequestListener.call(response);
 
 			loading = false;

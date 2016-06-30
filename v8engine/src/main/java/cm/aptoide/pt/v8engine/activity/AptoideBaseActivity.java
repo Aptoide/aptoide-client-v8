@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/06/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,20 +14,22 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import lombok.Getter;
 import rx.functions.Action0;
 
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle {
+public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle, PermissionRequest {
 
 	private static final String TAG = AptoideBaseActivity.class.getName();
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -104,7 +105,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 					}
 				} else {
 					// FIXME what should I do here?
-					ShowMessage.show(findViewById(android.R.id.content), "access to read and write to external storage" +
+					ShowMessage.asSnack(findViewById(android.R.id.content), "access to read and write to external " +
+							"storage" +
 							" was denied");
 				}
 				break;
@@ -118,7 +120,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 					}
 				} else {
 					// FIXME what should I do here?
-					ShowMessage.show(findViewById(android.R.id.content), "access to get accounts was denied");
+					ShowMessage.asSnack(findViewById(android.R.id.content), "access to get accounts was denied");
 				}
 				break;
 
@@ -140,17 +142,26 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
+		requestAccessToExternalFileSystem(false, toRunWhenAccessIsGranted);
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToExternalFileSystem(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 		if(hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
 
-			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+					.WRITE_EXTERNAL_STORAGE)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access external storage");
 				// FIXME improve this rationale messages
-				showMessageOKCancel(getString(R.string.access_to_external_storage_rationale), new DialogInterface
-						.OnClickListener() {
+				showMessageOKCancel(getString(R.string.access_to_external_storage_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
+
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onNext(GenericDialogs.EResponse eResponse) {
+						super.onNext(eResponse);
+						if(eResponse!= GenericDialogs.EResponse.YES) return;
+
 						ActivityCompat.requestPermissions(
 								AptoideBaseActivity.this,
 								new String[]{
@@ -181,17 +192,27 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
+		requestAccessToAccounts(false, toRunWhenAccessIsGranted);
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToAccounts(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
 		if (hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToAccountsIsGranted = toRunWhenAccessIsGranted;
 
-			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.GET_ACCOUNTS)) {
+			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+					.GET_ACCOUNTS)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access accounts");
 				// FIXME improve this rationale messages
-				showMessageOKCancel(getString(R.string.access_to_get_accounts_rationale), new DialogInterface
-						.OnClickListener() {
+				showMessageOKCancel(getString(R.string.access_to_get_accounts_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
+
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onNext(GenericDialogs.EResponse eResponse) {
+						super.onNext(eResponse);
+						if(eResponse!= GenericDialogs.EResponse.YES) return;
+
+
 						ActivityCompat.requestPermissions(
 								AptoideBaseActivity.this,
 								new String[]{
@@ -213,12 +234,11 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		toRunWhenAccessIsGranted.call();
 	}
 
-	private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-		new AlertDialog.Builder(this)
-				.setMessage(message)
-				.setPositiveButton("OK", okListener)
-				.setNegativeButton("Cancel", null)
-				.create()
-				.show();
+	private void showMessageOKCancel(
+			String message,
+			SimpleSubscriber<GenericDialogs.EResponse> subscriber
+	) {
+		GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
 	}
+
 }

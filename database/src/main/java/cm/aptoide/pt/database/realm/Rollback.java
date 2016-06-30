@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -30,6 +30,7 @@ public class Rollback extends RealmObject {
 	public static final String ACTION = "action";
 	public static final String MD5 = "md5";
 	public static final String CONFIRMED = "confirmed";
+	public static final String REFERRER = "referrer";
 
 	//	@PrimaryKey private int id = -1;
 	private String name;
@@ -41,6 +42,7 @@ public class Rollback extends RealmObject {
 	private String action;
 	@PrimaryKey private String md5;
 	private boolean confirmed;
+	private String referrer;
 
 	// TODO: 27-05-2016 neuro Nem sei o k fazer a isto..
 //	private String previousVersionName;
@@ -171,7 +173,15 @@ public class Rollback extends RealmObject {
 		this.versionCode = versionCode;
 	}
 
-//	public void computeId() {
+	public String getReferrer() {
+		return referrer;
+	}
+
+	public void setReferrer(String referrer) {
+		this.referrer = referrer;
+	}
+
+	//	public void computeId() {
 //		@Cleanup Realm realm = Database.get(Application.getContext());
 //		int n;
 //		Number max = realm.where(Rollback.class).max(Rollback.ID);

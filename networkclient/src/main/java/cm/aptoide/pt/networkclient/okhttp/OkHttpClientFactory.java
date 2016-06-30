@@ -1,14 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified by SithEngineer on 23/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
+
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.File;
 import java.io.IOException;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.Cache;
 import okhttp3.HttpUrl;
@@ -29,7 +32,13 @@ public class OkHttpClientFactory {
 	private static OkHttpClient httpClientInstance;
 
 	public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize, Interceptor interceptor) {
-		return new OkHttpClient.Builder()
+		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+		if (BuildConfig.DEBUG) {
+			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
+		}
+
+		return clientBuilder
 				.cache(new Cache(cacheDirectory, cacheMaxSize)) // 10 MiB
 				.addInterceptor(interceptor)
 				.build();
@@ -60,14 +69,19 @@ public class OkHttpClientFactory {
 
 			HttpUrl httpUrl = request.url();
 			if (response != null) {
-				Logger.v(TAG, "cache hit: " + httpUrl);
+
+				if(BuildConfig.DEBUG) {
+					Logger.v(TAG, String.format("cache hit '%s'", request.url()));
+				}
+
 				return response;
 			}
 
-			Logger.v(TAG, "cache miss: " + httpUrl);
+			if(BuildConfig.DEBUG) {
+				Logger.v(TAG, String.format("cache miss '%s'", request.url()));
+			}
 
-			Response cachedResponse = customCache.put(request, chain.proceed(request));
-			return cachedResponse;
+			return customCache.put(request, chain.proceed(request));
 		}
 	}
 }

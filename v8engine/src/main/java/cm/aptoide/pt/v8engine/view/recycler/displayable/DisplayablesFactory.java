@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
@@ -21,6 +23,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 
 /**
@@ -51,6 +54,23 @@ public class DisplayablesFactory {
 					case DISPLAYS:
 						displayables.add(getDisplays(wsWidget));
 						break;
+
+					case ADS:
+//						GetStoreWidgets.WSWidget.Action action = new GetStoreWidgets.WSWidget.Action();
+//						displayable.getPojo()
+//								.getActions()
+//								.get(0)
+//								.getEvent();
+//						action.setEvent(new Event().setName(Event.Name.getAds));
+//
+						LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
+						actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name
+								.getAds)));
+						wsWidget.setActions(actions);
+						GridHeaderDisplayable gridHeaderDisplayable = new GridHeaderDisplayable(wsWidget);
+						displayables.add(gridHeaderDisplayable);
+						displayables.add(getAds(wsWidget.getViewObject()));
+						break;
 				}
 			}
 		}
@@ -69,6 +89,20 @@ public class DisplayablesFactory {
 		*/
 
 		return displayables;
+	}
+
+	private static Displayable getAds(Object viewObject) {
+		GetAdsResponse getAdsResponse = (GetAdsResponse) viewObject;
+		List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
+		List<Displayable> tmp = new ArrayList<>(ads.size());
+		for (GetAdsResponse.Ad ad : ads) {
+
+			GridAdDisplayable diplayable = (GridAdDisplayable) DisplayableType
+					.newDisplayable(Type.ADS);
+			diplayable.setPojo(ad);
+			tmp.add(diplayable);
+		}
+		return new DisplayableGroup(tmp);
 	}
 
 	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {

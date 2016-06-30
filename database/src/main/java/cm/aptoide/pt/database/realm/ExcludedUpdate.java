@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -17,19 +17,24 @@ public class ExcludedUpdate extends RealmObject {
 	public static final String PACKAGE_NAME = "packageName";
 	public static final String NAME = "name";
 	public static final String ICON = "icon";
+	public static final String VERSION_CODE = "versionCode";
+	public static final String APK_ID = "apkId";
 
 	//	@PrimaryKey private long id;
 	@PrimaryKey private String packageName;
 	private String name;
 	private String icon;
+	private int versionCode;
+	private long apkId;
 
-	public ExcludedUpdate() {
-	}
+	public ExcludedUpdate() { }
 
 	public ExcludedUpdate(Update pojo) {
 		setName(pojo.getLabel());
 		setPackageName(pojo.getPackageName());
 		setIcon(pojo.getIcon());
+		setApkId(pojo.getAppId());
+		setVersionCode(pojo.getVersionCode());
 	}
 
 //	public long getId() {
@@ -62,5 +67,21 @@ public class ExcludedUpdate extends RealmObject {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public int getVersionCode() {
+		return versionCode;
+	}
+
+	public void setVersionCode(int versionCode) {
+		this.versionCode = versionCode;
+	}
+
+	public long getApkId() {
+		return apkId;
+	}
+
+	public void setApkId(long apkId) {
+		this.apkId = apkId;
 	}
 }

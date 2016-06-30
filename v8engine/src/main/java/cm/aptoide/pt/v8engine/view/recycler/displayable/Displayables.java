@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -19,6 +19,20 @@ public class Displayables {
 	public Displayables() {
 	}
 
+	public void add(int position, Displayable displayable) {
+		if (displayable instanceof DisplayableGroup) {
+			add(position, ((DisplayableGroup) displayable).getChildren());
+		} else {
+			displayables.add(position, displayable);
+		}
+	}
+
+	public void add(int position, Collection<? extends Displayable> collection) {
+		for (Displayable displayable : collection) {
+			add(position, displayable);
+		}
+	}
+
 	public void add(Displayable displayable) {
 		if (displayable instanceof DisplayableGroup) {
 			add(((DisplayableGroup) displayable).getChildren());
@@ -26,6 +40,7 @@ public class Displayables {
 			displayables.add(displayable);
 		}
 	}
+
 
 	public void add(Collection<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
@@ -42,7 +57,11 @@ public class Displayables {
 	}
 
 	public Displayable get(Integer position) {
-		return displayables.get(position);
+		if (displayables.size() > position) {
+			return displayables.get(position);
+		} else {
+			return null;
+		}
 	}
 
 	public int size() {

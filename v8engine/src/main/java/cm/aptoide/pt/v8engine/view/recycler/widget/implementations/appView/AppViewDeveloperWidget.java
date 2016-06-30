@@ -68,8 +68,7 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 					.string.not_available)));
 		}
 
-		permissionsLabel.setOnClickListener(
-				v -> ShowMessage.show(v, "TO DO")
+		permissionsLabel.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO")
 		);
 	}
 }

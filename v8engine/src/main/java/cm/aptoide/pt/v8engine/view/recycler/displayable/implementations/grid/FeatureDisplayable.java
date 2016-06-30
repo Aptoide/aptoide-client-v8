@@ -1,0 +1,80 @@
+package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
+
+import android.content.Context;
+import android.graphics.Typeface;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
+import android.text.Spannable;
+import android.text.style.StyleSpan;
+
+import java.util.Date;
+
+import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.timeline.Feature;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * Created by marcelobenites on 6/17/16.
+ */
+@AllArgsConstructor
+public class FeatureDisplayable extends Displayable {
+
+	@Getter private int avatarResource;
+	@Getter private int titleResource;
+	@Getter private String thumbnailUrl;
+	@Getter private String url;
+	@Getter private long appId;
+
+	private String appName;
+	private String title;
+	private Date date;
+	private DateCalculator dateCalculator;
+	private SpannableFactory spannableFactory;
+
+	public static FeatureDisplayable from(Feature feature, DateCalculator dateCalculator, SpannableFactory
+			spannableFactory) {
+		String appName = null;
+		long appId = 0;
+		if (feature.getApps() != null && feature.getApps().size() > 0) {
+			appName = feature.getApps().get(0).getName();
+			appId = feature.getApps().get(0).getId();
+		}
+		return new FeatureDisplayable(R.mipmap.ic_launcher, R.string.fragment_social_timeline_aptoide_team, feature.getThumbnailUrl(), feature.getUrl(),
+				appId, appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
+	}
+
+	public FeatureDisplayable() {
+	}
+
+	public String getTitle(Context context) {
+		return context.getString(titleResource);
+	}
+
+	public String getHoursSinceLastUpdate(Context context) {
+		return context.getString(R.string.fragment_social_timeline_hours_since_last_update, dateCalculator
+				.getHoursSinceDate(date));
+	}
+
+	public boolean isGetApp() {
+		return appName != null && appId != 0;
+	}
+
+	public Spannable getAppText(Context context) {
+		return spannableFactory.create(context
+				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), appName, new StyleSpan(Typeface.BOLD));
+	}
+
+	@Override
+	public Type getType() {
+		return Type.SOCIAL_TIMELINE;
+	}
+
+	@Override
+	public int getViewLayout() {
+		return R.layout.displayable_social_timeline_feature;
+	}
+}

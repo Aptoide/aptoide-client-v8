@@ -62,11 +62,11 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 	public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
 
 		if(videos!=null && position<videos.size()) {
-			// its a video. show placeholder for video
+			// its a video. asSnack placeholder for video
 			GetAppMeta.Media.Video item = videos.get(position);
 			holder.bindViews(item);
 		} else {
-			// its a screenshot. show placeholder for screenshot
+			// its a screenshot. asSnack placeholder for screenshot
 			GetAppMeta.Media.Screenshot item = screenshots.get(position);
 			int videosOffset = videos!=null? videos.size() : 0;
 			holder.bindViews(

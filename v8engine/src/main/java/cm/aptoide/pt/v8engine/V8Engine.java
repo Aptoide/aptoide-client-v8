@@ -1,33 +1,50 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
+import android.os.IBinder;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.stetho.Stetho;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.squareup.leakcanary.LeakCanary;
 
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
+import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
+import lombok.Getter;
+import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -36,23 +53,44 @@ public abstract class V8Engine extends DataProvider {
 
 	private static final String TAG = V8Engine.class.getName();
 
+	@Getter static DownloadService downloadService;
+
+	private ServiceConnection downloadServiceConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			DownloadService.LocalBinder binder = (DownloadService.LocalBinder) service;
+			downloadService = binder.getService();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+		}
+	};
+
+	public static Observable<Download> startDownload(GetAppMeta.App app) {
+		return downloadService.startDownload(app);
+	}
+
 	public static void loadStores() {
 
-		AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
-			@Cleanup Realm realm = Database.get(getContext());
-			for (GetUserRepoSubscription.Subscription subscription : subscriptions) {
-				Store store = new Store();
+		AptoideAccountManager.getUserRepos().subscribe(new Action1<List<Subscription>>() {
+			@Override
+			public void call(List<Subscription> subscriptions) {
+				@Cleanup
+				Realm realm = Database.get(getContext());
+				for (Subscription subscription : subscriptions) {
+					Store store = new Store();
 
-				store.setDownloads(Long.parseLong(subscription.getDownloads()));
-				store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription
-						.getAvatar());
-				store.setStoreId(subscription.getId().longValue());
-				store.setStoreName(subscription.getName());
-				store.setTheme(subscription.getTheme());
+					store.setDownloads(Long.parseLong(subscription.getDownloads()));
+					store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar());
+					store.setStoreId(subscription.getId().longValue());
+					store.setStoreName(subscription.getName());
+					store.setTheme(subscription.getTheme());
 
-				realm.beginTransaction();
-				realm.copyToRealmOrUpdate(store);
-				realm.commitTransaction();
+					realm.beginTransaction();
+					realm.copyToRealmOrUpdate(store);
+					realm.commitTransaction();
+				}
 			}
 		});
 	}
@@ -92,6 +130,7 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		if (SecurePreferences.isFirstRun()) {
+			setAdvertisingId();
 			loadInstalledApps();
 			DataproviderUtils.checkUpdates();
 
@@ -105,8 +144,8 @@ public abstract class V8Engine extends DataProvider {
 			}
 		}
 
-		final int validSignature = SecurityUtils.checkAppSignature(this);
-		if (validSignature != SecurityUtils.VALID_APP_SIGNATURE) {
+		final int appSignature = SecurityUtils.checkAppSignature(this);
+		if (appSignature != SecurityUtils.VALID_APP_SIGNATURE) {
 			Logger.e(TAG, "app signature is not valid!");
 		}
 
@@ -118,38 +157,49 @@ public abstract class V8Engine extends DataProvider {
 			Logger.w(TAG, "application has debug flag active");
 		}
 
-		// FIXME remove this line
-		getInstalledApksInfo();
+		if (BuildConfig.DEBUG) {
+			Stetho.initializeWithDefaults(this);
+		}
+
+		setupCrashlytics();
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+
+		AptoideDownloadManager.getInstance()
+				.init(context, downloadServiceConnection, new DownloadNotificationActionsActionsInterface(), new
+						DownloadManagerSettingsI());
+	}
+
+	private void setupCrashlytics() {
+		Crashlytics crashlyticsKit = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(!BuildConfig.FABRIC_CONFIGURED).build()).build();
+		Fabric.with(this, crashlyticsKit);
+	}
+
+	private void setAdvertisingId() {
+		AptoideUtils.ThreadU.runOnIoThread(() -> {
+			String aaid = "";
+			if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()) {
+				try {
+					aaid = AdvertisingIdClient.getAdvertisingIdInfo(V8Engine.this).getId();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				byte[] data = new byte[16];
+				String deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android
+						.provider.Settings.Secure.ANDROID_ID);
+				SecureRandom secureRandom = new SecureRandom();
+				secureRandom.setSeed(deviceId.hashCode());
+				secureRandom.nextBytes(data);
+				aaid = UUID.nameUUIDFromBytes(data).toString();
+			}
+
+			SecurePreferences.setAdvertisingId(aaid);
+		});
 	}
 
 	private void addDefaultStore() {
 		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
-	}
-
-	/**
-	 * 	just for curiosity...
-	 */
-	private void getInstalledApksInfo() {
-		try{
-			Logger.i(TAG, "browser (system) installed by: " + SecurityUtils.getInstallerPackageName(this, "com.android" +
-					".browser"));
-		}catch (Exception e) {
-			Logger.w(TAG, "browser (system) not installed", e);
-		}
-
-		try {
-			Logger.i(TAG, "aptoide installed by: " + SecurityUtils.getInstallerPackageName(this, "cm.aptoide.pt"));
-		}catch (Exception e) {
-			Logger.w(TAG, "aptoide not installed", e);
-		}
-
-		try{
-			Logger.i(TAG, "facebook installed by: " + SecurityUtils.getInstallerPackageName(this, "com.facebook.katana"));
-		}catch (Exception e){
-			Logger.w(TAG, "facebook not installed", e);
-		}
 	}
 
 	private void loadInstalledApps() {

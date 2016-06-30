@@ -5,23 +5,25 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.List;
 
-import lombok.Data;
+import cm.aptoide.pt.model.v7.listapp.App;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
 public class Article extends Feature {
 
-	private final String publisher;
+	@Getter private final Publisher publisher;
 
 	@JsonCreator
 	public Article(@JsonProperty("title") String title,
 	               @JsonProperty("thumbnail") String thumbnailUrl,
-	               @JsonProperty("publisher") String publisher,
+	               @JsonProperty("publisher") Publisher publisher,
 	               @JsonProperty("url") String url,
-	               @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date) {
-		super(title, thumbnailUrl, url, date);
+	               @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
+	               @JsonProperty("apps") List<App> apps) {
+		super(title, thumbnailUrl, url, date, apps);
 		this.publisher = publisher;
 	}
 }

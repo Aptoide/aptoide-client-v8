@@ -6,8 +6,9 @@ import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -28,29 +29,30 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 		return interfaces.getUserTimeline(body, bypassCache);
 	}
 
-	public static GetUserTimelineRequest of() {
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(
-				new Body("1", AptoideAccountManager.getAccessToken(),
-						AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.Q),
-				OkHttpClientFactory.newClient(),
+	public static GetUserTimelineRequest of(int limit, int offset) {
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(new Body("1",
+				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, limit,
+				AptoideAccountManager.getUserInfo().isMatureSwitch(), offset, Api.Q), OkHttpClientFactory.newClient(),
 				WebService.getDefaultConverter(), BASE_HOST);
 		return getAppRequest;
 	}
 
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody implements OffsetInterface<Body> {
 
-		private String lang;
-		private Integer limit;
-		private boolean mature;
-		private int offset;
-		private String q;
+		@Getter private String lang;
+		@Getter private Integer limit;
+		@Getter private boolean mature;
+		@Accessors(chain = true) @Setter @Getter private int offset;
+		@Getter private String q;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, String q) {
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, Integer limit,
+		            boolean mature, int offset, String q) {
 			super(aptoideId, accessToken, aptoideVercode, cdn);
 			this.lang = lang;
+			this.limit = limit;
+			this.mature = mature;
+			this.offset = offset;
 			this.q = q;
 		}
 	}

@@ -27,12 +27,6 @@ public class Logger {
 		}
 	}
 
-	public static void v(String TAG, String msg) {
-		if (DBG) {
-			Log.v(TAG, msg);
-		}
-	}
-
 	public static void i(Object object, String msg) {
 		i(object.getClass().getSimpleName(), msg);
 	}
@@ -80,6 +74,18 @@ public class Logger {
 	public static void e(String TAG, String msg, Throwable tr) {
 		if (DBG) {
 			Log.e(TAG, msg, tr);
+		}
+	}
+
+	public static void v(String TAG, String msg) {
+		if (DBG) {
+			Log.v(TAG, msg);
+		}
+	}
+
+	public static void v(String TAG, String msg, Throwable tr) {
+		if (DBG) {
+			Log.v(TAG, msg, tr);
 		}
 	}
 }

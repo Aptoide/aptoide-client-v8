@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/06/2016.
+ * Modified by SithEngineer on 30/06/2016.
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
-
+apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
     jvmArgs '-noverify'
 }
@@ -17,29 +16,43 @@ crashlytics {
     androidNdkLibsOut 'src/main/libs'
 }
 
+// Should be moved to application module when possible
+Properties localProperties = new Properties()
+localProperties.load(new FileInputStream("local.properties"))
+
+def fabricApiKey = localProperties.FABRIC_API_KEY
+
 android {
+    def BOOLEAN = "boolean"
+    def FABRIC_CONFIGURED = "FABRIC_CONFIGURED"
+
     // Websockets
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
+
+        buildConfigField BOOLEAN, FABRIC_CONFIGURED, (fabricApiKey != null).toString()
+        consumerProguardFiles "proguard-rules.txt"
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     publishNonDefault true
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -56,53 +69,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-
-    compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-
-    compile 'com.trello:rxlifecycle:0.6.1'
-    // If you want pre-written Activities and Fragments you can subclass as providers
-    compile 'com.trello:rxlifecycle-components:0.6.1'
-
-    //    Apagar
-    compile "com.jakewharton.rxbinding:rxbinding:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-design:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${RX_BINDING_VERSION}"
-
-    // for unit tests
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.0'
-
-    // for leak detection
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-
-    // round image lib
-    compile 'com.makeramen:roundedimageview:2.2.1'
-
-    /*
-    // Crashlytics Kit
-    compile('com.crashlyti<fcs.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true
-    }
-    // NDK Kit
-    compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
-        transitive = true
-    }
-    */
-
-    // Internal dependencies
+    //
+    // inter-projects dependencies
+    //
 
     debugCompile project(path: ':database', configuration: 'debug')
     releaseCompile project(path: ':database', configuration: 'release')
@@ -118,4 +88,71 @@ dependencies {
 
     debugCompile project(path: ':imageloader', configuration: 'debug')
     releaseCompile project(path: ':imageloader', configuration: 'release')
+
+    debugCompile project(path: ':downloadmanager', configuration: 'debug')
+    releaseCompile project(path: ':downloadmanager', configuration: 'release')
+
+    //
+    // custom libs in folders
+    //
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    // from remote repos
+    //
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+
+    //noinspection GradleDependency
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
+
+    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+
+    compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
+
+    compile "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
+    // If you want pre-written Activities and Fragments you can subclass as providers
+    compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
+
+    //    Apagar
+    compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
+
+    // for leak detection
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+
+    // Crashlytics Kit
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
+        transitive = true
+    }
+    /*
+    // NDK Kit
+    compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
+        transitive = true
+    }
+    */
+
+    debugCompile "com.facebook.stetho:stetho:${STETHO_VERSION}"
+    debugCompile "com.facebook.stetho:stetho-js-rhino:${STETHO_VERSION}"
+
+    // round image lib
+    compile "com.makeramen:roundedimageview:${ROUNDED_IMG_LIB}"
 }

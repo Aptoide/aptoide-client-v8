@@ -57,7 +57,7 @@ public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 			GetAppMeta.App app = pojo.getNodes().getMeta().getData();
 			bigRateThisAppBar.setRating(app.getStats().getRating().getAvg());
 			bigRateThisAppBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-				ShowMessage.show(ratingBar, "TO DO");
+				ShowMessage.asSnack(ratingBar, "TO DO");
 				// TODO
 			});
 
@@ -107,7 +107,7 @@ public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 
 		public void bindView(GetApp getApp) {
 			flagThisAppBtn.setOnClickListener(v -> {
-				ShowMessage.show(v, "TO DO");
+				ShowMessage.asSnack(v, "TO DO");
 				// TODO
 			});
 

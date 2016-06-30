@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 09/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -26,12 +27,14 @@ import io.realm.RealmResults;
  */
 public class Database {
 
-	private static final Object db_lock = new Object();
+	private static final String TAG = Database.class.getSimpleName();
 	private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
 	private static final String DB_NAME = "aptoide.realm.db";
 	private static final AllClassesModule MODULE = new AllClassesModule();
 	private static final RealmMigration MIGRATION = new RealmDatabaseMigration();
-	private static volatile boolean DELETE_DB = BuildConfig.DELETE_DB;
+	private static final Object BARRIER = new Object();
+	// FIXME remove the synchronized used here to improve performance
+	private static volatile boolean isInitialized = false;
 
 	private static String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
@@ -42,45 +45,43 @@ public class Database {
 	}
 
 	public static Realm get(Context context) {
-		StringBuilder strBuilder = new StringBuilder(KEY);
-		strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
-		strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
-		strBuilder.append(extract(cm.aptoide.pt.database.BuildConfig.APPLICATION_ID));
-		strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
+		if(isInitialized) return Realm.getDefaultInstance();
 
-		// Beware this is the app context
-		// So always use a unique name
-		// Always use explicit modules in library projects
-		RealmConfiguration realmConfig;
-		if (BuildConfig.DEBUG) {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
-					// Must be bumped when the schema changes
-					.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
-					// Migration to run instead of throwing an exception
-					.migration(MIGRATION).build();
-		} else {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-					.modules(MODULE)
-					.encryptionKey(strBuilder.toString().substring(0, 64).getBytes())
-					// Must be bumped when the schema changes
-					.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
-					// Migration to run instead of throwing an exception
-					.migration(MIGRATION)
-					.build();
-		}
+		synchronized (BARRIER) {
+			StringBuilder strBuilder = new StringBuilder(KEY);
+			strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
+			strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
+			strBuilder.append(extract(cm.aptoide.pt.database.BuildConfig.APPLICATION_ID));
+			strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
 
-		if(DELETE_DB) {
-			synchronized (db_lock) {
-				if(DELETE_DB) {
-					// Reset Realm
-					Realm.deleteRealm(realmConfig);
-					DELETE_DB = false;
-				}
+			// Beware this is the app context
+			// So always use a unique name
+			// Always use explicit modules in library projects
+			RealmConfiguration realmConfig;
+			if (BuildConfig.DEBUG) {
+				realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+						// Must be bumped when the schema changes
+						.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
+						// Migration to run instead of throwing an exception
+						.migration(MIGRATION).build();
+			} else {
+				realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
+						.modules(MODULE)
+						.encryptionKey(strBuilder.toString().substring(0, 64).getBytes())
+						// Must be bumped when the schema changes
+						.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
+						// Migration to run instead of throwing an exception
+						.migration(MIGRATION)
+						.build();
 			}
+
+			if (cm.aptoide.pt.database.BuildConfig.DELETE_DB) {
+				Realm.deleteRealm(realmConfig);
+			}
+			Realm.setDefaultConfiguration(realmConfig);
+			isInitialized = true;
+			return Realm.getDefaultInstance();
 		}
-
-
-		return Realm.getInstance(realmConfig);
 	}
 
 	public static void save(RealmObject realmObject, Realm realm) {
@@ -214,6 +215,20 @@ public class Database {
 			} else {
 				return null;
 			}
+		}
+
+		public static void setReferrer(String packageName, String referrer, Realm realm) {
+			Rollback rollback = get(packageName, Rollback.Action.INSTALL, realm);
+			if (rollback != null) {
+				rollback.setReferrer(referrer);
+			}
+		}
+	}
+
+	public static class ExcludedAdsQ {
+
+		public static RealmResults<ExcludedAd> getAll(Realm realm) {
+			return realm.where(ExcludedAd.class).findAll();
 		}
 	}
 }
