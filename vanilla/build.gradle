@@ -77,11 +77,17 @@ android {
     productFlavors {
         dev {
             applicationIdSuffix ".dev"
-            versionCode 62
             minSdkVersion 21
+            //versionCode incrementVerCode('DEV')
+        }
+
+        incVerCode {
+            applicationIdSuffix ".dev"
+            versionCode incrementVerCode('NIGHTLY')
         }
 
         prod {
+            //versionCode incrementVerCode('PROD')
         }
     }
 
@@ -163,6 +169,23 @@ dependencies {
     //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:multidex:${MULTIDEX_VERSION}"
+}
+
+def incrementVerCode(String buildType) {
+
+    // code to bump version code on each build
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def code = versionProps[buildType + '_VERSION_CODE'].toInteger() + 1
+        versionProps[buildType + '_VERSION_CODE'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+        return code
+
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
 }
 
 def getDate() {
