@@ -1,14 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/06/2016.
+ * Modified by SithEngineer on 30/06/2016.
  */
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
-
+apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
     jvmArgs '-noverify'
 }
@@ -43,11 +42,6 @@ android {
         minSdkVersion 15
         resValue "string", "authenticatorAccountType", APPLICATION_ID
         targetSdkVersion TARGET_SDK_VERSION
-
-        // http://tools.android.com/tech-docs/jackandjill
-        jackOptions {
-            enabled false
-        }
 
         // common proguard files to append and configure proguard for the whole project
         proguardFile 'libs/proguard/proguard-androidannotations.pro'

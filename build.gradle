@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/06/2016.
+ * Modified by SithEngineer on 30/06/2016.
  */
 
 buildscript {
@@ -20,7 +20,7 @@ buildscript {
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
 
         classpath 'io.fabric.tools:gradle:1.21.6'
-        classpath "io.realm:realm-gradle-plugin:1.0.0"
+        classpath "io.realm:realm-gradle-plugin:1.0.1"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -58,6 +58,7 @@ ext {
     //
     TARGET_SDK_VERSION = 23
     COMPILE_SDK_VERSION = 23
+    USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
     BUILD_TOOLS_VERSION = '23.0.3'
 
     //

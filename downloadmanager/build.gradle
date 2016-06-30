@@ -1,23 +1,21 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/06/2016.
+ * Modified by SithEngineer on 30/06/2016.
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+retrolambda {
+    jvmArgs '-noverify'
+}
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
         consumerProguardFiles "proguard-rules.txt"
-
-        // http://tools.android.com/tech-docs/jackandjill
-        jackOptions {
-            enabled false
-        }
     }
 
     lintOptions {
