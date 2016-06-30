@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by Neurophobic Animal on 29/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -17,6 +17,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -197,6 +198,10 @@ public enum DisplayableType {
 
 	public static Displayable newDisplayable(Type type, App app) {
 		return ((DisplayablePojo) newDisplayable(type)).setPojo(app);
+	}
+
+	public static Displayable newDisplayable(Type type, Store store) {
+		return ((DisplayablePojo) newDisplayable(type)).setPojo(store);
 	}
 
 	public static Displayable newDisplayable(Type type, GetAdsResponse.Ad ad) {

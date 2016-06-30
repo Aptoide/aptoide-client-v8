@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by Neurophobic Animal on 29/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -19,12 +19,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
@@ -110,6 +113,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					case getAds:
 						caseGetAds(refresh);
 						break;
+					case listStores:
+						caseListStores(url, refresh);
+						break;
 				}
 			} else {
 				// todo: rebenta quando não conhece, é mesmo para ficar assim??
@@ -122,6 +128,28 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			}
 			//setDisplayables(displayables);
 		}
+	}
+
+	private void caseListStores(String url, boolean refresh) {
+		ListStoresRequest listStoresRequest = ListStoresRequest.ofAction(url);
+		Action1<ListStores> listStoresAction = listStores -> {
+
+			// Load sub nodes
+			List<Store> list = listStores.getDatalist().getList();
+
+			displayables = new LinkedList<>();
+			for (Store store : list) {
+				displayables.add(DisplayableType.newDisplayable(Type.STORES_GROUP, store));
+			}
+
+			addDisplayables(displayables);
+		};
+
+		recyclerView.clearOnScrollListeners();
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listStoresAction, errorRequestListener,
+				refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
 	}
 
 	private void caseGetAds(boolean refresh) {
