@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 30/06/2016.
+ * Modified by Neurophobic Animal on 30/06/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -63,6 +63,7 @@ android {
         proguardFile 'proguard_files/proguard-fabric-twitter-kit.pro'
         proguardFile 'proguard_files/proguard-facebook.pro'
         proguardFile 'proguard_files/proguard-facebook-stetho.pro'
+        proguardFile 'proguard_files/proguard-square-okio.pro'
         proguardFile 'proguard-rules.pro'
         proguardFile getDefaultProguardFile('proguard-android.txt')
         testProguardFile 'proguard-test-rules.pro'
@@ -167,6 +168,7 @@ dependencies {
 
     debugCompile project(path: ':v8engine', configuration: 'debug')
     releaseCompile project(path: ':v8engine', configuration: 'release')
+    nightlyCompile project(path: ':v8engine', configuration: 'release')
 
     //
     // custom libs in folders
