@@ -152,7 +152,7 @@
 ## Aptoide specific rules
 ##
 
--dontwarn class java.lang.invoke.**
+-dontwarn java.lang.invoke.**
 -keep class android.support.v7.widget.SearchView { *; }
 #-keep class android.support.v7.appcompat.** { *; }
 #-keep class android.support.v4.** { *; }
