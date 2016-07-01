@@ -35,10 +35,11 @@ android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
+    // keep the "applicationId" var in third place for the jenkins build script hack
     defaultConfig {
-        applicationId "${APPLICATION_ID}"
         versionName "8.0.0"
         versionCode 1
+        applicationId "${APPLICATION_ID}"
         minSdkVersion 15
         resValue "string", "authenticatorAccountType", APPLICATION_ID
         targetSdkVersion TARGET_SDK_VERSION
