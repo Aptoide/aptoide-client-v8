@@ -281,42 +281,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
 
-//					ShowMessage.asSnack(v, new SubscribeStoreSnack(), R.layout.custom_snackbar, Snackbar
-//							.LENGTH_INDEFINITE);
-
+					ShowMessage.asSnack(v, new SubscribeStoreSnack(), R.layout.custom_snackbar, Snackbar
+							.LENGTH_INDEFINITE);
 					showSnackbar.make().show();
-//					AptoideDownloadManager.getInstance()
-//							.startDownload(app)
-//							.subscribe(progress -> onDownloadComplete((Integer) progress, app.getId()));
-					// TODO
-					V8Engine.startDownload(app)
-							.subscribe(progress -> onDownloadComplete(progress.getOverallProgress(), app.getId()));
+
 
 				});
 			};
-		}
-
-		private void onDownloadComplete(Integer progress, long appId) {
-			Logger.d(TAG, "onClick: " + progress);
-			Logger.d(TAG, "onClick: " + AptoideDownloadManager.getInstance().getDownloadFromDb(appId)
-					.getOverallProgress());
-			if (progress == 100) {
-				try {
-					Download downloadedApp = AptoideDownloadManager.getInstance().getDownloadFromDb(appId);
-					Intent install = new Intent(Intent.ACTION_VIEW);
-					install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, AptoideDownloadManager.getContext()
-							.getPackageName());
-					String filePath = downloadedApp.getFilesToDownload().get(0).getFilePath();
-					install.setDataAndType(Uri.fromFile(new File(filePath)), "application/vnd" +
-							".android" +
-							".package-archive");
-					Logger.d("Aptoide", "Installing app: " + filePath);
-					AptoideDownloadManager.getContext().startActivity(install);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
 		}
 
 		private View.OnClickListener newUpdateListener() {

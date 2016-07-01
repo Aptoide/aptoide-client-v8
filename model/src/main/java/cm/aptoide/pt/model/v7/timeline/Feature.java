@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.listapp.App;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @EqualsAndHashCode
-public class Feature  {
+public class Feature implements TimelineCard  {
 
+	@Getter private final String cardId;
 	@Getter private final String title;
 	@Getter private final String thumbnailUrl;
 	@Getter private final String url;
@@ -22,11 +22,13 @@ public class Feature  {
 	@Getter private final List<App> apps;
 
 	@JsonCreator
-	public Feature(@JsonProperty("title") String title,
+	public Feature(@JsonProperty("uid") String cardId,
+			       @JsonProperty("title") String title,
 	               @JsonProperty("thumbnail") String thumbnailUrl,
 	               @JsonProperty("url") String url,
 	               @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
 	               @JsonProperty("apps") List<App> apps) {
+		this.cardId = cardId;
 		this.title = title;
 		this.thumbnailUrl = thumbnailUrl;
 		this.url = url;

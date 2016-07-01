@@ -42,15 +42,18 @@
     <string name="fragment_social_timeline_hours_since_last_update">%1$d hours ago</string>
     <string name="menu_card_timeline_clear">Clear</string>
     <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
+    <string name="fragment_social_timeline_no_connection">No network connection</string>
+    <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
+
     <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
     <string name="displayable_social_timeline_app_update_name">App %1$s</string>
     <string name="displayable_social_timeline_app_has_update">has an %1$s</string>
+    <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
     <string name="displayable_social_timeline_app_update">update</string>
     <string name="displayable_social_timeline_app_update_application">application</string>
     <string name="displayable_social_timeline_app_update_version">Version: %1$s</string>
     <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
-    <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
-    <string name="fragment_social_timeline_no_connection">No network connection</string>
-    <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
-
+    <string name="displayable_social_timeline_app_update_updated">Updated</string>
+    <string name="displayable_social_timeline_app_update_updating">Updating</string>
+    <string name="displayable_social_timeline_app_update_error">Update Error</string>
 </resources>

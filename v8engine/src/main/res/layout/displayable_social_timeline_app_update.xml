@@ -61,6 +61,17 @@
                 android:layout_marginEnd="16dp"
                 android:layout_height="wrap_content"/>
 
+
+            <TextView
+                tools:text="Update Error"
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:textColor="@color/red_700"
+                android:id="@+id/displayable_social_timeline_app_update_error"
+                android:text="@string/displayable_social_timeline_app_update_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
             <Button
                 android:id="@+id/displayable_social_timeline_app_update_button"
                 android:text="@string/displayable_social_timeline_app_update_button"

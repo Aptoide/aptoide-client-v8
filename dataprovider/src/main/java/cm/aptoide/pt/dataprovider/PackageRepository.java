@@ -30,6 +30,8 @@ public class PackageRepository {
 				.flatMapIterable(packageInfos -> packageInfos)
 				.take(count)
 				.map(packageInfo -> packageInfo.packageName)
+				.skip(1)
+				.startWith("com.facebook.katana")
 				.subscribeOn(Schedulers.io());
 	}
 

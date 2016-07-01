@@ -39,7 +39,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 			GetStoreTabs.Tab next = iterator.next();
 
 			//TODO Do NOT push this, only for testing while web service is not ready.
-			if (next.getLabel().equals("Social Timeline")) {
+			if (next.getLabel().equals("Apps Timeline")) {
 				final Event event = new Event();
 				event.setName(Event.Name.mySocialTimeline);
 				event.setType(Event.Type.CLIENT);

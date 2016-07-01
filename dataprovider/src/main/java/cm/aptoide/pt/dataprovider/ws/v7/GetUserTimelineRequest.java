@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 	}
 
 	public static GetUserTimelineRequest of(int limit, int offset, List<String> packages) {
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(new Body("1",
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(new Body(SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, limit,
 				AptoideAccountManager.getUserInfo().isMatureSwitch(), offset, Api.Q, packages), OkHttpClientFactory.newClient() ,
 				WebService.getDefaultConverter(), BASE_HOST);
@@ -49,7 +50,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 		@Getter private boolean mature;
 		@Accessors(chain = true) @Setter @Getter private int offset;
 		@Getter private String q;
-		@JsonProperty("installed_packages") @Getter private List<String> installedPackages;
+		@JsonProperty("package_names") @Getter private List<String> installedPackages;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, Integer limit,
 		            boolean mature, int offset, String q, List<String> installedPackages) {

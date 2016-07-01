@@ -67,10 +67,6 @@ public abstract class V8Engine extends DataProvider {
 		}
 	};
 
-	public static Observable<Download> startDownload(GetAppMeta.App app) {
-		return downloadService.startDownload(app);
-	}
-
 	public static void loadStores() {
 
 		AptoideAccountManager.getUserRepos().subscribe(new Action1<List<Subscription>>() {

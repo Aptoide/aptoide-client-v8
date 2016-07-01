@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Data
+@EqualsAndHashCode
 public class FeatureTimelineItem implements TimelineItem<Feature> {
 
 	private final Feature feature;

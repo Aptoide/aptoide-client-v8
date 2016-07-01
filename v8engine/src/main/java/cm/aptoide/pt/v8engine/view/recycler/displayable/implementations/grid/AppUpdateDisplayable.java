@@ -2,18 +2,24 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import rx.Observable;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -21,19 +27,29 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AppUpdateDisplayable extends Displayable {
 
-	@Getter private long appId;
 	@Getter private String appIconUrl;
 
 	private String appVersioName;
 	private SpannableFactory spannableFactory;
 	private String appName;
+	private Download download;
+	private AptoideDownloadManager downloadManager;
 
-	public static AppUpdateDisplayable fromApp(App app, SpannableFactory spannableFactory) {
-		return new AppUpdateDisplayable(app.getId(), app.getIcon(), app.getFile().getVername(), spannableFactory,
-				app.getName());
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, AptoideDownloadManager
+			downloadManager) {
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(), downloadFactory.create(appUpdate),
+				downloadManager);
 	}
 
 	public AppUpdateDisplayable() {
+	}
+
+	public Observable<Download> getDownload() {
+		return downloadManager.getDownload(download.getAppId());
+	}
+
+	public Observable<Download> startDownload() {
+		return downloadManager.startDownload(download);
 	}
 
 	public Spannable getAppTitle(Context context) {
@@ -52,10 +68,22 @@ public class AppUpdateDisplayable extends Displayable {
 				appVersioName), appVersioName, new StyleSpan(Typeface.BOLD));
 	}
 
-	public Spannable updateAppText(Context context) {
+	public Spannable getUpdateAppText(Context context) {
 		String application = context.getString(R.string.displayable_social_timeline_app_update_application);
 		return spannableFactory.create(context.getString(R.string.displayable_social_timeline_app_update_button,
 				application), application, new StyleSpan(Typeface.BOLD));
+	}
+
+	public String getCompletedText(Context context) {
+		return context.getString(R.string.displayable_social_timeline_app_update_updated);
+	}
+
+	public String getUpdatingText(Context context) {
+		return context.getString(R.string.displayable_social_timeline_app_update_updating);
+	}
+
+	public String getUpdateErrorText(Context context) {
+		return context.getString(R.string.displayable_social_timeline_app_update_error);
 	}
 
 	@Override

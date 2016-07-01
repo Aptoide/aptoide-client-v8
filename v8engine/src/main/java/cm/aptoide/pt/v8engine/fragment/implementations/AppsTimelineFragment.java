@@ -10,18 +10,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.PackageRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.model.v7.timeline.AppUpdate;
+import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
@@ -29,6 +33,7 @@ import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
@@ -48,6 +53,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	public static final int SEARCH_LIMIT = 7;
+	private AptoideDownloadManager downloadManager;
+	private DownloadFactory downloadFactory;
 	private SpannableFactory spannableFactory;
 	private DateCalculator dateCalculator;
 	private boolean loading;
@@ -68,6 +75,8 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		dateCalculator = new DateCalculator();
 		spannableFactory = new SpannableFactory();
 		packageRespository = new PackageRepository(getContext().getPackageManager());
+		downloadFactory = new DownloadFactory();
+		downloadManager = AptoideDownloadManager.getInstance();
 		latestInstalledAppsObservable = packageRespository.getLatestInstalledPackages(5).cache();
 	}
 
@@ -107,15 +116,13 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.<GetUserTimeline> compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.filter(item -> item.getDatalist() != null)
 				.doOnNext(item -> setOffset(item.getDatalist()))
-				.flatMapIterable(getUserTimeline -> getUserTimeline.getDatalist().getList())
+				.flatMapIterable(getUserTimeline -> getListWithMockedAppUpdate(getUserTimeline))
 				.filter(timelineItem -> timelineItem != null)
 				.map(timelineItem -> timelineItem.getData())
 				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps || item instanceof App))
-				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory))
-				.buffer(1, TimeUnit.SECONDS, SEARCH_LIMIT)
+				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory, downloadFactory, downloadManager))
 				.observeOn(AndroidSchedulers.mainThread())
-				.doOnNext(item -> removeLoading())
-				.subscribe(displayables -> addDisplayables(displayables), throwable -> finishLoading((Throwable) throwable));
+				.subscribe(displayable -> addDisplayable(displayable), throwable -> finishLoading((Throwable) throwable));
 	}
 
 	private Observable<GetUserTimeline> getLoadMoreObservable(List<String> packages) {
@@ -124,9 +131,12 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.doOnNext(item -> addLoading())
 				.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset, packages).observe())
 				.delay(1, TimeUnit.SECONDS)
+				.observeOn(AndroidSchedulers.mainThread())
+				.doOnNext(item -> removeLoading())
 				.retryWhen(errors -> errors
 						.delay(1, TimeUnit.SECONDS)
 						.observeOn(AndroidSchedulers.mainThread())
+						.filter(item -> isLoading())
 						.doOnNext(error -> showErrorSnackbar(error)))
 				.subscribeOn(AndroidSchedulers.mainThread());
 	}
@@ -163,22 +173,35 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@NonNull
-	private Displayable itemToDisplayable(Object item, DateCalculator dateCalculator, SpannableFactory
-			spannableFactory) {
-
+	private Displayable itemToDisplayable(Object item, DateCalculator dateCalculator, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
+	                                      AptoideDownloadManager downloadManager) {
 		if (item instanceof Article) {
 			return ArticleDisplayable.from((Article) item, dateCalculator, spannableFactory);
 		} else if (item instanceof Feature) {
 			return FeatureDisplayable.from((Feature) item, dateCalculator, spannableFactory);
 		} else if (item instanceof StoreLatestApps) {
 			return StoreLatestAppsDisplayable.from((StoreLatestApps) item, dateCalculator);
-		} else if (item instanceof App) {
-			return AppUpdateDisplayable.fromApp((App) item, spannableFactory);
+		} else if (item instanceof AppUpdate) {
+			return AppUpdateDisplayable.from((AppUpdate) item, spannableFactory, downloadFactory, downloadManager);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
 	}
 
 	public void setPackages(List<String> packages) {
 		this.packages = packages;
+	}
+
+	private List<TimelineItem> getListWithMockedAppUpdate(GetUserTimeline getUserTimeline) {
+		AppUpdate appUpdate = new AppUpdate("1234");
+		appUpdate.setId(19347406);
+		appUpdate.setName("Clash of Clans");
+		File file = new File();
+		file.setVername("8.3332.14");
+		file.setPath("http://webservices.aptoide.com/apkinstall/apk?uid=19347406&store=kocha");
+		appUpdate.setFile(file);
+		appUpdate.setUpdated(new Date());
+		appUpdate.setIcon("http://cdn6.aptoide.com/imgs/a/a/e/aae8e02f62bf4a4008769ddb14b8fd89_icon_96x96.png");
+		getUserTimeline.getDatalist().getList().add(new AppUpdateTimelineItem(appUpdate));
+		return getUserTimeline.getDatalist().getList();
 	}
 }

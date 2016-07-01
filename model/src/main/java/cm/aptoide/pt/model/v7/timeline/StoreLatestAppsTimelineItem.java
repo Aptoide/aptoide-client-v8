@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Data
+@EqualsAndHashCode
 public class StoreLatestAppsTimelineItem implements TimelineItem<StoreLatestApps> {
 
 	private StoreLatestApps latestApps;
