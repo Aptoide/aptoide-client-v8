@@ -13,7 +13,7 @@ import android.support.design.widget.Snackbar;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -23,9 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
-import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
@@ -114,15 +112,19 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private Subscription getUpdateTimelineSubscription(Observable<GetUserTimeline> timelineUpdateSource) {
 		return timelineUpdateSource
 				.<GetUserTimeline> compose(bindUntilEvent(FragmentEvent.PAUSE))
-				.filter(item -> item.getDatalist() != null)
 				.doOnNext(item -> setOffset(item.getDatalist()))
-				.flatMapIterable(getUserTimeline -> getListWithMockedAppUpdate(getUserTimeline))
+				.flatMapIterable(getUserTimeline -> getTimelineList(getUserTimeline.getDatalist()))
 				.filter(timelineItem -> timelineItem != null)
 				.map(timelineItem -> timelineItem.getData())
 				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps || item instanceof App))
 				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory, downloadFactory, downloadManager))
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(displayable -> addDisplayable(displayable), throwable -> finishLoading((Throwable) throwable));
+				.subscribe(displayable -> updateTimeline(displayable), throwable -> finishLoading((Throwable) throwable));
+	}
+
+	private void updateTimeline(Displayable displayable) {
+		finishLoading();
+		addDisplayable(displayable);
 	}
 
 	private Observable<GetUserTimeline> getLoadMoreObservable(List<String> packages) {
@@ -153,7 +155,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void setOffset(Datalist<TimelineItem> datalist) {
-		offset = datalist.getNext();
+		if (datalist != null) {
+			offset = datalist.getNext();
+		}
 	}
 
 	private void addLoading() {
@@ -191,17 +195,13 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		this.packages = packages;
 	}
 
-	private List<TimelineItem> getListWithMockedAppUpdate(GetUserTimeline getUserTimeline) {
-		AppUpdate appUpdate = new AppUpdate("1234");
-		appUpdate.setId(19347406);
-		appUpdate.setName("Clash of Clans");
-		File file = new File();
-		file.setVername("8.3332.14");
-		file.setPath("http://webservices.aptoide.com/apkinstall/apk?uid=19347406&store=kocha");
-		appUpdate.setFile(file);
-		appUpdate.setUpdated(new Date());
-		appUpdate.setIcon("http://cdn6.aptoide.com/imgs/a/a/e/aae8e02f62bf4a4008769ddb14b8fd89_icon_96x96.png");
-		getUserTimeline.getDatalist().getList().add(new AppUpdateTimelineItem(appUpdate));
-		return getUserTimeline.getDatalist().getList();
+	private List<TimelineItem> getTimelineList(Datalist<TimelineItem> datalist) {
+		List<TimelineItem> items;
+		if (datalist == null) {
+			items = new ArrayList<>();
+		} else {
+			items = datalist.getList();
+		}
+		return items;
 	}
 }
