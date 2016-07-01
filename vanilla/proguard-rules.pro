@@ -152,9 +152,20 @@
 ## Aptoide specific rules
 ##
 
--dontwarn class java.lang.invoke.**
+-dontwarn java.lang.invoke.**
 -keep class android.support.v7.widget.SearchView { *; }
 #-keep class android.support.v7.appcompat.** { *; }
 #-keep class android.support.v4.** { *; }
 #-keep class cm.aptoide.accountmanager.** { *; }
 #-keep class cm.aptoide.pt.** {*;}
+
+##
+## Jackson specific rules
+##
+
+-keepattributes *Annotation*,EnclosingMethod,Signature
+-keepnames class com.fasterxml.jackson.** { *; }
+ -dontwarn com.fasterxml.jackson.databind.**
+ -keep class org.codehaus.** { *; }
+ -keepclassmembers public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
+ public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *; }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/06/2016.
+ * Modified by SithEngineer on 01/07/2016.
  */
 
 package cm.aptoide.pt;
@@ -18,9 +18,7 @@ public class Aptoide extends V8Engine {
 
 	@Override
 	protected void attachBaseContext(Context base) {
-		//if(BuildConfig.DEBUG) {
-			MultiDex.install(this);
-		//}
+		MultiDex.install(this);
 		super.attachBaseContext(base);
 	}
 
