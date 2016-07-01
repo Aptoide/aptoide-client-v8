@@ -241,7 +241,7 @@ public class AppViewFragment extends GridRecyclerFragment {
 			badgeLayout = (RelativeLayout) view.findViewById(R.id.badge_layout);
 			badge = (ImageView) view.findViewById(R.id.badge_img);
 			badgeText = (TextView) view.findViewById(R.id.badge_text);
-			appIcon = (ImageView) view.findViewById(R.id.icon);
+			appIcon = (ImageView) view.findViewById(R.id.app_icon);
 			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar_top);
 			fileSize = (TextView) view.findViewById(R.id.file_size);
 			versionName = (TextView) view.findViewById(R.id.version_name);
