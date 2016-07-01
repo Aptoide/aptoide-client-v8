@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/06/2016.
+ * Modified by SithEngineer on 01/07/2016.
  */
 
 apply plugin: 'com.android.application'
@@ -82,8 +82,9 @@ android {
             //versionCode incrementVerCode('DEV')
         }
 
-        incVerCode {
+        nightly {
             applicationIdSuffix ".dev"
+            versionName "8.0.0" + "." + getDate()
             versionCode incrementVerCode('NIGHTLY')
         }
 
@@ -94,28 +95,7 @@ android {
 
     buildTypes {
         release {
-            multiDexEnabled false
-            zipAlignEnabled true
-            minifyEnabled true
-            shrinkResources true
-            signingConfig signingConfigs.release
-
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    project.ext { appName = 'aptoide' }
-                    def newName = output.outputFile.name
-                    newName = newName.replace("vanilla-", "$project.ext.appName-") //"MyAppName" -> I set my app variables in the root project
-                    newName = newName.replace("prod-release", versionName)
-                    newName = newName.replace("release", versionName)
-                    //noinspection GroovyAssignabilityCheck
-                    output.outputFile = new File(output.outputFile.parent, newName)
-                }
-            }
-        }
-
-        nightly {
-            versionNameSuffix "." + getDate()
-            multiDexEnabled false
+            multiDexEnabled true
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
@@ -168,7 +148,6 @@ dependencies {
 
     debugCompile project(path: ':v8engine', configuration: 'debug')
     releaseCompile project(path: ':v8engine', configuration: 'release')
-    nightlyCompile project(path: ':v8engine', configuration: 'release')
 
     //
     // custom libs in folders
@@ -183,6 +162,7 @@ dependencies {
     testCompile "junit:junit:${JUNIT_VERSION}"
     //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    // Multi Dex support
     compile "com.android.support:multidex:${MULTIDEX_VERSION}"
 }
 
