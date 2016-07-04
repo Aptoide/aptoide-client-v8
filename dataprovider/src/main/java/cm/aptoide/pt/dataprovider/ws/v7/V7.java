@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by Neurophobic Animal on 04/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -173,6 +174,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 		@POST("getUserTimeline")
 		Observable<GetUserTimeline> getUserTimeline(@Body GetUserTimelineRequest.Body body, @Header(RequestCache
+				.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listComments{url}")
+		Observable<ListComments> listComments(@Path(value = "url", encoded = true) String path, @Body ListCommentsRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }
