@@ -11,7 +11,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"title", "thumbnailUrl", "url", "date", "apps"})
 public class Feature implements TimelineCard  {
 
 	@Getter private final String cardId;

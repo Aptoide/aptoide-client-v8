@@ -11,7 +11,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"store", "apps", "latestUpdate"})
 public class StoreLatestApps implements TimelineCard {
 
 	@Getter private final String cardId;

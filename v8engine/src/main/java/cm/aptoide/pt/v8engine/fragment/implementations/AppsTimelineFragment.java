@@ -10,11 +10,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.PackageRepository;
@@ -28,6 +32,7 @@ import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
+import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -44,6 +49,7 @@ import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -61,6 +67,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private PackageRepository packageRespository;
 	private List<String> packages;
 	private Observable<String> latestInstalledAppsObservable;
+	private TimelineCardDuplicateFilter duplicatesFilter;
 
 	public static AppsTimelineFragment newInstance() {
 		AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -76,6 +83,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		downloadFactory = new DownloadFactory();
 		downloadManager = AptoideDownloadManager.getInstance();
 		latestInstalledAppsObservable = packageRespository.getLatestInstalledPackages(5).cache();
+		duplicatesFilter = new TimelineCardDuplicateFilter(new HashSet<>());
 	}
 
 	@Override
@@ -106,7 +114,8 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private Observable<GetUserTimeline> getFreshLoadObservable(boolean refresh, List<String> packages) {
 		return GetUserTimelineRequest.of(SEARCH_LIMIT, 0, packages)
 				.observe(refresh)
-				.doOnNext(item -> removeDefaultLoading());
+				.doOnNext(item -> removeDefaultLoading())
+				.doOnNext(item -> duplicatesFilter.clear());
 	}
 
 	private void removeDefaultLoading() {
@@ -122,9 +131,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.filter(timelineItem -> timelineItem != null)
 				.map(timelineItem -> timelineItem.getData())
 				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps || item instanceof App))
+				.filter(duplicatesFilter)
 				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory, downloadFactory, downloadManager))
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(displayable -> addDisplayable(displayable), throwable -> finishLoading((Throwable) throwable));
+				.subscribe(displayable -> addDisplayable((Displayable) displayable), throwable -> finishLoading((Throwable) throwable));
 	}
 
 	private Observable<GetUserTimeline> getLoadMoreObservable(List<String> packages) {
@@ -203,5 +213,23 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 			items = datalist.getList();
 		}
 		return items;
+	}
+
+	private static class TimelineCardDuplicateFilter<T extends TimelineCard> implements Func1<T, Boolean> {
+
+		private final Set<String> cardIds;
+
+		public TimelineCardDuplicateFilter(Set<String> cardIds) {
+			this.cardIds = cardIds;
+		}
+
+		public void clear() {
+			cardIds.clear();
+		}
+
+		@Override
+		public Boolean call(T card) {
+			return cardIds.add(card.getCardId());
+		}
 	}
 }
