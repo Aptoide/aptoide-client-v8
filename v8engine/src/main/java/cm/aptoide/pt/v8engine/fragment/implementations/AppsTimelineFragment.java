@@ -106,7 +106,12 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private Observable<GetUserTimeline> getFreshLoadObservable(boolean refresh, List<String> packages) {
 		return GetUserTimelineRequest.of(SEARCH_LIMIT, 0, packages)
 				.observe(refresh)
-				.doOnNext(item -> getAdapter().clearDisplayables());
+				.doOnNext(item -> removeDefaultLoading());
+	}
+
+	private void removeDefaultLoading() {
+		finishLoading();
+		getAdapter().clearDisplayables();
 	}
 
 	private Subscription getUpdateTimelineSubscription(Observable<GetUserTimeline> timelineUpdateSource) {
@@ -119,12 +124,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps || item instanceof App))
 				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory, downloadFactory, downloadManager))
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(displayable -> updateTimeline(displayable), throwable -> finishLoading((Throwable) throwable));
-	}
-
-	private void updateTimeline(Displayable displayable) {
-		finishLoading();
-		addDisplayable(displayable);
+				.subscribe(displayable -> addDisplayable(displayable), throwable -> finishLoading((Throwable) throwable));
 	}
 
 	private Observable<GetUserTimeline> getLoadMoreObservable(List<String> packages) {
