@@ -182,14 +182,14 @@ public abstract class V8Engine extends DataProvider {
 				}
 			} else {
 				byte[] data = new byte[16];
-				String deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android
-						.provider.Settings.Secure.ANDROID_ID);
-				SecureRandom secureRandom = new SecureRandom();
-				secureRandom.setSeed(deviceId.hashCode());
-				secureRandom.nextBytes(data);
-				aaid = UUID.nameUUIDFromBytes(data).toString();
+				String deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+				if (deviceId != null) {
+					SecureRandom secureRandom = new SecureRandom();
+					secureRandom.setSeed(deviceId.hashCode());
+					secureRandom.nextBytes(data);
+					aaid = UUID.nameUUIDFromBytes(data).toString();
+				}
 			}
-
 			SecurePreferences.setAdvertisingId(aaid);
 		});
 	}

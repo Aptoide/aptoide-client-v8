@@ -7,6 +7,7 @@ package cm.aptoide.pt.preferences.secure;
 
 import android.content.SharedPreferences;
 
+import java.security.SecureRandom;
 import java.util.UUID;
 
 /**
@@ -15,11 +16,16 @@ import java.util.UUID;
 public class SecurePreferences {
 
 	public static String getAptoideClientUUID() {
+		final String advertisementId = getAdvertisingId();
+
+		if (advertisementId != null) {
+			return advertisementId;
+		}
+
 		SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance();
 		if (!sharedPreferences.contains(SecureKeys.APTOIDE_CLIENT_UUID)) {
 			sharedPreferences.edit().putString(SecureKeys.APTOIDE_CLIENT_UUID, UUID.randomUUID().toString()).apply();
 		}
-
 		return sharedPreferences.getString(SecureKeys.APTOIDE_CLIENT_UUID, null);
 	}
 
