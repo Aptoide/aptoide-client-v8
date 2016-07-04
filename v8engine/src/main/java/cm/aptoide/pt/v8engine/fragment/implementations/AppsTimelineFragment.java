@@ -155,7 +155,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void setOffset(Datalist<TimelineItem> datalist) {
-		if (datalist != null) {
+		if (datalist != null && datalist.getNext() != 0) {
 			offset = datalist.getNext();
 		}
 	}
