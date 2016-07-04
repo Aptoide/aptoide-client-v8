@@ -77,28 +77,27 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 				return Observable.just(t);
 			}
 		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (n, i) -> {
+			// Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
+			// Retry three times if request is queued by server.
 			if ((n instanceof ToRetryThrowable) && i < 3) {
-				return i;
+				return null;
 			} else {
-				// Todo: quando nao é erro de net, isto induz em erro lol
 				if (isNoNetworkException(n)) {
-					// Don't retry
 					throw new NoNetworkConnectionException(n);
 				} else {
-					try {
-						if (n instanceof HttpException) {
+					if (n instanceof HttpException) {
+						try {
 							throw new AptoideWsV7Exception(n).setBaseResponse((BaseV7Response)
 									converterFactory.responseBodyConverter(BaseV7Response.class, null, null)
 											.convert(((HttpException) n).response().errorBody()));
+						} catch (IOException exception) {
+							throw new RuntimeException(exception);
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
-
-					return Observable.error(n);
+					throw new RuntimeException(n);
 				}
 			}
-		}).delay(500, TimeUnit.MILLISECONDS));
+		}));
 	}
 
 	private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
