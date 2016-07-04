@@ -39,7 +39,6 @@
         apps (via Aptoide) including version and install date.</string>
 
     <!-- Timeline Fragment -->
-    <string name="fragment_social_timeline_hours_since_last_update">%1$d hours ago</string>
     <string name="menu_card_timeline_clear">Clear</string>
     <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
     <string name="fragment_social_timeline_no_connection">No network connection</string>
