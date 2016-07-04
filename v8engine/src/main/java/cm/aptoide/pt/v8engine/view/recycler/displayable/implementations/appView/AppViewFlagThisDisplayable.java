@@ -10,29 +10,28 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created by sithengineer on 30/06/16.
  */
-@Deprecated
-public class AppViewRateThisDisplayable extends AppViewDisplayable {
+public class AppViewFlagThisDisplayable extends AppViewDisplayable {
 
-	public AppViewRateThisDisplayable() {
+	public AppViewFlagThisDisplayable() {
 	}
 
-	public AppViewRateThisDisplayable(GetApp getApp) {
+	public AppViewFlagThisDisplayable(GetApp getApp) {
 		super(getApp);
 	}
 
-	public AppViewRateThisDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+	public AppViewFlagThisDisplayable(GetApp getApp, boolean fixedPerLineCount) {
 		super(getApp, fixedPerLineCount);
 	}
 
 	@Override
 	public Type getType() {
-		return Type.APP_VIEW_RATE_THIS;
+		return Type.APP_VIEW_FLAG_THIS;
 	}
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.displayable_app_view_rate_this;
+		return R.layout.displayable_app_view_flag_this;
 	}
 }

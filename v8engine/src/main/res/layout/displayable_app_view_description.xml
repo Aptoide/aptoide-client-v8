@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 10/05/2016.
+  ~ Modified by SithEngineer on 04/07/2016.
   -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,88 +23,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:textColor="?android:attr/textColorSecondary"
         android:maxLines="@integer/minimum_description_lines"
-        android:paddingTop="8dp" />
+        android:paddingTop="8dp"
+        android:textColor="?android:attr/textColorSecondary"/>
 
-    <RelativeLayout
+    <Button
+        android:id="@+id/read_more_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
-
-        <RelativeLayout
-            android:id="@+id/badge_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true">
-
-            <ImageView
-                android:id="@+id/iv_market_badge"
-                android:layout_width="@dimen/appview_badge_size"
-                android:layout_height="@dimen/appview_badge_size"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ic_badge_market"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/iv_signature_badge"
-                android:layout_width="@dimen/appview_badge_size"
-                android:layout_height="@dimen/appview_badge_size"
-                android:layout_marginRight="5dp"
-                android:layout_toRightOf="@id/iv_market_badge"
-                android:src="@drawable/ic_badge_signature"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/iv_flag_badge"
-                android:layout_width="@dimen/appview_badge_size"
-                android:layout_height="@dimen/appview_badge_size"
-                android:layout_marginRight="5dp"
-                android:layout_toRightOf="@id/iv_signature_badge"
-                android:src="@drawable/ic_badge_flag"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/iv_antivirus_badge"
-                android:layout_width="@dimen/appview_badge_size"
-                android:layout_height="@dimen/appview_badge_size"
-                android:layout_toRightOf="@id/iv_flag_badge"
-                android:src="@drawable/ic_badge_antivirus"
-                android:visibility="gone" />
-        </RelativeLayout>
-
-
-        <LinearLayout
-            android:id="@+id/see_more_layout"
-            style="@style/focusableRowBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:layout_gravity="right"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/see_more_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="@string/see_more"
-                android:textAllCaps="true"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/iv_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="3dp"
-                android:src="@drawable/ic_down_arrow" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+        android:background="@drawable/button_border_silver"
+        android:padding="12dp"
+        android:text="@string/read_more"
+        android:textAllCaps="true"
+        android:textColor="@color/silver"
+        android:textSize="@dimen/text_size_medium"
+        />
 
 </LinearLayout>

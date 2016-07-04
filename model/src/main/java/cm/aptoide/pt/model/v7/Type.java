@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/06/2016.
+ * Modified by SithEngineer on 04/07/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -35,6 +35,8 @@ public enum Type {
 	APP_VIEW_OTHER_VERSIONS,
 	APP_VIEW_RATE_RESULT,
 	APP_VIEW_RATE_THIS,
+	APP_VIEW_FLAG_THIS,
+	APP_VIEW_RATE_AND_COMMENT,
 	APP_VIEW_SUGGESTED_APPS,
 	APP_VIEW_SUBSCRIPTION,
 	APP_VIEW_DESCRIPTION,

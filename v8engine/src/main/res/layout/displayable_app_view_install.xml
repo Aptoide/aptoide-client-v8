@@ -2,11 +2,10 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 28/06/2016.
+  ~ Modified by SithEngineer on 04/07/2016.
   -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -97,9 +96,8 @@
     <LinearLayout
         android:id="@+id/install_and_latest_version_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="84dp"
         android:layout_gravity="center_vertical"
-        android:layout_margin="8dp"
         android:orientation="horizontal"
         android:weightSum="2"
         >
@@ -110,26 +108,77 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             >
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_latest_version"
-                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:lines="2"
                 android:maxLines="2"
                 android:maxWidth="70dp"
-                android:text="@string/appview_latest_version_text"
+                android:text="@string/appview_other_versions"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/text_size_small"
-                android:textStyle="bold"
                 />
+
+            <include
+                layout="@layout/separator_vertical"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:maxWidth="70dp"
+                    android:text="@string/appview_latest_version_text"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_small"
+                    android:textStyle="bold"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="34dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_latest_version"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="middle"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:maxWidth="70dp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold"
+                        tools:text="1.07.6"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <Button
@@ -171,105 +220,12 @@
             style="?attr/customButton"
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@drawable/rounded_corners_primary"
             android:text="@string/get_app"
             android:textAllCaps="true"
             />
-
-    </LinearLayout>
-
-    <include layout="@layout/separator_horizontal"/>
-
-    <!-- Store and subscription -->
-    <LinearLayout
-        android:id="@+id/store_layout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="8dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            >
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/store_avatar"
-                android:layout_width="@dimen/appview_store_icon_size"
-                android:layout_height="@dimen/appview_store_icon_size"
-                app:riv_corner_radius="15dp"
-                tools:src="@drawable/ic_avatar_apps"
-                />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                >
-
-                <TextView
-                    android:id="@+id/store_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:maxWidth="170dp"
-                    android:textSize="@dimen/text_size_medium"
-                    tools:text="Store name"
-                    />
-
-                <!--
-                    android:drawableLeft="@drawable/ic_user_icon_black"
-                    -->
-                <TextView
-                    android:id="@+id/store_number_users"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:drawablePadding="2dp"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:textSize="@dimen/text_size_small"
-                    tools:text="1234   Followers"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            >
-
-            <Button
-                android:id="@+id/btn_subscribe"
-                android:layout_width="wrap_content"
-                android:layout_height="28dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/button_border_orange2"
-                android:text="@string/appview_follow_store_button_text"
-                android:textAllCaps="true"
-                android:textAppearance="?android:attr/textAppearanceSmallInverse"
-                android:textColor="?colorPrimary"
-                android:textSize="12sp"
-                />
-        </RelativeLayout>
 
     </LinearLayout>
 

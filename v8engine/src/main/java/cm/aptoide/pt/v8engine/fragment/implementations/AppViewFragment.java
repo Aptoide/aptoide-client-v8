@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by SithEngineer on 04/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -30,36 +30,38 @@ import java.util.Locale;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment {
+public class AppViewFragment extends GridRecyclerFragment implements Scrollable {
+
+	public static final int VIEW_ID = R.layout.fragment_app_view;
 
 	//
 	// constants
 	//
-
-	public static final int VIEW_ID = R.layout.fragment_app_view;
+	private static final String TAG = AppViewFragment.class.getSimpleName();
 	//private static final String TAG = AppViewFragment.class.getName();
-
 	//
 	// vars
 	//
@@ -92,34 +94,18 @@ public class AppViewFragment extends GridRecyclerFragment {
 		return fragment;
 	}
 
-	@Override
-	public void load(boolean refresh) {
-		GetAppRequest.of(appId).execute(getApp -> {
-			header.setup(getApp);
-			setupDisplayables(getApp);
-			setupObservables(getApp);
-			finishLoading();
-		}, refresh);
-	}
-
 	private void setupObservables(GetApp getApp) {
 		// For stores subscription
-		Database.StoreQ.getAll(realm)
-				.asObservable()
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-				.subscribe(stores -> {
-					if (Database.StoreQ.get(getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
-						adapter.notifyDataSetChanged();
-					}
-				});
+		Database.StoreQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
+			if (Database.StoreQ.get(getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
+				adapter.notifyDataSetChanged();
+			}
+		});
 
 		// For install actions
-		Database.RollbackQ.getAll(realm)
-				.asObservable()
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-				.subscribe(rollbacks -> {
-					adapter.notifyDataSetChanged();
-				});
+		Database.RollbackQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(rollbacks -> {
+			adapter.notifyDataSetChanged();
+		});
 
 		// TODO: 27-05-2016 neuro install actions, not present in v7
 	}
@@ -130,12 +116,12 @@ public class AppViewFragment extends GridRecyclerFragment {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
 		displayables.add(new AppViewInstallDisplayable(getApp));
-		displayables.add(new AppViewDescriptionDisplayable(getApp));
+		displayables.add(new AppViewStoreDisplayable(getApp));
+		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
-		displayables.add(new AppViewRateThisDisplayable(getApp));
+		displayables.add(new AppViewDescriptionDisplayable(getApp));
+		displayables.add(new AppViewFlagThisDisplayable(getApp));
 		displayables.add(new AppViewSuggestedAppsDisplayable(getApp));
-		displayables.add(new AppViewCommentsDisplayable(getApp));
-		displayables.add(new AppViewOtherVersionsDisplayable(getApp));
 		displayables.add(new AppViewDeveloperDisplayable(getApp));
 
 		setDisplayables(displayables);
@@ -144,6 +130,16 @@ public class AppViewFragment extends GridRecyclerFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override
+	public void load(boolean refresh) {
+		GetAppRequest.of(appId).execute(getApp -> {
+			header.setup(getApp);
+			setupDisplayables(getApp);
+			setupObservables(getApp);
+			finishLoading();
+		}, refresh);
 	}
 
 	@Override
@@ -209,6 +205,36 @@ public class AppViewFragment extends GridRecyclerFragment {
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
+	}
+
+	@Override
+	public void scroll(Position position) {
+		if (position == Position.FIRST) {
+			Logger.d(TAG, "scrolling to first position");
+			getRecyclerView().smoothScrollToPosition(0);
+		} else if (position == Position.LAST) {
+			Logger.d(TAG, "scrolling to last position");
+			getRecyclerView().smoothScrollToPosition(getAdapter().getItemCount());
+		}
+	}
+
+	//
+	// Scrollable interface
+	//
+
+	@Override
+	public void itemAdded(int pos) {
+
+	}
+
+	@Override
+	public void itemRemoved(int pos) {
+
+	}
+
+	@Override
+	public void itemChanged(int pos) {
+
 	}
 
 	private enum BundleKeys {

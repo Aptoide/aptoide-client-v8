@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 08/06/2016.
+  ~ Modified by SithEngineer on 04/07/2016.
   -->
 
 <resources>
@@ -435,7 +435,6 @@
     <string name="appview_additional_information_title">Additional Information</string>
     <string name="appview_comment_reply_button_text">Reply</string>
     <string name="appview_header_trusted_text">Trusted</string>
-    <string name="appview_latest_version_text">This is the latest version!</string>
     <string name="appview_subscribe_store_button_text">Subscribe?</string>
     <string name="appview_subscribed_store_button_text">Subscribed</string>
     <string name="appview_rate_this_app_text">Rate this app</string>

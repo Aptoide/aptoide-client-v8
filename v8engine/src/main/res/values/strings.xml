@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 28/06/2016.
+  ~ Modified by SithEngineer on 04/07/2016.
   -->
 
 <resources>
@@ -72,4 +72,14 @@
     <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
     <string name="fragment_social_timeline_no_connection">No network connection</string>
     <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
+    <string name="appview_other_versions"><u>Other Versions</u></string>
+    <string name="appview_latest_version_text">Latest version</string>
+    <string name="appview_rate_this_app">rate this app</string>
+    <string name="appview_read_all">read all <![CDATA[>]]></string>
+    <string name="zero">0</string>
+    <string name="working_well">Working Well</string>
+    <string name="needs_license">Needs License</string>
+    <string name="fake_app">Fake App</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Additional information</string>
 </resources>

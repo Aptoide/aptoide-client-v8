@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 04/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created by sithengineer on 04/05/16.
  */
+@Deprecated
 @Displayables({AppViewOtherVersionsDisplayable.class})
 public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDisplayable> {
 
