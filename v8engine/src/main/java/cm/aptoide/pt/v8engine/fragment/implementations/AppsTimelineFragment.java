@@ -90,6 +90,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	public void onResume() {
 		super.onResume();
 		if (getAdapter().getItemCount() > 0 && (subscription == null || subscription.isUnsubscribed()) && packages != null) {
+			removeLoading();
 			subscription = getUpdateTimelineSubscription(getLoadMoreObservable(packages));
 		}
 	}
