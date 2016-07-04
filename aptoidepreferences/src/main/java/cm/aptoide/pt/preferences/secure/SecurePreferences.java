@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by Neurophobic Animal on 04/07/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
 
 import android.content.SharedPreferences;
 
-import java.security.SecureRandom;
 import java.util.UUID;
 
 /**
@@ -16,17 +15,24 @@ import java.util.UUID;
 public class SecurePreferences {
 
 	public static String getAptoideClientUUID() {
-		final String advertisementId = getAdvertisingId();
-
-		if (advertisementId != null) {
-			return advertisementId;
-		}
-
 		SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance();
 		if (!sharedPreferences.contains(SecureKeys.APTOIDE_CLIENT_UUID)) {
-			sharedPreferences.edit().putString(SecureKeys.APTOIDE_CLIENT_UUID, UUID.randomUUID().toString()).apply();
+			generateAptoideId(sharedPreferences);
 		}
 		return sharedPreferences.getString(SecureKeys.APTOIDE_CLIENT_UUID, null);
+	}
+
+	private static void generateAptoideId(SharedPreferences sharedPreferences) {
+		String aptoideId;
+		if (getAdvertisingId() != null) {
+			aptoideId = getAdvertisingId();
+		} else if (getAndroidId() != null) {
+			aptoideId = getAndroidId();
+		} else {
+			aptoideId = UUID.randomUUID().toString();
+		}
+
+		sharedPreferences.edit().putString(SecureKeys.APTOIDE_CLIENT_UUID, aptoideId).apply();
 	}
 
 	/**
@@ -126,5 +132,17 @@ public class SecurePreferences {
 		}
 
 		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ADVERTISING_ID_CLIENT, aaid).apply();
+	}
+
+	public static String getAndroidId() {
+		return SecurePreferencesImplementation.getInstance().getString(SecureKeys.ANDROID_ID_CLIENT, null);
+	}
+
+	public static void setAndroidId(String android) {
+		if (getAdvertisingId() != null) {
+			throw new RuntimeException("Android ID already set!");
+		}
+
+		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ANDROID_ID_CLIENT, android).apply();
 	}
 }

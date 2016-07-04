@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by Neurophobic Animal on 04/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.os.IBinder;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -26,7 +27,6 @@ import java.util.UUID;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -35,7 +35,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -43,7 +42,6 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Getter;
-import rx.Observable;
 import rx.functions.Action1;
 
 /**
@@ -127,6 +125,7 @@ public abstract class V8Engine extends DataProvider {
 
 		if (SecurePreferences.isFirstRun()) {
 			setAdvertisingId();
+			setAndroidId();
 			loadInstalledApps();
 			DataproviderUtils.checkUpdates();
 
@@ -169,6 +168,10 @@ public abstract class V8Engine extends DataProvider {
 	private void setupCrashlytics() {
 		Crashlytics crashlyticsKit = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(!BuildConfig.FABRIC_CONFIGURED).build()).build();
 		Fabric.with(this, crashlyticsKit);
+	}
+
+	private void setAndroidId() {
+		SecurePreferences.setAndroidId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 	}
 
 	private void setAdvertisingId() {
