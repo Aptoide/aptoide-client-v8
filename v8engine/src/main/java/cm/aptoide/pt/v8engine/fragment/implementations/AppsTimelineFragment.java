@@ -86,11 +86,12 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	public void onResume() {
 		super.onResume();
 		if (getAdapter().getItemCount() > 0 && (subscription == null || subscription.isUnsubscribed()) && packages != null) {
-			removeLoading();
 			subscription = getNextDisplayables(packages)
 					.<List<Displayable>>compose(bindUntilEvent(FragmentEvent.PAUSE))
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(displayables -> addDisplayables(displayables), throwable -> throwable.printStackTrace());
+		} else {
+			load(false);
 		}
 	}
 
@@ -116,7 +117,8 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private Observable<List<Displayable>> getFreshDisplayables(boolean refresh, List<String> packages) {
 		return getDisplayableList(packages, 0, refresh)
 				.doOnNext(item -> getAdapter().clearDisplayables())
-				.doOnNext(item -> finishLoading());
+				.doOnNext(item -> finishLoading())
+				.doOnUnsubscribe(() -> finishLoading());
 	}
 
 	private Observable<List<Displayable>> getNextDisplayables(List<String> packages) {
