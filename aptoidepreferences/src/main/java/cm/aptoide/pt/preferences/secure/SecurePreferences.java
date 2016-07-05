@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/07/2016.
+ * Modified by SithEngineer on 05/07/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.UUID;
 
@@ -13,6 +14,8 @@ import java.util.UUID;
  * Created by neuro on 21-04-2016.
  */
 public class SecurePreferences {
+
+	private static final String TAG = SecurePreferences.class.getSimpleName();
 
 	public static String getAptoideClientUUID() {
 		SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance();
@@ -140,7 +143,8 @@ public class SecurePreferences {
 
 	public static void setAndroidId(String android) {
 		if (getAdvertisingId() != null) {
-			throw new RuntimeException("Android ID already set!");
+			//throw new RuntimeException("Android ID already set!");
+			Log.e(TAG, "", new RuntimeException("Android ID already set!"));
 		}
 
 		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ANDROID_ID_CLIENT, android).apply();

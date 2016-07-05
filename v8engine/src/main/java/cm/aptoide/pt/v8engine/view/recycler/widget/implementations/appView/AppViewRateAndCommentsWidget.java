@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -9,8 +9,11 @@ import android.view.View;
 import android.widget.Button;
 
 import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -37,6 +40,7 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 	@Override
 	public void bindView(AppViewRateAndCommentsDisplayable displayable) {
 		GetApp pojo = displayable.getPojo();
+		GetAppMeta.App app = pojo.getNodes().getMeta().getData();
 
 		// TODO
 		rateThisButton.setOnClickListener(v -> {
@@ -44,7 +48,7 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 		});
 
 		readAllButton.setOnClickListener(v -> {
-			ShowMessage.asSnack(v, "TO DO: go to all comments");
+			((FragmentShower) v.getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId()));
 		});
 	}
 }

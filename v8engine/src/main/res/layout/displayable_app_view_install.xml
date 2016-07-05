@@ -2,9 +2,10 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 04/07/2016.
+  ~ Modified by SithEngineer on 05/07/2016.
   -->
 <LinearLayout
+    style="@style/Aptoide.AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -112,6 +113,7 @@
             >
 
             <TextView
+                android:id="@+id/other_versions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -128,6 +130,12 @@
                 layout="@layout/separator_vertical"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 />
 
             <LinearLayout
@@ -139,6 +147,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="2"
@@ -151,20 +160,21 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="44dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     >
 
                     <ImageView
                         android:layout_width="34dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:src="@drawable/ic_latest_version"
                         />
 
                     <TextView
+                        android:id="@+id/store_version_name"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:ellipsize="middle"
                         android:gravity="center"
                         android:maxLines="1"
@@ -228,7 +238,5 @@
             />
 
     </LinearLayout>
-
-    <include layout="@layout/separator_horizontal"/>
 
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 28/06/2016.
+  ~ Modified by SithEngineer on 05/07/2016.
   -->
 <!--
     tools:background="#BB000000"
@@ -19,6 +19,9 @@
     tools:showIn="@layout/fragment_app_view"
     >
 
+    <!--
+        android:background="@drawable/app_view_header_gradient"
+    -->
     <android.support.design.widget.CollapsingToolbarLayout
         android:id="@+id/collapsing_toolbar"
         android:layout_width="match_parent"
@@ -29,7 +32,8 @@
         app:expandedTitleMarginEnd="64dp"
         app:expandedTitleMarginStart="@dimen/appview_title_left_margin"
         app:expandedTitleTextAppearance="@style/HeaderTextAppView"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -45,6 +49,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:foreground="@drawable/app_view_header_gradient"
                 >
 
                 <ImageView

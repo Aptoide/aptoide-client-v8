@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 04/07/2016.
+  ~ Modified by SithEngineer on 05/07/2016.
   -->
 
-<LinearLayout android:id="@+id/app_view_middle_sugested"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:visibility="gone"
-              tools:visibility="visible">
+<LinearLayout
+    android:id="@+id/app_view_middle_sugested"
+    style="@style/Aptoide.AppViewWidget"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
 
     <RelativeLayout
         android:id="@+id/apkinfoheader"
@@ -27,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="8dp"
-            android:text="@string/suggested_app"
+            android:text="@string/recommended_for_you"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="?android:attr/textColorSecondary"/>
 

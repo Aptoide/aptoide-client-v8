@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -10,6 +10,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
+import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
@@ -207,6 +209,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 	}
 
+	//
+	// Scrollable interface
+	//
+
 	@Override
 	public void scroll(Position position) {
 		if (position == Position.FIRST) {
@@ -217,10 +223,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			getRecyclerView().smoothScrollToPosition(getAdapter().getItemCount());
 		}
 	}
-
-	//
-	// Scrollable interface
-	//
 
 	@Override
 	public void itemAdded(int pos) {
@@ -249,6 +251,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	private static final class AppViewHeader {
 
 		// views
+		private AppBarLayout appBarLayout;
 		private CollapsingToolbarLayout collapsingToolbar;
 		private ImageView featuredGraphic;
 		private RelativeLayout badgeLayout;
@@ -262,6 +265,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 		// ctor
 		public AppViewHeader(@NonNull View view) {
+			appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
 			collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
 			featuredGraphic = (ImageView) view.findViewById(R.id.featured_graphic);
 			badgeLayout = (RelativeLayout) view.findViewById(R.id.badge_layout);
@@ -294,6 +298,24 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			// TODO add placeholders in image loading
 
 			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
+			appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+
+				@Override
+				public void onStateChanged(AppBarLayout appBarLayout, State state) {
+					switch (state) {
+						case EXPANDED:
+							appIcon.animate().alpha(1F).start();
+							break;
+
+						default:
+						case IDLE:
+						case COLLAPSED:
+							appIcon.animate().alpha(0F).start();
+							break;
+					}
+				}
+			});
+
 			ratingBar.setRating(getApp.getNodes().getMeta().getData().getStats().getRating().getAvg());
 			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes()
 					.getMeta()

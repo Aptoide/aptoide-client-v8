@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 04/07/2016.
+  ~ Modified by SithEngineer on 05/07/2016.
   -->
 
 <LinearLayout
+    style="@style/Aptoide.AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="54dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/separator_horizontal"/>
 
     <LinearLayout
         android:id="@+id/store_layout"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
         android:orientation="horizontal"
         android:weightSum="2"
         >

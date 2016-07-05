@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by SithEngineer on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -33,7 +33,8 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
  */
 public class StoreFragment extends BasePagerToolbarFragment {
 
-	private static final String TAG = "StoreFragment";
+	private static final String TAG = StoreFragment.class.getSimpleName();
+
 	private final int PRIVATE_STORE_REQUEST_CODE = 20;
 	protected PagerSlidingTabStrip pagerSlidingTabStrip;
 	private String storeName;
