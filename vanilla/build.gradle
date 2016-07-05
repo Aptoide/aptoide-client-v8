@@ -2,6 +2,7 @@
  * Copyright (c) 2016.
  * Modified by SithEngineer on 01/07/2016.
  */
+import com.android.builder.model.ProductFlavor
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
@@ -80,17 +81,14 @@ android {
         dev {
             applicationIdSuffix ".dev"
             minSdkVersion 21
-            //versionCode incrementVerCode('DEV')
         }
 
         nightly {
             applicationIdSuffix ".dev"
-            versionName "8.0.0" + "." + getDate()
-            versionCode incrementVerCode('NIGHTLY')
         }
 
         prod {
-            versionCode incrementVerCode('PROD')
+
         }
     }
 
@@ -139,6 +137,20 @@ android {
         pickFirst 'META-INF/MANIFEST.MF'
         pickFirst 'META-INF/LGPL2.1'
     }
+
+    applicationVariants.all {variant ->
+        if (variant.buildType.name == buildTypes.release.name) {
+
+            variant.productFlavors.each {flavor ->
+                VersionUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}Version", VersionUpdateTask
+                versionUpdate.versionPropertiesFile = file('version.properties')
+                versionUpdate.mergedFlavor = variant.mergedFlavor
+                versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
+                versionUpdate.appendDate = flavor.name.toLowerCase().contains("nightly")
+                variant.assemble.dependsOn versionUpdate
+            }
+        }
+    }
 }
 
 dependencies {
@@ -167,27 +179,39 @@ dependencies {
     compile "com.android.support:multidex:${MULTIDEX_VERSION}"
 }
 
-def incrementVerCode(String buildType) {
 
-    // code to bump version code on each build
-    def versionPropsFile = file('version.properties')
-    if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
-        versionProps.load(new FileInputStream(versionPropsFile))
-        def code = versionProps[buildType + '_VERSION_CODE'].toInteger() + 1
-        versionProps[buildType + '_VERSION_CODE'] = code.toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
-        return code
+class VersionUpdateTask extends DefaultTask {
 
-    } else {
-        throw new GradleException("Could not read version.properties!")
+    @InputFile
+    File versionPropertiesFile
+
+    @Input
+    String versionPropertyKey
+
+    @Input
+    boolean appendDate
+
+    ProductFlavor mergedFlavor
+
+    @TaskAction
+    def updateVersion() {
+        if (versionPropertiesFile.canRead()) {
+            Properties versionProperties = new Properties()
+            versionProperties.load(new FileInputStream(versionPropertiesFile))
+
+            Integer code = versionProperties[versionPropertyKey].toInteger() + 1
+
+            versionProperties[versionPropertyKey] = code.toString()
+            versionProperties.store(versionPropertiesFile.newWriter(), null)
+
+            mergedFlavor.versionCode = code
+            if (appendDate) {
+                mergedFlavor.versionName += new Date().format("ddMMyyyy")
+            }
+        } else {
+            throw new GradleException("Could not read version.properties!")
+        }
     }
-}
-
-def getDate() {
-    def date = new Date()
-    def formattedDate = date.format('ddMMyyyy')
-    return formattedDate
 }
 
 def File propFile = new File('signing.properties')
