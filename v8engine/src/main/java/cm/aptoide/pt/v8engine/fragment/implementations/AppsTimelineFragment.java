@@ -13,25 +13,20 @@ import android.support.design.widget.Snackbar;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.PackageRepository;
+import cm.aptoide.pt.dataprovider.TimelineRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.model.v7.Datalist;
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.DataList;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
-import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -63,11 +58,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private boolean loading;
 	private int offset;
 	private Subscription subscription;
-	private PackageRepository packageRespository;
+	private TimelineRepository timelineRepository;
+	private PackageRepository packageRepository;
 	private List<String> packages;
-	private Observable<String> latestInstalledAppsObservable;
-	private TimelineCardDuplicateFilter duplicatesFilter;
-	private String action;
 
 	public static AppsTimelineFragment newInstance(String action) {
 		AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -81,14 +74,12 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		action = getArguments().getString(ACTION_KEY);
 		dateCalculator = new DateCalculator();
 		spannableFactory = new SpannableFactory();
-		packageRespository = new PackageRepository(getContext().getPackageManager());
 		downloadFactory = new DownloadFactory();
 		downloadManager = AptoideDownloadManager.getInstance();
-		latestInstalledAppsObservable = packageRespository.getLatestInstalledPackages(5).cache();
-		duplicatesFilter = new TimelineCardDuplicateFilter(new HashSet<>());
+		packageRepository = new PackageRepository(getContext().getPackageManager());
+		timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY), new TimelineRepository.TimelineCardDuplicateFilter(new HashSet<>()));
 	}
 
 	@Override
@@ -96,7 +87,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		super.onResume();
 		if (getAdapter().getItemCount() > 0 && (subscription == null || subscription.isUnsubscribed()) && packages != null) {
 			removeLoading();
-			subscription = getUpdateTimelineSubscription(getLoadMoreObservable(packages));
+			subscription = getNextDisplayables(packages)
+					.<List<Displayable>>compose(bindUntilEvent(FragmentEvent.PAUSE))
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(displayables -> addDisplayables(displayables), throwable -> throwable.printStackTrace());
 		}
 	}
 
@@ -105,49 +99,31 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		if (subscription != null) {
 			subscription.unsubscribe();
 		}
-		subscription = getUpdateTimelineSubscription(getPackagesObservable(latestInstalledAppsObservable)
-				.flatMap(packages -> Observable.concat(getFreshLoadObservable(refresh, packages), getLoadMoreObservable(packages))));
+		subscription = getPackages().flatMap(packages -> Observable.concat(getFreshDisplayables(refresh, packages), getNextDisplayables(packages)))
+				.<List<Displayable>>compose(bindUntilEvent(FragmentEvent.PAUSE))
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(displayables -> addDisplayables(displayables), throwable -> finishLoading((Throwable) throwable));
 	}
 
 	@NonNull
-	private Observable<List<String>> getPackagesObservable(Observable<String> latestInstalledAppsObservable) {
-		return Observable.concat(latestInstalledAppsObservable, packageRespository.getRandomInstalledPackages(5))
+	private Observable<List<String>> getPackages() {
+		return Observable.concat(packageRepository.getLatestInstalledPackages(5), packageRepository.getRandomInstalledPackages(5))
 				.toList()
 				.doOnNext(packages -> setPackages(packages));
 	}
 
 	@NonNull
-	private Observable<GetUserTimeline> getFreshLoadObservable(boolean refresh, List<String> packages) {
-		return GetUserTimelineRequest.of(action, SEARCH_LIMIT, 0, packages)
-				.observe(refresh)
-				.doOnNext(item -> removeDefaultLoading())
-				.doOnNext(item -> duplicatesFilter.clear());
+	private Observable<List<Displayable>> getFreshDisplayables(boolean refresh, List<String> packages) {
+		return getDisplayableList(packages, 0, refresh)
+				.doOnNext(item -> getAdapter().clearDisplayables())
+				.doOnNext(item -> finishLoading());
 	}
 
-	private void removeDefaultLoading() {
-		finishLoading();
-		getAdapter().clearDisplayables();
-	}
-
-	private Subscription getUpdateTimelineSubscription(Observable<GetUserTimeline> timelineUpdateSource) {
-		return timelineUpdateSource
-				.<GetUserTimeline> compose(bindUntilEvent(FragmentEvent.PAUSE))
-				.doOnNext(item -> setOffset(item.getDatalist()))
-				.flatMapIterable(getUserTimeline -> getTimelineList(getUserTimeline.getDatalist()))
-				.filter(timelineItem -> timelineItem != null)
-				.map(timelineItem -> timelineItem.getData())
-				.filter(item -> (item instanceof Article || item instanceof Feature || item instanceof StoreLatestApps || item instanceof App))
-				.filter(duplicatesFilter)
-				.map(item -> itemToDisplayable(item, dateCalculator, spannableFactory, downloadFactory, downloadManager))
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(displayable -> addDisplayable((Displayable) displayable), throwable -> finishLoading((Throwable) throwable));
-	}
-
-	private Observable<GetUserTimeline> getLoadMoreObservable(List<String> packages) {
+	private Observable<List<Displayable>> getNextDisplayables(List<String> packages) {
 		return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
 				.filter(item -> !isLoading())
 				.doOnNext(item -> addLoading())
-				.concatMap(item -> GetUserTimelineRequest.of(action, SEARCH_LIMIT, offset, packages).observe())
+				.concatMap(item -> getDisplayableList(packages, offset, false))
 				.delay(1, TimeUnit.SECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnNext(item -> removeLoading())
@@ -156,7 +132,17 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 						.observeOn(AndroidSchedulers.mainThread())
 						.filter(item -> isLoading())
 						.doOnNext(error -> showErrorSnackbar(error)))
+				.doOnUnsubscribe(() -> removeLoading())
 				.subscribeOn(AndroidSchedulers.mainThread());
+	}
+
+	@NonNull
+	private Observable<List<Displayable>> getDisplayableList(List<String> packages, int offset, boolean refresh) {
+		return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh)
+				.doOnNext(datalist -> setOffset(datalist))
+				.flatMapIterable(datalist -> datalist.getList())
+				.map(card -> cardToDisplayable(card, dateCalculator, spannableFactory, downloadFactory, downloadManager))
+				.toList();
 	}
 
 	private void showErrorSnackbar(Throwable error) {
@@ -170,7 +156,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
 	}
 
-	private void setOffset(Datalist<TimelineItem> datalist) {
+	private void setOffset(DataList<TimelineCard> datalist) {
 		if (datalist != null && datalist.getNext() != 0) {
 			offset = datalist.getNext();
 		}
@@ -193,16 +179,16 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@NonNull
-	private Displayable itemToDisplayable(Object item, DateCalculator dateCalculator, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
+	private Displayable cardToDisplayable(TimelineCard card, DateCalculator dateCalculator, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
 	                                      AptoideDownloadManager downloadManager) {
-		if (item instanceof Article) {
-			return ArticleDisplayable.from((Article) item, dateCalculator, spannableFactory);
-		} else if (item instanceof Feature) {
-			return FeatureDisplayable.from((Feature) item, dateCalculator, spannableFactory);
-		} else if (item instanceof StoreLatestApps) {
-			return StoreLatestAppsDisplayable.from((StoreLatestApps) item, dateCalculator);
-		} else if (item instanceof AppUpdate) {
-			return AppUpdateDisplayable.from((AppUpdate) item, spannableFactory, downloadFactory, downloadManager);
+		if (card instanceof Article) {
+			return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory);
+		} else if (card instanceof Feature) {
+			return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
+		} else if (card instanceof StoreLatestApps) {
+			return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator);
+		} else if (card instanceof AppUpdate) {
+			return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory, downloadManager);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
 	}
@@ -211,31 +197,4 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		this.packages = packages;
 	}
 
-	private List<TimelineItem> getTimelineList(Datalist<TimelineItem> datalist) {
-		List<TimelineItem> items;
-		if (datalist == null) {
-			items = new ArrayList<>();
-		} else {
-			items = datalist.getList();
-		}
-		return items;
-	}
-
-	private static class TimelineCardDuplicateFilter<T extends TimelineCard> implements Func1<T, Boolean> {
-
-		private final Set<String> cardIds;
-
-		public TimelineCardDuplicateFilter(Set<String> cardIds) {
-			this.cardIds = cardIds;
-		}
-
-		public void clear() {
-			cardIds.clear();
-		}
-
-		@Override
-		public Boolean call(T card) {
-			return cardIds.add(card.getCardId());
-		}
-	}
 }

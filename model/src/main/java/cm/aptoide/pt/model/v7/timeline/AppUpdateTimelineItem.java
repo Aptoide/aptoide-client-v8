@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  * Created by marcelobenites on 6/17/16.
  */
 @EqualsAndHashCode
-public class AppUpdateTimelineItem implements TimelineItem<AppUpdate> {
+public class AppUpdateTimelineItem implements TimelineItem<TimelineCard> {
 
 	private final AppUpdate appUpdate;
 
