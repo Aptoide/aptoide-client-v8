@@ -8,18 +8,21 @@ import java.util.List;
 
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode
-public class StoreLatestApps {
+@EqualsAndHashCode(exclude = {"store", "apps", "latestUpdate"})
+public class StoreLatestApps implements TimelineCard {
 
-	@Getter private Store store;
-	@Getter private List<App> apps;
+	@Getter private final String cardId;
+	@Getter private final Store store;
+	@Getter private final List<App> apps;
+
 	private Date latestUpdate;
 
-	@JsonCreator public StoreLatestApps(@JsonProperty("store") Store store, @JsonProperty("apps") List<App> apps) {
+	@JsonCreator
+	public StoreLatestApps(@JsonProperty("uid") String cardId, @JsonProperty("store") Store store, @JsonProperty("apps") List<App> apps) {
+		this.cardId = cardId;
 		this.store = store;
 		this.apps = apps;
 	}

@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -15,13 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
-import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -31,8 +25,6 @@ import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 19-04-2016.
@@ -54,13 +46,13 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest of(String storeName) {
-		return new GetStoreRequest(storeName, OkHttpClientFactory.getSingletoneClient(),
+		return new GetStoreRequest(storeName, OkHttpClientFactory.getSingletonClient(),
 				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, OkHttpClientFactory.getSingletoneClient(),
+		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, OkHttpClientFactory.getSingletonClient(),
 				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
@@ -70,7 +62,7 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest ofAction(String url) {
-		return new GetStoreRequest(new V7Url(url), OkHttpClientFactory.getSingletoneClient(),
+		return new GetStoreRequest(new V7Url(url), OkHttpClientFactory.getSingletonClient(),
 				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}

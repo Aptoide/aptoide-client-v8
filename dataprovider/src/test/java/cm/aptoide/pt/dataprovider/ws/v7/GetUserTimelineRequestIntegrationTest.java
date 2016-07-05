@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
@@ -139,7 +140,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -147,7 +148,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
 		final List<TimelineItem> items = Arrays.asList(new AppUpdateTimelineItem
-				(getApp(18849509, "Home Budget " + "with Sync Lite", "com.anishu.homebudget.lite",
+				(getAppUpdate(null, 18849509, "Home Budget " + "with Sync Lite", "com.anishu.homebudget.lite",
 						2372649, "http://pool.img.aptoide" +
 						".com/apps/db4d92cd5e5d1df2fa8d679853db4810_icon" + ".png", "2016-05-05 17:29:34",
 						"2016-05-05" + " 17:29:34", "2016-06-16 03:21:48", "webservice", getFile("3" + ".2.2", 39,
@@ -295,7 +296,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -303,10 +304,10 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
 		final List<TimelineItem> storeLatestAppsTimelineItems = Arrays.asList(new
-				StoreLatestAppsTimelineItem(new StoreLatestApps(getStore(id, name, avatar, getDate("UTC", added,
+				StoreLatestAppsTimelineItem(new StoreLatestApps(null, getStore(id, name, avatar, getDate("UTC", added,
 				"yyyy-MM-dd hh:mm:ss"), getDate("UTC", modified, "yyyy-MM-dd hh:mm:ss"), getAppearance(description,
 				theme), getStats(apps, subscribers, downloads)), Arrays
-				.asList(getApp(appId, appName, packageName, size, icon, graphic, appAdded, appModified, appUpdated,
+				.asList(getApp(new App(), appId, appName, packageName, size, icon, graphic, appAdded, appModified, appUpdated,
 						uptype, getFile(fileVersionName, fileVersionCode, md5, null, null, 0), getStats(appDownloads,
 								getRating(stars, total, Arrays
 						.asList(getVote(5, 2), getVote(4, 0), getVote(3, 0), getVote(2, 0), getVote(1, 0)))))))));
@@ -357,14 +358,14 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
 		testSubscriber.awaitTerminalEvent();
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
-		final List<TimelineItem> items = Arrays.asList(new FeatureTimelineItem(new Feature("Here, have a Xiaomi " +
+		final List<TimelineItem> items = Arrays.asList(new FeatureTimelineItem(new Feature(null, "Here, have a Xiaomi " +
 				"Redmi Note 3 pro on us", "https://d36eyd5j1kt1m6.cloudfront" +
 				".net/user-assets/127178/tXbdAxcnnJSp852q/01.png?1461237960", "http://blog.aptoide" +
 				".com/here-have-a-xiaomi-redmi-note-3-pro-on-us/", getDate("UTC", "2016-04-20", "yyyy-MM-dd"),
@@ -394,6 +395,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		String url = "https://www.androidpit.com/best-backup-apps";
 		String date = "2016-04-28";
 		String avatarUrl = "http://cdn03.androidauthority.net/wp-content/uploads/2015/07/favicon.png";
+		String id = "438a3a96445ff8be9374bb2cb6a6a94ddcd5d3e0c0352bf3b9365fc19ae674a8";
 		server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
 				"   \"info\": {\n" +
 				"      \"status\": \"OK\",\n" +
@@ -415,6 +417,7 @@ public class GetUserTimelineRequestIntegrationTest {
 				"   \"type\":\"ARTICLE\",\n" +
 				"   \"data\":  \n" +
 				"      {  \n" +
+				"         \"uid\":\"" + id + "\",\n" +
 				"         \"title\":\"" + title + "\",\n" +
 				"         \"thumbnail\":\"" + thumbnail + "\"," +
 				"\n" +
@@ -433,14 +436,14 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
 		testSubscriber.awaitTerminalEvent();
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
-		final List<TimelineItem> items = Arrays.asList(new ArticleTimelineItem(new Article(title, thumbnail,
+		final List<TimelineItem> items = Arrays.asList(new ArticleTimelineItem(new Article(id, title, thumbnail,
 				getPublisher(publisher, avatarUrl), url, getDate("UTC", date, "yyyy-MM-dd"), null)));
 		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, seconds, human, getDataList(items, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
@@ -477,7 +480,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		server.start();
 
 		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0);
+				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
@@ -496,18 +499,16 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private App getApp(int id, String name, String packageName, int size, String icon, String added, String modified,
-	                   String updated, String uptype, File file, App.Stats stats, Store store) throws ParseException {
-		App app = getApp(id, name, packageName, size, icon, null, added, modified, updated, uptype, file, stats);
+	private AppUpdate getAppUpdate(String cardId, int id, String name, String packageName, int size, String icon, String added, String modified, String updated,
+	                               String uptype, File file, App.Stats stats, Store store) throws ParseException {
+		AppUpdate app = (AppUpdate) getApp(new AppUpdate(cardId), id, name, packageName, size, icon, null, added, modified, updated, uptype, file, stats);
 		app.setStore(store);
 		return app;
 	}
 
 	@NonNull
-	private App getApp(int id, String name, String packageName, int size, String icon, String graphic, String added,
-	                   String modified, String updated, String uptype, File file, App.Stats stats) throws
+	private App getApp(App app, int id, String name, String packageName, int size, String icon, String graphic, String added, String modified, String updated, String uptype, File file, App.Stats stats) throws
 			ParseException {
-		final App app = new App();
 		app.setId(id);
 		app.setName(name);
 		app.setPackageName(packageName);
@@ -584,9 +585,9 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private GetUserTimelineRequest getGetUserTimelineRequest(String baseHost, String aptoideId, String accessToken, int aptoideVercode, String cdn, String language, String q, int limit, boolean mature, int offset) {
+	private GetUserTimelineRequest getGetUserTimelineRequest(String baseHost, String aptoideId, String accessToken, int aptoideVercode, String cdn, String language, String q, int limit, boolean mature, int offset, List<String> packages) {
 		return new GetUserTimelineRequest(new GetUserTimelineRequest.Body(aptoideId, accessToken, aptoideVercode, cdn,
-				language, limit, mature, offset, q), OkHttpClientFactory
+				language, limit, mature, offset, q, packages), OkHttpClientFactory
 				.newClient(), WebService.getDefaultConverter(), baseHost);
 	}
 

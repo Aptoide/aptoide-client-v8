@@ -41,8 +41,7 @@ public class StoreLatestAppsDisplayable extends Displayable {
 	}
 
 	public String getHoursSinceLastUpdate(Context context) {
-		return context.getString(R.string.fragment_social_timeline_hours_since_last_update, dateCalculator
-				.getHoursSinceDate(date));
+		return dateCalculator.getTimeSinceDate(context, date);
 	}
 
 	@Override

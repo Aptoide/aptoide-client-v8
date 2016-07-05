@@ -26,13 +26,14 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 
 		String action = intent.getAction();
 		if (action != null) {
+			AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
 			switch (action) {
 				case DOWNLOADMANAGER_ACTION_PAUSE:
-					AptoideDownloadManager.getInstance().pauseAllDownloads();
+					downloadManager.pauseAllDownloads();
 					break;
 				case DOWNLOADMANAGER_ACTION_OPEN:
-					if (AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface() != null) {
-						AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface()
+					if (downloadManager.getDownloadNotificationActionsInterface() != null) {
+						downloadManager.getDownloadNotificationActionsInterface()
 								.button1Pressed();
 					}
 					break;
@@ -40,19 +41,16 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					if (intent.hasExtra(APP_ID_EXTRA)) {
 						long appid = intent.getLongExtra(APP_ID_EXTRA, -1);
 						if (appid > 0) {
-							@Cleanup Realm realm = Database.get();
-							AptoideDownloadManager.getInstance()
-									.startDownload(AptoideDownloadManager.getInstance()
-											.getDownloadFromDb(realm, appid)
-											.clone());
-
+							downloadManager.getDownload(appid).first().flatMap(download -> downloadManager.startDownload(download)).subscribe(
+									download -> Logger.d("DownloadManager", "Download of " + download.getAppName() + " resumed"),
+									throwable -> Logger.e("DownloadManager", "Failed to resume download: " + throwable.getMessage()));
 						}
 					}
 					break;
 				case DOWNLOADMANAGER_ACTION_NOTIFICATION:
-					if (AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface() != null) {
+					if (downloadManager.getDownloadNotificationActionsInterface() != null) {
 						if (intent.hasExtra(APP_ID_EXTRA)) {
-							AptoideDownloadManager.getInstance().getDownloadNotificationActionsInterface()
+							downloadManager.getDownloadNotificationActionsInterface()
 									.notificationPressed(intent.getLongExtra(APP_ID_EXTRA, 0));
 						}
 						break;

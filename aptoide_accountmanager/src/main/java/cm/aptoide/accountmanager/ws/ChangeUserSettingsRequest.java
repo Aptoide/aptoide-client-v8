@@ -34,7 +34,7 @@ public class ChangeUserSettingsRequest extends v3accountManager<ChangeUserSettin
 	}
 
 	public static ChangeUserSettingsRequest of(boolean matureSwitchStatus) {
-		ChangeUserSettingsRequest request = new ChangeUserSettingsRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter());
+		ChangeUserSettingsRequest request = new ChangeUserSettingsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter());
 		request.setMatureSwitch(matureSwitchStatus);
 		return request;
 	}

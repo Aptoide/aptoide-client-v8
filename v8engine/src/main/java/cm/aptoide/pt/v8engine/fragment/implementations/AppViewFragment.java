@@ -224,17 +224,17 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 	@Override
 	public void itemAdded(int pos) {
-
+		getLayoutManager().onItemsAdded(getRecyclerView(), pos, 1);
 	}
 
 	@Override
 	public void itemRemoved(int pos) {
-
+		getLayoutManager().onItemsRemoved(getRecyclerView(), pos, 1);
 	}
 
 	@Override
 	public void itemChanged(int pos) {
-
+		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
 	private enum BundleKeys {

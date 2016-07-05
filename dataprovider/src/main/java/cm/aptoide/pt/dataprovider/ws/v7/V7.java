@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by Neurophobic Animal on 04/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -76,28 +77,27 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 				return Observable.just(t);
 			}
 		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (n, i) -> {
+			// Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
+			// Retry three times if request is queued by server.
 			if ((n instanceof ToRetryThrowable) && i < 3) {
-				return i;
+				return null;
 			} else {
-				// Todo: quando nao é erro de net, isto induz em erro lol
 				if (isNoNetworkException(n)) {
-					// Don't retry
 					throw new NoNetworkConnectionException(n);
 				} else {
-					try {
-						if (n instanceof HttpException) {
+					if (n instanceof HttpException) {
+						try {
 							throw new AptoideWsV7Exception(n).setBaseResponse((BaseV7Response)
 									converterFactory.responseBodyConverter(BaseV7Response.class, null, null)
 											.convert(((HttpException) n).response().errorBody()));
+						} catch (IOException exception) {
+							throw new RuntimeException(exception);
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
-
-					return Observable.error(n);
+					throw new RuntimeException(n);
 				}
 			}
-		}).delay(500, TimeUnit.MILLISECONDS));
+		}));
 	}
 
 	private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
@@ -173,6 +173,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 		@POST("getUserTimeline")
 		Observable<GetUserTimeline> getUserTimeline(@Body GetUserTimelineRequest.Body body, @Header(RequestCache
+				.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listComments{url}")
+		Observable<ListComments> listComments(@Path(value = "url", encoded = true) String path, @Body ListCommentsRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }

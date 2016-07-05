@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by Neurophobic Animal on 04/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -55,7 +55,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
-		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences
+		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), SecurePreferences
 				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 
 		listSearchAppsRequest.body.setQuery(query);
@@ -79,7 +79,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	public static class Body extends BaseBody implements OffsetInterface<Body> {
 
 		private String lang = Api.LANG;
-		private Integer limit = 10;
+		private Integer limit = getDefaultLimit();
 		private boolean mature;
 		private int offset;
 		private String q = Api.Q;

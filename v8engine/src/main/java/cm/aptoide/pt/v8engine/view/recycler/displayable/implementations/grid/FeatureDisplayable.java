@@ -2,8 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
 import android.text.Spannable;
 import android.text.style.StyleSpan;
 
@@ -55,8 +53,7 @@ public class FeatureDisplayable extends Displayable {
 	}
 
 	public String getHoursSinceLastUpdate(Context context) {
-		return context.getString(R.string.fragment_social_timeline_hours_since_last_update, dateCalculator
-				.getHoursSinceDate(date));
+		return dateCalculator.getTimeSinceDate(context, date);
 	}
 
 	public boolean isGetApp() {

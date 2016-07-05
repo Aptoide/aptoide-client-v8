@@ -7,3 +7,8 @@
 -keep class com.fasterxml.jackson.databind.ObjectWriter {
     public ** writeValueAsString(**);
 }
+
+# Keep Jackson annoted fields and methods
+-keepclassmembers class * {
+    @com.fasterxml.jackson.annotation.* *;
+}

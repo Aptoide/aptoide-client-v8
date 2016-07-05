@@ -20,17 +20,13 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		AptoideDownloadManager.getInstance().initDownloadService(this);
+		AptoideDownloadManager.getInstance().initDownloadService(getApplicationContext());
 	}
 
 	@Nullable
 	@Override
 	public IBinder onBind(Intent intent) {
 		return binder;
-	}
-
-	public Observable<Download> startDownload(GetAppMeta.App appToDownload) {
-		return AptoideDownloadManager.getInstance().startDownload(appToDownload);
 	}
 
 	public class LocalBinder extends Binder {

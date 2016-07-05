@@ -31,7 +31,7 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 	}
 
 	public static ListAppsRequest ofAction(String url) {
-		return new ListAppsRequest(new V7Url(url), OkHttpClientFactory.getSingletoneClient(), WebService
+		return new ListAppsRequest(new V7Url(url), OkHttpClientFactory.getSingletonClient(), WebService
 				.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 

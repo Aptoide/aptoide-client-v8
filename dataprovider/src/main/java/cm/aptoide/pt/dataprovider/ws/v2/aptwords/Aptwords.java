@@ -25,7 +25,7 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 	private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
 
 	public Aptwords() {
-		super(Interfaces.class, OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), BASE_URL);
+		super(Interfaces.class, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_URL);
 	}
 
 	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory) {

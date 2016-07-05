@@ -48,7 +48,7 @@ public class OkHttpClientFactory {
 		return new OkHttpClient.Builder().build();
 	}
 
-	public static OkHttpClient getSingletoneClient() {
+	public static OkHttpClient getSingletonClient() {
 		if (httpClientInstance == null) {
 			httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor());
 		}

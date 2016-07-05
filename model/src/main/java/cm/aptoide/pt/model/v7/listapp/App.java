@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.store.Store;
 import lombok.Data;
 
@@ -33,6 +34,7 @@ public class App {
 	private Store store;
 	private File file;
 	private Stats stats;
+	private Obb obb;
 
 	@Data
 	public static class Stats {

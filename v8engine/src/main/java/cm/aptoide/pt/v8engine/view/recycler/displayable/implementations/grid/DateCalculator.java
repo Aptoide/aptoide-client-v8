@@ -1,14 +1,14 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
+
 import java.util.Date;
+
+import cm.aptoide.pt.utils.AptoideUtils;
 
 public class DateCalculator {
 
-	public int getHoursSinceDate(Date date) {
-		if (date != null) {
-			long interval = new Date().getTime() - date.getTime();
-			return (int) (interval / (1000 * 60 * 60));
-		}
-		return 0;
+	public String getTimeSinceDate(Context context, Date date) {
+		return AptoideUtils.DateTimeU.getInstance(context).getTimeDiffAll(context, date.getTime());
 	}
 }

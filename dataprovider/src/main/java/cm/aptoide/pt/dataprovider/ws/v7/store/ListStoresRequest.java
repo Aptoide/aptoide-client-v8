@@ -39,13 +39,13 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 	}
 
 	public static ListStoresRequest of() {
-		return new ListStoresRequest(OkHttpClientFactory.getSingletoneClient(), WebService
+		return new ListStoresRequest(OkHttpClientFactory.getSingletonClient(), WebService
 				.getDefaultConverter(), SecurePreferences
 				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
 	public static ListStoresRequest ofAction(String url) {
-		return new ListStoresRequest(url, OkHttpClientFactory.getSingletoneClient(), WebService
+		return new ListStoresRequest(url, OkHttpClientFactory.getSingletonClient(), WebService
 				.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 

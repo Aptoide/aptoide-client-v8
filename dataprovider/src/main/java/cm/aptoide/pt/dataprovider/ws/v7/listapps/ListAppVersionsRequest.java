@@ -36,7 +36,7 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
 	}
 
 	public static ListAppVersionsRequest of() {
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletoneClient(), WebService
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService
 				.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
 	}
 
