@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.util.SparseArray;
-import android.util.SparseIntArray;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
@@ -57,6 +55,7 @@ import rx.functions.Func1;
 public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	public static final int SEARCH_LIMIT = 7;
+	private static final String ACTION_KEY = "ACTION";
 	private AptoideDownloadManager downloadManager;
 	private DownloadFactory downloadFactory;
 	private SpannableFactory spannableFactory;
@@ -68,15 +67,21 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private List<String> packages;
 	private Observable<String> latestInstalledAppsObservable;
 	private TimelineCardDuplicateFilter duplicatesFilter;
+	private String action;
 
-	public static AppsTimelineFragment newInstance() {
+	public static AppsTimelineFragment newInstance(String action) {
 		AppsTimelineFragment fragment = new AppsTimelineFragment();
+
+		final Bundle args = new Bundle();
+		args.putString(ACTION_KEY, action);
+		fragment.setArguments(args);
 		return fragment;
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		action = getArguments().getString(ACTION_KEY);
 		dateCalculator = new DateCalculator();
 		spannableFactory = new SpannableFactory();
 		packageRespository = new PackageRepository(getContext().getPackageManager());
@@ -113,7 +118,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	@NonNull
 	private Observable<GetUserTimeline> getFreshLoadObservable(boolean refresh, List<String> packages) {
-		return GetUserTimelineRequest.of(SEARCH_LIMIT, 0, packages)
+		return GetUserTimelineRequest.of(action, SEARCH_LIMIT, 0, packages)
 				.observe(refresh)
 				.doOnNext(item -> removeDefaultLoading())
 				.doOnNext(item -> duplicatesFilter.clear());
@@ -142,7 +147,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
 				.filter(item -> !isLoading())
 				.doOnNext(item -> addLoading())
-				.concatMap(item -> GetUserTimelineRequest.of(SEARCH_LIMIT, offset, packages).observe())
+				.concatMap(item -> GetUserTimelineRequest.of(action, SEARCH_LIMIT, offset, packages).observe())
 				.delay(1, TimeUnit.SECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnNext(item -> removeLoading())

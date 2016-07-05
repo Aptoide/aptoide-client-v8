@@ -32,6 +32,7 @@ public class Event {
 		getStoreWidgets,
 		getReviews,
 		getApkComments,
+		getUserTimeline,
 
 		// Client
 		myStores,
@@ -39,7 +40,6 @@ public class Event {
 		myExcludedUpdates,
 		myScheduledDownloads,
 		myRollbacks,
-		mySocialTimeline,
 		getAds,
 	}
 }

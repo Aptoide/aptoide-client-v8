@@ -45,6 +45,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -171,9 +172,9 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("getUserTimeline")
-		Observable<GetUserTimeline> getUserTimeline(@Body GetUserTimelineRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
+		@POST
+		Observable<GetUserTimeline> getUserTimeline(@Url String url, @Body GetUserTimelineRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
+				bypassCache);
 
 		@POST("listComments{url}")
 		Observable<ListComments> listComments(@Path(value = "url", encoded = true) String path, @Body ListCommentsRequest.Body body, @Header(RequestCache
