@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 05/07/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider;
@@ -13,10 +13,6 @@ import java.util.Set;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.DataList;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.Article;
-import cm.aptoide.pt.model.v7.timeline.Feature;
-import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import rx.Observable;
@@ -27,8 +23,8 @@ import rx.functions.Func1;
  */
 public class TimelineRepository {
 
-	private String action;
 	private final TimelineCardDuplicateFilter duplicateFilter;
+	private String action;
 
 	public TimelineRepository(String action, TimelineCardDuplicateFilter duplicateFilter) {
 		this.action = action;
@@ -40,12 +36,9 @@ public class TimelineRepository {
 				.observe(refresh)
 				.doOnNext(item -> duplicateFilter.clear())
 				.map(getUserTimeline -> getUserTimeline.getDatalist())
-				.flatMap(itemDataList -> Observable.<TimelineItem<TimelineCard>>from(getTimelineList(itemDataList))
-						.filter(timelineItem -> timelineItem != null)
-						.<TimelineCard>map(timelineItem -> timelineItem.getData())
-						.filter(duplicateFilter)
-						.toList()
-						.<DataList<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
+				.flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
+						.filter(timelineItem -> timelineItem != null).<TimelineCard> map(timelineItem -> timelineItem.getData()).filter(duplicateFilter)
+						.toList().<DataList<TimelineCard>> map(list -> getTimelineCardDatalist(itemDataList, list)));
 	}
 
 	@NonNull
@@ -72,7 +65,7 @@ public class TimelineRepository {
 		return items;
 	}
 
-	public static class TimelineCardDuplicateFilter implements Func1<TimelineCard, Boolean> {
+	public static class TimelineCardDuplicateFilter implements Func1<TimelineCard,Boolean> {
 
 		private final Set<String> cardIds;
 
@@ -89,5 +82,4 @@ public class TimelineRepository {
 			return cardIds.add(card.getCardId());
 		}
 	}
-	
 }

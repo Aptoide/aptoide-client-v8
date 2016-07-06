@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/07/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.UUID;
 

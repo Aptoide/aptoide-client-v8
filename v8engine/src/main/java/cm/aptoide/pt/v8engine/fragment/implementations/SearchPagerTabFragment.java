@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/07/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -33,7 +33,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 	private String storeName;
 	private boolean addSubscribedStores;
 
-	private Map<String, Void> mapPackages = new HashMap<>();
+	private Map<String,Void> mapPackages = new HashMap<>();
 	private transient EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 	private transient ListSearchAppsRequest listSearchAppsRequest;
 	private transient SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 29/06/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -42,7 +42,6 @@ import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -111,6 +110,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return Observable.concat(packageRepository.getLatestInstalledPackages(5), packageRepository.getRandomInstalledPackages(5))
 				.toList()
 				.doOnNext(packages -> setPackages(packages));
+	}
+
+	public void setPackages(List<String> packages) {
+		this.packages = packages;
 	}
 
 	@NonNull
@@ -193,10 +196,6 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 			return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory, downloadManager);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
-	}
-
-	public void setPackages(List<String> packages) {
-		this.packages = packages;
 	}
 
 }

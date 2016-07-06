@@ -1,7 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/07/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
+
+
 import com.android.builder.model.ProductFlavor
 
 apply plugin: 'com.android.application'
@@ -138,10 +140,10 @@ android {
         pickFirst 'META-INF/LGPL2.1'
     }
 
-    applicationVariants.all {variant ->
+    applicationVariants.all { variant ->
         if (variant.buildType.name == buildTypes.release.name) {
 
-            variant.productFlavors.each {flavor ->
+            variant.productFlavors.each { flavor ->
                 VersionUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}Version", VersionUpdateTask
                 versionUpdate.versionPropertiesFile = file('version.properties')
                 versionUpdate.mergedFlavor = variant.mergedFlavor

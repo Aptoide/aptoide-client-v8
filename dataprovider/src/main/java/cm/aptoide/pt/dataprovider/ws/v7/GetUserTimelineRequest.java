@@ -1,6 +1,9 @@
-package cm.aptoide.pt.dataprovider.ws.v7;
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 06/07/2016.
+ */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+package cm.aptoide.pt.dataprovider.ws.v7;
 
 import java.util.List;
 
@@ -32,17 +35,17 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 		this.url = url;
 	}
 
-	@Override
-	protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.getUserTimeline(url, body, bypassCache);
-	}
-
 	public static GetUserTimelineRequest of(String url, int limit, int offset, List<String> packages) {
 		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, limit,
 				AptoideAccountManager.getUserInfo().isMatureSwitch(), offset, Api.Q, packages), OkHttpClientFactory.newClient() ,
 				WebService.getDefaultConverter(), BASE_HOST);
 		return getAppRequest;
+	}
+
+	@Override
+	protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+		return interfaces.getUserTimeline(url, body, bypassCache);
 	}
 
 	@EqualsAndHashCode(callSuper = true)

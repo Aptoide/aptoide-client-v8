@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 06/07/2016.
+ */
+
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.NonNull;
@@ -33,10 +38,7 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import rx.observers.TestSubscriber;
-
-import static junit.framework.TestCase.assertEquals;
 
 public class GetUserTimelineRequestIntegrationTest {
 
