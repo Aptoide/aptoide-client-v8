@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 05/07/2016.
+  ~ Modified by SithEngineer on 06/07/2016.
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -412,7 +412,7 @@
         <item name="android:layout">@layout/fragment_aptoide_preferences</item>
     </style>
 
-    <style name="Aptoide.AppViewWidget">
+    <style name="AppViewWidget">
         <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
         <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>
         <item name="android:paddingLeft">@dimen/appview_side_margin</item>
