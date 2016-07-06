@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 05/07/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider;
@@ -12,11 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
-import cm.aptoide.pt.model.v7.DataList;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.Article;
-import cm.aptoide.pt.model.v7.timeline.Feature;
-import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
+import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import rx.Observable;
@@ -27,30 +23,30 @@ import rx.functions.Func1;
  */
 public class TimelineRepository {
 
-	private String action;
 	private final TimelineCardDuplicateFilter duplicateFilter;
+	private String action;
 
 	public TimelineRepository(String action, TimelineCardDuplicateFilter duplicateFilter) {
 		this.action = action;
 		this.duplicateFilter = duplicateFilter;
 	}
 
-	public Observable<DataList<TimelineCard>> getTimelineCards(int limit, int offset, List<String> packageNames, boolean refresh) {
+	public Observable<Datalist<TimelineCard>> getTimelineCards(int limit, int offset, List<String> packageNames, boolean refresh) {
 		return GetUserTimelineRequest.of(action, limit, offset, packageNames)
 				.observe(refresh)
 				.doOnNext(item -> duplicateFilter.clear())
 				.map(getUserTimeline -> getUserTimeline.getDatalist())
-				.flatMap(itemDataList -> Observable.<TimelineItem<TimelineCard>>from(getTimelineList(itemDataList))
+				.flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
 						.filter(timelineItem -> timelineItem != null)
 						.<TimelineCard>map(timelineItem -> timelineItem.getData())
 						.filter(duplicateFilter)
 						.toList()
-						.<DataList<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
+						.<Datalist<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
 	}
 
 	@NonNull
-	private DataList<TimelineCard> getTimelineCardDatalist(DataList<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
-		DataList<TimelineCard> cardDataList = new DataList<>();
+	private Datalist<TimelineCard> getTimelineCardDatalist(Datalist<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
+		Datalist<TimelineCard> cardDataList = new Datalist<>();
 		cardDataList.setCount(itemDataList.getCount());
 		cardDataList.setOffset(itemDataList.getOffset());
 		cardDataList.setTotal(itemDataList.getTotal());
@@ -62,7 +58,7 @@ public class TimelineRepository {
 		return cardDataList;
 	}
 
-	private List<TimelineItem<TimelineCard>> getTimelineList(DataList<TimelineItem<TimelineCard>> datalist) {
+	private List<TimelineItem<TimelineCard>> getTimelineList(Datalist<TimelineItem<TimelineCard>> datalist) {
 		List<TimelineItem<TimelineCard>> items;
 		if (datalist == null) {
 			items = new ArrayList<>();

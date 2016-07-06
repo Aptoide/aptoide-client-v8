@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -13,7 +13,7 @@ import lombok.Data;
  * Created by neuro on 27-04-2016.
  */
 @Data
-public class DataList<T> {
+public class Datalist<T> {
 
 	private int total;
 	private int count;

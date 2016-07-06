@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 29/06/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -21,7 +21,7 @@ import cm.aptoide.pt.dataprovider.PackageRepository;
 import cm.aptoide.pt.dataprovider.TimelineRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.model.v7.DataList;
+import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
@@ -42,7 +42,6 @@ import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -113,6 +112,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.doOnNext(packages -> setPackages(packages));
 	}
 
+	public void setPackages(List<String> packages) {
+		this.packages = packages;
+	}
+
 	@NonNull
 	private Observable<List<Displayable>> getFreshDisplayables(boolean refresh, List<String> packages) {
 		return getDisplayableList(packages, 0, refresh)
@@ -158,7 +161,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
 	}
 
-	private void setOffset(DataList<TimelineCard> datalist) {
+	private void setOffset(Datalist<TimelineCard> datalist) {
 		if (datalist != null && datalist.getNext() != 0) {
 			offset = datalist.getNext();
 		}
@@ -193,10 +196,6 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 			return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory, downloadManager);
 		}
 		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
-	}
-
-	public void setPackages(List<String> packages) {
-		this.packages = packages;
 	}
 
 }
