@@ -34,6 +34,7 @@ public class Download extends RealmObject {
 	public static final int FILE_MISSING = 10;
 	public static final int RETRY = 11;
 	public static final int NOT_DOWNLOADED = 12;
+	public static final int IN_QUEUE = 13;
 	RealmList<FileToDownload> filesToDownload;
 	@DownloadState
 	int overallDownloadStatus = 0;
@@ -42,9 +43,9 @@ public class Download extends RealmObject {
 	private long appId;
 	private String appName;
 
-	public static String getStatusName(@DownloadState int status, Context context) {
+	public String getStatusName(Context context) {
 		String toReturn;
-		switch (status) {
+		switch (overallDownloadStatus) {
 			case COMPLETED:
 				toReturn = context.getString(R.string.download_completed);
 				break;
@@ -53,6 +54,9 @@ public class Download extends RealmObject {
 				break;
 			case PROGRESS:
 				toReturn = context.getString(R.string.download_progress);
+				break;
+			case IN_QUEUE:
+				toReturn = context.getString(R.string.download_queue);
 				break;
 			case WARN:
 			case BLOCK_COMPLETE:
@@ -135,7 +139,9 @@ public class Download extends RealmObject {
 		return clone;
 	}
 
-	@IntDef({INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN, STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED})
+	@IntDef({INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN, STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED,
+			IN_QUEUE})
+
 	@Retention(RetentionPolicy.SOURCE)
 
 	public @interface DownloadState {

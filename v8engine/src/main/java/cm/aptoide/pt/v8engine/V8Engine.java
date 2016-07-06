@@ -5,10 +5,7 @@
 
 package cm.aptoide.pt.v8engine;
 
-import android.content.ComponentName;
-import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
-import android.os.IBinder;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.util.Log;
@@ -53,17 +50,17 @@ public abstract class V8Engine extends DataProvider {
 
 	@Getter static DownloadService downloadService;
 
-	private ServiceConnection downloadServiceConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName className, IBinder service) {
-			DownloadService.LocalBinder binder = (DownloadService.LocalBinder) service;
-			downloadService = binder.getService();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName arg0) {
-		}
-	};
+//	private ServiceConnection downloadServiceConnection = new ServiceConnection() {
+//		@Override
+//		public void onServiceConnected(ComponentName className, IBinder service) {
+//			DownloadService.LocalBinder binder = (DownloadService.LocalBinder) service;
+//			downloadService = binder.getService();
+//		}
+//
+//		@Override
+//		public void onServiceDisconnected(ComponentName arg0) {
+//		}
+//	};
 
 	public static void loadStores() {
 
@@ -159,9 +156,7 @@ public abstract class V8Engine extends DataProvider {
 		setupCrashlytics();
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
-
-		AptoideDownloadManager.getInstance()
-				.init(context, downloadServiceConnection, new DownloadNotificationActionsActionsInterface(), new
+		AptoideDownloadManager.getInstance().init(this, new DownloadNotificationActionsActionsInterface(), new
 						DownloadManagerSettingsI());
 	}
 

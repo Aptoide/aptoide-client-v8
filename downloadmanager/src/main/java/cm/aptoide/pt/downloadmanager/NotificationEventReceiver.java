@@ -4,21 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.logger.Logger;
-import io.realm.Realm;
-import lombok.Cleanup;
 
 /**
  * Created by trinkes on 6/23/16.
  */
 public class NotificationEventReceiver extends BroadcastReceiver {
 
-	public static final String APP_ID_EXTRA = "APTOIDE_APPID_EXTRA";
-	public static final String DOWNLOADMANAGER_ACTION_PAUSE = "cm.aptoide.downloadmanager.action.pause";
-	public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
-	public static final String DOWNLOADMANAGER_ACTION_RESUME = "cm.aptoide.downloadmanager.action.resume";
-	public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION = "cm.aptoide.downloadmanager.action.notification";
 	private static final String TAG = NotificationEventReceiver.class.getSimpleName();
 
 	public void onReceive(Intent intent) {
@@ -28,30 +20,36 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 		if (action != null) {
 			AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
 			switch (action) {
-				case DOWNLOADMANAGER_ACTION_PAUSE:
-					downloadManager.pauseAllDownloads();
-					break;
-				case DOWNLOADMANAGER_ACTION_OPEN:
+				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE:
+					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
+						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
+						if (appid > 0) {
+							downloadManager.pauseDownload(appid);
+						} else {
+							downloadManager.pauseAllDownloads();
+						}
+					}
+				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN:
 					if (downloadManager.getDownloadNotificationActionsInterface() != null) {
 						downloadManager.getDownloadNotificationActionsInterface()
 								.button1Pressed();
 					}
 					break;
-				case DOWNLOADMANAGER_ACTION_RESUME:
-					if (intent.hasExtra(APP_ID_EXTRA)) {
-						long appid = intent.getLongExtra(APP_ID_EXTRA, -1);
+				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD:
+					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
+						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
 						if (appid > 0) {
-							downloadManager.getDownload(appid).first().flatMap(download -> downloadManager.startDownload(download)).subscribe(
+							downloadManager.getDownload(appid).first().flatMap(downloadManager::startDownload).subscribe(
 									download -> Logger.d("DownloadManager", "Download of " + download.getAppName() + " resumed"),
 									throwable -> Logger.e("DownloadManager", "Failed to resume download: " + throwable.getMessage()));
 						}
 					}
 					break;
-				case DOWNLOADMANAGER_ACTION_NOTIFICATION:
+				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION:
 					if (downloadManager.getDownloadNotificationActionsInterface() != null) {
-						if (intent.hasExtra(APP_ID_EXTRA)) {
+						if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
 							downloadManager.getDownloadNotificationActionsInterface()
-									.notificationPressed(intent.getLongExtra(APP_ID_EXTRA, 0));
+									.notificationPressed(intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0));
 						}
 						break;
 					}

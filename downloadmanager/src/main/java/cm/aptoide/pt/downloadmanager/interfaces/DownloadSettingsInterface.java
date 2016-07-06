@@ -11,5 +11,8 @@ public interface DownloadSettingsInterface {
 	@DrawableRes
 	int getMainIcon();
 
+	@DrawableRes
+	int getButton1Icon();
+
 	String getButton1Text(Context context);
 }

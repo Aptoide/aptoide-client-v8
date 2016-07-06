@@ -128,7 +128,7 @@ public class SecurePreferences {
 
 	public static void setAdvertisingId(String aaid) {
 		if (getAdvertisingId() != null) {
-			throw new RuntimeException("Advertising ID already set!");
+			//			throw new RuntimeException("Advertising ID already set!");
 		}
 
 		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ADVERTISING_ID_CLIENT, aaid).apply();
@@ -140,7 +140,7 @@ public class SecurePreferences {
 
 	public static void setAndroidId(String android) {
 		if (getAdvertisingId() != null) {
-			throw new RuntimeException("Android ID already set!");
+			//			throw new RuntimeException("Android ID already set!");
 		}
 
 		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ANDROID_ID_CLIENT, android).apply();

@@ -1,29 +1,22 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.FileDownloader;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
-import io.realm.RealmList;
+import io.realm.RealmResults;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -42,11 +35,16 @@ public class AptoideDownloadManager {
 	public static final String APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
 	public static final String OBB_PATH = EXTERNAL_ABSOLUTE_PATH + "/Android/obb/";
 	public static final String GENERIC_PATH = DOWNLOADS_STORAGE_PATH + "generic/";
+	public static final String APP_ID_EXTRA = "APTOIDE_APPID_EXTRA";
+	public static final String DOWNLOADMANAGER_ACTION_PAUSE = "cm.aptoide.downloadmanager.action.pause";
+	public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
+	public static final String DOWNLOADMANAGER_ACTION_START_DOWNLOAD = "cm.aptoide.downloadmanager.action.start.download";
+	public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION = "cm.aptoide.downloadmanager.action.notification";
+	static public final int PROGRESS_MAX_VALUE = 100;
+
 	private static final String TAG = AptoideDownloadManager.class.getSimpleName();
 	private static AptoideDownloadManager instance;
 	private static Context context;
-	private Queue<Long> downloadQueue = new LinkedList<>();
-	private HashMap<Long, DownloadTask> downloadTasks = new HashMap<>();
 	private boolean isDownloading = false;
 	@Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface downloadNotificationActionsInterface;
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
@@ -62,19 +60,11 @@ public class AptoideDownloadManager {
 		return instance;
 	}
 
-	public void init(Context context, ServiceConnection serviceConnection, DownloadNotificationActionsInterface
-			downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface) {
-		Intent intent = new Intent(context, DownloadService.class);
-		if (!context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)) {
-			throw new RuntimeException("Download service bound failed");
-		}
-		context.startService(intent);
-		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
-		this.settingsInterface = settingsInterface;
+	private static Download getDownload(Realm realm, long appId) {
+		return realm.where(Download.class).equalTo("appId", appId).findFirst();
 	}
 
 	void initDownloadService(Context context) {
-		FileDownloader.init(context);
 		AptoideDownloadManager.context = context;
 		createDownloadDirs();
 	}
@@ -85,15 +75,6 @@ public class AptoideDownloadManager {
 		FileUtils.createDir(GENERIC_PATH);
 	}
 
-	private void startDownloadTask(DownloadTask downloadTask) {
-		if (isDownloading()) {
-			if (!isDownloadOnStack(downloadTask.download.getAppId())) {
-				downloadQueue.add(downloadTask.download.getAppId());
-			}
-		} else {
-			downloadTask.startDownload();
-		}
-	}
 
 	/**
 	 * @param download info about the download to be made.
@@ -102,23 +83,19 @@ public class AptoideDownloadManager {
 	 *
 	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this exception will be
 	 *                                  thrown with the cause in the detail message.
-	 * @see #startDownload(GetAppMeta.App)
 	 */
 	public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
 		if (getDownloadStatus(download.getAppId()).toBlocking().first() == Download.COMPLETED) {
 			return Observable.fromCallable(() -> download);
 		}
 
-		DownloadTask downloadTask;
-		if (downloadTasks.containsKey(download.getAppId())) {
-			downloadTask = downloadTasks.get(download.getAppId());
-		} else {
-			downloadTask = new DownloadTask(download);
-			downloadTasks.put(download.getAppId(), downloadTask);
-		}
+		download.setOverallDownloadStatus(Download.IN_QUEUE);
+		@Cleanup
+		Realm realm = Database.get();
+		Database.save(download, realm);
 
-		startDownloadTask(downloadTask);
-		return downloadTask.getObservable();
+		startNextDownload();
+		return getDownload(download.getAppId());
 	}
 
 	public void pauseDownload(long appId) {
@@ -127,16 +104,79 @@ public class AptoideDownloadManager {
 		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 			FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 		}
-//		downloadQueue.add(appId);
+	}
+
+	/**
+	 * Observe changes to a download. This observable never completes it will emmit items whenever the download state changes.
+	 *
+	 * @param appId
+	 *
+	 * @return observable for download state changes.
+	 */
+	public Observable<Download> getDownload(long appId) {
+		@Cleanup
+		Realm realm = Database.get();
+		final Download download = getDownload(realm, appId);
+		if (download == null) {
+			return Observable.error(new DownloadNotFoundException());
+		} else {
+			return download.<Download> asObservable().map(realmDownload -> download.clone());
+		}
+	}
+
+	Observable<Download> getCurrentDownload() {
+		return getDownloads().flatMapIterable(downloads -> downloads).filter(downloads -> downloads.getOverallDownloadStatus() == Download.PROGRESS);
+	}
+
+	Observable<List<Download>> getCurrentDownloads() {
+		@Cleanup
+		Realm realm = Database.get();
+		RealmResults<Download> download = realm.where(Download.class).findAll();
+		if (download.size() >= 0) {
+			return download.asObservable().map(results -> {
+				List<Download> list = new ArrayList<>();
+				for (final Download result : results) {
+					if (result.getOverallDownloadStatus() == Download.PROGRESS || result.getOverallDownloadStatus() == Download.IN_QUEUE || result
+							.getOverallDownloadStatus() == Download.PENDING) {
+						list.add(result.clone());
+					}
+				}
+				return list;
+			});
+		} else {
+			return Observable.error(new DownloadNotFoundException());
+		}
+	}
+
+	Observable<List<Download>> getDownloads() {
+		Realm realm = Database.get();
+		RealmResults<Download> download = realm.where(Download.class).findAll();
+		if (download.size() >= 0) {
+			return download.asObservable().map(results -> {
+				List<Download> list = new ArrayList<>();
+				for (final Download result : results) {
+					list.add(result.clone());
+				}
+				return list;
+			});
+		} else {
+			return Observable.error(new DownloadNotFoundException());
+		}
 	}
 
 	/**
 	 * Pause all the downloads
 	 */
 	public void pauseAllDownloads() {
-		Logger.d(TAG, "pauseAllDownloads() called");
-
 		FileDownloader.getImpl().pauseAll();
+		getCurrentDownloads().first().subscribe(downloads -> {
+			@Cleanup
+			Realm realm = Database.get();
+			for (final Download download : downloads) {
+				download.setOverallDownloadStatus(Download.PAUSED);
+				Database.save(download, realm);
+			}
+		});
 	}
 
 	public Observable<Integer> getDownloadStatus(long appId) {
@@ -154,25 +194,10 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	/**
-	 * Observe changes to a download. This observable never completes it will emmit items whenever the download state changes.
-	 *
-	 * @param appId
-	 *
-	 * @return observable for download state changes.
-	 */
-	public Observable<Download> getDownload(long appId) {
-		@Cleanup Realm realm = Database.get();
-		final Download download = getDownload(realm, appId);
-		if (download == null) {
-			return Observable.error(new DownloadNotFoundException());
-		} else {
-			return download.<Download> asObservable().map(realmDownload -> download.clone());
-		}
-	}
-
-	private Download getDownload(Realm realm, long appId) {
-		return realm.where(Download.class).equalTo("appId", appId).findFirst();
+	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface) {
+		FileDownloader.init(context);
+		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
+		this.settingsInterface = settingsInterface;
 	}
 
 	@NonNull
@@ -189,31 +214,16 @@ public class AptoideDownloadManager {
 	}
 
 	void currentDownloadFinished(long appId) {
-		downloadTasks.remove(appId);
 		startNextDownload();
 	}
 
 	void startNextDownload() {
-		Logger.d(TAG, "startNextDownload() called with: ");
-		DownloadTask nextDownload = downloadTasks.get(downloadQueue.poll());
-		if (nextDownload != null) {
-			nextDownload.startDownload();
+		if (!isDownloading) {
+			Download nextDownload = getNextDownload();
+			if (nextDownload != null) {
+				new DownloadTask(nextDownload).startDownload();
+			}
 		}
-	}
-
-	public void stopDownload(long appId) {
-		Logger.d(TAG, "stopDownload() called with: " + "appId = [" + appId + "]");
-		@Cleanup Realm realm = Database.get();
-		Download download = getDownload(realm, appId);
-
-		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-			FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
-			FileUtils.removeFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName());
-		}
-	}
-
-	public void openAppsManager() {
-		// TODO: 6/23/16 trinkes open apps manager
 	}
 
 	/**
@@ -229,22 +239,18 @@ public class AptoideDownloadManager {
 		isDownloading = downloading;
 	}
 
-	/**
-	 * Check if the download is in queue already
-	 *
-	 * @param appId App id that identifies the download
-	 *
-	 * @return true if the download is on queue already, false otherwise
-	 */
-	public boolean isDownloadOnStack(long appId) {
-//		boolean toReturn = false;
-//		for (final DownloadTask downloadTask : downloadQueue) {
-//			if (downloadTask.download.getAppId() == appId) {
-//				toReturn = true;
-//				break;
-//			}
-//		}
-//		return toReturn;
-		return downloadQueue.contains(appId);
+	public void stopDownloads() {
+		pauseAllDownloads();
+	}
+
+	public Download getNextDownload() {
+		@Cleanup
+		Realm realm = Database.get();
+		Download overallDownloadStatus = realm.where(Download.class).equalTo("overallDownloadStatus", Download.IN_QUEUE).findFirst();
+		if (overallDownloadStatus != null) {
+			return overallDownloadStatus.clone();
+		} else {
+			return null;
+		}
 	}
 }

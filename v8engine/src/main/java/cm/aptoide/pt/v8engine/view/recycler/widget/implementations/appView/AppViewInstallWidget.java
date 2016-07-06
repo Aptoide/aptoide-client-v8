@@ -6,8 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.ContextWrapper;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -21,13 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.File;
-
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -36,11 +33,11 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -49,6 +46,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.Observable;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -286,6 +284,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					showSnackbar.make().show();
 
 
+				});
+				DownloadFactory factory = new DownloadFactory();
+				DownloadServiceHelper helper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
+				Observable<Download> downloadObservable = helper.startDownload(factory.create(app));
+				downloadObservable.subscribe(download -> {
+					Logger.d(TAG, "newInstallListener() called with: " + "progress = [" +
+							download.getOverallProgress() + " State" + download.getStatusName(v.getContext()) + "]");
 				});
 			};
 		}

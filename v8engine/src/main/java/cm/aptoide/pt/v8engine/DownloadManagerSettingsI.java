@@ -15,6 +15,11 @@ public class DownloadManagerSettingsI implements DownloadSettingsInterface {
 	}
 
 	@Override
+	public int getButton1Icon() {
+		return R.drawable.ic_manager;
+	}
+
+	@Override
 	public String getButton1Text(Context context) {
 		return context.getString(R.string.open_apps_manager);
 	}

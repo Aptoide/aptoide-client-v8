@@ -29,7 +29,7 @@ android {
             minifyEnabled false
         }
         debug {
-            buildConfigField 'boolean', 'DELETE_DB', 'true'
+            buildConfigField 'boolean', 'DELETE_DB', 'false'
             shrinkResources false
             minifyEnabled false
         }
