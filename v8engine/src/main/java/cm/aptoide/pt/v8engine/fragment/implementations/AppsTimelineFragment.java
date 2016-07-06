@@ -21,7 +21,7 @@ import cm.aptoide.pt.dataprovider.PackageRepository;
 import cm.aptoide.pt.dataprovider.TimelineRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.model.v7.DataList;
+import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
@@ -161,7 +161,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
 	}
 
-	private void setOffset(DataList<TimelineCard> datalist) {
+	private void setOffset(Datalist<TimelineCard> datalist) {
 		if (datalist != null && datalist.getNext() != 0) {
 			offset = datalist.getNext();
 		}

@@ -13,7 +13,7 @@ import lombok.Data;
  * Created by neuro on 27-04-2016.
  */
 @Data
-public class DataList<T> {
+public class Datalist<T> {
 
 	private int total;
 	private int count;

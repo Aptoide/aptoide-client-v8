@@ -15,5 +15,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class BaseV7EndlessResponse<T> extends BaseV7Response {
 
-	private DataList<T> datalist;
+	private Datalist<T> datalist;
 }

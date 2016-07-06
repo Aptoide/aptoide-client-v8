@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
-import cm.aptoide.pt.model.v7.DataList;
+import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import rx.Observable;
@@ -31,19 +31,22 @@ public class TimelineRepository {
 		this.duplicateFilter = duplicateFilter;
 	}
 
-	public Observable<DataList<TimelineCard>> getTimelineCards(int limit, int offset, List<String> packageNames, boolean refresh) {
+	public Observable<Datalist<TimelineCard>> getTimelineCards(int limit, int offset, List<String> packageNames, boolean refresh) {
 		return GetUserTimelineRequest.of(action, limit, offset, packageNames)
 				.observe(refresh)
 				.doOnNext(item -> duplicateFilter.clear())
 				.map(getUserTimeline -> getUserTimeline.getDatalist())
 				.flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
-						.filter(timelineItem -> timelineItem != null).<TimelineCard> map(timelineItem -> timelineItem.getData()).filter(duplicateFilter)
-						.toList().<DataList<TimelineCard>> map(list -> getTimelineCardDatalist(itemDataList, list)));
+						.filter(timelineItem -> timelineItem != null)
+						.<TimelineCard>map(timelineItem -> timelineItem.getData())
+						.filter(duplicateFilter)
+						.toList()
+						.<Datalist<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
 	}
 
 	@NonNull
-	private DataList<TimelineCard> getTimelineCardDatalist(DataList<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
-		DataList<TimelineCard> cardDataList = new DataList<>();
+	private Datalist<TimelineCard> getTimelineCardDatalist(Datalist<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
+		Datalist<TimelineCard> cardDataList = new Datalist<>();
 		cardDataList.setCount(itemDataList.getCount());
 		cardDataList.setOffset(itemDataList.getOffset());
 		cardDataList.setTotal(itemDataList.getTotal());
@@ -55,7 +58,7 @@ public class TimelineRepository {
 		return cardDataList;
 	}
 
-	private List<TimelineItem<TimelineCard>> getTimelineList(DataList<TimelineItem<TimelineCard>> datalist) {
+	private List<TimelineItem<TimelineCard>> getTimelineList(Datalist<TimelineItem<TimelineCard>> datalist) {
 		List<TimelineItem<TimelineCard>> items;
 		if (datalist == null) {
 			items = new ArrayList<>();
@@ -65,7 +68,7 @@ public class TimelineRepository {
 		return items;
 	}
 
-	public static class TimelineCardDuplicateFilter implements Func1<TimelineCard,Boolean> {
+	public static class TimelineCardDuplicateFilter implements Func1<TimelineCard, Boolean> {
 
 		private final Set<String> cardIds;
 
@@ -82,4 +85,5 @@ public class TimelineRepository {
 			return cardIds.add(card.getCardId());
 		}
 	}
+	
 }

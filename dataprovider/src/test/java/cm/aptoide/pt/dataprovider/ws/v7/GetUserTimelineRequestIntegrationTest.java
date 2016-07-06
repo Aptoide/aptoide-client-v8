@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.DataList;
+import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
@@ -582,7 +582,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
 	@NonNull
 	private GetUserTimeline getUserTimeline(BaseV7Response.Info.Status status, double seconds, String humanTime,
-	                                        DataList<TimelineItem<TimelineCard>> dataList) {
+	                                        Datalist<TimelineItem<TimelineCard>> dataList) {
 		final GetUserTimeline getUserTimeline = new GetUserTimeline();
 
 		getUserTimeline.setDatalist(dataList);
@@ -601,9 +601,9 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private DataList<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list, boolean loaded, int hidden, int next, int limit, int offset, int
+	private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list, boolean loaded, int hidden, int next, int limit, int offset, int
 			count, int total) {
-		DataList<TimelineItem<TimelineCard>> datalist = new DataList<>();
+		Datalist<TimelineItem<TimelineCard>> datalist = new Datalist<>();
 		datalist.setTotal(total);
 		datalist.setCount(count);
 		datalist.setOffset(offset);
