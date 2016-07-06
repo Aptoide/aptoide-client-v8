@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -10,6 +10,8 @@ import android.widget.ImageView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -35,6 +37,6 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 	public void bindView(AppBrickDisplayable displayable) {
 		ImageLoader.load(displayable.getPojo().getGraphic(), R.drawable.placeholder_705x345, graphic);
 
-//		itemView.setOnClickListener(new BaseAdapter.AppItemOnClickListener(appItem));
+		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getPojo().getId())));
 	}
 }
