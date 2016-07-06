@@ -2,10 +2,6 @@
  * Copyright (c) 2016.
  * Modified by SithEngineer on 06/07/2016.
  */
-
-
-import com.android.builder.model.ProductFlavor
-
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
 apply plugin: 'com.neenbedankt.android-apt'
@@ -15,9 +11,8 @@ retrolambda {
     jvmArgs '-noverify'
 }
 
-// Should be moved to application module when possible
 Properties localProperties = new Properties()
-localProperties.load(new FileInputStream("local.properties"))
+localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 def fabricApiKey = localProperties.FABRIC_API_KEY
 def fabricConfigured = fabricApiKey != null
@@ -87,10 +82,12 @@ android {
 
         nightly {
             applicationIdSuffix ".dev"
+            versionName "8.0.0" + "." + getDate()
+            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "NIGHTLY_VERSION_CODE")
         }
 
         prod {
-
+            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "PROD_VERSION_CODE")
         }
     }
 
@@ -101,18 +98,6 @@ android {
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.release
-
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    project.ext { appName = 'aptoide' }
-                    def newName = output.outputFile.name
-                    newName = newName.replace("vanilla-", "$project.ext.appName-") //"MyAppName" -> I set my app variables in the root project
-                    newName = newName.replace("prod-release", versionName)
-                    newName = newName.replace("release", versionName)
-                    //noinspection GroovyAssignabilityCheck
-                    output.outputFile = new File(output.outputFile.parent, newName)
-                }
-            }
         }
 
         debug {
@@ -140,15 +125,24 @@ android {
         pickFirst 'META-INF/LGPL2.1'
     }
 
-    applicationVariants.all { variant ->
+    applicationVariants.all {variant ->
         if (variant.buildType.name == buildTypes.release.name) {
 
-            variant.productFlavors.each { flavor ->
-                VersionUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}Version", VersionUpdateTask
-                versionUpdate.versionPropertiesFile = file('version.properties')
-                versionUpdate.mergedFlavor = variant.mergedFlavor
+            variant.outputs.each { output ->
+                project.ext { appName = 'aptoide' }
+                def newName = output.outputFile.name
+                newName = newName.replace("vanilla-", "$project.ext.appName-") //"MyAppName" -> I set my app variables in the root project
+                newName = newName.replace("prod-release", versionName)
+                newName = newName.replace("release", versionName)
+                //noinspection GroovyAssignabilityCheck
+                output.outputFile = new File(output.outputFile.parent, newName)
+            }
+
+            variant.productFlavors.each {flavor ->
+                VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode", VersionCodeFileUpdateTask
+                versionUpdate.versionPropertiesFile = project.file("../../aptoideProperties/version.properties")
                 versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
-                versionUpdate.appendDate = flavor.name.toLowerCase().contains("nightly")
+                versionUpdate.versionCode = variant.mergedFlavor.versionCode
                 variant.assemble.dependsOn versionUpdate
             }
         }
@@ -182,7 +176,7 @@ dependencies {
 }
 
 
-class VersionUpdateTask extends DefaultTask {
+class VersionCodeFileUpdateTask extends DefaultTask {
 
     @InputFile
     File versionPropertiesFile
@@ -191,32 +185,41 @@ class VersionUpdateTask extends DefaultTask {
     String versionPropertyKey
 
     @Input
-    boolean appendDate
-
-    ProductFlavor mergedFlavor
+    Integer versionCode
 
     @TaskAction
-    def updateVersion() {
+    def updateVersionCodeFile() {
         if (versionPropertiesFile.canRead()) {
             Properties versionProperties = new Properties()
             versionProperties.load(new FileInputStream(versionPropertiesFile))
-
-            Integer code = versionProperties[versionPropertyKey].toInteger() + 1
-
-            versionProperties[versionPropertyKey] = code.toString()
+            versionProperties[versionPropertyKey] = versionCode.toString()
             versionProperties.store(versionPropertiesFile.newWriter(), null)
-
-            mergedFlavor.versionCode = code
-            if (appendDate) {
-                mergedFlavor.versionName += new Date().format("ddMMyyyy")
-            }
         } else {
             throw new GradleException("Could not read version.properties!")
         }
     }
 }
 
-def File propFile = new File('signing.properties')
+
+Integer getNextVersionCode(String versionPropertiesFilePath, String versionPropertyKey) {
+    File versionPropertiesFile = project.file(versionPropertiesFilePath);
+    if (versionPropertiesFile.canRead()) {
+        Properties versionProperties = new Properties()
+        versionProperties.load(new FileInputStream(versionPropertiesFile))
+
+        return versionProperties[versionPropertyKey].toInteger() + 1
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
+}
+
+String getDate() {
+    def date = new Date()
+    def formattedDate = date.format('ddMMyyyy')
+    return formattedDate
+}
+
+def File propFile = project.file('../../aptoideProperties/signing.properties')
 if (propFile.canRead()) {
     def Properties props = new Properties()
     props.load(new FileInputStream(propFile))
@@ -224,7 +227,7 @@ if (propFile.canRead()) {
     if (props != null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
             props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
 
-        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storeFile = project.file(props['STORE_FILE'])
         android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
         android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
         android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
