@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/07/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
@@ -11,9 +11,8 @@ retrolambda {
     jvmArgs '-noverify'
 }
 
-// Should be moved to application module when possible
 Properties localProperties = new Properties()
-localProperties.load(new FileInputStream("local.properties"))
+localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 def fabricApiKey = localProperties.FABRIC_API_KEY
 def fabricConfigured = fabricApiKey != null
@@ -84,11 +83,11 @@ android {
         nightly {
             applicationIdSuffix ".dev"
             versionName "8.0.0" + "." + getDate()
-            versionCode getNextVersionCode(file('version.properties'), 'NIGHTLY_VERSION_CODE')
+            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "NIGHTLY_VERSION_CODE")
         }
 
         prod {
-            versionCode getNextVersionCode(file('version.properties'), 'PROD_VERSION_CODE')
+            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "PROD_VERSION_CODE")
         }
     }
 
@@ -141,7 +140,7 @@ android {
 
             variant.productFlavors.each {flavor ->
                 VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode", VersionCodeFileUpdateTask
-                versionUpdate.versionPropertiesFile = file('version.properties')
+                versionUpdate.versionPropertiesFile = project.file("../../aptoideProperties/version.properties")
                 versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
                 versionUpdate.versionCode = variant.mergedFlavor.versionCode
                 variant.assemble.dependsOn versionUpdate
@@ -202,7 +201,8 @@ class VersionCodeFileUpdateTask extends DefaultTask {
 }
 
 
-Integer getNextVersionCode(File versionPropertiesFile, String versionPropertyKey) {
+Integer getNextVersionCode(String versionPropertiesFilePath, String versionPropertyKey) {
+    File versionPropertiesFile = project.file(versionPropertiesFilePath);
     if (versionPropertiesFile.canRead()) {
         Properties versionProperties = new Properties()
         versionProperties.load(new FileInputStream(versionPropertiesFile))
@@ -219,7 +219,7 @@ String getDate() {
     return formattedDate
 }
 
-def File propFile = new File('signing.properties')
+def File propFile = project.file('../../aptoideProperties/signing.properties')
 if (propFile.canRead()) {
     def Properties props = new Properties()
     props.load(new FileInputStream(propFile))
@@ -227,7 +227,7 @@ if (propFile.canRead()) {
     if (props != null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
             props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
 
-        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storeFile = project.file(props['STORE_FILE'])
         android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
         android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
         android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
