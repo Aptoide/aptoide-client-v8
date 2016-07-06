@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -72,7 +72,7 @@ public class GetStoreDisplaysRequest extends BaseRequestWithStore<GetStoreDispla
 		private StoreContext context;
 		private String lang = Api.LANG;
 		private Integer limit;
-		private int offset;
+		private Integer offset;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
 			super(aptoideId, accessToken, aptoideVercode, cdn);

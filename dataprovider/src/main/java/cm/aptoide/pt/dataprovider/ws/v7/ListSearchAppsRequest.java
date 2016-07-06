@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/07/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -81,7 +81,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		private String lang = Api.LANG;
 		private Integer limit = getDefaultLimit();
 		private boolean mature;
-		private int offset;
+		private Integer offset;
 		private String q = Api.Q;
 		private String query;
 		private List<Long> storeIds;
