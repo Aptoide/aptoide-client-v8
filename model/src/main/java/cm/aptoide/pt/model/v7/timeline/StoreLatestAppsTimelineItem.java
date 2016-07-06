@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class StoreLatestAppsTimelineItem implements TimelineItem<StoreLatestApps> {
+public class StoreLatestAppsTimelineItem implements TimelineItem<TimelineCard> {
 
 	private StoreLatestApps latestApps;
 

@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class FeatureTimelineItem implements TimelineItem<Feature> {
+public class FeatureTimelineItem implements TimelineItem<TimelineCard> {
 
 	private final Feature feature;
 

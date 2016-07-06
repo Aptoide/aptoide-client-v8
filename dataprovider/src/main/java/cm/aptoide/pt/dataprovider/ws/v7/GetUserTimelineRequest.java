@@ -25,17 +25,20 @@ import rx.Observable;
  */
 public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineRequest.Body> {
 
-	public GetUserTimelineRequest(Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+	private String url;
+
+	public GetUserTimelineRequest(String url, Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
 		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
 	}
 
 	@Override
 	protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.getUserTimeline(body, bypassCache);
+		return interfaces.getUserTimeline(url, body, bypassCache);
 	}
 
-	public static GetUserTimelineRequest of(int limit, int offset, List<String> packages) {
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(new Body(SecurePreferences.getAptoideClientUUID(),
+	public static GetUserTimelineRequest of(String url, int limit, int offset, List<String> packages) {
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(SecurePreferences.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, limit,
 				AptoideAccountManager.getUserInfo().isMatureSwitch(), offset, Api.Q, packages), OkHttpClientFactory.newClient() ,
 				WebService.getDefaultConverter(), BASE_HOST);
@@ -50,17 +53,17 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 		@Getter private boolean mature;
 		@Accessors(chain = true) @Setter @Getter private int offset;
 		@Getter private String q;
-		@JsonProperty("package_names") @Getter private List<String> installedPackages;
+		@Getter private List<String> packageNames;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, Integer limit,
-		            boolean mature, int offset, String q, List<String> installedPackages) {
+		            boolean mature, int offset, String q, List<String> packageNames) {
 			super(aptoideId, accessToken, aptoideVercode, cdn);
 			this.lang = lang;
 			this.limit = limit;
 			this.mature = mature;
 			this.offset = offset;
 			this.q = q;
-			this.installedPackages = installedPackages;
+			this.packageNames = packageNames;
 		}
 	}
 }

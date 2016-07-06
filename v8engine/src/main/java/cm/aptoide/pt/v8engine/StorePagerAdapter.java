@@ -38,14 +38,6 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		while (iterator.hasNext()) {
 			GetStoreTabs.Tab next = iterator.next();
 
-			//TODO Do NOT push this, only for testing while web service is not ready.
-			if (next.getLabel().equals("Apps Timeline")) {
-				final Event event = new Event();
-				event.setName(Event.Name.mySocialTimeline);
-				event.setType(Event.Type.CLIENT);
-				next.setEvent(event);
-			}
-
 			if (next.getEvent().getName() == null || next.getEvent().getType() == null) {
 				iterator.remove();
 			}
@@ -55,17 +47,27 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 
-		Event event = tabs.get(position).getEvent();
+		GetStoreTabs.Tab tab = tabs.get(position);
+		Event event = tab.getEvent();
 
 		switch (event.getType()) {
 			case API:
-				return StoreTabGridRecyclerFragment.newInstance(event, tabs.get(position)
-						.getLabel());
+				return caseAPI(tab);
 			case CLIENT:
 				return caseClient(event);
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.
 				throw new RuntimeException("Fragment type not implemented!");
+		}
+	}
+
+	private Fragment caseAPI(GetStoreTabs.Tab tab) {
+		Event event = tab.getEvent();
+		switch (event.getName()) {
+			case getUserTimeline:
+				return AppsTimelineFragment.newInstance(event.getAction());
+			default:
+				return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel());
 		}
 	}
 
@@ -76,10 +78,6 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 			case myUpdates:
 				return UpdatesFragment.newInstance();
-
-			case mySocialTimeline:
-				return AppsTimelineFragment.newInstance();
-
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.
 				throw new RuntimeException("Fragment type not implemented!");

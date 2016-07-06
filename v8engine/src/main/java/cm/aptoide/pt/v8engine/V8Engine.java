@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/07/2016.
+ * Modified by Neurophobic Animal on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -137,6 +137,7 @@ public abstract class V8Engine extends DataProvider {
 			} else {
 				addDefaultStore();
 			}
+			SecurePreferences.setFirstRun(false);
 		}
 
 		final int appSignature = SecurityUtils.checkAppSignature(this);
@@ -176,25 +177,30 @@ public abstract class V8Engine extends DataProvider {
 
 	private void setAdvertisingId() {
 		AptoideUtils.ThreadU.runOnIoThread(() -> {
-			String aaid = "";
 			if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()) {
 				try {
-					aaid = AdvertisingIdClient.getAdvertisingIdInfo(V8Engine.this).getId();
+					SecurePreferences.setGoogleAdvertisingId(AdvertisingIdClient.getAdvertisingIdInfo(V8Engine.this).getId());
 				} catch (Exception e) {
 					e.printStackTrace();
+					SecurePreferences.setAdvertisingId(generateRandomAdvertisingID());
 				}
 			} else {
-				byte[] data = new byte[16];
-				String deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-				if (deviceId != null) {
-					SecureRandom secureRandom = new SecureRandom();
-					secureRandom.setSeed(deviceId.hashCode());
-					secureRandom.nextBytes(data);
-					aaid = UUID.nameUUIDFromBytes(data).toString();
-				}
+				SecurePreferences.setAdvertisingId(generateRandomAdvertisingID());
 			}
-			SecurePreferences.setAdvertisingId(aaid);
 		});
+	}
+
+	private String generateRandomAdvertisingID() {
+		byte[] data = new byte[16];
+		String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		if (deviceId == null) {
+			deviceId = UUID.randomUUID().toString();
+		}
+
+		SecureRandom secureRandom = new SecureRandom();
+		secureRandom.setSeed(deviceId.hashCode());
+		secureRandom.nextBytes(data);
+		return UUID.nameUUIDFromBytes(data).toString();
 	}
 
 	private void addDefaultStore() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/07/2016.
+ * Modified by Neurophobic Animal on 05/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -45,6 +45,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -76,28 +77,28 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 			} else {
 				return Observable.just(t);
 			}
-		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (n, i) -> {
+		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (throwable, i) -> {
 			// Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
 			// Retry three times if request is queued by server.
-			if ((n instanceof ToRetryThrowable) && i < 3) {
+			if ((throwable instanceof ToRetryThrowable) && i < 3) {
 				return null;
 			} else {
-				if (isNoNetworkException(n)) {
-					throw new NoNetworkConnectionException(n);
+				if (isNoNetworkException(throwable)) {
+					throw new NoNetworkConnectionException(throwable);
 				} else {
-					if (n instanceof HttpException) {
+					if (throwable instanceof HttpException) {
 						try {
-							throw new AptoideWsV7Exception(n).setBaseResponse((BaseV7Response)
-									converterFactory.responseBodyConverter(BaseV7Response.class, null, null)
-											.convert(((HttpException) n).response().errorBody()));
+							throw new AptoideWsV7Exception(throwable).setBaseResponse((BaseV7Response) converterFactory.responseBodyConverter(BaseV7Response
+									.class, null, null)
+									.convert(((HttpException) throwable).response().errorBody()));
 						} catch (IOException exception) {
 							throw new RuntimeException(exception);
 						}
 					}
-					throw new RuntimeException(n);
+					throw new RuntimeException(throwable);
 				}
 			}
-		}));
+		}).delay(500, TimeUnit.MILLISECONDS));
 	}
 
 	private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
@@ -171,9 +172,9 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("getUserTimeline")
-		Observable<GetUserTimeline> getUserTimeline(@Body GetUserTimelineRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
+		@POST
+		Observable<GetUserTimeline> getUserTimeline(@Url String url, @Body GetUserTimelineRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
+				bypassCache);
 
 		@POST("listComments{url}")
 		Observable<ListComments> listComments(@Path(value = "url", encoded = true) String path, @Body ListCommentsRequest.Body body, @Header(RequestCache
