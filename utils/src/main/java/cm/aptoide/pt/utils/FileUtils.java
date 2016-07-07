@@ -92,4 +92,26 @@ public class FileUtils {
 			dir.mkdirs();
 		}
 	}
+
+	/**
+	 * Return the size of a directory in bytes
+	 */
+	public static long dirSize(File dir) {
+
+		long result = 0;
+		if (dir.exists()) {
+			File[] fileList = dir.listFiles();
+			for (int i = 0 ; i < fileList.length ; i++) {
+				// Recursive call if it's a directory
+				if (fileList[i].isDirectory()) {
+					result += dirSize(fileList[i]);
+				} else {
+					// Sum the file size in bytes
+					result += fileList[i].length();
+				}
+			}
+		}
+		Logger.d(TAG, "dirSize() returned: " + result);
+		return result;
+	}
 }
