@@ -14,6 +14,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.Cache;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -66,6 +67,7 @@ public class OkHttpClientFactory {
 			Request request = chain.request();
 			Response response = customCache.get(request);
 
+			HttpUrl httpUrl = request.url();
 			if (response != null) {
 
 				if(BuildConfig.DEBUG) {

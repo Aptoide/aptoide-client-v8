@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by SithEngineer on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -25,6 +25,9 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 		BaseLoaderToolbarFragment {
 
 	@Getter protected T adapter;
+	@Getter
+	protected RecyclerView.LayoutManager layoutManager;
+	@Getter
 	protected RecyclerView recyclerView;
 	private List<Displayable> displayables = new LinkedList<>();
 
@@ -53,7 +56,8 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 	public void setupViews() {
 		super.setupViews();
 		recyclerView.setAdapter(adapter);
-		recyclerView.setLayoutManager(createLayoutManager());
+		layoutManager = createLayoutManager();
+		recyclerView.setLayoutManager(layoutManager);
 	}
 
 	@Override

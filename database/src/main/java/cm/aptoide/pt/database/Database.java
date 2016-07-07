@@ -146,6 +146,10 @@ public class Database {
 			return realm.where(Store.class).equalTo(Store.STORE_NAME, storeName).findFirst();
 		}
 
+		public static boolean contains(String storeName, Realm realm) {
+			return realm.where(Store.class).equalTo(Store.STORE_NAME, storeName).count()>0;
+		}
+
 		public static RealmResults<Store> getAll(Realm realm) {
 			return realm.where(Store.class).findAll();
 		}
@@ -154,6 +158,19 @@ public class Database {
 			realm.beginTransaction();
 			realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst().deleteFromRealm();
 			realm.commitTransaction();
+		}
+	}
+
+	public static class ExcludedUpdatesQ {
+
+		public static RealmResults<ExcludedUpdate> getAll(Realm realm) {
+			return realm.where(ExcludedUpdate.class).findAll();
+		}
+
+		public static boolean contains(String packageName, Realm realm) {
+			return realm.where(ExcludedUpdate.class)
+					.equalTo(ExcludedUpdate.PACKAGE_NAME, packageName)
+					.findFirst() != null;
 		}
 	}
 
@@ -205,19 +222,6 @@ public class Database {
 			if (rollback != null) {
 				rollback.setReferrer(referrer);
 			}
-		}
-	}
-
-	public static class ExcludedUpdatesQ {
-
-		public static RealmResults<ExcludedUpdate> getAll(Realm realm) {
-			return realm.where(ExcludedUpdate.class).findAll();
-		}
-
-		public static boolean contains(String packageName, Realm realm) {
-			return realm.where(ExcludedUpdate.class)
-					.equalTo(ExcludedUpdate.PACKAGE_NAME, packageName)
-					.findFirst() != null;
 		}
 	}
 

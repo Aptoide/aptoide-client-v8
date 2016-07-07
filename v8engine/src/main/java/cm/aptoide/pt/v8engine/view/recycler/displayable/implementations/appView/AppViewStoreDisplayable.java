@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by SithEngineer on 04/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -12,17 +12,16 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by sithengineer on 10/05/16.
  */
-public class AppViewSubscriptionDisplayable extends AppViewDisplayable {
+public class AppViewStoreDisplayable extends AppViewDisplayable {
 
-
-	public AppViewSubscriptionDisplayable() {
+	public AppViewStoreDisplayable() {
 	}
 
-	public AppViewSubscriptionDisplayable(GetApp getApp) {
+	public AppViewStoreDisplayable(GetApp getApp) {
 		super(getApp);
 	}
 
-	public AppViewSubscriptionDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+	public AppViewStoreDisplayable(GetApp getApp, boolean fixedPerLineCount) {
 		super(getApp, fixedPerLineCount);
 	}
 

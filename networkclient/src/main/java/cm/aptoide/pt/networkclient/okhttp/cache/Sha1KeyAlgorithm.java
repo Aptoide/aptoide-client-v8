@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 09/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -24,14 +24,15 @@ import okio.Buffer;
  */
 public class Sha1KeyAlgorithm implements KeyAlgorithm {
 
-	private static final String TAG = Sha1KeyAlgorithm.class.getSimpleName();
+	private static final String TAG = Sha1KeyAlgorithm.class.getName();
 
 	@Override
 	public String getKeyFrom(Request request)  {
 		try {
-			String requestIdentifier;
 			final Buffer bodyBuffer = new Buffer();
 			final Request clonedRequest = request.newBuilder().build();
+
+			String requestIdentifier;
 
 			if (clonedRequest.body() != null && clonedRequest.body().contentLength() > 0) {
 				// best scenario: use request body as key
@@ -53,8 +54,8 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm {
 //			return buffer.toString();
 			return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
 		}
-		catch (IOException ex) {
-			Logger.e(TAG, "", ex);
+		catch (IOException e) {
+			Logger.e(TAG, "getKeyFrom(Request)", e);
 		}
 
 		return null;

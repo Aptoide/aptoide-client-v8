@@ -580,8 +580,8 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private GetUserTimeline getUserTimeline(BaseV7Response.Info.Status status, double seconds, String humanTime,
-	                                        Datalist<TimelineItem<TimelineCard>> dataList) {
+	private GetUserTimeline getUserTimeline(BaseV7Response.Info.Status status, double seconds, String humanTime, Datalist<TimelineItem<TimelineCard>>
+			dataList) {
 		final GetUserTimeline getUserTimeline = new GetUserTimeline();
 
 		getUserTimeline.setDatalist(dataList);
@@ -600,7 +600,8 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list, boolean loaded, int hidden, int next, int limit, int offset, int
+	private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list, boolean loaded, int hidden, int next, int limit, int
+			offset, int
 			count, int total) {
 		Datalist<TimelineItem<TimelineCard>> datalist = new Datalist<>();
 		datalist.setTotal(total);

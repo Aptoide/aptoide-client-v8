@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 20/06/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -164,6 +164,7 @@ public class GetAppMeta extends BaseV7Response {
 		public static class Rating {
 
 			private float avg;
+			private int total;
 			private List<Stats.Rating.Vote> votes;
 
 			@Data

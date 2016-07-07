@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 04/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -46,7 +46,7 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
 			return;
 		}
 
-		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(5))
+		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(6), (DividerItemDecoration.RIGHT | DividerItemDecoration.BOTTOM))
 		);
 		mediaList.setLayoutManager(new LinearLayoutManager(
 				itemView.getContext(), LinearLayoutManager.HORIZONTAL, false)

@@ -116,4 +116,7 @@ ext {
 
     // File Downloader lib
     FILE_DOWNLOADER_VERSION = '0.3.2'
+
+    // rounded image lib
+    ROUNDED_IMG_LIB = '2.2.1'
 }

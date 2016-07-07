@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 09/05/2016.
+  ~ Modified by SithEngineer on 05/07/2016.
   -->
 
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,8 +13,10 @@
 
     <fragment
         android:name="cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:layout="@layout/fragment_app_view"
         />
 
-</LinearLayout>
+</FrameLayout>

@@ -152,4 +152,7 @@ dependencies {
 
     debugCompile "com.facebook.stetho:stetho:${STETHO_VERSION}"
     debugCompile "com.facebook.stetho:stetho-js-rhino:${STETHO_VERSION}"
+
+    // round image lib
+    compile "com.makeramen:roundedimageview:${ROUNDED_IMG_LIB}"
 }

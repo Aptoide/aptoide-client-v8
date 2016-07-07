@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 27/06/2016.
+  ~ Modified by SithEngineer on 04/07/2016.
   -->
 
 <resources>
@@ -221,16 +221,6 @@
     <string name="dont_show_again">Don\'t show this dialog again</string>
 
     <!-- App View -->
-    <string name="action_settings">Settings</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
-    <string name="button_header_more">more</string>
-    <string name="search">Search</string>
-
-    <string name="update">Update</string>
-    <string name="uninstall">Uninstall</string>
-    <string name="downgrade">Downgrade</string>
-    <string name="reinstall">Reinstall</string>
 
     <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
 
@@ -259,6 +249,7 @@
     <string name="search_other_stores">Or search for others…</string>
     <string name="see_top_stores">See Top Stores</string>
     <string name="subscribe">Subscribe</string>
+    <string name="unsubscribe">Unsubscribe</string>
     <string name="store_name">Store Name</string>
     <string name="insert_store_name">Insert store name:</string>
     <string name="subscribe_pvt_store">Subscribe private store</string>
@@ -444,7 +435,6 @@
     <string name="appview_additional_information_title">Additional Information</string>
     <string name="appview_comment_reply_button_text">Reply</string>
     <string name="appview_header_trusted_text">Trusted</string>
-    <string name="appview_latest_version_text">This is the latest version!</string>
     <string name="appview_subscribe_store_button_text">Subscribe?</string>
     <string name="appview_subscribed_store_button_text">Subscribed</string>
     <string name="appview_rate_this_app_text">Rate this app</string>

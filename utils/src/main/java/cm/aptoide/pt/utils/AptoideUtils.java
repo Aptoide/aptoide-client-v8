@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
 
@@ -70,6 +71,7 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
  */
 public class AptoideUtils {
 
+	private static final Random random = new Random();
 	@Getter @Setter private static Context context;
 
 	public static class Core {
@@ -118,6 +120,8 @@ public class AptoideUtils {
 
 	public static class AlgorithmU {
 
+		private static final String TAG = AlgorithmU.class.getName();
+
 		public static byte[] computeSha1(byte[] bytes) {
 			MessageDigest md;
 			try {
@@ -135,7 +139,7 @@ public class AptoideUtils {
 			try {
 				return convToHex(computeSha1(text.getBytes("iso-8859-1")));
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				Logger.e(TAG, "computeSha1(String)", e);
 			}
 			return "";
 		}
@@ -225,6 +229,14 @@ public class AptoideUtils {
 			String sourceDir = packageInfo.applicationInfo.sourceDir;
 			File apkFile = new File(sourceDir);
 			return computeMd5(apkFile);
+		}
+
+		public static int randomBetween(int min, int max) {
+			int skewedMax = max - min;
+			if (skewedMax <= 0) {
+				throw new IllegalStateException("Minimum < maximum");
+			}
+			return random.nextInt(skewedMax + 1) + min;
 		}
 	}
 
@@ -677,7 +689,15 @@ public class AptoideUtils {
 
 	public static class HtmlU {
 
+		/**
+		 * Find a work around for this. Could be a dangerous operation, converting text from HTML.
+		 *
+		 * @param text
+		 *
+		 * @return original text converted to HTML in a CharSequence
+		 */
 		public static CharSequence parse(String text) {
+			// Fix for AN-348: replace the & with &amp; (that's was causing the pushback buffer full) (from Aptoide V7)
 			return Html.fromHtml(text.replace("\n", "<br/>").replace("&", "&amp;"));
 		}
 	}
@@ -1054,5 +1074,21 @@ public class AptoideUtils {
 					.getId() + " Method:" + methodName + " - Total execution time: " + (endTime - startTime) +
 					"ms");
 		}
+	}
+
+	public static class ObservableU {
+
+		/**
+		 * code from <a href="http://blog.danlew.net/2015/03/02/dont-break-the-chain/">http://blog.danlew.net/2015/03/02/dont-break-the-chain/</a>
+		 *
+		 * @param <T> Observable of T
+		 *
+		 * @return original Observable subscribed in an io thread and observed in the main thread
+		 */
+		public static <T> Observable.Transformer<T,T> applySchedulers() {
+			return observable -> observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+		}
+
+		// consider moving the retry code from dataprovider module to here
 	}
 }
