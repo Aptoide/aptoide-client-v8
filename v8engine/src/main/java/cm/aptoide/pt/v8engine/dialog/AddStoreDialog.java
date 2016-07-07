@@ -122,13 +122,6 @@ public class AddStoreDialog extends DialogFragment {
 		return GetStoreMetaRequest.of(storeName);
 	}
 
-	private GetStoreMetaRequest buildRequest(String storeName, String storeUser, String storePassSha1) {
-		GetStoreMetaRequest getStoreMetaRequest = buildRequest(storeName);
-		// TODO: 20-05-2016 neuro request default faxavor!
-		getStoreMetaRequest.getBody().setStoreUser(storeUser).setStorePassSha1(storePassSha1);
-		return getStoreMetaRequest;
-	}
-
 	private void showLoadingDialog() {
 
 		if (loadingDialog == null) {

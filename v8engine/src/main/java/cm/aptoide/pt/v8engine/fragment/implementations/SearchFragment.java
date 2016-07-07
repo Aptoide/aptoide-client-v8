@@ -148,7 +148,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 				}
 			}, e -> finishLoading());
 		} else {
-			ListSearchAppsRequest.of(query).execute(listSearchApps -> {
+			ListSearchAppsRequest.of(query, true).execute(listSearchApps -> {
 				List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
 				if (list != null && list.size() > 0) {

@@ -12,21 +12,17 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreTabsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
-import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
@@ -140,10 +136,6 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<ListAppsUpdates> listAppsUpdates(@Body ListAppsUpdatesRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("listAppVersions")
-		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
-
 		@POST("getStore{url}")
 		Observable<GetStore> getStore(@Path(value = "url", encoded = true) String path, @Body GetStoreRequest.Body
 				body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -155,10 +147,6 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("getStoreDisplays{url}")
 		Observable<GetStoreDisplays> getStoreDisplays(@Path(value = "url", encoded = true) String path, @Body
 		GetStoreDisplaysRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
-
-		@POST("getStoreTabs")
-		Observable<GetStoreTabs> getStoreTabs(@Body GetStoreTabsRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("getStoreWidgets{url}")
 		Observable<GetStoreWidgets> getStoreWidgets(@Path(value = "url", encoded = true) String path, @Body
@@ -176,8 +164,5 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<GetUserTimeline> getUserTimeline(@Url String url, @Body GetUserTimelineRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
 				bypassCache);
 
-		@POST("listComments{url}")
-		Observable<ListComments> listComments(@Path(value = "url", encoded = true) String path, @Body ListCommentsRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }

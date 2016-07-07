@@ -8,9 +8,15 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 /**
  * Created by neuro on 07-06-2016.
  */
-public interface OffsetInterface<T> {
+public interface Endless {
 
-	Integer getOffset();
+	int getOffset();
 
-	T setOffset(Integer offset);
+	void setOffset(int offset);
+
+	int getLimit();
+
+	static int getDefaultLimit() {
+		return 10;
+	}
 }

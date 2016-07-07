@@ -18,56 +18,24 @@ import retrofit2.Converter;
  */
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
-	protected final String url;
-
-	protected BaseRequestWithStore(V7Url v7Url, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+	public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
 		super(body, httpClient, converterFactory, baseHost);
-		setStoreIdentifierFromUrl(v7Url);
-		url = v7Url.get();
 	}
 
-	protected BaseRequestWithStore(String storeName, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-		body.setStoreName(storeName);
-		url = "";
-	}
-
-	protected BaseRequestWithStore(long storeId, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-		body.setStoreId(storeId);
-		url = "";
-	}
-
-	@Override
-	protected void onLoadDataFromNetwork() {
-		super.onLoadDataFromNetwork();
-		setPrivateCredentials();
-	}
-
-	protected void setPrivateCredentials() {
+	protected static Store getStore(Long storeId) {
 		@Cleanup Realm realm = Database.get(DataProvider.getContext());
 
-		Store store = null;
-
-		if (body.getStoreId() != null) {
-			store = Database.StoreQ.get(body.getStoreId(), realm);
+		if (storeId != null) {
+			return Database.StoreQ.get(storeId, realm);
 		}
-		else if (body.getStoreName() != null) {
-			store = Database.StoreQ.get(body.getStoreName(), realm);
-		}
-
-		if (store != null && store.getUsername() != null && store.getPasswordSha1() != null) {
-			body.setStoreUser(store.getUsername()).setStorePassSha1(store.getPasswordSha1());
-		}
+		return null;
 	}
 
-	private void setStoreIdentifierFromUrl(V7Url v7Url) {
-		Long storeId = v7Url.getStoreId();
-		if (storeId != null) {
-			body.setStoreId(storeId);
+	protected static Store getStore(String storeName) {
+		@Cleanup Realm realm = Database.get(DataProvider.getContext());
+		if (storeName != null) {
+			return Database.StoreQ.get(storeName, realm);
 		}
-		else {
-			body.setStoreName(v7Url.getStoreName());
-		}
+		return null;
 	}
 }

@@ -125,11 +125,7 @@ public class PrivateStoreDialog extends DialogFragment {
 	}
 
 	private GetStoreMetaRequest buildRequest() {
-		GetStoreMetaRequest getStoreMetaRequest = GetStoreMetaRequest.of(storeName);
-
-		getStoreMetaRequest.getBody().setStoreUser(storeUser).setStorePassSha1(storePassSha1);
-
-		return getStoreMetaRequest;
+		return GetStoreMetaRequest.of(storeName, storeUser, storePassSha1);
 	}
 
 	private enum BundleArgs {
