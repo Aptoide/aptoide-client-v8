@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.networkclient.WebService;
@@ -17,7 +16,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -39,7 +37,7 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 	public static ListAppsRequest ofAction(String url) {
 		V7Url v7Url = new V7Url(url).remove("listApps");
 		Long storeId = v7Url.getStoreId();
-		final Store store;
+		final StoreCredentials store;
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
@@ -52,10 +50,9 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 					.LANG, Api.MATURE, Api.Q, storeName);
 		}
 
-		if (store != null) {
-			body.setStoreUser(store.getUsername());
-			body.setStorePassSha1(store.getPasswordSha1());
-		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
+
 		return new ListAppsRequest(v7Url.get(), body,
 				WebService.getDefaultConverter(), OkHttpClientFactory.getSingletonClient(), BASE_HOST);
 	}

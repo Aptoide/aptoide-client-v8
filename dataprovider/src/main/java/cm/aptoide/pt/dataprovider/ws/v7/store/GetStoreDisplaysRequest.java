@@ -6,11 +6,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.networkclient.WebService;
@@ -19,8 +17,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -42,7 +38,7 @@ public class GetStoreDisplaysRequest extends BaseRequestWithStore<GetStoreDispla
 	public static GetStoreDisplaysRequest ofAction(String url) {
 		V7Url v7Url = new V7Url(url).remove("getStoreDisplays");
 		Long storeId = v7Url.getStoreId();
-		final Store store;
+		final StoreCredentials store;
 		final Body body;
 		if (storeId != null) {
 			body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
@@ -54,11 +50,8 @@ public class GetStoreDisplaysRequest extends BaseRequestWithStore<GetStoreDispla
 					Api.LANG, Api.MATURE, Api.Q, storeName);
 			store = getStore(storeName);
 		}
-
-		if (store != null) {
-			body.setStoreUser(store.getUsername());
-			body.setStorePassSha1(store.getPasswordSha1());
-		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
 		return new GetStoreDisplaysRequest(v7Url.get(), body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST);
 	}
 

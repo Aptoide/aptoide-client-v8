@@ -5,11 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import java.util.Arrays;
-import java.util.List;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -19,7 +15,6 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,22 +37,19 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
-		final Store store = getStore(storeName);
+		final StoreCredentials store = getStore(storeName);
 		final Body body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 				Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
 		body.setContext(storeContext);
-
-		if (store != null) {
-			body.setStoreUser(store.getUsername());
-			body.setStorePassSha1(store.getPasswordSha1());
-		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
 		return new GetStoreRequest("", OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
 	}
 
 	public static GetStoreRequest ofAction(String url) {
 		V7Url v7Url = new V7Url(url).remove("getStore");
 		Long storeId = v7Url.getStoreId();
-		final Store store;
+		final StoreCredentials store;
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
@@ -69,11 +61,8 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 			body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 					Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
 		}
-
-		if (store != null) {
-			body.setStoreUser(store.getUsername());
-			body.setStorePassSha1(store.getPasswordSha1());
-		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
 		return new GetStoreRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
 	}
 

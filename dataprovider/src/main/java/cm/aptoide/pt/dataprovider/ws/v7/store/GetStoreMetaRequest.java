@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -26,7 +25,7 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta, GetStoreMetaRequest.Body> {
+public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta,GetStoreMetaRequest.Body> {
 
 	private GetStoreMetaRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, Body body) {
 		super(body, httpClient, converterFactory, baseHost);
@@ -41,13 +40,11 @@ public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta, GetS
 	}
 
 	public static GetStoreMetaRequest of(String storeName) {
-		final Store store = getStore(storeName);
+		final StoreCredentials store = getStore(storeName);
 		final Body body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 				Api.LANG, Api.MATURE, Api.Q, storeName);
-		if (store != null) {
-			body.setStoreUser(store.getUsername());
-			body.setStorePassSha1(store.getPasswordSha1());
-		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
 		return new GetStoreMetaRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
 	}
 

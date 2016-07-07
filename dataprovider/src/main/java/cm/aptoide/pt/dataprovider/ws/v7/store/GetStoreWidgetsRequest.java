@@ -6,11 +6,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
@@ -19,7 +17,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -41,7 +38,7 @@ public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets
 	public static GetStoreWidgetsRequest ofAction(String url) {
 		V7Url v7Url = new V7Url(url).remove("getStoreWidgets");
 		Long storeId = v7Url.getStoreId();
-		final Store store;
+		final StoreCredentials store;
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
@@ -54,10 +51,8 @@ public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets
 					Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
 		}
 
-		if (store != null) {
-			body.setStoreUser(store.getUsername());
-			body.setStorePassSha1(store.getPasswordSha1());
-		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
 
 		return new GetStoreWidgetsRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
 	}
