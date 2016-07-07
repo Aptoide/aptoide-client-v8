@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by Neurophobic Animal on 07/07/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -635,6 +635,13 @@ public class AptoideUtils {
 			if (launchIntentForPackage != null) {
 				context.startActivity(launchIntentForPackage);
 			}
+		}
+
+		public static void installApp(String apkPath) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setDataAndType(Uri.fromFile(new File(apkPath)), "application/vnd.android.package-archive");
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(intent);
 		}
 
 		public static void uninstallApp(Context context, String packageName) {
