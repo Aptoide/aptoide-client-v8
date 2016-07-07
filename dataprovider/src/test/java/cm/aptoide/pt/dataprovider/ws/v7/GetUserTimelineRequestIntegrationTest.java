@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 06/07/2016.
+ */
+
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.NonNull;
@@ -27,15 +32,13 @@ import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.Publisher;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestAppsTimelineItem;
+import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import rx.observers.TestSubscriber;
-
-import static junit.framework.TestCase.assertEquals;
 
 public class GetUserTimelineRequestIntegrationTest {
 
@@ -139,15 +142,14 @@ public class GetUserTimelineRequestIntegrationTest {
 
 		server.start();
 
-		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
-				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+		final GetUserTimelineRequest request = getGetUserTimelineRequest("", server.url("/").toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
 		request.observe().subscribe(testSubscriber);
 		testSubscriber.awaitTerminalEvent();
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
-		final List<TimelineItem> items = Arrays.asList(new AppUpdateTimelineItem
+		final List<TimelineItem<TimelineCard>> items = Arrays.asList(new AppUpdateTimelineItem
 				(getAppUpdate(null, 18849509, "Home Budget " + "with Sync Lite", "com.anishu.homebudget.lite",
 						2372649, "http://pool.img.aptoide" +
 						".com/apps/db4d92cd5e5d1df2fa8d679853db4810_icon" + ".png", "2016-05-05 17:29:34",
@@ -162,8 +164,6 @@ public class GetUserTimelineRequestIntegrationTest {
 										("Aptoide Official App Store", "default"), getStats(15, 15, 1000944445)))));
 		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 milliseconds", getDataList(items, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
-		final RecordedRequest recordedRequest = server.takeRequest();
-		checkRequest(recordedRequest, "/getUserTimeline", "POST");
 
 		server.shutdown();
 	}
@@ -295,7 +295,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
 		server.start();
 
-		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
+		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/").toString(), server.url("/")
 				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
@@ -303,7 +303,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.awaitTerminalEvent();
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
-		final List<TimelineItem> storeLatestAppsTimelineItems = Arrays.asList(new
+		final List<TimelineItem<TimelineCard>> storeLatestAppsTimelineItems = Arrays.asList(new
 				StoreLatestAppsTimelineItem(new StoreLatestApps(null, getStore(id, name, avatar, getDate("UTC", added,
 				"yyyy-MM-dd hh:mm:ss"), getDate("UTC", modified, "yyyy-MM-dd hh:mm:ss"), getAppearance(description,
 				theme), getStats(apps, subscribers, downloads)), Arrays
@@ -313,9 +313,6 @@ public class GetUserTimelineRequestIntegrationTest {
 						.asList(getVote(5, 2), getVote(4, 0), getVote(3, 0), getVote(2, 0), getVote(1, 0)))))))));
 		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, seconds, human, getDataList(storeLatestAppsTimelineItems, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
-
-		final RecordedRequest recordedRequest = server.takeRequest();
-		checkRequest(recordedRequest, "/getUserTimeline", "POST");
 
 		server.shutdown();
 	}
@@ -357,7 +354,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
 		server.start();
 
-		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
+		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/").toString(), server.url("/")
 				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
@@ -365,7 +362,7 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.awaitTerminalEvent();
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
-		final List<TimelineItem> items = Arrays.asList(new FeatureTimelineItem(new Feature(null, "Here, have a Xiaomi " +
+		final List<TimelineItem<TimelineCard>> items = Arrays.asList(new FeatureTimelineItem(new Feature(null, "Here, have a Xiaomi " +
 				"Redmi Note 3 pro on us", "https://d36eyd5j1kt1m6.cloudfront" +
 				".net/user-assets/127178/tXbdAxcnnJSp852q/01.png?1461237960", "http://blog.aptoide" +
 				".com/here-have-a-xiaomi-redmi-note-3-pro-on-us/", getDate("UTC", "2016-04-20", "yyyy-MM-dd"),
@@ -373,9 +370,6 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 " +
 				"milliseconds", getDataList(items, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
-
-		final RecordedRequest recordedRequest = server.takeRequest();
-		checkRequest(recordedRequest, "/getUserTimeline", "POST");
 
 		server.shutdown();
 	}
@@ -435,7 +429,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
 		server.start();
 
-		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
+		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/").toString(), server.url("/")
 				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
@@ -443,12 +437,10 @@ public class GetUserTimelineRequestIntegrationTest {
 		testSubscriber.awaitTerminalEvent();
 		testSubscriber.assertNoErrors();
 		testSubscriber.assertValueCount(1);
-		final List<TimelineItem> items = Arrays.asList(new ArticleTimelineItem(new Article(id, title, thumbnail,
+		final List<TimelineItem<TimelineCard>> items = Arrays.asList(new ArticleTimelineItem(new Article(id, title, thumbnail,
 				getPublisher(publisher, avatarUrl), url, getDate("UTC", date, "yyyy-MM-dd"), null)));
 		testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, seconds, human, getDataList(items, true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
-
-		checkRequest(server.takeRequest(), "/getUserTimeline", "POST");
 
 		server.shutdown();
 	}
@@ -479,7 +471,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
 		server.start();
 
-		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/")
+		final GetUserTimelineRequest request = getGetUserTimelineRequest(server.url("/").toString(), server.url("/")
 				.toString(), "1234", "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
 
 		TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
@@ -491,9 +483,6 @@ public class GetUserTimelineRequestIntegrationTest {
 				"milliseconds", getDataList(Collections
 				.emptyList(), true, 0, 25, 25, 0, 9, 11)));
 		testSubscriber.assertCompleted();
-
-		final RecordedRequest recordedRequest = server.takeRequest();
-		checkRequest(recordedRequest, "/getUserTimeline", "POST");
 
 		server.shutdown();
 	}
@@ -585,20 +574,15 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private GetUserTimelineRequest getGetUserTimelineRequest(String baseHost, String aptoideId, String accessToken, int aptoideVercode, String cdn, String language, String q, int limit, boolean mature, int offset, List<String> packages) {
-		return new GetUserTimelineRequest(new GetUserTimelineRequest.Body(aptoideId, accessToken, aptoideVercode, cdn,
+	private GetUserTimelineRequest getGetUserTimelineRequest(String url, String baseHost, String aptoideId, String accessToken, int aptoideVercode, String cdn, String language, String q, int limit, boolean mature, int offset, List<String> packages) {
+		return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(aptoideId, accessToken, aptoideVercode, cdn,
 				language, limit, mature, offset, q, packages), OkHttpClientFactory
 				.newClient(), WebService.getDefaultConverter(), baseHost);
 	}
 
-	private void checkRequest(RecordedRequest recordedRequest, String path, String method) {
-		assertEquals(path, recordedRequest.getPath());
-		assertEquals(method, recordedRequest.getMethod());
-	}
-
 	@NonNull
 	private GetUserTimeline getUserTimeline(BaseV7Response.Info.Status status, double seconds, String humanTime,
-	                                        Datalist<TimelineItem> dataList) {
+	                                        Datalist<TimelineItem<TimelineCard>> dataList) {
 		final GetUserTimeline getUserTimeline = new GetUserTimeline();
 
 		getUserTimeline.setDatalist(dataList);
@@ -617,8 +601,9 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private Datalist<TimelineItem> getDataList(List<TimelineItem> list, boolean loaded, int hidden, int next, int limit, int offset, int count, int total) {
-		Datalist<TimelineItem> datalist = new Datalist<>();
+	private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list, boolean loaded, int hidden, int next, int limit, int offset, int
+			count, int total) {
+		Datalist<TimelineItem<TimelineCard>> datalist = new Datalist<>();
 		datalist.setTotal(total);
 		datalist.setCount(count);
 		datalist.setOffset(offset);

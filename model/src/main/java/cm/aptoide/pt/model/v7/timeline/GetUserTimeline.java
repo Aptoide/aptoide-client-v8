@@ -8,6 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
-public class GetUserTimeline extends BaseV7EndlessResponse<TimelineItem> {
+public class GetUserTimeline extends BaseV7EndlessResponse<TimelineItem<TimelineCard>> {
 
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -48,11 +48,15 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 		private String lang = Api.LANG;
 		private Integer limit;
 		private boolean mature;
-		private int offset;
+		private Integer offset;
 		private Order order;
 		private String q = Api.Q;
 		private Sort sort;
 		private Subgroups subgroups;
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+			super(aptoideId, accessToken, aptoideVercode, cdn);
+		}
 
 		public enum Sort {
 			latest, downloads, downloads7d, downloads30d, pdownloads, pdownloads7d, pdownloads30d,
@@ -61,10 +65,6 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 
 		public enum Subgroups {
 			highlighted, normal,
-		}
-
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
-			super(aptoideId, accessToken, aptoideVercode, cdn);
 		}
 	}
 }

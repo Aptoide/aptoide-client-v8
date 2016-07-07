@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 29/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -98,6 +98,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					case listApps:
 						caseListApps(url, refresh);
 						break;
+					case listAppsEditorsHammered:
+						caseListAppsEditorsHammered(url, refresh);
+						break;
 					case getStore:
 						caseGetStore(url, refresh);
 						break;
@@ -177,6 +180,28 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			displayables = new LinkedList<>();
 			for (App app : list) {
 				displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
+			}
+
+			addDisplayables(displayables);
+		};
+
+		recyclerView.clearOnScrollListeners();
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listAppsRequest, listAppsAction, errorRequestListener,
+				refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
+	}
+
+	private void caseListAppsEditorsHammered(String url, boolean refresh) {
+		ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url);
+		Action1<ListApps> listAppsAction = listApps -> {
+
+			// Load sub nodes
+			List<App> list = listApps.getDatalist().getList();
+
+			displayables = new LinkedList<>();
+			for (App app : list) {
+				displayables.add(DisplayableType.newDisplayable(Type.APP_BRICK_LIST_HAMMERED, app));
 			}
 
 			addDisplayables(displayables);

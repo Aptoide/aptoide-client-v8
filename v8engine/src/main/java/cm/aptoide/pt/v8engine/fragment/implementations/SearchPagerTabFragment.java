@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by Neurophobic Animal on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -30,9 +30,10 @@ import rx.Observable;
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 	private String query;
+	private String storeName;
 	private boolean addSubscribedStores;
-	private Map<String, Void> mapPackages = new HashMap<>();
 
+	private Map<String, Void> mapPackages = new HashMap<>();
 	private transient EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 	private transient ListSearchAppsRequest listSearchAppsRequest;
 	private transient SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {
@@ -65,6 +66,17 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		return fragment;
 	}
 
+	public static SearchPagerTabFragment newInstance(String query, String storeName) {
+		Bundle args = new Bundle();
+
+		args.putString(BundleCons.QUERY, query);
+		args.putString(BundleCons.STORE_NAME, storeName);
+
+		SearchPagerTabFragment fragment = new SearchPagerTabFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public void load(boolean refresh) {
 		super.load(refresh);
@@ -76,8 +88,14 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 			});
 
 			recyclerView.clearOnScrollListeners();
-			endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = ListSearchAppsRequest.of(query,
-					addSubscribedStores), listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
+			ListSearchAppsRequest of;
+			if (storeName != null) {
+				of = ListSearchAppsRequest.of(query, storeName);
+			} else {
+				of = ListSearchAppsRequest.of(query, addSubscribedStores);
+			}
+			endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
+					listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
 			recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 			endlessRecyclerOnScrollListener.onLoadMore(refresh);
 		} else {
@@ -95,6 +113,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		super.loadExtras(args);
 
 		query = args.getString(BundleCons.QUERY);
+		storeName = args.getString(BundleCons.STORE_NAME);
 		addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
 	}
 
@@ -103,12 +122,14 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		super.onSaveInstanceState(outState);
 
 		outState.putString(BundleCons.QUERY, query);
+		outState.putString(BundleCons.STORE_NAME, storeName);
 		outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
 	}
 
 	protected static class BundleCons {
 
 		public static final String QUERY = "query";
+		public static final String STORE_NAME = "storeName";
 		public static final String ADD_SUBSCRIBED_STORES = "addSubscribedStores";
 	}
 }

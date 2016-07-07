@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class ArticleTimelineItem implements TimelineItem<Article> {
+public class ArticleTimelineItem implements TimelineItem<TimelineCard> {
 
 	private final Article article;
 

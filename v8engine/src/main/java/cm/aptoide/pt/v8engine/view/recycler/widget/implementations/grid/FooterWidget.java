@@ -1,17 +1,21 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
 import java.util.List;
 
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -40,7 +44,10 @@ public class FooterWidget extends Widget<FooterDisplayable> {
 
 		button.setText(displayable.getPojo().getActions().get(0).getLabel());
 		button.setOnClickListener((view) -> {
-			// TODO
+			Event event = displayable.getPojo().getActions().get(0).getEvent();
+			event.setName(Event.Name.listAppsEditorsHammered);
+			FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreGridRecyclerFragment.newInstance(event, displayable.getPojo()
+					.getTitle()));
 		});
 	}
 }

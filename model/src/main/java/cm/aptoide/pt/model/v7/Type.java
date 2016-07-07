@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -17,6 +17,7 @@ public enum Type {
 	// Server
 	APPS_GROUP(3),
 	APP_BRICK(2, true),
+	APP_BRICK_LIST_HAMMERED(1),
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
 	ADS(3),

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 30/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -18,7 +18,7 @@ crashlytics {
 
 // Should be moved to application module when possible
 Properties localProperties = new Properties()
-localProperties.load(new FileInputStream("local.properties"))
+localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 def fabricApiKey = localProperties.FABRIC_API_KEY
 
@@ -48,7 +48,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            shrinkResources true
+            shrinkResources false
         }
         debug {
             minifyEnabled false

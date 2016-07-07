@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 04/07/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -45,7 +45,7 @@ public class ListCommentsRequest extends BaseRequestWithStore<ListComments,ListC
 		private String lang = Api.LANG;
 		private Integer limit = getDefaultLimit();
 		private boolean mature;
-		private int offset;
+		private Integer offset;
 		private Order order;
 		private String q = Api.Q;
 		private Sort sort;

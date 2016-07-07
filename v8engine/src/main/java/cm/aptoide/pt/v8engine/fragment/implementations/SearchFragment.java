@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by Neurophobic Animal on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -98,7 +98,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 	@Override
 	protected PagerAdapter createPagerAdapter() {
-		return new SearchPagerAdapter(getChildFragmentManager(), query, hasSubscribedResults, hasEverywhereResults);
+		if (storeName != null) {
+			return new SearchPagerAdapter(getChildFragmentManager(), query, storeName);
+		} else {
+			return new SearchPagerAdapter(getChildFragmentManager(), query, hasSubscribedResults, hasEverywhereResults);
+		}
 	}
 
 	private void setupButtonVisibility() {

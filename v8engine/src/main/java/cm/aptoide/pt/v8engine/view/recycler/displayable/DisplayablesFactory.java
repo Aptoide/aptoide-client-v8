@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 30/06/2016.
+ * Modified by Neurophobic Animal on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -69,7 +69,10 @@ public class DisplayablesFactory {
 						wsWidget.setActions(actions);
 						GridHeaderDisplayable gridHeaderDisplayable = new GridHeaderDisplayable(wsWidget);
 						displayables.add(gridHeaderDisplayable);
-						displayables.add(getAds(wsWidget.getViewObject()));
+						Displayable ads = getAds(wsWidget.getViewObject());
+						if (ads != null) {
+							displayables.add(ads);
+						}
 						break;
 				}
 			}
@@ -93,16 +96,19 @@ public class DisplayablesFactory {
 
 	private static Displayable getAds(Object viewObject) {
 		GetAdsResponse getAdsResponse = (GetAdsResponse) viewObject;
-		List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
-		List<Displayable> tmp = new ArrayList<>(ads.size());
-		for (GetAdsResponse.Ad ad : ads) {
+		if (viewObject != null) {
+			List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
+			List<Displayable> tmp = new ArrayList<>(ads.size());
+			for (GetAdsResponse.Ad ad : ads) {
 
-			GridAdDisplayable diplayable = (GridAdDisplayable) DisplayableType
-					.newDisplayable(Type.ADS);
-			diplayable.setPojo(ad);
-			tmp.add(diplayable);
+				GridAdDisplayable diplayable = (GridAdDisplayable) DisplayableType.newDisplayable(Type.ADS);
+				diplayable.setPojo(ad);
+				tmp.add(diplayable);
+			}
+			return new DisplayableGroup(tmp);
 		}
-		return new DisplayableGroup(tmp);
+
+		return null;
 	}
 
 	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {

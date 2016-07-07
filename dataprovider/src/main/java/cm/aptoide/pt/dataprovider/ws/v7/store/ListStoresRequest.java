@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
@@ -61,9 +61,13 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
 		private Group group;
 		private Integer limit;
-		private int offset;
+		private Integer offset;
 		private Order order;
 		private Sort sort;
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
+			super(aptoideId, accessToken, aptoideVercode, cdn);
+		}
 
 		public enum Group {
 			featured
@@ -71,10 +75,6 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
 		public enum Sort {
 			latest, downloads, downloads7d, downloads30d, trending7d, trending30d,
-		}
-
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
-			super(aptoideId, accessToken, aptoideVercode, cdn);
 		}
 	}
 }

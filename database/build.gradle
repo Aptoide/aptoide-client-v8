@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 30/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -25,8 +25,8 @@ android {
     buildTypes {
         release {
             buildConfigField 'boolean', 'DELETE_DB', 'false'
-            shrinkResources true
             minifyEnabled false
+            shrinkResources false
         }
         debug {
             buildConfigField 'boolean', 'DELETE_DB', 'false'
