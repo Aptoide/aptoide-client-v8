@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -15,7 +15,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
-import lombok.Getter;
 
 /**
  * Created by neuro on 16-04-2016.
@@ -44,6 +43,11 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	@Override
 	public int getItemViewType(int position) {
 		return displayables.get(position).getViewLayout();
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
 	}
 
 	@Override

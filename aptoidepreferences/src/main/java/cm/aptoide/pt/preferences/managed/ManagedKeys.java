@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/04/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.preferences.managed;
@@ -12,4 +12,5 @@ class ManagedKeys {
 
 	public static final String HWSPECS_FILTER = "hwspecsChkBox";
 	public static final String MATURE_CHECK_BOX = "matureChkBox";
+	public static final String ANIMATIONS_ENABLED = "animationsEnabled";
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/07/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -48,7 +48,7 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 		});
 
 		readAllButton.setOnClickListener(v -> {
-			((FragmentShower) v.getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId()));
+			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId()));
 		});
 	}
 }

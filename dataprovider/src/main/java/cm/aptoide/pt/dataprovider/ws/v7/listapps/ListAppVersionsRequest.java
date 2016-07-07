@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -29,15 +29,28 @@ import rx.Observable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsRequest.Body> {
+public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRequest.Body> {
 
-	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
+	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String
+			cdn) {
 		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
 	}
 
+	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String
+			cdn, String packageName) {
+		super(new Body(aptoideId, accessToken, versionCode, cdn, packageName), httpClient, converterFactory, BASE_HOST);
+	}
+
 	public static ListAppVersionsRequest of() {
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService
-				.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID()
+				, AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+	}
+
+	public static ListAppVersionsRequest of(String packageName) {
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID()
+				, AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", packageName);
 	}
 
 	@Override
@@ -64,6 +77,11 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
 			super(aptoideId, accessToken, aptoideVercode, cdn);
+		}
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String packageName) {
+			super(aptoideId, accessToken, aptoideVercode, cdn);
+			this.packageName = packageName;
 		}
 	}
 }

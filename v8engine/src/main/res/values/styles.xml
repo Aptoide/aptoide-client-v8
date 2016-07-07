@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/07/2016.
+  ~ Modified by SithEngineer on 07/07/2016.
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -276,8 +276,13 @@
     <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
     <!--</style>-->
 
-    <style name="HeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
+    <style name="AppViewHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/appview_title_text_size</item>
+    </style>
+
+    <style name="OtherVersionsHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/appview_title_text_size</item>
     </style>
 

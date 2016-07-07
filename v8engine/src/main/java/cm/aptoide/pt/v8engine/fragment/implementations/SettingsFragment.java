@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -201,6 +201,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				// FIXME ??
 				ShowMessage.asSnack(getView(), getString(R.string.restart_aptoide));
 				return true;
 			}

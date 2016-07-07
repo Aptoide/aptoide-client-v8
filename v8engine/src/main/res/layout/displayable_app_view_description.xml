@@ -2,15 +2,15 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/07/2016.
+  ~ Modified by SithEngineer on 07/07/2016.
   -->
 <LinearLayout
     style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -23,10 +23,15 @@
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxLines="@integer/minimum_description_lines"
         android:paddingTop="8dp"
-        android:textColor="?android:attr/textColorSecondary"/>
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/text_size_medium"
+        tools:text="this will contain the app description"
+        />
 
     <Button
         android:id="@+id/read_more_button"

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -12,8 +12,9 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -52,12 +53,12 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 	}
 
 	private void handleSeeMore(GetAppMeta.App app) {
-		readMoreBtn.setOnClickListener(seeMoreHandler(app));
+		readMoreBtn.setOnClickListener(seeMoreHandler(app.getId()));
 	}
 
-	private View.OnClickListener seeMoreHandler(final GetAppMeta.App app) {
+	private View.OnClickListener seeMoreHandler(final long appId) {
 		return v -> {
-			ShowMessage.asSnack(readMoreBtn, "TO DO");
+			((FragmentShower) getContext()).pushFragmentV4(DescriptionFragment.newInstance(appId));
 		};
 	}
 }

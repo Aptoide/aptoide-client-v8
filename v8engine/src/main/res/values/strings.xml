@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 04/07/2016.
+  ~ Modified by SithEngineer on 07/07/2016.
   -->
 
 <resources>
@@ -36,7 +36,8 @@
     <string name="reinstall">Reinstall</string>
     <string name="get_app">get app</string>
     <string name="appview_follow_store_button_text">follow store</string>
-    <string name="appview_followers_count_text">%d   Followers</string>
+    <string name="appview_followers_count_text">%1$d   Followers</string>
+    <string name="other_versions_downloads_count_text">%1$d   downloads</string>
 
     <!-- Common (menu) -->
     <string name="menu_select_all">Select All</string>
@@ -85,4 +86,8 @@
     <string name="displayable_social_timeline_app_update_updated">Updated</string>
     <string name="displayable_social_timeline_app_update_updating">Updating</string>
     <string name="displayable_social_timeline_app_update_error">Update Error</string>
+
+    <!-- Preferences -->
+    <string name="animations">Animations</string>
+    <string name="animations_enabled">Animations enabled</string>
 </resources>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -57,6 +57,8 @@ public enum Type {
 
 	// Search
 	SEARCH(1),
+
+	OTHER_VERSION,
 
 	// Progress
 	PROGRESS_DISPLAYABLE;

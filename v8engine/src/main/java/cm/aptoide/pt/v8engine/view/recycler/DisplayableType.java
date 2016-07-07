@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -49,6 +49,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
@@ -83,6 +84,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisp
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
@@ -150,8 +152,7 @@ public enum DisplayableType {
 
 	APP_VIEW_FLAG_THIS(AppViewFlagThisWidget.class, AppViewFlagThisDisplayable.class),
 
-	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class, AppViewOtherVersionsDisplayable
-			.class),
+	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class, AppViewOtherVersionsDisplayable.class),
 
 	APP_VIEW_RATE_RESULTS(AppViewRateResultsWidget.class, AppViewRateResultsDisplayable.class),
 
@@ -159,10 +160,9 @@ public enum DisplayableType {
 
 	APP_VIEW_SUBSCRIPTION(AppViewStoreWidget.class, AppViewStoreDisplayable.class),
 
-	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable
-			.class)
+	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable.class),
 
-	;
+	OTHER_VERSION(OtherVersionWidget.class, OtherVersionDisplayable.class),;
 
 	private static final String TAG = DisplayableType.class.getName();
 	private static List<Displayable> cachedDisplayables;
@@ -170,41 +170,36 @@ public enum DisplayableType {
 	private Widget widget;
 	private Class<? extends Displayable> displayableClass;
 	private Class<? extends Widget> widgetClass;
-	DisplayableType(Class<? extends Widget> widgetClass, Class<? extends Displayable>
-			displayableClass) {
+
+	DisplayableType(Class<? extends Widget> widgetClass, Class<? extends Displayable> displayableClass) {
 		this.displayableClass = displayableClass;
 		this.widgetClass = widgetClass;
 
 		displayable = newDisplayable();
 		widget = newWidget(new View(V8Engine.getContext()));
 
-		if (displayable.getType() == null)
-			throw new IllegalStateException(String.format("Missing type in Displayable %s",
-					displayableClass
-					.getName()));
+		if (displayable.getType() == null) {
+			throw new IllegalStateException(String.format("Missing type in Displayable %s", displayableClass.getName()));
+		}
 
-		if (widget.getItemViewType() == 0)
-			throw new IllegalStateException(String.format("Missing view type in Widget %s",
-					widgetClass
-					.getName()));
+		if (widget.getItemViewType() == 0) {
+			throw new IllegalStateException(String.format("Missing view type in Widget %s", widgetClass.getName()));
+		}
 	}
 
 	public static List<Displayable> newDisplayables(Group group) {
 		ArrayList<Displayable> displayables = new ArrayList<>(group.displayableTypes.length);
-		for (int i = 0; i < group.displayableTypes.length; i++) {
+		for (int i = 0 ; i < group.displayableTypes.length ; i++) {
 			displayables.add(group.displayableTypes[i].newDisplayable());
 		}
 		return displayables;
 	}
 
 	public static <T> List<DisplayablePojo> newDisplayables(Group group, T pojo) {
-		ArrayList<DisplayablePojo> displayablePojos =
-				new ArrayList<>(group.displayableTypes.length);
+		ArrayList<DisplayablePojo> displayablePojos = new ArrayList<>(group.displayableTypes.length);
 
-		for (int i = 0; i < group.displayableTypes.length; i++) {
-			displayablePojos.add(
-					((DisplayablePojo) group.displayableTypes[i].newDisplayable()).setPojo(pojo)
-			);
+		for (int i = 0 ; i < group.displayableTypes.length ; i++) {
+			displayablePojos.add(((DisplayablePojo) group.displayableTypes[i].newDisplayable()).setPojo(pojo));
 		}
 		return displayablePojos;
 	}
@@ -228,8 +223,7 @@ public enum DisplayableType {
 			}
 		}
 
-		throw new IllegalStateException(String.format("There is no displayable for '%s' type",
-				type));
+		throw new IllegalStateException(String.format("There is no displayable for '%s' type", type));
 	}
 
 	public static Widget newWidget(View view, int viewType) {
@@ -239,8 +233,8 @@ public enum DisplayableType {
 			}
 		}
 
-		throw new IllegalStateException(String.format("There's no widget for '%s' viewType",
-				viewType) + "\nDid you forget to add the mapping to DisplayableType enum??");
+		throw new IllegalStateException(String.format("There's no widget for '%s' viewType", viewType) + "\nDid you forget to add the mapping to " +
+				"DisplayableType enum??");
 	}
 
 	public static List<Displayable> getCachedDisplayables() {
@@ -262,8 +256,7 @@ public enum DisplayableType {
 		try {
 			return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
 		} catch (Exception e) {
-			String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName
-					());
+			String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
 			Logger.e(TAG, errMsg, e);
 			throw new RuntimeException(errMsg);
 		}
@@ -274,30 +267,24 @@ public enum DisplayableType {
 		try {
 			return displayableClass.newInstance();
 		} catch (Exception e) {
-			String errMsg = String.format("Error instantiating displayable '%s'", displayableClass
-					.getName());
+			String errMsg = String.format("Error instantiating displayable '%s'", displayableClass.getName());
 			Logger.e(TAG, errMsg, e);
 			throw new RuntimeException(errMsg);
 		}
 	}
 
 	public enum Group {
-		APP_VIEW(
-				APP_VIEW_INSTALL,
-//				APP_VIEW_SUBSCRIPTION,
-				APP_VIEW_DESCRIPTION,
-				APP_VIEW_SCREENSHOTS,
-				APP_VIEW_RATING,
-//				APP_VIEW_RATE_RESULTS,
+		APP_VIEW(APP_VIEW_INSTALL,
+				//				APP_VIEW_SUBSCRIPTION,
+				APP_VIEW_DESCRIPTION, APP_VIEW_SCREENSHOTS, APP_VIEW_RATING,
+				//				APP_VIEW_RATE_RESULTS,
 				APP_VIEW_COMMENTS,
-//				APP_VIEW_OTHER_VERSIONS,
-				APP_VIEW_DEVELOPER
-		)
-		;
+				//				APP_VIEW_OTHER_VERSIONS,
+				APP_VIEW_DEVELOPER);
 
 		public final DisplayableType[] displayableTypes;
 
-		Group(DisplayableType... displayableTypes){
+		Group(DisplayableType... displayableTypes) {
 			this.displayableTypes = displayableTypes;
 		}
 	}

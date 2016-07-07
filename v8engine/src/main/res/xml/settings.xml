@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 02/06/2016.
+  ~ Modified by SithEngineer on 07/07/2016.
   -->
 
 <PreferenceScreen
@@ -137,6 +137,13 @@
         <Preference
             android:key="aboutDialog"
             android:title="@string/about_us"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/animations">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="animationsEnabled"
+            android:title="@string/animations_enabled"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

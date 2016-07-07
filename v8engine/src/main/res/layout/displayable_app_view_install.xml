@@ -2,7 +2,7 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/07/2016.
+  ~ Modified by SithEngineer on 07/07/2016.
   -->
 
 <LinearLayout
@@ -124,7 +124,7 @@
                 android:maxWidth="70dp"
                 android:text="@string/appview_other_versions"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_medium"
                 />
 
             <include
@@ -146,7 +146,7 @@
                 >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:ellipsize="end"

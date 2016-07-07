@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/07/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -101,8 +101,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		versionName.setText(app.getFile().getVername());
 		otherVersions.setOnClickListener(v -> {
-			OtherVersionsFragment fragment = OtherVersionsFragment.newInstance(app.getId());
-			((FragmentShower) v.getContext()).pushFragmentV4(fragment);
+			OtherVersionsFragment fragment = OtherVersionsFragment.newInstance(app.getName(), app.getIcon(), app.getPackageName());
+			((FragmentShower) getContext()).pushFragmentV4(fragment);
 		});
 
 		setupInstallButton(app);
@@ -120,7 +120,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				installButton.setText(R.string.buy);
 				installButton.setOnClickListener(new Listeners().newBuyListener());
 			} else {
-				installButton.setText(R.string.install);
+				installButton.setText(R.string.get_app);
 				installButton.setOnClickListener(new Listeners().newInstallListener(app));
 			}
 		} else {

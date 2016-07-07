@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/07/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -19,8 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
@@ -35,6 +33,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
@@ -51,6 +50,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import lombok.Getter;
 
 /**
  * Created by sithengineer on 04/05/16.
@@ -63,6 +63,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	// constants
 	//
 	private static final String TAG = AppViewFragment.class.getSimpleName();
+	private static final String BAR_EXPANDED = "BAR_EXPANDED";
+	// FIXME restoreInstanteState doesn't work in this case
+	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
 	//
 	// vars
@@ -70,11 +73,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
-	private MinimalAd minimalAd;
 
 	//
 	// static fragment default new instance method
 	//
+	private MinimalAd minimalAd;
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -169,10 +172,30 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
+			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
+			header.getAppBarLayout().setExpanded(isExpanded);
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		if (header != null && header.getAppBarLayout() != null) {
+			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
+					.getVisibility() == View.VISIBLE);
+		}
+	}
+
+	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_appview_fragment, menu);
-
 		SearchUtils.setupGlobalSearchView(menu, getActivity());
 	}
 
@@ -250,31 +273,44 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 	private static final class AppViewHeader {
 
+		private final boolean animationsEnabled;
+
 		// views
-		private AppBarLayout appBarLayout;
-		private CollapsingToolbarLayout collapsingToolbar;
-		private ImageView featuredGraphic;
-		private RelativeLayout badgeLayout;
-		private ImageView badge;
-		private TextView badgeText;
-		private ImageView appIcon;
-		private RatingBar ratingBar;
-		private TextView fileSize;
-		private TextView versionName;
-		private TextView downloadsCount;
+		@Getter
+		private final AppBarLayout appBarLayout;
+
+		@Getter
+		private final CollapsingToolbarLayout collapsingToolbar;
+
+		@Getter
+		private final ImageView featuredGraphic;
+
+		@Getter
+		private final ImageView badge;
+
+		@Getter
+		private final TextView badgeText;
+
+		@Getter
+		private final ImageView appIcon;
+
+		@Getter
+		private final TextView fileSize;
+
+		@Getter
+		private final TextView downloadsCount;
 
 		// ctor
 		public AppViewHeader(@NonNull View view) {
+			animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+
 			appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
 			collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+			appIcon = (ImageView) view.findViewById(R.id.app_icon);
 			featuredGraphic = (ImageView) view.findViewById(R.id.featured_graphic);
-			badgeLayout = (RelativeLayout) view.findViewById(R.id.badge_layout);
 			badge = (ImageView) view.findViewById(R.id.badge_img);
 			badgeText = (TextView) view.findViewById(R.id.badge_text);
-			appIcon = (ImageView) view.findViewById(R.id.app_icon);
-			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar_top);
 			fileSize = (TextView) view.findViewById(R.id.file_size);
-			versionName = (TextView) view.findViewById(R.id.version_name);
 			downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
 		}
 
@@ -304,25 +340,32 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 				public void onStateChanged(AppBarLayout appBarLayout, State state) {
 					switch (state) {
 						case EXPANDED:
-							appIcon.animate().alpha(1F).start();
+							if (animationsEnabled) {
+								appIcon.animate().alpha(1F).start();
+							} else {
+								appIcon.setVisibility(View.VISIBLE);
+							}
 							break;
 
 						default:
 						case IDLE:
 						case COLLAPSED:
-							appIcon.animate().alpha(0F).start();
+							if (animationsEnabled) {
+								appIcon.animate().alpha(0F).start();
+							} else {
+								appIcon.setVisibility(View.INVISIBLE);
+							}
 							break;
 					}
 				}
 			});
 
-			ratingBar.setRating(getApp.getNodes().getMeta().getData().getStats().getRating().getAvg());
 			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes()
 					.getMeta()
 					.getData()
 					.getFile()
 					.getFilesize()));
-			versionName.setText(getApp.getNodes().getMeta().getData().getFile().getVername());
+
 			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats()
 					.getDownloads()));
 

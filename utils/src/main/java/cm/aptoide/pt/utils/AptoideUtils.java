@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -689,7 +689,15 @@ public class AptoideUtils {
 
 	public static class HtmlU {
 
+		/**
+		 * Find a work around for this. Could be a dangerous operation, converting text from HTML.
+		 *
+		 * @param text
+		 *
+		 * @return original text converted to HTML in a CharSequence
+		 */
 		public static CharSequence parse(String text) {
+			// Fix for AN-348: replace the & with &amp; (that's was causing the pushback buffer full) (from Aptoide V7)
 			return Html.fromHtml(text.replace("\n", "<br/>").replace("&", "&amp;"));
 		}
 	}
@@ -1066,5 +1074,21 @@ public class AptoideUtils {
 					.getId() + " Method:" + methodName + " - Total execution time: " + (endTime - startTime) +
 					"ms");
 		}
+	}
+
+	public static class ObservableU {
+
+		/**
+		 * code from <a href="http://blog.danlew.net/2015/03/02/dont-break-the-chain/">http://blog.danlew.net/2015/03/02/dont-break-the-chain/</a>
+		 *
+		 * @param <T> Observable of T
+		 *
+		 * @return original Observable subscribed in an io thread and observed in the main thread
+		 */
+		public static <T> Observable.Transformer<T,T> applySchedulers() {
+			return observable -> observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+		}
+
+		// consider moving the retry code from dataprovider module to here
 	}
 }
