@@ -10,6 +10,7 @@ import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Calendar;
 
 import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
@@ -42,6 +43,11 @@ public class Download extends RealmObject {
 	@PrimaryKey
 	private long appId;
 	private String appName;
+	private long timeStamp;
+
+	public Download() {
+		this.timeStamp = Calendar.getInstance().getTimeInMillis();
+	}
 
 	public String getStatusName(Context context) {
 		String toReturn;

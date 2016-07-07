@@ -17,6 +17,7 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -90,6 +91,7 @@ public class AptoideDownloadManager {
 		}
 
 		download.setOverallDownloadStatus(Download.IN_QUEUE);
+		download.setOverallProgress(0);
 		@Cleanup
 		Realm realm = Database.get();
 		Database.save(download, realm);
@@ -149,6 +151,7 @@ public class AptoideDownloadManager {
 	}
 
 	Observable<List<Download>> getDownloads() {
+		@Cleanup
 		Realm realm = Database.get();
 		RealmResults<Download> download = realm.where(Download.class).findAll();
 		if (download.size() >= 0) {
@@ -222,6 +225,8 @@ public class AptoideDownloadManager {
 			Download nextDownload = getNextDownload();
 			if (nextDownload != null) {
 				new DownloadTask(nextDownload).startDownload();
+			} else {
+				CacheHelper.cleanCache(settingsInterface, DOWNLOADS_STORAGE_PATH);
 			}
 		}
 	}
@@ -246,9 +251,11 @@ public class AptoideDownloadManager {
 	public Download getNextDownload() {
 		@Cleanup
 		Realm realm = Database.get();
-		Download overallDownloadStatus = realm.where(Download.class).equalTo("overallDownloadStatus", Download.IN_QUEUE).findFirst();
-		if (overallDownloadStatus != null) {
-			return overallDownloadStatus.clone();
+		RealmResults<Download> sortedDownloads = realm.where(Download.class)
+				.equalTo("overallDownloadStatus", Download.IN_QUEUE)
+				.findAllSorted("timeStamp", Sort.ASCENDING);
+		if (sortedDownloads.size() > 0) {
+			return sortedDownloads.get(0).clone();
 		} else {
 			return null;
 		}

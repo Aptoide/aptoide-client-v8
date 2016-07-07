@@ -15,4 +15,6 @@ public interface DownloadSettingsInterface {
 	int getButton1Icon();
 
 	String getButton1Text(Context context);
+
+	long getMaxCacheSize();
 }

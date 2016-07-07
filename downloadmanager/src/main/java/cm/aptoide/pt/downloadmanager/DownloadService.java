@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -95,7 +94,6 @@ public class DownloadService extends Service {
 
 	private void setupStopSelfMechanism() {
 		subscriptions.add(downloadManager.getCurrentDownloads().filter(downloads -> downloads.size() <= 0).subscribe(downloads1 -> {
-			Logger.d(TAG, "setupStopSelfMechanism() called with: " + downloads1.size());
 			stopSelf();
 		}));
 	}
@@ -105,9 +103,6 @@ public class DownloadService extends Service {
 			openAppsManagerIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null);
 
 			notificationUpdateSubscription = downloadManager.getCurrentDownload().subscribe(download -> {
-				Logger.d(TAG, "setupNotifications() called with: " + download.getAppId() + "appNmae: " + download.getAppName() + "status: " + download
-						.getStatusName(AptoideDownloadManager
-						.getContext()));
 				Bundle bundle = new Bundle();
 				bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
 				notificationClickIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION, bundle);
