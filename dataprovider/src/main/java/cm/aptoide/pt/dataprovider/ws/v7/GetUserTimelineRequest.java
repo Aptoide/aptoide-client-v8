@@ -37,9 +37,8 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
 	public static GetUserTimelineRequest of(String url, int limit, int offset, List<String> packages) {
 		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core
-				.getVerCode(), "pool", Api.LANG, limit, AptoideAccountManager.getUserInfo()
-				.isMatureSwitch(), offset, Api.Q, packages), OkHttpClientFactory.newClient(), WebService.getDefaultConverter(), BASE_HOST);
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, limit, offset, packages),
+				OkHttpClientFactory.newClient(), WebService.getDefaultConverter(), BASE_HOST);
 		return getAppRequest;
 	}
 
@@ -49,26 +48,17 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 	}
 
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody implements OffsetInterface<Body> {
+	public static class Body extends BaseBody implements Endless {
 
-		@Getter private String lang;
-		@Getter private Integer limit;
-		@Getter private boolean mature;
-		@Accessors(chain = true)
-		@Setter
-		@Getter
-		private Integer offset;
-		@Getter private String q;
+		@Getter private int limit;
+		@Getter @Setter private int offset;
 		@Getter private List<String> packageNames;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, Integer limit, boolean mature, Integer offset, String
-				q, List<String> packageNames) {
-			super(aptoideId, accessToken, aptoideVercode, cdn);
-			this.lang = lang;
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, Integer
+				offset, List<String> packageNames) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
 			this.limit = limit;
-			this.mature = mature;
 			this.offset = offset;
-			this.q = q;
 			this.packageNames = packageNames;
 		}
 	}

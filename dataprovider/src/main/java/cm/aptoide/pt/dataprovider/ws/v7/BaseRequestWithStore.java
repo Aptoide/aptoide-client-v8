@@ -9,7 +9,9 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import io.realm.Realm;
+import lombok.AllArgsConstructor;
 import lombok.Cleanup;
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -18,56 +20,42 @@ import retrofit2.Converter;
  */
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
-	protected final String url;
-
-	protected BaseRequestWithStore(V7Url v7Url, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+	public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
 		super(body, httpClient, converterFactory, baseHost);
-		setStoreIdentifierFromUrl(v7Url);
-		url = v7Url.get();
 	}
 
-	protected BaseRequestWithStore(String storeName, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-		body.setStoreName(storeName);
-		url = "";
-	}
-
-	protected BaseRequestWithStore(long storeId, B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-		body.setStoreId(storeId);
-		url = "";
-	}
-
-	@Override
-	protected void onLoadDataFromNetwork() {
-		super.onLoadDataFromNetwork();
-		setPrivateCredentials();
-	}
-
-	protected void setPrivateCredentials() {
+	protected static StoreCredentials getStore(Long storeId) {
 		@Cleanup Realm realm = Database.get(DataProvider.getContext());
 
-		Store store = null;
-
-		if (body.getStoreId() != null) {
-			store = Database.StoreQ.get(body.getStoreId(), realm);
+		if (storeId != null) {
+			Store store = Database.StoreQ.get(storeId, realm);
+			if (store != null) {
+				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
+			}
 		}
-		else if (body.getStoreName() != null) {
-			store = Database.StoreQ.get(body.getStoreName(), realm);
-		}
-
-		if (store != null && store.getUsername() != null && store.getPasswordSha1() != null) {
-			body.setStoreUser(store.getUsername()).setStorePassSha1(store.getPasswordSha1());
-		}
+		return new StoreCredentials();
 	}
 
-	private void setStoreIdentifierFromUrl(V7Url v7Url) {
-		Long storeId = v7Url.getStoreId();
-		if (storeId != null) {
-			body.setStoreId(storeId);
+	protected static StoreCredentials getStore(String storeName) {
+		@Cleanup Realm realm = Database.get(DataProvider.getContext());
+		if (storeName != null) {
+			Store store = Database.StoreQ.get(storeName, realm);
+			if (store != null) {
+				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
+			}
 		}
-		else {
-			body.setStoreName(v7Url.getStoreName());
+		return new StoreCredentials();
+	}
+
+	@AllArgsConstructor
+	public static class StoreCredentials {
+
+		@Getter private final String username;
+		@Getter private final String passwordSha1;
+
+		public StoreCredentials() {
+			username = null;
+			passwordSha1 = null;
 		}
 	}
 }

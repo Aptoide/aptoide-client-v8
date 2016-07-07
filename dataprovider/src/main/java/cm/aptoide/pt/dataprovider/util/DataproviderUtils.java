@@ -42,31 +42,6 @@ public class DataproviderUtils {
 		checkUpdates(null);
 	}
 
-	/*
-	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
-		ListAppsUpdatesRequest.of(true).execute(listAppsUpdates -> {
-
-			if(listAppsUpdates!=null) {
-				List<App> apps = listAppsUpdates.getList();
-				if(apps!=null && apps.size()>0) {
-					@Cleanup Realm realm = Database.get();
-					for (App app : apps) {
-						Database.save(new Update(app), realm);
-					}
-
-					if (successRequestListener != null) {
-						successRequestListener.call(listAppsUpdates);
-					}
-					return;
-				}
-			}
-
-			Logger.w(TAG, "List app updates response was null or empty.");
-
-		}, Throwable::printStackTrace);
-	}
-	*/
-
 	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
 		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
 			@Cleanup Realm realm = Database.get();

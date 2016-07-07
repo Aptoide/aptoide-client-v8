@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import cm.aptoide.pt.dataprovider.ws.Api;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,11 +21,10 @@ import lombok.Setter;
 public class BaseBody {
 
 	@Getter @JsonProperty("aptoide_uid") private String aptoideId;
-	@Setter @Getter @JsonProperty("access_token") private String accessToken;
-	@Getter @JsonProperty("aptoide_vercode") private int aptoideVercode;
+	@Setter @Getter private String accessToken;
+	@Getter private int aptoideVercode;
 	@Getter private String cdn;
-
-	protected static int getDefaultLimit() {
-		return 10;
-	}
+	@Getter private String lang;
+	@Getter private boolean mature;
+	@Getter private String q;
 }

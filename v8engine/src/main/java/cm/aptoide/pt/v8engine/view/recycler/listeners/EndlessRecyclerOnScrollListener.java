@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.listeners;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
+import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -21,7 +21,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
 
 	private final BaseAdapter adapter;
-	private final V7<? extends BaseV7EndlessResponse, ? extends OffsetInterface<?>> v7request;
+	private final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
 	private final Action1 successRequestListener;
 
 	private boolean loading;
@@ -31,13 +31,13 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
 	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
 			extends
-			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, boolean bypassCache) {
+			Endless> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, boolean bypassCache) {
 		this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
 	}
 
 	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
 			extends
-			OffsetInterface<?>> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache) {
+			Endless> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache) {
 		this.adapter = baseAdapter;
 		this.v7request = v7request;
 		this.successRequestListener = successRequestListener;

@@ -9,7 +9,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
@@ -18,7 +17,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -30,28 +28,33 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets, GetStoreWidgetsRequest.Body> {
 
-	private GetStoreWidgetsRequest(V7Url v7Url, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(v7Url.remove("getStoreWidgets"), new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
-	}
+	private final String url;
 
-	private GetStoreWidgetsRequest(String storeName, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeName, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
-	}
-
-	private GetStoreWidgetsRequest(long storeId, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(storeId, new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
-	}
-
-	public static GetStoreWidgetsRequest of(String storeName) {
-		return new GetStoreWidgetsRequest(storeName, OkHttpClientFactory.getSingletonClient(),
-				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
-				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+	private GetStoreWidgetsRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, Body body) {
+		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
 	}
 
 	public static GetStoreWidgetsRequest ofAction(String url) {
-		return new GetStoreWidgetsRequest(new V7Url(url), OkHttpClientFactory.getSingletonClient(),
-				WebService.getDefaultConverter(), BASE_HOST, SecurePreferences.getAptoideClientUUID(),
-				AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+		V7Url v7Url = new V7Url(url).remove("getStoreWidgets");
+		Long storeId = v7Url.getStoreId();
+		final StoreCredentials store;
+		final Body body;
+		if (storeId != null) {
+			store = getStore(storeId);
+			body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
+					Api.LANG, Api.MATURE, Api.Q, storeId, WidgetsArgs.createDefault());
+		} else {
+			String storeName = v7Url.getStoreName();
+			store = getStore(storeName);
+			body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
+					Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
+		}
+
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
+
+		return new GetStoreWidgetsRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
 	}
 
 	@Override
@@ -59,22 +62,21 @@ public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets
 		return interfaces.getStoreWidgets(url, body, bypassCache);
 	}
 
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBodyWithStore implements OffsetInterface<Body> {
+	public static class Body extends BaseBodyWithStore {
 
-		private StoreContext context;
-		private String lang = Api.LANG;
-		private Integer limit;
-		private Boolean mature = Api.MATURE;
-		private Integer offset;
-		private String q = Api.Q;
-		private String widget;
-		private WidgetsArgs widgetsArgs = WidgetsArgs.createDefault();
+		private WidgetsArgs widgetsArgs;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
-			super(aptoideId, accessToken, aptoideVercode, cdn);
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long storeId,
+		            WidgetsArgs widgetsArgs) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q, storeId);
+			this.widgetsArgs = widgetsArgs;
+		}
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, String storeName,
+		            WidgetsArgs widgetsArgs) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q, storeName);
+			this.widgetsArgs = widgetsArgs;
 		}
 	}
 }

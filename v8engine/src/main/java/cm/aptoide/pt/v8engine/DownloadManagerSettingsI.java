@@ -23,4 +23,9 @@ public class DownloadManagerSettingsI implements DownloadSettingsInterface {
 	public String getButton1Text(Context context) {
 		return context.getString(R.string.open_apps_manager);
 	}
+
+	@Override
+	public long getMaxCacheSize() {
+		return 81920;
+	}
 }

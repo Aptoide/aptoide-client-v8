@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,9 +19,9 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -30,42 +31,33 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-	private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
+	private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body) {
+		super(body, httpClient, converterFactory, BASE_HOST);
 	}
 
 	public static ListSearchAppsRequest of(String query, String storeName) {
-		LinkedList<String> stores = new LinkedList<>();
-		stores.add(storeName);
+		List<String> stores = Collections.singletonList(storeName);
 
-		ListSearchAppsRequest of = of(query, false);
-		of.body.setStoreNames(stores);
 		Map<String, List<String>> subscribedStoresAuthMap = StoreUtils.getSubscribedStoresAuthMap();
 		if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
 			Map<String, List<String>> storesAuthMap = new HashMap<>();
 			storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-			of.body.setStoresAuthMap(storesAuthMap);
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, storesAuthMap, stores, false));
 		}
-
-		return of;
-	}
-
-	public static ListSearchAppsRequest of(String query) {
-		return of(query, true);
+		return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, stores, false));
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
-		ListSearchAppsRequest listSearchAppsRequest = new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), SecurePreferences
-				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
-
-		listSearchAppsRequest.body.setQuery(query);
 		if (addSubscribedStores) {
-			listSearchAppsRequest.body.setStoreIds(StoreUtils.getSubscribedStoresIds());
-			Map<String, List<String>> storesAuthMap = StoreUtils.getSubscribedStoresAuthMap();
-			listSearchAppsRequest.body.setStoresAuthMap(storesAuthMap != null ? storesAuthMap : null);
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, StoreUtils
+					.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(), false));
+		} else {
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, false));
 		}
-
-		return listSearchAppsRequest;
 	}
 
 	@Override
@@ -73,25 +65,52 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		return interfaces.listSearchApps(body, bypassCache);
 	}
 
-	@Data
-	@Accessors(chain = true)
+
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody implements OffsetInterface<Body> {
+	public static class Body extends BaseBody implements Endless {
 
-		private String lang = Api.LANG;
-		private Integer limit = getDefaultLimit();
-		private boolean mature;
-		private Integer offset;
-		private String q = Api.Q;
-		private String query;
-		private List<Long> storeIds;
-		// Ideally, should never be used
-		private List<String> storeNames;
-		private Map<String, List<String>> storesAuthMap;
-		private Boolean trusted;
+		@Getter private int limit;
+		@Getter @Setter private int offset;
+		@Getter private String query;
+		@Getter private List<Long> storeIds;
+		@Getter private List<String> storeNames;
+		@Getter private Map<String, List<String>> storesAuthMap;
+		@Getter private Boolean trusted;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
-			super(aptoideId, accessToken, aptoideVercode, cdn);
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
+		            List<Long> storeIds, Map<String,List<String>> storesAuthMap, Boolean trusted) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.limit = limit;
+			this.query = query;
+			this.storeIds = storeIds;
+			this.storesAuthMap = storesAuthMap;
+			this.trusted = trusted;
+		}
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
+		            List<String> storeNames, Boolean trusted) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.limit = limit;
+			this.query = query;
+			this.storeNames = storeNames;
+			this.trusted = trusted;
+		}
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
+		            Map<String,List<String>> storesAuthMap, List<String> storeNames, Boolean trusted) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.limit = limit;
+			this.query = query;
+			this.storeNames = storeNames;
+			this.trusted = trusted;
+		}
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
+		            Boolean trusted) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.limit = limit;
+			this.query = query;
+			this.trusted = trusted;
 		}
 	}
 }
