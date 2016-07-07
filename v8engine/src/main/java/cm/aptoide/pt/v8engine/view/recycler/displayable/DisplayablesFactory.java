@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 05/07/2016.
+ * Modified by Neurophobic Animal on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -22,6 +22,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
@@ -113,6 +114,9 @@ public class DisplayablesFactory {
 
 	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {
 		ListApps listApps = (ListApps) wsWidget.getViewObject();
+		if (listApps == null) {
+			return new EmptyDisplayable();
+		}
 		List<App> apps = listApps.getDatalist().getList();
 		List<Displayable> displayables = new ArrayList<>(apps.size());
 
@@ -178,6 +182,9 @@ public class DisplayablesFactory {
 
 	private static Displayable getStores(Object viewObject) {
 		ListStores listStores = (ListStores) viewObject;
+		if (listStores == null) {
+			return new EmptyDisplayable();
+		}
 		List<Store> stores = listStores.getDatalist().getList();
 		List<Displayable> tmp = new ArrayList<>(stores.size());
 		for (Store store : stores) {

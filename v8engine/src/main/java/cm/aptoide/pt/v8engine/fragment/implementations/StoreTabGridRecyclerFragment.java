@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/07/2016.
+ * Modified by Neurophobic Animal on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -227,7 +227,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
 					Observable.from(list)
-							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> finishLoading(throwable)));
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> countDownLatch.countDown()));
 
 					try {
 						countDownLatch.await(5, TimeUnit.SECONDS);
