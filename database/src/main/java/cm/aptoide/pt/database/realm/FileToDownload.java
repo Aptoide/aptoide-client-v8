@@ -18,6 +18,7 @@ public class FileToDownload extends RealmObject {
 	public static final int APK = 0;
 	public static final int OBB = 1;
 	public static final int GENERIC = 2;
+	private String altLink;
 	private String link;
 	private String packageName;
 	private String path;
@@ -40,11 +41,12 @@ public class FileToDownload extends RealmObject {
 	 *
 	 * @return
 	 */
-	public static FileToDownload createFileToDownload(String link, long appId, String md5, String fileName, int fileType) {
+	public static FileToDownload createFileToDownload(String link, String altLink, long appId, String md5, String fileName, int fileType) {
 		FileToDownload fileToDownload = new FileToDownload();
 		fileToDownload.setLink(link);
 		fileToDownload.setAppId(appId);
 		fileToDownload.setMd5(md5);
+		fileToDownload.setAltLink(altLink);
 		if (!TextUtils.isEmpty(fileName)) {
 			fileToDownload.setFileName(fileName);
 		}
@@ -53,10 +55,18 @@ public class FileToDownload extends RealmObject {
 		return fileToDownload;
 	}
 
-	public static FileToDownload createFileToDownload(String link, long appId, String md5, String fileName, int fileType, String packageName) {
-		FileToDownload fileToDownload = createFileToDownload(link, appId, md5, fileName, fileType);
+	public static FileToDownload createFileToDownload(String link, String altLink, long appId, String md5, String fileName, int fileType, String packageName) {
+		FileToDownload fileToDownload = createFileToDownload(link, altLink, appId, md5, fileName, fileType);
 		fileToDownload.setPackageName(packageName);
 		return fileToDownload;
+	}
+
+	public String getAltLink() {
+		return altLink;
+	}
+
+	public void setAltLink(String altLink) {
+		this.altLink = altLink;
 	}
 
 	public
@@ -172,6 +182,9 @@ public class FileToDownload extends RealmObject {
 		}
 		if (this.getFileName() != null) {
 			clone.setFileName(new String(this.getFileName()));
+		}
+		if (!TextUtils.isEmpty(this.getAltLink())) {
+			clone.setAltLink(this.getAltLink());
 		}
 
 		return clone;

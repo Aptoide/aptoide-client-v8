@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -27,6 +28,7 @@ public class DownloadService extends Service {
 	private Intent pauseDownloadsIntent;
 	private Intent openAppsManagerIntent;
 	private Subscription notificationUpdateSubscription;
+	private Notification notification;
 
 	private void pauseDownloads(Intent intent) {
 		// TODO: 7/4/16 trinkes pause with specific id
@@ -49,7 +51,6 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		//		FileDownloader.init(this);
 
 		downloadManager = AptoideDownloadManager.getInstance();
 		downloadManager.initDownloadService(this);
@@ -100,7 +101,6 @@ public class DownloadService extends Service {
 	}
 
 	private void setupNotifications() {
-
 		if (notificationUpdateSubscription == null || notificationUpdateSubscription.isUnsubscribed()) {
 			openAppsManagerIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null);
 
@@ -127,7 +127,14 @@ public class DownloadService extends Service {
 						break;
 				}
 
-				startForeground(NOTIFICATION_ID, buildStandardNotification(download, pOpenAppsManager, pNotificationClick, builder).build());
+				if (notification == null) {
+					notification = buildStandardNotification(download, pOpenAppsManager, pNotificationClick, builder).build();
+				} else {
+					long oldWhen = notification.when;
+					notification = buildStandardNotification(download, pOpenAppsManager, pNotificationClick, builder).build();
+					notification.when = oldWhen;
+				}
+				startForeground(NOTIFICATION_ID, notification);
 				setupStopSelfMechanism();
 			}, Throwable::printStackTrace);
 			subscriptions.add(notificationUpdateSubscription);

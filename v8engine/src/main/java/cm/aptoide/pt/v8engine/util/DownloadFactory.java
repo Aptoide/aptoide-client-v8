@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.util;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.Download;
@@ -29,8 +30,9 @@ public class DownloadFactory {
 		Download download = new Download();
 		download.setAppId(appToDownload.getId());
 		download.setAppName(appToDownload.getName());
-		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(),
-				appToDownload.getFile().getMd5sum(), appToDownload.getObb()));
+		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload
+				.getFile()
+				.getMd5sum(), appToDownload.getObb(), appToDownload.getFile().getPathAlt()));
 		return download;
 	}
 
@@ -41,8 +43,9 @@ public class DownloadFactory {
 		Download download = new Download();
 		download.setAppId(appToDownload.getId());
 		download.setAppName(appToDownload.getName());
-		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(),
-				appToDownload.getFile().getMd5sum(), appToDownload.getObb()));
+		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload
+				.getFile()
+				.getMd5sum(), appToDownload.getObb(), appToDownload.getFile().getPathAlt()));
 		return download;
 	}
 
@@ -58,20 +61,20 @@ public class DownloadFactory {
 		}
 	}
 
-	private RealmList<FileToDownload> createFileList(long appId, String packageName, String filePath, String fileMd5, Obb appObb) {
+	private RealmList<FileToDownload> createFileList(long appId, String packageName, String filePath, String fileMd5, Obb appObb, @Nullable String altPathToApk) {
 
 		final RealmList<FileToDownload> downloads = new RealmList<>();
 
-		downloads.add(FileToDownload.createFileToDownload(filePath, appId, fileMd5, null, FileToDownload.APK));
+		downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, appId, fileMd5, null, FileToDownload.APK));
 
 		if (appObb != null) {
 			if (appObb.getMain() != null) {
-				downloads.add(FileToDownload.createFileToDownload(appObb.getMain().getPath(), appId, appObb.getMain().getMd5sum(),
+				downloads.add(FileToDownload.createFileToDownload(appObb.getMain().getPath(), null, appId, appObb.getMain().getMd5sum(),
 						appObb.getMain().getFilename(), FileToDownload.OBB, packageName));
 			}
 
 			if (appObb.getPatch() != null) {
-				downloads.add(FileToDownload.createFileToDownload(appObb.getPatch().getPath(), appId, appObb.getPatch().getMd5sum(),
+				downloads.add(FileToDownload.createFileToDownload(appObb.getPatch().getPath(), null, appId, appObb.getPatch().getMd5sum(),
 						appObb.getPatch().getFilename(), FileToDownload.OBB, packageName));
 			}
 		}

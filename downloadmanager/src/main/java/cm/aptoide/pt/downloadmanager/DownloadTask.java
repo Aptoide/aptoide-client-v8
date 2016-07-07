@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -13,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -124,11 +124,9 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 			if (isSerial) {
 				// To form a queue with the same queueTarget and execute them linearly
-				Logger.d(TAG, "startDownload() called with: " + "1");
 				FileDownloader.getImpl().start(this, true);
 			} else {
 				// To form a queue with the same queueTarget and execute them in parallel
-				Logger.d(TAG, "startDownload() called with: " + "2");
 				FileDownloader.getImpl().start(this, false);
 			}
 		}
@@ -138,9 +136,6 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	private synchronized void saveDownloadInDb(Download download) {
 		Observable.fromCallable(() -> {
-			Logger.d(TAG, "saveDownloadInDb() called with: " + "download = [" + download.getAppId() + "," + download.getStatusName(AptoideDownloadManager
-					.getContext()) +
-					"]");
 			@Cleanup Realm realm = Database.get();
 			Database.save(download, realm);
 			return null;
@@ -187,7 +182,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	@Override
 	protected void blockComplete(BaseDownloadTask task) {
-		Logger.d(TAG, "blockComplete() called with: " + "task = [" + task + "]");
+
 	}
 
 	@Override
@@ -212,8 +207,18 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	@Override
 	protected void error(BaseDownloadTask task, Throwable e) {
-		Logger.printException(e);
 		AptoideDownloadManager.getInstance().pauseDownload(download.getAppId());
+		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+			if (!TextUtils.isEmpty(fileToDownload.getAltLink())) {
+				fileToDownload.setLink(fileToDownload.getAltLink());
+				fileToDownload.setAltLink(null);
+				saveDownloadInDb(download);
+				Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+				intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+				intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
+				AptoideDownloadManager.getContext().sendBroadcast(intent);
+			}
+		}
 		setDownloadStatus(Download.ERROR, download, task);
 	}
 
