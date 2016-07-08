@@ -1,3 +1,8 @@
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Neurophobic Animal on 08/07/2016.
+  -->
+
 <code_scheme name="Project">
   <option name="OTHER_INDENT_OPTIONS">
     <value>
@@ -21,23 +26,23 @@
   </option>
   <option name="IMPORT_LAYOUT_TABLE">
     <value>
-      <package name="android" withSubpackages="true" static="false" />
+      <package name="android" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="com" withSubpackages="true" static="false" />
+      <package name="com" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="junit" withSubpackages="true" static="false" />
+      <package name="junit" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="net" withSubpackages="true" static="false" />
+      <package name="net" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="org" withSubpackages="true" static="false" />
+      <package name="org" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="java" withSubpackages="true" static="false" />
+      <package name="java" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="javax" withSubpackages="true" static="false" />
+      <package name="javax" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="" withSubpackages="true" static="false" />
+      <package name="" static="false" withSubpackages="true"/>
       <emptyLine />
-      <package name="" withSubpackages="true" static="true" />
+      <package name="" static="true" withSubpackages="true"/>
       <emptyLine />
     </value>
   </option>
@@ -51,6 +56,7 @@
   </AndroidXmlCodeStyleSettings>
   <JavaCodeStyleSettings>
     <option name="SPACE_AFTER_CLOSING_ANGLE_BRACKET_IN_TYPE_ARGUMENT" value="true" />
+    <option name="DO_NOT_WRAP_AFTER_SINGLE_ANNOTATION" value="true"/>
   </JavaCodeStyleSettings>
   <Objective-C-extensions>
     <option name="GENERATE_INSTANCE_VARIABLES_FOR_PROPERTIES" value="ASK" />
@@ -76,8 +82,8 @@
       <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="DeallocMethod" />
     </class>
     <extensions>
-      <pair source="cpp" header="h" />
-      <pair source="c" header="h" />
+      <pair header="h" source="cpp"/>
+      <pair header="h" source="c"/>
     </extensions>
   </Objective-C-extensions>
   <XML>
@@ -101,6 +107,7 @@
     <option name="DOWHILE_BRACE_FORCE" value="3" />
     <option name="WHILE_BRACE_FORCE" value="3" />
     <option name="WRAP_LONG_LINES" value="true" />
+    <option name="FIELD_ANNOTATION_WRAP" value="1"/>
     <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
     <option name="ENUM_CONSTANTS_WRAP" value="5" />
     <indentOptions>

@@ -10,11 +10,11 @@ import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
 
 /**
@@ -50,14 +50,18 @@ public class DownloadFactory {
 		return download;
 	}
 
-	public Download create(Update update) {
-		validateApp(update.getAppId(), null, update.getPackageName(), update.getLabel(), update.getApkPath(), update.getAlternativeApkPath());
+	public Download create(UpdateDisplayable updateDisplayable) {
+		validateApp(updateDisplayable.getAppId(), null, updateDisplayable.getPackageName(), updateDisplayable.getLabel(), updateDisplayable.getApkPath(),
+				updateDisplayable
+				.getAlternativeApkPath());
 		Download download = new Download();
-		download.setAppId(update.getAppId());
-		download.setAppName(update.getLabel());
-		download.setFilesToDownload(createFileList(update.getAppId(), update.getPackageName(), update.getApkPath(), update.getAlternativeApkPath(), update
-				.getMd5(), update
-				.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5()));
+		download.setAppId(updateDisplayable.getAppId());
+		download.setAppName(updateDisplayable.getLabel());
+		download.setFilesToDownload(createFileList(updateDisplayable.getAppId(), updateDisplayable.getPackageName(), updateDisplayable.getApkPath(),
+				updateDisplayable
+				.getAlternativeApkPath(), updateDisplayable.getMd5(), updateDisplayable.getMainObbPath(), updateDisplayable.getMainObbMd5(), updateDisplayable
+						.getPatchObbPath(), updateDisplayable
+				.getPatchObbMd5()));
 		return download;
 	}
 
@@ -73,9 +77,26 @@ public class DownloadFactory {
 		}
 	}
 
-	private RealmList<FileToDownload> createFileList(long appId, String packageName, String filePath, String fileMd5, Obb appObb, @Nullable String altPathToApk) {
-		return createFileList(appId, packageName, filePath, altPathToApk, fileMd5, appObb.getMain().getPath(), appObb.getMain().getMd5sum(), appObb.getPatch()
-				.getPath(), appObb.getPatch().getMd5sum());
+	private RealmList<FileToDownload> createFileList(long appId, String packageName, String filePath, String fileMd5, Obb appObb, @Nullable String
+			altPathToApk) {
+
+		String mainObbPath = null;
+		String mainObbMd5 = null;
+		String patchObbPath = null;
+		String patchObbMd5 = null;
+
+		Obb.ObbItem main = appObb.getMain();
+		if (main != null) {
+			mainObbPath = main.getPath();
+			mainObbMd5 = main.getMd5sum();
+		}
+
+		Obb.ObbItem patch = appObb.getPatch();
+		if (patch != null) {
+			patchObbPath = patch.getPath();
+			patchObbMd5 = patch.getMd5sum();
+		}
+		return createFileList(appId, packageName, filePath, altPathToApk, fileMd5, mainObbPath, mainObbMd5, patchObbPath, patchObbMd5);
 	}
 
 	private RealmList<FileToDownload> createFileList(long appId, String packageName, String filePath, @Nullable String altPathToApk, String fileMd5, String

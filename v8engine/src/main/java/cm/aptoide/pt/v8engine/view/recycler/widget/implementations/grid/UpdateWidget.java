@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -52,16 +51,15 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	@Override
 	public void bindView(UpdateDisplayable updateDisplayable) {
-		Update pojo = updateDisplayable.getPojo();
-
 		@Cleanup Realm realm = Database.get();
 
-		labelTextView.setText(pojo.getLabel());
-		installedVernameTextView.setText(Database.InstalledQ.get(pojo.getPackageName(), realm).getVersionName());
-		updateVernameTextView.setText(pojo.getUpdateVersionName());
-		ImageLoader.load(pojo.getIcon(), iconImageView);
+		labelTextView.setText(updateDisplayable.getLabel());
+		installedVernameTextView.setText(Database.InstalledQ.get(updateDisplayable.getPackageName(), realm).getVersionName());
+		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
+		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 		updateButtonLayout.setOnClickListener(view -> {
-			new DownloadServiceHelper(AptoideDownloadManager.getInstance()).startDownload(new DownloadFactory().create(pojo)).subscribe(download -> {
+			new DownloadServiceHelper(AptoideDownloadManager.getInstance()).startDownload(new DownloadFactory().create(updateDisplayable))
+					.subscribe(download -> {
 				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 					AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
 				}
