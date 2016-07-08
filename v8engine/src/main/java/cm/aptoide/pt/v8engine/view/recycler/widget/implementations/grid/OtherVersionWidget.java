@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -111,12 +111,13 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> {
 	private void setItemBackgroundColor(View itemView) {
 		final Resources.Theme theme = itemView.getContext().getTheme();
 		final Resources res = itemView.getResources();
+
 		int color;
-		if (itemView.getId() % 2 == 0) {
+		if (getLayoutPosition() % 2 == 0) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				color = res.getColor(R.color.dark_custom_gray, theme);
+				color = res.getColor(R.color.light_custom_gray, theme);
 			} else {
-				color = res.getColor(R.color.dark_custom_gray);
+				color = res.getColor(R.color.light_custom_gray);
 			}
 		} else {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

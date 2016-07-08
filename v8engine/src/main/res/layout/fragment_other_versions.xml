@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 07/07/2016.
+  ~ Modified by SithEngineer on 08/07/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -12,67 +12,63 @@
     android:layout_height="match_parent"
     >
 
-    <include
-        layout="@layout/partial_view_incl_no_network"
-        tools:visibility="gone"
-        />
-
-    <include
-        layout="@layout/partial_view_error"
-        tools:visibility="gone"
-        />
-
-
-    <!-- is this necessary ?? -->
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/other_versions_header_height"
         >
 
         <include
-            layout="@layout/partial_view_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            tools:visibility="visible"
+            layout="@layout/partial_view_incl_no_network"
+            tools:visibility="gone"
             />
 
-    </RelativeLayout>
+        <include
+            layout="@layout/partial_view_error"
+            tools:visibility="gone"
+            />
 
-    <TextView
-        android:id="@+id/empty_data"
+
+        <!-- is this necessary ?? -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <include
+                layout="@layout/partial_view_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/empty_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/label_padding"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:text="@string/no_excluded_updates_msg"
+            tools:visibility="visible"
+            />
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/other_versions_header_height"
-        android:gravity="center"
-        android:padding="@dimen/label_padding"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:visibility="gone"
-        tools:text="@string/no_excluded_updates_msg"
-        tools:visibility="visible"
-        />
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:visibility="gone"
-        >
-
-        <android.support.v7.widget.RecyclerView
-
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+        />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -90,7 +86,7 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:fitsSystemWindows="true"
-            android:textColor="@color/black"
+            android:textColor="@color/medium_custom_gray"
             android:textSize="@dimen/appview_title_text_size"
             app:expandedTitleMarginBottom="50dp"
             app:expandedTitleMarginEnd="@dimen/appview_title_right_margin"

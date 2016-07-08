@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.adapters;
@@ -127,6 +127,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 			itemView.setOnClickListener(
 					v -> {
 						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl()));
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						mainContext.startActivity(intent);
 					}
 			);

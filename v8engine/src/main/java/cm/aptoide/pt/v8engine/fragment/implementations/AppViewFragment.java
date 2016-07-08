@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -161,6 +161,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		ActionBar supportActionBar = parentActivity.getSupportActionBar();
 		if (supportActionBar != null) {
 			supportActionBar.setDisplayHomeAsUpEnabled(true);
+			supportActionBar.setTitle("");
 		}
 	}
 

@@ -1,16 +1,19 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,16 +33,15 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
-import lombok.Getter;
 
 /**
  * Created by sithengineer on 05/07/16.
  */
-public class OtherVersionsFragment extends GridRecyclerSwipeFragment {
+public class OtherVersionsFragment extends GridRecyclerFragment {
 
 	private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
@@ -75,15 +77,19 @@ public class OtherVersionsFragment extends GridRecyclerSwipeFragment {
 	public void load(boolean refresh) {
 		Logger.d(TAG, "Other versions should refresh? " + refresh);
 
-		getRecyclerView().removeItemDecoration(getDefaultItemDecoration());
+		if (refresh) {
+			fetchOtherVersions();
 
-		fetchOtherVersions();
-
-		if (header != null) {
-			header.setImage(appImgUrl);
+			if (header != null) {
+				header.setImage(appImgUrl);
+				//				header.setTitle(appName);
+			}
 		}
+	}
 
-		setTitle(appName);
+	@Override
+	public int getContentViewId() {
+		return R.layout.fragment_other_versions;
 	}
 
 	@Override
@@ -108,12 +114,8 @@ public class OtherVersionsFragment extends GridRecyclerSwipeFragment {
 		if (toolbar != null) {
 			ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 			bar.setDisplayHomeAsUpEnabled(true);
+			bar.setTitle(R.string.other_versions);
 		}
-	}
-
-	@Override
-	public int getContentViewId() {
-		return R.layout.fragment_other_versions;
 	}
 
 	@Override
@@ -151,17 +153,6 @@ public class OtherVersionsFragment extends GridRecyclerSwipeFragment {
 		});
 	}
 
-	private void setTitle(String title) {
-		if (toolbar != null) {
-			ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-			bar.setTitle(title);
-		}
-
-		if (header != null) {
-			header.setTitle(title);
-		}
-	}
-
 	//
 	// micro widget for header
 	//
@@ -171,19 +162,24 @@ public class OtherVersionsFragment extends GridRecyclerSwipeFragment {
 		private final boolean animationsEnabled;
 
 		// views
-		@Getter
 		private final AppBarLayout appBarLayout;
-
-		@Getter
 		private final CollapsingToolbarLayout collapsingToolbar;
-
-		@Getter
 		private final ImageView appIcon;
 
-		private String title;
+		private final SpannableString composedTitle1;
+		private final SpannableString composedTitle2;
+
+		private SpannableString title;
 
 		// ctor
 		public ViewHeader(@NonNull View view) {
+
+			composedTitle1 = new SpannableString(view.getResources().getString(R.string.other_versions_partial_title_1));
+			composedTitle1.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle1.length(), 0);
+
+			composedTitle2 = new SpannableString(view.getResources().getString(R.string.other_versions_partial_title_2));
+			composedTitle2.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle2.length(), 0);
+
 			animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
 
 			appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
@@ -195,23 +191,31 @@ public class OtherVersionsFragment extends GridRecyclerSwipeFragment {
 				@Override
 				public void onStateChanged(AppBarLayout appBarLayout, State state) {
 					switch (state) {
-						case EXPANDED:
+						case EXPANDED: {
 							if (animationsEnabled) {
 								appIcon.animate().alpha(1F).start();
 							} else {
 								appIcon.setVisibility(View.VISIBLE);
 							}
-							break;
 
+							//							SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
+							//							stringBuilder.append(composedTitle1);
+							//							stringBuilder.append(title);
+							//							stringBuilder.append(composedTitle2);
+							//							collapsingToolbar.setTitle(stringBuilder);
+							break;
+						}
 						default:
 						case IDLE:
-						case COLLAPSED:
+						case COLLAPSED: {
 							if (animationsEnabled) {
 								appIcon.animate().alpha(0F).start();
 							} else {
 								appIcon.setVisibility(View.INVISIBLE);
 							}
+							//							collapsingToolbar.setTitle(title);
 							break;
+						}
 					}
 				}
 			});
@@ -222,8 +226,12 @@ public class OtherVersionsFragment extends GridRecyclerSwipeFragment {
 		}
 
 		private void setTitle(String title) {
-			this.title = title;
-			collapsingToolbar.setTitle(title);
+			SpannableString titleSpan = new SpannableString(title);
+			titleSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, titleSpan.length(), 0);
+			this.title = titleSpan;
+
+			collapsingToolbar.setTitle(titleSpan);
+
 		}
 	}
 }

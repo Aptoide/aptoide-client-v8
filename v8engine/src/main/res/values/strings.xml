@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 07/07/2016.
+  ~ Modified by SithEngineer on 08/07/2016.
   -->
 
 <resources>
@@ -90,4 +90,9 @@
     <!-- Preferences -->
     <string name="animations">Animations</string>
     <string name="animations_enabled">Animations enabled</string>
+
+    <!-- "Other <app name> versions on different Stores" -->
+    <string name="other_versions_partial_title_1">Other</string>
+    <string name="other_versions_partial_title_2">versions on different Stores</string>
+    <string name="other_versions">Other versions</string>
 </resources>

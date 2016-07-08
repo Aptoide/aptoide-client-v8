@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 08/07/2016.
+  -->
+
 <resources>
     <color name="white">#fff</color>
     <color name="default_color">#e17117</color>
@@ -130,5 +135,8 @@
     <color name="appview_rating_text">#FAB000</color>
 
     <color name="separators_grey">#1f000000</color>
+
+    <color name="black_gradient_start">#dd000000</color>
+    <color name="black_gradient_end">#2f000000</color>
 
 </resources>
