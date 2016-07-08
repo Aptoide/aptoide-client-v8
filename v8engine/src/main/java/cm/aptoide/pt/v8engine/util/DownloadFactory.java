@@ -85,17 +85,20 @@ public class DownloadFactory {
 		String patchObbPath = null;
 		String patchObbMd5 = null;
 
-		Obb.ObbItem main = appObb.getMain();
-		if (main != null) {
-			mainObbPath = main.getPath();
-			mainObbMd5 = main.getMd5sum();
+		if (appObb != null) {
+			Obb.ObbItem main = appObb.getMain();
+			if (main != null) {
+				mainObbPath = main.getPath();
+				mainObbMd5 = main.getMd5sum();
+			}
+
+			Obb.ObbItem patch = appObb.getPatch();
+			if (patch != null) {
+				patchObbPath = patch.getPath();
+				patchObbMd5 = patch.getMd5sum();
+			}
 		}
 
-		Obb.ObbItem patch = appObb.getPatch();
-		if (patch != null) {
-			patchObbPath = patch.getPath();
-			patchObbMd5 = patch.getMd5sum();
-		}
 		return createFileList(appId, packageName, filePath, altPathToApk, fileMd5, mainObbPath, mainObbMd5, patchObbPath, patchObbMd5);
 	}
 
