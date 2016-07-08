@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 16/06/2016.
  */
 
-package cm.aptoide.pt.v8engine.interfaces;
+package cm.aptoide.pt.actions;
 
 import android.annotation.TargetApi;
 import android.os.Build;

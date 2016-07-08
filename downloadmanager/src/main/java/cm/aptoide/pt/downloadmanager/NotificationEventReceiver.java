@@ -14,7 +14,6 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 	private static final String TAG = NotificationEventReceiver.class.getSimpleName();
 
 	public void onReceive(Intent intent) {
-		Logger.d(TAG, "onReceive() called with: " + "intent = [" + intent + "]");
 
 		String action = intent.getAction();
 		if (action != null) {
@@ -29,6 +28,7 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 							downloadManager.pauseAllDownloads();
 						}
 					}
+					break;
 				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN:
 					if (downloadManager.getDownloadNotificationActionsInterface() != null) {
 						downloadManager.getDownloadNotificationActionsInterface()

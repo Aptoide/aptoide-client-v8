@@ -9,6 +9,7 @@ import com.liulishuo.filedownloader.FileDownloader;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -21,6 +22,7 @@ import io.realm.Sort;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -49,6 +51,8 @@ public class AptoideDownloadManager {
 	private boolean isDownloading = false;
 	@Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface downloadNotificationActionsInterface;
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
+	@Setter
+	private PermissionRequest permissionRequest;
 
 	public static Context getContext() {
 		return context;
@@ -94,7 +98,17 @@ public class AptoideDownloadManager {
 		if (getDownloadStatus(download.getAppId()).toBlocking().first() == Download.COMPLETED) {
 			return Observable.fromCallable(() -> download);
 		}
+		if (permissionRequest != null) {
+			permissionRequest.requestAccessToExternalFileSystem(() -> {
+				startNewDownload(download);
+			});
+		} else {
+			startNewDownload(download);
+		}
+		return getDownload(download.getAppId());
+	}
 
+	private void startNewDownload(Download download) {
 		download.setOverallDownloadStatus(Download.IN_QUEUE);
 		download.setOverallProgress(0);
 		@Cleanup
@@ -102,12 +116,11 @@ public class AptoideDownloadManager {
 		Database.save(download, realm);
 
 		startNextDownload();
-		return getDownload(download.getAppId());
 	}
 
 	public void pauseDownload(long appId) {
 		@Cleanup Realm realm = Database.get();
-		getDownload(realm, appId).subscribe(download -> {
+		getDownload(realm, appId).first().subscribe(download -> {
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 			}
