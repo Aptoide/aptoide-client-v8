@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,20 +42,21 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 			Map<String, List<String>> storesAuthMap = new HashMap<>();
 			storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
 			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, storesAuthMap, stores, false));
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, storesAuthMap,
+					stores, false));
 		}
 		return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, stores, false));
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, stores, false));
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
 		if (addSubscribedStores) {
 			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, StoreUtils
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, StoreUtils
 					.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(), false));
 		} else {
 			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.getDefaultLimit(), query, false));
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, false));
 		}
 	}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -19,7 +19,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -59,7 +60,7 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 	}
 
 	@Data
-	@Accessors(chain = false)
+	//@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody implements Endless {
 
@@ -67,7 +68,11 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 		private String apkMd5sum;
 		private Integer appId;
 		private String lang = Api.LANG;
+		@Setter
+		@Getter
 		private int limit;
+		@Setter
+		@Getter
 		private int offset;
 		private Integer packageId;
 		private String packageName;

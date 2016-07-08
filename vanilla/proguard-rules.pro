@@ -51,6 +51,8 @@
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 
+# For Fabric to properly de-obfuscate your crash reports, you need to remove this line from your ProGuard config:
+# -printmapping mapping.txt
 # RemoteViews might need annotations.
 
 -keepattributes *Annotation*
@@ -62,6 +64,9 @@
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
+
+# If you are using custom exceptions, add this line so that custom exception types are skipped during obfuscation:
+-keep public class * extends java.lang.Exception
 
 # Preserve all View implementations, their special context constructors, and
 # their setters.
@@ -159,13 +164,10 @@
 #-keep class cm.aptoide.accountmanager.** { *; }
 #-keep class cm.aptoide.pt.** {*;}
 
-##
-## Jackson specific rules
-##
-
--keepattributes *Annotation*,EnclosingMethod,Signature
--keepnames class com.fasterxml.jackson.** { *; }
- -dontwarn com.fasterxml.jackson.databind.**
- -keep class org.codehaus.** { *; }
- -keepclassmembers public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
- public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *; }
+-keep class com.google.android.gms.** {*;}
+-keep class rg.apache.harmony.xnet.provider.jsse.NativeCrypto { *; }
+-keep class pl.droidsonroids.gif.** { *; }
+#-keep class com.squareup.picasso.Transformation { *; }
+-dontwarn com.squareup.picasso.**
+#-keep class cm.aptoide.pt.dataprovider.ws.v7.Endless { *; }
+#-dontwarn cm.aptoide.pt.dataprovider.ws.v7.Endless

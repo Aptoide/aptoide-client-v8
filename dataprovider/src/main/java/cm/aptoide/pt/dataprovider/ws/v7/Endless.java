@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -10,13 +10,12 @@ package cm.aptoide.pt.dataprovider.ws.v7;
  */
 public interface Endless {
 
+	int DEFAULT_LIMIT = 10;
+
 	int getOffset();
 
 	void setOffset(int offset);
 
 	int getLimit();
 
-	static int getDefaultLimit() {
-		return 10;
-	}
 }

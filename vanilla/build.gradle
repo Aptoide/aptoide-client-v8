@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by SithEngineer on 08/07/2016.
  */
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
@@ -9,6 +9,7 @@ apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
     jvmArgs '-noverify'
+    //defaultMethods true
 }
 
 Properties localProperties = new Properties()
