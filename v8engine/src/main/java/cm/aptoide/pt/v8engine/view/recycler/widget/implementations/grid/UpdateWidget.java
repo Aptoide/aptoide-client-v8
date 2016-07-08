@@ -17,7 +17,9 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -30,6 +32,7 @@ import lombok.Cleanup;
 @Displayables({UpdateDisplayable.class})
 public class UpdateWidget extends Widget<UpdateDisplayable> {
 
+	private View updateRowRelativeLayout;
 	private TextView labelTextView;
 	private ImageView iconImageView;
 	private TextView installedVernameTextView;
@@ -42,6 +45,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
+		updateRowRelativeLayout = itemView.findViewById(R.id.updateRowRelativeLayout);
 		labelTextView = (TextView) itemView.findViewById(R.id.name);
 		iconImageView = (ImageView) itemView.findViewById(R.id.icon);
 		installedVernameTextView = (TextView) itemView.findViewById(R.id.app_installed_version);
@@ -57,6 +61,9 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		installedVernameTextView.setText(Database.InstalledQ.get(updateDisplayable.getPackageName(), realm).getVersionName());
 		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
+
+		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
+
 		updateButtonLayout.setOnClickListener(view -> {
 			new DownloadServiceHelper(AptoideDownloadManager.getInstance()).startDownload(new DownloadFactory().create(updateDisplayable))
 					.subscribe(download -> {
