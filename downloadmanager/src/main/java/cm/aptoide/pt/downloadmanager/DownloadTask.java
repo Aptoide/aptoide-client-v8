@@ -188,16 +188,16 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	@Override
 	protected void completed(BaseDownloadTask task) {
-		for (FileToDownload fileToDownload : download.getFilesToDownload()) {
-			if (fileToDownload.getDownloadId() == task.getId()) {
-				fileToDownload.setPath(getFilePathFromFileType(fileToDownload));
-				fileToDownload.setStatus(Download.COMPLETED);
-				moveFileToRightPlace(download);
-				fileToDownload.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
-			}
-		}
-		saveDownloadInDb(download);
-		AptoideDownloadManager.getInstance().setDownloading(false);
+		Observable.from(download.getFilesToDownload())
+				.filter(file -> file.getDownloadId() == task.getId())
+				.flatMap(file -> {
+					file.setPath(getFilePathFromFileType(file));
+					file.setStatus(Download.COMPLETED);
+					return moveFileToRightPlace(download).doOnNext(success -> file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE));
+				})
+				.doOnUnsubscribe(() -> AptoideDownloadManager.getInstance().setDownloading(false))
+				.subscribeOn(Schedulers.io())
+				.subscribe(success -> saveDownloadInDb(download), throwable -> setDownloadStatus(Download.ERROR, download));
 	}
 
 	@Override
@@ -252,21 +252,13 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		}
 	}
 
-	private void moveFileToRightPlace(Download download) {
+	private Observable<Void> moveFileToRightPlace(Download download) {
 		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 			if (fileToDownload.getStatus() != Download.COMPLETED) {
-				return;
+				return Observable.error(new IllegalArgumentException("All files must be completed!"));
 			}
 		}
-
-		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-			FileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, fileToDownload.getPath(), fileToDownload.getFileName())
-					.subscribeOn(Schedulers.io())
-					.subscribe(copiedSuccessful -> {
-						if (!copiedSuccessful) {
-							setDownloadStatus(Download.ERROR, download);
-						}
-					});
-		}
+		return Observable.from(download.getFilesToDownload())
+				.flatMap(file -> FileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, file.getPath(), file.getFileName()));
 	}
 }
