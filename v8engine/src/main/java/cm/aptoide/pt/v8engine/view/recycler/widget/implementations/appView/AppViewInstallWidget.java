@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
@@ -29,7 +30,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;

@@ -15,9 +15,9 @@ import android.view.ViewGroup;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
-import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import io.realm.Realm;
 import rx.functions.Action0;
 
