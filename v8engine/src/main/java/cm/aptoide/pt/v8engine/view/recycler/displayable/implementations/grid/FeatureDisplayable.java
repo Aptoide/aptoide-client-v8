@@ -62,7 +62,7 @@ public class FeatureDisplayable extends Displayable {
 
 	public Spannable getAppText(Context context) {
 		return spannableFactory.create(context
-				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), appName, new StyleSpan(Typeface.BOLD));
+				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), new StyleSpan(Typeface.BOLD), appName);
 	}
 
 	@Override

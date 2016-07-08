@@ -90,4 +90,7 @@
     <!-- Preferences -->
     <string name="animations">Animations</string>
     <string name="animations_enabled">Animations enabled</string>
+    <string name="displayable_social_timeline_recommendation_similar_to">Similar to %1$s</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">and</string>
+    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide Team recommends</string>
 </resources>
