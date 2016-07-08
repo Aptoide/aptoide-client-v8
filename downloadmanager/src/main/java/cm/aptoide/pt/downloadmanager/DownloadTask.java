@@ -46,6 +46,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
 				.subscribeOn(Schedulers.io())
+				.takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS && download.getOverallDownloadStatus() != Download.IN_QUEUE &&
+						download.getOverallDownloadStatus() != Download.PENDING)
 				.map(aLong -> updateProgress())
 				.filter(updatedDownload -> {
 					if (updatedDownload.getOverallProgress() <= AptoideDownloadManager.PROGRESS_MAX_VALUE && download
@@ -60,9 +62,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 						return false;
 					}
 				})
-				//				.takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS)
 				.publish();
-		observable.connect();
 	}
 
 	@NonNull
@@ -109,6 +109,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	 * @throws IllegalArgumentException
 	 */
 	public void startDownload() throws IllegalArgumentException {
+		observable.connect();
 		if (download.getFilesToDownload() != null) {
 			for (FileToDownload fileToDownload : download.getFilesToDownload()) {
 				if (TextUtils.isEmpty(fileToDownload.getLink())) {

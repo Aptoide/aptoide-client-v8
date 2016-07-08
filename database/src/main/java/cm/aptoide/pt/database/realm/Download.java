@@ -43,6 +43,7 @@ public class Download extends RealmObject {
 	@PrimaryKey
 	private long appId;
 	private String appName;
+	@SuppressWarnings({"all"})
 	private long timeStamp;
 
 	public Download() {

@@ -61,8 +61,13 @@ public class AptoideDownloadManager {
 		return instance;
 	}
 
-	private static Download getDownload(Realm realm, long appId) {
-		return realm.where(Download.class).equalTo("appId", appId).findFirst();
+	private static Observable<Download> getDownload(Realm realm, long appId) {
+		return Observable.fromCallable(() -> realm.where(Download.class).equalTo("appId", appId).findFirst()).flatMap(download -> {
+			if (download == null) {
+				return Observable.error(new DownloadNotFoundException());
+			}
+			return download.asObservable();
+		});
 	}
 
 	void initDownloadService(Context context) {
@@ -102,10 +107,11 @@ public class AptoideDownloadManager {
 
 	public void pauseDownload(long appId) {
 		@Cleanup Realm realm = Database.get();
-		Download download = getDownload(realm, appId);
-		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-			FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
-		}
+		getDownload(realm, appId).subscribe(download -> {
+			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+				FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
+			}
+		});
 	}
 
 	/**
@@ -118,12 +124,9 @@ public class AptoideDownloadManager {
 	public Observable<Download> getDownload(long appId) {
 		@Cleanup
 		Realm realm = Database.get();
-		final Download download = getDownload(realm, appId);
-		if (download == null) {
-			return Observable.error(new DownloadNotFoundException());
-		} else {
-			return download.<Download> asObservable().map(realmDownload -> download.clone());
-		}
+		return getDownload(realm, appId).takeUntil(download -> download.getOverallDownloadStatus() != Download.PROGRESS && download.getOverallDownloadStatus()
+				!= Download.IN_QUEUE && download
+				.getOverallDownloadStatus() != Download.PENDING && download.getOverallDownloadStatus() != Download.INVALID_STATUS).map(Download::clone);
 	}
 
 	Observable<Download> getCurrentDownload() {
@@ -182,18 +185,14 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	public Observable<Integer> getDownloadStatus(long appId) {
-		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = Database.get();
-			Download downloadToCheck = getDownload(realm, appId);
-			@Download.DownloadState int downloadStatus = Download.NOT_DOWNLOADED;
-			if (downloadToCheck != null) {
-				downloadStatus = downloadToCheck.getOverallDownloadStatus();
-				if (downloadStatus == Download.COMPLETED) {
-					downloadStatus = getStateIfFileExists(downloadToCheck);
-				}
+	private Observable<Integer> getDownloadStatus(long appId) {
+		@Cleanup
+		Realm realm = Database.get();
+		return getDownload(realm, appId).map(download -> {
+			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+				return getStateIfFileExists(download);
 			}
-			return downloadStatus;
+			return download.getOverallDownloadStatus();
 		});
 	}
 
