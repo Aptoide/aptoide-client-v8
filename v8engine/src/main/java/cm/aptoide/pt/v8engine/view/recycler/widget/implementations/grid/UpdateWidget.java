@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by Neurophobic Animal on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -11,10 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -57,8 +61,11 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		updateVernameTextView.setText(pojo.getUpdateVersionName());
 		ImageLoader.load(pojo.getIcon(), iconImageView);
 		updateButtonLayout.setOnClickListener(view -> {
-			// TODO: 24-05-2016 neuro implementar
-			ShowMessage.asSnack(view, "TO DO");
+			new DownloadServiceHelper(AptoideDownloadManager.getInstance()).startDownload(new DownloadFactory().create(pojo)).subscribe(download -> {
+				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+					AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+				}
+			});
 		});
 	}
 }
