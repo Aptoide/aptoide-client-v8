@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Spannable;
-import android.text.style.StyleSpan;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,15 +66,17 @@ public class RecommendationDisplayable extends Displayable {
 			similarAppsText.append(similarAppsNames.get(i));
 		}
 		if (similarAppsNames.size() > 1) {
+			similarAppsText.append(" ");
 			similarAppsText.append(context.getString(R.string.displayable_social_timeline_recommendation_similar_and));
+			similarAppsText.append(" ");
 			similarAppsText.append(similarAppsNames.get(similarAppsNames.size() - 1));
 		}
-		return spannableFactory.create(similarAppsText.toString(), new StyleSpan(Typeface.BOLD), similarAppsNames.toArray(new String[similarAppsNames.size()]));
+		return spannableFactory.createStyleSpan(similarAppsText.toString(), Typeface.BOLD, similarAppsNames.toArray(new String[similarAppsNames.size()]));
 	}
 
 	public Spannable getAppText(Context context) {
-		return spannableFactory.create(context
-				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), new StyleSpan(Typeface.BOLD), appName);
+		return spannableFactory.createStyleSpan(context
+				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), Typeface.BOLD, appName);
 	}
 
 	public String getHoursSinceLastUpdate(Context context) {

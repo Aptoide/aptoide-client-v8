@@ -2,10 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -51,24 +48,24 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Spannable getAppTitle(Context context) {
-		return spannableFactory.create(context.getString(R.string.displayable_social_timeline_app_update_name,
-				appName), new StyleSpan(Typeface.BOLD), appName);
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_name,
+				appName), Typeface.BOLD, appName);
 	}
 
 	public Spannable getHasUpdateText(Context context) {
 		final String update = context.getString(R.string.displayable_social_timeline_app_update);
-		return spannableFactory.create(context.getString(R.string.displayable_social_timeline_app_has_update, update), new ForegroundColorSpan(ContextCompat.getColor(context, R.color.aptoide_orange)), update);
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update), Typeface.BOLD, update);
 	}
 
 	public Spannable getVersionText(Context context) {
-		return spannableFactory.create(context.getString(R.string.displayable_social_timeline_app_update_version,
-				appVersioName), new StyleSpan(Typeface.BOLD), appVersioName);
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_version,
+				appVersioName), Typeface.BOLD, appVersioName);
 	}
 
 	public Spannable getUpdateAppText(Context context) {
 		String application = context.getString(R.string.displayable_social_timeline_app_update_application);
-		return spannableFactory.create(context.getString(R.string.displayable_social_timeline_app_update_button,
-				application), new StyleSpan(Typeface.BOLD), application);
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_button,
+				application), Typeface.BOLD, application);
 	}
 
 	public String getCompletedText(Context context) {

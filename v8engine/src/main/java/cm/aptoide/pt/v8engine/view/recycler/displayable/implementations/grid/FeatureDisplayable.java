@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Spannable;
-import android.text.style.StyleSpan;
 
 import java.util.Date;
 
@@ -61,8 +60,8 @@ public class FeatureDisplayable extends Displayable {
 	}
 
 	public Spannable getAppText(Context context) {
-		return spannableFactory.create(context
-				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), new StyleSpan(Typeface.BOLD), appName);
+		return spannableFactory.createStyleSpan(context
+				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), Typeface.BOLD, appName);
 	}
 
 	@Override
