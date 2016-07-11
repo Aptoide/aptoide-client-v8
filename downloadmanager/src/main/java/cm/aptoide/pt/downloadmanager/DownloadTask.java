@@ -177,7 +177,6 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		}
 		if (download.getOverallDownloadStatus() != Download.PROGRESS) {
 			setDownloadStatus(Download.PROGRESS, download, task);
-			AptoideDownloadManager.getInstance().setDownloading(true);
 		}
 	}
 
