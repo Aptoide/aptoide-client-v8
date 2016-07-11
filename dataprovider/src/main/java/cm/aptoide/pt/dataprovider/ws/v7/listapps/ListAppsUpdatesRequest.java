@@ -15,13 +15,15 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -46,14 +48,17 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	private static final int SPLIT_SIZE = 100;
 
-	private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body) {
-		super(body, httpClient, converterFactory, BASE_HOST);
+	private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 	}
 
 	public static ListAppsUpdatesRequest of() {
-		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-				new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-						Api.MATURE, Api.Q, getInstalledApksDataWithoutExcluded(), StoreUtils.getSubscribedStoresIds()));
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+				.getAptoideClientUUID(), AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, getInstalledApksDataWithoutExcluded(), StoreUtils
+				.getSubscribedStoresIds()), BASE_HOST);
 	}
 
 	private static List<ApksData> getInstalledApksDataWithoutExcluded() {

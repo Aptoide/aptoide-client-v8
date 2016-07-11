@@ -8,6 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 import java.util.List;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -15,7 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,26 +34,24 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRequest.Body> {
 
-	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String
-			cdn) {
-		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
-	}
-
-	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String
-			cdn, String packageName) {
-		super(new Body(aptoideId, accessToken, versionCode, cdn, packageName), httpClient, converterFactory, BASE_HOST);
+	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 	}
 
 	public static ListAppVersionsRequest of() {
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID()
-				, AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+				.getAptoideClientUUID(), AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool"), BASE_HOST);
 	}
 
 	public static ListAppVersionsRequest of(String packageName) {
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID()
-				, AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", packageName);
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+				.getAptoideClientUUID(), AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", packageName), BASE_HOST);
 	}
 
 	@Override

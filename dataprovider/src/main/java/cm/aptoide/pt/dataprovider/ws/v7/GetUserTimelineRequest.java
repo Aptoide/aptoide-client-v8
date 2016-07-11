@@ -8,16 +8,17 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import java.util.List;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -36,7 +37,9 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 	}
 
 	public static GetUserTimelineRequest of(String url, int limit, int offset, List<String> packages) {
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager
 				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, limit, offset, packages),
 				OkHttpClientFactory.newClient(), WebService.getDefaultConverter(), BASE_HOST);
 		return getAppRequest;
