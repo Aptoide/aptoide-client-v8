@@ -10,9 +10,12 @@ import android.os.Build;
 import java.util.HashMap;
 import java.util.Map;
 
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import rx.Observable;
@@ -28,6 +31,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
 	private String success;
 
 	private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success) {
+		super(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 		this.adId = adId;
 		this.appId = appId;
 		this.success = (success ? "1" : "0");

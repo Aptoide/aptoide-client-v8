@@ -11,12 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,33 +32,42 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-	private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body) {
-		super(body, httpClient, converterFactory, BASE_HOST);
+	private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 	}
 
 	public static ListSearchAppsRequest of(String query, String storeName) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
 		List<String> stores = Collections.singletonList(storeName);
 
 		Map<String, List<String>> subscribedStoresAuthMap = StoreUtils.getSubscribedStoresAuthMap();
 		if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
 			Map<String, List<String>> storesAuthMap = new HashMap<>();
 			storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+					.getAptoideClientUUID(), AptoideAccountManager
 					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, storesAuthMap,
-					stores, false));
+					stores, false), BASE_HOST);
 		}
-		return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, stores, false));
+		return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+				.getAptoideClientUUID(), AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, stores, false), BASE_HOST);
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
 		if (addSubscribedStores) {
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+					.getAptoideClientUUID(), AptoideAccountManager
 					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, StoreUtils
-					.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(), false));
+					.getSubscribedStoresIds(), StoreUtils
+					.getSubscribedStoresAuthMap(), false), BASE_HOST);
 		} else {
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, false));
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+					.getAptoideClientUUID(), AptoideAccountManager
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, false), BASE_HOST);
 		}
 	}
 

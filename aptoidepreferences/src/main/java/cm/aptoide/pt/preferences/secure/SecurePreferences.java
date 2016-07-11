@@ -5,37 +5,12 @@
 
 package cm.aptoide.pt.preferences.secure;
 
-import android.content.SharedPreferences;
-
-import java.util.UUID;
-
 /**
  * Created by neuro on 21-04-2016.
  */
 public class SecurePreferences {
 
 	private static final String TAG = SecurePreferences.class.getSimpleName();
-
-	public static String getAptoideClientUUID() {
-		SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance();
-		if (!sharedPreferences.contains(SecureKeys.APTOIDE_CLIENT_UUID)) {
-			generateAptoideId(sharedPreferences);
-		}
-		return sharedPreferences.getString(SecureKeys.APTOIDE_CLIENT_UUID, null);
-	}
-
-	private static void generateAptoideId(SharedPreferences sharedPreferences) {
-		String aptoideId;
-		if (getGoogleAdvertisingId() != null) {
-			aptoideId = getGoogleAdvertisingId();
-		} else if (getAndroidId() != null) {
-			aptoideId = getAndroidId();
-		} else {
-			aptoideId = UUID.randomUUID().toString();
-		}
-
-		sharedPreferences.edit().putString(SecureKeys.APTOIDE_CLIENT_UUID, aptoideId).apply();
-	}
 
 	/**
 	 * DO NOT USE THIS METHOD
@@ -122,41 +97,5 @@ public class SecurePreferences {
 
 	public static boolean isAdultSwitchActive() {
 		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
-	}
-
-	public static String getGoogleAdvertisingId() {
-		return SecurePreferencesImplementation.getInstance().getString(SecureKeys.GOOGLE_ADVERTISING_ID_CLIENT, null);
-	}
-
-	public static void setGoogleAdvertisingId(String gaid) {
-		if (getGoogleAdvertisingId() != null) {
-			throw new RuntimeException("Google Advertising ID already set!");
-		}
-
-		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.GOOGLE_ADVERTISING_ID_CLIENT, gaid).apply();
-	}
-
-	public static String getAdvertisingId() {
-		return SecurePreferencesImplementation.getInstance().getString(SecureKeys.ADVERTISING_ID_CLIENT, null);
-	}
-
-	public static void setAdvertisingId(String aaid) {
-		if (getAdvertisingId() != null) {
-			throw new RuntimeException("Advertising ID already set!");
-		}
-
-		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ADVERTISING_ID_CLIENT, aaid).apply();
-	}
-
-	public static String getAndroidId() {
-		return SecurePreferencesImplementation.getInstance().getString(SecureKeys.ANDROID_ID_CLIENT, null);
-	}
-
-	public static void setAndroidId(String android) {
-		if (getAndroidId() != null) {
-			throw new RuntimeException("Android ID already set!");
-		}
-
-		SecurePreferencesImplementation.getInstance().edit().putString(SecureKeys.ANDROID_ID_CLIENT, android).apply();
 	}
 }

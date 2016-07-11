@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -13,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,28 +39,32 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		final StoreCredentials store = getStore(storeName);
-		final Body body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
+		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 				Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
+
 		body.setContext(storeContext);
 		body.setStoreUser(store.getUsername());
 		body.setStorePassSha1(store.getPasswordSha1());
+
 		return new GetStoreRequest("", OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
 	}
 
 	public static GetStoreRequest ofAction(String url) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		V7Url v7Url = new V7Url(url).remove("getStore");
 		Long storeId = v7Url.getStoreId();
 		final StoreCredentials store;
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
-			body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 					Api.LANG, Api.MATURE, Api.Q, storeId, WidgetsArgs.createDefault());
 		} else {
 			String storeName = v7Url.getStoreName();
 			store = getStore(storeName);
-			body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 					Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
 		}
 		body.setStoreUser(store.getUsername());

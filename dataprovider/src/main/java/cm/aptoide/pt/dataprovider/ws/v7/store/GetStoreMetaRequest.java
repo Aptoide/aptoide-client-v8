@@ -6,13 +6,15 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,7 +34,9 @@ public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta,GetSt
 	}
 
 	public static GetStoreMetaRequest of(String storeName, String username, String passwordSha1) {
-		final Body body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 				Api.LANG, Api.MATURE, Api.Q, storeName);
 		body.setStoreUser(username);
 		body.setStorePassSha1(passwordSha1);
@@ -40,8 +44,10 @@ public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta,GetSt
 	}
 
 	public static GetStoreMetaRequest of(String storeName) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
 		final StoreCredentials store = getStore(storeName);
-		final Body body = new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
+		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
 				Api.LANG, Api.MATURE, Api.Q, storeName);
 		body.setStoreUser(store.getUsername());
 		body.setStorePassSha1(store.getPasswordSha1());
