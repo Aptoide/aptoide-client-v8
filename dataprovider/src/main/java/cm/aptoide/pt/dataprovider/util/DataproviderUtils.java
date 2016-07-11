@@ -17,12 +17,12 @@ import java.util.Date;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import io.realm.Realm;
 import lombok.Cleanup;
 import okhttp3.Call;
@@ -82,9 +82,11 @@ public class DataproviderUtils {
 
 		public static String parseMacros(@NonNull String clickUrl) {
 
-			clickUrl = clickUrl.replace("[USER_ANDROID_ID]", AptoideUtils.SystemU.getAndroidId());
-			clickUrl = clickUrl.replace("[USER_UDID]", SecurePreferences.getAptoideClientUUID());
-			clickUrl = clickUrl.replace("[USER_AAID]", SecurePreferences.getAdvertisingId());
+			IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+			clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
+			clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getAptoideClientUUID());
+			clickUrl = clickUrl.replace("[USER_AAID]", idsRepository.getAdvertisingId());
 			clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
 
 			return clickUrl;

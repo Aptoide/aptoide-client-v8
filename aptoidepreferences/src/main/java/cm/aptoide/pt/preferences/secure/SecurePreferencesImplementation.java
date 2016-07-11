@@ -38,7 +38,7 @@ import cm.aptoide.pt.preferences.Application;
 /**
  * Created by neuro on 21-04-2016.
  */
-class SecurePreferencesImplementation implements SharedPreferences {
+public class SecurePreferencesImplementation implements SharedPreferences {
 
 	private static final String TAG = SecurePreferencesImplementation.class.getName();
 	private static final int KEY_SIZE = 256;

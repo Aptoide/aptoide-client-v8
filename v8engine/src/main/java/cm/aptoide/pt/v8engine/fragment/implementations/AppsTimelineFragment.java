@@ -44,13 +44,14 @@ import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 6/17/16.
  */
 public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
-	public static final int SEARCH_LIMIT = 7;
+	public static final int SEARCH_LIMIT = 20;
 	private static final String ACTION_KEY = "ACTION";
 	private AptoideDownloadManager downloadManager;
 	private DownloadFactory downloadFactory;
