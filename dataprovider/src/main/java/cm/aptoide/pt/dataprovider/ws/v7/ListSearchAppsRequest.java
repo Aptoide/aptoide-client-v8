@@ -80,7 +80,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody implements Endless {
 
-		@Getter private int limit;
+		@Getter private Integer limit;
 		@Getter @Setter private int offset;
 		@Getter private String query;
 		@Getter private List<Long> storeIds;

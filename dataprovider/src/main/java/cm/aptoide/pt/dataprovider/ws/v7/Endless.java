@@ -16,6 +16,6 @@ public interface Endless {
 
 	void setOffset(int offset);
 
-	int getLimit();
+	Integer getLimit();
 
 }

@@ -68,12 +68,8 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 		private String apkMd5sum;
 		private Integer appId;
 		private String lang = Api.LANG;
-		@Setter
-		@Getter
-		private int limit;
-		@Setter
-		@Getter
-		private int offset;
+		@Setter @Getter private Integer limit;
+		@Setter @Getter private int offset;
 		private Integer packageId;
 		private String packageName;
 		private String q = Api.Q;

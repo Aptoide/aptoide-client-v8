@@ -18,7 +18,7 @@ public class Datalist<T> {
 	private int total;
 	private int count;
 	private int offset;
-	private int limit;
+	private Integer limit;
 	private int next;
 	private int hidden;
 	private boolean loaded;
