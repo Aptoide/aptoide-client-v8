@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified by SithEngineer on 11/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
@@ -55,6 +56,8 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 	// views
 	private ViewHeader header;
 	private TextView emptyData;
+	// data
+	private ArrayList<Displayable> displayables;
 
 	/**
 	 * @param appName
@@ -74,16 +77,19 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 	}
 
 	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override
 	public void load(boolean refresh) {
 		Logger.d(TAG, "Other versions should refresh? " + refresh);
 
-		if (refresh) {
-			fetchOtherVersions();
+		fetchOtherVersions();
 
-			if (header != null) {
-				header.setImage(appImgUrl);
-				//				header.setTitle(appName);
-			}
+		if (header != null) {
+			header.setImage(appImgUrl);
+			//				header.setTitle(appName);
 		}
 	}
 
@@ -98,6 +104,11 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 		header = new ViewHeader(view);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
 	}
 
 	@Override
@@ -139,11 +150,12 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 			@Override
 			public void call(ListAppVersions listAppVersions) {
 				List<App> apps = listAppVersions.getList();
-				ArrayList<Displayable> displayables = new ArrayList<>(apps.size());
+				displayables = new ArrayList<>(apps.size());
 				for (final App app : apps) {
 					displayables.add(new OtherVersionDisplayable(app));
 				}
 				setDisplayables(displayables);
+				//finishLoading();
 			}
 		}, new ErrorRequestListener() {
 			@Override

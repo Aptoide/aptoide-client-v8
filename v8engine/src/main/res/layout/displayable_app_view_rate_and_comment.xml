@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/07/2016.
+  ~ Modified by SithEngineer on 11/07/2016.
   -->
 
 <RelativeLayout
     style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:orientation="horizontal"
-    >
+    android:layout_height="180dp"
+    android:orientation="horizontal">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/rating_layout"
         android:layout_width="150dp"
         android:layout_height="match_parent"
@@ -21,19 +21,13 @@
         android:orientation="vertical"
         android:weightSum="5">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="12dp"
-            android:layout_weight="4"
-            android:src="@drawable/user_account_white"
-            />
-
         <Button
             android:id="@+id/rate_this_button"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="38dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:background="@drawable/button_border_silver"
             android:text="@string/appview_rate_this_app"
             android:textAllCaps="true"
@@ -41,9 +35,70 @@
             android:textSize="@dimen/text_size_medium"
             />
 
-    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/rate_this_button"
+            android:layout_marginBottom="12dp"
+            android:background="@color/yellow"
+            >
 
-    <LinearLayout
+            <ImageView
+                android:id="@+id/users_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/icon_displayable_view_and_rate"
+                android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:src="@drawable/ic_user_icon"
+                />
+
+            <TextView
+                android:id="@+id/users_voted"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/icon_displayable_view_and_rate"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toRightOf="@id/users_icon"
+                android:gravity="center_vertical|left|start"
+                android:textColor="@color/white"
+                tools:text="2425"
+                />
+
+            <TextView
+                android:id="@+id/rating_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/users_icon"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="62sp"
+                tools:text="4.2"
+                />
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@id/rating_value"
+                android:layout_marginEnd="18dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginStart="18dp"
+                android:max="5"
+                tools:rating="3"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/comments_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,21 +106,15 @@
         android:layout_toEndOf="@id/rating_layout"
         android:layout_toRightOf="@id/rating_layout"
         android:orientation="vertical"
-        android:weightSum="5">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="12dp"
-            android:layout_weight="4"
-            android:src="@color/medium_custom_gray"
-            />
+        >
 
         <Button
             android:id="@+id/read_all_button"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="38dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:background="@drawable/button_border_silver"
             android:text="@string/appview_read_all"
             android:textAllCaps="true"
@@ -73,6 +122,30 @@
             android:textSize="@dimen/text_size_medium"
             />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/top_comments_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/top_comments"
+            android:textColor="?colorPrimary"
+            android:textSize="@dimen/text_size_large"
+            />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/top_comments_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/read_all_button"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/top_comments_title"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
+            />
+
+    </RelativeLayout>
 
 </RelativeLayout>

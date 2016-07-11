@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 08/07/2016.
+  ~ Modified by SithEngineer on 11/07/2016.
   -->
 <!--
     tools:background="#BB000000"
@@ -79,7 +79,7 @@
 
                 <LinearLayout
                     android:id="@+id/badges_layout"
-                    android:layout_width="186dp"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:gravity="bottom"
@@ -151,6 +151,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
                     android:layout_marginEnd="@dimen/appview_header_side_margin"
                     android:layout_marginRight="@dimen/appview_header_side_margin"
                     android:layout_toEndOf="@id/badges_layout"

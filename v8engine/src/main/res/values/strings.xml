@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 08/07/2016.
+  ~ Modified by SithEngineer on 11/07/2016.
   -->
 
 <resources>
@@ -98,4 +98,5 @@
     <string name="displayable_social_timeline_recommendation_similar_to">Similar to %1$s</string>
     <string name="displayable_social_timeline_recommendation_similar_and">and</string>
     <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide Team recommends</string>
+    <string name="top_comments">Top Comments</string>
 </resources>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified by SithEngineer on 11/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -19,15 +19,18 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+
 
 /**
  * Created by sithengineer on 07/07/16.
  */
 @Displayables({OtherVersionDisplayable.class})
-public class OtherVersionWidget extends Widget<OtherVersionDisplayable> {
+public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implements View.OnClickListener {
 
 	private static final String TAG = OtherVersionWidget.class.getSimpleName();
 	private static final Locale DEFAULT_LOCALE = Locale.getDefault();
@@ -43,6 +46,8 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> {
 	private ImageView storeIcon;
 	private TextView storeName;
 	private TextView followers;
+
+	private long appId;
 
 	public OtherVersionWidget(View itemView) {
 		super(itemView);
@@ -60,6 +65,8 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> {
 		storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
 		storeName = (TextView) itemView.findViewById(R.id.store_name);
 		followers = (TextView) itemView.findViewById(R.id.store_followers);
+
+		itemView.setOnClickListener(this);
 	}
 
 	@Override
@@ -67,6 +74,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> {
 		setItemBackgroundColor(itemView);
 		try {
 			final App app = displayable.getPojo();
+			appId = app.getId();
 
 			version.setText(app.getFile().getVername());
 			setBadge(app, trustedBadge);
@@ -128,5 +136,11 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> {
 		}
 
 		itemView.setBackgroundColor(color);
+	}
+
+	@Override
+	public void onClick(View v) {
+		Logger.d(TAG, "showing other version for app with id = " + appId);
+		((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(appId));
 	}
 }
