@@ -31,7 +31,7 @@ public class TimelineRepository {
 		this.duplicateFilter = duplicateFilter;
 	}
 
-	public Observable<Datalist<TimelineCard>> getTimelineCards(int limit, int offset, List<String> packageNames, boolean refresh) {
+	public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset, List<String> packageNames, boolean refresh) {
 		return GetUserTimelineRequest.of(action, limit, offset, packageNames)
 				.observe(refresh)
 				.doOnNext(item -> duplicateFilter.clear())

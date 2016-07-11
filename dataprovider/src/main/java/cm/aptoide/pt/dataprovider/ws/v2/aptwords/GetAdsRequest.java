@@ -38,7 +38,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
 	private Location location;
 	private String keyword;
-	private int limit;
+	private Integer limit;
 	private String packageName;
 	private String repo;
 	private String categories;
@@ -48,11 +48,11 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 		super(client, WebService.getDefaultConverter(), new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 	}
 
-	private static GetAdsRequest of(Location location, String keyword, int limit) {
+	private static GetAdsRequest of(Location location, String keyword, Integer limit) {
 		return new GetAdsRequest().setLocation(location).setKeyword(keyword).setLimit(limit);
 	}
 
-	private static GetAdsRequest of(Location location, int limit) {
+	private static GetAdsRequest of(Location location, Integer limit) {
 		return of(location, "__NULL__", limit);
 	}
 
