@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by pedroribeiro on 11/07/2016.
+  -->
+
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -10,6 +15,50 @@
         <item name="android:background">@drawable/ab_background_aptoide</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
         <item name="android:titleTextStyle" tools:ignore="NewApi">@style/titleStyle</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card" parent="">
+        <item name="android:background">@drawable/dialog_bg</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Title" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Title.Large" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Title.Feature">
+        <item name="android:textColor">@color/aptoide_orange</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Title.LatestApps">
+        <item name="android:textColor">@color/orange_700</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Thumbnail" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Button" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableStart">@drawable/timeline_arrow_get_app</item>
+    </style>
+
+    <style name="Widget.Aptoide.Card.Subtitle" parent="Base.TextAppearance.AppCompat.Caption"/>
+
+    <style name="Widget.Aptoide.Card.Headline" parent="Base.TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -363,6 +412,16 @@
         <item name="android:layout">@layout/fragment_aptoide_preferences</item>
     </style>
 
+    <style name="AppViewWidget">
+        <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>
+        <item name="android:paddingLeft">@dimen/appview_side_margin</item>
+        <item name="android:paddingStart">@dimen/appview_side_margin</item>
+        <item name="android:paddingRight">@dimen/appview_side_margin</item>
+        <item name="android:paddingEnd">@dimen/appview_side_margin</item>
+    </style>
+
+    <dimen name="appview_side_margin">8dp</dimen>
 
 
     <style name="ToolbarGrey" parent="@style/Theme.AppCompat">

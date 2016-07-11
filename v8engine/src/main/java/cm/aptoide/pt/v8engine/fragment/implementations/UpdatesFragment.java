@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -54,10 +54,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 		DataproviderUtils.checkUpdates(listAppsUpdates -> {
 			if (listAppsUpdates.getList().size() == 0) {
 				finishLoading();
-				ShowMessage.show(getView(), R.string.no_updates_available_retoric);
+				ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
 			}
 			if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
-				ShowMessage.show(getView(), R.string.no_new_updates_available);
+				ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
 			}
 		});
 	}
@@ -80,7 +80,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
-									updatesDisplayablesList.add(new UpdateDisplayable(update));
+									updatesDisplayablesList.add(UpdateDisplayable.create(update));
 								}
 							}
 

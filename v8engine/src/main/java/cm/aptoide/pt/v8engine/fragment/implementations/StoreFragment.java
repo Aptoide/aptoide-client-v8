@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/06/2016.
+ * Modified by SithEngineer on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
+import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 
@@ -36,7 +39,8 @@ import cm.aptoide.pt.v8engine.util.ThemeUtils;
  */
 public class StoreFragment extends BasePagerToolbarFragment {
 
-	private static final String TAG = "StoreFragment";
+	private static final String TAG = StoreFragment.class.getSimpleName();
+
 	private final int PRIVATE_STORE_REQUEST_CODE = 20;
 	protected PagerSlidingTabStrip pagerSlidingTabStrip;
 	private String storeName;
@@ -145,16 +149,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 	}
 
 	@Override
-	public void setupToolbar() {
-		super.setupToolbar();
-		if (toolbar != null) {
-			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(storeName);
-			((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			toolbar.setLogo(R.drawable.ic_store);
-		}
-	}
-
-	@Override
 	protected void setupViewPager() {
 		super.setupViewPager();
 		pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
@@ -180,6 +174,35 @@ public class StoreFragment extends BasePagerToolbarFragment {
 					load(true);
 					break;
 			}
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_search, menu);
+
+		setupSearch(menu);
+	}
+
+	protected void setupSearch(Menu menu) {
+		SearchUtils.setupInsideStoreSearchView(menu, getActivity(), storeName);
+	}
+
+	@Override
+	public void setupViews() {
+		super.setupViews();
+
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void setupToolbar() {
+		super.setupToolbar();
+		if (toolbar != null) {
+			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(storeName);
+			((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			toolbar.setLogo(R.drawable.ic_store);
 		}
 	}
 

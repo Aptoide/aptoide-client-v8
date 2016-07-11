@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.preferences.secure;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -313,6 +314,7 @@ class SecurePreferencesImplementation implements SharedPreferences {
 		/**
 		 * Constructor.
 		 */
+		@SuppressLint("CommitPrefEdits")
 		private Editor() {
 			mEditor = SecurePreferencesImplementation.sFile.edit();
 		}

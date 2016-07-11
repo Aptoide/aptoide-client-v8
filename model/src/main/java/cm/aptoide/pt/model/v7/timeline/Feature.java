@@ -5,25 +5,34 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.List;
 
-import lombok.Data;
+import cm.aptoide.pt.model.v7.listapp.App;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Data
-public class Feature  {
+@EqualsAndHashCode(exclude = {"title", "thumbnailUrl", "url", "date", "apps"})
+public class Feature implements TimelineCard  {
 
-	private final String title;
-	private final String thumbnailUrl;
-	private final String url;
-	private final Date date;
+	@Getter private final String cardId;
+	@Getter private final String title;
+	@Getter private final String thumbnailUrl;
+	@Getter private final String url;
+	@Getter private final Date date;
+	@Getter private final List<App> apps;
 
 	@JsonCreator
-	public Feature(@JsonProperty("title") String title,
+	public Feature(@JsonProperty("uid") String cardId,
+			       @JsonProperty("title") String title,
 	               @JsonProperty("thumbnail") String thumbnailUrl,
 	               @JsonProperty("url") String url,
-	               @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date) {
+	               @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
+	               @JsonProperty("apps") List<App> apps) {
+		this.cardId = cardId;
 		this.title = title;
 		this.thumbnailUrl = thumbnailUrl;
 		this.url = url;
 		this.date = date;
+		this.apps = apps;
 	}
 }

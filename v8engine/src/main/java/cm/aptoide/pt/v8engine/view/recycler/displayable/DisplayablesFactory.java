@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/06/2016.
+ * Modified by Neurophobic Animal on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
@@ -20,7 +22,9 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 
 /**
@@ -51,6 +55,20 @@ public class DisplayablesFactory {
 					case DISPLAYS:
 						displayables.add(getDisplays(wsWidget));
 						break;
+
+					case ADS:
+						Displayable ads = getAds(wsWidget.getViewObject());
+						if (ads != null) {
+							// Header hammered
+							LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
+							actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
+							wsWidget.setActions(actions);
+							GridHeaderDisplayable gridHeaderDisplayable = new GridHeaderDisplayable(wsWidget);
+							displayables.add(gridHeaderDisplayable);
+
+							displayables.add(ads);
+						}
+						break;
 				}
 			}
 		}
@@ -71,8 +89,28 @@ public class DisplayablesFactory {
 		return displayables;
 	}
 
+	private static Displayable getAds(Object viewObject) {
+		GetAdsResponse getAdsResponse = (GetAdsResponse) viewObject;
+		if (viewObject != null) {
+			List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
+			List<Displayable> tmp = new ArrayList<>(ads.size());
+			for (GetAdsResponse.Ad ad : ads) {
+
+				GridAdDisplayable diplayable = (GridAdDisplayable) DisplayableType.newDisplayable(Type.ADS);
+				diplayable.setPojo(ad);
+				tmp.add(diplayable);
+			}
+			return new DisplayableGroup(tmp);
+		}
+
+		return null;
+	}
+
 	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
 		ListApps listApps = (ListApps) wsWidget.getViewObject();
+		if (listApps == null) {
+			return new EmptyDisplayable();
+		}
 		List<App> apps = listApps.getDatalist().getList();
 		List<Displayable> displayables = new ArrayList<>(apps.size());
 
@@ -86,7 +124,7 @@ public class DisplayablesFactory {
 						.getResources()
 						.getInteger(R.integer.nr_small_app_bricks);
 
-				nrAppBricks += useBigBrick ? 1 : 0;
+				nrAppBricks = Math.min(nrAppBricks, apps.size());
 
 				if (useBigBrick) {
 					displayables.add(
@@ -94,23 +132,31 @@ public class DisplayablesFactory {
 									.newDisplayable(Type.APP_BRICK, apps.get(0))
 									.setDefaultPerLineCount(1)
 					);
+
+					nrAppBricks++;
 				}
 
-				for (int i = (useBigBrick ? 1 : 0); i < apps.size() && i < nrAppBricks; i++) {
-					Displayable appDisplayablePojo = DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(i));
+				for (int i = (useBigBrick ? 1 : 0); i < nrAppBricks ; i++) {
+					Displayable appDisplayablePojo =
+							DisplayableType
+									.newDisplayable(Type.APP_BRICK, apps.get(i));
+//									.setDefaultPerLineCount(
+//											useBigBrick ? nrAppBricks : Type.APP_BRICK
+//													.getDefaultPerLineCount()
+//									);
 
 					displayables.add(appDisplayablePojo);
 				}
 
-//				for (int i = 0; i < apps.size(); i++) {
-//					Displayable appDisplayablePojo = DisplayableType.newDisplayable(Type
-//							.APP_BRICK, apps
-//							.get(i));
-//
-//					displayables.add(appDisplayablePojo);
-//				}
-
 				displayables.add(new FooterDisplayable(wsWidget));
+			}
+		} else if (Layout.LIST.equals(wsWidget.getData().getLayout())) {
+			if (apps.size() > 0) {
+				displayables.add(new GridHeaderDisplayable(wsWidget));
+			}
+
+			for (App app : apps) {
+				displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP_LIST, app));
 			}
 		} else {
 			if (apps.size() > 0) {
@@ -130,6 +176,9 @@ public class DisplayablesFactory {
 
 	private static Displayable getStores(Object viewObject) {
 		ListStores listStores = (ListStores) viewObject;
+		if (listStores == null) {
+			return new EmptyDisplayable();
+		}
 		List<Store> stores = listStores.getDatalist().getList();
 		List<Displayable> tmp = new ArrayList<>(stores.size());
 		for (Store store : stores) {

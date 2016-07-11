@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 17/06/2016.
+ */
+
 package cm.aptoide.accountmanager;
 
 import android.content.Intent;
@@ -133,7 +138,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
 	@Override
 	public void onLoginSuccess() {
-		ShowMessage.show(content, R.string.login_successful);
+		ShowMessage.asSnack(content, R.string.login_successful);
 		finish();
 		if (openMyAccountOnLoginSuccess) {
 			AptoideAccountManager.openAccountManager(this);
@@ -144,7 +149,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
 	@Override
 	public void onLoginFail(String reason) {
-		ShowMessage.show(content, reason);
+		ShowMessage.asSnack(content, reason);
 	}
 
 	@Override

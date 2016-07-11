@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.preferences;
+
+import android.support.annotation.DrawableRes;
 
 /**
  * Created by neuro on 10-05-2016.
@@ -27,6 +29,7 @@ public interface AptoideConfiguration {
 	// Market
 	String getMarketName();
 
+	@DrawableRes
 	int getIcon();
 
 	String getDefaultStore();
@@ -45,4 +48,11 @@ public interface AptoideConfiguration {
 
 	// Classes
 	Class<?> getPushNotificationReceiverClass();
+
+	// Partners
+
+	/**
+	 * @return partner id. null for vanilla.
+	 */
+	String getPartnerId();
 }

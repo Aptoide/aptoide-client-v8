@@ -21,6 +21,7 @@ public abstract class Application extends android.app.Application {
 	public void onCreate() {
 		super.onCreate();
 
+		PRNGFixes.apply();
 		context = this;
 		configuration = createConfiguration();
 	}

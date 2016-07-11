@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 package cm.aptoide.accountmanager;
@@ -41,8 +41,8 @@ import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
-import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -394,7 +394,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static Observable<String> invalidateAccessToken(@NonNull Context context) {
 		return Observable.fromCallable(() -> {
-			if (AptoideUtils.ThreadU.isOnUiThread()) {
+			if (AptoideUtils.ThreadU.isUiThread()) {
 				throw new IllegalThreadStateException("This method shouldn't be called on ui " +
 						"thread.");
 			}
@@ -564,7 +564,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		cm.aptoide.pt.preferences.Application.getContext().sendBroadcast(new Intent().setAction(LOGIN));
 	}
 
-	public static Observable<List<GetUserRepoSubscription.Subscription>> getUserRepos() {
+	public static Observable<List<Subscription>> getUserRepos() {
 		return GetUserRepoSubscriptionRequest.of()
 				.observe()
 				.observeOn(AndroidSchedulers.mainThread())

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -19,7 +19,6 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -30,6 +29,8 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -45,24 +46,14 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	private static final int SPLIT_SIZE = 100;
 
-	private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String aptoideId, String accessToken, int versionCode, String cdn) {
-		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, BASE_HOST);
+	private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body) {
+		super(body, httpClient, converterFactory, BASE_HOST);
 	}
 
 	public static ListAppsUpdatesRequest of() {
-		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter(), SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool");
-	}
-
-	// // TODO: 12-05-2016 neuro check deprecated
-	@Deprecated
-	private static List<Long> getSubscribedStoresIds() {
-		LinkedList<Long> storesIds = new LinkedList<>();
-
-		for (Store store : StoreUtils.getSubscribedStores()) {
-			storesIds.add(store.getId());
-		}
-
-		return storesIds;
+		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
+				new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+						Api.MATURE, Api.Q, getInstalledApksDataWithoutExcluded(), StoreUtils.getSubscribedStoresIds()));
 	}
 
 	private static List<ApksData> getInstalledApksDataWithoutExcluded() {
@@ -123,57 +114,31 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		}
 	}
 
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private List<ApksData> apksData = getInstalledApksDataWithoutExcluded();
-		private String lang = Api.LANG;
-		private String q = Api.Q;
-		// TODO: 27-05-2016 neuro implement
-		private List<Long> storeIds = getSubscribedStoresIds();
-		private List<String> storeNames;
-		private List<StoreAuth> storesAuth;
+		@Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
+		@Getter private List<Long> storeIds;
 
-		public Body(String aptoideId, String accessToken, int versionCode, String cdn) {
-			super(aptoideId, accessToken, versionCode, cdn);
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, List<ApksData> apksData,
+		            List<Long> storeIds) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.apksData = apksData;
+			this.storeIds = storeIds;
 		}
 
 		public Body(Body body) {
-			this(body.getAptoideId(), body.getAccessToken(), body.getAptoideVercode(), body.getCdn());
-			if (body.getApksData() != null) {
-				this.apksData = new LinkedList<>(body.getApksData());
-			}
-			this.lang = body.getLang();
-			this.q = body.getQ();
-
-			if (body.getStoreIds() != null) {
-				this.storeIds = new LinkedList<>(body.getStoreIds());
-			}
-			if (body.getStoreNames() != null) {
-				this.storeNames = new LinkedList<>(body.getStoreNames());
-			}
-			if (body.getStoresAuth() != null) {
-				this.storesAuth = new LinkedList<>(body.getStoresAuth());
-			}
+			super(body.getAptoideId(), body.getAccessToken(), body.getAptoideVercode(), body.getCdn(), body.getLang(), body.isMature(), body.getQ());
+			this.apksData = body.getApksData();
+			this.storeIds = body.getStoreIds();
 		}
 	}
 
-	@Data
-	public static class StoreAuth {
-
-		private String storeName;
-		private String storeUser;
-		private String storePassSha1;
-	}
-
-	@Data
 	@AllArgsConstructor
 	public static class ApksData {
 
-		@JsonProperty("package") private String packageName;
-		private int vercode;
-		private String signature;
+		@Getter @JsonProperty("package") private String packageName;
+		@Getter private int vercode;
+		@Getter private String signature;
 	}
 }

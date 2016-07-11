@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -14,32 +14,49 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateResultsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRatingDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSubscriptionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -47,23 +64,37 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDescriptionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewFlagThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewInstallWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateAndCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRatingWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewScreenshotsWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSubscriptionWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickListWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAdWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppListWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisplayWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 
@@ -78,6 +109,7 @@ public enum DisplayableType {
 	// common widgets / displayables
 	ADD_MORE_STORES(AddMoreStoresWidget.class, AddMoreStoresDisplayable.class),
 	APP_BRICK(AppBrickWidget.class, AppBrickDisplayable.class),
+	APP_BRICK_LIST_HAMMERED(AppBrickListWidget.class, AppBrickListDisplayable.class),
 	FOOTER(FooterWidget.class, FooterDisplayable.class),
 	SUBSCRIBED_STORE(SubscribedStoreWidget.class, SubscribedStoreDisplayable.class),
 
@@ -86,13 +118,28 @@ public enum DisplayableType {
 	GRID_DISPLAY(GridDisplayWidget.class, GridDisplayDisplayable.class),
 	GRID_HEADER(GridHeaderWidget.class, GridHeaderDisplayable.class),
 	GRID_STORE(GridStoreWidget.class, GridStoreDisplayable.class),
+	ADS(GridAdWidget.class, GridAdDisplayable.class),
+
+	// Multi Layout
+	APPS_GROUP_LIST(GridAppListWidget.class, GridAppListDisplayable.class),
 
 	// Updates
 	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
 	UPDATE(UpdateWidget.class, UpdateDisplayable.class),
+	EXCLUDED_UPDATE(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class),
+
+	// Social Timeline
+	SOCIAL_TIMELINE_ARTICLE(ArticleWidget.class, ArticleDisplayable.class),
+	SOCIAL_TIMELINE_FEATURE(FeatureWidget.class, FeatureDisplayable.class),
+	SOCIAL_TIMELINE_STORE_LATEST_APPS(StoreLatestAppsWidget.class, StoreLatestAppsDisplayable.class),
+	SOCIAL_TIMELINE_STORE_APP_UPDATE(AppUpdateWidget.class, AppUpdateDisplayable.class),
+	SOCIAL_TIMELINE_RECOMMENDATION(RecommendationWidget.class, RecommendationDisplayable.class),
+
+	ROLLBACK(RollbackWidget.class, RollbackDisplayable.class),
 
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),
+	SEARCH_ADD(SearchAdWidget.class, SearchAdDisplayable.class),
 
 	// Loading
 	PROGRESS(ProgressBarWidget.class, ProgressBarDisplayable.class),
@@ -108,19 +155,21 @@ public enum DisplayableType {
 
 	APP_VIEW_INSTALL(AppViewInstallWidget.class, AppViewInstallDisplayable.class),
 
-	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class, AppViewOtherVersionsDisplayable
-			.class),
+	APP_VIEW_RATE_AND_COMMENTS(AppViewRateAndCommentsWidget.class, AppViewRateAndCommentsDisplayable.class),
+
+	APP_VIEW_FLAG_THIS(AppViewFlagThisWidget.class, AppViewFlagThisDisplayable.class),
+
+	APP_VIEW_OTHER_VERSIONS(AppViewOtherVersionsWidget.class, AppViewOtherVersionsDisplayable.class),
 
 	APP_VIEW_RATE_RESULTS(AppViewRateResultsWidget.class, AppViewRateResultsDisplayable.class),
 
-	APP_VIEW_RATING(AppViewRatingWidget.class, AppViewRatingDisplayable.class),
+	APP_VIEW_RATING(AppViewRateThisWidget.class, AppViewRateThisDisplayable.class),
 
-	APP_VIEW_SUBSCRIPTION(AppViewSubscriptionWidget.class, AppViewSubscriptionDisplayable.class),
+	APP_VIEW_SUBSCRIPTION(AppViewStoreWidget.class, AppViewStoreDisplayable.class),
 
-	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable
-			.class)
+	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable.class),
 
-	;
+	OTHER_VERSION(OtherVersionWidget.class, OtherVersionDisplayable.class),;
 
 	private static final String TAG = DisplayableType.class.getName();
 	private static List<Displayable> cachedDisplayables;
@@ -128,47 +177,50 @@ public enum DisplayableType {
 	private Widget widget;
 	private Class<? extends Displayable> displayableClass;
 	private Class<? extends Widget> widgetClass;
-	DisplayableType(Class<? extends Widget> widgetClass, Class<? extends Displayable>
-			displayableClass) {
+
+	DisplayableType(Class<? extends Widget> widgetClass, Class<? extends Displayable> displayableClass) {
 		this.displayableClass = displayableClass;
 		this.widgetClass = widgetClass;
 
 		displayable = newDisplayable();
 		widget = newWidget(new View(V8Engine.getContext()));
 
-		if (displayable.getType() == null)
-			throw new IllegalStateException(String.format("Missing type in Displayable %s",
-					displayableClass
-					.getName()));
+		if (displayable.getType() == null) {
+			throw new IllegalStateException(String.format("Missing type in Displayable %s", displayableClass.getName()));
+		}
 
-		if (widget.getItemViewType() == 0)
-			throw new IllegalStateException(String.format("Missing view type in Widget %s",
-					widgetClass
-					.getName()));
+		if (widget.getItemViewType() == 0) {
+			throw new IllegalStateException(String.format("Missing view type in Widget %s", widgetClass.getName()));
+		}
 	}
 
 	public static List<Displayable> newDisplayables(Group group) {
 		ArrayList<Displayable> displayables = new ArrayList<>(group.displayableTypes.length);
-		for (int i = 0; i < group.displayableTypes.length; i++) {
+		for (int i = 0 ; i < group.displayableTypes.length ; i++) {
 			displayables.add(group.displayableTypes[i].newDisplayable());
 		}
 		return displayables;
 	}
 
 	public static <T> List<DisplayablePojo> newDisplayables(Group group, T pojo) {
-		ArrayList<DisplayablePojo> displayablePojos =
-				new ArrayList<>(group.displayableTypes.length);
+		ArrayList<DisplayablePojo> displayablePojos = new ArrayList<>(group.displayableTypes.length);
 
-		for (int i = 0; i < group.displayableTypes.length; i++) {
-			displayablePojos.add(
-					((DisplayablePojo) group.displayableTypes[i].newDisplayable()).setPojo(pojo)
-			);
+		for (int i = 0 ; i < group.displayableTypes.length ; i++) {
+			displayablePojos.add(((DisplayablePojo) group.displayableTypes[i].newDisplayable()).setPojo(pojo));
 		}
 		return displayablePojos;
 	}
 
 	public static Displayable newDisplayable(Type type, App app) {
 		return ((DisplayablePojo) newDisplayable(type)).setPojo(app);
+	}
+
+	public static Displayable newDisplayable(Type type, Store store) {
+		return ((DisplayablePojo) newDisplayable(type)).setPojo(store);
+	}
+
+	public static Displayable newDisplayable(Type type, GetAdsResponse.Ad ad) {
+		return ((DisplayablePojo) newDisplayable(type)).setPojo(ad);
 	}
 
 	public static Displayable newDisplayable(Type type) {
@@ -178,8 +230,7 @@ public enum DisplayableType {
 			}
 		}
 
-		throw new IllegalStateException(String.format("There is no displayable for '%s' type",
-				type));
+		throw new IllegalStateException(String.format("There is no displayable for '%s' type", type));
 	}
 
 	public static Widget newWidget(View view, int viewType) {
@@ -189,8 +240,8 @@ public enum DisplayableType {
 			}
 		}
 
-		throw new IllegalStateException(String.format("There's no widget for '%s' viewType",
-				viewType) + "\nDid you forget to add the mapping to DisplayableType enum??");
+		throw new IllegalStateException(String.format("There's no widget for '%s' viewType", viewType) + "\nDid you forget to add the mapping to " +
+				"DisplayableType enum??");
 	}
 
 	public static List<Displayable> getCachedDisplayables() {
@@ -212,8 +263,7 @@ public enum DisplayableType {
 		try {
 			return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
 		} catch (Exception e) {
-			String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName
-					());
+			String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
 			Logger.e(TAG, errMsg, e);
 			throw new RuntimeException(errMsg);
 		}
@@ -224,30 +274,24 @@ public enum DisplayableType {
 		try {
 			return displayableClass.newInstance();
 		} catch (Exception e) {
-			String errMsg = String.format("Error instantiating displayable '%s'", displayableClass
-					.getName());
+			String errMsg = String.format("Error instantiating displayable '%s'", displayableClass.getName());
 			Logger.e(TAG, errMsg, e);
 			throw new RuntimeException(errMsg);
 		}
 	}
 
 	public enum Group {
-		APP_VIEW(
-				APP_VIEW_INSTALL,
-//				APP_VIEW_SUBSCRIPTION,
-				APP_VIEW_DESCRIPTION,
-				APP_VIEW_SCREENSHOTS,
-				APP_VIEW_RATING,
-//				APP_VIEW_RATE_RESULTS,
+		APP_VIEW(APP_VIEW_INSTALL,
+				//				APP_VIEW_SUBSCRIPTION,
+				APP_VIEW_DESCRIPTION, APP_VIEW_SCREENSHOTS, APP_VIEW_RATING,
+				//				APP_VIEW_RATE_RESULTS,
 				APP_VIEW_COMMENTS,
-//				APP_VIEW_OTHER_VERSIONS,
-				APP_VIEW_DEVELOPER
-		)
-		;
+				//				APP_VIEW_OTHER_VERSIONS,
+				APP_VIEW_DEVELOPER);
 
 		public final DisplayableType[] displayableTypes;
 
-		Group(DisplayableType... displayableTypes){
+		Group(DisplayableType... displayableTypes) {
 			this.displayableTypes = displayableTypes;
 		}
 	}

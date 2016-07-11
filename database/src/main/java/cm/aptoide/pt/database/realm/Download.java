@@ -5,8 +5,16 @@
 
 package cm.aptoide.pt.database.realm;
 
+import android.content.Context;
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Calendar;
+
+import cm.aptoide.pt.database.R;
+import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -14,25 +22,136 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Download extends RealmObject {
 
-	public static final String APP_ID = "appId";
-	public static final String DOWNLOAD_ID = "downloadId";
+	public static final int INVALID_STATUS = 0;
+	public static final int COMPLETED = 1;
+	public static final int BLOCK_COMPLETE = 2;
+	public static final int CONNECTED = 3;
+	public static final int PENDING = 4;
+	public static final int PROGRESS = 5;
+	public static final int PAUSED = 6;
+	public static final int WARN = 7;
+	public static final int STARTED = 8;
+	public static final int ERROR = 9;
+	public static final int FILE_MISSING = 10;
+	public static final int RETRY = 11;
+	public static final int NOT_DOWNLOADED = 12;
+	public static final int IN_QUEUE = 13;
+	RealmList<FileToDownload> filesToDownload;
+	@DownloadState
+	int overallDownloadStatus = 0;
+	int overallProgress = 0;
+	@PrimaryKey
+	private long appId;
+	private String appName;
+	@SuppressWarnings({"all"})
+	private long timeStamp;
 
-	@PrimaryKey private int appId;
-	@Index private int downloadId;
+	public Download() {
+		this.timeStamp = Calendar.getInstance().getTimeInMillis();
+	}
 
-	public int getAppId() {
+	public String getStatusName(Context context) {
+		String toReturn;
+		switch (overallDownloadStatus) {
+			case COMPLETED:
+				toReturn = context.getString(R.string.download_completed);
+				break;
+			case PAUSED:
+				toReturn = context.getString(R.string.download_paused);
+				break;
+			case PROGRESS:
+				toReturn = context.getString(R.string.download_progress);
+				break;
+			case IN_QUEUE:
+				toReturn = context.getString(R.string.download_queue);
+				break;
+			case WARN:
+			case BLOCK_COMPLETE:
+			case CONNECTED:
+			case RETRY:
+			case STARTED:
+			case PENDING:
+			case NOT_DOWNLOADED:
+				toReturn = "";
+				break;
+			case ERROR:
+			case FILE_MISSING:
+			case INVALID_STATUS:
+			default:
+				toReturn = context.getString(R.string.simple_error_occured);
+		}
+		return toReturn;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public RealmList<FileToDownload> getFilesToDownload() {
+		return filesToDownload;
+	}
+
+	public void setFilesToDownload(RealmList<FileToDownload> filesToDownload) {
+		this.filesToDownload = filesToDownload;
+	}
+
+	public
+	@DownloadState
+	int getOverallDownloadStatus() {
+		return overallDownloadStatus;
+	}
+
+	public void setOverallDownloadStatus(@DownloadState int overallDownloadStatus) {
+		this.overallDownloadStatus = overallDownloadStatus;
+	}
+
+	public int getOverallProgress() {
+		return overallProgress;
+	}
+
+	public void setOverallProgress(int overallProgress) {
+		this.overallProgress = overallProgress;
+	}
+
+	public long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(int appId) {
+	public void setAppId(long appId) {
 		this.appId = appId;
 	}
 
-	public int getDownloadId() {
-		return downloadId;
+	@Override
+	public Download clone() {
+		Download clone = new Download();
+		clone.setAppId(this.getAppId());
+		clone.setOverallDownloadStatus(this.getOverallDownloadStatus());
+		clone.setOverallProgress(this.getOverallProgress());
+		if (this.getAppName() != null) {
+			clone.setAppName(new String(this.getAppName()));
+		}
+		clone.setFilesToDownload(cloneDownloadFiles(this.getFilesToDownload()));
+		return clone;
 	}
 
-	public void setDownloadId(int downloadId) {
-		this.downloadId = downloadId;
+	private RealmList<FileToDownload> cloneDownloadFiles(RealmList<FileToDownload> filesToDownload) {
+		RealmList<FileToDownload> clone = new RealmList<>();
+		for (final FileToDownload fileToDownload : filesToDownload) {
+			clone.add(fileToDownload.clone());
+		}
+		return clone;
+	}
+
+	@IntDef({INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN, STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED,
+			IN_QUEUE})
+
+	@Retention(RetentionPolicy.SOURCE)
+
+	public @interface DownloadState {
+
 	}
 }

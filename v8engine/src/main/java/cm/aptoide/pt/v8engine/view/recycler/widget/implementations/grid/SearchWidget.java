@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -32,11 +32,13 @@ import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by neuro on 01-06-2016.
  */
+@Displayables({SearchDisplayable.class})
 public class SearchWidget extends Widget<SearchDisplayable> {
 
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -118,18 +120,12 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 			ratingBar.setRating(avg);
 		}
 
-		Date modified = null;
-		try {
-			modified = dateFormatter.parse(pojo.getModified());
-		} catch (ParseException e) {
-			Logger.printException(e);
-		} finally {
-			if (modified != null) {
-				String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
-						.getTimeDiffAll(itemView.getContext(), modified.getTime());
-				if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
-					time.setText(timeSinceUpdate);
-				}
+		Date modified = pojo.getModified();
+		if (modified != null) {
+			String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
+					.getTimeDiffAll(itemView.getContext(), modified.getTime());
+			if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
+				time.setText(timeSinceUpdate);
 			}
 		}
 
@@ -158,7 +154,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 		store.setText(pojo.getStore().getName());
 		ImageLoader.load(AptoideUtils.IconSizeU.parseIcon(pojo.getIcon()), icon);
 
-		if (Malware.Rank.TRUSTED.equals(pojo.getFile().getMalware())) {
+		if (Malware.Rank.TRUSTED.equals(pojo.getFile().getMalware().getRank())) {
 			icTrusted.setVisibility(View.VISIBLE);
 		} else {
 			icTrusted.setVisibility(View.GONE);

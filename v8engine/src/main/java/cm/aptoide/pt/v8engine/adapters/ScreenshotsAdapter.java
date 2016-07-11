@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.adapters;
@@ -61,12 +61,12 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 	@Override
 	public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
 
-		if(videos!=null && position<videos.size()) {
-			// its a video. show placeholder for video
+		if (videos != null && videos.size() > position) {
+			// its a video. asSnack placeholder for video
 			GetAppMeta.Media.Video item = videos.get(position);
 			holder.bindViews(item);
-		} else {
-			// its a screenshot. show placeholder for screenshot
+		} else if (screenshots != null && screenshots.size() > position) {
+			// its a screenshot. asSnack placeholder for screenshot
 			GetAppMeta.Media.Screenshot item = screenshots.get(position);
 			int videosOffset = videos!=null? videos.size() : 0;
 			holder.bindViews(
@@ -147,17 +147,8 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 
 			itemView.setOnClickListener(
 					v ->{
-						// FIXME
-						try {
-							((FragmentShower) v.getContext()).pushFragmentV4(
-									ScreenshotsViewerFragment.newInstance(
-											imagesUris,
-											position
-									)
-							);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						// TODO improve this call
+						((FragmentShower) v.getContext()).pushFragmentV4(ScreenshotsViewerFragment.newInstance(imagesUris, position));
 					}
 			);
 		}

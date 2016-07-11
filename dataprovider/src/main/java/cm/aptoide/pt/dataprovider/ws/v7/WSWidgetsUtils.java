@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -45,7 +46,10 @@ public class WSWidgetsUtils {
 					break;
 				case DISPLAYS:
 					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
-							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
+							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
+					break;
+				case ADS:
+					ioScheduler(GetAdsRequest.ofHomepage().observe()).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				default:

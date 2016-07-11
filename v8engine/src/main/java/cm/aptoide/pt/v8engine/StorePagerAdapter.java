@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -15,6 +15,7 @@ import java.util.List;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
@@ -38,6 +39,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		Iterator<GetStoreTabs.Tab> iterator = tabs.iterator();
 		while (iterator.hasNext()) {
 			GetStoreTabs.Tab next = iterator.next();
+
 			if (next.getEvent().getName() == null || next.getEvent().getType() == null) {
 				iterator.remove();
 			}
@@ -47,12 +49,12 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 
-		Event event = tabs.get(position).getEvent();
+		GetStoreTabs.Tab tab = tabs.get(position);
+		Event event = tab.getEvent();
 
 		switch (event.getType()) {
 			case API:
-				return StoreTabGridRecyclerFragment.newInstance(event, tabs.get(position)
-						.getLabel(), storeTheme);
+				return caseAPI(tab);
 			case CLIENT:
 				return caseClient(event);
 			default:
@@ -61,14 +63,22 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		}
 	}
 
+	private Fragment caseAPI(GetStoreTabs.Tab tab) {
+		Event event = tab.getEvent();
+		switch (event.getName()) {
+			case getUserTimeline:
+				return AppsTimelineFragment.newInstance(event.getAction());
+			default:
+				return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel(), storeTheme);
+		}
+	}
+
 	private Fragment caseClient(Event event) {
 		switch (event.getName()) {
 			case myStores:
 				return SubscribedStoresFragment.newInstance();
-
 			case myUpdates:
 				return UpdatesFragment.newInstance();
-
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.
 				throw new RuntimeException("Fragment type not implemented!");

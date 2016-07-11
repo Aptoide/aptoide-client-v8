@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -100,7 +100,7 @@ public class AdultDialog extends DialogFragment {
 			public void onClick(android.content.DialogInterface dialog, int which) {
 
 				if (which == android.content.DialogInterface.BUTTON_POSITIVE) {
-					SecurePreferences.setAdultContentCheckBox(true);
+					SecurePreferences.setAdultSwitch(true);
 				}
 			}
 		});

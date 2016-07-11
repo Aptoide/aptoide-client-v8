@@ -17,6 +17,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -25,22 +26,17 @@ import rx.Observable;
 /**
  * Created by neuro on 22-04-2016.
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
-	private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, String cdn, int versionCode, String accessToken, String aptoideId) {
-		super(new Body(aptoideId, accessToken, versionCode, cdn), httpClient, converterFactory, baseHost);
+	private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, Body body) {
+		super(body, httpClient, converterFactory, baseHost);
 	}
 
 	public static GetAppRequest of(long appId) {
-		GetAppRequest getAppRequest = new GetAppRequest(OkHttpClientFactory.getSingletoneClient(),
-				WebService.getDefaultConverter(), BASE_HOST, "pool", AptoideUtils.Core.getVerCode(),
-				AptoideAccountManager.getAccessToken(), SecurePreferences.getAptoideClientUUID());
-
-		getAppRequest.body.appId = appId;
-
-		return getAppRequest;
+		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
+				WebService.getDefaultConverter(), BASE_HOST, new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
+				AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, appId));
 	}
 
 	@Override
@@ -48,37 +44,14 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		return interfaces.getApp(body, bypassCache);
 	}
 
-	public enum AppNodes {
-		meta, versions;
-
-		public static List<AppNodes> list() {
-			return Arrays.asList(values());
-		}
-	}
-
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private Integer apkId;
-		private String apkMd5sum;
-		private Long appId;
-		private String lang = Api.LANG;
-		private Integer limit;
-		private List<AppNodes> nodes;
-		private Integer offset;
-		private Integer packageId;
-		private String packageName;
-		private String q = Api.Q;
-		private Integer storeId;
-		private List<Long> storeIds;
-		private String storeName;
-		private String storePassSha1;
-		private String storeUser;
+		@Getter private Long appId;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
-			super(aptoideId, accessToken, aptoideVercode, cdn);
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long appId) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.appId = appId;
 		}
 	}
 }

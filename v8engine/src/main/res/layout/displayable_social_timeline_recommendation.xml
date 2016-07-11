@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Marcelo Benites on 08/07/2016.
+  -->
+
+<android.support.v7.widget.CardView
+    style="@style/Widget.Aptoide.Card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/displayable_social_timeline_recommendation_card_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="16dp"
+                tools:ignore="contentDescription"
+                tools:src="@drawable/img_people_mockup"/>
+
+            <TextView
+                android:id="@+id/displayable_social_timeline_recommendation_card_title"
+                style="@style/Widget.Aptoide.Card.Title.Feature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginTop="16dp"
+                android:ellipsize="end"
+                android:lines="1"
+                tools:text="Aptoide Team"/>
+
+            <TextView
+                android:id="@+id/displayable_social_timeline_recommendation_card_subtitle"
+                style="@style/Widget.Aptoide.Card.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/displayable_social_timeline_recommendation_card_title"
+                android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
+                android:ellipsize="end"
+                android:lines="1"
+                tools:text="Há duas horas"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/separators_grey"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/displayable_social_timeline_recommendation_icon"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_margin="16dp"
+                android:scaleType="fitCenter"
+                tools:ignore="contentDescription"
+                tools:src="@mipmap/ic_launcher"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/displayable_social_timeline_recommendation_icon"
+                android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
+                android:layout_toRightOf="@id/displayable_social_timeline_recommendation_icon"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/displayable_social_timeline_recommendation_name"
+                    style="@style/Widget.Aptoide.Card.Title.Large"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    tools:text="Clash Royale"/>
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/displayable_social_timeline_recommendation_similar_apps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    tools:text="Similar to Empire of Kings, Clash of Clans and Boom Beach"/>
+
+                <Button
+                    android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
+                    style="@style/Widget.Aptoide.Card.Button"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_vertical"
+                    tools:text="Get app Clash Royale"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+

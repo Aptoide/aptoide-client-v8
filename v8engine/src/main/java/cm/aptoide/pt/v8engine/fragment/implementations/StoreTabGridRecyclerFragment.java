@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/06/2016.
+ * Modified by Neurophobic Animal on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -15,16 +15,22 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -48,6 +54,15 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	protected String title;
 	protected String storeTheme;
 	private List<Displayable> displayables;
+	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+
+	public static StoreTabGridRecyclerFragment newInstance(Event event, String title) {
+		Bundle args = buildBundle(event, title);
+
+		StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	public static StoreTabGridRecyclerFragment newInstance(Event event, String title, String storeTheme) {
 		Bundle args = buildBundle(event, title, storeTheme);
@@ -87,6 +102,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	@Override
 	public void load(boolean refresh) {
+		super.load(refresh);
 		if (refresh) {
 			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
@@ -95,6 +111,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				switch (name) {
 					case listApps:
 						caseListApps(url, refresh);
+						break;
+					case listAppsEditorsHammered:
+						caseListAppsEditorsHammered(url, refresh);
 						break;
 					case getStore:
 						caseGetStore(url, refresh);
@@ -108,14 +127,61 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					case getApkComments:
 						//todo
 						break;
+					case getAds:
+						caseGetAds(refresh);
+						break;
+					case listStores:
+						caseListStores(url, refresh);
+						break;
 				}
 			} else {
 				// todo: rebenta quando não conhece, é mesmo para ficar assim??
 				throw new RuntimeException("StoreTabGridRecyclerFragment unknown request!");
 			}
 		} else {
-			setDisplayables(displayables);
+			// Not all requests are endless so..
+			if (endlessRecyclerOnScrollListener != null) {
+				recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+			}
+			//setDisplayables(displayables);
 		}
+	}
+
+	private void caseListStores(String url, boolean refresh) {
+		ListStoresRequest listStoresRequest = ListStoresRequest.ofAction(url);
+		Action1<ListStores> listStoresAction = listStores -> {
+
+			// Load sub nodes
+			List<Store> list = listStores.getDatalist().getList();
+
+			displayables = new LinkedList<>();
+			for (Store store : list) {
+				displayables.add(DisplayableType.newDisplayable(Type.STORES_GROUP, store));
+			}
+
+			addDisplayables(displayables);
+		};
+
+		recyclerView.clearOnScrollListeners();
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listStoresAction, errorRequestListener,
+				refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
+	}
+
+	private void caseGetAds(boolean refresh) {
+		GetAdsRequest.ofHomepageMore().execute(getAdsResponse -> {
+			List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
+
+			displayables = new LinkedList<>();
+			for (GetAdsResponse.Ad ad : list) {
+				displayables.add(DisplayableType.newDisplayable(Type.ADS, ad));
+			}
+
+			addDisplayables(displayables);
+		}, e -> finishLoading());
+
+		getView().findViewById(R.id.swipe_container).setEnabled(false);
 	}
 
 	private void caseListApps(String url, boolean refresh) {
@@ -134,10 +200,32 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		};
 
 		recyclerView.clearOnScrollListeners();
-		EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(this, listAppsRequest,
-				listAppsAction, errorRequestListener, refresh);
-		recyclerView.addOnScrollListener(listener);
-		listener.onLoadMore(refresh);
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listAppsRequest, listAppsAction, errorRequestListener,
+				refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
+	}
+
+	private void caseListAppsEditorsHammered(String url, boolean refresh) {
+		ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url);
+		Action1<ListApps> listAppsAction = listApps -> {
+
+			// Load sub nodes
+			List<App> list = listApps.getDatalist().getList();
+
+			displayables = new LinkedList<>();
+			for (App app : list) {
+				displayables.add(DisplayableType.newDisplayable(Type.APP_BRICK_LIST_HAMMERED, app));
+			}
+
+			addDisplayables(displayables);
+		};
+
+		recyclerView.clearOnScrollListeners();
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listAppsRequest, listAppsAction, errorRequestListener,
+				refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
 	}
 
 	private Subscription caseGetStore(String url, boolean refresh) {
@@ -153,7 +241,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
 					Observable.from(list)
-							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> finishLoading(throwable)));
+							.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh, throwable -> countDownLatch.countDown()));
 
 					try {
 						countDownLatch.await(5, TimeUnit.SECONDS);

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 10/05/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
@@ -28,6 +28,6 @@ public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget>
 
 	@Override
 	public int getViewLayout() {
-		return R.layout.button;
+		return R.layout.displayable_grid_footer;
 	}
 }

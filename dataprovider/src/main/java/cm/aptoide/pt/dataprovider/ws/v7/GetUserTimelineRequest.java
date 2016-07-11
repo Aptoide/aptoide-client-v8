@@ -1,13 +1,22 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
+ */
+
 package cm.aptoide.pt.dataprovider.ws.v7;
+
+import java.util.List;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -19,39 +28,38 @@ import rx.Observable;
  */
 public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineRequest.Body> {
 
-	public GetUserTimelineRequest(Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+	private String url;
+
+	public GetUserTimelineRequest(String url, Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
 		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
+	}
+
+	public static GetUserTimelineRequest of(String url, int limit, int offset, List<String> packages) {
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(SecurePreferences.getAptoideClientUUID(), AptoideAccountManager
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, limit, offset, packages),
+				OkHttpClientFactory.newClient(), WebService.getDefaultConverter(), BASE_HOST);
+		return getAppRequest;
 	}
 
 	@Override
 	protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.getUserTimeline(body, bypassCache);
+		return interfaces.getUserTimeline(url, body, bypassCache);
 	}
 
-	public static GetUserTimelineRequest of() {
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(
-				new Body("1", AptoideAccountManager.getAccessToken(),
-						AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.Q),
-				OkHttpClientFactory.newClient(),
-				WebService.getDefaultConverter(), BASE_HOST);
-		return getAppRequest;
-	}
-
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody implements OffsetInterface<Body> {
+	public static class Body extends BaseBody implements Endless {
 
-		private String lang;
-		private Integer limit;
-		private boolean mature;
-		private int offset;
-		private String q;
+		@Getter private int limit;
+		@Getter @Setter private int offset;
+		@Getter private List<String> packageNames;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, String q) {
-			super(aptoideId, accessToken, aptoideVercode, cdn);
-			this.lang = lang;
-			this.q = q;
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, Integer
+				offset, List<String> packageNames) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.limit = limit;
+			this.offset = offset;
+			this.packageNames = packageNames;
 		}
 	}
 }

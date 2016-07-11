@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.support.annotation.StringDef;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import java.security.MessageDigest;
@@ -23,6 +24,8 @@ import cm.aptoide.pt.logger.Logger;
  * Code extracted from https://www.airpair.com/android/posts/adding-tampering-detection-to-your-android-app
  */
 public final class SecurityUtils {
+
+	private static final String TAG = SecurityUtils.class.getName();
 
 	public static final int VALID_APP_SIGNATURE = 0;
 	public static final int INVALID_APP_SIGNATURE = 1;
@@ -46,17 +49,17 @@ public final class SecurityUtils {
 				md.update(signature.toByteArray());
 				final String currentSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT);
 
-				Logger.d(SecurityUtils.class.getName(), "Include this string as a value for SIGNATURE:" +
-						currentSignature);
+				Logger.d(TAG, String.format("Include this string as a value for SIGNATURE: %s", currentSignature));
 
 				//compare signatures
 
-				if (APP_SIGNATURE.equals(currentSignature)) {
+				if (TextUtils.equals(APP_SIGNATURE, currentSignature)) {
 					return VALID_APP_SIGNATURE;
 				}
 			}
 		} catch (Exception e) {
 			//assumes an issue in checking signature., but we let the caller decide on what to do.
+			Logger.w(TAG, "checkAppSignature(Context)", e);
 		}
 
 		return INVALID_APP_SIGNATURE;

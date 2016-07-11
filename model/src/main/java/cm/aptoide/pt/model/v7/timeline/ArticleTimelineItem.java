@@ -1,24 +1,27 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 06/07/2016.
+ */
+
 package cm.aptoide.pt.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+import lombok.EqualsAndHashCode;
 
-import lombok.Data;
+@EqualsAndHashCode
+public class ArticleTimelineItem implements TimelineItem<TimelineCard> {
 
-@Data
-public class ArticleTimelineItem implements TimelineItem<Article> {
-
-	private final List<Article> articles;
+	private final Article article;
 
 	@JsonCreator
-	public ArticleTimelineItem(@JsonProperty("items") List<Article> articles) {
-		this.articles = articles;
+	public ArticleTimelineItem(@JsonProperty("data") Article article) {
+		this.article = article;
 	}
 
 	@Override
-	public List<Article> getItems() {
-		return articles;
+	public Article getData() {
+		return article;
 	}
 }

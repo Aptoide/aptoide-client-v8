@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/04/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.model.v2;
@@ -15,69 +15,70 @@ import java.util.List;
 @lombok.Data
 public class GetAdsResponse {
 
-	final private List<Ads> ads;
-	final private Options options;
+	private List<Ad> ads;
+	private Options options;
 
 	@lombok.Data
 	public static class Data {
 
-		final private long id;
-		final private String name;
-		final private String repo;
-		@JsonProperty("package") final private String packageName;
-		final private String md5sum;
-		final private long size;
-		final private int vercode;
-		final private String vername;
-		final private String icon;
-		final private int downloads;
-		final private int stars;
-		final private String description;
+		private long id;
+		private String name;
+		private String repo;
+		@JsonProperty("package")
+		private String packageName;
+		private String md5sum;
+		private long size;
+		private int vercode;
+		private String vername;
+		private String icon;
+		private int downloads;
+		private int stars;
+		private String description;
 	}
 
 	@lombok.Data
-	public static class Ads {
+	public static class Ad {
 
-		final private Data data;
-		final private Info info;
-		final private Partner partner;
-		final private Partner tracker;
+		private Data data;
+		private Info info;
+		private Partner partner;
+		private Partner tracker;
 	}
 
 	@lombok.Data
 	public static class Info {
 
-		final private long adId;
-		final private String adType;
-		final private String cpcUrl;
-		final private String cpiUrl;
-		final private String cpdUrl;
+		private long adId;
+		private String adType;
+		private String cpcUrl;
+		private String cpiUrl;
+		private String cpdUrl;
 	}
 
 	@lombok.Data
 	public static class Partner {
 
-		final private Info info;
-		final private Data data;
+		private Info info;
+		private Data data;
 
 		@lombok.Data
 		public static class Info {
 
-			final private int id;
-			final private String name;
+			private int id;
+			private String name;
 		}
 
 		@lombok.Data
 		public static class Data {
 
-			final private String clickUrl;
-			final private String impressionUrl;
+			private String clickUrl;
+			private String impressionUrl;
 		}
 	}
 
 	@lombok.Data
 	public static class Options {
 
-		final private Boolean mediation = true;
+		private Boolean mediation = true;
 	}
 }

@@ -1,14 +1,14 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 06/07/2016.
+ */
+
 package cm.aptoide.pt.model.v7.timeline;
 
-import java.util.List;
+import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
+import lombok.EqualsAndHashCode;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import lombok.Data;
-
-
-@Data
-public class GetUserTimeline extends BaseV7Response {
-
-	private List<TimelineItem> list;
+@EqualsAndHashCode(callSuper = true)
+public class GetUserTimeline extends BaseV7EndlessResponse<TimelineItem<TimelineCard>> {
 
 }

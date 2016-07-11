@@ -35,7 +35,7 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
 	}
 
 	public static CreateUserRequest of(String email, String password) {
-		return new CreateUserRequest(OkHttpClientFactory.getSingletoneClient(), WebService.getDefaultConverter()).setEmail(email).setName("").setPassword(password);
+		return new CreateUserRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter()).setEmail(email).setName("").setPassword(password);
 	}
 
 

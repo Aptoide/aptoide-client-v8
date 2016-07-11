@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -17,8 +17,13 @@ public enum Type {
 	// Server
 	APPS_GROUP(3),
 	APP_BRICK(2, true),
+	APP_BRICK_LIST_HAMMERED(1),
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
+	ADS(3),
+
+	// Multi Layout
+	APPS_GROUP_LIST(1),
 
 	// Server Complement
 	HEADER_ROW(true),
@@ -35,23 +40,29 @@ public enum Type {
 	APP_VIEW_SUBSCRIPTION,
 	APP_VIEW_DESCRIPTION,
 	APP_VIEW_IMAGES,
+	APP_VIEW_FLAG_THIS,
+	APP_VIEW_RATE_AND_COMMENT,
 
 	// Client
 	SUBSCRIBED_STORE(2),
 	ADD_MORE_STORES(true),
+	SEARCH_AD(1),
 
 	// Updates
 	INSTALLED(1),
 	UPDATE(1),
+	EXCLUDED_UPDATE(1),
 	ROLLBACK(1),
 
-	SOCIAL_TIMELINE(1),
+	SOCIAL_TIMELINE(1, true),
 
 	// Search
 	SEARCH(1),
 
 	// Progress
-	PROGRESS_DISPLAYABLE;
+	PROGRESS_DISPLAYABLE,
+	OTHER_VERSION
+	;
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 

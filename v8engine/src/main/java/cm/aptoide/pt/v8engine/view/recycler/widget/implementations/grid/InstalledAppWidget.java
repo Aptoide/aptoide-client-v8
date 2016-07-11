@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -15,11 +15,13 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by neuro on 17-05-2016.
  */
+@Displayables({InstalledAppDisplayable.class})
 public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
 	private TextView labelTextView;
@@ -55,7 +57,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
 		createReviewLayout.setOnClickListener(v -> {
 			// TODO: 25-05-2016 neuro create review
-			ShowMessage.toast(getContext(), "Create Review");
+			ShowMessage.asToast(getContext(), "Create Review");
 		});
 	}
 }

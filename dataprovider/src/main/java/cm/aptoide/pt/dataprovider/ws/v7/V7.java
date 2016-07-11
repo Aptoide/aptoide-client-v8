@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -17,13 +17,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreTabsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
@@ -31,8 +29,8 @@ import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
-import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
@@ -44,7 +42,9 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 import rx.Observable;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -74,26 +74,25 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 			} else {
 				return Observable.just(t);
 			}
-		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (n, i) -> {
-			if ((n instanceof ToRetryThrowable) && i < 3) {
-				return i;
+		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (throwable, i) -> {
+			// Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
+			// Retry three times if request is queued by server.
+			if ((throwable instanceof ToRetryThrowable) && i < 3) {
+				return null;
 			} else {
-				// Todo: quando nao é erro de net, isto induz em erro lol
-				if (isNoNetworkException(n)) {
-					// Don't retry
-					throw new NoNetworkConnectionException(n);
+				if (isNoNetworkException(throwable)) {
+					throw new NoNetworkConnectionException(throwable);
 				} else {
-					try {
-						if (n instanceof HttpException) {
-							throw new AptoideWsV7Exception(n).setBaseResponse((BaseV7Response)
-									converterFactory.responseBodyConverter(BaseV7Response.class, null, null)
-											.convert(((HttpException) n).response().errorBody()));
+					if (throwable instanceof HttpException) {
+						try {
+							throw new AptoideWsV7Exception(throwable).setBaseResponse((BaseV7Response) converterFactory.responseBodyConverter(BaseV7Response
+									.class, null, null)
+									.convert(((HttpException) throwable).response().errorBody()));
+						} catch (IOException exception) {
+							throw new RuntimeException(exception);
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
-
-					return Observable.error(n);
+					throw new RuntimeException(throwable);
 				}
 			}
 		}).delay(500, TimeUnit.MILLISECONDS));
@@ -108,9 +107,12 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 					if (!accessTokenRetry) {
 						accessTokenRetry = true;
-						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s -> {
-							this.body.setAccessToken(s);
-							return V7.this.observe(bypassCache);
+						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(new Func1<String,Observable<? extends U>>() {
+							@Override
+							public Observable<? extends U> call(String s) {
+								V7.this.body.setAccessToken(s);
+								return V7.this.observe(bypassCache);
+							}
 						});
 					}
 				} else {
@@ -135,10 +137,6 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<ListAppsUpdates> listAppsUpdates(@Body ListAppsUpdatesRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("listAppVersions")
-		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
-
 		@POST("getStore{url}")
 		Observable<GetStore> getStore(@Path(value = "url", encoded = true) String path, @Body GetStoreRequest.Body
 				body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -150,10 +148,6 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("getStoreDisplays{url}")
 		Observable<GetStoreDisplays> getStoreDisplays(@Path(value = "url", encoded = true) String path, @Body
 		GetStoreDisplaysRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
-
-		@POST("getStoreTabs")
-		Observable<GetStoreTabs> getStoreTabs(@Body GetStoreTabsRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("getStoreWidgets{url}")
 		Observable<GetStoreWidgets> getStoreWidgets(@Path(value = "url", encoded = true) String path, @Body
@@ -167,8 +161,12 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body, @Header(RequestCache
 				.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("getUserTimeline")
-		Observable<GetUserTimeline> getUserTimeline(@Body GetUserTimelineRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
+		@POST
+		Observable<GetUserTimeline> getUserTimeline(@Url String url, @Body GetUserTimelineRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
+				bypassCache);
+
+		@POST("listAppVersions")
+		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
 	}
 }
