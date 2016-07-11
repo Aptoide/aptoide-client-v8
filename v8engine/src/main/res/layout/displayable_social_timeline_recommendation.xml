@@ -35,7 +35,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp"
                 android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
                 android:layout_marginTop="16dp"
                 android:ellipsize="end"
                 android:lines="1"
@@ -48,7 +50,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/displayable_social_timeline_recommendation_card_title"
                 android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp"
                 android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
                 android:ellipsize="end"
                 android:lines="1"
                 tools:text="Há duas horas"/>
@@ -80,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/displayable_social_timeline_recommendation_icon"
                 android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
+                android:layout_toRightOf="@id/displayable_social_timeline_recommendation_icon"
                 android:orientation="vertical">
 
                 <TextView
@@ -89,6 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
                     android:ellipsize="end"
                     android:lines="1"
                     tools:text="Clash Royale"/>
@@ -99,6 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
                     android:ellipsize="end"
                     android:maxLines="2"
                     tools:text="Similar to Empire of Kings, Clash of Clans and Boom Beach"/>
@@ -107,6 +114,7 @@
                     android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
                     style="@style/Widget.Aptoide.Card.Button"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
                     android:gravity="center_vertical"
                     tools:text="Get app Clash Royale"
                     android:layout_width="match_parent"
