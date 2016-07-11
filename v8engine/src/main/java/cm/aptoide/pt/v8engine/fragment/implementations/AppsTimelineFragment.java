@@ -21,6 +21,7 @@ import cm.aptoide.pt.dataprovider.PackageRepository;
 import cm.aptoide.pt.dataprovider.TimelineRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
@@ -53,7 +54,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	public static final int SEARCH_LIMIT = 20;
 	private static final String ACTION_KEY = "ACTION";
-	private AptoideDownloadManager downloadManager;
+	private DownloadServiceHelper downloadManager;
 	private DownloadFactory downloadFactory;
 	private SpannableFactory spannableFactory;
 	private DateCalculator dateCalculator;
@@ -79,7 +80,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		dateCalculator = new DateCalculator();
 		spannableFactory = new SpannableFactory();
 		downloadFactory = new DownloadFactory();
-		downloadManager = AptoideDownloadManager.getInstance();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
 		packageRepository = new PackageRepository(getContext().getPackageManager());
 		timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY), new TimelineRepository.TimelineCardDuplicateFilter(new HashSet<>()));
 	}
@@ -115,7 +116,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.doOnNext(packages -> setPackages(packages));
 	}
 
-	public void setPackages(List<String> packages) {
+	private void setPackages(List<String> packages) {
 		this.packages = packages;
 	}
 
@@ -188,7 +189,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	@NonNull
 	private Displayable cardToDisplayable(TimelineCard card, DateCalculator dateCalculator, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-	                                      AptoideDownloadManager downloadManager) {
+	                                      DownloadServiceHelper downloadManager) {
 		if (card instanceof Article) {
 			return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory);
 		} else if (card instanceof Feature) {

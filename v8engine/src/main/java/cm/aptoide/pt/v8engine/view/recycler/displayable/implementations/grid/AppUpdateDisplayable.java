@@ -6,6 +6,7 @@ import android.text.Spannable;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.v8engine.R;
@@ -28,9 +29,9 @@ public class AppUpdateDisplayable extends Displayable {
 	private SpannableFactory spannableFactory;
 	private String appName;
 	private Download download;
-	private AptoideDownloadManager downloadManager;
+	private DownloadServiceHelper downloadManager;
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, AptoideDownloadManager
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, DownloadServiceHelper
 			downloadManager) {
 		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(), downloadFactory.create(appUpdate),
 				downloadManager);

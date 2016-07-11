@@ -96,6 +96,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 			case Download.RETRY:
 			case Download.STARTED:
 			case Download.PENDING:
+			case Download.IN_QUEUE:
 				updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 				updateButton.setText(displayable.getUpdatingText(getContext()));
 				break;
