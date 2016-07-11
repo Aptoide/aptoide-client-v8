@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by Neurophobic Animal on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -80,7 +80,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
-									updatesDisplayablesList.add(new UpdateDisplayable(update));
+									updatesDisplayablesList.add(UpdateDisplayable.create(update));
 								}
 							}
 

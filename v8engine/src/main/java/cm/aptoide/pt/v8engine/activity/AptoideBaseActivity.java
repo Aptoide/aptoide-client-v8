@@ -16,13 +16,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
-import cm.aptoide.pt.v8engine.interfaces.PermissionRequest;
 import lombok.Getter;
 import rx.functions.Action0;
 
@@ -43,6 +44,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		super.onCreate(savedInstanceState);
 		// https://fabric.io/downloads/gradle/ndk
 		// Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+		AptoideDownloadManager.getInstance().setPermissionRequest(this);
 		if (getIntent().getExtras() != null) {
 			loadExtras(getIntent().getExtras());
 		}

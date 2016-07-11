@@ -55,6 +55,7 @@
         </AndroidXmlCodeStyleSettings>
         <JavaCodeStyleSettings>
           <option name="SPACE_AFTER_CLOSING_ANGLE_BRACKET_IN_TYPE_ARGUMENT" value="true" />
+          <option name="DO_NOT_WRAP_AFTER_SINGLE_ANNOTATION" value="true" />
         </JavaCodeStyleSettings>
         <Objective-C-extensions>
           <option name="GENERATE_INSTANCE_VARIABLES_FOR_PROPERTIES" value="ASK" />
@@ -105,6 +106,7 @@
           <option name="DOWHILE_BRACE_FORCE" value="3" />
           <option name="WHILE_BRACE_FORCE" value="3" />
           <option name="WRAP_LONG_LINES" value="true" />
+          <option name="FIELD_ANNOTATION_WRAP" value="1" />
           <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
           <option name="ENUM_CONSTANTS_WRAP" value="5" />
           <indentOptions>

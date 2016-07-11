@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by Neurophobic Animal on 08/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -39,7 +39,6 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Getter;
-import rx.functions.Action1;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -64,25 +63,24 @@ public abstract class V8Engine extends DataProvider {
 
 	public static void loadStores() {
 
-		AptoideAccountManager.getUserRepos().subscribe(new Action1<List<Subscription>>() {
-			@Override
-			public void call(List<Subscription> subscriptions) {
-				@Cleanup
-				Realm realm = Database.get(getContext());
-				for (Subscription subscription : subscriptions) {
-					Store store = new Store();
+		AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
+			@Cleanup
+			Realm realm = Database.get(getContext());
+			for (Subscription subscription : subscriptions) {
+				Store store = new Store();
 
-					store.setDownloads(Long.parseLong(subscription.getDownloads()));
-					store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar());
-					store.setStoreId(subscription.getId().longValue());
-					store.setStoreName(subscription.getName());
-					store.setTheme(subscription.getTheme());
+				store.setDownloads(Long.parseLong(subscription.getDownloads()));
+				store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar());
+				store.setStoreId(subscription.getId().longValue());
+				store.setStoreName(subscription.getName());
+				store.setTheme(subscription.getTheme());
 
-					realm.beginTransaction();
-					realm.copyToRealmOrUpdate(store);
-					realm.commitTransaction();
-				}
+				realm.beginTransaction();
+				realm.copyToRealmOrUpdate(store);
+				realm.commitTransaction();
 			}
+
+			DataproviderUtils.checkUpdates();
 		});
 	}
 
@@ -124,7 +122,6 @@ public abstract class V8Engine extends DataProvider {
 			setAdvertisingId();
 			setAndroidId();
 			loadInstalledApps();
-			DataproviderUtils.checkUpdates();
 
 			if (AptoideAccountManager.isLoggedIn()) {
 				if (!SecurePreferences.isUserDataLoaded()) {
@@ -199,7 +196,7 @@ public abstract class V8Engine extends DataProvider {
 	}
 
 	private void addDefaultStore() {
-		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
+		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> DataproviderUtils.checkUpdates(), null);
 	}
 
 	private void loadInstalledApps() {

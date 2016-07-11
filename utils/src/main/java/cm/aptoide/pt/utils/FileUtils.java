@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.Callable;
 
 import cm.aptoide.pt.logger.Logger;
 import rx.Observable;
@@ -32,9 +33,8 @@ public class FileUtils {
 	 *
 	 * @return true if the the file was copied successfully, false otherwise
 	 */
-	public static Observable<Boolean> copyFile(String inputPath, String outputPath, String fileName) {
-		return Observable.fromCallable(() -> {
-			boolean toReturn = true;
+	public static Observable<Void> copyFile(String inputPath, String outputPath, String fileName) {
+		return Observable.fromCallable((Callable<Void>) () -> {
 			InputStream in = null;
 			OutputStream out = null;
 			try {
@@ -69,12 +69,13 @@ public class FileUtils {
 					outputFile.delete();
 				}
 				Logger.e(TAG, e.getMessage());
-				toReturn = false;
+				//				toReturn = false;
+				throw new RuntimeException(e);
 			} finally {
 				in = null;
 				out = null;
+				return null;
 			}
-			return toReturn;
 		});
 	}
 
@@ -111,7 +112,6 @@ public class FileUtils {
 				}
 			}
 		}
-		Logger.d(TAG, "dirSize() returned: " + result);
 		return result;
 	}
 }

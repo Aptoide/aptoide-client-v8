@@ -57,21 +57,15 @@ public class DisplayablesFactory {
 						break;
 
 					case ADS:
-//						GetStoreWidgets.WSWidget.Action action = new GetStoreWidgets.WSWidget.Action();
-//						displayable.getPojo()
-//								.getActions()
-//								.get(0)
-//								.getEvent();
-//						action.setEvent(new Event().setName(Event.Name.getAds));
-//
-						LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
-						actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name
-								.getAds)));
-						wsWidget.setActions(actions);
-						GridHeaderDisplayable gridHeaderDisplayable = new GridHeaderDisplayable(wsWidget);
-						displayables.add(gridHeaderDisplayable);
 						Displayable ads = getAds(wsWidget.getViewObject());
 						if (ads != null) {
+							// Header hammered
+							LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
+							actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
+							wsWidget.setActions(actions);
+							GridHeaderDisplayable gridHeaderDisplayable = new GridHeaderDisplayable(wsWidget);
+							displayables.add(gridHeaderDisplayable);
+
 							displayables.add(ads);
 						}
 						break;
