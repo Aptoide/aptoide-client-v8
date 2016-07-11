@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,7 +45,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 	private String excludedNetworks;
 
 	public GetAdsRequest() {
-		super(client, WebService.getDefaultConverter());
+		super(client, WebService.getDefaultConverter(), new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 	}
 
 	private static GetAdsRequest of(Location location, String keyword, int limit) {
@@ -103,7 +105,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
 		parameters.put("q", Api.Q);
 		parameters.put("lang", Api.LANG);
-		parameters.put("cpuid", SecurePreferences.getAptoideClientUUID());
+		parameters.put("cpuid", idsRepository.getAptoideClientUUID());
 		parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
 		parameters.put("location", "native-aptoide:" + location);
 		parameters.put("type", "1-3");

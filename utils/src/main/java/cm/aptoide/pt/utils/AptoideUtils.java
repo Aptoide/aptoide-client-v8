@@ -21,7 +21,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
-import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
@@ -561,11 +560,6 @@ public class AptoideUtils {
 	public static class SystemU {
 
 		public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
-
-		public static String getAndroidId() {
-			// TODO: 15-06-2016 neuro lazzy may not be a bad idea.
-			return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		}
 
 		public static int getSdkVer() {
 			return Build.VERSION.SDK_INT;

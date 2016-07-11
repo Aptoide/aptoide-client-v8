@@ -7,19 +7,15 @@ package cm.aptoide.pt.v8engine;
 
 import android.content.pm.PackageInfo;
 import android.os.StrictMode;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.stetho.Stetho;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.squareup.leakcanary.LeakCanary;
 
-import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
@@ -119,8 +115,6 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		if (SecurePreferences.isFirstRun()) {
-			setAdvertisingId();
-			setAndroidId();
 			loadInstalledApps();
 
 			if (AptoideAccountManager.isLoggedIn()) {
@@ -161,38 +155,6 @@ public abstract class V8Engine extends DataProvider {
 	private void setupCrashlytics() {
 		Crashlytics crashlyticsKit = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(!BuildConfig.FABRIC_CONFIGURED).build()).build();
 		Fabric.with(this, crashlyticsKit);
-	}
-
-	private void setAndroidId() {
-		SecurePreferences.setAndroidId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-	}
-
-	private void setAdvertisingId() {
-		AptoideUtils.ThreadU.runOnIoThread(() -> {
-			if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()) {
-				try {
-					SecurePreferences.setGoogleAdvertisingId(AdvertisingIdClient.getAdvertisingIdInfo(V8Engine.this).getId());
-				} catch (Exception e) {
-					e.printStackTrace();
-					SecurePreferences.setAdvertisingId(generateRandomAdvertisingID());
-				}
-			} else {
-				SecurePreferences.setAdvertisingId(generateRandomAdvertisingID());
-			}
-		});
-	}
-
-	private String generateRandomAdvertisingID() {
-		byte[] data = new byte[16];
-		String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		if (deviceId == null) {
-			deviceId = UUID.randomUUID().toString();
-		}
-
-		SecureRandom secureRandom = new SecureRandom();
-		secureRandom.setSeed(deviceId.hashCode());
-		secureRandom.nextBytes(data);
-		return UUID.nameUUIDFromBytes(data).toString();
 	}
 
 	private void addDefaultStore() {

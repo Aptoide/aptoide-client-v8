@@ -67,7 +67,8 @@ public class AptoideDownloadManager {
 
 	private static Observable<Download> getDownload(Realm realm, long appId) {
 		return Observable.fromCallable(() -> realm.where(Download.class).equalTo("appId", appId).findFirst()).flatMap(download -> {
-			if (download == null) {
+			if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download
+					.FILE_MISSING)) {
 				return Observable.error(new DownloadNotFoundException());
 			}
 			return download.asObservable();
@@ -236,6 +237,7 @@ public class AptoideDownloadManager {
 		if (!isDownloading) {
 			Download nextDownload = getNextDownload();
 			if (nextDownload != null) {
+				isDownloading = true;
 				new DownloadTask(nextDownload).startDownload();
 			} else {
 				CacheHelper.cleanCache(settingsInterface, DOWNLOADS_STORAGE_PATH);
@@ -254,10 +256,6 @@ public class AptoideDownloadManager {
 
 	public void setDownloading(boolean downloading) {
 		isDownloading = downloading;
-	}
-
-	public void stopDownloads() {
-		pauseAllDownloads();
 	}
 
 	public Download getNextDownload() {

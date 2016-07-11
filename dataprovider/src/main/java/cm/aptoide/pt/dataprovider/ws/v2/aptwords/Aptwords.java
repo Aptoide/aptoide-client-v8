@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import java.util.Map;
 
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -23,13 +24,16 @@ import rx.Observable;
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
 	private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
+	protected final IdsRepository idsRepository;
 
-	public Aptwords() {
+	public Aptwords(IdsRepository idsRepository) {
 		super(Interfaces.class, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_URL);
+		this.idsRepository = idsRepository;
 	}
 
-	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory) {
+	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory, IdsRepository idsRepository) {
 		super(Interfaces.class, httpClient, factory, BASE_URL);
+		this.idsRepository = idsRepository;
 	}
 
 
