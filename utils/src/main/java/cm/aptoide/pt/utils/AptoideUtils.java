@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -1091,5 +1092,20 @@ public class AptoideUtils {
 		}
 
 		// consider moving the retry code from dataprovider module to here
+	}
+
+	public static class SocialLinksU {
+
+		public static
+		@Nullable
+		String getFacebookPageURL(int version, @NonNull String facebookUrl) {
+			String toReturn;
+			if (version >= 3002850) { //newer versions of fb app
+				toReturn = "fb://facewebmodal/f?href=" + facebookUrl;
+			} else {
+				toReturn = facebookUrl;
+			}
+			return toReturn;
+		}
 	}
 }
