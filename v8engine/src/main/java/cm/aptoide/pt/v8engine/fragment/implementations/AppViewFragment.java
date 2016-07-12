@@ -85,7 +85,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//	private GetAppMeta.App app;
 	private long appId;
 	private String storeTheme;
-	private String lastFragment;
 
 	//
 	// static fragment default new instance method
@@ -167,7 +166,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			if (storeTheme == null) {
 				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 			}
-			header.setup(getActivity(), getApp);
+			header.setup(getApp);
 			setupDisplayables(getApp);
 			setupObservables(getApp);
 			finishLoading();
@@ -195,7 +194,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
-		header = new AppViewHeader(view, lastFragment);
+		header = new AppViewHeader(view);
 		setHasOptionsMenu(true);
 	}
 
@@ -258,7 +257,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		appId = args.getLong(BundleKeys.APP_ID.name());
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
-		lastFragment = FragmentUtils.getLastFragmentInStack(fragmentActivity.getSupportFragmentManager());
 	}
 
 	//
@@ -329,10 +327,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		@Getter
 		private final TextView downloadsCount;
 
-		private String lastFragmentOnStack;
-
 		// ctor
-		public AppViewHeader(@NonNull View view, String lastFragmentOnStack) {
+		public AppViewHeader(@NonNull View view) {
 			animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
 
 			appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
@@ -343,12 +339,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			badgeText = (TextView) view.findViewById(R.id.badge_text);
 			fileSize = (TextView) view.findViewById(R.id.file_size);
 			downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
-
-			this.lastFragmentOnStack = lastFragmentOnStack;
 		}
 
 		// setup methods
-		public void setup(Activity activity, @NonNull GetApp getApp) {
+		public void setup(@NonNull GetApp getApp) {
 
 			if (getApp.getNodes().getMeta().getData().getGraphic() != null) {
 				ImageLoader.load(getApp.getNodes().getMeta().getData().getGraphic(), featuredGraphic);
@@ -367,10 +361,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			// TODO add placeholders in image loading
 
 			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
-				StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
-				collapsingToolbar.setBackgroundColor(ContextCompat.getColor(activity, storeThemeEnum.getStoreHeader()));
-				collapsingToolbar.setContentScrimColor(ContextCompat.getColor(activity, storeThemeEnum.getStoreHeader()));
-				ThemeUtils.setStatusBarThemeColor(activity, StoreThemeEnum.get(storeTheme));
+			StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
+			collapsingToolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
+			collapsingToolbar.setContentScrimColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
 			appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
 				@Override

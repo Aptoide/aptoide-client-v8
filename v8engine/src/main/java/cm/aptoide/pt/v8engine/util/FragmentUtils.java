@@ -52,13 +52,4 @@ public final class FragmentUtils {
 		replaceFragmentV4(fragmentActivity, fragment, fragment.getClass().getSimpleName() + "_" + atomicInt
 				.incrementAndGet());
 	}
-
-	public static String getLastFragmentInStack(@NonNull FragmentManager fragmentManager) {
-		int count = fragmentManager.getBackStackEntryCount();
-		if(count > 0) {
-			return fragmentManager.getBackStackEntryAt(count - 1).getName();
-		}
-		return "None";
-	}
-
 }
