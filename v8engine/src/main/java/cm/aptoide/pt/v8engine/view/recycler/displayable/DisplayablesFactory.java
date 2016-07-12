@@ -32,7 +32,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
  */
 public class DisplayablesFactory {
 
-	public static List<Displayable> parse(GetStoreWidgets getStoreWidgets) {
+	public static List<Displayable> parse(GetStoreWidgets getStoreWidgets, String storeTheme) {
 
 		LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -44,11 +44,11 @@ public class DisplayablesFactory {
 				switch (wsWidget.getType()) {
 
 					case APPS_GROUP:
-						displayables.add(getApps(wsWidget));
+						displayables.add(getApps(wsWidget, storeTheme));
 						break;
 
 					case STORES_GROUP:
-						displayables.add(new GridHeaderDisplayable(wsWidget));
+						displayables.add(new GridHeaderDisplayable(wsWidget, storeTheme));
 						displayables.add(getStores(wsWidget.getViewObject()));
 						break;
 
@@ -106,13 +106,19 @@ public class DisplayablesFactory {
 		return null;
 	}
 
-	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget) {
+	private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
 		ListApps listApps = (ListApps) wsWidget.getViewObject();
 		if (listApps == null) {
 			return new EmptyDisplayable();
 		}
+
+
 		List<App> apps = listApps.getDatalist().getList();
 		List<Displayable> displayables = new ArrayList<>(apps.size());
+
+		for (App app : apps) {
+			app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+		}
 
 		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
@@ -160,7 +166,7 @@ public class DisplayablesFactory {
 			}
 		} else {
 			if (apps.size() > 0) {
-				displayables.add(new GridHeaderDisplayable(wsWidget));
+				displayables.add(new GridHeaderDisplayable(wsWidget, storeTheme));
 			}
 
 			for (App app : apps) {

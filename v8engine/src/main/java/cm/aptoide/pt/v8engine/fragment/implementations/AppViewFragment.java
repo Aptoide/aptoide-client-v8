@@ -1,10 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified by pedroribeiro on 11/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -12,12 +14,17 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,10 +40,14 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
@@ -73,16 +84,29 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
+	private String storeTheme;
+	private String lastFragment;
 
 	//
 	// static fragment default new instance method
 	//
 	private MinimalAd minimalAd;
 
+	private static FragmentActivity fragmentActivity;
+
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(BundleKeys.APP_ID.name(), appId);
 
+		AppViewFragment fragment = new AppViewFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
+
+	public static AppViewFragment newInstance(long appId, String storeTheme) {
+		Bundle bundle = new Bundle();
+		bundle.putLong(BundleKeys.APP_ID.name(), appId);
+		bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
 		return fragment;
@@ -140,7 +164,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void load(boolean refresh) {
 		GetAppRequest.of(appId).execute(getApp -> {
-			header.setup(getApp);
+			if (storeTheme == null) {
+				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+			}
+			header.setup(getActivity(), getApp);
 			setupDisplayables(getApp);
 			setupObservables(getApp);
 			finishLoading();
@@ -168,14 +195,13 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
-		header = new AppViewHeader(view);
+		header = new AppViewHeader(view, lastFragment);
 		setHasOptionsMenu(true);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
 			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
 			header.getAppBarLayout().setExpanded(isExpanded);
@@ -231,6 +257,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
+		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
+		lastFragment = FragmentUtils.getLastFragmentInStack(fragmentActivity.getSupportFragmentManager());
 	}
 
 	//
@@ -272,7 +300,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	// micro widget for header
 	//
 
-	private static final class AppViewHeader {
+	private final class AppViewHeader {
 
 		private final boolean animationsEnabled;
 
@@ -301,8 +329,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		@Getter
 		private final TextView downloadsCount;
 
+		private String lastFragmentOnStack;
+
 		// ctor
-		public AppViewHeader(@NonNull View view) {
+		public AppViewHeader(@NonNull View view, String lastFragmentOnStack) {
 			animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
 
 			appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
@@ -313,10 +343,12 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			badgeText = (TextView) view.findViewById(R.id.badge_text);
 			fileSize = (TextView) view.findViewById(R.id.file_size);
 			downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
+
+			this.lastFragmentOnStack = lastFragmentOnStack;
 		}
 
 		// setup methods
-		public void setup(@NonNull GetApp getApp) {
+		public void setup(Activity activity, @NonNull GetApp getApp) {
 
 			if (getApp.getNodes().getMeta().getData().getGraphic() != null) {
 				ImageLoader.load(getApp.getNodes().getMeta().getData().getGraphic(), featuredGraphic);
@@ -335,6 +367,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			// TODO add placeholders in image loading
 
 			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
+				StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
+				collapsingToolbar.setBackgroundColor(ContextCompat.getColor(activity, storeThemeEnum.getStoreHeader()));
+				collapsingToolbar.setContentScrimColor(ContextCompat.getColor(activity, storeThemeEnum.getStoreHeader()));
+				ThemeUtils.setStatusBarThemeColor(activity, StoreThemeEnum.get(storeTheme));
 			appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
 				@Override
@@ -394,6 +430,20 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			badgeText.setText(badgeMessageId);
 		}
 
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if(storeTheme != null) {
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+		}
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		fragmentActivity = (FragmentActivity) activity;
+		super.onAttach(activity);
 	}
 }
 
