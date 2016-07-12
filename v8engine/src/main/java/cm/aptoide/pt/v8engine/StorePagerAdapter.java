@@ -31,7 +31,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 	public StorePagerAdapter(FragmentManager fm, GetStore getStore) {
 		super(fm);
 		tabs = getStore.getNodes().getTabs().getList();
-		storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
+		if (getStore.getNodes().getMeta().getData().getId() != 15) {
+			storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
+		}
 		validateGetStore();
 	}
 

@@ -80,21 +80,5 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if(storeTheme != null && !getActivity().getTheme().equals("default")) {
-		}
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		if(storeTheme != null) {
-			ThemeUtils.setAptoideTheme(getActivity());
-			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
-		}
-	}
-
 
 }

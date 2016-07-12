@@ -208,6 +208,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 			displayables = new LinkedList<>();
 			for (App app : list) {
+				app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
 				displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
 			}
 
@@ -264,11 +265,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 						e.printStackTrace();
 					}
 
-					displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), getStore.getNodes()
-							.getMeta()
-							.getData()
-							.getAppearance()
-							.getTheme());
+					displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme);
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
 	}

@@ -106,9 +106,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	public static AppViewFragment newInstance(long appId, String storeTheme) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(BundleKeys.APP_ID.name(), appId);
-		if(!storeTheme.equals("none")) {
-			bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
-		}
+		bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
 		return fragment;
@@ -166,11 +164,13 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void load(boolean refresh) {
 		GetAppRequest.of(appId).execute(getApp -> {
+			if (storeTheme == null) {
+				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+			}
 			header.setup(getActivity(), getApp);
 			setupDisplayables(getApp);
 			setupObservables(getApp);
 			finishLoading();
-			storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 		}, refresh);
 	}
 
@@ -299,7 +299,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	// micro widget for header
 	//
 
-	private static final class AppViewHeader {
+	private final class AppViewHeader {
 
 		private final boolean animationsEnabled;
 
@@ -328,7 +328,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		@Getter
 		private final TextView downloadsCount;
 
-		private String storeTheme;
 		private String lastFragmentOnStack;
 
 		// ctor
@@ -350,9 +349,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		// setup methods
 		public void setup(Activity activity, @NonNull GetApp getApp) {
 
-			storeTheme = getApp.getNodes().getMeta().getData().getStore()
-					.getAppearance().getTheme();
-
 			if (getApp.getNodes().getMeta().getData().getGraphic() != null) {
 				ImageLoader.load(getApp.getNodes().getMeta().getData().getGraphic(), featuredGraphic);
 			}
@@ -370,12 +366,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			// TODO add placeholders in image loading
 
 			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
-			if(!lastFragmentOnStack.contains("StoreFragment")) {
 				StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
 				collapsingToolbar.setBackgroundColor(ContextCompat.getColor(activity, storeThemeEnum.getStoreHeader()));
 				collapsingToolbar.setContentScrimColor(ContextCompat.getColor(activity, storeThemeEnum.getStoreHeader()));
 				ThemeUtils.setStatusBarThemeColor(activity, StoreThemeEnum.get(storeTheme));
-			}
 			appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
 				@Override

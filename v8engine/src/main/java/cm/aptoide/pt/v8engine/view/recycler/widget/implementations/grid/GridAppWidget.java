@@ -78,7 +78,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 				v -> {
 					// FIXME
 					((FragmentShower) v.getContext()).pushFragmentV4(
-							AppViewFragment.newInstance(appId)
+							AppViewFragment.newInstance(appId, pojo.getStore().getAppearance().getTheme())
 					);
 				}
 		);

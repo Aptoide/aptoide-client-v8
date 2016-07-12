@@ -111,8 +111,14 @@ public class DisplayablesFactory {
 		if (listApps == null) {
 			return new EmptyDisplayable();
 		}
+
+
 		List<App> apps = listApps.getDatalist().getList();
 		List<Displayable> displayables = new ArrayList<>(apps.size());
+
+		for (App app : apps) {
+			app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+		}
 
 		if (Layout.BRICK.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
