@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 11/07/2016.
+  ~ Modified by SithEngineer on 12/07/2016.
   -->
 
 <resources>
@@ -67,7 +67,7 @@
 
     <dimen name="appview_developer_padding">10dp</dimen>
     <dimen name="appview_title_left_margin">120dp</dimen>
-    <dimen name="appview_title_right_margin">80dp</dimen>
+    <dimen name="appview_title_right_margin">84dp</dimen>
     <dimen name="appview_header_height">256dp</dimen>
     <dimen name="appview_top_rating_top_margin">80dp</dimen>
     <dimen name="custom_snackbar_height">44dp</dimen>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 12/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -57,13 +57,14 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 		final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
 		final Context ctx = getContext();
 
+		final FragmentShower fragmentShower = ((FragmentShower) ctx);
 		final Resources.Theme theme = additionalInfo.getContext().getTheme();
 		final Resources res = additionalInfo.getResources();
 
 		additionalInfo.setOnClickListener(v -> {
 			Scrollable scrollable = null;
 			try {
-				scrollable = (Scrollable) ((FragmentShower) getContext()).getCurrent();
+				scrollable = ((Scrollable) fragmentShower.getCurrentV4());
 			} catch (ClassCastException ex) {
 				Logger.e(TAG, ex);
 			}

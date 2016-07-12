@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 12/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -16,9 +16,6 @@ import cm.aptoide.pt.v8engine.util.FragmentUtils;
  */
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
 
-	private android.app.Fragment currentFragment;
-	private android.support.v4.app.Fragment currentFragmentV4;
-
 	@Override
 	protected android.support.v4.app.Fragment createFragment() {
 		return HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home);
@@ -27,21 +24,23 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	@Override
 	public void pushFragment(android.app.Fragment fragment) {
 		FragmentUtils.replaceFragment(this, fragment);
-		currentFragment = fragment;
 	}
 
 	@Override
 	public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
 		FragmentUtils.replaceFragmentV4(this, fragment);
-		currentFragmentV4 = fragment;
-	}
-
-	public android.support.v4.app.Fragment getCurrent() {
-		return currentFragmentV4;
 	}
 
 	@Override
 	public void popFragment() {
-		// TODO
+		onBackPressed();
+	}
+
+	public android.support.v4.app.Fragment getCurrentV4() {
+		return FragmentUtils.getCurrentFragmentV4(this);
+	}
+
+	public android.app.Fragment getCurrent() {
+		return FragmentUtils.getCurrentFragment(this);
 	}
 }
