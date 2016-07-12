@@ -24,6 +24,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 5/13/16.
@@ -189,7 +190,7 @@ public class AptoideDownloadManager {
 	 */
 	public void pauseAllDownloads() {
 		FileDownloader.getImpl().pauseAll();
-		getCurrentDownloads().first().subscribe(downloads -> {
+		getCurrentDownloads().first().subscribeOn(Schedulers.io()).subscribe(downloads -> {
 			@Cleanup
 			Realm realm = Database.get();
 			for (final Download download : downloads) {
