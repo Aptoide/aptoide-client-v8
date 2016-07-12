@@ -68,17 +68,17 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
 		tvAddedTime.setText(dateFormatter.format(pojo.getAdded()));
-		try {
+		/*try {
 			storeTheme = pojo.getStore().getAppearance().getTheme();
 		} catch (NullPointerException e) {
 			storeTheme = "none";
-		}
+		}*/
 
 		itemView.setOnClickListener(
 				v -> {
 					// FIXME
 					((FragmentShower) v.getContext()).pushFragmentV4(
-							AppViewFragment.newInstance(appId, storeTheme)
+							AppViewFragment.newInstance(appId)
 					);
 				}
 		);

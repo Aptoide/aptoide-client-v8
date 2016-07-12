@@ -31,6 +31,15 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 		return fragment;
 	}
 
+	public static StoreGridRecyclerFragment newInstance(Event event, String
+			title) {
+		Bundle args = buildBundle(event, title);
+
+		StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public void setupToolbar() {
 		// It's not calling super cause it does nothing in the middle class}
@@ -75,7 +84,6 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 	public void onDestroy() {
 		super.onDestroy();
 		if(storeTheme != null && !getActivity().getTheme().equals("default")) {
-			ThemeUtils.setAptoideTheme(getActivity());
 		}
 	}
 
@@ -84,6 +92,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 		super.onDestroyView();
 		if(storeTheme != null) {
 			ThemeUtils.setAptoideTheme(getActivity());
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
 		}
 	}
 

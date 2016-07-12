@@ -276,9 +276,16 @@
     <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
     <!--</style>-->
 
-    <style name="HeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
+    <style name="AppViewHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/appview_title_text_size</item>
+    </style>
+
+    <style name="OtherVersionsHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/medium_custom_gray</item>
+        <item name="android:textSize">@dimen/appview_title_text_size</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:minLines">2</item>
     </style>
 
     <style name="RollBackSectionTextViewStyle" parent="@android:style/Widget.TextView">

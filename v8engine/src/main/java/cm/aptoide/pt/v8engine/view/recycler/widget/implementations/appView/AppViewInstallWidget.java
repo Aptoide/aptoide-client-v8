@@ -6,8 +6,10 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.ContextWrapper;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,8 +23,10 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -33,6 +37,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -98,6 +103,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+		/*Store store = app.getStore();
+
+		StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);*/
 
 		versionName.setText(app.getFile().getVername());
 		otherVersions.setOnClickListener(v -> {
@@ -161,7 +169,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			latestVersionLayout.setVisibility(View.VISIBLE);
 		}
 	}
-
+/*
 	private void setupStoreInfo(GetApp getApp) {
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
@@ -202,7 +210,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			subscribeButton.setOnClickListener(new Listeners().newSubscribeStoreListener(itemView, store.getName()));
 		}
 	}
-
+*/
 	private boolean isLatestAvailable(GetApp getApp) {
 		return (getApp.getNodes().getVersions() != null && !getApp.getNodes().getVersions().getList().isEmpty() &&
 				getApp.getNodes().getMeta().getData().getFile().getVercode() < getApp.getNodes()
@@ -301,8 +309,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			return v -> {
 				long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
 
-				FragmentUtils.replaceFragmentV4(fragmentActivity, AppViewFragment.newInstance(latestAppId,
-						getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme()));
+				FragmentUtils.replaceFragmentV4(fragmentActivity, AppViewFragment.newInstance(latestAppId));
 			};
 		}
 

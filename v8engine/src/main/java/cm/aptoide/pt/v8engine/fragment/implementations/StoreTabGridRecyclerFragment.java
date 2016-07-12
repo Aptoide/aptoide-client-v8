@@ -87,6 +87,21 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		return args;
 	}
 
+	@NonNull
+	protected static Bundle buildBundle(Event event, String title) {
+		Bundle args = new Bundle();
+
+		if (event.getType() != null) {
+			args.putString(BundleCons.TYPE, event.getType().toString());
+		}
+		if (event.getName() != null) {
+			args.putString(BundleCons.NAME, event.getName().toString());
+		}
+		args.putString(BundleCons.TITLE, title);
+		args.putString(BundleCons.ACTION, event.getAction());
+		return args;
+	}
+
 	@Override
 	public void loadExtras(Bundle args) {
 		if (args.containsKey(BundleCons.TYPE)) {
