@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 08/07/2016.
+  ~ Modified by SithEngineer on 12/07/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -76,21 +76,17 @@
         android:layout_height="@dimen/other_versions_header_height"
         android:fitsSystemWindows="true"
         >
-
-        <!--
-            app:contentScrim="@color/black"
-        -->
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
             android:fitsSystemWindows="true"
-            android:textColor="@color/medium_custom_gray"
+            android:textColor="@color/black"
             android:textSize="@dimen/appview_title_text_size"
-            app:expandedTitleMarginBottom="50dp"
-            app:expandedTitleMarginEnd="@dimen/appview_title_right_margin"
-            app:expandedTitleMarginStart="@dimen/appview_title_left_margin"
+            app:expandedTitleMarginStart="@dimen/other_versions_title_left_margin"
+            app:expandedTitleMarginEnd="@dimen/other_versions_title_right_margin"
+            app:expandedTitleMarginBottom="@dimen/other_versions_title_bottom_margin"
             app:expandedTitleTextAppearance="@style/OtherVersionsHeaderTextAppView"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             >
@@ -116,6 +112,22 @@
                     />
 
             </RelativeLayout>
+
+            <!--
+                android:layout_toRightOf="@id/app_icon"
+                -->
+            <TextView
+                android:id="@+id/other_versions_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:textStyle="italic"
+                android:textSize="@dimen/appview_title_text_size"
+                android:layout_marginLeft="@dimen/other_versions_title_left_margin"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="118dp"
+                android:text="@string/other_versions_on_different_stores"
+                />
 
             <!--
             android:theme="?attr/toolbarTheme"

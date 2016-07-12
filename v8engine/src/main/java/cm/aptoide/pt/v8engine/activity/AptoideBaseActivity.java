@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by SithEngineer on 12/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -144,7 +144,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
-		requestAccessToExternalFileSystem(false, toRunWhenAccessIsGranted);
+		requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
@@ -194,7 +194,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
-		requestAccessToAccounts(false, toRunWhenAccessIsGranted);
+		requestAccessToAccounts(true, toRunWhenAccessIsGranted);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
@@ -213,7 +213,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 					public void onNext(GenericDialogs.EResponse eResponse) {
 						super.onNext(eResponse);
 						if(eResponse!= GenericDialogs.EResponse.YES) return;
-
 
 						ActivityCompat.requestPermissions(
 								AptoideBaseActivity.this,
