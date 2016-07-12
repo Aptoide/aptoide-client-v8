@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -19,22 +21,24 @@ import com.trello.rxlifecycle.FragmentEvent;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
-import rx.Observable;
 
 /**
  * Created by neuro on 09-05-2016.
  */
 public class HomeFragment extends StoreFragment {
 
+	public static final String APTOIDE_FACEBOOK_LINK = "http://www.facebook.com/aptoide";
+	public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
+	public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
+	public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 	private static final String TAG = HomeFragment.class.getSimpleName();
-
 	private DrawerLayout mDrawerLayout;
 	private NavigationView mNavigationView;
 	private BadgeView updatesBadge;
@@ -68,13 +72,13 @@ public class HomeFragment extends StoreFragment {
 				} else if (itemId == R.id.navigation_item_settings) {
 					((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_facebook) {
-					Snackbar.make(mNavigationView, "Facebook", Snackbar.LENGTH_SHORT).show();
+					openFacebook();
 				} else if (itemId == R.id.navigation_item_twitter) {
-					Snackbar.make(mNavigationView, "Twitter", Snackbar.LENGTH_SHORT).show();
+					openTwitter();
 				} else if (itemId == R.id.navigation_item_backup_apps) {
 					Snackbar.make(mNavigationView, "Backup Apps", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.send_feedback) {
-					Snackbar.make(mNavigationView, "Send Feedback", Snackbar.LENGTH_SHORT).show();
+					startFeedbackFragment();
 				}
 
 				mDrawerLayout.closeDrawer(mNavigationView);
@@ -84,19 +88,38 @@ public class HomeFragment extends StoreFragment {
 		}
 	}
 
-	@Override
-	public int getContentViewId() {
-		return R.layout.activity_main;
+	private void startFeedbackFragment() {
+		String downloadFolderPath = AptoideUtils.SystemU.getDownloadFolderPath();
+		String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
+		AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+		((FragmentShower) getActivity()).pushFragmentV4(SendFeedbackFragment.newInstance(downloadFolderPath + screenshotFileName));
+	}
+
+	private void openTwitter() {
+		openSocialLink(TWITTER_PACKAGE_NAME, APTOIDE_TWITTER_URL, getContext().getString(R.string.social_twitter_screen_title), Uri.parse
+				(APTOIDE_TWITTER_URL));
+	}
+
+	private void openFacebook() {
+		Installed installedFacebook = Database.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
+		openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK, getContext().getString(R.string.social_facebook_screen_title), Uri.parse(AptoideUtils
+				.SocialLinksU
+				.getFacebookPageURL(installedFacebook == null ? 0 : installedFacebook.getVersionCode(), APTOIDE_FACEBOOK_LINK)));
+	}
+
+	private void openSocialLink(String packageName, String socialUrl, String pageTitle, Uri uriToOpenApp) {
+		Installed installedFacebook = Database.InstalledQ.get(packageName, realm);
+		if (installedFacebook == null) {
+			((FragmentShower) getActivity()).pushFragmentV4(SocialFragment.newInstance(socialUrl, pageTitle));
+		} else {
+			Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
+			getContext().startActivity(sharingIntent);
+		}
 	}
 
 	@Override
-	public void setupToolbar() {
-		if (toolbar != null) {
-			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-			toolbar.setNavigationIcon(R.drawable.ic_drawer);
-			toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
-		}
+	public int getContentViewId() {
+		return R.layout.activity_main;
 	}
 
 	@Override
@@ -105,12 +128,9 @@ public class HomeFragment extends StoreFragment {
 
 		updatesBadge = new BadgeView(getContext(), ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
 
-		Database.UpdatesQ.getAll(realm)
-				.asObservable()
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-				.subscribe(updates -> {
-					refreshUpdatesBadge(updates.size());
-				});
+		Database.UpdatesQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(updates -> {
+			refreshUpdatesBadge(updates.size());
+		});
 	}
 
 	@Override
@@ -122,6 +142,16 @@ public class HomeFragment extends StoreFragment {
 	public void setupViews() {
 		super.setupViews();
 		setupNavigationView();
+	}
+
+	@Override
+	public void setupToolbar() {
+		if (toolbar != null) {
+			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+			toolbar.setNavigationIcon(R.drawable.ic_drawer);
+			toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+		}
 	}
 
 	@Override

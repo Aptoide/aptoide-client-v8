@@ -26,10 +26,14 @@ import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 	private final List<GetStoreTabs.Tab> tabs;
+	private String storeTheme;
 
 	public StorePagerAdapter(FragmentManager fm, GetStore getStore) {
 		super(fm);
 		tabs = getStore.getNodes().getTabs().getList();
+		if (getStore.getNodes().getMeta().getData().getId() != 15) {
+			storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
+		}
 		validateGetStore();
 	}
 
@@ -67,7 +71,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 			case getUserTimeline:
 				return AppsTimelineFragment.newInstance(event.getAction());
 			default:
-				return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel());
+				return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel(), storeTheme);
 		}
 	}
 
@@ -75,7 +79,6 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		switch (event.getName()) {
 			case myStores:
 				return SubscribedStoresFragment.newInstance();
-
 			case myUpdates:
 				return UpdatesFragment.newInstance();
 			default:

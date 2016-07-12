@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +32,8 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
@@ -48,6 +52,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	protected Event.Name name;
 	protected String action;
 	protected String title;
+	protected String storeTheme;
 	private List<Displayable> displayables;
 	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
@@ -57,6 +62,29 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
 		fragment.setArguments(args);
 		return fragment;
+	}
+
+	public static StoreTabGridRecyclerFragment newInstance(Event event, String title, String storeTheme) {
+		Bundle args = buildBundle(event, title, storeTheme);
+		StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	@NonNull
+	protected static Bundle buildBundle(Event event, String title, String storeTheme) {
+		Bundle args = new Bundle();
+
+		if (event.getType() != null) {
+			args.putString(BundleCons.TYPE, event.getType().toString());
+		}
+		if (event.getName() != null) {
+			args.putString(BundleCons.NAME, event.getName().toString());
+		}
+		args.putString(BundleCons.TITLE, title);
+		args.putString(BundleCons.ACTION, event.getAction());
+		args.putString(BundleCons.STORE_THEME, storeTheme);
+		return args;
 	}
 
 	@NonNull
@@ -84,6 +112,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 		title = args.getString(BundleCons.TITLE);
 		action = args.getString(BundleCons.ACTION);
+		storeTheme = args.getString(BundleCons.STORE_THEME);
 	}
 
 	@Override
@@ -179,6 +208,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 			displayables = new LinkedList<>();
 			for (App app : list) {
+				app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
 				displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
 			}
 
@@ -235,7 +265,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 						e.printStackTrace();
 					}
 
-					displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets());
+					displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme);
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
 	}
@@ -258,7 +288,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 						e.printStackTrace();
 					}
 
-					displayables = DisplayablesFactory.parse(getStoreWidgets);
+					displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme);
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
 	}
@@ -268,11 +298,17 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	}
 
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+	}
+
 	private static class BundleCons {
 
 		public static final String TYPE = "type";
 		public static final String NAME = "name";
 		public static final String TITLE = "title";
 		public static final String ACTION = "action";
+		public static final String STORE_THEME = "storeTheme";
 	}
 }

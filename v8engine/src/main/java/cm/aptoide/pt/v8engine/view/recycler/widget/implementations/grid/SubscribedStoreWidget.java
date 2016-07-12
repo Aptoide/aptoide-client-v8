@@ -70,7 +70,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 		storeLayout.setBackgroundColor(color);
 		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
 				StoreFragment
-				.newInstance(displayable.getPojo().getStoreName())));
+				.newInstance(displayable.getPojo().getStoreName(), displayable.getPojo().getTheme())));
 
 		if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
 			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);

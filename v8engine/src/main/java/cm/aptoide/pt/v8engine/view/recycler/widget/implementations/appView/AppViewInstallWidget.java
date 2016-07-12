@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by pedroribeiro on 11/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.ContextWrapper;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,8 +23,10 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -33,6 +37,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -98,6 +103,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+		/*Store store = app.getStore();
+
+		StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);*/
 
 		versionName.setText(app.getFile().getVername());
 		otherVersions.setOnClickListener(v -> {
@@ -161,7 +169,48 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			latestVersionLayout.setVisibility(View.VISIBLE);
 		}
 	}
+/*
+	private void setupStoreInfo(GetApp getApp) {
 
+		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+		Store store = app.getStore();
+
+		if (TextUtils.isEmpty(store.getAvatar())) {
+			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatarView);
+		} else {
+			ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatarView);
+		}
+
+		StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);
+
+		storeNameView.setText(store.getName());
+		storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
+		storeNumberUsersView.setText(String.valueOf(store.getStats().getSubscribers()));
+		subscribeButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			subscribeButton.setElevation(0);
+		}
+		subscribeButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
+		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(), store
+				.getAppearance().getTheme()));
+
+		@Cleanup Realm realm = Database.get();
+		boolean subscribed = Database.StoreQ.get(store.getId(), realm) != null;
+
+		if (subscribed) {
+			int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
+			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
+			subscribeButton.setText(R.string.appview_subscribed_store_button_text);
+			subscribeButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(), store
+					.getAppearance().getTheme()));
+		} else {
+			int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
+			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
+			subscribeButton.setText(R.string.appview_subscribe_store_button_text);
+			subscribeButton.setOnClickListener(new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+		}
+	}
+*/
 	private boolean isLatestAvailable(GetApp getApp) {
 		return (getApp.getNodes().getVersions() != null && !getApp.getNodes().getVersions().getList().isEmpty() &&
 				getApp.getNodes().getMeta().getData().getFile().getVercode() < getApp.getNodes()
@@ -271,10 +320,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newOpenStoreListener(View itemView, String storeName) {
+		private View.OnClickListener newOpenStoreListener(View itemView, String storeName, String storeTheme) {
 			return v -> {
 				FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreFragment.newInstance
-						(storeName));
+						(storeName, storeTheme));
 			};
 		}
 

@@ -6,16 +6,30 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 
 /**
  * Created by neuro on 10-05-2016.
  */
 public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
+
+	public static StoreGridRecyclerFragment newInstance(Event event, String
+			title, String theme) {
+		Bundle args = buildBundle(event, title, theme);
+
+		StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	public static StoreGridRecyclerFragment newInstance(Event event, String
 			title) {
@@ -54,4 +68,17 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 	public void bindViews(View view) {
 		super.bindViews(view);
 	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
+			savedInstanceState) {
+		if(storeTheme != null) {
+			ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+		}
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+
 }
