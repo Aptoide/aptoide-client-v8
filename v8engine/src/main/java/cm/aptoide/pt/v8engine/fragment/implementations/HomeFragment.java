@@ -78,7 +78,7 @@ public class HomeFragment extends StoreFragment {
 				} else if (itemId == R.id.navigation_item_backup_apps) {
 					Snackbar.make(mNavigationView, "Backup Apps", Snackbar.LENGTH_SHORT).show();
 				} else if (itemId == R.id.send_feedback) {
-					Snackbar.make(mNavigationView, "Send Feedback", Snackbar.LENGTH_SHORT).show();
+					startFeedbackFragment();
 				}
 
 				mDrawerLayout.closeDrawer(mNavigationView);
@@ -86,6 +86,13 @@ public class HomeFragment extends StoreFragment {
 				return false;
 			});
 		}
+	}
+
+	private void startFeedbackFragment() {
+		String downloadFolderPath = AptoideUtils.SystemU.getDownloadFolderPath();
+		String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
+		AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+		((FragmentShower) getActivity()).pushFragmentV4(SendFeedbackFragment.newInstance(downloadFolderPath + screenshotFileName));
 	}
 
 	private void openTwitter() {

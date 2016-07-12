@@ -6,6 +6,7 @@
 package cm.aptoide.pt.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -15,11 +16,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Looper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
@@ -31,11 +34,18 @@ import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.WindowManager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -476,6 +486,37 @@ public class AptoideUtils {
 			return dpi;
 		}
 
+		public static File takeScreenshot(Activity a, String mPath, String fileName) {
+			Bitmap bitmap;
+			FileUtils.createDir(mPath);
+			View v1 = a.getWindow().getDecorView().getRootView();
+			v1.setDrawingCacheEnabled(true);
+			try {
+				bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+				v1.setDrawingCacheEnabled(false);
+			} catch (Exception e) {
+				Logger.e("FeedBackActivity-screenshot", "Exception: " + e.getMessage());
+				return null;
+			}
+
+			OutputStream fout = null;
+			File imageFile = new File(mPath, fileName);
+			try {
+				imageFile.createNewFile();
+				fout = new FileOutputStream(imageFile);
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
+				fout.flush();
+				fout.close();
+			} catch (FileNotFoundException e) {
+				Logger.e("FeedBackActivity-screenshot", "FileNotFoundException: " + e.getMessage());
+				return null;
+			} catch (IOException e) {
+				Logger.e("FeedBackActivity-screenshot", "IOException: " + e.getMessage());
+				return null;
+			}
+			return imageFile;
+		}
+
 		public enum Size {
 			notfound, small, normal, large, xlarge;
 
@@ -624,6 +665,10 @@ public class AptoideUtils {
 			return "android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon;
 		}
 
+		public static String getDownloadFolderPath() {
+			return Environment.getExternalStorageDirectory().getAbsolutePath() + "/.aptoide/";
+		}
+
 		public static void openApp(String packageName) {
 			Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(packageName);
 
@@ -660,6 +705,44 @@ public class AptoideUtils {
 				}
 			}
 			return "unknown";
+		}
+
+		public static File readLogs(String mPath, String fileName) {
+
+			Process process = null;
+			try {
+				process = Runtime.getRuntime().exec("logcat -d");
+			} catch (IOException e) {
+				Logger.e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
+				return null;
+			}
+			FileOutputStream outputStream;
+			FileUtils.createDir(mPath);
+			File logsFile = new File(mPath, fileName);
+			StringBuilder log = new StringBuilder();
+			log.append("Android Build Version: " + Build.VERSION.SDK_INT + "\n");
+			log.append("Build Model: " + Build.MODEL + "\n");
+			log.append("Device: " + Build.DEVICE + "\n");
+			log.append("Brand: " + Build.BRAND + "\n");
+			log.append("CPU: " + Build.CPU_ABI + "\n");
+			log.append("\nLogs:\n");
+			try {
+				outputStream = new FileOutputStream(logsFile);
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+				String line = null;
+				int linecount = 0;
+				while (linecount < 100 && (line = bufferedReader.readLine()) != null) {
+
+					log.append(line + "\n");
+					linecount++;
+				}
+				outputStream.write(log.toString().getBytes());
+			} catch (IOException e) {
+				return logsFile;
+			}
+
+			return logsFile;
 		}
 	}
 

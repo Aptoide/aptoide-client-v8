@@ -101,4 +101,5 @@
     <string name="social_facebook_screen_title">Facebook</string>
     <string name="social_twitter_screen_title">Twitter</string>
     <string name="top_comments">Top Comments</string>
+    <string name="feedback_not_valid">Please enter some valid Subject!</string>
 </resources>

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
-import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.FileDownloader;
 
@@ -31,22 +31,20 @@ import rx.schedulers.Schedulers;
  */
 public class AptoideDownloadManager {
 
-	/***********
-	 * Paths
-	 *****************/
-	public static final String EXTERNAL_ABSOLUTE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
-	public static final String DOWNLOADS_STORAGE_PATH = EXTERNAL_ABSOLUTE_PATH + "/.aptoide/";
-	public static final String APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
-	public static final String OBB_PATH = EXTERNAL_ABSOLUTE_PATH + "/Android/obb/";
-	public static final String GENERIC_PATH = DOWNLOADS_STORAGE_PATH + "generic/";
 	public static final String APP_ID_EXTRA = "APTOIDE_APPID_EXTRA";
 	public static final String DOWNLOADMANAGER_ACTION_PAUSE = "cm.aptoide.downloadmanager.action.pause";
 	public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
 	public static final String DOWNLOADMANAGER_ACTION_START_DOWNLOAD = "cm.aptoide.downloadmanager.action.start.download";
 	public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION = "cm.aptoide.downloadmanager.action.notification";
 	static public final int PROGRESS_MAX_VALUE = 100;
-
 	private static final String TAG = AptoideDownloadManager.class.getSimpleName();
+	/***********
+	 * Paths
+	 *****************/
+	static String DOWNLOADS_STORAGE_PATH;
+	static String APK_PATH;
+	static String OBB_PATH;
+	static String GENERIC_PATH;
 	private static AptoideDownloadManager instance;
 	private static Context context;
 	private boolean isDownloading = false;
@@ -215,6 +213,15 @@ public class AptoideDownloadManager {
 		FileDownloader.init(context);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
 		this.settingsInterface = settingsInterface;
+
+		DOWNLOADS_STORAGE_PATH = settingsInterface.getDownloadDir();
+		APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
+		GENERIC_PATH = DOWNLOADS_STORAGE_PATH + "generic/";
+		OBB_PATH = settingsInterface.getObbDir();
+		if (TextUtils.isEmpty(OBB_PATH)) {
+			OBB_PATH = GENERIC_PATH;
+		}
+
 	}
 
 	@NonNull
