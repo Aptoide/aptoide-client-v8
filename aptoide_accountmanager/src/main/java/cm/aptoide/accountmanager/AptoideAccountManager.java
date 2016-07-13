@@ -641,7 +641,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			// Creating the account on the device and setting the auth token we got
 			// (Not setting the auth token will cause another call to the server to authenticate
 			// the user)
-			accountManager.addAccountExplicitly(account, userPassword, null);
+			try {
+				accountManager.addAccountExplicitly(account, userPassword, null);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 			accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
 			AccountManagerPreferences.setRefreshToken(refreshToken);
 			CheckUserCredentialsRequest.of(accessToken)

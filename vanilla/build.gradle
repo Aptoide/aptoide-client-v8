@@ -40,7 +40,6 @@ android {
         versionCode 1
         applicationId "${APPLICATION_ID}"
         minSdkVersion 15
-        resValue "string", "authenticatorAccountType", APPLICATION_ID
         targetSdkVersion TARGET_SDK_VERSION
 
         // common proguard files to append and configure proguard for the whole project
@@ -79,16 +78,19 @@ android {
         dev {
             applicationIdSuffix ".dev"
             minSdkVersion 15
+            resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
         }
 
         nightly {
             applicationIdSuffix ".dev"
             versionName "8.0.0" + "." + getDate()
             versionCode getNextVersionCode("../../aptoideProperties/version.properties", "NIGHTLY_VERSION_CODE")
+            resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
         }
 
         prod {
             versionCode getNextVersionCode("../../aptoideProperties/version.properties", "PROD_VERSION_CODE")
+            resValue "string", "authenticatorAccountType", APPLICATION_ID
         }
     }
 
