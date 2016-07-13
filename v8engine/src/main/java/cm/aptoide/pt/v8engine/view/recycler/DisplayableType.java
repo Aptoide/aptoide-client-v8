@@ -18,7 +18,6 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -38,6 +37,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
@@ -74,6 +74,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AdultRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickListWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
@@ -139,7 +140,8 @@ public enum DisplayableType {
 
 	// Search
 	SEARCH(SearchWidget.class, SearchDisplayable.class),
-	SEARCH_ADD(SearchAdWidget.class, SearchAdDisplayable.class),
+	SEARCH_AD(SearchAdWidget.class, SearchAdDisplayable.class),
+	ADULT_ROW_SWITCH(AdultRowWidget.class, AdultRowDisplayable.class),
 
 	// Loading
 	PROGRESS(ProgressBarWidget.class, ProgressBarDisplayable.class),

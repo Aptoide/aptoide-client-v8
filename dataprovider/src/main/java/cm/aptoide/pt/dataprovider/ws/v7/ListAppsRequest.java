@@ -45,13 +45,13 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api
-					.LANG, Api.MATURE, Api.Q, storeId);
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeId);
 		} else {
 			String storeName = v7Url.getStoreName();
 			store = getStore(storeName);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api
-					.LANG, Api.MATURE, Api.Q, storeName);
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeName);
 		}
 
 		body.setStoreUser(store.getUsername());

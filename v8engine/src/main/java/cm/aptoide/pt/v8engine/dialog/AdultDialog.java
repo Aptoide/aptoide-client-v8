@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.dialog;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
@@ -55,8 +56,8 @@ public class AdultDialog extends DialogFragment {
 		return builder.create();
 	}
 
-	private static android.app.Dialog dialogAsk21(final android.content.Context c, final android.content
-            .DialogInterface.OnClickListener positiveButtonlistener) {
+	private static android.app.Dialog dialogAsk21(final android.content.Context c, final android.content.DialogInterface.OnClickListener
+			positiveButtonlistener) {
 		return new android.app.AlertDialog.Builder(c).setMessage(c.getString(R.string.are_you_adult))
 				.setPositiveButton(R.string.yes, new android.content.DialogInterface.OnClickListener() {
 					@Override
@@ -76,11 +77,43 @@ public class AdultDialog extends DialogFragment {
 				.create();
 	}
 
-	public static android.app.Dialog buildAreYouAdultDialog(final android.content.Context c, final android.content
-            .DialogInterface.OnClickListener positiveButtonlistener) {
+	private static android.app.Dialog dialogAsk21(final android.content.Context c, final android.content.DialogInterface.OnClickListener
+			positiveButtonlistener, DialogInterface.OnCancelListener cancelListener) {
+		return new android.app.AlertDialog.Builder(c).setMessage(c.getString(R.string.are_you_adult))
+				.setPositiveButton(R.string.yes, new android.content.DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(android.content.DialogInterface dialog, int which) {
+						//                        FlurryAgent.logEvent("Dialog_Adult_Content_Confirmed_More_Than_21_Years_Old");
+						positiveButtonlistener.onClick(dialog, which);
+						//Analytics.AdultContent.unlock();
+					}
+				})
+				.setNegativeButton(R.string.no, new android.content.DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(android.content.DialogInterface dialog, int which) {
+						dialog.cancel();
+						//Analytics.AdultContent.lock();
+						cancelListener.onCancel(dialog);
+					}
+				})
+				.create();
+	}
+
+	public static android.app.Dialog buildAreYouAdultDialog(final android.content.Context c, final android.content.DialogInterface.OnClickListener
+			positiveButtonlistener) {
 		int pin = SecurePreferences.getAdultContentPin();
 		if (pin == -1) {
 			return dialogAsk21(c, positiveButtonlistener);
+		} else {
+			return dialogRequestMaturepin(c, positiveButtonlistener);
+		}
+	}
+
+	public static android.app.Dialog buildAreYouAdultDialog(final android.content.Context c, final android.content.DialogInterface.OnClickListener
+			positiveButtonlistener, DialogInterface.OnCancelListener cancelListener) {
+		int pin = SecurePreferences.getAdultContentPin();
+		if (pin == -1) {
+			return dialogAsk21(c, positiveButtonlistener, cancelListener);
 		} else {
 			return dialogRequestMaturepin(c, positiveButtonlistener);
 		}

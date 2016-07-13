@@ -77,11 +77,11 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 		private List<String> storeNames;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, Api.LANG, Api.MATURE, Api.Q);
+			super(aptoideId, accessToken, aptoideVercode, cdn, Api.LANG, Api.isMature(), Api.Q);
 		}
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String packageName) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, Api.LANG, Api.MATURE, Api.Q);
+			super(aptoideId, accessToken, aptoideVercode, cdn, Api.LANG, Api.isMature(), Api.Q);
 			this.packageName = packageName;
 		}
 	}
