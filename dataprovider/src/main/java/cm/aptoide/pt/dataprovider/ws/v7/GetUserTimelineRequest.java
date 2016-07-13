@@ -39,8 +39,8 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 	public static GetUserTimelineRequest of(String url, Integer limit, int offset, List<String> packages) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, limit, offset, packages),
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core
+				.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, limit, offset, packages),
 				OkHttpClientFactory.newClient(), WebService.getDefaultConverter(), BASE_HOST);
 		return getAppRequest;
 	}

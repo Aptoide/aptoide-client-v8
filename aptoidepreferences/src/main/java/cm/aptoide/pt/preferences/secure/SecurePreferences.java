@@ -75,7 +75,7 @@ public class SecurePreferences {
 	}
 
 	public static int getAdultContentPin() {
-		return SecurePreferencesImplementation.getInstance().getInt(SecureKeys.ADULT_CONTENT_PIN, 0);
+		return SecurePreferencesImplementation.getInstance().getInt(SecureKeys.ADULT_CONTENT_PIN, -1);
 	}
 
 	public static void setAdultContentPin(int pin) {

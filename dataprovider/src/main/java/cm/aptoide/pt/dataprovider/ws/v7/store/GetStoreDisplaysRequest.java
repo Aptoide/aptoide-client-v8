@@ -45,13 +45,13 @@ public class GetStoreDisplaysRequest extends BaseRequestWithStore<GetStoreDispla
 		final StoreCredentials store;
 		final Body body;
 		if (storeId != null) {
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
-					Api.LANG, Api.MATURE, Api.Q, storeId);
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeId);
 			store = getStore(storeId);
 		} else {
 			String storeName = v7Url.getStoreName();
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
-					Api.LANG, Api.MATURE, Api.Q, storeName);
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeName);
 			store = getStore(storeName);
 		}
 		body.setStoreUser(store.getUsername());
