@@ -18,7 +18,6 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -67,7 +66,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewFlagThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewInstallWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateAndCommentsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewScreenshotsWidget;
@@ -155,7 +154,7 @@ public enum DisplayableType {
 
 	APP_VIEW_INSTALL(AppViewInstallWidget.class, AppViewInstallDisplayable.class),
 
-	APP_VIEW_RATE_AND_COMMENTS(AppViewRateAndCommentsWidget.class, AppViewRateAndCommentsDisplayable.class),
+	APP_VIEW_RATE_AND_COMMENTS(AppViewRateAndReviewsWidget.class, AppViewRateAndCommentsDisplayable.class),
 
 	APP_VIEW_FLAG_THIS(AppViewFlagThisWidget.class, AppViewFlagThisDisplayable.class),
 
