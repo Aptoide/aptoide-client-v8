@@ -41,9 +41,9 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
  * Created by sithengineer on 30/06/16.
  */
 @Displayables({AppViewRateAndCommentsDisplayable.class})
-public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsDisplayable> {
+public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDisplayable> {
 
-	private static final String TAG = AppViewRateAndCommentsWidget.class.getSimpleName();
+	private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
 	private static final Locale LOCALE = Locale.getDefault();
 
 	private TextView usersVoted;
@@ -54,10 +54,10 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 	private Button rateThisButton;
 	private Button readAllButton;
 
-	private TopCommentAdapter topCommentAdapter;
+	private TopReviewsAdapter topReviewsAdapter;
 	private Handler handler;
 
-	public AppViewRateAndCommentsWidget(View itemView) {
+	public AppViewRateAndReviewsWidget(View itemView) {
 		super(itemView);
 	}
 
@@ -98,14 +98,14 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 	}
 
 	private void showTopComments(long appId) {
-		topCommentAdapter = new TopCommentAdapter(getContext().getSupportFragmentManager(), appId);
-		topCommentsPager.setAdapter(topCommentAdapter);
+		topReviewsAdapter = new TopReviewsAdapter(getContext().getSupportFragmentManager(), appId);
+		topCommentsPager.setAdapter(topReviewsAdapter);
 		scheduleAnimations();
 	}
 
 	private void scheduleAnimations() {
 		if (ManagerPreferences.getAnimationsEnabledStatus()) {
-			for (int i = 0 ; i < topCommentAdapter.getCount() ; ++i) {
+			for (int i = 0 ; i < topReviewsAdapter.getCount() ; ++i) {
 				final int count = i;
 				handler.postDelayed(() -> {
 					topCommentsPager.setCurrentItem(count, true);
@@ -116,13 +116,13 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 		}
 	}
 
-	private static final class TopCommentAdapter extends FragmentPagerAdapter {
+	private static final class TopReviewsAdapter extends FragmentPagerAdapter {
 
 		private static final int MAX_COMMENTS = 3;
 		private long appId;
 		private List<Comment> comments;
 
-		public TopCommentAdapter(FragmentManager fm, long appId) {
+		public TopReviewsAdapter(FragmentManager fm, long appId) {
 			super(fm);
 			this.appId = appId;
 			loadTopComments();

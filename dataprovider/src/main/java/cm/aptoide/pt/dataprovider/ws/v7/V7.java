@@ -23,6 +23,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -167,6 +168,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 		@POST("listAppVersions")
 		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listComments{url}")
+		Observable<ListComments> listComments(@Path(value = "url", encoded = true) String path, @Body ListCommentsRequest.Body body,
+		                                      @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 	}
 }
