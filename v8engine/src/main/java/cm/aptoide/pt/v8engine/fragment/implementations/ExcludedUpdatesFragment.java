@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -16,15 +16,18 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.ExcludedUpdate;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
+import io.realm.Realm;
+import lombok.Cleanup;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -81,17 +84,51 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
+
 		if (itemId == android.R.id.home) {
 			getActivity().onBackPressed();
 			return true;
-		} else if (itemId == R.id.menu_restore_updates) {
-			ShowMessage.asSnack(this, "TO DO: restore updates");
+		}
+
+		if (itemId == R.id.menu_restore_updates) {
+			// get all selected ExcludedUpdates and restore them in the updates
+			LinkedList<Update> excludedUpdatesToRestore = new LinkedList<>();
+			BaseAdapter adapter = getAdapter();
+			for (int i = 0 ; i < adapter.getItemCount() ; ++i) {
+				ExcludedUpdateDisplayable displayable = ((ExcludedUpdateDisplayable) adapter.getDisplayable(i));
+				if (displayable.isSelected()) {
+					excludedUpdatesToRestore.add(displayable.getPojo());
+				}
+			}
+
+			// restore updates and remove them from excluded
+			@Cleanup
+			Realm realm = Database.get();
+			realm.beginTransaction();
+			for (Update e : excludedUpdatesToRestore) {
+				e.setExcluded(false);
+			}
+			realm.copyToRealmOrUpdate(excludedUpdatesToRestore);
+			realm.commitTransaction();
+
+			// TODO refresh this view
+
 			return true;
-		} else if (itemId == R.id.menu_select_all) {
-			ShowMessage.asSnack(this, "TO DO: select all");
+		}
+
+		if (itemId == R.id.menu_select_all) {
+			BaseAdapter adapter = getAdapter();
+			for (int i = 0 ; i < adapter.getItemCount() ; ++i) {
+				((ExcludedUpdateDisplayable) adapter.getDisplayable(i)).setSelected(true);
+			}
 			return true;
-		} else if (itemId == R.id.menu_select_none) {
-			ShowMessage.asSnack(this, "TO DO: select none");
+		}
+
+		if (itemId == R.id.menu_select_none) {
+			BaseAdapter adapter = getAdapter();
+			for (int i = 0 ; i < adapter.getItemCount() ; ++i) {
+				((ExcludedUpdateDisplayable) adapter.getDisplayable(i)).setSelected(false);
+			}
 			return true;
 		}
 
@@ -99,7 +136,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void fetchExcludedUpdates() {
-		subscription = Database.ExcludedUpdatesQ.getAll(realm)
+		subscription = Database.UpdatesQ.getAll(realm, true)
 				.asObservable()
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.observeOn(AndroidSchedulers.mainThread())
@@ -115,7 +152,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 						emptyData.setVisibility(View.GONE);
 
 						List<ExcludedUpdateDisplayable> displayables = new ArrayList<>();
-						for (final ExcludedUpdate excludedUpdate : excludedUpdates) {
+						for (Update excludedUpdate : excludedUpdates) {
 							displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));
 						}
 						setDisplayables(displayables);

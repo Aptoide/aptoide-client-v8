@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/07/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -57,8 +59,11 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	public void bindView(UpdateDisplayable updateDisplayable) {
 		@Cleanup Realm realm = Database.get();
 
+		final String packageName = updateDisplayable.getPackageName();
+		Installed installed = Database.InstalledQ.get(packageName, realm);
+
 		labelTextView.setText(updateDisplayable.getLabel());
-		installedVernameTextView.setText(Database.InstalledQ.get(updateDisplayable.getPackageName(), realm).getVersionName());
+		installedVernameTextView.setText(installed.getVersionName());
 		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 
@@ -71,6 +76,27 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 					AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
 				}
 			});
+		});
+
+		updateRowRelativeLayout.setOnLongClickListener(v -> {
+			AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());
+
+			builder.setTitle(R.string.ignore_update)
+					.setCancelable(true)
+					.setNegativeButton(R.string.no, null)
+					.setPositiveButton(R.string.yes, (dialog, which) -> {
+						if (which == AlertDialog.BUTTON_POSITIVE) {
+							@Cleanup
+							Realm realm1 = Database.get();
+							Database.UpdatesQ.setExcluded(true, realm1);
+							updateRowRelativeLayout.setVisibility(View.GONE);
+						}
+						dialog.dismiss();
+					});
+
+			builder.create().show();
+
+			return true;
 		});
 	}
 }

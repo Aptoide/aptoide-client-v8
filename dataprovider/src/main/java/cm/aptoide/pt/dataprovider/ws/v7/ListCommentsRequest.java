@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/07/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -61,7 +61,7 @@ public class ListCommentsRequest extends BaseRequestWithStore<ListComments,ListC
 	}
 
 	@Data
-	@Accessors(chain = true)
+	@Accessors(chain = false)
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBodyWithStore implements Endless {
 

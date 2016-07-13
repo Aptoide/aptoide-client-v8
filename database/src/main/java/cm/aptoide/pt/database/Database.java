@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -9,7 +9,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.ExcludedAd;
-import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Store;
@@ -161,23 +160,10 @@ public class Database {
 		}
 	}
 
-	public static class ExcludedUpdatesQ {
-
-		public static RealmResults<ExcludedUpdate> getAll(Realm realm) {
-			return realm.where(ExcludedUpdate.class).findAll();
-		}
-
-		public static boolean contains(String packageName, Realm realm) {
-			return realm.where(ExcludedUpdate.class)
-					.equalTo(ExcludedUpdate.PACKAGE_NAME, packageName)
-					.findFirst() != null;
-		}
-	}
-
 	public static class UpdatesQ {
 
-		public static RealmResults<Update> getAll(Realm realm) {
-			return realm.where(Update.class).findAll();
+		public static RealmResults<Update> getAll(Realm realm, boolean excluded) {
+			return realm.where(Update.class).equalTo(Update.EXCLUDED, Boolean.toString(excluded)).findAll();
 		}
 
 		public static boolean contains(String packageName, Realm realm) {
@@ -195,6 +181,10 @@ public class Database {
 
 		public static Update get(String packageName, Realm realm) {
 			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
+		}
+
+		public static void setExcluded(boolean isExcluded, Realm realm) {
+
 		}
 	}
 

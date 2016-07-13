@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/07/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -64,7 +64,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 	private void fetchUpdates() {
 		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-			updatesSubscription = Database.UpdatesQ.getAll(realm)
+			updatesSubscription = Database.UpdatesQ.getAll(realm, false)
 					.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.observeOn(AndroidSchedulers.mainThread())

@@ -157,7 +157,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 				// TODO call ws with rating result
 
-
 				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
 
 			} else if (which == DialogInterface.BUTTON_NEGATIVE) {
