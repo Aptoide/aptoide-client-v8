@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 12/07/2016.
+  ~ Modified by SithEngineer on 13/07/2016.
   -->
 
 <RelativeLayout
@@ -84,18 +84,20 @@
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="54sp"
+                android:textSize="58sp"
                 tools:text="4.2"
                 />
 
-            <RatingBar
+            <android.support.v7.widget.AppCompatRatingBar
                 android:id="@+id/rating_bar"
-                android:layout_width="124dp"
-                android:layout_height="24dp"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/rating_value"
                 android:layout_centerInParent="true"
-                android:max="5"
-                tools:rating="3"
+                android:numStars="5"
+                android:stepSize="0.5"
+                tools:rating="3.0"
                 />
 
         </RelativeLayout>

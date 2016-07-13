@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 12/07/2016.
+  ~ Modified by SithEngineer on 13/07/2016.
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -421,10 +421,36 @@
         <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
         <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>
         <item name="android:paddingLeft">@dimen/appview_side_margin</item>
-        <item name="android:paddingStart">@dimen/appview_side_margin</item>
         <item name="android:paddingRight">@dimen/appview_side_margin</item>
-        <item name="android:paddingEnd">@dimen/appview_side_margin</item>
     </style>
 
-    <dimen name="appview_side_margin">8dp</dimen>
+    <!--
+    <style name="AptoideRatingBar" parent="Theme.AppCompat">
+
+        <item name="colorControlNormal">?colorPrimary</item>
+        <item name="colorControlActivated">?colorPrimary</item>
+
+        <item name="android:isIndicator">false</item>
+        <item name="android:stepSize">1.0</item>
+        <item name="android:max">5</item>
+        <item name="android:numStars">5</item>
+        <item name="android:maxHeight">58dp</item>
+        <item name="android:minHeight">58dp</item>
+    </style>
+
+    <style name="AptoideRatingBarIndicator" parent="@style/AptoideRatingBar">
+        <item name="android:isIndicator">true</item>
+        <item name="android:stepSize">0.5</item>
+    </style>
+
+    <style name="AptoideRatingBarIndicatorMedium" parent="@style/AptoideRatingBarIndicator">
+        <item name="android:maxHeight">32dp</item>
+        <item name="android:minHeight">32dp</item>
+    </style>
+
+    <style name="AptoideRatingBarIndicatorSmall" parent="@style/AptoideRatingBarIndicator">
+        <item name="android:maxHeight">10dp</item>
+        <item name="android:minHeight">10dp</item>
+    </style>
+    -->
 </resources>

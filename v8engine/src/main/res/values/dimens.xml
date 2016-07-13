@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 12/07/2016.
+  ~ Modified by SithEngineer on 13/07/2016.
   -->
 
 <resources>
@@ -83,4 +83,5 @@
     <dimen name="other_versions_title_left_margin">120dp</dimen>
     <dimen name="other_versions_title_right_margin">60dp</dimen>
     <dimen name="other_versions_title_bottom_margin">50dp</dimen>
+    <dimen name="appview_side_margin">8dp</dimen>
 </resources>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/07/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -56,7 +57,7 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 
 	private TextView usersVoted;
 	private TextView ratingValue;
-	private RatingBar ratingBar;
+	private AppCompatRatingBar ratingBar;
 	private ViewPager topCommentsPager;
 
 	private Button rateThisButton;
@@ -77,7 +78,7 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 		commentsLayout = itemView.findViewById(R.id.comments_layout);
 		usersVoted = (TextView) itemView.findViewById(R.id.users_voted);
 		ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
-		ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
+		ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
 		topCommentsPager = (ViewPager) itemView.findViewById(R.id.top_comments_pager);
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
@@ -97,7 +98,7 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 
 		float ratingAvg = stats.getRating().getAvg();
 		ratingValue.setText(String.format(LOCALE, "%.1f", ratingAvg));
-		ratingBar.setNumStars(Math.round(ratingAvg));
+		ratingBar.setRating(ratingAvg);
 
 		showTopComments(app.getId());
 
@@ -119,7 +120,7 @@ public class AppViewRateAndCommentsWidget extends Widget<AppViewRateAndCommentsD
 		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_rate_app, null);
 
 		final TextView title = (TextView) view.findViewById(R.id.title);
-		final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+		final AppCompatRatingBar ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
 		final EditText titleText = (EditText) view.findViewById(R.id.input_title);
 		final EditText reviewText = (EditText) view.findViewById(R.id.input_review);
 
