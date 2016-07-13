@@ -424,33 +424,247 @@
         <item name="android:paddingRight">@dimen/appview_side_margin</item>
     </style>
 
-    <!--
-    <style name="AptoideRatingBar" parent="Theme.AppCompat">
-
-        <item name="colorControlNormal">?colorPrimary</item>
-        <item name="colorControlActivated">?colorPrimary</item>
-
-        <item name="android:isIndicator">false</item>
-        <item name="android:stepSize">1.0</item>
-        <item name="android:max">5</item>
-        <item name="android:numStars">5</item>
-        <item name="android:maxHeight">58dp</item>
-        <item name="android:minHeight">58dp</item>
+    <style name="ToolbarGrey" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/grey</item>
     </style>
 
-    <style name="AptoideRatingBarIndicator" parent="@style/AptoideRatingBar">
-        <item name="android:isIndicator">true</item>
-        <item name="android:stepSize">0.5</item>
+    <style name="ToolbarTeal" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/teal</item>
     </style>
 
-    <style name="AptoideRatingBarIndicatorMedium" parent="@style/AptoideRatingBarIndicator">
-        <item name="android:maxHeight">32dp</item>
-        <item name="android:minHeight">32dp</item>
+    <style name="ToolbarBrown" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/brown</item>
     </style>
 
-    <style name="AptoideRatingBarIndicatorSmall" parent="@style/AptoideRatingBarIndicator">
-        <item name="android:maxHeight">10dp</item>
-        <item name="android:minHeight">10dp</item>
+    <style name="ToolbarBluegrey" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/bluegrey</item>
     </style>
-    -->
+
+    <style name="ToolbarLightgreen" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/lightgreen</item>
+    </style>
+
+    <style name="ToolbarAmber" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/amber</item>
+    </style>
+
+    <style name="ToolbarLime" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/lime</item>
+    </style>
+
+    <style name="ToolbarOrange" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/orange</item>
+    </style>
+
+    <style name="ToolbarPink" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/pink</item>
+    </style>
+
+    <style name="ToolbarIndigo" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/indigo</item>
+    </style>
+
+    <style name="ToolbarRed" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/red</item>
+    </style>
+
+    <style name="ToolbarGreen" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/green</item>
+    </style>
+
+    <style name="ToolbarDeeppurple" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/deeppurple</item>
+    </style>
+
+    <style name="ToolbarBlack" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/grey</item>
+    </style>
+
+    <style name="ToolbarLightblue" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/lightblue</item>
+    </style>
+
+    <style name="ToolbarGreyTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/grey_700</item>
+    </style>
+
+    <style name="ToolbarTealTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/teal_700</item>
+    </style>
+
+    <style name="ToolbarBrownTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/brown_700</item>
+    </style>
+
+    <style name="ToolbarBluegreyTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/bluegrey_700</item>
+    </style>
+
+    <style name="ToolbarLightgreenTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/lightgreen_700</item>
+    </style>
+
+    <style name="ToolbarAmberTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/amber_700</item>
+    </style>
+
+    <style name="ToolbarLimeTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/lime_700</item>
+    </style>
+
+    <style name="ToolbarOrangeTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/orange_700</item>
+    </style>
+
+    <style name="ToolbarPinkTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/pink_700</item>
+    </style>
+
+    <style name="ToolbarIndigoTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/indigo_700</item>
+    </style>
+
+    <style name="ToolbarRedTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/red_700</item>
+    </style>
+
+    <style name="ToolbarGreenTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/green_700</item>
+    </style>
+
+    <style name="ToolbarDeeppurpleTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/deeppurple_700</item>
+    </style>
+
+    <style name="ToolbarBlackTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/grey_700</item>
+    </style>
+
+    <style name="ToolbarLightblueTransparent" parent="@style/Theme.AppCompat">
+        <item name="pstsIndicatorColor">@color/lightblue_700</item>
+    </style>
+
+
+    <!-- Widgets for non-default themes -->
+
+    <style name="WidgetButtonCustomOrange" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/orange_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideOrange" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/orange_btn_default_holo_light</item>
+        <item name="android:textColor" >@color/orange_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomPink" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/pink_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoidePink" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/pink_btn_default_holo_light</item>
+        <item name="android:textColor" >@color/pink_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomRed" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/red_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideRed" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/red_btn_default_holo_light</item>
+        <item name="android:textColor" >@color/red_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomGreen" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/green_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideGreen" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/green_btn_default_holo_light</item>
+        <item name="android:textColor" >@color/green_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomLime" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/lime_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideLime" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/lime_btn_default_holo_light</item>
+        <item name="android:textColor" >@color/lime_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomIndigo" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/indigo_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideIndigo" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/indigo_btn_default_holo_light</item>
+        <item name="android:textColor" >@color/indigo_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomDeepPurple" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideDeepPurple" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
+        <item name="android:textColor">@color/deeppurple_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomAmber" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/amber_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideAmber" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/amber_btn_default_holo_light</item>
+        <item name="android:textColor">@color/amber_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomBlack" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/black_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideBlack" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/black_btn_default_holo_light</item>
+        <item name="android:textColor" >@color/black</item>
+    </style>
+
+    <style name="WidgetButtonCustomLightblue" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideLightblue" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
+        <item name="android:textColor">@color/lightblue_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomLightgreen" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideLightgreen" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
+        <item name="android:textColor">@color/lightgreen_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomBluegrey" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideBluegrey" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
+        <item name="android:textColor">@color/bluegrey_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomBrown" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/brown_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideBrown" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/brown_btn_default_holo_light</item>
+        <item name="android:textColor">@color/brown_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomTeal" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/teal_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideTeal" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/teal_btn_default_holo_light</item>
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
+
+    <style name="WidgetButtonCustomGrey" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/grey_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomAptoideGrey" parent="WidgetButtonCustomAptoide">
+        <item name="android:background">@drawable/grey_btn_default_holo_light</item>
+        <item name="android:textColor">@color/grey_700</item>
+    </style>
+
 </resources>

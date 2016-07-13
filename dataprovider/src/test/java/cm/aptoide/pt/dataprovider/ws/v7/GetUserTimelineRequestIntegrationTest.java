@@ -574,7 +574,8 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private GetUserTimelineRequest getGetUserTimelineRequest(String url, String baseHost, String aptoideId, String accessToken, int aptoideVercode, String cdn, String language, String q, int limit, boolean mature, int offset, List<String> packages) {
+	private GetUserTimelineRequest getGetUserTimelineRequest(String url, String baseHost, String aptoideId, String accessToken, int aptoideVercode, String
+			cdn, String language, String q, Integer limit, boolean mature, int offset, List<String> packages) {
 		return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(aptoideId, accessToken, aptoideVercode, cdn, language, mature, q, limit, offset, packages), OkHttpClientFactory
 				.newClient(), WebService.getDefaultConverter(), baseHost);
 	}
@@ -600,7 +601,7 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	@NonNull
-	private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list, boolean loaded, int hidden, int next, int limit, int
+	private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list, boolean loaded, int hidden, int next, Integer limit, int
 			offset, int
 			count, int total) {
 		Datalist<TimelineItem<TimelineCard>> datalist = new Datalist<>();

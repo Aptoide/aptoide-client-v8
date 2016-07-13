@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,7 +33,7 @@ public final class FragmentUtils {
 
 	public static void replaceFragment(@NonNull android.app.Activity activity, @NonNull android.app.Fragment
 			fragment) {
-		replaceFragment(activity, fragment, "fragment_" + atomicInt.incrementAndGet());
+		replaceFragment(activity, fragment, fragment.getClass().getSimpleName() + "_" + atomicInt.incrementAndGet());
 	}
 
 	public static android.app.Fragment getCurrentFragment(@NonNull android.app.Activity activity) {
@@ -50,9 +51,10 @@ public final class FragmentUtils {
 				.commit();
 	}
 
-	public static void replaceFragmentV4(@NonNull android.support.v4.app.FragmentActivity fragmentActivity, @NonNull android.support.v4.app.Fragment
-			fragment) {
-		replaceFragmentV4(fragmentActivity, fragment, "support_fragment_" + atomicInt.incrementAndGet());
+	public static void replaceFragmentV4(@NonNull android.support.v4.app.FragmentActivity fragmentActivity, @NonNull
+	android.support.v4.app.Fragment fragment) {
+		replaceFragmentV4(fragmentActivity, fragment, fragment.getClass().getSimpleName() + "_" + atomicInt
+				.incrementAndGet());
 	}
 
 	public static android.support.v4.app.Fragment getCurrentFragmentV4(@NonNull android.support.v4.app.FragmentActivity fragmentActivity) {

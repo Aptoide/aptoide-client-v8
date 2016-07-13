@@ -111,4 +111,5 @@
     <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
     <string name="other_versions_on_different_stores">Other versions on different stores</string>
     <string name="review_optional">Review (optional)</string>
+    <string name="feedback_not_valid">Please enter some valid Subject!</string>
 </resources>

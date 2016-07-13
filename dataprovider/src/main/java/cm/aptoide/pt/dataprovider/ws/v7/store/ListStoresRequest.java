@@ -53,7 +53,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody implements Endless {
 
-		@Getter private int limit;
+		@Getter private Integer limit;
 		@Getter @Setter private int offset;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q) {

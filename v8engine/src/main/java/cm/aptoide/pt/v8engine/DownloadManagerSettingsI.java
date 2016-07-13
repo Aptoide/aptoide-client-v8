@@ -1,8 +1,11 @@
 package cm.aptoide.pt.v8engine;
 
 import android.content.Context;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
+import cm.aptoide.pt.utils.AptoideUtils;
 
 /**
  * Created by trinkes on 6/28/16.
@@ -27,5 +30,16 @@ public class DownloadManagerSettingsI implements DownloadSettingsInterface {
 	@Override
 	public long getMaxCacheSize() {
 		return 81920;
+	}
+
+	@NonNull
+	@Override
+	public String getDownloadDir() {
+		return AptoideUtils.SystemU.getDownloadFolderPath();
+	}
+
+	@Override
+	public String getObbDir() {
+		return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
 	}
 }

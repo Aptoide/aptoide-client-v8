@@ -70,7 +70,7 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBodyWithStore implements Endless {
 
-		@Getter private int limit;
+		@Getter private Integer limit;
 		@Getter @Setter private int offset;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long storeId) {

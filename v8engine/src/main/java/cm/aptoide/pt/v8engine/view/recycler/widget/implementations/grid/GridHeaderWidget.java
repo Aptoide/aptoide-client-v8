@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by Neurophobic Animal on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -50,12 +50,12 @@ public class GridHeaderWidget extends Widget<GridHeaderDisplayable> {
 				.getEvent()
 				.getName() != null ? View.VISIBLE : View.GONE);
 		more.setOnClickListener((view) -> {
-			FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-					StoreGridRecyclerFragment
-					.newInstance(displayable.getPojo()
-							.getActions()
-							.get(0)
-							.getEvent(), displayable.getPojo().getTitle()));
+			FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreGridRecyclerFragment
+					.newInstance(displayable
+					.getPojo()
+					.getActions()
+					.get(0)
+					.getEvent(), displayable.getPojo().getTitle(), displayable.getStoreTheme()));
 		});
 	}
 }

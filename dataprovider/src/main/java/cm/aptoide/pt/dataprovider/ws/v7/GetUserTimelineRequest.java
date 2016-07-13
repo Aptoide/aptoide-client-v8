@@ -36,7 +36,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 		this.url = url;
 	}
 
-	public static GetUserTimelineRequest of(String url, int limit, int offset, List<String> packages) {
+	public static GetUserTimelineRequest of(String url, Integer limit, int offset, List<String> packages) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager
@@ -53,7 +53,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody implements Endless {
 
-		@Getter private int limit;
+		@Getter private Integer limit;
 		@Getter @Setter private int offset;
 		@Getter private List<String> packageNames;
 
