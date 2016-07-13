@@ -112,4 +112,5 @@
     <string name="other_versions_on_different_stores">Other versions on different stores</string>
     <string name="review_optional">Review (optional)</string>
     <string name="feedback_not_valid">Please enter some valid Subject!</string>
+    <string name="thank_you_for_your_opinion">Thank you for your opinion</string>
 </resources>
