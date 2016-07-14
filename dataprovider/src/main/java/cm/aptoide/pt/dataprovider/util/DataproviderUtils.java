@@ -73,7 +73,7 @@ public class DataproviderUtils {
 
 			@Override
 			public void onResponse(Call call, Response response) throws IOException {
-
+				response.body().close();
 			}
 		});
 	}

@@ -22,6 +22,14 @@ public class ManagerPreferences {
 		return Preferences.get().getBoolean(ManagedKeys.MATURE_CHECK_BOX, true);
 	}
 
+	public static int getLastPushNotificationId() {
+		return Preferences.get().getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
+	}
+
+	public static void setLastPushNotificationId(int notificationId) {
+		Preferences.get().edit().putInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, notificationId).apply();
+	}
+
 	public static boolean getAnimationsEnabledStatus() {
 		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);
 	}

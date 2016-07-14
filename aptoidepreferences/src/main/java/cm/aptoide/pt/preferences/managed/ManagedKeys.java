@@ -13,4 +13,5 @@ class ManagedKeys {
 	public static final String HWSPECS_FILTER = "hwspecsChkBox";
 	public static final String MATURE_CHECK_BOX = "matureChkBox";
 	public static final String ANIMATIONS_ENABLED = "animationsEnabled";
+	public static final String LAST_PUSH_NOTIFICATION_ID = "lastPushNotificationId";
 }

@@ -5,10 +5,14 @@
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.services.PullingContentService;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 
 /**
@@ -22,6 +26,14 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	@Override
 	protected android.support.v4.app.Fragment createFragment() {
 		return HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState == null) {
+			startService(new Intent(this, PullingContentService.class));
+		}
 	}
 
 	@Override
