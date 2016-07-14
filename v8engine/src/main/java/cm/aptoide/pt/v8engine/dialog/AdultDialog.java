@@ -95,7 +95,7 @@ public class AdultDialog extends DialogFragment {
 						//Analytics.AdultContent.lock();
 						cancelListener.onCancel(dialog);
 					}
-				})
+				}).setOnCancelListener(dialog -> cancelListener.onCancel(dialog))
 				.create();
 	}
 
