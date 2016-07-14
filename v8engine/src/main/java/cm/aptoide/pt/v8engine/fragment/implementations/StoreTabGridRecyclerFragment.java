@@ -101,6 +101,24 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		return args;
 	}
 
+	public static boolean validateAcceptedName(Event.Name name) {
+		if (name != null) {
+			switch (name) {
+				case listApps:
+				case listAppsEditorsHammered:
+				case getStore:
+				case getStoreWidgets:
+				case getReviews:
+				case getApkComments:
+				case getAds:
+				case listStores:
+					return true;
+			}
+		}
+
+		return false;
+	}
+
 	@Override
 	public void loadExtras(Bundle args) {
 		if (args.containsKey(BundleCons.TYPE)) {
@@ -266,37 +284,35 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		if (refresh) {
 			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
-			// todo: não é redundante? se não existe nem devia chegar aqui.. hmm..
-			if (name != null) {
-				switch (name) {
-					case listApps:
-						caseListApps(url, refresh);
-						break;
-					case listAppsEditorsHammered:
-						caseListAppsEditorsHammered(url, refresh);
-						break;
-					case getStore:
-						caseGetStore(url, refresh);
-						break;
-					case getStoreWidgets:
-						caseGetStoreWidgets(url, refresh);
-						break;
-					case getReviews:
-						//todo
-						break;
-					case getApkComments:
-						//todo
-						break;
-					case getAds:
-						caseGetAds(refresh);
-						break;
-					case listStores:
-						caseListStores(url, refresh);
-						break;
-				}
-			} else {
-				// todo: rebenta quando não conhece, é mesmo para ficar assim??
-				throw new RuntimeException("StoreTabGridRecyclerFragment unknown request!");
+			if (!validateAcceptedName(name)) {
+				throw new RuntimeException("Invalid name for event on " + getClass().getSimpleName() + "!");
+			}
+
+			switch (name) {
+				case listApps:
+					caseListApps(url, refresh);
+					break;
+				case listAppsEditorsHammered:
+					caseListAppsEditorsHammered(url, refresh);
+					break;
+				case getStore:
+					caseGetStore(url, refresh);
+					break;
+				case getStoreWidgets:
+					caseGetStoreWidgets(url, refresh);
+					break;
+				case getReviews:
+					//todo
+					break;
+				case getApkComments:
+					//todo
+					break;
+				case getAds:
+					caseGetAds(refresh);
+					break;
+				case listStores:
+					caseListStores(url, refresh);
+					break;
 			}
 		} else {
 			// Not all requests are endless so..
