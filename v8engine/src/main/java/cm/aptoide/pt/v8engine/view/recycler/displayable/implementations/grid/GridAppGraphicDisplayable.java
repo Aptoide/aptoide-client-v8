@@ -15,18 +15,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 /**
  * Created by neuro on 09-05-2016.
  */
-public class AppBrickListDisplayable extends DisplayablePojo<App> {
+public class GridAppGraphicDisplayable extends DisplayablePojo<App> {
 
-	public AppBrickListDisplayable() {
+	public GridAppGraphicDisplayable() {
 	}
 
-	public AppBrickListDisplayable(App pojo) {
+	public GridAppGraphicDisplayable(App pojo) {
 		super(pojo);
 	}
 
 	@Override
 	public Type getType() {
-		return Type.APP_BRICK_LIST_HAMMERED;
+		return Type.APPS_GROUP_GRAPHIC;
 	}
 
 	@LayoutRes

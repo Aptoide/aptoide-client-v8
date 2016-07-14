@@ -18,6 +18,7 @@ public class Event {
 	private Type type; // API, v3
 	private Name name; // listApps, getStore, getStoreWidgets, getApkComments
 	private String action;
+	private GetStoreWidgets.WSWidget.Data data;
 
 	public enum Type {
 		API,
@@ -41,9 +42,6 @@ public class Event {
 		myScheduledDownloads,
 		myRollbacks,
 		getAds,
-
-		// Hammereds!
-		listAppsEditorsHammered,
 
 		// Displays
 		facebook,
