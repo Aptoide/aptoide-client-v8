@@ -44,5 +44,10 @@ public class Event {
 
 		// Hammereds!
 		listAppsEditorsHammered,
+
+		// Displays
+		facebook,
+		twitch,
+		youtube
 	}
 }

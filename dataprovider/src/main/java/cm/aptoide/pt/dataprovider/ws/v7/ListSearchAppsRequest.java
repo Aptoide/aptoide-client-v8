@@ -46,13 +46,13 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 			Map<String, List<String>> storesAuthMap = new HashMap<>();
 			storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
 			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, storesAuthMap,
+					.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
+					Endless.DEFAULT_LIMIT, query, storesAuthMap,
 					stores, false), BASE_HOST);
 		}
 		return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, stores, false), BASE_HOST);
+				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
+				Endless.DEFAULT_LIMIT, query, stores, false), BASE_HOST);
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
@@ -60,14 +60,14 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
 		if (addSubscribedStores) {
 			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, StoreUtils
+					.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
+					Endless.DEFAULT_LIMIT, query, StoreUtils
 					.getSubscribedStoresIds(), StoreUtils
 					.getSubscribedStoresAuthMap(), false), BASE_HOST);
 		} else {
 			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, Endless.DEFAULT_LIMIT, query, false), BASE_HOST);
+					.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
+					Endless.DEFAULT_LIMIT, query, false), BASE_HOST);
 		}
 	}
 

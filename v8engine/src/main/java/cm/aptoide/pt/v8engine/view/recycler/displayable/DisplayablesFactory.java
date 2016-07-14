@@ -25,6 +25,7 @@ import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 
 /**
@@ -53,7 +54,7 @@ public class DisplayablesFactory {
 						break;
 
 					case DISPLAYS:
-						displayables.add(getDisplays(wsWidget));
+						displayables.add(getDisplays(wsWidget, storeTheme));
 						break;
 
 					case ADS:
@@ -197,17 +198,22 @@ public class DisplayablesFactory {
 		return new DisplayableGroup(tmp);
 	}
 
-	private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget) {
+	private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
 		GetStoreDisplays getStoreDisplays = (GetStoreDisplays) wsWidget.getViewObject();
+		if (getStoreDisplays == null) {
+			return new EmptyDisplayable();
+		}
 		List<GetStoreDisplays.EventImage> getStoreDisplaysList = getStoreDisplays.getList();
 		List<Displayable> tmp = new ArrayList<>(getStoreDisplaysList.size());
 
 		for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
-			DisplayablePojo<GetStoreDisplays.EventImage> diplayable =
-					(DisplayablePojo<GetStoreDisplays.EventImage>) DisplayableType
-					.newDisplayable(wsWidget.getType());
-			diplayable.setPojo(eventImage);
-			tmp.add(diplayable);
+			DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo = new GridDisplayDisplayable(eventImage, storeTheme);
+
+			Event.Name name = displayablePojo.getPojo().getEvent().getName();
+			if (Event.Name.facebook.equals(name) || Event.Name.twitch.equals(name) || Event.Name.youtube.equals(name)) {
+				displayablePojo.setDefaultPerLineCount(1);
+			}
+			tmp.add(displayablePojo);
 		}
 		return new DisplayableGroup(tmp);
 	}

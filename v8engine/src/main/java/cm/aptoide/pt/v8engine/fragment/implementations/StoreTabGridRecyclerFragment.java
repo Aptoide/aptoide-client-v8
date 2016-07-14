@@ -32,11 +32,10 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import rx.Observable;
 import rx.Subscription;
@@ -102,6 +101,24 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		return args;
 	}
 
+	public static boolean validateAcceptedName(Event.Name name) {
+		if (name != null) {
+			switch (name) {
+				case listApps:
+				case listAppsEditorsHammered:
+				case getStore:
+				case getStoreWidgets:
+				case getReviews:
+				case getApkComments:
+				case getAds:
+				case listStores:
+					return true;
+			}
+		}
+
+		return false;
+	}
+
 	@Override
 	public void loadExtras(Bundle args) {
 		if (args.containsKey(BundleCons.TYPE)) {
@@ -113,53 +130,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		title = args.getString(BundleCons.TITLE);
 		action = args.getString(BundleCons.ACTION);
 		storeTheme = args.getString(BundleCons.STORE_THEME);
-	}
-
-	@Override
-	public void load(boolean refresh) {
-		super.load(refresh);
-		if (refresh) {
-			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
-
-			// todo: não é redundante? se não existe nem devia chegar aqui.. hmm..
-			if (name != null) {
-				switch (name) {
-					case listApps:
-						caseListApps(url, refresh);
-						break;
-					case listAppsEditorsHammered:
-						caseListAppsEditorsHammered(url, refresh);
-						break;
-					case getStore:
-						caseGetStore(url, refresh);
-						break;
-					case getStoreWidgets:
-						caseGetStoreWidgets(url, refresh);
-						break;
-					case getReviews:
-						//todo
-						break;
-					case getApkComments:
-						//todo
-						break;
-					case getAds:
-						caseGetAds(refresh);
-						break;
-					case listStores:
-						caseListStores(url, refresh);
-						break;
-				}
-			} else {
-				// todo: rebenta quando não conhece, é mesmo para ficar assim??
-				throw new RuntimeException("StoreTabGridRecyclerFragment unknown request!");
-			}
-		} else {
-			// Not all requests are endless so..
-			if (endlessRecyclerOnScrollListener != null) {
-				recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-			}
-			//setDisplayables(displayables);
-		}
 	}
 
 	private void caseListStores(String url, boolean refresh) {
@@ -266,6 +236,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					}
 
 					displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme);
+
+					// We only want Adult Switch in Home Fragment.
+					if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
+						displayables.add(new AdultRowDisplayable());
+					}
 					setDisplayables(displayables);
 				}, throwable -> finishLoading(throwable));
 	}
@@ -301,6 +276,51 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override
+	public void load(boolean refresh) {
+		super.load(refresh);
+		if (refresh) {
+			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
+
+			if (!validateAcceptedName(name)) {
+				throw new RuntimeException("Invalid name for event on " + getClass().getSimpleName() + "!");
+			}
+
+			switch (name) {
+				case listApps:
+					caseListApps(url, refresh);
+					break;
+				case listAppsEditorsHammered:
+					caseListAppsEditorsHammered(url, refresh);
+					break;
+				case getStore:
+					caseGetStore(url, refresh);
+					break;
+				case getStoreWidgets:
+					caseGetStoreWidgets(url, refresh);
+					break;
+				case getReviews:
+					//todo
+					break;
+				case getApkComments:
+					//todo
+					break;
+				case getAds:
+					caseGetAds(refresh);
+					break;
+				case listStores:
+					caseListStores(url, refresh);
+					break;
+			}
+		} else {
+			// Not all requests are endless so..
+			if (endlessRecyclerOnScrollListener != null) {
+				recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+			}
+			//setDisplayables(displayables);
+		}
 	}
 
 	private static class BundleCons {
