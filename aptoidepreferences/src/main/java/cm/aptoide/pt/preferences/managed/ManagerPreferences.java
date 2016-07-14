@@ -18,10 +18,6 @@ public class ManagerPreferences {
 		return Preferences.get().getBoolean(ManagedKeys.HWSPECS_FILTER, true);
 	}
 
-	public static boolean getMatureFilter() {
-		return Preferences.get().getBoolean(ManagedKeys.MATURE_CHECK_BOX, true);
-	}
-
 	public static boolean getAnimationsEnabledStatus() {
 		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);
 	}

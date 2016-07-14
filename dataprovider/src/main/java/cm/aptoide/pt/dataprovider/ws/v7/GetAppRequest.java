@@ -35,8 +35,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
 		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, new Body(idsRepository
 				.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(),
-				AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.MATURE, Api.Q, appId));
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, appId));
 	}
 
 	@Override

@@ -41,8 +41,9 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		final StoreCredentials store = getStore(storeName);
-		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
-				Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
+		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api
+				.LANG, Api
+				.isMature(), Api.Q, storeName, WidgetsArgs.createDefault());
 
 		body.setContext(storeContext);
 		body.setStoreUser(store.getUsername());
@@ -59,13 +60,15 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
-					Api.LANG, Api.MATURE, Api.Q, storeId, WidgetsArgs.createDefault());
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeId, WidgetsArgs
+					.createDefault());
 		} else {
 			String storeName = v7Url.getStoreName();
 			store = getStore(storeName);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
-					Api.LANG, Api.MATURE, Api.Q, storeName, WidgetsArgs.createDefault());
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeName, WidgetsArgs
+					.createDefault());
 		}
 		body.setStoreUser(store.getUsername());
 		body.setStorePassSha1(store.getPasswordSha1());

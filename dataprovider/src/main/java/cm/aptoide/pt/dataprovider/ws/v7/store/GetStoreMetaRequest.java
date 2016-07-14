@@ -36,8 +36,9 @@ public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta,GetSt
 	public static GetStoreMetaRequest of(String storeName, String username, String passwordSha1) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
-		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
-				Api.LANG, Api.MATURE, Api.Q, storeName);
+		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api
+				.LANG, Api
+				.isMature(), Api.Q, storeName);
 		body.setStoreUser(username);
 		body.setStorePassSha1(passwordSha1);
 		return new GetStoreMetaRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
@@ -47,8 +48,9 @@ public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta,GetSt
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		final StoreCredentials store = getStore(storeName);
-		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool",
-				Api.LANG, Api.MATURE, Api.Q, storeName);
+		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api
+				.LANG, Api
+				.isMature(), Api.Q, storeName);
 		body.setStoreUser(store.getUsername());
 		body.setStorePassSha1(store.getPasswordSha1());
 		return new GetStoreMetaRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
