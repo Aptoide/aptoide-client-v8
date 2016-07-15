@@ -45,7 +45,6 @@ public class FooterWidget extends Widget<FooterDisplayable> {
 		button.setText(displayable.getPojo().getActions().get(0).getLabel());
 		button.setOnClickListener((view) -> {
 			Event event = displayable.getPojo().getActions().get(0).getEvent();
-			event.setName(Event.Name.listAppsEditorsHammered);
 			FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreGridRecyclerFragment.newInstance(event, displayable.getPojo()
 					.getTitle()));
 		});

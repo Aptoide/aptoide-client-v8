@@ -39,7 +39,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
@@ -47,6 +46,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Fea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppGraphicDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
@@ -110,7 +110,6 @@ public enum DisplayableType {
 	// common widgets / displayables
 	ADD_MORE_STORES(AddMoreStoresWidget.class, AddMoreStoresDisplayable.class),
 	APP_BRICK(AppBrickWidget.class, AppBrickDisplayable.class),
-	APP_BRICK_LIST_HAMMERED(AppBrickListWidget.class, AppBrickListDisplayable.class),
 	FOOTER(FooterWidget.class, FooterDisplayable.class),
 	SUBSCRIBED_STORE(SubscribedStoreWidget.class, SubscribedStoreDisplayable.class),
 
@@ -123,6 +122,7 @@ public enum DisplayableType {
 
 	// Multi Layout
 	APPS_GROUP_LIST(GridAppListWidget.class, GridAppListDisplayable.class),
+	APPS_GROUP_GRAPHIC(AppBrickListWidget.class, GridAppGraphicDisplayable.class),
 
 	// Updates
 	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
