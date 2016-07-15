@@ -16,19 +16,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import rx.Subscription;
 
 /**
@@ -128,15 +122,15 @@ public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void fetchReviews() {
-		ListCommentsRequest.of(appId).execute(listComments -> {
-			List<Comment> comments = listComments.getDatalist().getList();
-			List<Displayable> displayables = new LinkedList<>();
-			for (final Comment comment : comments) {
-				displayables.add(new RateAndReviewCommentDisplayable(comment));
-			}
-			setDisplayables(displayables);
-			finishLoading();
-		});
+		//		ListCommentsRequest.of(appId).execute(listComments -> {
+		//			List<Comment> comments = listComments.getDatalist().getList();
+		//			List<Displayable> displayables = new LinkedList<>();
+		//			for (final Comment comment : comments) {
+		//				displayables.add(new RateAndReviewCommentDisplayable(comment));
+		//			}
+		//			setDisplayables(displayables);
+		//			finishLoading();
+		//		});
 	}
 
 	public void setupTitle(String title) {

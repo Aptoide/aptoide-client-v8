@@ -68,11 +68,12 @@
 
         <RelativeLayout
             android:id="@+id/rating_layout"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
+            android:layout_width="143dp"
+            android:layout_height="143dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:background="@color/yellow"
+            android:background="@drawable/round_circle_gradient"
+            android:padding="16dp"
             android:paddingBottom="8dp"
             >
 
@@ -86,8 +87,8 @@
 
                 <ImageView
                     android:id="@+id/users_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/icon_displayable_view_and_rate"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_user_icon"
                     />
@@ -95,13 +96,14 @@
                 <TextView
                     android:id="@+id/users_voted"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/icon_displayable_view_and_rate"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginStart="4dp"
                     android:gravity="center_vertical|left|start"
                     android:textColor="@color/white"
+                    android:textSize="16sp"
                     tools:text="2425"
                     />
             </LinearLayout>
@@ -115,9 +117,10 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="58sp"
+                android:textSize="50sp"
                 tools:text="4.2"
                 />
 
@@ -128,9 +131,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rating_value"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/half_circle_white"
                 android:numStars="5"
-                android:stepSize="0.5"
-                tools:rating="3.0"
+                android:stepSize="0.1"
+                tools:rating="4.2"
                 />
 
         </RelativeLayout>
@@ -177,7 +182,9 @@
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:background="@drawable/progress_bar_background"
+                    android:indeterminate="false"
+                    android:progress="0"
                     />
 
                 <TextView
@@ -190,6 +197,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="7914"
                     />
@@ -220,7 +228,9 @@
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:background="@drawable/progress_bar_background"
+                    android:indeterminate="false"
+                    android:progress="0"
                     />
 
                 <TextView
@@ -233,6 +243,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="192"
                     />
@@ -263,7 +274,9 @@
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:background="@drawable/progress_bar_background"
+                    android:indeterminate="false"
+                    android:progress="0"
                     />
 
                 <TextView
@@ -276,6 +289,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="4548"
                     />
@@ -306,7 +320,9 @@
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:background="@drawable/progress_bar_background"
+                    android:indeterminate="false"
+                    android:progress="0"
                     />
 
                 <TextView
@@ -319,6 +335,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="123"
                     />
@@ -349,7 +366,9 @@
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:background="@drawable/progress_bar_background"
+                    android:indeterminate="false"
+                    android:progress="0"
                     />
 
                 <TextView
@@ -362,6 +381,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="2"
                     />
@@ -403,9 +423,13 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/rounded_corners_dark"
+                android:background="@drawable/rounded_corners_dark_gray"
+                android:drawableEnd="@drawable/ic_up_arrow"
+                android:drawableRight="@drawable/ic_up_arrow"
+                android:drawableTint="@color/dark_gray"
+                android:text="Highest ranking"
+                android:textColor="@color/dark_gray"
                 android:textSize="@dimen/text_size_medium"
-                tools:text="Highest ranking ^"
                 />
 
             <Button
@@ -414,8 +438,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/rounded_corners_dark"
+                android:background="@drawable/rounded_corners_dark_gray"
                 android:text="@string/just_reviews"
+                android:textColor="@color/dark_gray"
                 android:textSize="@dimen/text_size_medium"
                 />
 

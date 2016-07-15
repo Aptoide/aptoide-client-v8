@@ -170,8 +170,7 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("listComments")
-		Observable<ListComments> listComments(@Body ListCommentsRequest.Body body,
-		                                      @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<ListComments> listComments(@Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 	}
 }

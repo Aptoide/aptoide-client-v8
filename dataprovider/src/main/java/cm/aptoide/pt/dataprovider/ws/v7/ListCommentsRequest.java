@@ -26,6 +26,9 @@ import rx.Observable;
  */
 public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Body> {
 
+	private static final int MAX_REVIEWS = 10;
+	private static final int MAX_COMMENTS = 10;
+
 	protected ListCommentsRequest(Body body, String baseHost) {
 		super(
 				body,
@@ -35,23 +38,28 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		);
 	}
 
-	public static ListCommentsRequest of(long appId) {
+	public static ListCommentsRequest of(String storeName, String packageName) {
+		//
+		// http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
+		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(
 				idsRepository.getAptoideClientUUID(),
 				AptoideAccountManager.getAccessToken(),
 				AptoideUtils.Core.getVerCode(),
-				"pool",
-				Api.LANG, Api.isMature(), Api.Q, appId
+				"pool", Api.LANG, Api.isMature(), Api.Q, storeName, packageName, MAX_REVIEWS, MAX_COMMENTS
 		);
 		return new ListCommentsRequest(body, BASE_HOST);
 	}
 
-	public static ListCommentsRequest of(long appId, boolean onlyReviews, int max) {
+	public static ListCommentsRequest ofTopReviews(String storeName, String packageName, int maxReviews) {
+		//
+		// http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
+		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
 				Api
-				.isMature(), Api.Q, appId, onlyReviews, max);
+				.isMature(), Api.Q, storeName, packageName, maxReviews, 0);
 		return new ListCommentsRequest(body, BASE_HOST);
 	}
 
@@ -73,23 +81,22 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		private String q = Api.Q;
 		private Sort sort;
 
-		private Integer apkId;
-		private String apkMd5sum;
-		private Long appId;
-		private Long commentId;
+		//		private Integer apkId;
+		//		private String apkMd5sum;
+		//		private Long appId;
+		//		private Long commentId;
+		//		private Long reviewId;
 		private String packageName;
-		private Long reviewId;
+		private String storeName;
 		private Integer subLimit;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long appId) {
+		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, String storeName, String
+				packageName, int limit, int subLimit) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
-			this.appId = appId;
-		}
-
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long appId, boolean
-				onlyReviews, int max) {
-			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
-			this.appId = appId;
+			this.packageName = packageName;
+			this.storeName = storeName;
+			this.limit = limit;
+			this.subLimit = subLimit;
 		}
 
 		public enum Sort {

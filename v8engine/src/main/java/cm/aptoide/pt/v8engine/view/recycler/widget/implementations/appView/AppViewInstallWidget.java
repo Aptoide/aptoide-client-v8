@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by pedroribeiro on 11/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.Context;
 import android.content.ContextWrapper;
-import android.os.Build;
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,23 +21,22 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
+import cm.aptoide.pt.v8engine.receivers.InstalledBroadcastReceiver;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -129,15 +128,15 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				installButton.setOnClickListener(new Listeners().newBuyListener());
 			} else {
 				installButton.setText(R.string.get_app);
-				installButton.setOnClickListener(new Listeners().newInstallListener(app));
+				installButton.setOnClickListener(new Listeners().newInstallListener(app, R.string.installing_msg));
 			}
 		} else {
 			if (app.getFile().getVercode() > installed.getVersionCode()) {
 				installButton.setText(R.string.update);
-				installButton.setOnClickListener(new Listeners().newUpdateListener());
+				installButton.setOnClickListener(new Listeners().newUpdateListener(app));
 			} else if (app.getFile().getVercode() < installed.getVersionCode()) {
 				installButton.setText(R.string.downgrade);
-				installButton.setOnClickListener(new Listeners().newDowngradeListener());
+				installButton.setOnClickListener(new Listeners().newDowngradeListener(app));
 			} else {
 				installButton.setText(R.string.open);
 				installButton.setOnClickListener(new Listeners().newOpenAppListener(app.getPackageName()));
@@ -221,6 +220,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						.getVercode());
 	}
 
+	/*
 	private static class SubscribeStoreSnack extends ShowMessage.CustomSnackViewHolder {
 
 		private ImageView storeImage;
@@ -254,6 +254,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			//storeImage.setImageResource( ?? ); // TODO
 		}
 	}
+	*/
 
 	private static class Listeners {
 
@@ -264,41 +265,76 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				ContextWrapper ctx = (ContextWrapper) v.getContext();
 				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
-					// TODO
+					// TODO: 15/07/16 sithengineer Paid Apps feature
 				});
 			};
 		}
 
-		private View.OnClickListener newInstallListener(GetAppMeta.App app) {
-			return v -> {
-				ContextWrapper ctx = (ContextWrapper) v.getContext();
-				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
-
-				final ShowSnackbar showSnackbar = ((ShowSnackbar) ctx.getBaseContext());
+		private View.OnClickListener newInstallListener(final GetAppMeta.App app, final int msgId) {
+			return view -> {
+				ContextWrapper contextWrapper = (ContextWrapper) view.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
 
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
 
-					ShowMessage.asSnack(v, new SubscribeStoreSnack(), R.layout.custom_snackbar, Snackbar
-							.LENGTH_INDEFINITE);
-					showSnackbar.make().show();
+					ShowMessage.asSnack(view, msgId);
 
-
+					DownloadFactory factory = new DownloadFactory();
+					Download appDownload = factory.create(app);
+					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
+					downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
+						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+							AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+						}
+					});
 				});
 			};
 		}
 
-		private View.OnClickListener newUpdateListener() {
-			return v -> {
-				ContextWrapper ctx = (ContextWrapper) v.getContext();
-				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+		private View.OnClickListener newUpdateListener(final GetAppMeta.App app) {
+			return newInstallListener(app, R.string.updating_msg);
+		}
+
+		private View.OnClickListener newDowngradeListener(final GetAppMeta.App app) {
+			// FIXME: 15/07/16 sithengineer show notification to user saying it will lose all his data
+
+			return view -> {
+
+				final Context context = view.getContext();
+				ContextWrapper contextWrapper = (ContextWrapper) context;
+				PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
+
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
-					// TODO
+					ShowMessage.asSnack(view, R.string.downgrading_msg);
+
+					DownloadFactory factory = new DownloadFactory();
+					Download appDownload = factory.create(app);
+					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
+					downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
+						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+							final String appPackageName = app.getPackageName();
+
+							// register a broadcast listener for package removal
+							// to install new package
+							IntentFilter intentFilter = new IntentFilter();
+							intentFilter.addAction(Intent.ACTION_UNINSTALL_PACKAGE);
+							intentFilter.addDataScheme("package");
+							context.registerReceiver(new InstalledBroadcastReceiver() {
+								@Override
+								protected void onPackageRemoved(String packageName) {
+									super.onPackageRemoved(packageName);
+									if (packageName.equalsIgnoreCase(appPackageName)) {
+										AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+									}
+								}
+							}, intentFilter);
+
+							// ask for package removal
+							AptoideUtils.SystemU.uninstallApp(view.getContext(), appPackageName);
+						}
+					});
 				});
 			};
-		}
-
-		private View.OnClickListener newDowngradeListener() {
-			return null;
 		}
 
 		private View.OnClickListener newOpenAppListener(String packageName) {
@@ -317,22 +353,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			return v -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUninstallAction(packageName));
 				AptoideUtils.SystemU.uninstallApp(itemView.getContext(), packageName);
-			};
-		}
-
-		private View.OnClickListener newOpenStoreListener(View itemView, String storeName, String storeTheme) {
-			return v -> {
-				FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreFragment.newInstance
-						(storeName, storeTheme));
-			};
-		}
-
-		private View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
-			return v -> {
-				StoreUtils.subscribeStore(storeName, getStoreMeta -> {
-					ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string
-							.store_subscribed, storeName));
-				}, Throwable::printStackTrace);
 			};
 		}
 	}

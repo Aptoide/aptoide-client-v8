@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 13/07/2016.
+  ~ Modified by SithEngineer on 15/07/2016.
   -->
 
 <RelativeLayout
@@ -9,7 +9,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
+    android:layout_height="194dp"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -40,7 +40,8 @@
             android:layout_height="match_parent"
             android:layout_above="@id/rate_this_button"
             android:layout_marginBottom="12dp"
-            android:background="@color/yellow"
+            android:background="@drawable/round_circle_gradient"
+            android:padding="4dp"
             >
 
             <LinearLayout

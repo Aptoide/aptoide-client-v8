@@ -120,4 +120,7 @@
     <string name="two_numeric">2</string>
     <string name="one_numeric">1</string>
     <string name="just_reviews">Just Reviews</string>
+    <string name="downgrading_msg">Downgrading</string>
+    <string name="updating_msg">Updating</string>
+    <string name="installing_msg">Installing</string>
 </resources>
