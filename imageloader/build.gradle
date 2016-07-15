@@ -65,6 +65,8 @@ dependencies {
 
     //noinspection GradleDependency
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+    compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 
     compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
 }
