@@ -24,6 +24,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
 import io.realm.Realm;
@@ -48,12 +49,22 @@ public class PullingContentService extends Service {
 		am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
 	}
 
+	private boolean isAlarmUp(Context context, String action) {
+		Intent intent = new Intent(context, PullingContentService.class);
+		intent.setAction(action);
+		return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+	}
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-		setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, PUSH_NOTIFICATION_INTERVAL);
-		setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
+		if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
+			setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, PUSH_NOTIFICATION_INTERVAL);
+		}
+		if (!isAlarmUp(this, UPDATES_ACTION)) {
+			setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
+		}
 	}
 
 	@Override
@@ -85,18 +96,27 @@ public class PullingContentService extends Service {
 
 		@Cleanup
 		Realm realm = Database.get();
-		int numberUpdates = Database.UpdatesQ.getAll(realm, false).size();
+		int numberUpdates = Database.UpdatesQ.getAll(realm).size();
+		if (numberUpdates > 0) {
+			CharSequence tickerText = AptoideUtils.StringU.getFormattedString(R.string.has_updates, Application.getConfiguration().getMarketName());
+			CharSequence contentTitle = Application.getConfiguration().getMarketName();
+			CharSequence contentText = AptoideUtils.StringU.getFormattedString(R.string.new_updates, numberUpdates);
+			if (numberUpdates == 1) {
+				contentText = AptoideUtils.StringU.getFormattedString(R.string.one_new_update, numberUpdates);
+			}
 
-		Notification notification = new NotificationCompat.Builder(Application.getContext()).setContentIntent(resultPendingIntent)
-				.setOngoing(false)
-				.setSmallIcon(Application.getConfiguration().getIcon())
-				.setContentTitle("Updates Title")
-				.setContentText("You have " + numberUpdates + " updates.")
-				.build();
+			Notification notification = new NotificationCompat.Builder(Application.getContext()).setContentIntent(resultPendingIntent)
+					.setOngoing(false)
+					.setSmallIcon(Application.getConfiguration().getIcon())
+					.setContentTitle(contentTitle)
+					.setContentText(contentText)
+					.setTicker(tickerText)
+					.build();
 
-		notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-		final NotificationManager managerNotification = (NotificationManager) Application.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
+			notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+			final NotificationManager managerNotification = (NotificationManager) Application.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+			managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
+		}
 		stopSelf();
 	}
 

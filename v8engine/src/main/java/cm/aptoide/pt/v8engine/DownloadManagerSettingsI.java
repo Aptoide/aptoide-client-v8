@@ -5,7 +5,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
-import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.preferences.Application;
 
 /**
  * Created by trinkes on 6/28/16.
@@ -35,7 +35,7 @@ public class DownloadManagerSettingsI implements DownloadSettingsInterface {
 	@NonNull
 	@Override
 	public String getDownloadDir() {
-		return AptoideUtils.SystemU.getDownloadFolderPath();
+		return Application.getConfiguration().getCachePath();
 	}
 
 	@Override

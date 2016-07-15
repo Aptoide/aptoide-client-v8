@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -30,6 +31,9 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null) {
 			startService(new Intent(this, PullingContentService.class));
+			if (ManagerPreferences.isAutoUpdateEnable()) {
+				new AutoUpdate(this).execute();
+			}
 		}
 	}
 
