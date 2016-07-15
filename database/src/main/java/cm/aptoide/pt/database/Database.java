@@ -162,6 +162,11 @@ public class Database {
 
 	public static class UpdatesQ {
 
+		public static RealmResults<Update> getAll(Realm realm) {
+			// to cope with previously API calls
+			return getAll(realm, false);
+		}
+
 		public static RealmResults<Update> getAll(Realm realm, boolean excluded) {
 			return realm.where(Update.class).equalTo(Update.EXCLUDED, excluded).findAll();
 		}
