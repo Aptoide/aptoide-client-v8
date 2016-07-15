@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -56,5 +56,7 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 		isExcluded.setOnCheckedChangeListener((buttonView, isChecked) -> {
 			displayable.setSelected(isChecked);
 		});
+
+		isExcluded.setChecked(displayable.isSelected());
 	}
 }

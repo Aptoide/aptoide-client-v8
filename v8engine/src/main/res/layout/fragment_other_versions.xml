@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 13/07/2016.
+  ~ Modified by SithEngineer on 15/07/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -105,7 +105,9 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="@dimen/appview_header_bottom_margin"
+                    android:layout_marginEnd="@dimen/appview_header_bottom_margin"
                     android:layout_marginLeft="@dimen/appview_header_bottom_margin"
+                    android:layout_marginRight="@dimen/appview_header_bottom_margin"
                     android:layout_marginStart="@dimen/appview_header_bottom_margin"
                     app:layout_anchor="@id/app_bar"
                     app:layout_anchorGravity="bottom|left|start"
@@ -118,7 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
                     android:layout_marginTop="118dp"
                     android:layout_toRightOf="@id/app_icon"
                     android:lines="1"

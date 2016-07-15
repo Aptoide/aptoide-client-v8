@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -22,6 +22,7 @@ import java.util.List;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -101,6 +102,11 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 				}
 			}
 
+			if (excludedUpdatesToRestore.size() == 0) {
+				ShowMessage.asSnack(emptyData, R.string.no_excluded_updates_selected);
+				return true;
+			}
+
 			// restore updates and remove them from excluded
 			@Cleanup
 			Realm realm = Database.get();
@@ -111,7 +117,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 			realm.copyToRealmOrUpdate(excludedUpdatesToRestore);
 			realm.commitTransaction();
 
-			// TODO refresh this view
+			// TODO is it needed to refresh this view ?
 
 			return true;
 		}
@@ -120,6 +126,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 			BaseAdapter adapter = getAdapter();
 			for (int i = 0 ; i < adapter.getItemCount() ; ++i) {
 				((ExcludedUpdateDisplayable) adapter.getDisplayable(i)).setSelected(true);
+				adapter.notifyDataSetChanged();
 			}
 			return true;
 		}
@@ -128,6 +135,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 			BaseAdapter adapter = getAdapter();
 			for (int i = 0 ; i < adapter.getItemCount() ; ++i) {
 				((ExcludedUpdateDisplayable) adapter.getDisplayable(i)).setSelected(false);
+				adapter.notifyDataSetChanged();
 			}
 			return true;
 		}
@@ -142,15 +150,13 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(excludedUpdates -> {
 
-					finishLoading();
-
 					if (excludedUpdates == null || excludedUpdates.isEmpty()) {
 						emptyData.setText(R.string.no_excluded_updates_msg);
 						emptyData.setVisibility(View.VISIBLE);
+						clearDisplayables();
+						finishLoading();
 					} else {
-
 						emptyData.setVisibility(View.GONE);
-
 						List<ExcludedUpdateDisplayable> displayables = new ArrayList<>();
 						for (Update excludedUpdate : excludedUpdates) {
 							displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));

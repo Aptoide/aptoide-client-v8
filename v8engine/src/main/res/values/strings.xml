@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 13/07/2016.
+  ~ Modified by SithEngineer on 15/07/2016.
   -->
 
 <resources>
@@ -114,4 +114,10 @@
     <string name="feedback_not_valid">Please enter some valid Subject!</string>
     <string name="thank_you_for_your_opinion">Thank you for your opinion!</string>
     <string name="ignore_update">Ignore Update</string>
+    <string name="five_numeric">5</string>
+    <string name="four_numeric">4</string>
+    <string name="three_numeric">3</string>
+    <string name="two_numeric">2</string>
+    <string name="one_numeric">1</string>
+    <string name="just_reviews">Just Reviews</string>
 </resources>

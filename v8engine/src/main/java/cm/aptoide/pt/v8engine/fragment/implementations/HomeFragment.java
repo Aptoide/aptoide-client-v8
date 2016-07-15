@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 28/06/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -118,6 +118,23 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	@Override
+	public void bindViews(View view) {
+		super.bindViews(view);
+		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
+		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		mDrawerLayout = null;
+		mNavigationView = null;
+	}
+
+	@Override
 	public int getContentViewId() {
 		return R.layout.activity_main;
 	}
@@ -128,7 +145,7 @@ public class HomeFragment extends StoreFragment {
 
 		updatesBadge = new BadgeView(getContext(), ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
 
-		Database.UpdatesQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(updates -> {
+		Database.UpdatesQ.getAll(realm, false).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(updates -> {
 			refreshUpdatesBadge(updates.size());
 		});
 	}
@@ -152,23 +169,6 @@ public class HomeFragment extends StoreFragment {
 			toolbar.setNavigationIcon(R.drawable.ic_drawer);
 			toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
 		}
-	}
-
-	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
-		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
-		mDrawerLayout = null;
-		mNavigationView = null;
 	}
 
 	public void refreshUpdatesBadge(int num) {

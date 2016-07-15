@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -53,6 +53,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
@@ -91,6 +92,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStor
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RateAndReviewCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
@@ -171,7 +173,8 @@ public enum DisplayableType {
 
 	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable.class),
 
-	OTHER_VERSION(OtherVersionWidget.class, OtherVersionDisplayable.class),;
+	OTHER_VERSION(OtherVersionWidget.class, OtherVersionDisplayable.class),
+	RATE_AND_REVIEW(RateAndReviewCommentWidget.class, RateAndReviewCommentDisplayable.class),;
 
 	private static final String TAG = DisplayableType.class.getName();
 	private static List<Displayable> cachedDisplayables;

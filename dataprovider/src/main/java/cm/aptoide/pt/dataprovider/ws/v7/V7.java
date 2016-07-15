@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -169,8 +169,8 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("listAppVersions")
 		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("listComments{url}")
-		Observable<ListComments> listComments(@Path(value = "url", encoded = true) String path, @Body ListCommentsRequest.Body body,
+		@POST("listComments")
+		Observable<ListComments> listComments(@Body ListCommentsRequest.Body body,
 		                                      @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 	}

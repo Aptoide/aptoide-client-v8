@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -165,13 +165,20 @@ public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 		private ComunityRatingBar ratingBar;
 
 		public ComunityRatingIndicator(View view) {
-			ratingCard = new CommunityRatingCard(view.findViewById(R.id.ratingCard));
+			View ratingCardView = view.findViewById(R.id.ratingCard);
+			if (ratingCardView != null) {
+				ratingCard = new CommunityRatingCard(ratingCardView);
+			}
 			ratingBar = new ComunityRatingBar(view);
 		}
 
 		public void bindView(GetApp getApp) {
-			ratingCard.bindView(getApp);
-			ratingBar.bindView(getApp);
+			if (ratingCard != null) {
+				ratingCard.bindView(getApp);
+			}
+			if (ratingBar != null) {
+				ratingBar.bindView(getApp);
+			}
 		}
 	}
 

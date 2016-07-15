@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -163,11 +163,19 @@ public class Database {
 	public static class UpdatesQ {
 
 		public static RealmResults<Update> getAll(Realm realm, boolean excluded) {
-			return realm.where(Update.class).equalTo(Update.EXCLUDED, Boolean.toString(excluded)).findAll();
+			return realm.where(Update.class).equalTo(Update.EXCLUDED, excluded).findAll();
 		}
 
-		public static boolean contains(String packageName, Realm realm) {
-			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst() != null;
+//		public static boolean contains(String packageName, Realm realm) {
+//			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst() != null;
+//		}
+
+		public static boolean contains(String packageName, boolean excluded, Realm realm) {
+			return realm
+					.where(Update.class)
+					.equalTo(Update.PACKAGE_NAME, packageName)
+					.equalTo(Update.EXCLUDED, excluded)
+					.findFirst() != null;
 		}
 
 		public static void delete(String packageName, Realm realm) {
@@ -183,8 +191,15 @@ public class Database {
 			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
 		}
 
-		public static void setExcluded(boolean isExcluded, Realm realm) {
-
+		public static void setExcluded(String packageName, boolean excluded, Realm realm) {
+			Update update = realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
+			if(update!=null) {
+				realm.beginTransaction();
+				update.setExcluded(excluded);
+				realm.commitTransaction();
+			} else {
+				throw new RuntimeException("Update with package name '"+ packageName +"' not found");
+			}
 		}
 	}
 

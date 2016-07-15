@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -88,7 +88,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 						if (which == AlertDialog.BUTTON_POSITIVE) {
 							@Cleanup
 							Realm realm1 = Database.get();
-							Database.UpdatesQ.setExcluded(true, realm1);
+							Database.UpdatesQ.setExcluded(packageName, true, realm1);
 							updateRowRelativeLayout.setVisibility(View.GONE);
 						}
 						dialog.dismiss();

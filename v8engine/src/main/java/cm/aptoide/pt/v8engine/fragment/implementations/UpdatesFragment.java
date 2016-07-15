@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -103,7 +103,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 						RealmResults<Installed> all = realmResults;
 						for (int i = all.size() - 1; i >= 0; i--) {
-							if (!Database.UpdatesQ.contains(all.get(i).getPackageName(), realm)) {
+							if (!Database.UpdatesQ.contains(all.get(i).getPackageName(), false, realm)) {
 								installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
 							}
 						}

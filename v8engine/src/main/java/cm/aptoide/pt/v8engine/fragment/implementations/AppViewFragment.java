@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by pedroribeiro on 11/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -15,16 +14,14 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,18 +37,16 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -75,6 +70,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//
 	private static final String TAG = AppViewFragment.class.getSimpleName();
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
+	private static FragmentActivity fragmentActivity;
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -85,13 +81,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//	private GetAppMeta.App app;
 	private long appId;
 	private String storeTheme;
-
 	//
 	// static fragment default new instance method
 	//
 	private MinimalAd minimalAd;
-
-	private static FragmentActivity fragmentActivity;
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -192,30 +185,18 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	}
 
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if (storeTheme != null) {
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+		}
+	}
+
+	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 		header = new AppViewHeader(view);
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
-			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
-			header.getAppBarLayout().setExpanded(isExpanded);
-		}
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-
-		if (header != null && header.getAppBarLayout() != null) {
-			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
-			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
-					.getVisibility() == View.VISIBLE);
-		}
 	}
 
 	@Override
@@ -232,20 +213,17 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		if (i == android.R.id.home) {
 			getActivity().onBackPressed();
 			return true;
-
 		} else if (i == R.id.menu_share) {
 			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
 			// TODO
 
 			return true;
-
 		} else if (i == R.id.menu_schedule) {
 			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
 			// TODO
 			return true;
-
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -259,20 +237,24 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
 
+	@Override
+	public void scroll(Position position) {
+		RecyclerView rView = getRecyclerView();
+		if (rView == null || getAdapter().getItemCount() == 0) {
+			Logger.e(TAG, "Recycler view is null or there are no elements in the adapter");
+			return;
+		}
+
+		if (position == Position.FIRST) {
+			rView.smoothScrollToPosition(0);
+		} else if (position == Position.LAST) {
+			rView.smoothScrollToPosition(getAdapter().getItemCount());
+		}
+	}
+
 	//
 	// Scrollable interface
 	//
-
-	@Override
-	public void scroll(Position position) {
-		if (position == Position.FIRST) {
-			Logger.d(TAG, "scrolling to first position");
-			getRecyclerView().smoothScrollToPosition(0);
-		} else if (position == Position.LAST) {
-			Logger.d(TAG, "scrolling to last position");
-			getRecyclerView().smoothScrollToPosition(getAdapter().getItemCount());
-		}
-	}
 
 	@Override
 	public void itemAdded(int pos) {
@@ -289,43 +271,61 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
-	private enum BundleKeys {
-		APP_ID,
-		MINIMAL_AD
+	@Override
+	public void onAttach(Activity activity) {
+		fragmentActivity = (FragmentActivity) activity;
+		super.onAttach(activity);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
+			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
+			header.getAppBarLayout().setExpanded(isExpanded);
+		}
 	}
 
 	//
 	// micro widget for header
 	//
 
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		if (header != null && header.getAppBarLayout() != null) {
+			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
+					.getVisibility() == View.VISIBLE);
+		}
+	}
+
+	private enum BundleKeys {
+		APP_ID,
+		MINIMAL_AD
+	}
+
 	private final class AppViewHeader {
 
 		private final boolean animationsEnabled;
 
 		// views
-		@Getter
-		private final AppBarLayout appBarLayout;
+		@Getter private final AppBarLayout appBarLayout;
 
-		@Getter
-		private final CollapsingToolbarLayout collapsingToolbar;
+		@Getter private final CollapsingToolbarLayout collapsingToolbar;
 
-		@Getter
-		private final ImageView featuredGraphic;
+		@Getter private final ImageView featuredGraphic;
 
-		@Getter
-		private final ImageView badge;
+		@Getter private final ImageView badge;
 
-		@Getter
-		private final TextView badgeText;
+		@Getter private final TextView badgeText;
 
-		@Getter
-		private final ImageView appIcon;
+		@Getter private final ImageView appIcon;
 
-		@Getter
-		private final TextView fileSize;
+		@Getter private final TextView fileSize;
 
-		@Getter
-		private final TextView downloadsCount;
+		@Getter private final TextView downloadsCount;
 
 		// ctor
 		public AppViewHeader(@NonNull View view) {
@@ -391,17 +391,14 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 				}
 			});
 
-			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes()
-					.getMeta()
-					.getData()
-					.getFile()
-					.getFilesize()));
+			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getFile().getFilesize()));
 
-			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats()
-					.getDownloads()));
+			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats().getDownloads()));
 
-			@DrawableRes int badgeResId = 0;
-			@StringRes int badgeMessageId = 0;
+			@DrawableRes
+			int badgeResId = 0;
+			@StringRes
+			int badgeMessageId = 0;
 			switch (getApp.getNodes().getMeta().getData().getFile().getMalware().getRank()) {
 				case TRUSTED:
 					badgeResId = R.drawable.ic_badge_trusted;
@@ -423,21 +420,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			ImageLoader.load(badgeResId, badge);
 			badgeText.setText(badgeMessageId);
 		}
-
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		if(storeTheme != null) {
-			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
-		}
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		fragmentActivity = (FragmentActivity) activity;
-		super.onAttach(activity);
 	}
 }
 
