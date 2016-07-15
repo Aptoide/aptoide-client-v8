@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -56,25 +56,14 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 	public void bindView(AppViewDeveloperDisplayable displayable) {
 		final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
 		final Context ctx = getContext();
-
-		final FragmentShower fragmentShower = ((FragmentShower) ctx);
-		final Resources.Theme theme = additionalInfo.getContext().getTheme();
-		final Resources res = additionalInfo.getResources();
+		final FragmentShower fragmentShower = (FragmentShower) ctx;
+		final Resources.Theme theme = ctx.getTheme();
+		final Resources res = ctx.getResources();
 
 		additionalInfo.setOnClickListener(v -> {
-			Scrollable scrollable = null;
-			try {
-				scrollable = ((Scrollable) fragmentShower.getCurrentV4());
-			} catch (ClassCastException ex) {
-				Logger.e(TAG, ex);
-			}
 
 			if (additionalInfoLayout.getVisibility() == View.GONE) {
 				additionalInfoLayout.setVisibility(View.VISIBLE);
-
-				if (scrollable != null) {
-					scrollable.scroll(Scrollable.Position.LAST);
-				}
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 					additionalInfo.setCompoundDrawablesWithIntrinsicBounds(null, null, res.getDrawable(R.drawable.ic_up_arrow, theme), null);
@@ -85,15 +74,22 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 
 				additionalInfoLayout.setVisibility(View.GONE);
 
-				if (scrollable != null) {
-					scrollable.scroll(Scrollable.Position.LAST);
-				}
-
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 					additionalInfo.setCompoundDrawablesWithIntrinsicBounds(null, null, res.getDrawable(R.drawable.ic_down_arrow, theme), null);
 				} else {
 					additionalInfo.setCompoundDrawablesWithIntrinsicBounds(null, null, res.getDrawable(R.drawable.ic_down_arrow), null);
 				}
+			}
+
+			Scrollable scrollable = null;
+			try {
+				scrollable = ((Scrollable) fragmentShower.getLastV4());
+			} catch (ClassCastException ex) {
+				Logger.e(TAG, ex);
+			}
+
+			if (scrollable != null) {
+				scrollable.scroll(Scrollable.Position.LAST);
 			}
 		});
 
@@ -120,7 +116,6 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 					.string.not_available)));
 		}
 
-		permissionsLabel.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO")
-		);
+		permissionsLabel.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
 	}
 }

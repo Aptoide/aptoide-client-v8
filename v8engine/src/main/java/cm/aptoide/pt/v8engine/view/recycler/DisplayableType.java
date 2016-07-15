@@ -18,7 +18,6 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
@@ -179,7 +178,7 @@ public enum DisplayableType {
 	private static final String TAG = DisplayableType.class.getName();
 	private static List<Displayable> cachedDisplayables;
 	private Displayable displayable;
-	private Widget widget;
+	//private Widget widget;
 	private Class<? extends Displayable> displayableClass;
 	private Class<? extends Widget> widgetClass;
 
@@ -188,15 +187,7 @@ public enum DisplayableType {
 		this.widgetClass = widgetClass;
 
 		displayable = newDisplayable();
-		widget = newWidget(new View(V8Engine.getContext()));
-
-		if (displayable.getType() == null) {
-			throw new IllegalStateException(String.format("Missing type in Displayable %s", displayableClass.getName()));
-		}
-
-		if (widget.getItemViewType() == 0) {
-			throw new IllegalStateException(String.format("Missing view type in Widget %s", widgetClass.getName()));
-		}
+		//widget = newWidget(new View(V8Engine.getContext()));
 	}
 
 	public static List<Displayable> newDisplayables(Group group) {

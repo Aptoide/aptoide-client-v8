@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
 
+import android.app.FragmentManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,8 +36,14 @@ public final class FragmentUtils {
 		replaceFragment(activity, fragment, fragment.getClass().getSimpleName() + "_" + atomicInt.incrementAndGet());
 	}
 
-	public static android.app.Fragment getCurrentFragment(@NonNull android.app.Activity activity) {
+	public static android.app.Fragment getFirstFragment(@NonNull android.app.Activity activity) {
 		android.app.FragmentManager.BackStackEntry backStackEntry = activity.getFragmentManager().getBackStackEntryAt(0);
+		return activity.getFragmentManager().findFragmentByTag(backStackEntry.getName());
+	}
+
+	public static android.app.Fragment getLastFragment(@NonNull android.app.Activity activity) {
+		FragmentManager fragmentManager = activity.getFragmentManager();
+		android.app.FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
 		return activity.getFragmentManager().findFragmentByTag(backStackEntry.getName());
 	}
 
@@ -57,8 +63,15 @@ public final class FragmentUtils {
 				.incrementAndGet());
 	}
 
-	public static android.support.v4.app.Fragment getCurrentFragmentV4(@NonNull android.support.v4.app.FragmentActivity fragmentActivity) {
+	public static android.support.v4.app.Fragment getFirstFragmentV4(@NonNull android.support.v4.app.FragmentActivity fragmentActivity) {
 		android.support.v4.app.FragmentManager.BackStackEntry backStackEntry = fragmentActivity.getSupportFragmentManager().getBackStackEntryAt(0);
+		return fragmentActivity.getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
+	}
+
+	public static android.support.v4.app.Fragment getLastFragmentV4(@NonNull android.support.v4.app.FragmentActivity fragmentActivity) {
+		android.support.v4.app.FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
+		android.support.v4.app.FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() -
+				1);
 		return fragmentActivity.getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
 	}
 }
