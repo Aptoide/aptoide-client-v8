@@ -92,7 +92,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		GetStoreRequest.of("apps", StoreContext.home)
 				.execute(this::setupViewPager, refresh);
 	}

@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	public static final int SEARCH_LIMIT = 20;
 	private static final String ACTION_KEY = "ACTION";
+	private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
 	private DownloadServiceHelper downloadManager;
 	private DownloadFactory downloadFactory;
 	private SpannableFactory spannableFactory;
@@ -93,17 +95,34 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 					.<List<Displayable>>compose(bindUntilEvent(FragmentEvent.PAUSE))
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(displayables -> addDisplayables(displayables), throwable -> throwable.printStackTrace());
-		} else {
-			load(false);
 		}
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void onSaveInstanceState(Bundle outState) {
+		if (packages != null) {
+			outState.putStringArray(PACKAGE_LIST_KEY, packages.toArray(new String[packages.size()]));
+		}
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (subscription != null) {
 			subscription.unsubscribe();
 		}
-		subscription = getPackages().flatMap(packages -> Observable.concat(getFreshDisplayables(refresh, packages), getNextDisplayables(packages)))
+
+		final Observable<List<String>> packagesObservable;
+		if (savedInstanceState != null && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
+			packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
+			packagesObservable = Observable.just(packages);
+		} else if (!refresh && packages != null) {
+			packagesObservable = Observable.just(packages);
+		} else {
+			packagesObservable = getPackages();
+		}
+
+		subscription = packagesObservable.flatMap(packages -> Observable.concat(getFreshDisplayables(refresh, packages), getNextDisplayables(packages)))
 				.<List<Displayable>>compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(displayables -> addDisplayables(displayables), throwable -> finishLoading((Throwable) throwable));

@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.os.Bundle;
+
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
@@ -43,7 +45,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		fetchUpdates();
 		fetchInstalled();
 	}

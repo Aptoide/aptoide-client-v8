@@ -104,4 +104,9 @@ public class VanillaConfiguration implements AptoideConfiguration {
 	public String getPartnerId() {
 		return null;
 	}
+
+	@Override
+	public String getExtraId() {
+		return null;
+	}
 }

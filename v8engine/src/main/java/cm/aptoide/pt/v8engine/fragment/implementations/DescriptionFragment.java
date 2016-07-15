@@ -60,7 +60,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (hasAppId) {
 			Logger.d(TAG, "App Description should refresh? " + refresh);
 			GetAppRequest.of(appId).execute(getApp -> {

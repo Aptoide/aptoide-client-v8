@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -49,7 +50,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		Logger.d(TAG, String.format("refresh excluded updates? %s", refresh ? "yes" : "no"));
 		fetchExcludedUpdates();
 	}

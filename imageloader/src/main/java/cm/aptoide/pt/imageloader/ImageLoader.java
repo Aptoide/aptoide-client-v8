@@ -9,6 +9,7 @@ import android.support.annotation.DrawableRes;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.NotificationTarget;
 
 import cm.aptoide.pt.preferences.Application;
 
@@ -42,5 +43,9 @@ public class ImageLoader {
 				.load(url)
 				.transform(new CircleTransform(Application.getContext()))
 				.into(imageView);
+	}
+
+	public static void loadImageToNotification(NotificationTarget notificationTarget, String url) {
+		Glide.with(Application.getContext().getApplicationContext()).load(url).asBitmap().into(notificationTarget);
 	}
 }

@@ -67,7 +67,7 @@ public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		Logger.d(TAG, "Other versions should refresh? " + refresh);
 		fetchRating(refresh);
 		fetchReviews();

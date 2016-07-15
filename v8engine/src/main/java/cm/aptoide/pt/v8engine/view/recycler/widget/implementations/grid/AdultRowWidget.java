@@ -42,14 +42,14 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 						AptoideAccountManager.updateMatureSwitch(true);
 
 						FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
-						((BaseLoaderFragment) supportFragmentManager.getFragments().get(supportFragmentManager.getBackStackEntryCount())).load(true);
+						((BaseLoaderFragment) supportFragmentManager.getFragments().get(supportFragmentManager.getBackStackEntryCount())).load(true, null);
 					}
 				}, dialog1 -> {
 					adultSwitch.setChecked(false);
 				}).show();
 			} else {
 				FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
-				((BaseLoaderFragment) supportFragmentManager.getFragments().get(supportFragmentManager.getBackStackEntryCount())).load(true);
+				((BaseLoaderFragment) supportFragmentManager.getFragments().get(supportFragmentManager.getBackStackEntryCount())).load(true, null);
 				AptoideAccountManager.updateMatureSwitch(false);
 			}
 		});

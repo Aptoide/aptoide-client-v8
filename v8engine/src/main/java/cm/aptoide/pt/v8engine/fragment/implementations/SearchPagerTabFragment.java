@@ -78,8 +78,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 	}
 
 	@Override
-	public void load(boolean refresh) {
-		super.load(refresh);
+	public void load(boolean refresh, Bundle savedInstanceState) {
+		super.load(refresh, savedInstanceState);
 		if (refresh) {
 			GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
 				if (getAdsResponse.getAds().size() > 0) {

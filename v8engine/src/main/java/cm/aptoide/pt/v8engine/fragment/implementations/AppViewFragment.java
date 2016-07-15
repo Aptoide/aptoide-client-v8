@@ -154,7 +154,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		GetAppRequest.of(appId).execute(getApp -> {
 			if (storeTheme == null) {
 				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();

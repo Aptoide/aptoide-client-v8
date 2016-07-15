@@ -39,7 +39,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (refresh) {
 			clearDisplayables();
 		} else {

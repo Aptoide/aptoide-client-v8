@@ -31,7 +31,7 @@ public abstract class BaseLoaderFragment extends BaseFragment implements LoadInt
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		load(!created);
+		load(!created, savedInstanceState);
 	}
 
 	@Override
@@ -86,5 +86,5 @@ public abstract class BaseLoaderFragment extends BaseFragment implements LoadInt
 		}
 	}
 
-	public abstract void load(boolean refresh);
+	public abstract void load(boolean refresh, Bundle savedInstanceState);
 }

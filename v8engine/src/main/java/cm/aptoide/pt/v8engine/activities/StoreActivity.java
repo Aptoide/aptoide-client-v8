@@ -92,7 +92,7 @@ public class StoreActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (refresh) {
 			GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
 				this.getStore = getStore;

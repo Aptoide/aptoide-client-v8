@@ -245,7 +245,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (refresh) {
 			executeSearchRequests();
 		} else {
