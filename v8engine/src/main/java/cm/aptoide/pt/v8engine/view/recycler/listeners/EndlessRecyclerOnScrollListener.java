@@ -25,12 +25,11 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	private final Action1 successRequestListener;
 
 	private boolean loading;
-	private int previousTotal = 0; // The total number of items in the dataset after the last load
-	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before
+	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before load
 	private boolean bypassCache;
-	private int offset;
-	private int totalCountResponse;
 	private ErrorRequestListener errorRequestListener;
+	private int total;
+	private int offset;
 
 	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
 			extends
@@ -55,18 +54,13 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
 		LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-		int visibleItemCount = recyclerView.getChildCount();
 		int totalItemCount = mLinearLayoutManager.getItemCount();
-		int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+		int lastVisibleItemPosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-		if (loading) {
-			if (totalItemCount > previousTotal) {
-				previousTotal = totalItemCount;
-			}
-		}
-		if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-			if (offset < totalCountResponse) {
-				// End has been reached, load more items
+		if (!loading && (((totalItemCount - 1) == lastVisibleItemPosition)
+						|| ((totalItemCount - 1) == (lastVisibleItemPosition + visibleThreshold)))) {
+			// End has been reached, load more items
+			if (offset == 0 || offset < total) {
 				onLoadMore(bypassCache);
 			}
 		}
@@ -84,7 +78,9 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 			}
 
 			if (response.getDatalist() != null) {
-				v7request.getBody().setOffset(response.getDatalist().getNext());
+				total = response.getDatalist().getTotal();
+				offset = response.getDatalist().getNext();
+				v7request.getBody().setOffset(offset);
 			}
 			successRequestListener.call(response);
 

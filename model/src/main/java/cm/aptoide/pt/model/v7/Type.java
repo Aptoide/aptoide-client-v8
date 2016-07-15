@@ -17,13 +17,13 @@ public enum Type {
 	// Server
 	APPS_GROUP(3),
 	APP_BRICK(2, true),
-	APP_BRICK_LIST_HAMMERED(1),
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
 	ADS(3),
 
 	// Multi Layout
 	APPS_GROUP_LIST(1),
+	APPS_GROUP_GRAPHIC(1),
 
 	// Server Complement
 	HEADER_ROW(true),

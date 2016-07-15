@@ -78,6 +78,7 @@ android {
         dev {
             applicationIdSuffix ".dev"
             minSdkVersion 15
+            versionCode 8000
             resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
         }
 

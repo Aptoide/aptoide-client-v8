@@ -11,5 +11,6 @@ package cm.aptoide.pt.model.v7;
 public enum Layout {
 	GRID,
 	LIST,
-	BRICK
+	BRICK,
+	GRAPHIC
 }

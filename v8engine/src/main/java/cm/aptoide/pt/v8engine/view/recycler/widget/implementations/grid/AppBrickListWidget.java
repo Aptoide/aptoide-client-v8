@@ -15,13 +15,13 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppGraphicDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by neuro on 09-05-2016.
  */
-public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
+public class AppBrickListWidget extends Widget<GridAppGraphicDisplayable> {
 
 	private TextView name;
 	private ImageView graphic;
@@ -39,7 +39,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
 	}
 
 	@Override
-	public void bindView(AppBrickListDisplayable displayable) {
+	public void bindView(GridAppGraphicDisplayable displayable) {
 		App app = displayable.getPojo();
 
 		ImageLoader.load(app.getGraphic(), R.drawable.placeholder_705x345, graphic);

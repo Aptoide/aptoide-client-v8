@@ -25,6 +25,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -49,6 +50,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
 	protected Event.Type type;
 	protected Event.Name name;
+	protected Layout layout;
 	protected String action;
 	protected String title;
 	protected String storeTheme;
@@ -80,6 +82,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		if (event.getName() != null) {
 			args.putString(BundleCons.NAME, event.getName().toString());
 		}
+		if (event.getData() != null && event.getData().getLayout() != null) {
+			args.putString(BundleCons.LAYOUT, event.getData().getLayout().toString());
+		}
 		args.putString(BundleCons.TITLE, title);
 		args.putString(BundleCons.ACTION, event.getAction());
 		args.putString(BundleCons.STORE_THEME, storeTheme);
@@ -96,6 +101,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		if (event.getName() != null) {
 			args.putString(BundleCons.NAME, event.getName().toString());
 		}
+		if (event.getData() != null && event.getData().getLayout() != null) {
+			args.putString(BundleCons.LAYOUT, event.getData().getLayout().toString());
+		}
 		args.putString(BundleCons.TITLE, title);
 		args.putString(BundleCons.ACTION, event.getAction());
 		return args;
@@ -105,7 +113,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		if (name != null) {
 			switch (name) {
 				case listApps:
-				case listAppsEditorsHammered:
 				case getStore:
 				case getStoreWidgets:
 				case getReviews:
@@ -126,6 +133,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		}
 		if (args.containsKey(BundleCons.NAME)) {
 			name = Event.Name.valueOf(args.getString(BundleCons.NAME));
+		}
+		if (args.containsKey(BundleCons.LAYOUT)) {
+			layout = Layout.valueOf(args.getString(BundleCons.LAYOUT));
 		}
 		title = args.getString(BundleCons.TITLE);
 		action = args.getString(BundleCons.ACTION);
@@ -177,31 +187,26 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			List<App> list = listApps.getDatalist().getList();
 
 			displayables = new LinkedList<>();
-			for (App app : list) {
-				app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-				displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
-			}
-
-			addDisplayables(displayables);
-		};
-
-		recyclerView.clearOnScrollListeners();
-		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listAppsRequest, listAppsAction, errorRequestListener,
-				refresh);
-		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-		endlessRecyclerOnScrollListener.onLoadMore(refresh);
-	}
-
-	private void caseListAppsEditorsHammered(String url, boolean refresh) {
-		ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url);
-		Action1<ListApps> listAppsAction = listApps -> {
-
-			// Load sub nodes
-			List<App> list = listApps.getDatalist().getList();
-
-			displayables = new LinkedList<>();
-			for (App app : list) {
-				displayables.add(DisplayableType.newDisplayable(Type.APP_BRICK_LIST_HAMMERED, app));
+			if (layout != null) {
+				switch (layout) {
+					case GRAPHIC:
+						for (App app : list) {
+							app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+							displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP_GRAPHIC, app));
+						}
+						break;
+					default:
+						for (App app : list) {
+							app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+							displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
+						}
+						break;
+				}
+			} else {
+				for (App app : list) {
+					app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+					displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP, app));
+				}
 			}
 
 			addDisplayables(displayables);
@@ -292,9 +297,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				case listApps:
 					caseListApps(url, refresh);
 					break;
-				case listAppsEditorsHammered:
-					caseListAppsEditorsHammered(url, refresh);
-					break;
 				case getStore:
 					caseGetStore(url, refresh);
 					break;
@@ -330,5 +332,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		public static final String TITLE = "title";
 		public static final String ACTION = "action";
 		public static final String STORE_THEME = "storeTheme";
+		public static final String LAYOUT = "layout";
 	}
 }

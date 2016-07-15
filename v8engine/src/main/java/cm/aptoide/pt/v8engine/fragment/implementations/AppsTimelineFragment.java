@@ -45,7 +45,6 @@ import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -60,6 +59,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private DateCalculator dateCalculator;
 	private boolean loading;
 	private int offset;
+	private int total;
 	private Subscription subscription;
 	private TimelineRepository timelineRepository;
 	private PackageRepository packageRepository;
@@ -130,9 +130,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	private Observable<List<Displayable>> getNextDisplayables(List<String> packages) {
 		return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
+				.filter(item -> !isTotal())
 				.filter(item -> !isLoading())
 				.doOnNext(item -> addLoading())
-				.concatMap(item -> getDisplayableList(packages, offset, false))
+				.concatMap(item -> getDisplayableList(packages, getOffset(), false))
 				.delay(1, TimeUnit.SECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnNext(item -> removeLoading())
@@ -148,8 +149,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	@NonNull
 	private Observable<List<Displayable>> getDisplayableList(List<String> packages, int offset, boolean refresh) {
 		return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh)
-				.doOnNext(datalist -> setOffset(datalist))
-				.flatMapIterable(datalist -> datalist.getList())
+				.doOnNext(dataList -> setTotal(dataList))
+				.doOnNext(dataList -> setOffset(dataList))
+				.flatMapIterable(dataList -> dataList.getList())
 				.map(card -> cardToDisplayable(card, dateCalculator, spannableFactory, downloadFactory, downloadManager))
 				.toList();
 	}
@@ -165,9 +167,23 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
 	}
 
-	private void setOffset(Datalist<TimelineCard> datalist) {
-		if (datalist != null && datalist.getNext() != 0) {
-			offset = datalist.getNext();
+	private boolean isTotal() {
+		return offset >= total;
+	}
+
+	private void setOffset(Datalist<TimelineCard> dataList) {
+		if (dataList != null && dataList.getNext() != 0) {
+			offset = dataList.getNext();
+		}
+	}
+
+	private int getOffset() {
+		return offset;
+	}
+
+	public void setTotal(Datalist<TimelineCard> dataList) {
+		if (dataList != null && dataList.getTotal() != 0) {
+			total = dataList.getTotal();
 		}
 	}
 
