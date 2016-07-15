@@ -23,6 +23,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -89,7 +90,7 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	private void startFeedbackFragment() {
-		String downloadFolderPath = AptoideUtils.SystemU.getDownloadFolderPath();
+		String downloadFolderPath = Application.getConfiguration().getCachePath();
 		String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
 		AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
 		((FragmentShower) getActivity()).pushFragmentV4(SendFeedbackFragment.newInstance(downloadFolderPath + screenshotFileName));

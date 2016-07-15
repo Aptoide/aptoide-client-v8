@@ -14,6 +14,8 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
 
@@ -118,5 +120,14 @@ public class DownloadFactory {
 		}
 
 		return downloads;
+	}
+
+	public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
+		Download download = new Download();
+		int appId = 1;
+		download.setAppName(Application.getConfiguration().getMarketName());
+		download.setAppId(appId);
+		download.setFilesToDownload(createFileList(appId, null, autoUpdateInfo.path, autoUpdateInfo.md5, null, null));
+		return download;
 	}
 }

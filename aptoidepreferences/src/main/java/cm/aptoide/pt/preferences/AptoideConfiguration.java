@@ -58,4 +58,6 @@ public interface AptoideConfiguration {
 
 	//OEM extra id
 	String getExtraId();
+
+	boolean isAlwaysUpdate();
 }

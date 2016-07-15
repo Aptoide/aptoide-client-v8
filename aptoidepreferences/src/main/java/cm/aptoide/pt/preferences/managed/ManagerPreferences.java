@@ -29,4 +29,12 @@ public class ManagerPreferences {
 	public static boolean getAnimationsEnabledStatus() {
 		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);
 	}
+
+	public static boolean isAutoUpdateEnable() {
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.CHECK_AUTO_UPDATE, true);
+	}
+
+	public static boolean isAllwaysUpdate() {
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_ALWAYS_UPDATE, false);
+	}
 }

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -102,7 +103,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 					uris.add(urifile);
 				}
 
-				File logs = AptoideUtils.SystemU.readLogs(AptoideUtils.SystemU.getDownloadFolderPath(), LOGS_FILE_NAME);
+				File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(), LOGS_FILE_NAME);
 				if (logs != null) {
 					Uri urifile = Uri.fromFile(logs);
 					uris.add(urifile);
