@@ -284,8 +284,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
-		super.load(refresh);
+	public void load(boolean refresh, Bundle savedInstanceState) {
+		super.load(refresh, savedInstanceState);
 		if (refresh) {
 			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 

@@ -45,7 +45,7 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		socialWebview.loadUrl(socialUrl);
 	}
 
