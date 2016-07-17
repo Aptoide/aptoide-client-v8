@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 17/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -32,6 +32,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -194,10 +195,18 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		public void loadTopComments(String storeName, String packageName) {
 			ListCommentsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listComments -> {
-				comments = listComments.getDatalist().getList();
-				notifyDataSetChanged();
-				// scheduleAnimations(); // TODO: 15/07/16 sithengineer add animations
-			});
+						comments = listComments.getDatalist().getList();
+						notifyDataSetChanged();
+						// scheduleAnimations(); // TODO: 15/07/16 sithengineer add animations
+					}, new ErrorRequestListener() {
+						@Override
+						public void onError(Throwable e) {
+							comments = null;
+							notifyDataSetChanged();
+							Logger.e(TAG, e);
+						}
+					}, true // bypass cache flag
+			);
 
 		}
 
@@ -209,17 +218,17 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		@Override
 		public Fragment getItem(int position) {
 			if (comments != null && position < comments.size()) {
-				return new MiniTopCommentFragment(comments.get(position));
+				return MiniTopCommentFragment.newInstance(comments.get(position));
 			}
-			return new MiniTopCommentFragment(null); // FIXME: 15/07/16 sithengineer this shouldn't happen
+			return new MiniTopCommentFragment(); // FIXME: 15/07/16 sithengineer this shouldn't happen
 		}
 	}
 
-	private static final class MiniTopCommentFragment extends BaseFragment {
+	public static final class MiniTopCommentFragment extends BaseFragment {
 
 		private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-		private final Comment comment;
+		private Comment comment;
 
 		private ImageView userIcon;
 		private RatingBar ratingBar;
@@ -228,8 +237,13 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		private TextView addedDate;
 		private TextView commentText;
 
-		public MiniTopCommentFragment(Comment comment) {
-			this.comment = comment;
+		public MiniTopCommentFragment() {
+		}
+
+		public static MiniTopCommentFragment newInstance(Comment comment) {
+			MiniTopCommentFragment fragment = new MiniTopCommentFragment();
+			fragment.comment = comment;
+			return fragment;
 		}
 
 		@Override
