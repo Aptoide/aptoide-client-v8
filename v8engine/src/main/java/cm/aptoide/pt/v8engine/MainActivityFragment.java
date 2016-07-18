@@ -14,6 +14,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -34,7 +35,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		if (savedInstanceState == null) {
 			startService(new Intent(this, PullingContentService.class));
 			if (ManagerPreferences.isAutoUpdateEnable()) {
-				new AutoUpdate(this).execute();
+				new AutoUpdate(this, new InstallManager()).execute();
 			}
 			if(SecurePreferences.isFirstRun()){
 				pushFragmentV4(new BaseWizardViewerFragment());

@@ -5,9 +5,15 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
+
+import java.io.File;
+
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,26 +39,19 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private String patchObbPath;
 	@Getter private String patchObbMd5;
 
+	private InstallManager installManager;
+
 	public UpdateDisplayable() {
 	}
 
-	public static UpdateDisplayable create(Update update) {
-		UpdateDisplayable updateDisplayable = new UpdateDisplayable();
+	public static UpdateDisplayable create(Update update, InstallManager installManager) {
+		return new UpdateDisplayable(update.getPackageName(),update.getAppId(), update.getLabel(), update.getIcon(), update.getMd5(), update.getApkPath(),
+				update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
+				update.getPatchObbMd5(), installManager);
+	}
 
-		updateDisplayable.packageName = update.getPackageName();
-		updateDisplayable.appId = update.getAppId();
-		updateDisplayable.label = update.getLabel();
-		updateDisplayable.icon = update.getIcon();
-		updateDisplayable.md5 = update.getMd5();
-		updateDisplayable.apkPath = update.getApkPath();
-		updateDisplayable.alternativeApkPath = update.getAlternativeApkPath();
-		updateDisplayable.updateVersionName = update.getUpdateVersionName();
-		updateDisplayable.mainObbPath = update.getMainObbPath();
-		updateDisplayable.mainObbMd5 = update.getMainObbMd5();
-		updateDisplayable.patchObbPath = update.getPatchObbPath();
-		updateDisplayable.patchObbMd5 = update.getPatchObbMd5();
-
-		return updateDisplayable;
+	public void install(Context context, FileToDownload file) {
+		installManager.install(context, new File(file.getFilePath()));
 	}
 
 	@Override

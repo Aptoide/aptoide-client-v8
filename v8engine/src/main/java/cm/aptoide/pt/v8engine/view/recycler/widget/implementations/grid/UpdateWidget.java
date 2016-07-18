@@ -17,7 +17,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -73,7 +72,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 			new DownloadServiceHelper(AptoideDownloadManager.getInstance()).startDownload(new DownloadFactory().create(updateDisplayable))
 					.subscribe(download -> {
 				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-					AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+					updateDisplayable.install(view.getContext(), download.getFilesToDownload().get(0));
 				}
 			});
 		});

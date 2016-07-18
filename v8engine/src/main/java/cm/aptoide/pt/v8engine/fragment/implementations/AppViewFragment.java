@@ -45,6 +45,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
@@ -95,6 +96,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private MinimalAd minimalAd;
 	// Stored to postpone ads logic
 	private AppViewInstallDisplayable appViewInstallDisplayable;
+	private InstallManager installManager;
 
 	private Action0 unInstallAction;
 	private MenuItem uninstallMenuItem;
@@ -129,6 +131,12 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		return fragment;
 	}
 
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		installManager = new InstallManager();
+	}
+
 	private void setupObservables(GetApp getApp) {
 		// For stores subscription
 		Database.StoreQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
@@ -150,7 +158,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(getApp, minimalAd != null ? minimalAd.getCpdUrl() : null));
+		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd != null ? minimalAd.getCpdUrl() : null));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));

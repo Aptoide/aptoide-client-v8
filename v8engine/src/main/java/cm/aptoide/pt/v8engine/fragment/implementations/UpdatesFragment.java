@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
@@ -21,6 +22,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
@@ -38,10 +40,17 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	private List<Displayable> installedDisplayablesList = new LinkedList<>();
 	private Subscription installedSubscription;
 	private Subscription updatesSubscription;
+	private InstallManager installManager;
 
 	public static UpdatesFragment newInstance() {
 		UpdatesFragment fragment = new UpdatesFragment();
 		return fragment;
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		installManager = new InstallManager();
 	}
 
 	@Override
@@ -82,7 +91,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
-									updatesDisplayablesList.add(UpdateDisplayable.create(update));
+									updatesDisplayablesList.add(UpdateDisplayable.create(update, installManager));
 								}
 							}
 

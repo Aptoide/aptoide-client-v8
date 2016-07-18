@@ -121,44 +121,44 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//check if the app is installed
 		if (installed == null) {
 			// app not installed
-			setupInstallButton(app);
+			setupInstallButton(app, displayable);
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
 		} else {
 			// app installed
 
 			// setup un-install button in menu
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(new Listeners().newUninstallListener(itemView, installed
-					.getPackageName()));
+					.getPackageName(), displayable));
 
 			// is it an upgrade, downgrade or open app?
-			setupUpgradeDowngradeOpenActions(getApp, installed);
+			setupUpgradeDowngradeOpenActions(getApp, installed, displayable);
 		}
 	}
 
-	private void setupUpgradeDowngradeOpenActions(GetApp getApp, Installed installed) {
+	private void setupUpgradeDowngradeOpenActions(GetApp getApp, Installed installed, AppViewInstallDisplayable displayable) {
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
 		if (!isLatestAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
 			actionButton.setText(R.string.update);
-			actionButton.setOnClickListener(new Listeners().newUpdateListener(app));
+			actionButton.setOnClickListener(new Listeners().newUpdateListener(app, displayable));
 		} else if (app.getFile().getVercode() < installed.getVersionCode()) {
 			actionButton.setText(R.string.downgrade);
-			actionButton.setOnClickListener(new Listeners().newDowngradeListener(app));
+			actionButton.setOnClickListener(new Listeners().newDowngradeListener(app, displayable));
 		} else {
 			actionButton.setText(R.string.open);
 			actionButton.setOnClickListener(new Listeners().newOpenAppListener(app.getPackageName()));
 		}
 	}
 
-	public void setupInstallButton(GetAppMeta.App app) {
+	public void setupInstallButton(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 		//check if the app is payed
 		if (app.getPay() != null && app.getPay().getPrice() > 0) {
 			actionButton.setText(R.string.buy);
 			actionButton.setOnClickListener(new Listeners().newBuyListener());
 		} else {
 			actionButton.setText(R.string.install);
-			actionButton.setOnClickListener(new Listeners().newInstallListener(app));
+			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
 		}
 	}
 
@@ -194,14 +194,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newInstallListener(GetAppMeta.App app) {
-			return v -> {
-				innerInstallAction(app, R.string.installing_msg, v);
-			};
+		private View.OnClickListener newInstallListener(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+			return v -> innerInstallAction(app, R.string.installing_msg, v, displayable);
 		}
 
-		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v) {
-			final String packageName = app.getPackageName();
+		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v, AppViewInstallDisplayable displayable) {
+			String packageName = app.getPackageName();
 			AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
 			if (cpdUrl != null) {
 				DataproviderUtils.knock(cpdUrl);
@@ -287,7 +285,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+							displayable.install(v.getContext(), download.getFilesToDownload().get(0));
 
 							IntentFilter intentFilter = new IntentFilter();
 							intentFilter.addAction(Intent.ACTION_INSTALL_PACKAGE);
@@ -300,7 +298,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 										actionButton.setText(R.string.open);
 										// FIXME: 20/07/16 sithengineer refactor this ugly code
 										((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-											new Listeners().newUninstallListener(itemView, app.getPackageName()).call();
+											new Listeners().newUninstallListener(itemView, app.getPackageName(), displayable).call();
 										});
 									}
 								}
@@ -314,14 +312,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			});
 		}
 
-		private View.OnClickListener newUpdateListener(final GetAppMeta.App app) {
+		private View.OnClickListener newUpdateListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 			return v -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUpdateAction(app.getPackageName()));
-				innerInstallAction(app, R.string.updating_msg, v);
+				innerInstallAction(app, R.string.updating_msg, v, displayable);
 			};
 		}
 
-		private View.OnClickListener newDowngradeListener(final GetAppMeta.App app) {
+		private View.OnClickListener newDowngradeListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 			// FIXME: 15/07/16 sithengineer show notification to user saying it will lose all his data
 
 			return view -> {
@@ -351,13 +349,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 								protected void onPackageRemoved(String packageName) {
 									super.onPackageRemoved(packageName);
 									if (packageName.equalsIgnoreCase(appPackageName)) {
-										AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+										displayable.install(context, download.getFilesToDownload().get(0));
 									}
 								}
 							}, intentFilter);
 
 							// ask for package removal
-							AptoideUtils.SystemU.uninstallApp(view.getContext(), appPackageName);
+							displayable.uninstall(view.getContext(), appPackageName);
 						}
 					});
 				}, () -> {
@@ -378,10 +376,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private Action0 newUninstallListener(View itemView, String packageName) {
+		private Action0 newUninstallListener(View itemView, String packageName, AppViewInstallDisplayable displayable) {
 			return () -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUninstallAction(packageName));
-				AptoideUtils.SystemU.uninstallApp(itemView.getContext(), packageName);
+				displayable.uninstall(itemView.getContext(), packageName);
 			};
 		}
 	}

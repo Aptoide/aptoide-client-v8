@@ -29,6 +29,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 
 public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
@@ -36,10 +37,12 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 	private final String url = Application.getConfiguration().getAutoUpdateUrl();
 
 	private AptoideBaseActivity activity;
+	private InstallManager installManager;
 	private ProgressDialog dialog;
 
-	public AutoUpdate(AptoideBaseActivity activity) {
+	public AutoUpdate(AptoideBaseActivity activity, InstallManager installManager) {
 		this.activity = activity;
+		this.installManager = installManager;
 	}
 
 	@Override
@@ -121,7 +124,7 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 							File apk = new File(download.getFilesToDownload().get(0).getFilePath());
 							String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
 							if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-								AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+								installManager.install(activity, new File(download.getFilesToDownload().get(0).getFilePath()));
 							} else {
 								Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
 								throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);
