@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 18/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
@@ -344,23 +346,23 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		// setup methods
 		public void setup(@NonNull GetApp getApp) {
 
-			if (getApp.getNodes().getMeta().getData().getGraphic() != null) {
-				ImageLoader.load(getApp.getNodes().getMeta().getData().getGraphic(), featuredGraphic);
-			}
-			/*
-			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty
-			(screenshots.get(0).url)) {
-				ImageLoader.load(screenshots.get(0).url, mFeaturedGraphic);
-			}
-			*/
+			GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-			if (getApp.getNodes().getMeta().getData().getIcon() != null) {
+			String headerImageUrl = app.getGraphic();
+			List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
+
+			if (!TextUtils.isEmpty(headerImageUrl)) {
+				ImageLoader.load(app.getGraphic(), featuredGraphic);
+			}
+			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(screenshots.get(0).getUrl())) {
+				ImageLoader.load(screenshots.get(0).getUrl(), featuredGraphic);
+			}
+
+			if (app.getIcon() != null) {
 				ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
 			}
 
-			// TODO add placeholders in image loading
-
-			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
+			collapsingToolbar.setTitle(app.getName());
 			StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
 			collapsingToolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
 			collapsingToolbar.setContentScrimColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
@@ -391,15 +393,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 				}
 			});
 
-			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getFile().getFilesize()));
+			fileSize.setText(String.format(Locale.ROOT, "%d", app.getFile().getFilesize()));
 
-			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats().getDownloads()));
+			downloadsCount.setText(String.format(Locale.ROOT, "%d", app.getStats().getDownloads()));
 
 			@DrawableRes
 			int badgeResId = 0;
 			@StringRes
 			int badgeMessageId = 0;
-			switch (getApp.getNodes().getMeta().getData().getFile().getMalware().getRank()) {
+			switch (app.getFile().getMalware().getRank()) {
 				case TRUSTED:
 					badgeResId = R.drawable.ic_badge_trusted;
 					badgeMessageId = R.string.appview_header_trusted_text;

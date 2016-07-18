@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/07/2016.
+ * Modified by SithEngineer on 18/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
@@ -104,7 +104,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		ratingLayout.setOnClickListener(rateOnClickListener);
 
 		View.OnClickListener commentsOnClickListener = v -> {
-			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId()));
+			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getStore().getName(), app.getPackageName()));
 		};
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
@@ -154,7 +154,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 
-				// TODO call ws with rating result
+				// TODO: 18/07/16 sithengineer call WS with rating result
 
 				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
 
@@ -194,7 +194,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		}
 
 		public void loadTopComments(String storeName, String packageName) {
-			ListCommentsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listComments -> {
+			ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listComments -> {
 						comments = listComments.getDatalist().getList();
 						notifyDataSetChanged();
 						// scheduleAnimations(); // TODO: 15/07/16 sithengineer add animations

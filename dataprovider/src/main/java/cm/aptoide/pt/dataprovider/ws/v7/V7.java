@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 18/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -23,7 +23,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
-import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -169,8 +169,11 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("listAppVersions")
 		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("listComments")
-		Observable<ListComments> listComments(@Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		@POST("listReviews")
+		Observable<ListReviews> listTopReviews(@Body ListReviewsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		//		@POST("listComments")
+		//		Observable<ListReviews> listComments(@Body ListReviewsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 	}
 }
