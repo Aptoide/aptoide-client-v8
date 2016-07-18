@@ -5,17 +5,32 @@
 
 package cm.aptoide.pt.v8engine.toolbox;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
+
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Constants;
+import cm.aptoide.accountmanager.util.UserInfo;
+import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.utils.AptoideUtils;
 
 /**
  * Created by marcelobenites on 7/7/16.
@@ -34,7 +49,6 @@ public class ToolboxContentProvider extends ContentProvider {
 	private static final int PASSHASH = 3;
 	private static final int LOGIN_TYPE = 4;
 	private static final int LOGIN_NAME = 5;
-	private static final int CHANGE_PREFERENCE = 6;
 
 	private final static UriMatcher uriMatcher;
 
@@ -45,30 +59,80 @@ public class ToolboxContentProvider extends ContentProvider {
 		uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "loginType", LOGIN_TYPE);
 		uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "passHash", PASSHASH);
 		uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "loginName", LOGIN_NAME);
-		uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "changePreference", CHANGE_PREFERENCE);
 	}
 
 	private ToolboxSecurityManager securityManager;
-	private Handler handler;
 
 	@Override
 	public boolean onCreate() {
 		securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
-		handler = new Handler(getContext().getMainLooper());
 		return true;
 	}
 
 	@Nullable
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		if(securityManager.checkSignature(Binder.getCallingUid(), BACKUP_SIGNATURE, BACKUP_PACKAGE)) {
-			handler.post(() -> Toast.makeText(getContext(), "BACKUP APPS APP QUERIED TOOLBOX CONTENT PROVIDER", Toast.LENGTH_LONG).show());
-		} else if (securityManager.checkSignature(Binder.getCallingUid(), UPLOADER_SIGNATURE, UPLOADER_PACKAGE)) {
-			handler.post(() -> Toast.makeText(getContext(), "UPLOADER APP QUERIED TOOLBOX CONTENT PROVIDER", Toast.LENGTH_LONG).show());
+		if(securityManager.checkSignature(Binder.getCallingUid(), BACKUP_SIGNATURE, BACKUP_PACKAGE)
+				|| securityManager.checkSignature(Binder.getCallingUid(), UPLOADER_SIGNATURE, UPLOADER_PACKAGE)) {
+			switch (uriMatcher.match(uri)) {
+				case TOKEN:
+
+					final String accessToken = AptoideAccountManager.getAccessToken();
+					if (accessToken != null) {
+						final MatrixCursor tokenCursor = new MatrixCursor(new String[]{"userToken"}, 1);
+						tokenCursor.addRow(new Object[]{accessToken});
+						return tokenCursor;
+					}
+					throw new IllegalStateException("User not logged in.");
+				case REPO:
+
+					final UserInfo userInfo = AptoideAccountManager.getUserInfo();
+					if (userInfo != null) {
+						final MatrixCursor userRepoCursor = new MatrixCursor(new String[]{"userRepo"}, 1);
+						userRepoCursor.addRow(new Object[]{userInfo.getUserRepo()});
+						return userRepoCursor;
+					}
+					throw new IllegalStateException("User not logged in.");
+				case PASSHASH:
+
+					final AccountManager accountManager = AccountManager.get(getContext());
+					final Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+					final LoginMode loginMode = AptoideAccountManager.getLoginMode();
+					if (accounts.length > 0 && loginMode != null) {
+						final MatrixCursor passwordCursor = new MatrixCursor(new String[]{"userPass"}, 1);
+						if (LoginMode.APTOIDE.equals(loginMode)) {
+							passwordCursor.addRow(new String[]{AptoideUtils.AlgorithmU.computeSha1(accountManager.getPassword(accounts[0]))});
+							return passwordCursor;
+						} else if (LoginMode.APTOIDE.equals(loginMode) || LoginMode.GOOGLE.equals(loginMode)) {
+							passwordCursor.addRow(new String[] {accountManager.getPassword(accounts[0])});
+							return passwordCursor;
+						}
+					}
+					throw new IllegalStateException("User not logged in.");
+				case LOGIN_TYPE:
+
+					final LoginMode loginType = AptoideAccountManager.getLoginMode();
+					if (loginType != null) {
+						final MatrixCursor loginTypeCursor = new MatrixCursor(new String[]{"loginType"}, 1);
+						loginTypeCursor.addRow(new String[]{loginType.name().toLowerCase(Locale.US)});
+						return loginTypeCursor;
+					}
+					throw new IllegalStateException("User not logged in.");
+				case LOGIN_NAME:
+
+					final UserInfo userName = AptoideAccountManager.getUserInfo();
+					if (userName != null) {
+						final MatrixCursor userRepoCursor = new MatrixCursor(new String[]{"loginName"}, 1);
+						userRepoCursor.addRow(new Object[]{userName.getUserName()});
+						return userRepoCursor;
+					}
+					throw new IllegalStateException("User not logged in.");
+				default:
+					throw new IllegalArgumentException("Only /token, /repo, /passHash, /loginType and /loginName supported.");
+			}
 		} else {
-			handler.post(() -> Toast.makeText(getContext(), "INVALID APP TRIED TO QUERY TOOLBOX CONTENT PROVIDER", Toast.LENGTH_LONG).show());
+			throw new SecurityException("Package not authorized to access provider.");
 		}
-		return null;
 	}
 
 	@Nullable
@@ -90,11 +154,6 @@ public class ToolboxContentProvider extends ContentProvider {
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		if (securityManager.checkSignature(Binder.getCallingUid(), getContext().getPackageName())) {
-			handler.post(() -> Toast.makeText(getContext(), "SAME SIGNATURE APP UPDATED TOOLBOX CONTENT PROVIDER", Toast.LENGTH_LONG).show());
-		} else {
-			handler.post(() -> Toast.makeText(getContext(), "INVALID APP TRIED TO UPDATE TOOLBOX CONTENT PROVIDER", Toast.LENGTH_LONG).show());
-		}
 		return 0;
 	}
 }
