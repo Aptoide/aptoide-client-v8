@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -72,7 +72,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//
 	private static final String TAG = AppViewFragment.class.getSimpleName();
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
-	private static FragmentActivity fragmentActivity;
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -87,6 +86,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	// static fragment default new instance method
 	//
 	private MinimalAd minimalAd;
+	// Stored to postpone ads logic
+	private AppViewInstallDisplayable appViewInstallDisplayable;
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -138,7 +139,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(new AppViewInstallDisplayable(getApp));
+		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(getApp, minimalAd != null ? minimalAd.getCpdUrl() : null));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -158,6 +159,24 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		GetAppRequest.of(appId).execute(getApp -> {
+			if (minimalAd == null) {
+				GetAdsRequest.ofAppview(getApp.getNodes().getMeta().getData().getPackageName(), getApp.getNodes().getMeta().getData().getStore().getName())
+						.execute(getAdsResponse -> {
+							List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
+							if (ads == null || ads.get(0) == null) {
+								return;
+							}
+							GetAdsResponse.Ad ad = ads.get(0);
+							minimalAd = new MinimalAd(getAdsResponse.getAds().get(0));
+
+							if (appViewInstallDisplayable != null) {
+								appViewInstallDisplayable.setCpdUrl(ad.getInfo().getCpdUrl());
+								appViewInstallDisplayable.setCpiUrl(ad.getInfo().getCpiUrl());
+							}
+							DataproviderUtils.knock(minimalAd.getCpcUrl());
+						});
+			}
+
 			if (storeTheme == null) {
 				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 			}
@@ -271,12 +290,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void itemChanged(int pos) {
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		fragmentActivity = (FragmentActivity) activity;
-		super.onAttach(activity);
 	}
 
 	@Override

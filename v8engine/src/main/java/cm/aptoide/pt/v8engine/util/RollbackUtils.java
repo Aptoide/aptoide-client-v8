@@ -18,16 +18,33 @@ import lombok.Cleanup;
  */
 public class RollbackUtils {
 
-	public static void addUninstallAction(String packageName) {
+	private static void rollbackAction(String packageName, Rollback.Action action) {
 		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
 		if (packageInfo != null) {
-			Rollback rollback = new Rollback(packageInfo, Rollback.Action.UNINSTALL);
+			Rollback rollback = new Rollback(packageInfo, action);
 
 			AptoideUtils.ThreadU.runOnUiThread(() -> {
-				@Cleanup Realm realm = Database.get();
+				@Cleanup
+				Realm realm = Database.get();
 				Database.save(rollback, realm);
 			});
 		}
+	}
+
+	public static void addInstallAction(String packageName) {
+		rollbackAction(packageName, Rollback.Action.INSTALL);
+	}
+
+	public static void addUninstallAction(String packageName) {
+		rollbackAction(packageName, Rollback.Action.UNINSTALL);
+	}
+
+	public static void addUpdateAction(String packageName) {
+		rollbackAction(packageName, Rollback.Action.UPDATE);
+	}
+
+	public static void addDowngradeAction(String packageName) {
+		rollbackAction(packageName, Rollback.Action.DOWNGRADE);
 	}
 }

@@ -23,6 +23,8 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -33,6 +35,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
 import cm.aptoide.pt.v8engine.receivers.InstalledBroadcastReceiver;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -70,6 +73,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	// app info
 	private TextView versionName;
 	private TextView otherVersions;
+	private String cpdUrl;
+	private String cpiUrl;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -100,6 +105,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
 
+		cpdUrl = displayable.getCpdUrl();
+		cpiUrl = displayable.getCpdUrl();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		/*Store store = app.getStore();
@@ -118,7 +125,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void setupInstallButton(GetAppMeta.App app) {
 		@Cleanup Realm realm = Database.get();
-		Installed installed = Database.InstalledQ.get(app.getPackageName(), realm);
+		String packageName = app.getPackageName();
+		Installed installed = Database.InstalledQ.get(packageName, realm);
 
 		//check if the app is installed
 		if (installed == null) {
@@ -128,7 +136,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				installButton.setOnClickListener(new Listeners().newBuyListener());
 			} else {
 				installButton.setText(R.string.get_app);
-				installButton.setOnClickListener(new Listeners().newInstallListener(app, R.string.installing_msg));
+				installButton.setOnClickListener(new Listeners().newInstallListener(app));
 			}
 		} else {
 			if (app.getFile().getVercode() > installed.getVersionCode()) {
@@ -139,7 +147,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				installButton.setOnClickListener(new Listeners().newDowngradeListener(app));
 			} else {
 				installButton.setText(R.string.open);
-				installButton.setOnClickListener(new Listeners().newOpenAppListener(app.getPackageName()));
+				installButton.setOnClickListener(new Listeners().newOpenAppListener(packageName));
 			}
 		}
 	}
@@ -256,9 +264,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 	*/
 
-	private static class Listeners {
+	private class Listeners {
 
-		private static final String TAG = Listeners.class.getSimpleName();
+		private final String TAG = Listeners.class.getSimpleName();
 
 		private View.OnClickListener newBuyListener() {
 			return v -> {
@@ -270,14 +278,36 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newInstallListener(final GetAppMeta.App app, final int msgId) {
-			return view -> {
-				ContextWrapper contextWrapper = (ContextWrapper) view.getContext();
-				PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
+		private View.OnClickListener newInstallListener(GetAppMeta.App app) {
+			return v -> {
+				innerInstallAction(app, R.string.installing_msg, v);
+			};
+		}
+
+		private Runnable innerInstallAction(GetAppMeta.App app, final int msgId, View v) {
+			return () -> {
+				String packageName = app.getPackageName();
+				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
+				if (cpdUrl != null) {
+					DataproviderUtils.knock(cpdUrl);
+				}
+
+				@Cleanup
+				Realm realm = Database.get();
+				Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
+				if (rollback != null) {
+					rollback.setCpiUrl(cpiUrl);
+					Database.save(rollback, realm);
+				}
+
+				ContextWrapper ctx = (ContextWrapper) v.getContext();
+				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+
+				final ShowSnackbar showSnackbar = ((ShowSnackbar) ctx.getBaseContext());
 
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
 
-					ShowMessage.asSnack(view, msgId);
+					ShowMessage.asSnack(v, msgId);
 
 					DownloadFactory factory = new DownloadFactory();
 					Download appDownload = factory.create(app);
@@ -292,7 +322,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 
 		private View.OnClickListener newUpdateListener(final GetAppMeta.App app) {
-			return newInstallListener(app, R.string.updating_msg);
+			return v -> {
+				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUpdateAction(app.getPackageName()));
+				innerInstallAction(app, R.string.updating_msg, v);
+			};
 		}
 
 		private View.OnClickListener newDowngradeListener(final GetAppMeta.App app) {
@@ -300,6 +333,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 			return view -> {
 
+				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUpdateAction(app.getPackageName()));
 				final Context context = view.getContext();
 				ContextWrapper contextWrapper = (ContextWrapper) context;
 				PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());

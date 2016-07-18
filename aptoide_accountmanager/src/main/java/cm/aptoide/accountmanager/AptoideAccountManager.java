@@ -200,10 +200,14 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 *
 	 * @return A string with the token
 	 */
-	public static
 	@Nullable
-	String getAccessToken() {
+	public static String getAccessToken() {
 		return AccountManagerPreferences.getAccessToken();
+	}
+
+	@Nullable
+	public static LoginMode getLoginMode() {
+		return AccountManagerPreferences.getLoginMode();
 	}
 
 	/**
@@ -266,6 +270,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				if (getInstance().addLocalUserAccount(userName, passwordOrToken, null, oAuth
 						.getRefresh_token(), oAuth
 						.getAccessToken())) {
+					AccountManagerPreferences.setLoginMode(mode);
 					getInstance().onLoginSuccess();
 					if (finalGenericPleaseWaitDialog != null) {
 						finalGenericPleaseWaitDialog.dismiss();
