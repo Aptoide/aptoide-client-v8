@@ -83,6 +83,11 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
 		Database.save(new Installed(packageInfo, V8Engine.getContext().getPackageManager()), realm);
+
+		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
+		if (rollback != null) {
+			confirmAction(packageName, Rollback.Action.INSTALL);
+		}
 	}
 
 	private void databaseOnPackageReplaced(String packageName) {
@@ -98,8 +103,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 
 		if (installed != null) {
-			installed.update(packageInfo, realm);
-			Database.save(installed, realm);
+			confirmAction(packageName, Rollback.Action.UPDATE);
 		}
 	}
 
@@ -107,7 +111,19 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Database.InstalledQ.delete(packageName, realm);
 		Database.UpdatesQ.delete(packageName, realm);
 
-		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
+		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.DOWNGRADE, realm);
+		if (rollback != null) {
+			confirmAction(packageName, Rollback.Action.DOWNGRADE);
+		} else {
+			rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
+			if (rollback != null) {
+				confirmAction(packageName, Rollback.Action.UNINSTALL);
+			}
+		}
+	}
+
+	private void confirmAction(String packageName, Rollback.Action action) {
+		Rollback rollback = Database.RollbackQ.get(packageName, action, realm);
 		if (rollback != null) {
 			rollback.confirm(realm);
 		}

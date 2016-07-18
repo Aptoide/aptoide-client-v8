@@ -117,7 +117,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void setupInstallButton(GetAppMeta.App app) {
 		@Cleanup Realm realm = Database.get();
-		Installed installed = Database.InstalledQ.get(app.getPackageName(), realm);
+		String packageName = app.getPackageName();
+		Installed installed = Database.InstalledQ.get(packageName, realm);
 
 		//check if the app is installed
 		if (installed == null) {
@@ -127,18 +128,18 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				installButton.setOnClickListener(new Listeners().newBuyListener());
 			} else {
 				installButton.setText(R.string.get_app);
-				installButton.setOnClickListener(new Listeners().newInstallListener(app));
+				installButton.setOnClickListener(new Listeners().newInstallListener(packageName));
 			}
 		} else {
 			if (app.getFile().getVercode() > installed.getVersionCode()) {
 				installButton.setText(R.string.update);
-				installButton.setOnClickListener(new Listeners().newUpdateListener());
+				installButton.setOnClickListener(new Listeners().newUpdateListener(packageName));
 			} else if (app.getFile().getVercode() < installed.getVersionCode()) {
 				installButton.setText(R.string.downgrade);
-				installButton.setOnClickListener(new Listeners().newDowngradeListener());
+				installButton.setOnClickListener(new Listeners().newDowngradeListener(packageName));
 			} else {
 				installButton.setText(R.string.open);
-				installButton.setOnClickListener(new Listeners().newOpenAppListener(app.getPackageName()));
+				installButton.setOnClickListener(new Listeners().newOpenAppListener(packageName));
 			}
 		}
 	}
@@ -267,8 +268,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newInstallListener(GetAppMeta.App app) {
+		private View.OnClickListener newInstallListener(String packageName) {
 			return v -> {
+				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
 				if (cpdUrl != null) {
 					DataproviderUtils.knock(cpdUrl);
 				}
@@ -288,8 +290,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newUpdateListener() {
+		private View.OnClickListener newUpdateListener(String packageName) {
 			return v -> {
+				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUpdateAction(packageName));
 				ContextWrapper ctx = (ContextWrapper) v.getContext();
 				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
@@ -298,8 +301,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newDowngradeListener() {
-			return null;
+		private View.OnClickListener newDowngradeListener(String packageName) {
+			return v -> {
+				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addDowngradeAction(packageName));
+			};
 		}
 
 		private View.OnClickListener newOpenAppListener(String packageName) {
