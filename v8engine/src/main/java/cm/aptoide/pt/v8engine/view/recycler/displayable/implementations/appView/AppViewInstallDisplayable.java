@@ -17,6 +17,7 @@ import lombok.Setter;
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
 	@Getter @Setter private String cpdUrl;
+	@Getter @Setter private String cpiUrl;
 
 	public AppViewInstallDisplayable() {
 	}

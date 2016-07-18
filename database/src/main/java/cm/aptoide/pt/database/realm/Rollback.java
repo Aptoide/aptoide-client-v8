@@ -43,6 +43,7 @@ public class Rollback extends RealmObject {
 	@PrimaryKey private String md5;
 	private boolean confirmed;
 	private String referrer;
+	private String cpiUrl;
 
 	// TODO: 27-05-2016 neuro Nem sei o k fazer a isto..
 //	private String previousVersionName;
@@ -61,6 +62,11 @@ public class Rollback extends RealmObject {
 		setTimestamp(Calendar.getInstance().getTimeInMillis());
 		setMd5(AptoideUtils.AlgorithmU.computeMd5(packageInfo));
 //		computeId();
+	}
+
+	public Rollback(PackageInfo packageInfo, Action action, String cpiUrl) {
+		this(packageInfo, action);
+		this.cpiUrl = cpiUrl;
 	}
 
 	public void confirm(Realm realm) {
@@ -192,6 +198,14 @@ public class Rollback extends RealmObject {
 //		}
 //		id = n;
 //	}
+
+	public String getCpiUrl() {
+		return cpiUrl;
+	}
+
+	public void setCpiUrl(String cpiUrl) {
+		this.cpiUrl = cpiUrl;
+	}
 
 	public enum Action {
 		UPDATE, DOWNGRADE, UNINSTALL, INSTALL

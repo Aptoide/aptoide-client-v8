@@ -20,6 +20,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -68,6 +69,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private TextView versionName;
 	private TextView otherVersions;
 	private String cpdUrl;
+	private String cpiUrl;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -99,6 +101,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	public void bindView(AppViewInstallDisplayable displayable) {
 
 		cpdUrl = displayable.getCpdUrl();
+		cpiUrl = displayable.getCpdUrl();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		/*Store store = app.getStore();
@@ -274,6 +277,15 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				if (cpdUrl != null) {
 					DataproviderUtils.knock(cpdUrl);
 				}
+
+				@Cleanup
+				Realm realm = Database.get();
+				Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
+				if (rollback != null) {
+					rollback.setCpiUrl(cpiUrl);
+					Database.save(rollback, realm);
+				}
+
 				ContextWrapper ctx = (ContextWrapper) v.getContext();
 				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 

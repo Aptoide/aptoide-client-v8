@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -89,6 +90,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		if (rollback != null) {
 			confirmAction(packageName, Rollback.Action.INSTALL);
 			ReferrerUtils.broadcastReferrer(packageName, rollback.getReferrer());
+			DataproviderUtils.knock(rollback.getCpiUrl());
 		}
 	}
 

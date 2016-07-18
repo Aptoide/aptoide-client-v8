@@ -167,11 +167,12 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 							if (ads == null || ads.get(0) == null) {
 								return;
 							}
-
+							GetAdsResponse.Ad ad = ads.get(0);
 							minimalAd = new MinimalAd(getAdsResponse.getAds().get(0));
 
 							if (appViewInstallDisplayable != null) {
-								appViewInstallDisplayable.setCpdUrl(ads.get(0).getInfo().getCpdUrl());
+								appViewInstallDisplayable.setCpdUrl(ad.getInfo().getCpdUrl());
+								appViewInstallDisplayable.setCpiUrl(ad.getInfo().getCpiUrl());
 							}
 							DataproviderUtils.knock(minimalAd.getCpcUrl());
 						});
