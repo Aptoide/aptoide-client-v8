@@ -6,10 +6,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.ContextWrapper;
-import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,11 +20,10 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -37,7 +34,6 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -71,6 +67,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	// app info
 	private TextView versionName;
 	private TextView otherVersions;
+	private String cpdUrl;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -101,6 +98,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
 
+		cpdUrl = displayable.getCpdUrl();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		/*Store store = app.getStore();
@@ -255,9 +253,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 	}
 
-	private static class Listeners {
+	private class Listeners {
 
-		private static final String TAG = Listeners.class.getSimpleName();
+		private final String TAG = Listeners.class.getSimpleName();
 
 		private View.OnClickListener newBuyListener() {
 			return v -> {
@@ -271,6 +269,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		private View.OnClickListener newInstallListener(GetAppMeta.App app) {
 			return v -> {
+				if (cpdUrl != null) {
+					DataproviderUtils.knock(cpdUrl);
+				}
 				ContextWrapper ctx = (ContextWrapper) v.getContext();
 				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 

@@ -31,6 +31,8 @@ public class MinimalAd implements Parcelable {
 	private final String packageName;
 	private final long networkId;
 	private final String clickUrl;
+	private final String cpcUrl;
+	private final String cpdUrl;
 	private final long appId;
 	private final long adId;
 
@@ -38,6 +40,8 @@ public class MinimalAd implements Parcelable {
 		packageName = ad.getData().getPackageName();
 		networkId = ad.getPartner().getInfo().getId();
 		clickUrl = ad.getPartner().getData().getClickUrl();
+		cpcUrl = ad.getInfo().getCpcUrl();
+		cpdUrl = ad.getInfo().getCpdUrl();
 		appId = ad.getData().getId();
 		adId = ad.getInfo().getAdId();
 	}
@@ -46,6 +50,8 @@ public class MinimalAd implements Parcelable {
 		packageName = in.readString();
 		networkId = in.readLong();
 		clickUrl = in.readString();
+		cpcUrl = in.readString();
+		cpdUrl = in.readString();
 		appId = in.readLong();
 		adId = in.readLong();
 	}
@@ -61,6 +67,8 @@ public class MinimalAd implements Parcelable {
 		dest.writeString(packageName);
 		dest.writeLong(networkId);
 		dest.writeString(clickUrl);
+		dest.writeString(cpcUrl);
+		dest.writeString(cpdUrl);
 		dest.writeLong(appId);
 		dest.writeLong(adId);
 	}

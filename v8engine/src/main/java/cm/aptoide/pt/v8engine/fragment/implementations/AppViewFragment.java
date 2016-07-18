@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -15,43 +14,41 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -75,6 +72,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//
 	private static final String TAG = AppViewFragment.class.getSimpleName();
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
+	private static FragmentActivity fragmentActivity;
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -85,13 +83,12 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//	private GetAppMeta.App app;
 	private long appId;
 	private String storeTheme;
-
 	//
 	// static fragment default new instance method
 	//
 	private MinimalAd minimalAd;
-
-	private static FragmentActivity fragmentActivity;
+	// Stored to postpone ads logic
+	private AppViewInstallDisplayable appViewInstallDisplayable;
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -143,7 +140,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(new AppViewInstallDisplayable(getApp));
+		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(getApp, minimalAd != null ? minimalAd.getCpdUrl() : null));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -163,6 +160,23 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void load(boolean refresh) {
 		GetAppRequest.of(appId).execute(getApp -> {
+			if (minimalAd == null) {
+				GetAdsRequest.ofAppview(getApp.getNodes().getMeta().getData().getPackageName(), getApp.getNodes().getMeta().getData().getStore().getName())
+						.execute(getAdsResponse -> {
+							List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
+							if (ads == null || ads.get(0) == null) {
+								return;
+							}
+
+							minimalAd = new MinimalAd(getAdsResponse.getAds().get(0));
+
+							if (appViewInstallDisplayable != null) {
+								appViewInstallDisplayable.setCpdUrl(ads.get(0).getInfo().getCpdUrl());
+							}
+							DataproviderUtils.knock(minimalAd.getCpcUrl());
+						});
+			}
+
 			if (storeTheme == null) {
 				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 			}
@@ -192,30 +206,18 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	}
 
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if (storeTheme != null) {
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+		}
+	}
+
+	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 		header = new AppViewHeader(view);
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
-			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
-			header.getAppBarLayout().setExpanded(isExpanded);
-		}
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-
-		if (header != null && header.getAppBarLayout() != null) {
-			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
-			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
-					.getVisibility() == View.VISIBLE);
-		}
 	}
 
 	@Override
@@ -232,14 +234,12 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		if (i == android.R.id.home) {
 			getActivity().onBackPressed();
 			return true;
-
 		} else if (i == R.id.menu_share) {
 			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
 			// TODO
 
 			return true;
-
 		} else if (i == R.id.menu_schedule) {
 			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
@@ -259,10 +259,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
 
-	//
-	// Scrollable interface
-	//
-
 	@Override
 	public void scroll(Position position) {
 		if (position == Position.FIRST) {
@@ -273,6 +269,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			getRecyclerView().smoothScrollToPosition(getAdapter().getItemCount());
 		}
 	}
+
+	//
+	// Scrollable interface
+	//
 
 	@Override
 	public void itemAdded(int pos) {
@@ -289,43 +289,61 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
-	private enum BundleKeys {
-		APP_ID,
-		MINIMAL_AD
+	@Override
+	public void onAttach(Activity activity) {
+		fragmentActivity = (FragmentActivity) activity;
+		super.onAttach(activity);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
+			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
+			header.getAppBarLayout().setExpanded(isExpanded);
+		}
 	}
 
 	//
 	// micro widget for header
 	//
 
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		if (header != null && header.getAppBarLayout() != null) {
+			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
+					.getVisibility() == View.VISIBLE);
+		}
+	}
+
+	private enum BundleKeys {
+		APP_ID,
+		MINIMAL_AD
+	}
+
 	private final class AppViewHeader {
 
 		private final boolean animationsEnabled;
 
 		// views
-		@Getter
-		private final AppBarLayout appBarLayout;
+		@Getter private final AppBarLayout appBarLayout;
 
-		@Getter
-		private final CollapsingToolbarLayout collapsingToolbar;
+		@Getter private final CollapsingToolbarLayout collapsingToolbar;
 
-		@Getter
-		private final ImageView featuredGraphic;
+		@Getter private final ImageView featuredGraphic;
 
-		@Getter
-		private final ImageView badge;
+		@Getter private final ImageView badge;
 
-		@Getter
-		private final TextView badgeText;
+		@Getter private final TextView badgeText;
 
-		@Getter
-		private final ImageView appIcon;
+		@Getter private final ImageView appIcon;
 
-		@Getter
-		private final TextView fileSize;
+		@Getter private final TextView fileSize;
 
-		@Getter
-		private final TextView downloadsCount;
+		@Getter private final TextView downloadsCount;
 
 		// ctor
 		public AppViewHeader(@NonNull View view) {
@@ -391,17 +409,14 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 				}
 			});
 
-			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes()
-					.getMeta()
-					.getData()
-					.getFile()
-					.getFilesize()));
+			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getFile().getFilesize()));
 
-			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats()
-					.getDownloads()));
+			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats().getDownloads()));
 
-			@DrawableRes int badgeResId = 0;
-			@StringRes int badgeMessageId = 0;
+			@DrawableRes
+			int badgeResId = 0;
+			@StringRes
+			int badgeMessageId = 0;
 			switch (getApp.getNodes().getMeta().getData().getFile().getMalware().getRank()) {
 				case TRUSTED:
 					badgeResId = R.drawable.ic_badge_trusted;
@@ -424,20 +439,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			badgeText.setText(badgeMessageId);
 		}
 
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		if(storeTheme != null) {
-			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
-		}
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		fragmentActivity = (FragmentActivity) activity;
-		super.onAttach(activity);
 	}
 }
 

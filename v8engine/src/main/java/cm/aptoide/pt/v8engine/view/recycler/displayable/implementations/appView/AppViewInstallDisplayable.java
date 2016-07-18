@@ -8,21 +8,30 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by sithengineer on 06/05/16.
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
+	@Getter @Setter private String cpdUrl;
+
 	public AppViewInstallDisplayable() {
 	}
 
 	public AppViewInstallDisplayable(GetApp getApp) {
-		super(getApp);
+		this(getApp, false, null);
 	}
 
-	public AppViewInstallDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+	public AppViewInstallDisplayable(GetApp getApp, String cpdUrl) {
+		this(getApp, false, cpdUrl);
+	}
+
+	public AppViewInstallDisplayable(GetApp getApp, boolean fixedPerLineCount, String cpdUrl) {
 		super(getApp, fixedPerLineCount);
+		this.cpdUrl = cpdUrl;
 	}
 
 	@Override
