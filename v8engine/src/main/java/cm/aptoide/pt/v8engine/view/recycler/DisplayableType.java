@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -18,7 +18,6 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
@@ -53,6 +52,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
@@ -67,7 +67,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewFlagThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewInstallWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateAndCommentsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewScreenshotsWidget;
@@ -91,6 +91,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStor
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RateAndReviewCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
@@ -157,7 +158,7 @@ public enum DisplayableType {
 
 	APP_VIEW_INSTALL(AppViewInstallWidget.class, AppViewInstallDisplayable.class),
 
-	APP_VIEW_RATE_AND_COMMENTS(AppViewRateAndCommentsWidget.class, AppViewRateAndCommentsDisplayable.class),
+	APP_VIEW_RATE_AND_COMMENTS(AppViewRateAndReviewsWidget.class, AppViewRateAndCommentsDisplayable.class),
 
 	APP_VIEW_FLAG_THIS(AppViewFlagThisWidget.class, AppViewFlagThisDisplayable.class),
 
@@ -171,12 +172,13 @@ public enum DisplayableType {
 
 	APP_VIEW_SUGGESTED_APPS(AppViewSuggestedAppsWidget.class, AppViewSuggestedAppsDisplayable.class),
 
-	OTHER_VERSION(OtherVersionWidget.class, OtherVersionDisplayable.class),;
+	OTHER_VERSION(OtherVersionWidget.class, OtherVersionDisplayable.class),
+	RATE_AND_REVIEW(RateAndReviewCommentWidget.class, RateAndReviewCommentDisplayable.class),;
 
 	private static final String TAG = DisplayableType.class.getName();
 	private static List<Displayable> cachedDisplayables;
 	private Displayable displayable;
-	private Widget widget;
+	//private Widget widget;
 	private Class<? extends Displayable> displayableClass;
 	private Class<? extends Widget> widgetClass;
 
@@ -185,15 +187,7 @@ public enum DisplayableType {
 		this.widgetClass = widgetClass;
 
 		displayable = newDisplayable();
-		widget = newWidget(new View(V8Engine.getContext()));
-
-		if (displayable.getType() == null) {
-			throw new IllegalStateException(String.format("Missing type in Displayable %s", displayableClass.getName()));
-		}
-
-		if (widget.getItemViewType() == 0) {
-			throw new IllegalStateException(String.format("Missing view type in Widget %s", widgetClass.getName()));
-		}
+		//widget = newWidget(new View(V8Engine.getContext()));
 	}
 
 	public static List<Displayable> newDisplayables(Group group) {

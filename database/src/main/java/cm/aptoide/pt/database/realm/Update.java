@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/07/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -30,6 +30,7 @@ public class Update extends RealmObject {
 	public static final String UPDATE_VERSION_NAME = "updateVersionName";
 	public static final String ALTERNATIVE_URL = "alternativeApkPath";
 	public static final String UPDATE_VERSION_CODE = "updateVersionCode";
+	public static final String EXCLUDED = "excluded";
 
 	@PrimaryKey private String packageName;
 	private long appId;
@@ -44,6 +45,7 @@ public class Update extends RealmObject {
 	private String updateVersionName;
 	private String alternativeApkPath;
 	private int updateVersionCode;
+	private boolean excluded;
 
 	// Obb
 	private String mainObbPath;
@@ -220,5 +222,13 @@ public class Update extends RealmObject {
 
 	public void setPatchObbMd5(String patchObbMd5) {
 		this.patchObbMd5 = patchObbMd5;
+	}
+
+	public boolean isExcluded() {
+		return excluded;
+	}
+
+	public void setExcluded(boolean excluded) {
+		this.excluded = excluded;
 	}
 }

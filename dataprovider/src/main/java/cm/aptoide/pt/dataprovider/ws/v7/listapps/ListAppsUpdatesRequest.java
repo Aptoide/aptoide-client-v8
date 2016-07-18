@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.IdsRepository;
@@ -66,10 +65,10 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 		@Cleanup Realm realm = Database.get();
 
-		RealmResults<ExcludedUpdate> excludedUpdates = Database.ExcludedUpdatesQ.getAll(realm);
+		//RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
 		RealmResults<Installed> installeds = Database.InstalledQ.getAll(realm);
 		for (Installed installed : installeds) {
-			if (!Database.ExcludedUpdatesQ.contains(installed.getPackageName(), realm)) {
+			if (!Database.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
 				apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed
 						.getSignature()));
 			}

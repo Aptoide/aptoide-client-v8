@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 11/07/2016.
+  ~ Modified by SithEngineer on 15/07/2016.
   -->
 
 <resources>
@@ -101,5 +101,26 @@
     <string name="social_facebook_screen_title">Facebook</string>
     <string name="social_twitter_screen_title">Twitter</string>
     <string name="top_comments">Top Comments</string>
+    <string name="rate">Rate</string>
+    <string name="rate_app">Rate %s</string>
+    <string name="title">Title</string>
+    <string name="tap_a_star">Tap a star to rate</string>
+    <string name="review">Review</string>
+    <string name="optional">optional</string>
+
+    <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+    <string name="other_versions_on_different_stores">Other versions on different stores</string>
+    <string name="review_optional">Review (optional)</string>
     <string name="feedback_not_valid">Please enter some valid Subject!</string>
+    <string name="thank_you_for_your_opinion">Thank you for your opinion!</string>
+    <string name="ignore_update">Ignore Update</string>
+    <string name="five_numeric">5</string>
+    <string name="four_numeric">4</string>
+    <string name="three_numeric">3</string>
+    <string name="two_numeric">2</string>
+    <string name="one_numeric">1</string>
+    <string name="just_reviews">Just Reviews</string>
+    <string name="downgrading_msg">Downgrading</string>
+    <string name="updating_msg">Updating</string>
+    <string name="installing_msg">Installing</string>
 </resources>

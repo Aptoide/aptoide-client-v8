@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	public static final int SEARCH_LIMIT = 20;
 	private static final String ACTION_KEY = "ACTION";
+	private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
 	private DownloadServiceHelper downloadManager;
 	private DownloadFactory downloadFactory;
 	private SpannableFactory spannableFactory;
@@ -86,31 +88,54 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		if (getAdapter().getItemCount() > 0 && (subscription == null || subscription.isUnsubscribed()) && packages != null) {
-			subscription = getNextDisplayables(packages)
-					.<List<Displayable>>compose(bindUntilEvent(FragmentEvent.PAUSE))
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(displayables -> addDisplayables(displayables), throwable -> throwable.printStackTrace());
-		} else {
-			load(false);
+	public void onSaveInstanceState(Bundle outState) {
+		if (packages != null) {
+			outState.putStringArray(PACKAGE_LIST_KEY, packages.toArray(new String[packages.size()]));
 		}
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
+		super.load(refresh, savedInstanceState);
+
 		if (subscription != null) {
 			subscription.unsubscribe();
 		}
-		subscription = getPackages().flatMap(packages -> Observable.concat(getFreshDisplayables(refresh, packages), getNextDisplayables(packages)))
-				.<List<Displayable>>compose(bindUntilEvent(FragmentEvent.PAUSE))
+
+		final Observable<List<String>> packagesObservable;
+		final Observable<Datalist<Displayable>> displayableObservable;
+		if (refresh) {
+			if (savedInstanceState != null && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
+				packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
+				packagesObservable = Observable.just(packages);
+			} else {
+				packagesObservable = refreshPackages();
+			}
+			displayableObservable = packagesObservable.flatMap(packages ->  Observable.concat(getFreshDisplayables(refresh, packages), getNextDisplayables(packages)));
+		} else {
+
+			if (packages != null) {
+				packagesObservable = Observable.just(packages);
+			} else {
+				packagesObservable = refreshPackages();
+			}
+
+			if (adapter.getItemCount() == 0) {
+				displayableObservable = packagesObservable.flatMap(packages ->  Observable.concat(getFreshDisplayables(refresh, packages), getNextDisplayables(packages)));
+			} else {
+				displayableObservable = packagesObservable.flatMap(packages ->  getNextDisplayables(packages));
+			}
+		}
+
+		subscription = displayableObservable
+				.<Datalist<Displayable>> compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(displayables -> addDisplayables(displayables), throwable -> finishLoading((Throwable) throwable));
+				.subscribe(items -> addItems(items), throwable -> finishLoading((Throwable) throwable));
 	}
 
 	@NonNull
-	private Observable<List<String>> getPackages() {
+	private Observable<List<String>> refreshPackages() {
 		return Observable.concat(packageRepository.getLatestInstalledPackages(5), packageRepository.getRandomInstalledPackages(5))
 				.toList()
 				.doOnNext(packages -> setPackages(packages));
@@ -121,43 +146,50 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@NonNull
-	private Observable<List<Displayable>> getFreshDisplayables(boolean refresh, List<String> packages) {
+	private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh, List<String> packages) {
 		return getDisplayableList(packages, 0, refresh)
 				.doOnNext(item -> getAdapter().clearDisplayables())
-				.doOnNext(item -> finishLoading())
 				.doOnUnsubscribe(() -> finishLoading());
 	}
 
-	private Observable<List<Displayable>> getNextDisplayables(List<String> packages) {
+	private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
 		return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
-				.filter(item -> !isTotal())
-				.filter(item -> !isLoading())
-				.doOnNext(item -> addLoading())
+				.filter(item -> onStartLoadNext())
 				.concatMap(item -> getDisplayableList(packages, getOffset(), false))
 				.delay(1, TimeUnit.SECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
-				.doOnNext(item -> removeLoading())
 				.retryWhen(errors -> errors
 						.delay(1, TimeUnit.SECONDS)
 						.observeOn(AndroidSchedulers.mainThread())
-						.filter(item -> isLoading())
-						.doOnNext(error -> showErrorSnackbar(error)))
+						.filter(error -> onStopLoadNext(error)))
 				.doOnUnsubscribe(() -> removeLoading())
 				.subscribeOn(AndroidSchedulers.mainThread());
 	}
 
+
 	@NonNull
-	private Observable<List<Displayable>> getDisplayableList(List<String> packages, int offset, boolean refresh) {
+	private Observable<Datalist<Displayable>> getDisplayableList(List<String> packages, int offset, boolean refresh) {
 		return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh)
-				.doOnNext(dataList -> setTotal(dataList))
-				.doOnNext(dataList -> setOffset(dataList))
-				.flatMapIterable(dataList -> dataList.getList())
-				.map(card -> cardToDisplayable(card, dateCalculator, spannableFactory, downloadFactory, downloadManager))
-				.toList();
+				.flatMap(datalist -> Observable.just(datalist).flatMapIterable(dataList -> dataList.getList())
+						.map(card -> cardToDisplayable(card, dateCalculator, spannableFactory, downloadFactory, downloadManager))
+						.toList().map(list -> createDisplayableDataList(datalist, list)));
+
+	}
+
+	private Datalist<Displayable> createDisplayableDataList(Datalist<TimelineCard> datalist, List<Displayable> list) {
+		Datalist<Displayable> displayableDataList = new Datalist<>();
+		displayableDataList.setNext(datalist.getNext());
+		displayableDataList.setCount(datalist.getCount());
+		displayableDataList.setLoaded(datalist.isLoaded());
+		displayableDataList.setHidden(datalist.getHidden());
+		displayableDataList.setTotal(datalist.getTotal());
+		displayableDataList.setLimit(datalist.getLimit());
+		displayableDataList.setOffset(datalist.getOffset());
+		displayableDataList.setList(list);
+		return displayableDataList;
 	}
 
 	private void showErrorSnackbar(Throwable error) {
-		removeLoading();
 		@StringRes int errorString;
 		if (ErrorUtils.isNoNetworkConnection(error)) {
 			errorString = R.string.fragment_social_timeline_no_connection;
@@ -171,7 +203,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return offset >= total;
 	}
 
-	private void setOffset(Datalist<TimelineCard> dataList) {
+	private void setOffset(Datalist<Displayable> dataList) {
 		if (dataList != null && dataList.getNext() != 0) {
 			offset = dataList.getNext();
 		}
@@ -181,26 +213,54 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return offset;
 	}
 
-	public void setTotal(Datalist<TimelineCard> dataList) {
+	public void setTotal(Datalist<Displayable> dataList) {
 		if (dataList != null && dataList.getTotal() != 0) {
 			total = dataList.getTotal();
 		}
 	}
 
 	private void addLoading() {
-		this.loading = true;
-		adapter.addDisplayable(new ProgressBarDisplayable());
+		if (!loading) {
+			this.loading = true;
+			adapter.addDisplayable(new ProgressBarDisplayable());
+		}
 	}
 
 	private void removeLoading() {
 		if (loading) {
-			this.loading = false;
+			loading = false;
 			adapter.popDisplayable();
 		}
 	}
 
 	private boolean isLoading() {
 		return loading;
+	}
+
+	private void addItems(Datalist<Displayable> data) {
+		removeLoading();
+		addDisplayables(data.getList());
+		setTotal(data);
+		setOffset(data);
+	}
+
+	@NonNull
+	private boolean onStopLoadNext(Throwable error) {
+		if (isLoading()) {
+			showErrorSnackbar(error);
+			removeLoading();
+			return true;
+		}
+		return false;
+	}
+
+	@NonNull
+	private boolean onStartLoadNext() {
+		if (!isTotal() && !isLoading()) {
+			addLoading();
+			return true;
+		}
+		return false;
 	}
 
 	@NonNull

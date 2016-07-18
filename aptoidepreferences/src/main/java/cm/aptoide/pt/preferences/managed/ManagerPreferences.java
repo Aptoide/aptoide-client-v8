@@ -18,7 +18,23 @@ public class ManagerPreferences {
 		return Preferences.get().getBoolean(ManagedKeys.HWSPECS_FILTER, true);
 	}
 
+	public static int getLastPushNotificationId() {
+		return Preferences.get().getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
+	}
+
+	public static void setLastPushNotificationId(int notificationId) {
+		Preferences.get().edit().putInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, notificationId).apply();
+	}
+
 	public static boolean getAnimationsEnabledStatus() {
 		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);
+	}
+
+	public static boolean isAutoUpdateEnable() {
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.CHECK_AUTO_UPDATE, true);
+	}
+
+	public static boolean isAllwaysUpdate() {
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_ALWAYS_UPDATE, false);
 	}
 }

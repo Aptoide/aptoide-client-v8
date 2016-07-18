@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -102,11 +102,6 @@ public abstract class V8Engine extends DataProvider {
 		long l = System.currentTimeMillis();
 		AptoideUtils.setContext(this);
 
-		if (BuildConfig.DEBUG) {
-			setupStrictMode();
-			Log.w(TAG, "StrictMode setup");
-		}
-
 		super.onCreate();
 
 		if (BuildConfig.DEBUG) {
@@ -147,9 +142,16 @@ public abstract class V8Engine extends DataProvider {
 
 		setupCrashlytics();
 
+		AptoideDownloadManager.getInstance().init(this, new DownloadNotificationActionsActionsInterface(), new DownloadManagerSettingsI());
+
+		// setupCurrentActivityListener();
+
+		if (BuildConfig.DEBUG) {
+			setupStrictMode();
+			Log.w(TAG, "StrictMode setup");
+		}
+
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
-		AptoideDownloadManager.getInstance().init(this, new DownloadNotificationActionsActionsInterface(), new
-						DownloadManagerSettingsI());
 	}
 
 	private void setupCrashlytics() {
@@ -164,6 +166,7 @@ public abstract class V8Engine extends DataProvider {
 	private void loadInstalledApps() {
 		@Cleanup Realm realm = Database.get(this);
 		Database.dropTable(Installed.class, realm);
+		// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
 		List<PackageInfo> installedApps = AptoideUtils.SystemU.getUserInstalledApps();
 		Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
@@ -190,4 +193,63 @@ public abstract class V8Engine extends DataProvider {
 				.penaltyDeath()
 				.build());
 	}
+
+	/*
+	private static final ActivityLifecycleMonitor lifecycleMonitor = new ActivityLifecycleMonitor();
+
+	private FragmentActivity currentActivityV4;
+	private Activity currentActivity;
+
+	private void setupCurrentActivityListener() {
+		registerActivityLifecycleCallbacks(lifecycleMonitor);
+	}
+
+	public static Activity getCurrentActivity() {
+		return lifecycleMonitor.getCurrentActivity();
+	}
+
+	private static class ActivityLifecycleMonitor implements ActivityLifecycleCallbacks {
+
+		private Activity currentActivity = null;
+
+		@Override
+		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+		}
+
+		@Override
+		public void onActivityStarted(Activity activity) {
+
+		}
+
+		@Override
+		public void onActivityResumed(Activity activity) {
+			currentActivity = activity;
+		}
+
+		@Override
+		public void onActivityPaused(Activity activity) {
+
+		}
+
+		@Override
+		public void onActivityStopped(Activity activity) {
+
+		}
+
+		@Override
+		public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+		}
+
+		@Override
+		public void onActivityDestroyed(Activity activity) {
+
+		}
+
+		public Activity getCurrentActivity() {
+			return currentActivity;
+		}
+	}
+	*/
 }

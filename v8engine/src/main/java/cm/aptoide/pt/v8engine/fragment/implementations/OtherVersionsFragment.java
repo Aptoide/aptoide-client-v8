@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 11/07/2016.
+ * Modified by SithEngineer on 13/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -82,14 +82,14 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		Logger.d(TAG, "Other versions should refresh? " + refresh);
 
 		fetchOtherVersions();
 
 		if (header != null) {
 			header.setImage(appImgUrl);
-			//				header.setTitle(appName);
+			setTitle(appName);
 		}
 	}
 
@@ -125,7 +125,13 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 		if (toolbar != null) {
 			ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 			bar.setDisplayHomeAsUpEnabled(true);
-			bar.setTitle(R.string.other_versions);
+		}
+	}
+
+	private void setTitle(String title) {
+		if (toolbar != null) {
+			ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+			bar.setTitle(title);
 		}
 	}
 
@@ -174,6 +180,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 		private final boolean animationsEnabled;
 
 		// views
+		private final TextView otherVersionsTitle;
 		private final AppBarLayout appBarLayout;
 		private final CollapsingToolbarLayout collapsingToolbar;
 		private final ImageView appIcon;
@@ -181,10 +188,9 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 		private final SpannableString composedTitle1;
 		private final SpannableString composedTitle2;
 
-		private SpannableString title;
-
 		// ctor
 		public ViewHeader(@NonNull View view) {
+
 
 			composedTitle1 = new SpannableString(view.getResources().getString(R.string.other_versions_partial_title_1));
 			composedTitle1.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle1.length(), 0);
@@ -194,6 +200,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
 			animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
 
+			otherVersionsTitle = (TextView) view.findViewById(R.id.other_versions_title);
 			appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
 			collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
 			appIcon = (ImageView) view.findViewById(R.id.app_icon);
@@ -209,12 +216,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 							} else {
 								appIcon.setVisibility(View.VISIBLE);
 							}
-
-							//							SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
-							//							stringBuilder.append(composedTitle1);
-							//							stringBuilder.append(title);
-							//							stringBuilder.append(composedTitle2);
-							//							collapsingToolbar.setTitle(stringBuilder);
+							otherVersionsTitle.setVisibility(View.VISIBLE);
 							break;
 						}
 						default:
@@ -225,7 +227,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 							} else {
 								appIcon.setVisibility(View.INVISIBLE);
 							}
-							//							collapsingToolbar.setTitle(title);
+							otherVersionsTitle.setVisibility(View.INVISIBLE);
 							break;
 						}
 					}
@@ -235,15 +237,6 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
 		private void setImage(String imgUrl) {
 			ImageLoader.load(imgUrl, appIcon);
-		}
-
-		private void setTitle(String title) {
-			SpannableString titleSpan = new SpannableString(title);
-			titleSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, titleSpan.length(), 0);
-			this.title = titleSpan;
-
-			collapsingToolbar.setTitle(titleSpan);
-
 		}
 	}
 }

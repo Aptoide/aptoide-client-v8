@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
+
+import android.os.Bundle;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
@@ -43,7 +45,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		fetchUpdates();
 		fetchInstalled();
 	}
@@ -64,7 +66,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 	private void fetchUpdates() {
 		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-			updatesSubscription = Database.UpdatesQ.getAll(realm)
+			updatesSubscription = Database.UpdatesQ.getAll(realm, false)
 					.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.observeOn(AndroidSchedulers.mainThread())
@@ -103,7 +105,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 						RealmResults<Installed> all = realmResults;
 						for (int i = all.size() - 1; i >= 0; i--) {
-							if (!Database.UpdatesQ.contains(all.get(i).getPackageName(), realm)) {
+							if (!Database.UpdatesQ.contains(all.get(i).getPackageName(), false, realm)) {
 								installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
 							}
 						}

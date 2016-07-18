@@ -22,7 +22,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Looper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
@@ -663,10 +662,6 @@ public class AptoideUtils {
 
 		public static String getApkIconPath(PackageInfo packageInfo) {
 			return "android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon;
-		}
-
-		public static String getDownloadFolderPath() {
-			return Environment.getExternalStorageDirectory().getAbsolutePath() + "/.aptoide/";
 		}
 
 		public static void openApp(String packageName) {

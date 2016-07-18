@@ -26,7 +26,7 @@ public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragmentWith
 
 	@Override
 	public void reload() {
-		load(true);
+		load(true, null);
 	}
 
 	@Override

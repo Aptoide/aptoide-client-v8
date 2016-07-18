@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.os.Bundle;
+
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
@@ -29,7 +31,7 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 
 		Observable<RealmResults<Store>> realmResultsObservable = Database.StoreQ.getAll(realm).asObservable();
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/06/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -69,8 +69,10 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
 
 		public SuggestedAppExtraInfo(View view) {
 			extraInfoLayout = view.findViewById(R.id.extra_info_layout);
-			badge = (ImageView) extraInfoLayout.findViewById(R.id.app_badge);
-			text = (TextView) extraInfoLayout.findViewById(R.id.app_badge_text);
+			if (extraInfoLayout != null) {
+				badge = (ImageView) extraInfoLayout.findViewById(R.id.app_badge);
+				text = (TextView) extraInfoLayout.findViewById(R.id.app_badge_text);
+			}
 		}
 
 		public void bindView(GetApp getApp) {

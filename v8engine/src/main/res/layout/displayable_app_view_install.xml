@@ -2,7 +2,7 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 07/07/2016.
+  ~ Modified by SithEngineer on 15/07/2016.
   -->
 
 <LinearLayout
@@ -106,7 +106,7 @@
 
         <LinearLayout
             android:id="@+id/latestversion_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
@@ -194,7 +194,7 @@
 
         <Button
             android:id="@+id/btn_get_latest"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:layout_marginLeft="4dp"
@@ -211,7 +211,7 @@
 
         <Button
             android:id="@+id/btn_uninstall"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:layout_marginLeft="4dp"
@@ -229,7 +229,7 @@
         <Button
             android:id="@+id/btn_install"
             style="?attr/customButton"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"

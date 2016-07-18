@@ -8,6 +8,7 @@ package cm.aptoide.pt;
 import android.os.Environment;
 
 import cm.aptoide.pt.preferences.AptoideConfiguration;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 
 /**
  * Created by neuro on 10-05-2016.
@@ -103,5 +104,15 @@ public class VanillaConfiguration implements AptoideConfiguration {
 	@Override
 	public String getPartnerId() {
 		return null;
+	}
+
+	@Override
+	public String getExtraId() {
+		return null;
+	}
+
+	@Override
+	public boolean isAlwaysUpdate() {
+		return ManagerPreferences.isAllwaysUpdate();
 	}
 }

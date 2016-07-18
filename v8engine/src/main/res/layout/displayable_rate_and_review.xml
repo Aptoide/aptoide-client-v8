@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 15/07/2016.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="157dp"
+    android:orientation="vertical"
+    >
+
+    <!--
+        app:layout_anchor="@id/app_bar"
+    -->
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/user_icon"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        app:layout_anchorGravity="bottom|left|start"
+        app:riv_corner_radius="15dp"
+        tools:src="@color/red_700"
+        />
+
+</RelativeLayout>

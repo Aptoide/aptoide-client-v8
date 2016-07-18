@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by pedroribeiro on 11/07/2016.
+  ~ Modified by SithEngineer on 13/07/2016.
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -282,10 +282,8 @@
     </style>
 
     <style name="OtherVersionsHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/medium_custom_gray</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/appview_title_text_size</item>
-        <item name="android:maxLines">3</item>
-        <item name="android:minLines">2</item>
     </style>
 
     <style name="RollBackSectionTextViewStyle" parent="@android:style/Widget.TextView">
@@ -423,13 +421,8 @@
         <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
         <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>
         <item name="android:paddingLeft">@dimen/appview_side_margin</item>
-        <item name="android:paddingStart">@dimen/appview_side_margin</item>
         <item name="android:paddingRight">@dimen/appview_side_margin</item>
-        <item name="android:paddingEnd">@dimen/appview_side_margin</item>
     </style>
-
-    <dimen name="appview_side_margin">8dp</dimen>
-
 
     <style name="ToolbarGrey" parent="@style/Theme.AppCompat">
         <item name="pstsIndicatorColor">@color/grey</item>

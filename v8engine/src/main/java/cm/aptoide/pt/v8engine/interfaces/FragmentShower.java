@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.interfaces;
@@ -12,6 +12,13 @@ public interface FragmentShower {
 	void pushFragment(android.app.Fragment fragment);
 	void pushFragmentV4(android.support.v4.app.Fragment fragment);
 
-	android.support.v4.app.Fragment getCurrent();
 	void popFragment();
+
+	android.support.v4.app.Fragment getCurrentV4();
+
+	android.app.Fragment getCurrent();
+
+	android.support.v4.app.Fragment getLastV4();
+
+	android.app.Fragment getLast();
 }

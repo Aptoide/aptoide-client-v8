@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.receivers;
@@ -63,19 +63,19 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void onPackageAdded(String packageName) {
+	protected void onPackageAdded(String packageName) {
 		Log.d(TAG, "Package added: " + packageName);
 
 		databaseOnPackageAdded(packageName);
 	}
 
-	private void onPackageReplaced(String packageName) {
+	protected void onPackageReplaced(String packageName) {
 		Log.d(TAG, "Packaged replaced: " + packageName);
 
 		databaseOnPackageReplaced(packageName);
 	}
 
-	private void onPackageRemoved(String packageName) {
+	protected void onPackageRemoved(String packageName) {
 		Log.d(TAG, "Packaged removed: " + packageName);
 
 		databaseOnPackageRemoved(packageName);

@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by pedroribeiro on 11/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -13,10 +12,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,7 +71,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//
 	private static final String TAG = AppViewFragment.class.getSimpleName();
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
-	private static FragmentActivity fragmentActivity;
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -158,7 +156,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		GetAppRequest.of(appId).execute(getApp -> {
 			if (minimalAd == null) {
 				GetAdsRequest.ofAppview(getApp.getNodes().getMeta().getData().getPackageName(), getApp.getNodes().getMeta().getData().getStore().getName())
@@ -246,7 +244,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 			// TODO
 			return true;
-
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -262,12 +259,16 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 	@Override
 	public void scroll(Position position) {
+		RecyclerView rView = getRecyclerView();
+		if (rView == null || getAdapter().getItemCount() == 0) {
+			Logger.e(TAG, "Recycler view is null or there are no elements in the adapter");
+			return;
+		}
+
 		if (position == Position.FIRST) {
-			Logger.d(TAG, "scrolling to first position");
-			getRecyclerView().smoothScrollToPosition(0);
+			rView.smoothScrollToPosition(0);
 		} else if (position == Position.LAST) {
-			Logger.d(TAG, "scrolling to last position");
-			getRecyclerView().smoothScrollToPosition(getAdapter().getItemCount());
+			rView.smoothScrollToPosition(getAdapter().getItemCount());
 		}
 	}
 
@@ -288,12 +289,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void itemChanged(int pos) {
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		fragmentActivity = (FragmentActivity) activity;
-		super.onAttach(activity);
 	}
 
 	@Override
@@ -439,7 +434,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			ImageLoader.load(badgeResId, badge);
 			badgeText.setText(badgeMessageId);
 		}
-
 	}
 }
 

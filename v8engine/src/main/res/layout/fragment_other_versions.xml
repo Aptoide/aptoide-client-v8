@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 08/07/2016.
+  ~ Modified by SithEngineer on 15/07/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -76,21 +76,17 @@
         android:layout_height="@dimen/other_versions_header_height"
         android:fitsSystemWindows="true"
         >
-
-        <!--
-            app:contentScrim="@color/black"
-        -->
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
             android:fitsSystemWindows="true"
-            android:textColor="@color/medium_custom_gray"
+            android:textColor="@color/black"
             android:textSize="@dimen/appview_title_text_size"
-            app:expandedTitleMarginBottom="50dp"
-            app:expandedTitleMarginEnd="@dimen/appview_title_right_margin"
-            app:expandedTitleMarginStart="@dimen/appview_title_left_margin"
+            app:expandedTitleMarginBottom="@dimen/other_versions_title_bottom_margin"
+            app:expandedTitleMarginEnd="@dimen/other_versions_title_right_margin"
+            app:expandedTitleMarginStart="@dimen/other_versions_title_left_margin"
             app:expandedTitleTextAppearance="@style/OtherVersionsHeaderTextAppView"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             >
@@ -108,11 +104,29 @@
                     android:layout_height="@dimen/other_version_header_app_image_size"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_margin="@dimen/appview_header_bottom_margin"
+                    android:layout_marginBottom="@dimen/appview_header_bottom_margin"
+                    android:layout_marginEnd="@dimen/appview_header_bottom_margin"
+                    android:layout_marginLeft="@dimen/appview_header_bottom_margin"
+                    android:layout_marginRight="@dimen/appview_header_bottom_margin"
+                    android:layout_marginStart="@dimen/appview_header_bottom_margin"
                     app:layout_anchor="@id/app_bar"
                     app:layout_anchorGravity="bottom|left|start"
                     app:riv_corner_radius="15dp"
                     tools:src="@color/red_700"
+                    />
+
+                <TextView
+                    android:id="@+id/other_versions_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="118dp"
+                    android:layout_toRightOf="@id/app_icon"
+                    android:lines="1"
+                    android:text="@string/other_versions_on_different_stores"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="italic"
                     />
 
             </RelativeLayout>

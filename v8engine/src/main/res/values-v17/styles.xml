@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 13/07/2016.
+  -->
+
+<resources>
+
+    <style name="AppViewWidget">
+        <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>
+        <item name="android:paddingLeft">@dimen/appview_side_margin</item>
+        <item name="android:paddingStart">@dimen/appview_side_margin</item>
+        <item name="android:paddingRight">@dimen/appview_side_margin</item>
+        <item name="android:paddingEnd">@dimen/appview_side_margin</item>
+    </style>
+</resources>

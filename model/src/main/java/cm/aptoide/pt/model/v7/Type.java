@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 06/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -62,8 +62,8 @@ public enum Type {
 
 	// Progress
 	PROGRESS_DISPLAYABLE,
-	OTHER_VERSION
-	;
+	OTHER_VERSION,
+	RATE_AND_REVIEW;
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 

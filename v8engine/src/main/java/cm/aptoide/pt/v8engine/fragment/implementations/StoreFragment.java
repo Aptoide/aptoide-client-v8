@@ -122,7 +122,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (refresh) {
 			GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
 				this.getStore = getStore;
@@ -171,7 +171,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 		if (requestCode == PRIVATE_STORE_REQUEST_CODE) {
 			switch (resultCode) {
 				case Activity.RESULT_OK:
-					load(true);
+					load(true, null);
 					break;
 			}
 		}

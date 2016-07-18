@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -39,7 +39,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (refresh) {
 			clearDisplayables();
 		} else {
@@ -103,7 +103,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 		finishLoading();
 	}
 
-	private void clearDisplayables() {
+	public void clearDisplayables() {
 		this.displayables.clear();
 		adapter.clearDisplayables();
 	}

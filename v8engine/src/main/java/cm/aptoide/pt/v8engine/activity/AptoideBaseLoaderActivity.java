@@ -25,7 +25,7 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity impl
 	protected void onCreate(Bundle savedInstanceState) {
 		loaderLayoutHandler = createLoaderLayoutHandler();
 		super.onCreate(savedInstanceState);
-		load(true);
+		load(true, savedInstanceState);
 	}
 
 	@Override
@@ -49,5 +49,5 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity impl
 	@IdRes
 	protected abstract int getViewToShowAfterLoadingId();
 
-	public abstract void load(boolean refresh);
+	public abstract void load(boolean refresh, Bundle savedInstanceState);
 }

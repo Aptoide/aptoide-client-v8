@@ -55,4 +55,9 @@ public interface AptoideConfiguration {
 	 * @return partner id. null for vanilla.
 	 */
 	String getPartnerId();
+
+	//OEM extra id
+	String getExtraId();
+
+	boolean isAlwaysUpdate();
 }
