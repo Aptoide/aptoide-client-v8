@@ -17,6 +17,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import io.realm.Realm;
 
 /**
@@ -87,6 +88,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
 		if (rollback != null) {
 			confirmAction(packageName, Rollback.Action.INSTALL);
+			ReferrerUtils.broadcastReferrer(packageName, rollback.getReferrer());
 		}
 	}
 
