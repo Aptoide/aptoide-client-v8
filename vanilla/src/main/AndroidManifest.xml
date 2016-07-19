@@ -30,6 +30,11 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator"/>
         </service>
+
+        <provider
+            android:exported="true"
+            android:authorities="${toolboxProviderAuthority}"
+            android:name="cm.aptoide.pt.v8engine.toolbox.ToolboxContentProvider"/>
     </application>
 
 </manifest>

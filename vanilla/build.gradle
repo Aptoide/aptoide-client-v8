@@ -66,6 +66,7 @@ android {
         proguardFile 'proguard-rules.pro'
         proguardFile getDefaultProguardFile('proguard-android.txt')
         testProguardFile 'proguard-test-rules.pro'
+        manifestPlaceholders = [ toolboxProviderAuthority:"cm.aptoide.pt.StubProvider"]
     }
 
     lintOptions {
@@ -88,6 +89,7 @@ android {
             versionName "8.0.0." + getDate()
             versionCode getNextVersionCode("../../aptoideProperties/version.properties", "NIGHTLY_VERSION_CODE")
             resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
+            manifestPlaceholders = [ toolboxProviderAuthority:"cm.aptoide.pt.StubProvider.dev"]
         }
 
         prod {

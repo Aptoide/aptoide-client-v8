@@ -56,11 +56,6 @@
         </receiver>
 
         <provider
-            android:exported="true"
-            android:authorities="cm.aptoide.pt.StubProvider"
-            android:name=".toolbox.ToolboxContentProvider"/>
-
-        <provider
             android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
             android:authorities="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
             android:exported="false"/>
