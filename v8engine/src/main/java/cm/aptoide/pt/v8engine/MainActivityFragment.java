@@ -35,7 +35,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		if (savedInstanceState == null) {
 			startService(new Intent(this, PullingContentService.class));
 			if (ManagerPreferences.isAutoUpdateEnable()) {
-				new AutoUpdate(this, new InstallManager()).execute();
+				new AutoUpdate(this, new InstallManager(getPackageManager())).execute();
 			}
 			if(SecurePreferences.isFirstRun()){
 				pushFragmentV4(new BaseWizardViewerFragment());

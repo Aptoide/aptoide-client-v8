@@ -17,12 +17,15 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
@@ -41,6 +44,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	private Subscription installedSubscription;
 	private Subscription updatesSubscription;
 	private InstallManager installManager;
+	private DownloadServiceHelper downloadManager;
+	private DownloadFactory downloadFactory;
 
 	public static UpdatesFragment newInstance() {
 		UpdatesFragment fragment = new UpdatesFragment();
@@ -50,7 +55,9 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		installManager = new InstallManager();
+		installManager = new InstallManager(getContext().getPackageManager());
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
+		downloadFactory = new DownloadFactory();
 	}
 
 	@Override
@@ -91,7 +98,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
-									updatesDisplayablesList.add(UpdateDisplayable.create(update, installManager));
+									updatesDisplayablesList.add(UpdateDisplayable.create(update, installManager, downloadManager, downloadFactory));
 								}
 							}
 

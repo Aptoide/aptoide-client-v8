@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -26,6 +28,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.Subscription;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -39,6 +42,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	private TextView installedVernameTextView;
 	private TextView updateVernameTextView;
 	private ViewGroup updateButtonLayout;
+	private Subscription subscription;
 
 	public UpdateWidget(View itemView) {
 		super(itemView);
@@ -68,14 +72,13 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
 
-		updateButtonLayout.setOnClickListener(view -> {
-			new DownloadServiceHelper(AptoideDownloadManager.getInstance()).startDownload(new DownloadFactory().create(updateDisplayable))
-					.subscribe(download -> {
-				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-					updateDisplayable.install(view.getContext(), download.getFilesToDownload().get(0));
-				}
-			});
-		});
+		if (subscription != null) {
+			subscription.unsubscribe();
+		}
+
+		subscription = RxView.clicks(updateButtonLayout)
+				.flatMap(click -> updateDisplayable.install(getContext()))
+				.subscribe();
 
 		updateRowRelativeLayout.setOnLongClickListener(v -> {
 			AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());

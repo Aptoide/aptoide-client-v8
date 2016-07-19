@@ -134,7 +134,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		installManager = new InstallManager();
+		installManager = new InstallManager(getContext().getPackageManager());
 	}
 
 	private void setupObservables(GetApp getApp) {

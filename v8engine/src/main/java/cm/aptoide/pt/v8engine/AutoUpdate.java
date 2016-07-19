@@ -113,7 +113,9 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 			dialog.show();
 			DownloadFactory downloadFactory = new DownloadFactory();
 			DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
-			downloadServiceHelper.startDownload(downloadFactory.create(autoUpdateInfo)).subscribe(download -> {
+			downloadServiceHelper.startDownload(downloadFactory.create(autoUpdateInfo))
+
+					.subscribe(download -> {
 				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 					if (activity.is_resumed() && this.dialog.isShowing()) {
 						this.dialog.dismiss();
@@ -124,7 +126,7 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 							File apk = new File(download.getFilesToDownload().get(0).getFilePath());
 							String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
 							if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-								installManager.install(activity, new File(download.getFilesToDownload().get(0).getFilePath()));
+								installManager.install(activity, new File(download.getFilesToDownload().get(0).getFilePath())).toBlocking().subscribe();
 							} else {
 								Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
 								throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);

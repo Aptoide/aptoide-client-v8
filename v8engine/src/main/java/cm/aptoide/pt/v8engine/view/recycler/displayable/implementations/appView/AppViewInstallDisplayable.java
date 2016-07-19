@@ -9,13 +9,14 @@ import android.content.Context;
 
 import java.io.File;
 
-import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import lombok.Getter;
 import lombok.Setter;
+import rx.Observable;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -44,12 +45,17 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		this.cpdUrl = cpdUrl;
 	}
 
-	public void install(Context context, FileToDownload file) {
-		installManager.install(context, new File(file.getFilePath()));
+	public Observable<Void> install(Context context, File file) {
+		return installManager.install(context, file);
 	}
 
-	public void uninstall(Context context, String packageName) {
-		installManager.uninstall(context, packageName);
+	public Observable<Void> uninstall(Context context, String packageName) {
+		return installManager.uninstall(context, packageName);
+	}
+
+	public Observable<Void> downgrade(Context context, String uninstallPackage, File installFile) {
+		return Observable.concat(uninstall(context, uninstallPackage),
+				install(context, installFile));
 	}
 
 	@Override

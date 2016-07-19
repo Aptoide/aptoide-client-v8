@@ -10,8 +10,10 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.io.File;
 
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -41,7 +45,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.receivers.InstalledBroadcastReceiver;
+import cm.aptoide.pt.v8engine.install.InstalledBroadcastReceiver;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
@@ -50,7 +54,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.Observable;
 import rx.functions.Action0;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -164,11 +171,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	private boolean isLatestAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
 		return appVersions != null && !appVersions.getList().isEmpty() &&
-				(app.getFile().getVercode() < appVersions
-						.getList()
-						.get(0)
-						.getFile()
-						.getVercode());
+				(app.getFile().getVercode() < appVersions.getList().get(0).getFile().getVercode());
 	}
 
 	//private static class Listeners {
@@ -285,24 +288,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(v.getContext(), download.getFilesToDownload().get(0));
-
-							IntentFilter intentFilter = new IntentFilter();
-							intentFilter.addAction(Intent.ACTION_INSTALL_PACKAGE);
-							intentFilter.addDataScheme("package");
-							getContext().registerReceiver(new InstalledBroadcastReceiver() {
-								@Override
-								protected void onPackageAdded(String installedPackageName) {
-									super.onPackageAdded(installedPackageName);
-									if (TextUtils.equals(installedPackageName, packageName) && actionButton.getVisibility() == View.VISIBLE) {
-										actionButton.setText(R.string.open);
-										// FIXME: 20/07/16 sithengineer refactor this ugly code
-										((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-											new Listeners().newUninstallListener(itemView, app.getPackageName(), displayable).call();
-										});
-									}
-								}
-							}, intentFilter);
+							displayable.install(v.getContext(), new File(download.getFilesToDownload().get(0).getFilePath()))
+									.subscribe(success -> {
+										if (actionButton.getVisibility() == View.VISIBLE) {
+											actionButton.setText(R.string.open);
+											// FIXME: 20/07/16 sithengineer refactor this ugly code
+											((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
+												new Listeners().newUninstallListener(itemView, app.getPackageName(), displayable).call();
+											});
+										}
+									});
 							break;
 						}
 					}
@@ -338,24 +333,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
 						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 							final String appPackageName = app.getPackageName();
-
-							// register a broadcast listener for package removal
-							// to install new package
-							IntentFilter intentFilter = new IntentFilter();
-							intentFilter.addAction(Intent.ACTION_UNINSTALL_PACKAGE);
-							intentFilter.addDataScheme("package");
-							context.registerReceiver(new InstalledBroadcastReceiver() {
-								@Override
-								protected void onPackageRemoved(String packageName) {
-									super.onPackageRemoved(packageName);
-									if (packageName.equalsIgnoreCase(appPackageName)) {
-										displayable.install(context, download.getFilesToDownload().get(0));
-									}
-								}
-							}, intentFilter);
-
-							// ask for package removal
-							displayable.uninstall(view.getContext(), appPackageName);
+							displayable.downgrade(view.getContext(), appPackageName, new File(download.getFilesToDownload().get(0).getFilePath())).subscribe();
 						}
 					});
 				}, () -> {
@@ -379,7 +357,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		private Action0 newUninstallListener(View itemView, String packageName, AppViewInstallDisplayable displayable) {
 			return () -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUninstallAction(packageName));
-				displayable.uninstall(itemView.getContext(), packageName);
+				displayable.uninstall(itemView.getContext(), packageName).subscribe();
 			};
 		}
 	}

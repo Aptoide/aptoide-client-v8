@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -54,7 +55,7 @@ public class DownloadFactory {
 		return download;
 	}
 
-	public Download create(UpdateDisplayable updateDisplayable) {
+	public Download create(Update updateDisplayable) {
 		validateApp(updateDisplayable.getAppId(), null, updateDisplayable.getPackageName(), updateDisplayable.getLabel(), updateDisplayable.getApkPath(),
 				updateDisplayable
 				.getAlternativeApkPath());

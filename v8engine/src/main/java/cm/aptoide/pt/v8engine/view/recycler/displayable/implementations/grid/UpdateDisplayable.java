@@ -9,14 +9,18 @@ import android.content.Context;
 
 import java.io.File;
 
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import rx.Observable;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -40,18 +44,23 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private String patchObbMd5;
 
 	private InstallManager installManager;
+	private DownloadServiceHelper downloadServiceHelper;
+	private Download download;
 
 	public UpdateDisplayable() {
 	}
 
-	public static UpdateDisplayable create(Update update, InstallManager installManager) {
+	public static UpdateDisplayable create(Update update, InstallManager installManager, DownloadServiceHelper downloadServiceHelper, DownloadFactory
+			downloadFactory) {
 		return new UpdateDisplayable(update.getPackageName(),update.getAppId(), update.getLabel(), update.getIcon(), update.getMd5(), update.getApkPath(),
 				update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
-				update.getPatchObbMd5(), installManager);
+				update.getPatchObbMd5(), installManager, downloadServiceHelper, downloadFactory.create(update));
 	}
 
-	public void install(Context context, FileToDownload file) {
-		installManager.install(context, new File(file.getFilePath()));
+	public Observable<Void> install(Context context) {
+		return downloadServiceHelper.startDownload(download)
+				.last()
+				.flatMap(download -> installManager.install(context, new File(download.getFilesToDownload().get(0).getPath())));
 	}
 
 	@Override
