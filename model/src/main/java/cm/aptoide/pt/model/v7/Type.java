@@ -63,7 +63,11 @@ public enum Type {
 	// Progress
 	PROGRESS_DISPLAYABLE,
 	OTHER_VERSION,
-	RATE_AND_REVIEW;
+	RATE_AND_REVIEW,
+
+	//Download tab
+	ACTIVE_DOWNLOAD,
+	COMPLETED_DOWNLOAD;
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 

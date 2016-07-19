@@ -16,6 +16,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
@@ -81,6 +82,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 				return SubscribedStoresFragment.newInstance();
 			case myUpdates:
 				return UpdatesFragment.newInstance();
+			case myDownloads:
+				return DownloadsFragment.newInstance();
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.
 				throw new RuntimeException("Fragment type not implemented!");

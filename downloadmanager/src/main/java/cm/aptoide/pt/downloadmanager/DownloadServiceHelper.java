@@ -86,7 +86,7 @@ public class DownloadServiceHelper {
 	 * @return an observable with all downloads in database
 	 */
 	public Observable<List<Download>> getAllDownloads() {
-		return aptoideDownloadManager.getCurrentDownloads();
+		return aptoideDownloadManager.getDownloads();
 	}
 
 	/**

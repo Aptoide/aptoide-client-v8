@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 
 /**
  * Created by trinkes on 6/28/16.
@@ -29,7 +30,7 @@ public class DownloadManagerSettingsI implements DownloadSettingsInterface {
 
 	@Override
 	public long getMaxCacheSize() {
-		return 81920;
+		return ManagerPreferences.getCacheLimit();
 	}
 
 	@NonNull

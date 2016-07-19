@@ -42,6 +42,7 @@ public class Event {
 		myScheduledDownloads,
 		myRollbacks,
 		getAds,
+		myDownloads,
 
 		// Displays
 		facebook,

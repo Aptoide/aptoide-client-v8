@@ -37,4 +37,16 @@ public class ManagerPreferences {
 	public static boolean isAllwaysUpdate() {
 		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_ALWAYS_UPDATE, false);
 	}
+
+	public static int getLastUpdates() {
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getInt(ManagedKeys.LAST_UPDATES_KEY, 0);
+	}
+
+	public static void setLastUpdates(int lastUpdates) {
+		Preferences.get().edit().putInt(ManagedKeys.LAST_UPDATES_KEY, lastUpdates).apply();
+	}
+
+	public static int getCacheLimit() {
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getInt(ManagedKeys.MAX_FILE_CACHE, 200);
+	}
 }
