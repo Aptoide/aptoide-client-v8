@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -39,10 +40,13 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
@@ -58,12 +62,15 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import io.realm.Realm;
+import lombok.Cleanup;
 import lombok.Getter;
+import rx.functions.Action0;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment implements Scrollable {
+public class AppViewFragment extends GridRecyclerFragment implements Scrollable, AppMenuOptions {
 
 	public static final int VIEW_ID = R.layout.fragment_app_view;
 
@@ -81,6 +88,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
+	private Scheduled scheduled;
 	private String storeTheme;
 	//
 	// static fragment default new instance method
@@ -88,6 +96,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	private MinimalAd minimalAd;
 	// Stored to postpone ads logic
 	private AppViewInstallDisplayable appViewInstallDisplayable;
+
+	private Action0 unInstallAction;
+	private MenuItem uninstallMenuItem;
+
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -116,6 +128,16 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		fragment.setArguments(bundle);
 
 		return fragment;
+	}
+
+	public static long sumFileSizes(long fileSize, Obb obb) {
+		if (obb == null || obb.getMain() == null) {
+			return fileSize;
+		} else if (obb.getPatch() == null) {
+			return fileSize + obb.getMain().getFilesize();
+		} else {
+			return fileSize + obb.getMain().getFilesize() + obb.getPatch().getFilesize();
+		}
 	}
 
 	private void setupObservables(GetApp getApp) {
@@ -180,6 +202,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			if (storeTheme == null) {
 				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 			}
+
+			// useful data for the schedule updates menu option
+			GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+			scheduled = new Scheduled(app);
+
 			header.setup(getApp);
 			setupDisplayables(getApp);
 			setupObservables(getApp);
@@ -195,7 +222,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void setupViews() {
 		super.setupViews();
-//		this.showAppInfo();
+		//		this.showAppInfo();
 
 		final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
 		ActionBar supportActionBar = parentActivity.getSupportActionBar();
@@ -225,6 +252,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_appview_fragment, menu);
 		SearchUtils.setupGlobalSearchView(menu, getActivity());
+		uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
 	}
 
 	@Override
@@ -232,18 +260,26 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		int i = item.getItemId();
 
 		if (i == android.R.id.home) {
+
 			getActivity().onBackPressed();
 			return true;
 		} else if (i == R.id.menu_share) {
+
 			ShowMessage.asSnack(item.getActionView(), "TO DO");
-
-			// TODO
-
+			// TODO: 19/07/16 sithengineer
 			return true;
 		} else if (i == R.id.menu_schedule) {
-			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
-			// TODO
+			@Cleanup
+			Realm realm = Database.get();
+			realm.beginTransaction();
+			realm.copyToRealmOrUpdate(scheduled);
+			realm.commitTransaction();
+
+			ShowMessage.asSnack(item.getActionView(), R.string.added_to_scheduled);
+			return true;
+		} else if (i == R.id.menu_uninstall && unInstallAction != null) {
+			unInstallAction.call();
 			return true;
 		}
 
@@ -257,6 +293,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
+
+	//
+	// Scrollable interface
+	//
 
 	@Override
 	public void scroll(Position position) {
@@ -273,10 +313,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		}
 	}
 
-	//
-	// Scrollable interface
-	//
-
 	@Override
 	public void itemAdded(int pos) {
 		getLayoutManager().onItemsAdded(getRecyclerView(), pos, 1);
@@ -292,6 +328,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
+	//
+	// micro widget for header
+	//
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -300,10 +340,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			header.getAppBarLayout().setExpanded(isExpanded);
 		}
 	}
-
-	//
-	// micro widget for header
-	//
 
 	@Override
 	public void onPause() {
@@ -314,6 +350,12 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
 					.getVisibility() == View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
+		this.unInstallAction = unInstallAction;
+		uninstallMenuItem.setVisible(unInstallAction != null);
 	}
 
 	private enum BundleKeys {
@@ -406,7 +448,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 				}
 			});
 
-			fileSize.setText(String.format(Locale.ROOT, "%d", app.getFile().getFilesize()));
+			fileSize.setText(AptoideUtils.StringU.formatBits(sumFileSizes(app.getSize(), app.getObb())));
 
 			downloadsCount.setText(String.format(Locale.ROOT, "%d", app.getStats().getDownloads()));
 

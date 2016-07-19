@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
@@ -30,11 +31,13 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
+import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.InstalledBroadcastReceiver;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -45,6 +48,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.functions.Action0;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -52,23 +56,20 @@ import lombok.Cleanup;
 @Displayables({AppViewInstallDisplayable.class})
 public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
+	private RelativeLayout downloadProgressLayout;
+	private LinearLayout installAndLatestVersionLayout;
+
 	//
 	// downloading views
 	//
-	private RelativeLayout downloadProgressLayout;
-	private CheckBox btinstallshare;
+	private CheckBox shareInTimeline;
 	private ProgressBar downloadProgress;
 	private TextView textProgress;
 	private ImageView actionResume;
 	private ImageView actionCancel;
 
-	//
-	// to (un)install views
-	//
-	private LinearLayout latestVersionLayout;
-	private Button getLatestButton;
-	private Button uninstallButton;
-	private Button installButton;
+	// get app, upgrade and downgrade button
+	private Button actionButton;
 
 	// app info
 	private TextView versionName;
@@ -82,22 +83,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
-		// bind "download" views
 		downloadProgressLayout = (RelativeLayout) itemView.findViewById(R.id.download_progress_layout);
-		btinstallshare = (CheckBox) itemView.findViewById(R.id.btinstallshare);
-		downloadProgress = (ProgressBar) itemView.findViewById(R.id.downloading_progress);
+		installAndLatestVersionLayout = (LinearLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
+		shareInTimeline = (CheckBox) itemView.findViewById(R.id.share_in_timeline);
+		downloadProgress = (ProgressBar) itemView.findViewById(R.id.download_progress);
 		textProgress = (TextView) itemView.findViewById(R.id.text_progress);
-
-		actionResume = (ImageView) itemView.findViewById(R.id.ic_action_resume);
+		actionResume = (ImageView) itemView.findViewById(R.id.ic_action_pause_resume);
 		actionCancel = (ImageView) itemView.findViewById(R.id.ic_action_cancel);
-
-		// bind "install and latest versions" views
-		latestVersionLayout = (LinearLayout) itemView.findViewById(R.id.latestversion_layout);
-
-		getLatestButton = (Button) itemView.findViewById(R.id.btn_get_latest);
-		installButton = (Button) itemView.findViewById(R.id.btn_install);
-		uninstallButton = (Button) itemView.findViewById(R.id.btn_uninstall);
-
+		actionButton = (Button) itemView.findViewById(R.id.action_btn);
 		versionName = (TextView) itemView.findViewById(R.id.store_version_name);
 		otherVersions = (TextView) itemView.findViewById(R.id.other_versions);
 	}
@@ -119,109 +112,60 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			((FragmentShower) getContext()).pushFragmentV4(fragment);
 		});
 
-		setupInstallButton(app);
-		setupUninstalButton(getApp);
-	}
-
-	public void setupInstallButton(GetAppMeta.App app) {
-		@Cleanup Realm realm = Database.get();
+		@Cleanup
+		Realm realm = Database.get();
 		String packageName = app.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 
+		final FragmentShower fragmentShower = (FragmentShower) getContext();
+
 		//check if the app is installed
 		if (installed == null) {
-			//check if the app is payed
-			if (app.getPay() != null && app.getPay().getPrice() > 0) {
-				installButton.setText(R.string.buy);
-				installButton.setOnClickListener(new Listeners().newBuyListener());
-			} else {
-				installButton.setText(R.string.get_app);
-				installButton.setOnClickListener(new Listeners().newInstallListener(app));
-			}
+			// app not installed
+			setupInstallButton(app);
+			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
 		} else {
-			if (app.getFile().getVercode() > installed.getVersionCode()) {
-				installButton.setText(R.string.update);
-				installButton.setOnClickListener(new Listeners().newUpdateListener(app));
-			} else if (app.getFile().getVercode() < installed.getVersionCode()) {
-				installButton.setText(R.string.downgrade);
-				installButton.setOnClickListener(new Listeners().newDowngradeListener(app));
-			} else {
-				installButton.setText(R.string.open);
-				installButton.setOnClickListener(new Listeners().newOpenAppListener(packageName));
-			}
+			// app installed
+
+			// setup un-install button in menu
+			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(new Listeners().newUninstallListener(itemView, installed
+					.getPackageName()));
+
+			// is it an upgrade, downgrade or open app?
+			setupUpgradeDowngradeOpenActions(getApp, installed);
 		}
 	}
 
-	private void setupUninstalButton(GetApp getApp) {
-		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		@Cleanup Realm realm = Database.get();
-		Installed installed = Database.InstalledQ.get(app.getPackageName(), realm);
-
-		if (isLatestAvailable(getApp)) {
-			latestVersionLayout.setVisibility(View.GONE);
-			uninstallButton.setVisibility(View.GONE);
-			getLatestButton.setVisibility(View.VISIBLE);
-			getLatestButton.setOnClickListener(new Listeners().newGetLatestListener((FragmentActivity) itemView
-					.getContext(), getApp));
-		}
-		if (installed != null) {
-			getLatestButton.setVisibility(View.GONE);
-			latestVersionLayout.setVisibility(View.GONE);
-			uninstallButton.setVisibility(View.VISIBLE);
-			uninstallButton.setOnClickListener(new Listeners().newUninstallListener(itemView, installed.getPackageName
-					()));
-		} else {
-			uninstallButton.setVisibility(View.GONE);
-			getLatestButton.setVisibility(View.GONE);
-			latestVersionLayout.setVisibility(View.VISIBLE);
-		}
-	}
-/*
-	private void setupStoreInfo(GetApp getApp) {
+	private void setupUpgradeDowngradeOpenActions(GetApp getApp, Installed installed) {
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		Store store = app.getStore();
 
-		if (TextUtils.isEmpty(store.getAvatar())) {
-			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatarView);
+		if (!isLatestAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
+			actionButton.setText(R.string.update);
+			actionButton.setOnClickListener(new Listeners().newUpdateListener(app));
+		} else if (app.getFile().getVercode() < installed.getVersionCode()) {
+			actionButton.setText(R.string.downgrade);
+			actionButton.setOnClickListener(new Listeners().newDowngradeListener(app));
 		} else {
-			ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatarView);
-		}
-
-		StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);
-
-		storeNameView.setText(store.getName());
-		storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeNumberUsersView.setText(String.valueOf(store.getStats().getSubscribers()));
-		subscribeButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			subscribeButton.setElevation(0);
-		}
-		subscribeButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(), store
-				.getAppearance().getTheme()));
-
-		@Cleanup Realm realm = Database.get();
-		boolean subscribed = Database.StoreQ.get(store.getId(), realm) != null;
-
-		if (subscribed) {
-			int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
-			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
-			subscribeButton.setText(R.string.appview_subscribed_store_button_text);
-			subscribeButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(), store
-					.getAppearance().getTheme()));
-		} else {
-			int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
-			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-			subscribeButton.setText(R.string.appview_subscribe_store_button_text);
-			subscribeButton.setOnClickListener(new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+			actionButton.setText(R.string.open);
+			actionButton.setOnClickListener(new Listeners().newOpenAppListener(app.getPackageName()));
 		}
 	}
-*/
-	private boolean isLatestAvailable(GetApp getApp) {
-		return (getApp.getNodes().getVersions() != null && !getApp.getNodes().getVersions().getList().isEmpty() &&
-				getApp.getNodes().getMeta().getData().getFile().getVercode() < getApp.getNodes()
-						.getVersions()
+
+	public void setupInstallButton(GetAppMeta.App app) {
+		//check if the app is payed
+		if (app.getPay() != null && app.getPay().getPrice() > 0) {
+			actionButton.setText(R.string.buy);
+			actionButton.setOnClickListener(new Listeners().newBuyListener());
+		} else {
+			actionButton.setText(R.string.get_app);
+			actionButton.setOnClickListener(new Listeners().newInstallListener(app));
+		}
+	}
+
+	private boolean isLatestAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
+		return appVersions != null && !appVersions.getList().isEmpty() &&
+				(app.getFile().getVercode() < appVersions
 						.getList()
 						.get(0)
 						.getFile()
@@ -250,42 +194,53 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private Runnable innerInstallAction(GetAppMeta.App app, final int msgId, View v) {
-			return () -> {
-				String packageName = app.getPackageName();
-				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
-				if (cpdUrl != null) {
-					DataproviderUtils.knock(cpdUrl);
-				}
+		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v) {
+			String packageName = app.getPackageName();
+			AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
+			if (cpdUrl != null) {
+				DataproviderUtils.knock(cpdUrl);
+			}
 
-				@Cleanup
-				Realm realm = Database.get();
-				Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
-				if (rollback != null) {
-					rollback.setCpiUrl(cpiUrl);
-					Database.save(rollback, realm);
-				}
+			@Cleanup
+			Realm realm = Database.get();
+			Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
+			if (rollback != null) {
+				rollback.setCpiUrl(cpiUrl);
+				Database.save(rollback, realm);
+			}
 
-				ContextWrapper ctx = (ContextWrapper) v.getContext();
-				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+			ContextWrapper ctx = (ContextWrapper) v.getContext();
+			PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 
-				permissionRequest.requestAccessToExternalFileSystem(() -> {
+			permissionRequest.requestAccessToExternalFileSystem(() -> {
 
-					ShowMessage.asSnack(v, msgId);
+				ShowMessage.asSnack(v, msgId);
 
-					DownloadFactory factory = new DownloadFactory();
-					Download appDownload = factory.create(app);
-					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
-					downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
-						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-							AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
-						}
-					});
-				}, () -> {
+				DownloadFactory factory = new DownloadFactory();
+				Download appDownload = factory.create(app);
+				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
+				downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
 
-					ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+					// TODO: 19/07/16 sithengineer logic to show / hide pause / resume download and show download progress
+
+					if (download.getOverallDownloadStatus() == Download.PROGRESS) {
+						installAndLatestVersionLayout.setVisibility(View.GONE);
+						downloadProgressLayout.setVisibility(View.VISIBLE);
+						downloadProgress.setProgress(download.getOverallProgress());
+						//textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) + "/s");
+						textProgress.setText(download.getOverallProgress() + "%");
+					}
+
+					if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+						installAndLatestVersionLayout.setVisibility(View.VISIBLE);
+						downloadProgressLayout.setVisibility(View.GONE);
+						AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+					}
 				});
-			};
+			}, () -> {
+
+				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+			});
 		}
 
 		private View.OnClickListener newUpdateListener(final GetAppMeta.App app) {
@@ -352,8 +307,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private View.OnClickListener newUninstallListener(View itemView, String packageName) {
-			return v -> {
+		private Action0 newUninstallListener(View itemView, String packageName) {
+			return () -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUninstallAction(packageName));
 				AptoideUtils.SystemU.uninstallApp(itemView.getContext(), packageName);
 			};

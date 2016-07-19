@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -66,8 +66,8 @@ public class HomeFragment extends StoreFragment {
 					AptoideAccountManager.openAccountManager(getContext());
 				} else if (itemId == R.id.navigation_item_rollback) {
 					((FragmentShower) getActivity()).pushFragmentV4(RollbackFragment.newInstance());
-				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
-					((FragmentShower) getActivity()).pushFragmentV4(AppViewFragment.newInstance(19067731));
+				} else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+					((FragmentShower) getActivity()).pushFragmentV4(ScheduledDownloadsFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_excluded_updates) {
 					((FragmentShower) getActivity()).pushFragmentV4(ExcludedUpdatesFragment.newInstance());
 				} else if (itemId == R.id.navigation_item_settings) {

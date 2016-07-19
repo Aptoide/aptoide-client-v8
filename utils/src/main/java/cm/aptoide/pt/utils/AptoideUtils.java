@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -552,6 +552,16 @@ public class AptoideUtils {
 		}
 
 		public static String withBinarySuffix(long bytes) {
+			int unit = 1024;
+			if (bytes < unit) {
+				return bytes + " B";
+			}
+			int exp = (int) (Math.log(bytes) / Math.log(unit));
+			String pre = ("KMGTPE").charAt(exp - 1) + "";
+			return String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+		}
+
+		public static String formatBits(long bytes) {
 			int unit = 1024;
 			if (bytes < unit) {
 				return bytes + " B";

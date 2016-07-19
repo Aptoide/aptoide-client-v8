@@ -124,4 +124,6 @@
     <string name="updating_msg">Updating</string>
     <string name="installing_msg">Installing</string>
     <string name="needs_permission_to_fs">Needs permission to use the external File System</string>
+
+    <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
 </resources>

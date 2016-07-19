@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 07/07/2016.
+  ~ Modified by SithEngineer on 19/07/2016.
   -->
 
 <PreferenceScreen
@@ -9,16 +9,20 @@
     android:key="root"
     android:title="@string/settings_title_bar">
 
-    <PreferenceCategory android:title="@string/setting_general_download_rules">
+    <PreferenceCategory
+        android:title="@string/setting_general_download_rules"
+        >
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="generalnetworkwifi"
-            android:title="@string/setting_wifi"/>
+            android:title="@string/setting_wifi"
+            />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="generalnetworkmobile"
-            android:title="@string/setting_mobile"/>
+            android:title="@string/setting_mobile"
+            />
 
     </PreferenceCategory>
 

@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.database.realm;
 
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -20,16 +21,25 @@ public class Scheduled extends RealmObject {
 	public static final String ICON = "icon";
 
 
-	@PrimaryKey private int appId;
+	@PrimaryKey private long appId;
 	private String name;
 	private String versionName;
 	private String icon;
 
-	public int getAppId() {
+	public Scheduled() { }
+
+	public Scheduled(GetAppMeta.App app) {
+		appId = app.getId();
+		name = app.getName();
+		versionName = app.getFile().getVername();
+		icon = app.getIcon();
+	}
+
+	public long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(int appId) {
+	public void setAppId(long appId) {
 		this.appId = appId;
 	}
 

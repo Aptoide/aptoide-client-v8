@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 01/05/2016.
+  ~ Modified by SithEngineer on 19/07/2016.
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
@@ -17,7 +17,7 @@
         android:icon="?attr/icRollbackDrawable"
         android:title="@string/rollback"/>
     <item
-        android:id="@+id/navigation_item_setting_schdwntitle"
+        android:id="@+id/navigation_item_setting_scheduled_downloads"
         android:icon="?attr/icScheduledDrawable"
         android:title="@string/setting_schdwntitle"/>
     <item

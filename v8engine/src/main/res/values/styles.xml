@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 13/07/2016.
+  ~ Modified by SithEngineer on 19/07/2016.
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -415,6 +415,9 @@
 
     <style name="Aptoide.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="android:layout">@layout/fragment_aptoide_preferences</item>
+        <item name="android:labelTextSize">@dimen/text_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:windowTitleSize">@dimen/text_size_large</item>
     </style>
 
     <style name="AppViewWidget">
