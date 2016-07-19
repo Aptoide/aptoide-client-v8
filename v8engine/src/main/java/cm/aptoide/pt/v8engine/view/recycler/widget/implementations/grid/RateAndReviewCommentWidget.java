@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -67,6 +67,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 	@Override
 	public void bindView(RateAndReviewCommentDisplayable displayable) {
 		Comment comment = displayable.getPojo();
+
 		ImageLoader.loadWithCircleTransform(comment.getUser().getAvatar(), userImage);
 		username.setText(comment.getUser().getName());
 

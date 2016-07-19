@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 15/07/2016.
+  ~ Modified by SithEngineer on 19/07/2016.
   -->
 
 <resources>
@@ -123,4 +123,5 @@
     <string name="downgrading_msg">Downgrading</string>
     <string name="updating_msg">Updating</string>
     <string name="installing_msg">Installing</string>
+    <string name="needs_permission_to_fs">Needs permission to use the external File System</string>
 </resources>

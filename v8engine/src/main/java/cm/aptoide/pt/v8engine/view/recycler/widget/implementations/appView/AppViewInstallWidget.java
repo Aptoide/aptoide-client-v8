@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -27,6 +27,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -35,7 +36,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.interfaces.ShowSnackbar;
 import cm.aptoide.pt.v8engine.receivers.InstalledBroadcastReceiver;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -228,42 +228,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						.getVercode());
 	}
 
-	/*
-	private static class SubscribeStoreSnack extends ShowMessage.CustomSnackViewHolder {
-
-		private ImageView storeImage;
-		private TextView storeName;
-		private Button dismiss;
-		private Button subscribe;
-
-		@Override
-		public void assignViews(View view) {
-			storeImage = (ImageView) view.findViewById(R.id.snackbar_image);
-			storeName = (TextView) view.findViewById(R.id.snackbar_text);
-			dismiss = (Button) view.findViewById(R.id.snackbar_dismiss_action);
-			subscribe = (Button) view.findViewById(R.id.snackbar_action);
-		}
-
-		@Override
-		public void setupBehaviour(Snackbar snackbar) {
-
-//			dismiss.setOnClickListener( v-> {
-//				snackbar.dismiss();
-//			});
-
-			subscribe.setOnClickListener(v -> {
-
-				// TODO
-
-				snackbar.dismiss();
-			});
-
-			storeName.setText("TO DO");
-			//storeImage.setImageResource( ?? ); // TODO
-		}
-	}
-	*/
-
 	private class Listeners {
 
 		private final String TAG = Listeners.class.getSimpleName();
@@ -274,6 +238,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
 					// TODO: 15/07/16 sithengineer Paid Apps feature
+				}, () -> {
+					Logger.e(TAG, "unable to access FS");
 				});
 			};
 		}
@@ -303,8 +269,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				ContextWrapper ctx = (ContextWrapper) v.getContext();
 				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 
-				final ShowSnackbar showSnackbar = ((ShowSnackbar) ctx.getBaseContext());
-
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
 
 					ShowMessage.asSnack(v, msgId);
@@ -317,6 +281,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 							AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
 						}
 					});
+				}, () -> {
+
+					ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 				});
 			};
 		}
@@ -367,6 +334,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 							AptoideUtils.SystemU.uninstallApp(view.getContext(), appPackageName);
 						}
 					});
+				}, () -> {
+					Logger.e(TAG, "unable to access to external FS");
 				});
 			};
 		}

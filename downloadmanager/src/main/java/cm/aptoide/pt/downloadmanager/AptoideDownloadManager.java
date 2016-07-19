@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 19/07/2016.
+ */
+
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
@@ -15,6 +20,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -101,6 +107,8 @@ public class AptoideDownloadManager {
 		if (permissionRequest != null) {
 			permissionRequest.requestAccessToExternalFileSystem(() -> {
 				startNewDownload(download);
+			}, ()-> {
+				Logger.e(TAG, "unable to start new download");
 			});
 		} else {
 			startNewDownload(download);
