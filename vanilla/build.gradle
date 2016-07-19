@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 apply plugin: 'com.android.application'
 apply plugin: 'android-command'
@@ -76,21 +76,24 @@ android {
 
     productFlavors {
         dev {
-            applicationIdSuffix ".dev"
             minSdkVersion 15
-            versionCode 8000
+            applicationIdSuffix ".dev"
+            versionName "8.0.0." + getDate()
+            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "DEV_VERSION_CODE")
             resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
         }
 
         nightly {
             applicationIdSuffix ".dev"
-            versionName "8.0.0" + "." + getDate()
+            versionName "8.0.0." + getDate()
             versionCode getNextVersionCode("../../aptoideProperties/version.properties", "NIGHTLY_VERSION_CODE")
             resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
         }
 
         prod {
-            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "PROD_VERSION_CODE")
+            Integer value = getNextVersionCode("../../aptoideProperties/version.properties", "PROD_VERSION_CODE")
+            versionCode value
+            versionName "8.0.0." + value
             resValue "string", "authenticatorAccountType", APPLICATION_ID
         }
     }

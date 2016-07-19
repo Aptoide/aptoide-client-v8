@@ -1,64 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 15/07/2016.
+  ~ Modified by SithEngineer on 18/07/2016.
   -->
 
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
-    <include
-        layout="@layout/partial_view_incl_no_network"
-        tools:visibility="gone"
-        />
-
-    <include
-        layout="@layout/partial_view_error"
-        tools:visibility="gone"
-        />
-
-
-    <!-- is this necessary ?? -->
-    <RelativeLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?android:actionBarSize"
-        >
+        android:layout_height="wrap_content">
 
-        <include
-            layout="@layout/partial_view_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-    </RelativeLayout>
+        <include layout="@layout/toolbar"/>
 
-    <!--
-    <TextView
-        android:id="@+id/empty_data"
+    </android.support.design.widget.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?android:actionBarSize"
-        android:padding="@dimen/label_padding"
-        android:textAlignment="center"
-        android:textSize="16sp"
+        android:layout_height="8dp"
+        android:indeterminate="true"
         android:visibility="gone"
-        tools:text="@string/no_excluded_updates_msg"
         tools:visibility="visible"
         />
-    -->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?android:actionBarSize"
+        android:paddingTop="10dp"
         >
+
+
+        <!--
+
+        error views
+
+        -->
+
+
+        <include
+            layout="@layout/partial_view_incl_no_network"
+            tools:visibility="gone"
+            />
+
+        <include
+            layout="@layout/partial_view_error"
+            tools:visibility="gone"
+            />
 
         <!--
 
@@ -68,11 +61,12 @@
 
         <RelativeLayout
             android:id="@+id/rating_layout"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
+            android:layout_width="143dp"
+            android:layout_height="143dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:background="@color/yellow"
+            android:background="@drawable/round_circle_gradient"
+            android:padding="16dp"
             android:paddingBottom="8dp"
             >
 
@@ -86,8 +80,8 @@
 
                 <ImageView
                     android:id="@+id/users_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/icon_displayable_view_and_rate"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_user_icon"
                     />
@@ -95,13 +89,14 @@
                 <TextView
                     android:id="@+id/users_voted"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/icon_displayable_view_and_rate"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginStart="4dp"
                     android:gravity="center_vertical|left|start"
                     android:textColor="@color/white"
+                    android:textSize="16sp"
                     tools:text="2425"
                     />
             </LinearLayout>
@@ -115,9 +110,10 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="58sp"
+                android:textSize="50sp"
                 tools:text="4.2"
                 />
 
@@ -128,9 +124,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rating_value"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/half_circle_white"
                 android:numStars="5"
-                android:stepSize="0.5"
-                tools:rating="3.0"
+                android:stepSize="0.1"
+                tools:rating="4.2"
                 />
 
         </RelativeLayout>
@@ -173,11 +171,15 @@
 
                 <ProgressBar
                     android:id="@+id/five_rate_star_progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
@@ -190,6 +192,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="7914"
                     />
@@ -216,11 +219,15 @@
 
                 <ProgressBar
                     android:id="@+id/four_rate_star_progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
@@ -233,6 +240,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="192"
                     />
@@ -259,11 +267,15 @@
 
                 <ProgressBar
                     android:id="@+id/three_rate_star_progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
@@ -276,6 +288,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="4548"
                     />
@@ -302,11 +315,15 @@
 
                 <ProgressBar
                     android:id="@+id/two_rate_star_progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
@@ -319,6 +336,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="123"
                     />
@@ -345,11 +363,15 @@
 
                 <ProgressBar
                     android:id="@+id/one_rate_star_progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_weight="4"
-                    tools:background="@color/aptoide_color_focused"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
@@ -362,6 +384,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingStart="4dp"
+                    android:text="@string/zero"
                     android:textSize="14sp"
                     tools:text="2"
                     />
@@ -403,9 +426,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/rounded_corners_dark"
+                android:background="@drawable/rounded_corners_dark_gray"
+                android:drawableEnd="@drawable/ic_up_arrow"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/ic_up_arrow"
+                android:drawableTint="@color/dark_gray"
+                android:text="Highest ranking"
+                android:textColor="@color/dark_gray"
                 android:textSize="@dimen/text_size_medium"
-                tools:text="Highest ranking ^"
                 />
 
             <Button
@@ -414,8 +442,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/rounded_corners_dark"
+                android:background="@drawable/rounded_corners_dark_gray"
                 android:text="@string/just_reviews"
+                android:textColor="@color/dark_gray"
                 android:textSize="@dimen/text_size_medium"
                 />
 
@@ -428,39 +457,19 @@
 
         -->
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_container"
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/ordering_buttons_layout"
+            android:clipToPadding="false"
+            android:paddingLeft="@dimen/recycler_margin"
+            android:paddingRight="@dimen/recycler_margin"
             android:visibility="visible"
             tools:visibility="visible"
-            >
-
-            <android.support.v7.widget.RecyclerView
-
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingLeft="@dimen/recycler_margin"
-                android:paddingRight="@dimen/recycler_margin"
-                />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
+            />
 
     </RelativeLayout>
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            />
-
-    </android.support.design.widget.AppBarLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

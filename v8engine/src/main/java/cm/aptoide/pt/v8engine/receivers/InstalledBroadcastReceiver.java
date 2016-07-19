@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.receivers;
@@ -15,8 +15,10 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import io.realm.Realm;
 
 /**
@@ -61,19 +63,19 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void onPackageAdded(String packageName) {
+	protected void onPackageAdded(String packageName) {
 		Log.d(TAG, "Package added: " + packageName);
 
 		databaseOnPackageAdded(packageName);
 	}
 
-	private void onPackageReplaced(String packageName) {
+	protected void onPackageReplaced(String packageName) {
 		Log.d(TAG, "Packaged replaced: " + packageName);
 
 		databaseOnPackageReplaced(packageName);
 	}
 
-	private void onPackageRemoved(String packageName) {
+	protected void onPackageRemoved(String packageName) {
 		Log.d(TAG, "Packaged removed: " + packageName);
 
 		databaseOnPackageRemoved(packageName);
@@ -83,6 +85,13 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
 		Database.save(new Installed(packageInfo, V8Engine.getContext().getPackageManager()), realm);
+
+		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
+		if (rollback != null) {
+			confirmAction(packageName, Rollback.Action.INSTALL);
+			ReferrerUtils.broadcastReferrer(packageName, rollback.getReferrer());
+			DataproviderUtils.knock(rollback.getCpiUrl());
+		}
 	}
 
 	private void databaseOnPackageReplaced(String packageName) {
@@ -98,8 +107,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 
 		if (installed != null) {
-			installed.update(packageInfo, realm);
-			Database.save(installed, realm);
+			confirmAction(packageName, Rollback.Action.UPDATE);
 		}
 	}
 
@@ -107,7 +115,19 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Database.InstalledQ.delete(packageName, realm);
 		Database.UpdatesQ.delete(packageName, realm);
 
-		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
+		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.DOWNGRADE, realm);
+		if (rollback != null) {
+			confirmAction(packageName, Rollback.Action.DOWNGRADE);
+		} else {
+			rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
+			if (rollback != null) {
+				confirmAction(packageName, Rollback.Action.UNINSTALL);
+			}
+		}
+	}
+
+	private void confirmAction(String packageName, Rollback.Action action) {
+		Rollback rollback = Database.RollbackQ.get(packageName, action, realm);
 		if (rollback != null) {
 			rollback.confirm(realm);
 		}

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,8 +37,12 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
 	private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
 	@Getter private boolean _resumed = false;
+	@Nullable
 	private Action0 toRunWhenAccessToFileSystemIsGranted;
+	@Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
+	@Nullable
 	private Action0 toRunWhenAccessToAccountsIsGranted;
+	@Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +111,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 						toRunWhenAccessToFileSystemIsGranted.call();
 					}
 				} else {
-					// FIXME what should I do here?
+					if (toRunWhenAccessToFileSystemIsDenied != null) {
+						toRunWhenAccessToFileSystemIsDenied.call();
+					}
 					ShowMessage.asSnack(findViewById(android.R.id.content), "access to read and write to external " +
 							"storage" +
 							" was denied");
@@ -121,7 +128,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 						toRunWhenAccessToAccountsIsGranted.call();
 					}
 				} else {
-					// FIXME what should I do here?
+					if (toRunWhenAccessToAccountsIsDenied != null) {
+						toRunWhenAccessToAccountsIsDenied.call();
+					}
 					ShowMessage.asSnack(findViewById(android.R.id.content), "access to get accounts was denied");
 				}
 				break;
@@ -143,26 +152,33 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	//
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
-		requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted);
+	public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied) {
+		requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToExternalFileSystem(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToExternalFileSystem(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0
+			toRunWhenAccessIsDennied) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 		if(hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
+			this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDennied;
 
 			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
 					.WRITE_EXTERNAL_STORAGE)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access external storage");
-				// FIXME improve this rationale messages
+				
+				// TODO: 19/07/16 sithengineer improve this rationale messages 
 				showMessageOKCancel(getString(R.string.access_to_external_storage_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
 
 					@Override
 					public void onNext(GenericDialogs.EResponse eResponse) {
 						super.onNext(eResponse);
-						if(eResponse!= GenericDialogs.EResponse.YES) return;
+						if (eResponse != GenericDialogs.EResponse.YES) {
+							if (toRunWhenAccessToFileSystemIsDenied != null) {
+								toRunWhenAccessToFileSystemIsDenied.call();
+							}
+						}
 
 						ActivityCompat.requestPermissions(
 								AptoideBaseActivity.this,
@@ -189,30 +205,38 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 			return;
 		}
 		Logger.i(TAG, "already has permission to access external storage");
-		toRunWhenAccessIsGranted.call();
+		if (toRunWhenAccessIsGranted != null) {
+			toRunWhenAccessIsGranted.call();
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
-		requestAccessToAccounts(true, toRunWhenAccessIsGranted);
+	public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+		requestAccessToAccounts(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToAccounts(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToAccounts(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
 		if (hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToAccountsIsGranted = toRunWhenAccessIsGranted;
+			this.toRunWhenAccessToAccountsIsDenied = toRunWhenAccessIsDenied;
 
 			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
 					.GET_ACCOUNTS)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access accounts");
-				// FIXME improve this rationale messages
+				
+				// TODO: 19/07/16 sithengineer improve this rationale messages
 				showMessageOKCancel(getString(R.string.access_to_get_accounts_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
 
 					@Override
 					public void onNext(GenericDialogs.EResponse eResponse) {
 						super.onNext(eResponse);
-						if(eResponse!= GenericDialogs.EResponse.YES) return;
+						if (eResponse != GenericDialogs.EResponse.YES) {
+							if (toRunWhenAccessToAccountsIsDenied != null) {
+								toRunWhenAccessToAccountsIsDenied.call();
+							}
+						}
 
 						ActivityCompat.requestPermissions(
 								AptoideBaseActivity.this,
@@ -232,7 +256,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 			return;
 		}
 		Logger.i(TAG, "already has permission to access accounts");
-		toRunWhenAccessIsGranted.call();
+		if (toRunWhenAccessIsGranted != null) {
+			toRunWhenAccessIsGranted.call();
+		}
 	}
 
 	private void showMessageOKCancel(

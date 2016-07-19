@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 04/07/2016.
+  ~ Modified by SithEngineer on 19/07/2016.
   -->
 
 <resources>
@@ -215,7 +215,6 @@
     <string name="schDown_invertselection">Invert Selection</string>
 
     <string name="schDwnBtn">Schedule Download</string>
-    <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
     <string name="schDown_install">Do you want to install all scheduled downloads?</string>
     <string name="hidden_adult">Some apps are hidden because adult content filter is active. Do you want to list this apps?</string>
     <string name="dont_show_again">Don\'t show this dialog again</string>

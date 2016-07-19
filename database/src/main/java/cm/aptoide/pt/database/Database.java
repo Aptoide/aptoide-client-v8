@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.preferences.Application;
@@ -162,6 +163,11 @@ public class Database {
 
 	public static class UpdatesQ {
 
+		public static RealmResults<Update> getAll(Realm realm) {
+			// to cope with previously API calls
+			return getAll(realm, false);
+		}
+
 		public static RealmResults<Update> getAll(Realm realm, boolean excluded) {
 			return realm.where(Update.class).equalTo(Update.EXCLUDED, excluded).findAll();
 		}
@@ -231,9 +237,15 @@ public class Database {
 	}
 
 	public static class ExcludedAdsQ {
-
 		public static RealmResults<ExcludedAd> getAll(Realm realm) {
 			return realm.where(ExcludedAd.class).findAll();
+		}
+	}
+
+	public static class ScheduledQ {
+
+		public static RealmResults<Scheduled> getAll(Realm realm) {
+			return realm.where(Scheduled.class).findAll();
 		}
 	}
 }

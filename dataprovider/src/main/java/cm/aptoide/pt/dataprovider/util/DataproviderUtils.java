@@ -61,6 +61,10 @@ public class DataproviderUtils {
 	 * @param url
 	 */
 	public static void knock(String url) {
+		if (url == null) {
+			return;
+		}
+
 		OkHttpClient client = new OkHttpClient();
 
 		Request click = new Request.Builder().url(url).build();

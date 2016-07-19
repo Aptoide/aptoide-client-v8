@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.os.Build;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -40,8 +39,6 @@ import lombok.Cleanup;
  */
 @Displayables({AppViewStoreDisplayable.class})
 public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
-
-	private String TAG = AppViewStoreWidget.class.getSimpleName();
 
 	private ImageView storeAvatarView;
 	private TextView storeNameView;
@@ -109,43 +106,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		}
 	}
 
-	private static class SubscribeStoreSnack extends ShowMessage.CustomSnackViewHolder {
-
-		private ImageView storeImage;
-		private TextView storeName;
-		private Button dismiss;
-		private Button subscribe;
-
-		@Override
-		public void assignViews(View view) {
-			storeImage = (ImageView) view.findViewById(R.id.snackbar_image);
-			storeName = (TextView) view.findViewById(R.id.snackbar_text);
-			dismiss = (Button) view.findViewById(R.id.snackbar_dismiss_action);
-			subscribe = (Button) view.findViewById(R.id.snackbar_action);
-		}
-
-		@Override
-		public void setupBehaviour(Snackbar snackbar) {
-
-			//			dismiss.setOnClickListener( v-> {
-			//				snackbar.dismiss();
-			//			});
-
-			subscribe.setOnClickListener(v -> {
-
-				// TODO
-
-				snackbar.dismiss();
-			});
-
-			storeName.setText("TO DO");
-			//storeImage.setImageResource( ?? ); // TODO
-		}
-	}
-
 	private static class Listeners {
-
-		private static final String TAG = Listeners.class.getSimpleName();
 
 		private View.OnClickListener newOpenStoreListener(View itemView, String storeName) {
 			return v -> {

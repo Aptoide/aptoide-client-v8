@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -13,11 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,19 +27,26 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
@@ -56,12 +62,15 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import io.realm.Realm;
+import lombok.Cleanup;
 import lombok.Getter;
+import rx.functions.Action0;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment implements Scrollable {
+public class AppViewFragment extends GridRecyclerFragment implements Scrollable, AppMenuOptions {
 
 	public static final int VIEW_ID = R.layout.fragment_app_view;
 
@@ -70,7 +79,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	//
 	private static final String TAG = AppViewFragment.class.getSimpleName();
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
-	private static FragmentActivity fragmentActivity;
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -80,11 +88,18 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
+	private Scheduled scheduled;
 	private String storeTheme;
 	//
 	// static fragment default new instance method
 	//
 	private MinimalAd minimalAd;
+	// Stored to postpone ads logic
+	private AppViewInstallDisplayable appViewInstallDisplayable;
+
+	private Action0 unInstallAction;
+	private MenuItem uninstallMenuItem;
+
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -115,6 +130,16 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		return fragment;
 	}
 
+	public static long sumFileSizes(long fileSize, Obb obb) {
+		if (obb == null || obb.getMain() == null) {
+			return fileSize;
+		} else if (obb.getPatch() == null) {
+			return fileSize + obb.getMain().getFilesize();
+		} else {
+			return fileSize + obb.getMain().getFilesize() + obb.getPatch().getFilesize();
+		}
+	}
+
 	private void setupObservables(GetApp getApp) {
 		// For stores subscription
 		Database.StoreQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
@@ -136,7 +161,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(new AppViewInstallDisplayable(getApp));
+		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(getApp, minimalAd != null ? minimalAd.getCpdUrl() : null));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -156,9 +181,32 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		GetAppRequest.of(appId).execute(getApp -> {
+			if (minimalAd == null) {
+				GetAdsRequest.ofAppview(getApp.getNodes().getMeta().getData().getPackageName(), getApp.getNodes().getMeta().getData().getStore().getName())
+						.execute(getAdsResponse -> {
+							List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
+							if (ads == null || ads.get(0) == null) {
+								return;
+							}
+							GetAdsResponse.Ad ad = ads.get(0);
+							minimalAd = new MinimalAd(getAdsResponse.getAds().get(0));
+
+							if (appViewInstallDisplayable != null) {
+								appViewInstallDisplayable.setCpdUrl(ad.getInfo().getCpdUrl());
+								appViewInstallDisplayable.setCpiUrl(ad.getInfo().getCpiUrl());
+							}
+							DataproviderUtils.knock(minimalAd.getCpcUrl());
+						});
+			}
+
 			if (storeTheme == null) {
 				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 			}
+
+			// useful data for the schedule updates menu option
+			GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+			scheduled = new Scheduled(app);
+
 			header.setup(getApp);
 			setupDisplayables(getApp);
 			setupObservables(getApp);
@@ -174,7 +222,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 	@Override
 	public void setupViews() {
 		super.setupViews();
-//		this.showAppInfo();
+		//		this.showAppInfo();
 
 		final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
 		ActionBar supportActionBar = parentActivity.getSupportActionBar();
@@ -204,6 +252,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_appview_fragment, menu);
 		SearchUtils.setupGlobalSearchView(menu, getActivity());
+		uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
 	}
 
 	@Override
@@ -211,18 +260,26 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		int i = item.getItemId();
 
 		if (i == android.R.id.home) {
+
 			getActivity().onBackPressed();
 			return true;
 		} else if (i == R.id.menu_share) {
+
 			ShowMessage.asSnack(item.getActionView(), "TO DO");
-
-			// TODO
-
+			// TODO: 19/07/16 sithengineer
 			return true;
 		} else if (i == R.id.menu_schedule) {
-			ShowMessage.asSnack(item.getActionView(), "TO DO");
 
-			// TODO
+			@Cleanup
+			Realm realm = Database.get();
+			realm.beginTransaction();
+			realm.copyToRealmOrUpdate(scheduled);
+			realm.commitTransaction();
+
+			ShowMessage.asSnack(item.getActionView(), R.string.added_to_scheduled);
+			return true;
+		} else if (i == R.id.menu_uninstall && unInstallAction != null) {
+			unInstallAction.call();
 			return true;
 		}
 
@@ -236,6 +293,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
+
+	//
+	// Scrollable interface
+	//
 
 	@Override
 	public void scroll(Position position) {
@@ -252,10 +313,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		}
 	}
 
-	//
-	// Scrollable interface
-	//
-
 	@Override
 	public void itemAdded(int pos) {
 		getLayoutManager().onItemsAdded(getRecyclerView(), pos, 1);
@@ -271,11 +328,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		fragmentActivity = (FragmentActivity) activity;
-		super.onAttach(activity);
-	}
+	//
+	// micro widget for header
+	//
 
 	@Override
 	public void onResume() {
@@ -286,10 +341,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		}
 	}
 
-	//
-	// micro widget for header
-	//
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -299,6 +350,12 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
 					.getVisibility() == View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
+		this.unInstallAction = unInstallAction;
+		uninstallMenuItem.setVisible(unInstallAction != null);
 	}
 
 	private enum BundleKeys {
@@ -344,23 +401,23 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 		// setup methods
 		public void setup(@NonNull GetApp getApp) {
 
-			if (getApp.getNodes().getMeta().getData().getGraphic() != null) {
-				ImageLoader.load(getApp.getNodes().getMeta().getData().getGraphic(), featuredGraphic);
-			}
-			/*
-			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty
-			(screenshots.get(0).url)) {
-				ImageLoader.load(screenshots.get(0).url, mFeaturedGraphic);
-			}
-			*/
+			GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-			if (getApp.getNodes().getMeta().getData().getIcon() != null) {
+			String headerImageUrl = app.getGraphic();
+			List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
+
+			if (!TextUtils.isEmpty(headerImageUrl)) {
+				ImageLoader.load(app.getGraphic(), featuredGraphic);
+			}
+			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(screenshots.get(0).getUrl())) {
+				ImageLoader.load(screenshots.get(0).getUrl(), featuredGraphic);
+			}
+
+			if (app.getIcon() != null) {
 				ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
 			}
 
-			// TODO add placeholders in image loading
-
-			collapsingToolbar.setTitle(getApp.getNodes().getMeta().getData().getName());
+			collapsingToolbar.setTitle(app.getName());
 			StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(storeTheme);
 			collapsingToolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
 			collapsingToolbar.setContentScrimColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
@@ -391,15 +448,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable 
 				}
 			});
 
-			fileSize.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getFile().getFilesize()));
+			fileSize.setText(AptoideUtils.StringU.formatBits(sumFileSizes(app.getSize(), app.getObb())));
 
-			downloadsCount.setText(String.format(Locale.ROOT, "%d", getApp.getNodes().getMeta().getData().getStats().getDownloads()));
+			downloadsCount.setText(String.format(Locale.ROOT, "%d", app.getStats().getDownloads()));
 
 			@DrawableRes
 			int badgeResId = 0;
 			@StringRes
 			int badgeMessageId = 0;
-			switch (getApp.getNodes().getMeta().getData().getFile().getMalware().getRank()) {
+			switch (app.getFile().getMalware().getRank()) {
 				case TRUSTED:
 					badgeResId = R.drawable.ic_badge_trusted;
 					badgeMessageId = R.string.appview_header_trusted_text;

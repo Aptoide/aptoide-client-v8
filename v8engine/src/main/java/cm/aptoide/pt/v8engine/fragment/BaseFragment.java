@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/06/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -83,9 +83,9 @@ public abstract class BaseFragment extends RxFragment implements Lifecycle, Perm
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
 		try {
-			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(toRunWhenAccessIsGranted);
+			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
 			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
 					.class
@@ -94,10 +94,10 @@ public abstract class BaseFragment extends RxFragment implements Lifecycle, Perm
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToExternalFileSystem(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToExternalFileSystem(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0
+			toRunWhenAccessIsDenied) {
 		try {
-			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
-					toRunWhenAccessIsGranted);
+			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
 			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
 					.class
@@ -106,9 +106,9 @@ public abstract class BaseFragment extends RxFragment implements Lifecycle, Perm
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
 		try {
-			((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted);
+			((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
 			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
 					.class
@@ -117,10 +117,9 @@ public abstract class BaseFragment extends RxFragment implements Lifecycle, Perm
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToAccounts(boolean forceShowRationale, Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToAccounts(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
 		try {
-			((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale,
-					toRunWhenAccessIsGranted);
+			((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
 			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
 					.class

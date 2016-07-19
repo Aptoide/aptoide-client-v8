@@ -1,5 +1,8 @@
 package cm.aptoide.accountmanager;
 
+import java.util.Locale;
+
+import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 
 /**
@@ -113,5 +116,18 @@ class AccountManagerPreferences {
 
 	static void removeRepoAvatar() {
 		SecurePreferences.remove(SecureKeys.REPO_AVATAR);
+	}
+
+	public static void setLoginMode(LoginMode loginMode) {
+		SecurePreferences.putString(SecureKeys.LOGIN_MODE, loginMode.name());
+	}
+
+	public static LoginMode getLoginMode() {
+		final String loginModeName = SecurePreferences.getString(SecureKeys.LOGIN_MODE);
+		if (loginModeName != null) {
+			return LoginMode.valueOf(loginModeName);
+		} else {
+			return null;
+		}
 	}
 }

@@ -14,4 +14,5 @@ class SecureKeys {
 	public static final String USER_NICK_NAME = "aptoide_account_manager_user_nick_name";
 	public static final String MATURE_SWITCH = "aptoide_account_manager_mature_switch";
 	public static final String REPO_AVATAR = "aptoide_account_manager_repo_avatar";
+	public static final String LOGIN_MODE = "aptoide_account_manager_login_mode";
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -110,7 +110,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 					Snackbar.make(mNavigationView, "MatureSwitch: " + AptoideAccountManager
 							.getUserInfo()
 							.isMatureSwitch(), Snackbar.LENGTH_SHORT).show();
-				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
+				} else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
 					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
 							.show();
 				} else if (itemId == R.id.navigation_item_excluded_updates) {

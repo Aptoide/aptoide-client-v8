@@ -196,7 +196,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 		return referrer;
 	}
 
-	private static void broadcastReferrer(String packageName, String referrer) {
+	public static void broadcastReferrer(String packageName, String referrer) {
 		Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
 		i.setPackage(packageName);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {

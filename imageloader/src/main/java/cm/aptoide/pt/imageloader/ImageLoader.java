@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+ * Modified by SithEngineer on 18/07/2016.
  */
 
 package cm.aptoide.pt.imageloader;
@@ -17,6 +17,8 @@ import cm.aptoide.pt.preferences.Application;
  * Created by neuro on 24-05-2016.
  */
 public class ImageLoader {
+
+	// TODO: 18/07/16 sithengineer add placeholders in image loading
 
 	public static void load(String url, @DrawableRes int loadingPlaceHolder, ImageView imageView) {
 		Glide.with(Application.getContext()).load(url).placeholder(loadingPlaceHolder).into(imageView);

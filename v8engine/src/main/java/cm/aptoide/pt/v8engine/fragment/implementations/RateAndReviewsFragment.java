@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 18/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import rx.Subscription;
@@ -34,15 +34,16 @@ import rx.Subscription;
 /**
  * Created by sithengineer on 13/05/16.
  */
-public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
+public class RateAndReviewsFragment extends GridRecyclerFragmentWithDecorator {
 
 	private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
 
 	private static final String APP_ID = "app_id";
+	private static final String PACKAGE_NAME = "package_name";
+	private static final String STORE_NAME = "store_name";
 	private long appId;
-
-	//	private static final String APP_PACKAGE = "app_package";
-	//	private String appPackage;
+	private String packageName;
+	private String storeName;
 
 	private TextView emptyData;
 	private Subscription subscription;
@@ -50,11 +51,12 @@ public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
 	private RatingTotalsLayout ratingTotalsLayout;
 	private RatingBarsLayout ratingBarsLayout;
 
-	public static RateAndReviewsFragment newInstance(long appId) {
+	public static RateAndReviewsFragment newInstance(long appId, String storeName, String packageName) {
 		RateAndReviewsFragment fragment = new RateAndReviewsFragment();
 		Bundle args = new Bundle();
 		args.putLong(APP_ID, appId);
-		//		args.putString(APP_PACKAGE, appPackage);
+		args.putString(STORE_NAME, storeName);
+		args.putString(PACKAGE_NAME, packageName);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -63,7 +65,8 @@ public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
 	public void loadExtras(Bundle args) {
 		super.loadExtras(args);
 		appId = args.getLong(APP_ID);
-		//		appPackage = args.getString(APP_PACKAGE);
+		packageName = args.getString(PACKAGE_NAME);
+		storeName = args.getString(STORE_NAME);
 	}
 
 	@Override
@@ -71,6 +74,11 @@ public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
 		Logger.d(TAG, "Other versions should refresh? " + refresh);
 		fetchRating(refresh);
 		fetchReviews();
+	}
+
+	@Override
+	public int getContentViewId() {
+		return R.layout.fragment_rate_and_reviews;
 	}
 
 	@Override
@@ -90,11 +98,6 @@ public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
 			ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 			bar.setDisplayHomeAsUpEnabled(true);
 		}
-	}
-
-	@Override
-	public int getContentViewId() {
-		return R.layout.fragment_rate_and_reviews;
 	}
 
 	@Override
@@ -128,8 +131,8 @@ public class RateAndReviewsFragment extends GridRecyclerSwipeFragment {
 	}
 
 	private void fetchReviews() {
-		ListCommentsRequest.of(appId).execute(listComments -> {
-			List<Comment> comments = listComments.getDatalist().getList();
+		ListReviewsRequest.of(storeName, packageName).execute(listTopReviews -> {
+			List<Comment> comments = listTopReviews.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();
 			for (final Comment comment : comments) {
 				displayables.add(new RateAndReviewCommentDisplayable(comment));

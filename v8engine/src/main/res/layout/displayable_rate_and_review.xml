@@ -1,29 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 15/07/2016.
+  ~ Modified by SithEngineer on 18/07/2016.
   -->
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="157dp"
-    android:orientation="vertical"
     >
 
     <!--
-        app:layout_anchor="@id/app_bar"
-    -->
-
     <com.makeramen.roundedimageview.RoundedImageView
+    -->
+    <ImageView
         android:id="@+id/user_icon"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        app:layout_anchorGravity="bottom|left|start"
-        app:riv_corner_radius="15dp"
-        tools:src="@color/red_700"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/icon_user"
+        />
+
+    <android.support.v7.widget.AppCompatRatingBar
+        android:id="@+id/rating_bar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/user_icon"
+        android:layout_toRightOf="@id/user_icon"
+        android:numStars="5"
+        android:stepSize="1.0"
+        tools:rating="3.0"
+        />
+
+    <Button
+        android:id="@+id/write_reply_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/user_icon"
+        android:drawableLeft="@drawable/circle"
+        android:drawablePadding="10dp"
+        android:text="reply"
+        android:textAllCaps="true"
+        android:textSize="9sp"
+        />
+
+    <TextView
+        android:id="@+id/comment_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/rating_bar"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_toLeftOf="@id/write_reply_btn"
+        android:layout_toRightOf="@id/rating_bar"
+        android:layout_toStartOf="@id/write_reply_btn"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Super Gameplay !!"
+        android:textSize="@dimen/text_size_medium_small"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_title"
+        android:layout_toRightOf="@id/user_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Mary Pollaki"
+        android:textSize="@dimen/text_size_small"
+        />
+
+    <TextView
+        android:id="@+id/added_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/user_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toRightOf="@id/user_name"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="03/06/1992"
+        android:textSize="@dimen/text_size_small"
+        />
+
+    <Button
+        android:id="@+id/helpful_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/ic_action_good"
+        android:text="helpful"
+        android:textAllCaps="true"
+        android:textSize="9sp"
+        />
+
+    <Button
+        android:id="@+id/not_helpful_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/helpful_btn"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/ic_action_bad"
+        android:text="not helpful"
+        android:textAllCaps="true"
+        android:textSize="9sp"
+        />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/helpful_btn"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/user_icon"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
+        android:textSize="@dimen/text_size_medium_small"
+        />
+
+    <Button
+        android:id="@+id/show_replies_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/ic_down_arrow"
+        android:text="Replies"
+        android:textAllCaps="true"
+        android:textSize="9sp"
         />
 
 </RelativeLayout>

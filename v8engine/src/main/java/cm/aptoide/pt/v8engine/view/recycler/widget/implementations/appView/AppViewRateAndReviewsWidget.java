@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 18/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -8,8 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,11 +26,13 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -64,7 +64,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private Button readAllButton;
 
 	private TopReviewsAdapter topReviewsAdapter;
-	private Handler handler;
 
 	private String appName;
 
@@ -82,8 +81,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		topCommentsPager = (ViewPager) itemView.findViewById(R.id.top_comments_pager);
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
-
-		handler = new Handler(Looper.myLooper());
 	}
 
 	@Override
@@ -100,8 +97,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		ratingValue.setText(String.format(LOCALE, "%.1f", ratingAvg));
 		ratingBar.setRating(ratingAvg);
 
-		showTopComments(app.getId());
-
 		View.OnClickListener rateOnClickListener = v -> {
 			showRateDialog();
 		};
@@ -109,10 +104,14 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		ratingLayout.setOnClickListener(rateOnClickListener);
 
 		View.OnClickListener commentsOnClickListener = v -> {
-			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId()));
+			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getStore().getName(), app.getPackageName()));
 		};
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
+
+		topReviewsAdapter = new TopReviewsAdapter(getContext().getSupportFragmentManager());
+		topCommentsPager.setAdapter(topReviewsAdapter);
+		topReviewsAdapter.loadTopComments(app.getStore().getName(), app.getPackageName());
 	}
 
 	private void showRateDialog() {
@@ -155,7 +154,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 
-				// TODO call ws with rating result
+				// TODO: 18/07/16 sithengineer call WS with rating result
 
 				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
 
@@ -171,20 +170,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		builder.create().show();
 	}
 
-	private void showTopComments(long appId) {
-		topReviewsAdapter = new TopReviewsAdapter(getContext().getSupportFragmentManager(), appId);
-		topCommentsPager.setAdapter(topReviewsAdapter);
-		scheduleAnimations();
-	}
-
 	private void scheduleAnimations() {
-		if (ManagerPreferences.getAnimationsEnabledStatus()) {
-			for (int i = 0 ; i < topReviewsAdapter.getCount() ; ++i) {
+		if (ManagerPreferences.getAnimationsEnabledStatus() && topReviewsAdapter.getCount() > 1) {
+			for (int i = 0 ; i < topReviewsAdapter.getCount() - 1 ; ++i) {
 				final int count = i;
-				handler.postDelayed(() -> {
-					if (topCommentsPager.getVisibility() == View.VISIBLE) {
-						topCommentsPager.arrowScroll(View.FOCUS_LEFT);
-					}
+				topCommentsPager.postDelayed(() -> {
+					topCommentsPager.setCurrentItem(count, true);
 				}, (count + 1) * 1200);
 			}
 		} else {
@@ -195,37 +186,49 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private static final class TopReviewsAdapter extends FragmentPagerAdapter {
 
 		private static final int MAX_COMMENTS = 3;
-		private long appId;
+
 		private List<Comment> comments;
 
-		public TopReviewsAdapter(FragmentManager fm, long appId) {
+		public TopReviewsAdapter(FragmentManager fm) {
 			super(fm);
-			this.appId = appId;
-			loadTopComments();
 		}
 
-		private void loadTopComments() {
-
-			// TODO fetch top comments
+		public void loadTopComments(String storeName, String packageName) {
+			ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listComments -> {
+						comments = listComments.getDatalist().getList();
+						notifyDataSetChanged();
+						// scheduleAnimations(); // TODO: 15/07/16 sithengineer add animations
+					}, new ErrorRequestListener() {
+						@Override
+						public void onError(Throwable e) {
+							comments = null;
+							notifyDataSetChanged();
+							Logger.e(TAG, e);
+						}
+					}, true // bypass cache flag
+			);
 
 		}
 
 		@Override
 		public int getCount() {
-			return MAX_COMMENTS;
+			return comments == null ? 0 : comments.size();
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			return new MiniTopCommentFragment(null);//comments.get(position));
+			if (comments != null && position < comments.size()) {
+				return MiniTopCommentFragment.newInstance(comments.get(position));
+			}
+			return new MiniTopCommentFragment(); // FIXME: 15/07/16 sithengineer this shouldn't happen
 		}
 	}
 
-	private static final class MiniTopCommentFragment extends BaseFragment {
+	public static final class MiniTopCommentFragment extends BaseFragment {
 
 		private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-		private final Comment comment;
+		private Comment comment;
 
 		private ImageView userIcon;
 		private RatingBar ratingBar;
@@ -234,8 +237,13 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		private TextView addedDate;
 		private TextView commentText;
 
-		public MiniTopCommentFragment(Comment comment) {
-			this.comment = comment;
+		public MiniTopCommentFragment() {
+		}
+
+		public static MiniTopCommentFragment newInstance(Comment comment) {
+			MiniTopCommentFragment fragment = new MiniTopCommentFragment();
+			fragment.comment = comment;
+			return fragment;
 		}
 
 		@Override

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
@@ -43,6 +44,9 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 		name.setText(pojo.getData().getName());
 		ImageLoader.load(pojo.getData().getIcon(), icon);
 
-		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo)));
+		itemView.setOnClickListener(v -> {
+			DataproviderUtils.knock(displayable.getPojo().getInfo().getCpcUrl());
+			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo));
+		});
 	}
 }
