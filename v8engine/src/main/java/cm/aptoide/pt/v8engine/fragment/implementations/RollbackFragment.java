@@ -33,7 +33,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.HeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
@@ -45,7 +45,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by sithengineer on 14/06/16.
  */
-public class RollbackFragment extends GridRecyclerSwipeFragment {
+public class RollbackFragment extends GridRecyclerFragment {
 
 	private static final String TAG = RollbackFragment.class.getSimpleName();
 	private static final DateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());

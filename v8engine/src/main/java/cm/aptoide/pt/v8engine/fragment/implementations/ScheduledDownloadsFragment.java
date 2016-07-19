@@ -14,14 +14,14 @@ import com.trello.rxlifecycle.FragmentEvent;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 19/07/16.
  */
-public class ScheduledDownloadsFragment extends GridRecyclerSwipeFragment {
+public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
 	private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
 
@@ -46,6 +46,11 @@ public class ScheduledDownloadsFragment extends GridRecyclerSwipeFragment {
 		super.bindViews(view);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public int getContentViewId() {
+		return R.layout.fragment_with_toolbar;
 	}
 
 	private void fetchScheduledDownloads() {

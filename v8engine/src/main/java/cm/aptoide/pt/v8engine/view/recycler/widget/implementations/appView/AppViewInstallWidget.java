@@ -102,9 +102,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		cpiUrl = displayable.getCpdUrl();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		/*Store store = app.getStore();
-
-		StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);*/
 
 		versionName.setText(app.getFile().getVername());
 		otherVersions.setOnClickListener(v -> {
@@ -112,8 +109,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			((FragmentShower) getContext()).pushFragmentV4(fragment);
 		});
 
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = Database.get();
 		String packageName = app.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 
