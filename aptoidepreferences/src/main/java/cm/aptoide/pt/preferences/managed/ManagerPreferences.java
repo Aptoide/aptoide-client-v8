@@ -46,7 +46,12 @@ public class ManagerPreferences {
 		Preferences.get().edit().putInt(ManagedKeys.LAST_UPDATES_KEY, lastUpdates).apply();
 	}
 
-	public static int getCacheLimit() {
-		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getInt(ManagedKeys.MAX_FILE_CACHE, 200);
+	public static long getCacheLimit() {
+		String chacheLimit = PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getString(ManagedKeys.MAX_FILE_CACHE, "200");
+		try {
+			return Long.parseLong(chacheLimit);
+		} catch (Exception e) {
+			return 200;
+		}
 	}
 }

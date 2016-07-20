@@ -18,7 +18,7 @@ import lombok.Cleanup;
 public class CacheHelper {
 
 	public static void cleanCache(DownloadSettingsInterface settingsInterface, String cacheDirPath) {
-		long maxCacheSize = settingsInterface.getMaxCacheSize();
+		long maxCacheSize = settingsInterface.getMaxCacheSize() * 1024 * 1024 * 8;
 		@Cleanup
 		Realm realm = Database.get();
 		RealmResults<Download> allSorted = realm.where(Download.class).findAllSorted("timeStamp", Sort.ASCENDING);

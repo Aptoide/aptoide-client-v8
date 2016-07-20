@@ -40,6 +40,7 @@ import java.text.DecimalFormat;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -244,10 +245,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-
-				((EditTextPreference) preference).setText(android.preference.PreferenceManager
-						.getDefaultSharedPreferences(context)
-						.getString("maxFileCache", "200"));
+				((EditTextPreference) preference).setText(String.valueOf(ManagerPreferences.getCacheLimit()));
 				return false;
 			}
 		});

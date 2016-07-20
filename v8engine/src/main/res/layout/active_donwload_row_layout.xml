@@ -111,11 +111,11 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/manage_icon"
+            android:layout_toLeftOf="@+id/pause_cancel_button"
             android:background="?attr/separatorColor"/>
 
         <ImageView
-            android:id="@+id/manage_icon"
+            android:id="@+id/pause_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

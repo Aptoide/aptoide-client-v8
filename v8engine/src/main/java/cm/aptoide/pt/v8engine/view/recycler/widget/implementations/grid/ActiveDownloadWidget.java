@@ -1,8 +1,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.v8engine.R;
@@ -19,6 +22,7 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	private TextView appName;
 	private ProgressBar progressBar;
 	private TextView downloadStatusTv;
+	private ImageView pauseCancelButton;
 
 	public ActiveDownloadWidget(View itemView) {
 		super(itemView);
@@ -29,6 +33,7 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 		appName = (TextView) itemView.findViewById(R.id.app_name);
 		downloadStatusTv = (TextView) itemView.findViewById(R.id.speed);
 		progressBar = (ProgressBar) itemView.findViewById(R.id.downloading_progress);
+		pauseCancelButton = (ImageView) itemView.findViewById(R.id.pause_cancel_button);
 	}
 
 	@Override
@@ -42,5 +47,12 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 			progressBar.setProgress(download.getOverallProgress());
 		}
 		downloadStatusTv.setText(download.getStatusName(itemView.getContext()));
+		RxView.clicks(pauseCancelButton).subscribe(aVoid -> {
+			updateDownloadStatus(displayable, download);
+		});
+	}
+
+	private void updateDownloadStatus(ActiveDownloadDisplayable displayable, Download download) {
+		displayable.cancelDownload(download);
 	}
 }

@@ -25,11 +25,13 @@ import rx.Subscription;
  */
 public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
+	private static DownloadServiceHelper downloadServiceHelper;
 	private List<Displayable> activeDisplayablesList = new LinkedList<>();
 	private List<Displayable> completedDisplayablesList = new LinkedList<>();
 	private Subscription subscription;
 
 	public static DownloadsFragment newInstance() {
+		downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
 		return new DownloadsFragment();
 	}
 
@@ -44,7 +46,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 				completedDisplayablesList.clear();
 				for (final Download download : downloads) {
 					if (download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE) {
-						activeDisplayablesList.add(new ActiveDownloadDisplayable(download));
+						activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadServiceHelper));
 					} else {
 						completedDisplayablesList.add(new CompletedDownloadDisplayable(download));
 					}
