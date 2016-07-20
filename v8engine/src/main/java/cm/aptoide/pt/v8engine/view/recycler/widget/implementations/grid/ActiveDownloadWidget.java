@@ -69,4 +69,8 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 		});
 	}
 
+	@Override
+	public void unbindView() {
+
+	}
 }

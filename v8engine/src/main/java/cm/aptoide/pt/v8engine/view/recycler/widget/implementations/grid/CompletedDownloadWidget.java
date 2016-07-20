@@ -70,4 +70,9 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 		}, Throwable::printStackTrace));
 		subscription.add(RxView.clicks(cancelDownloadButton).subscribe(click -> displayable.removeDownload(download)));
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }
