@@ -100,7 +100,7 @@ public class AptoideDownloadManager {
 	 *                                  thrown with the cause in the detail message.
 	 */
 	public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-		if (getDownloadStatus(download.getAppId()).toBlocking().first() == Download.COMPLETED) {
+		if (getDownloadStatus(download.getAppId()) == Download.COMPLETED) {
 			return Observable.fromCallable(() -> download);
 		}
 		if (permissionRequest != null) {
@@ -127,14 +127,16 @@ public class AptoideDownloadManager {
 
 	public void pauseDownload(long appId) {
 		@Cleanup Realm realm = Database.get();
-		getDownload(realm, appId).first().subscribe(download -> {
+		Download download = getDownloadObject(appId);
+		if (download != null) {
+			if (download.getOverallDownloadStatus() != Download.PROGRESS) {
+				download.setOverallDownloadStatus(Download.PAUSED);
+				Database.save(download, realm);
+			}
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 			}
-		}, throwable -> {
-			Logger.d(TAG, "pauseDownload: ");
-			throwable.printStackTrace();
-		});
+		}
 	}
 
 	/**
@@ -211,15 +213,12 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	private Observable<Integer> getDownloadStatus(long appId) {
-		@Cleanup
-		Realm realm = Database.get();
-		return getDownload(realm, appId).map(download -> {
-			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-				return getStateIfFileExists(download);
-			}
-			return download.getOverallDownloadStatus();
-		});
+	private int getDownloadStatus(long appId) {
+		Download download = getDownloadObject(appId);
+		if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+			return getStateIfFileExists(download);
+		}
+		return download.getOverallDownloadStatus();
 	}
 
 	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface) {
@@ -290,5 +289,24 @@ public class AptoideDownloadManager {
 		} else {
 			return null;
 		}
+	}
+
+	public void removeDownload(long appId) {
+		@Cleanup
+		Realm realm1 = Database.get();
+		getDownload(realm1, appId).subscribe(download -> {
+			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+				FileUtils.removeFile(fileToDownload.getFilePath());
+			}
+			@Cleanup
+			Realm realm = Database.get();
+			Database.delete(download, realm);
+		}, Throwable::printStackTrace);
+	}
+
+	public Download getDownloadObject(long appId) {
+		@Cleanup
+		Realm realm = Database.get();
+		return realm.where(Download.class).equalTo("appId", appId).findFirst().clone();
 	}
 }

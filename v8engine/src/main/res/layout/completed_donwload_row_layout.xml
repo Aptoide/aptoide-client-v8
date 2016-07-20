@@ -40,7 +40,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/view"
+            android:layout_toLeftOf="@+id/resume_download"
             android:layout_toRightOf="@+id/app_icon"
             android:orientation="vertical">
 
@@ -98,6 +98,13 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/resume_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/view"
+            android:background="@drawable/ic_play"/>
         <View
             android:id="@+id/view"
             android:layout_width="1dip"
@@ -108,6 +115,7 @@
             android:layout_toLeftOf="@+id/pause_cancel_button"
             android:background="?attr/separatorColor"/>
 
+        <!--android:background="?attr/icCancelDrawable"-->
         <ImageView
             android:id="@+id/pause_cancel_button"
             android:layout_width="wrap_content"

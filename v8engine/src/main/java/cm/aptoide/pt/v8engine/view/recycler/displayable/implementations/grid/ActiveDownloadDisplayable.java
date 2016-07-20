@@ -36,7 +36,7 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
 		return R.layout.active_donwload_row_layout;
 	}
 
-	public void cancelDownload(Download download) {
+	public void pauseDownload(Download download) {
 		downloadServiceHelper.pauseDownload(download.getAppId());
 	}
 }

@@ -45,10 +45,11 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 				activeDisplayablesList.clear();
 				completedDisplayablesList.clear();
 				for (final Download download : downloads) {
-					if (download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE) {
+					if (download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE || download
+							.getOverallDownloadStatus() == Download.PENDING) {
 						activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadServiceHelper));
 					} else {
-						completedDisplayablesList.add(new CompletedDownloadDisplayable(download));
+						completedDisplayablesList.add(new CompletedDownloadDisplayable(download, downloadServiceHelper));
 					}
 				}
 				if (completedDisplayablesList.size() > 0) {
