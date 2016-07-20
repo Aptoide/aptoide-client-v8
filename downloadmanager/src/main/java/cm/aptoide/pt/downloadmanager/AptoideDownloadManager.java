@@ -30,7 +30,6 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 5/13/16.
@@ -132,6 +131,9 @@ public class AptoideDownloadManager {
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 			}
+		}, throwable -> {
+			Logger.d(TAG, "pauseDownload: ");
+			throwable.printStackTrace();
 		});
 	}
 
@@ -196,13 +198,16 @@ public class AptoideDownloadManager {
 	 */
 	public void pauseAllDownloads() {
 		FileDownloader.getImpl().pauseAll();
-		getCurrentDownloads().first().subscribeOn(Schedulers.io()).subscribe(downloads -> {
+		getCurrentDownloads().first().subscribe(downloads -> {
 			@Cleanup
 			Realm realm = Database.get();
 			for (final Download download : downloads) {
 				download.setOverallDownloadStatus(Download.PAUSED);
 				Database.save(download, realm);
 			}
+		}, throwable -> {
+			Logger.d(TAG, "pauseAllDownloads: ");
+			throwable.printStackTrace();
 		});
 	}
 

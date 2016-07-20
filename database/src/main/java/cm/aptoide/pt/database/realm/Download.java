@@ -45,6 +45,7 @@ public class Download extends RealmObject {
 	private String appName;
 	@SuppressWarnings({"all"})
 	private long timeStamp;
+	private int downloadSpeed;
 
 	public Download() {
 		this.timeStamp = Calendar.getInstance().getTimeInMillis();
@@ -72,8 +73,6 @@ public class Download extends RealmObject {
 			case STARTED:
 			case PENDING:
 			case NOT_DOWNLOADED:
-				toReturn = "";
-				break;
 			case ERROR:
 			case FILE_MISSING:
 			case INVALID_STATUS:
@@ -135,6 +134,7 @@ public class Download extends RealmObject {
 			clone.setAppName(new String(this.getAppName()));
 		}
 		clone.setFilesToDownload(cloneDownloadFiles(this.getFilesToDownload()));
+		clone.setDownloadSpeed(this.getDownloadSpeed());
 		return clone;
 	}
 
@@ -144,6 +144,14 @@ public class Download extends RealmObject {
 			clone.add(fileToDownload.clone());
 		}
 		return clone;
+	}
+
+	public int getDownloadSpeed() {
+		return downloadSpeed;
+	}
+
+	public void setDownloadSpeed(int speed) {
+		this.downloadSpeed = speed;
 	}
 
 	@IntDef({INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN, STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED,

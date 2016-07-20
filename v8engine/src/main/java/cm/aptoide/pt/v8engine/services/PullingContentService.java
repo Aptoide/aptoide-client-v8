@@ -17,18 +17,16 @@ import android.widget.RemoteViews;
 
 import com.bumptech.glide.request.target.NotificationTarget;
 
-import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
+import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
-import io.realm.Realm;
-import lombok.Cleanup;
 
 /**
  * Created by trinkes on 7/13/16.
@@ -74,7 +72,7 @@ public class PullingContentService extends Service {
 		if (action != null) {
 			switch (action) {
 				case UPDATES_ACTION:
-					DataproviderUtils.checkUpdates(listAppsUpdates -> setUpdatesNotification());
+					DataproviderUtils.checkUpdates(this::setUpdatesNotification);
 					break;
 				case PUSH_NOTIFICATIONS_ACTION:
 					PushNotificationsRequest.of().execute(this::setPushNotification, true);
@@ -90,14 +88,12 @@ public class PullingContentService extends Service {
 		return null;
 	}
 
-	private void setUpdatesNotification() {
+	private void setUpdatesNotification(ListAppsUpdates listAppsUpdates) {
 		Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
 		PendingIntent resultPendingIntent = PendingIntent.getBroadcast(Application.getContext(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		@Cleanup
-		Realm realm = Database.get();
-		int numberUpdates = Database.UpdatesQ.getAll(realm).size();
-		if (numberUpdates > 0) {
+		int numberUpdates = listAppsUpdates.getList().size();
+		if (numberUpdates > 0 && numberUpdates != ManagerPreferences.getLastUpdates()) {
 			CharSequence tickerText = AptoideUtils.StringU.getFormattedString(R.string.has_updates, Application.getConfiguration().getMarketName());
 			CharSequence contentTitle = Application.getConfiguration().getMarketName();
 			CharSequence contentText = AptoideUtils.StringU.getFormattedString(R.string.new_updates, numberUpdates);
@@ -116,6 +112,7 @@ public class PullingContentService extends Service {
 			notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 			final NotificationManager managerNotification = (NotificationManager) Application.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 			managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
+			ManagerPreferences.setLastUpdates(numberUpdates);
 		}
 		stopSelf();
 	}
