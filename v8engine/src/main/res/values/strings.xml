@@ -141,9 +141,9 @@
 
     <!-- WIZARD PAGE 3 -->
     <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
-    <string name="wizard_description_part_one_viewpager_three">Follow your friends</string>
-    <string name="wizard_description_part_two_viewpager_three">Review and Rate apps</string>
-    <string name="wizard_description_part_three_viewpager_three">Create your Store</string>
+    <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+    <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+    <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
     <string name="wizard_register_now_button">Register now</string>
     <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
     <string name="wizard_or_login"><u>or Login</u></string>
