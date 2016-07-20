@@ -111,7 +111,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			((FragmentShower) getContext()).pushFragmentV4(fragment);
 		});
 
-		@Cleanup Realm realm = Database.get();
+		@Cleanup
+		Realm realm = Database.get();
 		String packageName = app.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/06/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -60,18 +60,6 @@ public class RollbackFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public int getContentViewId() {
-		return R.layout.fragment_with_toolbar;
-	}
-
-	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		emptyData = (TextView) view.findViewById(R.id.empty_data);
-		setHasOptionsMenu(true);
-	}
-
-	@Override
 	public void setupToolbar() {
 		super.setupToolbar();
 		if (toolbar != null) {
@@ -106,6 +94,18 @@ public class RollbackFragment extends GridRecyclerFragment {
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		Logger.d(TAG, String.format("refresh rollbacks? %s", refresh ? "yes" : "no"));
 		fetchRollbacks();
+	}
+
+	@Override
+	public int getContentViewId() {
+		return R.layout.fragment_with_toolbar;
+	}
+
+	@Override
+	public void bindViews(View view) {
+		super.bindViews(view);
+		emptyData = (TextView) view.findViewById(R.id.empty_data);
+		setHasOptionsMenu(true);
 	}
 
 	private void fetchRollbacks() {

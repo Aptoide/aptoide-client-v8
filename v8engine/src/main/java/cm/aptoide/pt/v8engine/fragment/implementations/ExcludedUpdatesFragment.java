@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -56,15 +56,15 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
 	}
 
 	@Override
+	public int getContentViewId() {
+		return R.layout.fragment_with_toolbar;
+	}
+
+	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public int getContentViewId() {
-		return R.layout.fragment_with_toolbar;
 	}
 
 	@Override

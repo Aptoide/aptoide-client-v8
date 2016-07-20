@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 27/06/2016.
+  ~ Modified by SithEngineer on 20/07/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -10,10 +10,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+
     <include
         layout="@layout/partial_view_incl_no_network"
         tools:visibility="gone"
         />
+
     <include
         layout="@layout/partial_view_error"
         tools:visibility="gone"
