@@ -25,7 +25,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import io.realm.Realm;
@@ -36,7 +36,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by sithengineer on 21/06/16.
  */
-public class ExcludedUpdatesFragment extends GridRecyclerSwipeFragment {
+public class ExcludedUpdatesFragment extends GridRecyclerFragment {
 
 	private static final String TAG = ExcludedUpdatesFragment.class.getSimpleName();
 	private TextView emptyData;

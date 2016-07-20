@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -9,8 +9,10 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -65,7 +67,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private CheckBox shareInTimeline;
 	private ProgressBar downloadProgress;
 	private TextView textProgress;
-	private ImageView actionResume;
+	private ImageView actionPauseResume;
 	private ImageView actionCancel;
 
 	// get app, upgrade and downgrade button
@@ -88,7 +90,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		shareInTimeline = (CheckBox) itemView.findViewById(R.id.share_in_timeline);
 		downloadProgress = (ProgressBar) itemView.findViewById(R.id.download_progress);
 		textProgress = (TextView) itemView.findViewById(R.id.text_progress);
-		actionResume = (ImageView) itemView.findViewById(R.id.ic_action_pause_resume);
+		actionPauseResume = (ImageView) itemView.findViewById(R.id.ic_action_pause_resume);
 		actionCancel = (ImageView) itemView.findViewById(R.id.ic_action_cancel);
 		actionButton = (Button) itemView.findViewById(R.id.action_btn);
 		versionName = (TextView) itemView.findViewById(R.id.store_version_name);
@@ -102,9 +104,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		cpiUrl = displayable.getCpdUrl();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		/*Store store = app.getStore();
-
-		StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);*/
 
 		versionName.setText(app.getFile().getVername());
 		otherVersions.setOnClickListener(v -> {
@@ -112,8 +111,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			((FragmentShower) getContext()).pushFragmentV4(fragment);
 		});
 
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = Database.get();
 		String packageName = app.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 
@@ -172,9 +170,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						.getVercode());
 	}
 
+	//private static class Listeners {
 	private class Listeners {
 
 		private final String TAG = Listeners.class.getSimpleName();
+
+		//		private final WeakReference<AppViewInstallWidget> widgetWeakRef;
+		//
+		//		public Listeners(AppViewInstallWidget widget) {
+		//			widgetWeakRef = new WeakReference<>(widget);
+		//		}
 
 		private View.OnClickListener newBuyListener() {
 			return v -> {
@@ -195,7 +200,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 
 		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v) {
-			String packageName = app.getPackageName();
+			final String packageName = app.getPackageName();
 			AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
 			if (cpdUrl != null) {
 				DataproviderUtils.knock(cpdUrl);
@@ -219,26 +224,91 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
 				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
+
+				actionPauseResume.setOnClickListener(view -> {
+					downloadServiceHelper.pauseDownload(app.getId());
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+						actionPauseResume.setBackgroundColor(getContext().getColor(R.color.default_color));
+					} else {
+						actionPauseResume.setBackgroundColor(getContext().getResources().getColor(R.color.default_color));
+					}
+				});
+
+				actionCancel.setOnClickListener(view -> {
+					//download.cancel();
+					//downloadServiceHelper.cancelDownload(app.getId());
+					downloadServiceHelper.pauseDownload(app.getId());
+
+					installAndLatestVersionLayout.setVisibility(View.VISIBLE);
+					downloadProgressLayout.setVisibility(View.GONE);
+				});
+
+				installAndLatestVersionLayout.setVisibility(View.GONE);
+				downloadProgressLayout.setVisibility(View.VISIBLE);
+				actionPauseResume.setImageResource(R.drawable.ic_pause);
+
 				downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
 
 					// TODO: 19/07/16 sithengineer logic to show / hide pause / resume download and show download progress
 
-					if (download.getOverallDownloadStatus() == Download.PROGRESS) {
-						installAndLatestVersionLayout.setVisibility(View.GONE);
-						downloadProgressLayout.setVisibility(View.VISIBLE);
-						downloadProgress.setProgress(download.getOverallProgress());
-						//textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) + "/s");
-						textProgress.setText(download.getOverallProgress() + "%");
-					}
+					switch (download.getOverallDownloadStatus()) {
 
-					if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-						installAndLatestVersionLayout.setVisibility(View.VISIBLE);
-						downloadProgressLayout.setVisibility(View.GONE);
-						AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+						case Download.PAUSED: {
+							actionPauseResume.setOnClickListener(view -> {
+
+								downloadServiceHelper.startDownload(download);
+
+								//actionPauseResume.setImageResource(R.drawable.ic_); // missing the changing of the drawable
+								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+									actionPauseResume.setBackgroundColor(getContext().getColor(android.R.color.transparent));
+								} else {
+									actionPauseResume.setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
+								}
+							});
+							break;
+						}
+
+						case Download.PROGRESS: {
+							downloadProgress.setProgress(download.getOverallProgress());
+							//textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) +
+							// "/s");
+							textProgress.setText(download.getOverallProgress() + "%");
+							break;
+						}
+
+						case Download.ERROR: {
+							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
+							downloadProgressLayout.setVisibility(View.GONE);
+							break;
+						}
+
+						case Download.COMPLETED: {
+							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
+							downloadProgressLayout.setVisibility(View.GONE);
+							AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+
+							IntentFilter intentFilter = new IntentFilter();
+							intentFilter.addAction(Intent.ACTION_INSTALL_PACKAGE);
+							intentFilter.addDataScheme("package");
+							getContext().registerReceiver(new InstalledBroadcastReceiver() {
+								@Override
+								protected void onPackageAdded(String installedPackageName) {
+									super.onPackageAdded(installedPackageName);
+									if (TextUtils.equals(installedPackageName, packageName) && actionButton.getVisibility() == View.VISIBLE) {
+										actionButton.setText(R.string.open);
+										// FIXME: 20/07/16 sithengineer refactor this ugly code
+										((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
+											new Listeners().newUninstallListener(itemView, app.getPackageName()).call();
+										});
+									}
+								}
+							}, intentFilter);
+							break;
+						}
 					}
 				});
 			}, () -> {
-
 				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 			});
 		}

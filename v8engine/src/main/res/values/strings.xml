@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 19/07/2016.
+  ~ Modified by SithEngineer on 20/07/2016.
   -->
 
 <resources>
@@ -152,4 +152,6 @@
     <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
     <string name="wizard_or_login"><u>or Login</u></string>
 
+    <string name="you_need_to_be_logged_in">You need to be logged in</string>
+    <string name="login">Login</string>
 </resources>

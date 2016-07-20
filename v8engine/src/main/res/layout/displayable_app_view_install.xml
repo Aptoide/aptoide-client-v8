@@ -2,7 +2,7 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 19/07/2016.
+  ~ Modified by SithEngineer on 20/07/2016.
   -->
 
 <LinearLayout
@@ -22,7 +22,7 @@
         android:orientation="horizontal"
         android:padding="7dp"
         android:visibility="gone"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <CheckBox
             android:id="@+id/share_in_timeline"
@@ -103,7 +103,7 @@
         android:orientation="horizontal"
         android:visibility="visible"
         android:weightSum="2"
-        tools:visibility="visible"
+        tools:visibility="gone"
         >
 
         <LinearLayout
