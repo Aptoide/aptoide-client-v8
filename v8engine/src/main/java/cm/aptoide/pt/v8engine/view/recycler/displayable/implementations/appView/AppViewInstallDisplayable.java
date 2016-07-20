@@ -9,7 +9,6 @@ import android.content.Context;
 
 import java.io.File;
 
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
@@ -45,17 +44,17 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		this.cpdUrl = cpdUrl;
 	}
 
-	public Observable<Void> install(Context context, File file) {
-		return installManager.install(context, file);
+	public Observable<Void> install(Context context, File file, String packageName) {
+		return installManager.install(context, file, packageName);
 	}
 
 	public Observable<Void> uninstall(Context context, String packageName) {
 		return installManager.uninstall(context, packageName);
 	}
 
-	public Observable<Void> downgrade(Context context, String uninstallPackage, File installFile) {
-		return Observable.concat(uninstall(context, uninstallPackage),
-				install(context, installFile));
+	public Observable<Void> downgrade(Context context, File installFile, String packageName) {
+		return Observable.concat(uninstall(context, packageName),
+				install(context, installFile, packageName));
 	}
 
 	@Override

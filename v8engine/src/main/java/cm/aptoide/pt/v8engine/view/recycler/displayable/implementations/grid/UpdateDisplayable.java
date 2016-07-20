@@ -10,7 +10,6 @@ import android.content.Context;
 import java.io.File;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
@@ -57,10 +56,10 @@ public class UpdateDisplayable extends Displayable {
 				update.getPatchObbMd5(), installManager, downloadServiceHelper, downloadFactory.create(update));
 	}
 
-	public Observable<Void> install(Context context) {
+	public Observable<Void> updateApp(Context context) {
 		return downloadServiceHelper.startDownload(download)
 				.last()
-				.flatMap(download -> installManager.install(context, new File(download.getFilesToDownload().get(0).getPath())));
+				.flatMap(download -> installManager.install(context, new File(download.getFilesToDownload().get(0).getFilePath()), packageName));
 	}
 
 	@Override

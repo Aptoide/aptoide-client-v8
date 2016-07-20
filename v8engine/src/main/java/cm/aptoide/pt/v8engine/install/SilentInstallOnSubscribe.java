@@ -29,6 +29,7 @@ import rx.subscriptions.Subscriptions;
 @AllArgsConstructor
 public class SilentInstallOnSubscribe implements Observable.OnSubscribe<Void> {
 
+	private static final int INSTALL_SUCCEEDED = 0x00000001;
 	private static final int INSTALL_REPLACE_EXISTING = 0x00000002;
 	private final Context context;
 	private final PackageManager packageManager;
@@ -39,10 +40,17 @@ public class SilentInstallOnSubscribe implements Observable.OnSubscribe<Void> {
 		final IPackageInstallObserver.Stub silentObserver = new IPackageInstallObserver.Stub() {
 			@Override
 			public void packageInstalled(String packageName, int returnCode) throws RemoteException {
-				if (!subscriber.isUnsubscribed()) {
-					subscriber.onNext(null);
-					subscriber.onCompleted();
+				if (returnCode == INSTALL_SUCCEEDED) {
+					if (!subscriber.isUnsubscribed()) {
+						subscriber.onNext(null);
+						subscriber.onCompleted();
+					}
+				} else {
+					if (!subscriber.isUnsubscribed()) {
+						subscriber.onError(new InstallationException("Package not installed with error code: " + returnCode));
+					}
 				}
+
 			}
 		};
 
@@ -53,12 +61,12 @@ public class SilentInstallOnSubscribe implements Observable.OnSubscribe<Void> {
 				installPackage.invoke(packageManager, params);
 			} catch (Exception e) {
 				if (!subscriber.isUnsubscribed()) {
-					subscriber.onError(e);
+					subscriber.onError(new InstallationException(e));
 				}
 			}
 		} else {
 			if (!subscriber.isUnsubscribed()) {
-				subscriber.onError(new IllegalStateException("Aptoide does not  hold system privilege!"));
+				subscriber.onError(new InstallationException("Aptoide does not hold system privilege!"));
 			}
 		}
 	}

@@ -24,6 +24,7 @@ import java.io.File;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -283,7 +284,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(v.getContext(), new File(download.getFilesToDownload().get(0).getFilePath()))
+							displayable.install(v.getContext(), new File(download.getFilesToDownload().get(0).getFilePath()), packageName)
 									.subscribe(success -> {
 										if (actionButton.getVisibility() == View.VISIBLE) {
 											actionButton.setText(R.string.open);
@@ -327,8 +328,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
 					downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
 						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-							final String appPackageName = app.getPackageName();
-							displayable.downgrade(getContext(), appPackageName, new File(download.getFilesToDownload().get(0).getFilePath())).subscribe();
+							final String packageName = app.getPackageName();
+							final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+							displayable.downgrade(getContext(), new File(downloadedFile.getFilePath()), packageName).subscribe();
 						}
 					});
 				}, () -> {

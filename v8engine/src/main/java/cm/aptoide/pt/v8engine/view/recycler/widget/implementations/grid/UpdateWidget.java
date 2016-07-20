@@ -14,14 +14,10 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -73,7 +69,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
 
 		subscription = RxView.clicks(updateButtonLayout)
-				.flatMap(click -> updateDisplayable.install(getContext()))
+				.flatMap(click -> updateDisplayable.updateApp(getContext()))
 				.subscribe();
 
 		updateRowRelativeLayout.setOnLongClickListener(v -> {

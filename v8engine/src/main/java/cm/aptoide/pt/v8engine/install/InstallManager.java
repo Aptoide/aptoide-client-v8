@@ -26,44 +26,55 @@ public class InstallManager {
 
 	private final PackageManager packageManager;
 
-	public Observable<Void> install(Context context, File apkFile) {
-		final Uri apkUri = Uri.fromFile(apkFile);
-		return systemInstall(context, apkUri).onErrorResumeNext(defaultInstall(context, apkUri)).subscribeOn(Schedulers.computation());
+	public Observable<Void> install(Context context, File file, String packageName) {
+		return systemInstall(context, file).onErrorResumeNext(defaultInstall(context, file, packageName)).subscribeOn(Schedulers.computation());
 	}
 
 	public Observable<Void> uninstall(Context context, String packageName) {
 		final Uri uri = Uri.fromParts("package", packageName, null);
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-		return Observable.fromCallable(() -> {
-			Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-			context.startActivity(intent);
+		intentFilter.addDataScheme("package");
+		return Observable.<Void>fromCallable(() -> {
+			uninstallPackage(context, packageName, uri);
 			return null;
-		}).concatMap(success -> packageEvent(context, uri, intentFilter)).subscribeOn(Schedulers.computation());
+		}).concatWith(packageIntent(context, intentFilter, packageName)).last().subscribeOn(Schedulers.computation());
 	}
 
-	private Observable<Void> defaultInstall(Context context, Uri packageUri) {
+	private Observable<Void> defaultInstall(Context context, File file, String packageName) {
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
 		intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-		return Observable.fromCallable(() -> {
+		intentFilter.addDataScheme("package");
+		return Observable.<Void>fromCallable(() -> {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setDataAndType(packageUri, "application/vnd.android.package-archive");
+			intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(intent);
 			return null;
-		}).concatMap(success -> packageEvent(context, packageUri, intentFilter));
+		}).concatWith(packageIntent(context, intentFilter, packageName)).last();
 	}
 
-	private Observable<Void> systemInstall(Context context, Uri packageUri) {
-		return Observable.create(new SilentInstallOnSubscribe(context, packageManager, packageUri));
+	private Observable<Void> systemInstall(Context context, File file) {
+		return Observable.create(new SilentInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
+	}
+
+	private void uninstallPackage(Context context, String packageName, Uri uri) throws InstallationException {
+		try {
+			// Check if package is installed first
+			packageManager.getPackageInfo(packageName, 0);
+			Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+			context.startActivity(intent);
+		} catch (PackageManager.NameNotFoundException e) {
+			throw new InstallationException(e);
+		}
 	}
 
 	@NonNull
-	private Observable<Void> packageEvent(Context context, Uri packageUri, IntentFilter intentFilter) {
+	private Observable<Void> packageIntent(Context context, IntentFilter intentFilter, String packageName) {
 		return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-				.filter(intent -> intent.getData().equals(packageUri))
-				.ignoreElements()
-				.cast(Void.class);
+				.filter(intent -> intent.getData().toString().contains(packageName))
+				.<Void>map(intent -> null)
+				.first();
 	}
 }
