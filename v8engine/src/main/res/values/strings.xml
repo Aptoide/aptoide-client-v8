@@ -126,6 +126,10 @@
     <string name="needs_permission_to_fs">Needs permission to use the external File System</string>
 
     <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
+    <string name="pause_all_downloads">Pause Downloads</string>
+    <string name="all_stores">All Stores</string>
+    <string name="followed_stores">Followed Stores</string>
+    <string name="storage_access_permission_request_message">Please allow access to your phone’s storage so we can download and install this app.</string>
 
     <!-- WIZARD -->
     <string name="wizard_skip"><b>SKIP</b></string>
