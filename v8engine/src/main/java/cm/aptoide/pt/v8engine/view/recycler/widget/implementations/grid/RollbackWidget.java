@@ -65,4 +65,9 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 			ShowMessage.asSnack(view, "TO DO");
 		});
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

@@ -65,4 +65,9 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 		getAppButton.setText(displayable.getAppText(getContext()));
 		getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

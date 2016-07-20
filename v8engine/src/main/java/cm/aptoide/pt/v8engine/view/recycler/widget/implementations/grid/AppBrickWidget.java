@@ -39,4 +39,9 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 
 		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getPojo().getId())));
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

@@ -101,4 +101,9 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 			return true;
 		});
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

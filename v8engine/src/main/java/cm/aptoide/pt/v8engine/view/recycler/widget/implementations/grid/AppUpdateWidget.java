@@ -56,10 +56,6 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
 		ImageLoader.load(displayable.getAppIconUrl(), appIcon);
 
-		if (downloadSubscription != null) {
-			downloadSubscription.unsubscribe();
-		}
-
 		downloadSubscription = Observable.merge(
 				displayable.getDownload()
 						.onErrorResumeNext(throwable -> treatDownloadNotFoundError(throwable)),
@@ -69,6 +65,13 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 						.distinctUntilChanged()
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(download -> updateDownloadStatus(displayable, download), throwable -> showDownloadError(displayable, throwable));
+	}
+
+	@Override
+	public void unbindView() {
+		if (downloadSubscription != null) {
+			downloadSubscription.unsubscribe();
+		}
 	}
 
 	@NonNull

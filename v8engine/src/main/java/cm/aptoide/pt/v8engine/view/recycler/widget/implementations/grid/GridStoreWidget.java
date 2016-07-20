@@ -84,4 +84,9 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 			ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatar);
 		}
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

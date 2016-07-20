@@ -61,6 +61,11 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
 		// TODO
 	}
 
+	@Override
+	public void unbindView() {
+
+	}
+
 	private static final class SuggestedAppExtraInfo {
 
 		private View extraInfoLayout;

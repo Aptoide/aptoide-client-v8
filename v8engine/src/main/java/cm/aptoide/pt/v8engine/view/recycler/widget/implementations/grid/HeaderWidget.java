@@ -39,4 +39,9 @@ public class HeaderWidget extends Widget<HeaderDisplayable> {
 		more.setVisibility(View.GONE);
 		title.setVisibility(View.VISIBLE);
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

@@ -92,6 +92,11 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 		}
 	}
 
+	@Override
+	public void unbindView() {
+
+	}
+
 	private void setBadge(App app, ImageView trustedBadge) {
 		@DrawableRes
 		int badgeResId;

@@ -41,4 +41,9 @@ public class AddMoreStoresWidget extends Widget<AddMoreStoresDisplayable> {
 			}
 		});
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

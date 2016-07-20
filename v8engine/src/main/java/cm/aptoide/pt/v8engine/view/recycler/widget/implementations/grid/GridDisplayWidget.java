@@ -76,6 +76,11 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 		});
 	}
 
+	@Override
+	public void unbindView() {
+
+	}
+
 	private void sendActionEvent(String eventActionUrl) {
 		Intent i;
 		if (eventActionUrl != null) {

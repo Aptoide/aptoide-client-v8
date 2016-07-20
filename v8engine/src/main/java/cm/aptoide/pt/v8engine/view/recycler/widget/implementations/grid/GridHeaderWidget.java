@@ -58,4 +58,9 @@ public class GridHeaderWidget extends Widget<GridHeaderDisplayable> {
 					.getEvent(), displayable.getPojo().getTitle(), displayable.getStoreTheme()));
 		});
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

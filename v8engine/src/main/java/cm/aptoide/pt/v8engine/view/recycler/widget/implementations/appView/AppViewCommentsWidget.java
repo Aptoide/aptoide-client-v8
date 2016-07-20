@@ -37,4 +37,9 @@ public class AppViewCommentsWidget extends Widget<AppViewCommentsDisplayable> {
 
 		writeCommentView.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

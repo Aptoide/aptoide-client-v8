@@ -64,6 +64,11 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		setupStoreInfo(displayable.getPojo());
 	}
 
+	@Override
+	public void unbindView() {
+
+	}
+
 	private void setupStoreInfo(GetApp getApp) {
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();

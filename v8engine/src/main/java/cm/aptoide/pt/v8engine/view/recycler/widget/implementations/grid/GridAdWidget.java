@@ -49,4 +49,9 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo));
 		});
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

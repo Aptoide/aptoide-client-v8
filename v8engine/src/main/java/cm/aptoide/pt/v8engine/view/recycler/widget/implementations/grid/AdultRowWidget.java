@@ -54,4 +54,9 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 			}
 		});
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

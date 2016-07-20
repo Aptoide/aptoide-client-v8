@@ -66,4 +66,10 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 			}
 		});
 	}
+
+	@Override
+	public void unbindView() {
+		url.setOnClickListener(null);
+		getAppButton.setOnClickListener(null);
+	}
 }

@@ -41,6 +41,11 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	}
 
 	@Override
+	public void onViewDetachedFromWindow(Widget holder) {
+		holder.unbindView();
+	}
+
+	@Override
 	public int getItemViewType(int position) {
 		return displayables.get(position).getViewLayout();
 	}

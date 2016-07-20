@@ -59,4 +59,9 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 
 		isExcluded.setChecked(displayable.isSelected());
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

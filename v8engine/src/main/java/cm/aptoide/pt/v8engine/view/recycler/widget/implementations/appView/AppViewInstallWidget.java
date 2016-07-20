@@ -142,6 +142,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 	}
 
+	@Override
+	public void unbindView() {
+
+	}
+
 	private void setupUpgradeDowngradeOpenActions(GetApp getApp, Installed installed, AppViewInstallDisplayable displayable) {
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();

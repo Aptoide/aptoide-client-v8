@@ -86,6 +86,11 @@ public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 		}
 	}
 
+	@Override
+	public void unbindView() {
+
+	}
+
 	private static final class FlagThisApp {
 
 		private Button flagThisAppBtn;

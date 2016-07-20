@@ -30,4 +30,9 @@ public class ProgressBarWidget extends Widget<ProgressBarDisplayable> {
 	public void bindView(ProgressBarDisplayable displayable) {
 
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

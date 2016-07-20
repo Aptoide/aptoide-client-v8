@@ -66,4 +66,10 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 			}
 		});
 	}
+
+	@Override
+	public void unbindView() {
+		url.setOnClickListener(null);
+		getAppButton.setOnClickListener(null);
+	}
 }

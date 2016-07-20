@@ -47,4 +47,9 @@ public class AppBrickListWidget extends Widget<GridAppGraphicDisplayable> {
 		ratingBar.setRating(app.getStats().getRating().getAvg());
 		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(app.getId())));
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

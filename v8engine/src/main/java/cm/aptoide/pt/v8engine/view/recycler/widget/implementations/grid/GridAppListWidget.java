@@ -66,4 +66,9 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
 		});
 		ImageLoader.load(AptoideUtils.IconSizeU.parseIcon(app.getIcon()), icon);
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

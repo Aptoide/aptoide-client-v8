@@ -98,4 +98,9 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 					});
 		});
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }

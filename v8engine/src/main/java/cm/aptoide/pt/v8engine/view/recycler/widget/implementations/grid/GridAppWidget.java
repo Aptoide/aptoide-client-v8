@@ -83,4 +83,9 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 				}
 		);
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }
