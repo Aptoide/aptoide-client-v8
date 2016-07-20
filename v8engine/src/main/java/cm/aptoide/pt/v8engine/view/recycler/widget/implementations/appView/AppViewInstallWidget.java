@@ -7,14 +7,9 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -45,7 +40,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.install.InstalledBroadcastReceiver;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.RollbackUtils;
@@ -54,10 +48,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
-import rx.Observable;
 import rx.functions.Action0;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -144,7 +135,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	public void unbindView() {
-
 	}
 
 	private void setupUpgradeDowngradeOpenActions(GetApp getApp, Installed installed, AppViewInstallDisplayable displayable) {
@@ -338,7 +328,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
 						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 							final String appPackageName = app.getPackageName();
-							displayable.downgrade(view.getContext(), appPackageName, new File(download.getFilesToDownload().get(0).getFilePath())).subscribe();
+							displayable.downgrade(getContext(), appPackageName, new File(download.getFilesToDownload().get(0).getFilePath())).subscribe();
 						}
 					});
 				}, () -> {
@@ -362,7 +352,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		private Action0 newUninstallListener(View itemView, String packageName, AppViewInstallDisplayable displayable) {
 			return () -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUninstallAction(packageName));
-				displayable.uninstall(itemView.getContext(), packageName).subscribe();
+				displayable.uninstall(getContext(), packageName).subscribe();
 			};
 		}
 	}
