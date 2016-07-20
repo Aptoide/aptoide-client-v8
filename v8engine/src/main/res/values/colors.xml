@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 08/07/2016.
+  ~ Modified by SithEngineer on 20/07/2016.
   -->
 
 <resources>
@@ -138,5 +138,6 @@
 
     <color name="black_gradient_start">#dd000000</color>
     <color name="black_gradient_end">#2f000000</color>
+    <color name="app_view_follow_orange">#b64735</color>
 
 </resources>

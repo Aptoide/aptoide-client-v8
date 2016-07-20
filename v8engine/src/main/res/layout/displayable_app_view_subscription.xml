@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/07/2016.
+  ~ Modified by SithEngineer on 20/07/2016.
   -->
 
 <LinearLayout
@@ -91,18 +91,18 @@
             >
 
             <Button
-                android:id="@+id/btn_subscribe"
+                android:id="@+id/follow_store_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/button_border_orange2"
-                android:text="@string/appview_follow_store_button_text"
+                android:background="@drawable/button_border_orange3"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceSmallInverse"
-                android:textColor="?colorPrimary"
+                android:textColor="@color/app_view_follow_orange"
                 android:textSize="12sp"
+                tools:text="@string/appview_follow_store_button_text"
                 />
         </RelativeLayout>
 

@@ -157,7 +157,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			actionButton.setText(R.string.buy);
 			actionButton.setOnClickListener(new Listeners().newBuyListener());
 		} else {
-			actionButton.setText(R.string.get_app);
+			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(new Listeners().newInstallListener(app));
 		}
 	}

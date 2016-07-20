@@ -26,6 +26,8 @@ import rx.Observable;
  */
 public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> {
 
+	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
+
 	private static final int MAX_REVIEWS = 10;
 	private static final int MAX_COMMENTS = 10;
 

@@ -22,7 +22,7 @@
         android:orientation="horizontal"
         android:padding="7dp"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <CheckBox
             android:id="@+id/share_in_timeline"
@@ -103,7 +103,7 @@
         android:orientation="horizontal"
         android:visibility="visible"
         android:weightSum="2"
-        tools:visibility="gone"
+        tools:visibility="visible"
         >
 
         <LinearLayout
@@ -201,7 +201,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@drawable/rounded_corners_primary"
-            android:text="@string/get_app"
+            android:text="@string/install"
             android:textAllCaps="true"
             />
 

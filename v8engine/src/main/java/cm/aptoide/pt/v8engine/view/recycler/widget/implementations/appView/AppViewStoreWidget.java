@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -43,7 +43,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 	private ImageView storeAvatarView;
 	private TextView storeNameView;
 	private TextView storeNumberUsersView;
-	private Button subscribeButton;
+	private Button followButton;
 	private View storeLayout;
 
 	public AppViewStoreWidget(View itemView) {
@@ -55,7 +55,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		storeAvatarView = ((ImageView) itemView.findViewById(R.id.store_avatar));
 		storeNameView = ((TextView) itemView.findViewById(R.id.store_name));
 		storeNumberUsersView = ((TextView) itemView.findViewById(R.id.store_number_users));
-		subscribeButton = ((Button) itemView.findViewById(R.id.btn_subscribe));
+		followButton = ((Button) itemView.findViewById(R.id.follow_store_btn));
 		storeLayout = itemView.findViewById(R.id.store_layout);
 	}
 
@@ -82,11 +82,11 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		storeNumberUsersView.setText(String.format(Locale.getDefault(), V8Engine.getContext().getString(R.string.appview_followers_count_text), store
 				.getStats()
 				.getSubscribers()));
-		subscribeButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+		followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			subscribeButton.setElevation(0);
+			followButton.setElevation(0);
 		}
-		subscribeButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
+		followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
 		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName()));
 
 		@Cleanup
@@ -94,15 +94,15 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		boolean subscribed = Database.StoreQ.get(store.getId(), realm) != null;
 
 		if (subscribed) {
-			int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
-			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
-			subscribeButton.setText(R.string.appview_subscribed_store_button_text);
-			subscribeButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName()));
+			//int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
+			//followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
+			followButton.setText(R.string.followed);
+			followButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName()));
 		} else {
-			int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
-			subscribeButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-			subscribeButton.setText(R.string.appview_subscribe_store_button_text);
-			subscribeButton.setOnClickListener(new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+			//int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
+			//followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
+			followButton.setText(R.string.appview_follow_store_button_text);
+			followButton.setOnClickListener(new Listeners().newSubscribeStoreListener(itemView, store.getName()));
 		}
 	}
 

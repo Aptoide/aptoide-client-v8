@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -169,7 +169,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 				Logger.i(TAG, "showing rationale and requesting permission to access external storage");
 				
 				// TODO: 19/07/16 sithengineer improve this rationale messages 
-				showMessageOKCancel(getString(R.string.access_to_external_storage_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
+				showMessageOKCancel(getString(R.string.storage_access_permission_request_message), new SimpleSubscriber<GenericDialogs.EResponse>() {
 
 					@Override
 					public void onNext(GenericDialogs.EResponse eResponse) {

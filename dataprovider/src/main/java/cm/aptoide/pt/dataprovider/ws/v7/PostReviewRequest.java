@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -21,7 +22,9 @@ import rx.Observable;
 /**
  * Created by sithengineer on 20/07/16.
  */
-public class PostReviewRequest extends V7<Void,PostReviewRequest.Body> {
+public class PostReviewRequest extends V7<BaseV7Response,PostReviewRequest.Body> {
+
+	private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
 	protected PostReviewRequest(Body body, String baseHost) {
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
@@ -40,7 +43,7 @@ public class PostReviewRequest extends V7<Void,PostReviewRequest.Body> {
 	}
 
 	@Override
-	protected Observable<Void> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+	protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.postReview(body, true);
 	}
 
