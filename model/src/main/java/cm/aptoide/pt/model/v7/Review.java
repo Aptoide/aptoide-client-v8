@@ -12,22 +12,29 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * Created by neuro on 04-07-2016.
+ * Created by sithengineer on 20/07/16.
  */
 @Data
-public class Comment {
+public class Review {
 
 	private long id;
 	private String body;
-	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
-	private Date added;
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date added;
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date modified;
 	private User user;
-	private long parentReview;
+	private Stats stats;
 
 	@Data
 	public static class User {
 
 		private String name;
 		private String avatar;
+	}
+
+	@Data
+	public static class Stats {
+
+		private long comments;
+		private long points;
 	}
 }

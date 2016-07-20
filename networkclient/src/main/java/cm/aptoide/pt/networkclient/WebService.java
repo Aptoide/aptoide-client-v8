@@ -1,11 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.networkclient;
-
-import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -18,9 +16,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -51,6 +49,13 @@ public abstract class WebService<T, U> {
 	private Retrofit retrofit;
 	private Observable<T> service;
 
+	protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		this.httpClient = httpClient;
+		this.converterFactory = converterFactory;
+		this.clazz = clazz;
+		this.baseHost = baseHost;
+	}
+
 	public static Converter.Factory getDefaultConverter() {
 		if (defaultConverterFactory == null) {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -65,13 +70,6 @@ public abstract class WebService<T, U> {
 			defaultConverterFactory = JacksonConverterFactory.create(objectMapper);
 		}
 		return defaultConverterFactory;
-	}
-
-	protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		this.httpClient = httpClient;
-		this.converterFactory= converterFactory;
-		this.clazz = clazz;
-		this.baseHost = baseHost;
 	}
 
 	protected Observable<T> getService() {
@@ -134,9 +132,10 @@ public abstract class WebService<T, U> {
 	}
 
 	protected ErrorRequestListener defaultErrorRequestListener() {
+
 		return (Throwable e) -> {
 			// TODO: Implementar
-			System.out.println("Erro por implementar");
+			Logger.e(ErrorRequestListener.class.getName(), "Erro por implementar");
 			e.printStackTrace();
 		};
 	}

@@ -6,8 +6,8 @@
 package cm.aptoide.pt.model.v7;
 
 /**
- * Created by neuro on 04-07-2016.
+ * Created by sithengineer on 20/07/16.
  */
-public class ListReviews extends BaseV7EndlessResponse<Review> {
+public class ListComments extends BaseV7EndlessResponse<Comment> {
 	
 }

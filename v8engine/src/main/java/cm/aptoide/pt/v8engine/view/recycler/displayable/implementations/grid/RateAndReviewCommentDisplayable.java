@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -13,16 +13,16 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 /**
  * Created by sithengineer on 14/07/16.
  */
-public class RateAndReviewCommentDisplayable extends DisplayablePojo<Comment> {
+public class RateAndReviewCommentDisplayable extends DisplayablePojo<Review> {
 
 	public RateAndReviewCommentDisplayable() {
 	}
 
-	public RateAndReviewCommentDisplayable(Comment pojo) {
+	public RateAndReviewCommentDisplayable(Review pojo) {
 		super(pojo);
 	}
 
-	public RateAndReviewCommentDisplayable(Comment pojo, boolean fixedPerLineCount) {
+	public RateAndReviewCommentDisplayable(Review pojo, boolean fixedPerLineCount) {
 		super(pojo, fixedPerLineCount);
 	}
 

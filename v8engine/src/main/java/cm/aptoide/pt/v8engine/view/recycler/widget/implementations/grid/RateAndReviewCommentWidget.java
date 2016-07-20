@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
@@ -66,10 +66,10 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 
 	@Override
 	public void bindView(RateAndReviewCommentDisplayable displayable) {
-		Comment comment = displayable.getPojo();
+		Review review = displayable.getPojo();
 
-		ImageLoader.loadWithCircleTransform(comment.getUser().getAvatar(), userImage);
-		username.setText(comment.getUser().getName());
+		ImageLoader.loadWithCircleTransform(review.getUser().getAvatar(), userImage);
+		username.setText(review.getUser().getName());
 
 		// TODO: 18/07/16 sithengineer ratingBar.setRating( ?? );
 		ratingBar.setVisibility(View.INVISIBLE);
@@ -77,9 +77,9 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 		// TODO: 18/07/16 sithengineer reviewTitle.setText( ?? );
 		reviewTitle.setVisibility(View.INVISIBLE);
 
-		reviewText.setText(comment.getBody());
+		reviewText.setText(review.getBody());
 
-		reviewDate.setText(DATE_FORMAT.format(comment.getAdded()));
+		reviewDate.setText(DATE_FORMAT.format(review.getAdded()));
 
 		reply.setOnClickListener(v -> {
 			ShowMessage.asSnack(v, "TO DO: write reply");

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/07/2016.
+ * Modified by SithEngineer on 20/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -26,13 +26,14 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -66,6 +67,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private TopReviewsAdapter topReviewsAdapter;
 
 	private String appName;
+	private String packageName;
+	private String storeName;
 
 	public AppViewRateAndReviewsWidget(View itemView) {
 		super(itemView);
@@ -90,6 +93,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		GetAppMeta.Stats stats = app.getStats();
 
 		appName = app.getName();
+		packageName = app.getPackageName();
+		storeName = app.getStore().getName();
 
 		usersVoted.setText(String.format(LOCALE, "%d", stats.getDownloads()));
 
@@ -98,7 +103,13 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		ratingBar.setRating(ratingAvg);
 
 		View.OnClickListener rateOnClickListener = v -> {
-			showRateDialog();
+			if (AptoideAccountManager.isLoggedIn()) {
+				showRateDialog();
+			} else {
+				ShowMessage.asSnack(ratingBar, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
+					AptoideAccountManager.openAccountManager(snackView.getContext());
+				});
+			}
 		};
 		rateThisButton.setOnClickListener(rateOnClickListener);
 		ratingLayout.setOnClickListener(rateOnClickListener);
@@ -118,12 +129,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		final Context ctx = getContext();
 		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_rate_app, null);
 
-		final TextView title = (TextView) view.findViewById(R.id.title);
-		final AppCompatRatingBar ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
-		final EditText titleText = (EditText) view.findViewById(R.id.input_title);
-		final EditText reviewText = (EditText) view.findViewById(R.id.input_review);
+		final TextView titleTextView = (TextView) view.findViewById(R.id.title);
+		final AppCompatRatingBar reviewRatingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
+		final EditText titleEditText = (EditText) view.findViewById(R.id.input_title);
+		final EditText reviewEditText = (EditText) view.findViewById(R.id.input_review);
 
-		title.setText(String.format(LOCALE, ctx.getString(R.string.rate_app), appName));
+		titleTextView.setText(String.format(LOCALE, ctx.getString(R.string.rate_app), appName));
 
 		// build review text hint in runtime using spans and different text styles / colors
 		/*
@@ -154,7 +165,16 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 
-				// TODO: 18/07/16 sithengineer call WS with rating result
+				final String reviewTitle = titleEditText.getText().toString();
+				final String reviewText = reviewEditText.getText().toString();
+				final int reviewRating = Math.round(reviewRatingBar.getRating());
+
+				PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(aVoid -> {
+					Logger.d(TAG, "review added");
+				}, e -> {
+					Logger.e(TAG, e);
+					ShowMessage.asSnack(ratingLayout, R.string.error_occured);
+				});
 
 				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
 
@@ -187,24 +207,21 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		private static final int MAX_COMMENTS = 3;
 
-		private List<Comment> comments;
+		private List<Review> reviews;
 
 		public TopReviewsAdapter(FragmentManager fm) {
 			super(fm);
 		}
 
 		public void loadTopComments(String storeName, String packageName) {
-			ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listComments -> {
-						comments = listComments.getDatalist().getList();
+			ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
+						reviews = listReviews.getDatalist().getList();
 						notifyDataSetChanged();
 						// scheduleAnimations(); // TODO: 15/07/16 sithengineer add animations
-					}, new ErrorRequestListener() {
-						@Override
-						public void onError(Throwable e) {
-							comments = null;
-							notifyDataSetChanged();
-							Logger.e(TAG, e);
-						}
+					}, e -> {
+						reviews = null;
+						notifyDataSetChanged();
+						Logger.e(TAG, e);
 					}, true // bypass cache flag
 			);
 
@@ -212,23 +229,23 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		@Override
 		public int getCount() {
-			return comments == null ? 0 : comments.size();
+			return reviews == null ? 0 : reviews.size();
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			if (comments != null && position < comments.size()) {
-				return MiniTopCommentFragment.newInstance(comments.get(position));
+			if (reviews != null && position < reviews.size()) {
+				return MiniTopReviewFragment.newInstance(reviews.get(position));
 			}
-			return new MiniTopCommentFragment(); // FIXME: 15/07/16 sithengineer this shouldn't happen
+			return new MiniTopReviewFragment(); // FIXME: 15/07/16 sithengineer this shouldn't happen
 		}
 	}
 
-	public static final class MiniTopCommentFragment extends BaseFragment {
+	public static final class MiniTopReviewFragment extends BaseFragment {
 
 		private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-		private Comment comment;
+		private Review review;
 
 		private ImageView userIcon;
 		private RatingBar ratingBar;
@@ -237,12 +254,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		private TextView addedDate;
 		private TextView commentText;
 
-		public MiniTopCommentFragment() {
+		public MiniTopReviewFragment() {
 		}
 
-		public static MiniTopCommentFragment newInstance(Comment comment) {
-			MiniTopCommentFragment fragment = new MiniTopCommentFragment();
-			fragment.comment = comment;
+		public static MiniTopReviewFragment newInstance(Review review) {
+			MiniTopReviewFragment fragment = new MiniTopReviewFragment();
+			fragment.review = review;
 			return fragment;
 		}
 
@@ -263,15 +280,15 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		@Override
 		public void setupViews() {
-			if (comment == null) {
+			if (review == null) {
 				return;
 			}
-			ImageLoader.load(comment.getUser().getAvatar(), userIcon);
-			userName.setText(comment.getUser().getName());
+			ImageLoader.load(review.getUser().getAvatar(), userIcon);
+			userName.setText(review.getUser().getName());
 			//ratingBar.setRating( ?? );
 			//commentTitle.setText( ?? );
-			commentText.setText(comment.getBody());
-			addedDate.setText(SIMPLE_DATE_FORMAT.format(comment.getAdded()));
+			commentText.setText(review.getBody());
+			addedDate.setText(SIMPLE_DATE_FORMAT.format(review.getAdded()));
 		}
 	}
 }
