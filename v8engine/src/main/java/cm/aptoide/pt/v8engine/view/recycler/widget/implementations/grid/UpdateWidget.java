@@ -72,10 +72,6 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
 
-		if (subscription != null) {
-			subscription.unsubscribe();
-		}
-
 		subscription = RxView.clicks(updateButtonLayout)
 				.flatMap(click -> updateDisplayable.install(getContext()))
 				.subscribe();
@@ -104,6 +100,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	@Override
 	public void unbindView() {
-
+		if (subscription != null) {
+			subscription.unsubscribe();
+		}
 	}
 }
