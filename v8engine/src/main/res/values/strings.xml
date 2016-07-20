@@ -126,4 +126,24 @@
     <string name="needs_permission_to_fs">Needs permission to use the external File System</string>
 
     <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
+
+    <!-- WIZARD PAGE 1 -->
+    <string name="wizard_welcome_message"><b>Welcome!</b></string>
+    <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey</string>
+    <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install</string>
+    <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
+
+    <!-- WIZARD PAGE 2 -->
+    <string name="wizard_title_viewpager_two"><b>Apps Feed</b></string>
+    <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+
+    <!-- WIZARD PAGE 3 -->
+    <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+    <string name="wizard_description_part_one_viewpager_three">Follow your friends</string>
+    <string name="wizard_description_part_two_viewpager_three">Review and Rate apps</string>
+    <string name="wizard_description_part_three_viewpager_three">Create your Store</string>
+    <string name="wizard_register_now_button">Register now</string>
+    <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+    <string name="wizard_or_login"><u>or Login</u></string>
+
 </resources>
