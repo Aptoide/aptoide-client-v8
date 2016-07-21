@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -141,8 +141,8 @@ public class RollbackFragment extends GridRecyclerFragment {
 			throw new RuntimeException(ex);
 		}
 	}
-
-	// FIXME slow method. could this be improved ??
+	
+	// FIXME: 21/07/2016 slow method. could this be improved ??
 	private void sortRollbacksAndAdd(RealmResults<Rollback> rollbacks) {
 		// group by timestamp
 		TreeMap<String,List<Displayable>> arrayOfDisplayables = new TreeMap<>(new Comparator<String>() {

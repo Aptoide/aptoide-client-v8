@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -28,7 +28,6 @@ import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Scheduled;
@@ -450,7 +449,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			fileSize.setText(AptoideUtils.StringU.formatBits(sumFileSizes(app.getSize(), app.getObb())));
 
-			downloadsCount.setText(String.format(Locale.ROOT, "%d", app.getStats().getDownloads()));
+			downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
 
 			@DrawableRes
 			int badgeResId = 0;

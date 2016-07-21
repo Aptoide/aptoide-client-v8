@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -56,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Ins
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
@@ -98,6 +99,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Progress
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RateAndReviewCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ScheduledDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
@@ -178,6 +180,7 @@ public enum DisplayableType {
 
 	OTHER_VERSION(OtherVersionWidget.class, OtherVersionDisplayable.class),
 	RATE_AND_REVIEW(RateAndReviewCommentWidget.class, RateAndReviewCommentDisplayable.class),
+	SCHEDULED_DOWNLOAD(ScheduledDownloadWidget.class, ScheduledDownloadDisplayable.class),
 	COMPLETED_DOWNLOAD(CompletedDownloadWidget.class, CompletedDownloadDisplayable.class),
 	ACTIVE_DOWNLOAD(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class);
 

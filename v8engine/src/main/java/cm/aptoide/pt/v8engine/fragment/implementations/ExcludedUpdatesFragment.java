@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -164,6 +164,12 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
 						}
 						setDisplayables(displayables);
 					}
+				}, t -> {
+					Logger.e(TAG, t);
+					emptyData.setText(R.string.no_excluded_updates_msg);
+					emptyData.setVisibility(View.VISIBLE);
+					clearDisplayables();
+					finishLoading();
 				});
 	}
 }
