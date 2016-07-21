@@ -1,9 +1,19 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
+import android.widget.ImageView;
+
+import java.io.File;
+
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
 
@@ -13,14 +23,16 @@ import rx.Observable;
 public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 
 	private DownloadServiceHelper downloadServiceHelper;
+	private InstallManager installManager;
 
 	public CompletedDownloadDisplayable() {
 		super();
 	}
 
-	public CompletedDownloadDisplayable(Download pojo, DownloadServiceHelper downloadServiceHelper) {
+	public CompletedDownloadDisplayable(Download pojo, DownloadServiceHelper downloadServiceHelper, InstallManager installManager) {
 		super(pojo);
 		this.downloadServiceHelper = downloadServiceHelper;
+		this.installManager = installManager;
 	}
 
 	public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
@@ -41,7 +53,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 		downloadServiceHelper.removeDownload(download.getAppId());
 	}
 
-	public Observable<Download> resumeDownload(Download download) {
+	public Observable<Download> resumeDownload(Context context, Download download, ImageView resumeDownloadButton) {
 		return downloadServiceHelper.startDownload(download);
 	}
 }

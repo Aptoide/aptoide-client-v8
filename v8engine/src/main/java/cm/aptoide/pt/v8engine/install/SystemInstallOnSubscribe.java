@@ -27,7 +27,7 @@ import rx.subscriptions.Subscriptions;
  * Created by marcelobenites on 7/19/16.
  */
 @AllArgsConstructor
-public class SilentInstallOnSubscribe implements Observable.OnSubscribe<Void> {
+public class SystemInstallOnSubscribe implements Observable.OnSubscribe<Void> {
 
 	private static final int INSTALL_SUCCEEDED = 0x00000001;
 	private static final int INSTALL_REPLACE_EXISTING = 0x00000002;

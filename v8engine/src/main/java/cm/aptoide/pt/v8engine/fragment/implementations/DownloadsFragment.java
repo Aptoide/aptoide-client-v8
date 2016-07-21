@@ -14,6 +14,7 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
@@ -49,7 +50,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 							.getOverallDownloadStatus() == Download.PENDING) {
 						activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadServiceHelper));
 					} else {
-						completedDisplayablesList.add(new CompletedDownloadDisplayable(download, downloadServiceHelper));
+						completedDisplayablesList.add(new CompletedDownloadDisplayable(download, downloadServiceHelper, new InstallManager(getContext()
+								.getPackageManager())));
 					}
 				}
 				if (completedDisplayablesList.size() > 0) {

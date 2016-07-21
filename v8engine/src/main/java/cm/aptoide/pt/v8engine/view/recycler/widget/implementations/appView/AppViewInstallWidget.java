@@ -49,6 +49,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 /**
@@ -285,6 +286,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
 							displayable.install(v.getContext(), new File(download.getFilesToDownload().get(0).getFilePath()), packageName)
+									.observeOn(AndroidSchedulers.mainThread())
 									.subscribe(success -> {
 										if (actionButton.getVisibility() == View.VISIBLE) {
 											actionButton.setText(R.string.open);

@@ -53,4 +53,9 @@ public class ScheduledDownloadWidget extends Widget<ScheduledDownloadDisplayable
 
 		isSelected.setChecked(displayable.isSelected());
 	}
+
+	@Override
+	public void unbindView() {
+
+	}
 }
