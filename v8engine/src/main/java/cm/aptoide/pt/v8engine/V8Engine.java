@@ -23,12 +23,14 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import io.fabric.sdk.android.Fabric;
@@ -105,6 +107,7 @@ public abstract class V8Engine extends DataProvider {
 		AptoideUtils.setContext(this);
 
 		super.onCreate();
+		generateAptoideUUID().subscribe();
 
 		if (BuildConfig.DEBUG) {
 			LeakCanary.install(this);
@@ -120,7 +123,7 @@ public abstract class V8Engine extends DataProvider {
 					SecurePreferences.setUserDataLoaded();
 				}
 			} else {
-				addDefaultStore();
+				generateAptoideUUID().subscribe(success -> addDefaultStore());
 			}
 //			SecurePreferences.setFirstRun(false);    //jdandrade - Disabled this line so i could run first run wizard.
 		}
@@ -154,6 +157,11 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+	}
+
+	Observable<String> generateAptoideUUID() {
+		return Observable.fromCallable(() ->
+				new IdsRepository(SecurePreferencesImplementation.getInstance(), this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
 	}
 
 	private void setupCrashlytics() {
