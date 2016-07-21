@@ -80,9 +80,6 @@ public class InstallManager {
 
 				// Attempt to install Application
 				DataOutputStream os = new DataOutputStream(p.getOutputStream());
-				InputStream stderr = p.getErrorStream();
-				InputStream stdout = p.getInputStream();
-
 				byte[] arrayOfByte = Base64.decode("cG0gaW5zdGFsbCAtciA=", Base64.DEFAULT);
 				String install = new String(arrayOfByte, "UTF-8");
 				os.writeBytes(install + "\"" + file.getPath() + "\"\n");
@@ -90,17 +87,6 @@ public class InstallManager {
 				// Close the terminal
 				os.writeBytes("exit\n");
 				os.flush();
-
-				String line;
-				BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
-				while ((line = br.readLine()) != null) {
-				}
-				br.close();
-				br = new BufferedReader(new InputStreamReader(stderr));
-
-				while ((line = br.readLine()) != null) {
-				}
-				br.close();
 
 				//Wait for operation result
 				p.waitFor();
@@ -117,7 +103,7 @@ public class InstallManager {
 		}
 	}
 
-	public boolean isRooted() {
+	private boolean isRooted() {
 		return findBinary("su") || checkRootBuildTags() || checkRootPaths() || checkRootSU();
 	}
 
