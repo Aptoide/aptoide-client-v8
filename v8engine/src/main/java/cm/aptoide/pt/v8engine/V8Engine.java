@@ -35,6 +35,8 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Getter;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -120,7 +122,7 @@ public abstract class V8Engine extends DataProvider {
 			} else {
 				addDefaultStore();
 			}
-			SecurePreferences.setFirstRun(false);
+//			SecurePreferences.setFirstRun(false);    //jdandrade - Disabled this line so i could run first run wizard.
 		}
 
 		final int appSignature = SecurityUtils.checkAppSignature(this);
@@ -164,20 +166,24 @@ public abstract class V8Engine extends DataProvider {
 	}
 
 	private void loadInstalledApps() {
-		@Cleanup Realm realm = Database.get(this);
-		Database.dropTable(Installed.class, realm);
-		// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
+		Observable.fromCallable(() -> {
+			@Cleanup Realm realm = Database.get(this);
+			Database.dropTable(Installed.class, realm);
+			// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
-		List<PackageInfo> installedApps = AptoideUtils.SystemU.getUserInstalledApps();
-		Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
+			List<PackageInfo> installedApps = AptoideUtils.SystemU.getUserInstalledApps();
+			Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
 
-		// Installed apps are inserted in database based on their firstInstallTime. Older comes first.
-		Collections.sort(installedApps, (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
+			// Installed apps are inserted in database based on their firstInstallTime. Older comes first.
+			Collections.sort(installedApps, (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
-		for (PackageInfo packageInfo : installedApps) {
-			Installed installed = new Installed(packageInfo, getPackageManager());
-			Database.save(installed, realm);
-		}
+			for (PackageInfo packageInfo : installedApps) {
+				Installed installed = new Installed(packageInfo, getPackageManager());
+				Database.save(installed, realm);
+			}
+			return null;
+		}).subscribeOn(Schedulers.io()).subscribe();
+
 	}
 
 	private void setupStrictMode() {
