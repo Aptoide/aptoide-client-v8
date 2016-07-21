@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -210,16 +211,20 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	@Override
 	protected void error(BaseDownloadTask task, Throwable e) {
 		AptoideDownloadManager.getInstance().pauseDownload(download.getAppId());
-		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-			if (!TextUtils.isEmpty(fileToDownload.getAltLink())) {
-				fileToDownload.setLink(fileToDownload.getAltLink());
-				fileToDownload.setAltLink(null);
-				saveDownloadInDb(download);
-				Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-				intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-				intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
-				AptoideDownloadManager.getContext().sendBroadcast(intent);
-				return;
+		if (e instanceof FileDownloadHttpException && ((FileDownloadHttpException) e).getCode() == 404) {
+			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+				if (!TextUtils.isEmpty(fileToDownload.getAltLink())) {
+					fileToDownload.setLink(fileToDownload.getAltLink());
+					fileToDownload.setAltLink(null);
+					@Cleanup
+					Realm realm = Database.get();
+					Database.save(download, realm);
+					Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+					intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+					intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
+					AptoideDownloadManager.getContext().sendBroadcast(intent);
+					return;
+				}
 			}
 		}
 		setDownloadStatus(Download.ERROR, download, task);

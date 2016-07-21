@@ -42,8 +42,10 @@ public class DownloadService extends Service {
 	private void startDownload(long appId) {
 		if (appId > 0) {
 			Download download = downloadManager.getDownloadObject(appId);
-			downloadManager.startDownload(download);
-			setupNotifications();
+			if (download != null) {
+				downloadManager.startDownload(download);
+				setupNotifications();
+			}
 		}
 	}
 

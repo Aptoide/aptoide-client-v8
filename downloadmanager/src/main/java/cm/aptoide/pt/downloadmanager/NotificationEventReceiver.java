@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.database.realm.Download;
 
 /**
  * Created by trinkes on 6/23/16.
@@ -39,9 +39,10 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
 						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
 						if (appid > 0) {
-							downloadManager.getDownload(appid).first().flatMap(downloadManager::startDownload).subscribe(
-									download -> Logger.d("DownloadManager", "Download of " + download.getAppName() + " resumed"),
-									throwable -> Logger.e("DownloadManager", "Failed to resume download: " + throwable.getMessage()));
+							Download download = downloadManager.getDownloadObject(appid);
+							if (download != null) {
+								downloadManager.startDownload(download);
+							}
 						}
 					}
 					break;

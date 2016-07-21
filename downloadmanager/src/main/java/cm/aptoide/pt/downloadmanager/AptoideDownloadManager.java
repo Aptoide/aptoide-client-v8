@@ -215,10 +215,14 @@ public class AptoideDownloadManager {
 
 	private int getDownloadStatus(long appId) {
 		Download download = getDownloadObject(appId);
-		if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-			return getStateIfFileExists(download);
+		if (download != null) {
+			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+				return getStateIfFileExists(download);
+			}
+			return download.getOverallDownloadStatus();
+		} else {
+			return Download.NOT_DOWNLOADED;
 		}
-		return download.getOverallDownloadStatus();
 	}
 
 	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface) {
@@ -307,6 +311,7 @@ public class AptoideDownloadManager {
 	public Download getDownloadObject(long appId) {
 		@Cleanup
 		Realm realm = Database.get();
-		return realm.where(Download.class).equalTo("appId", appId).findFirst().clone();
+		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
+		return download != null ? download.clone() : null;
 	}
 }
