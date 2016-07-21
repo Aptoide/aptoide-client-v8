@@ -50,7 +50,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (setSkipButton) {
-			menu.add(0, 0, 0, "skip").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add(0, 0, 0, R.string.wizard_skip).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		} else {
 			return super.onCreateOptionsMenu(menu);
