@@ -92,16 +92,6 @@
                     android:layout_gravity="left"/>
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/app_error"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="left|center"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:visibility="gone"/>
-
         </LinearLayout>
 
         <View
@@ -121,7 +111,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:background="?attr/icCancelDrawable"
+            android:background="@drawable/ic_pause"
             android:contentDescription="@null"
             android:foreground="?attr/selectableItemBackground"
             android:padding="15dp"/>

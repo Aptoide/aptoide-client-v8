@@ -32,18 +32,18 @@ public class DownloadService extends Service {
 	private void pauseDownloads(Intent intent) {
 		// TODO: 7/4/16 trinkes pause with specific id
 		long appId = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0);
-		downloadManager.pauseAllDownloads();
 		if (appId > 0) {
 			downloadManager.pauseDownload(appId);
+		} else {
+			downloadManager.pauseAllDownloads();
 		}
 	}
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			downloadManager.getDownload(appId).first().subscribe(download -> {
-				downloadManager.startDownload(download);
-				setupNotifications();
-			});
+			Download download = downloadManager.getDownloadObject(appId);
+			downloadManager.startDownload(download);
+			setupNotifications();
 		}
 	}
 
@@ -75,7 +75,7 @@ public class DownloadService extends Service {
 				if (download != null) {
 					startDownload(download.getAppId());
 				}
-			});
+			}, Throwable::printStackTrace);
 		}
 		return START_STICKY;
 	}
