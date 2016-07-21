@@ -10,11 +10,13 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/18/16.
@@ -30,11 +32,11 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 	private TextView status;
 	private ImageView resumeDownloadButton;
 	private ImageView cancelDownloadButton;
-	private Subscription resumeSubscription;
-	private Subscription cancelSubscription;
+	private CompositeSubscription subscription;
 
 	public CompletedDownloadWidget(View itemView) {
 		super(itemView);
+		subscription = new CompositeSubscription();
 	}
 
 	@Override
@@ -56,17 +58,16 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 			ImageLoader.load(download.getIcon(), appIcon);
 		}
 		status.setText(download.getStatusName(itemView.getContext()));
-		if (resumeSubscription != null && resumeSubscription.isUnsubscribed()) {
-			resumeSubscription.unsubscribe();
-		}
-		if (cancelSubscription != null && cancelSubscription.isUnsubscribed()) {
-			cancelSubscription.unsubscribe();
-		}
-		resumeSubscription = RxView.clicks(resumeDownloadButton).subscribe(aVoid -> {
-			displayable.resumeDownload(download, resumeDownloadButton);
-		});
-		cancelSubscription = RxView.clicks(cancelDownloadButton).subscribe(aVoid -> {
-			displayable.removeDownload(download);
-		});
+
+		subscription.unsubscribe();
+		subscription = new CompositeSubscription();
+		subscription.add(RxView.clicks(resumeDownloadButton).flatMap(click -> displayable.resumeDownload(download)).subscribe(download1 -> {
+			if (download1.getOverallDownloadStatus() == Download.COMPLETED) {
+				ShowMessage.asSnack(resumeDownloadButton, R.string.download_completed, R.string.install, v -> {
+					AptoideUtils.SystemU.installApp(download1.getFilesToDownload().get(0).getFilePath());
+				});
+			}
+		}, Throwable::printStackTrace));
+		subscription.add(RxView.clicks(cancelDownloadButton).subscribe(click -> displayable.removeDownload(download)));
 	}
 }
