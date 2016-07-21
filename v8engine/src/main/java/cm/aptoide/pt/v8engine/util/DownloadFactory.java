@@ -32,6 +32,7 @@ public class DownloadFactory {
 
 		Download download = new Download();
 		download.setAppId(appToDownload.getId());
+		download.setIcon(appToDownload.getIcon());
 		download.setAppName(appToDownload.getName());
 		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload
 				.getFile()
@@ -45,6 +46,7 @@ public class DownloadFactory {
 				file != null? file.getPathAlt(): null);
 		Download download = new Download();
 		download.setAppId(appToDownload.getId());
+		download.setIcon(appToDownload.getIcon());
 		download.setAppName(appToDownload.getName());
 		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload
 				.getFile()
@@ -58,6 +60,7 @@ public class DownloadFactory {
 				.getAlternativeApkPath());
 		Download download = new Download();
 		download.setAppId(updateDisplayable.getAppId());
+		download.setIcon(updateDisplayable.getIcon());
 		download.setAppName(updateDisplayable.getLabel());
 		download.setFilesToDownload(createFileList(updateDisplayable.getAppId(), updateDisplayable.getPackageName(), updateDisplayable.getApkPath(),
 				updateDisplayable

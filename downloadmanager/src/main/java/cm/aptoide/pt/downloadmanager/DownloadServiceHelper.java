@@ -108,4 +108,8 @@ public class DownloadServiceHelper {
 	public Observable<Download> getDownload(long appId) {
 		return aptoideDownloadManager.getDownload(appId);
 	}
+
+	public void removeDownload(long appId) {
+		aptoideDownloadManager.removeDownload(appId);
+	}
 }

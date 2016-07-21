@@ -43,6 +43,7 @@ public class Download extends RealmObject {
 	@PrimaryKey
 	private long appId;
 	private String appName;
+	private String Icon;
 	@SuppressWarnings({"all"})
 	private long timeStamp;
 	private int downloadSpeed;
@@ -63,6 +64,7 @@ public class Download extends RealmObject {
 			case PROGRESS:
 				toReturn = context.getString(R.string.download_progress);
 				break;
+			case PENDING:
 			case IN_QUEUE:
 				toReturn = context.getString(R.string.download_queue);
 				break;
@@ -71,7 +73,6 @@ public class Download extends RealmObject {
 			case CONNECTED:
 			case RETRY:
 			case STARTED:
-			case PENDING:
 			case NOT_DOWNLOADED:
 			case ERROR:
 			case FILE_MISSING:
@@ -124,6 +125,14 @@ public class Download extends RealmObject {
 		this.appId = appId;
 	}
 
+	public String getIcon() {
+		return Icon;
+	}
+
+	public void setIcon(String icon) {
+		Icon = icon;
+	}
+
 	@Override
 	public Download clone() {
 		Download clone = new Download();
@@ -135,6 +144,8 @@ public class Download extends RealmObject {
 		}
 		clone.setFilesToDownload(cloneDownloadFiles(this.getFilesToDownload()));
 		clone.setDownloadSpeed(this.getDownloadSpeed());
+		clone.setIcon(this.getIcon());
+
 		return clone;
 	}
 

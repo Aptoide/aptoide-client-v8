@@ -175,7 +175,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				fileToDownload.setProgress((int) Math.floor((float) soFarBytes / totalBytes * AptoideDownloadManager.PROGRESS_MAX_VALUE));
 			}
 		}
-		this.download.setDownloadSpeed(task.getSpeed());
+		this.download.setDownloadSpeed(task.getSpeed() * 1024);
 		if (download.getOverallDownloadStatus() != Download.PROGRESS) {
 			setDownloadStatus(Download.PROGRESS, download, task);
 		}
@@ -198,7 +198,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				.doOnUnsubscribe(() -> AptoideDownloadManager.getInstance().setDownloading(false))
 				.subscribeOn(Schedulers.io())
 				.subscribe(success -> saveDownloadInDb(download), throwable -> setDownloadStatus(Download.ERROR, download));
-		download.setDownloadSpeed(task.getSpeed());
+		download.setDownloadSpeed(task.getSpeed() * 1024);
 	}
 
 	@Override
@@ -219,6 +219,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 				intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
 				AptoideDownloadManager.getContext().sendBroadcast(intent);
+				return;
 			}
 		}
 		setDownloadStatus(Download.ERROR, download, task);
