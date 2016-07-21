@@ -158,4 +158,13 @@
     <string name="followed">Followed</string>
     <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
     <string name="rate_this_app">Rate this app</string>
+
+    <string name="dialog_install_warning_proceed_button">Proceed</string>
+    <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
+    <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
+    <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
+    <string name="dialog_install_warning_credibility_text">Before proceeding, check the Store\'s
+        credibility and other user comments. Aptoide always recommends that you only install %1$s Trusted apps.</string>
+    <string name="dialog_install_warning_trusted_version_button">Trusted Version</string>
+    <string name="dialog_install_warning_get_trusted_version_button">Get</string>
 </resources>

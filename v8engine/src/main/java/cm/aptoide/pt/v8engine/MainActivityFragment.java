@@ -10,7 +10,9 @@ import android.os.Bundle;
 
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
+import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
@@ -33,6 +35,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 			startService(new Intent(this, PullingContentService.class));
 			if (ManagerPreferences.isAutoUpdateEnable()) {
 				new AutoUpdate(this).execute();
+			}
+			if(SecurePreferences.isFirstRun()){
+				pushFragmentV4(new BaseWizardViewerFragment());
+				SecurePreferences.setFirstRun(false);
 			}
 		}
 	}
