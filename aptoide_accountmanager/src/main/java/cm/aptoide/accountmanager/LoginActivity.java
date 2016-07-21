@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
 import android.text.style.UnderlineSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,7 +24,6 @@ import android.widget.TextView;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ShowMessage;
 
 /**
@@ -30,9 +31,9 @@ import cm.aptoide.pt.utils.ShowMessage;
  */
 public class LoginActivity extends BaseActivity implements AptoideAccountManager.ILoginInterface {
 
-	public static final String OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS =
-			"OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS";
+	public static final String OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS = "OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS";
 	private static final String TAG = LoginActivity.class.getSimpleName();
+	public static String SKIP_BUTTON = "skip_button";
 	View content;
 	private Button mLoginButton;
 	private Button mRegisterButton;
@@ -44,17 +45,27 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	private Toolbar mToolbar;
 	private TextView forgotPassword;
 	private boolean openMyAccountOnLoginSuccess;
+	private boolean setSkipButton;
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (setSkipButton) {
+			menu.add(0, 0, 0, "skip").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			return true;
+		} else {
+			return super.onCreateOptionsMenu(menu);
+		}
+	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Logger.d(TAG, "onCreate() called with: " + "savedInstanceState = [" + savedInstanceState +
-				"]");
+
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(getLayoutId());
 		bindViews();
-		openMyAccountOnLoginSuccess = getIntent().getBooleanExtra
-				(OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, true);
+		openMyAccountOnLoginSuccess = getIntent().getBooleanExtra(OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, true);
+		setSkipButton = getIntent().getBooleanExtra(SKIP_BUTTON, false);
 		AptoideAccountManager.getInstance()
 				.setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
 		setupShowHidePassButton();
@@ -84,9 +95,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 		forgotPassword.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m" +
-						"" +
-						".aptoide.com/account/password-recovery"));
+				Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
 				startActivity(passwordRecovery);
 			}
 		});
@@ -96,7 +105,9 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 		if (mToolbar != null) {
 			setSupportActionBar(mToolbar);
 			getSupportActionBar().setHomeButtonEnabled(true);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			if (!setSkipButton) {
+				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			}
 			getSupportActionBar().setDisplayShowTitleEnabled(true);
 			getSupportActionBar().setTitle(getActivityTitle());
 		}

@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -35,13 +35,13 @@ public class WizardPageThreeFragment extends Fragment {
         registerButton.setTransformationMethod(null);
 
         registerButton.setOnClickListener(view1 -> {
-            //todo go to register view
-            Toast.makeText(getContext(), "Register button clicked", Toast.LENGTH_SHORT).show();
+            AptoideAccountManager.openAccountManager(getContext(), true, false);
+            getActivity().onBackPressed();
         });
 
         loginLink.setOnClickListener(view1 -> {
-            //todo go to login view
-            Toast.makeText(getContext(), "Login link clicked", Toast.LENGTH_SHORT).show();
+            AptoideAccountManager.openAccountManager(getContext(), true, false);
+            getActivity().onBackPressed();
         });
     }
 }

@@ -26,9 +26,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int i = item.getItemId();
-		if (i == android.R.id.home) {
-			finish();
-		} else if (i == R.id.home) {
+		if (i == android.R.id.home || i == R.id.home || i == 0) {
 			finish();
 		}
 		return super.onOptionsItemSelected(item);
