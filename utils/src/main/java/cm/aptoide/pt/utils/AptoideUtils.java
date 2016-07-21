@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionGroupInfo;
+import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -51,7 +53,9 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -65,6 +69,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.permissions.ApkPermission;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -748,6 +753,36 @@ public class AptoideUtils {
 			}
 
 			return logsFile;
+		}
+
+		public static List<ApkPermission> parsePermissions(Context context, List<String> permissionArray) {
+			List<ApkPermission> list = new ArrayList<>();
+			CharSequence csPermissionGroupLabel;
+			CharSequence csPermissionLabel;
+			PackageManager pm = context.getPackageManager();
+
+			List<PermissionGroupInfo> lstGroups = pm.getAllPermissionGroups(PackageManager.PERMISSION_GRANTED);
+			for (String permission : permissionArray) {
+
+				for (PermissionGroupInfo pgi : lstGroups) {
+					try {
+						List<PermissionInfo> lstPermissions = pm.queryPermissionsByGroup(pgi.name, PackageManager.PERMISSION_GRANTED);
+						for (PermissionInfo pi : lstPermissions) {
+							if (pi.name.equals(permission)) {
+								csPermissionLabel = pi.loadLabel(pm);
+								csPermissionGroupLabel = pgi.loadLabel(pm);
+								list.add(new ApkPermission(csPermissionGroupLabel.toString(), csPermissionLabel.toString()));
+							}
+						}
+					} catch (Exception e) {
+						Logger.printException(e);
+					}
+				}
+			}
+
+			Collections.sort(list, (lhs, rhs) -> lhs.getName().compareTo(rhs.getName()));
+
+			return list;
 		}
 	}
 

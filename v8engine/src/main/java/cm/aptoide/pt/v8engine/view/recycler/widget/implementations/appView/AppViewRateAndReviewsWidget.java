@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -31,6 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
@@ -43,6 +44,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import lombok.Setter;
 
 /**
  * Created by sithengineer on 30/06/16.
@@ -52,7 +54,9 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
 	private static final Locale LOCALE = Locale.getDefault();
+	private static final int MAX_COMMENTS = 3;
 
+	private View emptyReviewsLayout;
 	private View ratingLayout;
 	private View commentsLayout;
 
@@ -61,6 +65,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private AppCompatRatingBar ratingBar;
 	private ViewPager topCommentsPager;
 
+	private Button rateThisAppButton;
 	private Button rateThisButton;
 	private Button readAllButton;
 
@@ -76,14 +81,17 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	@Override
 	protected void assignViews(View itemView) {
+		emptyReviewsLayout = itemView.findViewById(R.id.empty_reviews_layout);
 		ratingLayout = itemView.findViewById(R.id.rating_layout);
 		commentsLayout = itemView.findViewById(R.id.comments_layout);
+
 		usersVoted = (TextView) itemView.findViewById(R.id.users_voted);
 		ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
 		ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
 		topCommentsPager = (ViewPager) itemView.findViewById(R.id.top_comments_pager);
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
+		rateThisAppButton = (Button) itemView.findViewById(R.id.rate_this_app_button);
 	}
 
 	@Override
@@ -119,10 +127,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		};
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
+		rateThisAppButton.setOnClickListener(commentsOnClickListener);
 
 		topReviewsAdapter = new TopReviewsAdapter(getContext().getSupportFragmentManager());
 		topCommentsPager.setAdapter(topReviewsAdapter);
-		topReviewsAdapter.loadTopComments(app.getStore().getName(), app.getPackageName());
+		loadTopComments(app.getStore().getName(), app.getPackageName());
 	}
 
 	private void showRateDialog() {
@@ -136,30 +145,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		titleTextView.setText(String.format(LOCALE, ctx.getString(R.string.rate_app), appName));
 
-		// build review text hint in runtime using spans and different text styles / colors
-		/*
-		final String reviewLabel = ctx.getString(R.string.review);
-		final String optionalLabel = "(" + ctx.getString(R.string.optional)+")";
-
-		SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-		spannableStringBuilder.append(reviewLabel);
-		spannableStringBuilder.append(" ");
-		SpannableString spannableString = new SpannableString(optionalLabel);
-		int color;
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			color = ctx.getColor(R.color.medium_custom_gray);
-		} else {
-			color = ctx.getResources().getColor(R.color.medium_custom_gray);
-		}
-
-		spannableString.setSpan(new ForegroundColorSpan(color), 0, optionalLabel.length(), Spannable
-				.SPAN_EXCLUSIVE_EXCLUSIVE);
-		spannableStringBuilder.append(spannableString);
-
-		reviewText.setHint(spannableStringBuilder);
-		*/
-
 		// build rating dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
 		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
@@ -169,15 +154,30 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 				final String reviewText = reviewEditText.getText().toString();
 				final int reviewRating = Math.round(reviewRatingBar.getRating());
 
-				PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(aVoid -> {
+				PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(response -> {
+
+					if (response.getError() != null) {
+						Logger.e(TAG, response.getError().toString());
+						return;
+					}
+
+					List<BaseV7Response.Error> errors = response.getErrors();
+					if (errors != null && !errors.isEmpty()) {
+						for (final BaseV7Response.Error error : errors) {
+							Logger.e(TAG, error.toString());
+						}
+						return;
+					}
+
+					ManagerPreferences.setForceServerRefreshFlag(true);
 					Logger.d(TAG, "review added");
+
 				}, e -> {
 					Logger.e(TAG, e);
 					ShowMessage.asSnack(ratingLayout, R.string.error_occured);
 				});
 
 				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
-
 			} else if (which == DialogInterface.BUTTON_NEGATIVE) {
 				// do nothing.
 			}
@@ -203,28 +203,40 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		}
 	}
 
+	public void loadTopComments(String storeName, String packageName) {
+		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
+					List<Review> reviews = listReviews.getDatalist().getList();
+					if (reviews == null || reviews.isEmpty()) {
+						emptyReviewsLayout.setVisibility(View.VISIBLE);
+						ratingLayout.setVisibility(View.GONE);
+						commentsLayout.setVisibility(View.GONE);
+						topReviewsAdapter.setReviews(null);
+						topReviewsAdapter.notifyDataSetChanged();
+						return;
+					}
+
+					topReviewsAdapter.setReviews(listReviews.getDatalist().getList());
+					topReviewsAdapter.notifyDataSetChanged();
+					scheduleAnimations();
+				}, e -> {
+
+					emptyReviewsLayout.setVisibility(View.VISIBLE);
+					ratingLayout.setVisibility(View.GONE);
+					commentsLayout.setVisibility(View.GONE);
+
+					topReviewsAdapter.setReviews(null);
+					topReviewsAdapter.notifyDataSetChanged();
+					Logger.e(TAG, e);
+				}, true // bypass cache flag
+		);
+	}
+
 	private static final class TopReviewsAdapter extends FragmentPagerAdapter {
 
-		private static final int MAX_COMMENTS = 3;
-
-		private List<Review> reviews;
+		@Setter private List<Review> reviews;
 
 		public TopReviewsAdapter(FragmentManager fm) {
 			super(fm);
-		}
-
-		public void loadTopComments(String storeName, String packageName) {
-			ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
-						reviews = listReviews.getDatalist().getList();
-						notifyDataSetChanged();
-						// scheduleAnimations(); // TODO: 15/07/16 sithengineer add animations
-					}, e -> {
-						reviews = null;
-						notifyDataSetChanged();
-						Logger.e(TAG, e);
-					}, true // bypass cache flag
-			);
-
 		}
 
 		@Override

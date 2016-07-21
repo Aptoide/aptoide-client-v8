@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -37,8 +37,7 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		// http://ws75.aptoide.com/api/7/listComments/review_id/1/limit/2/sort/latest/order/desc/
 		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api
+		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
 				.isMature(), Api.Q, limit, reviewId);
 		return new ListCommentsRequest(body, BASE_HOST);
 	}

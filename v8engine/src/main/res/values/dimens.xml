@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 15/07/2016.
+  ~ Modified by SithEngineer on 21/07/2016.
   -->
 
 <resources>
@@ -13,6 +13,7 @@
 
 
     <dimen name="text_size_large">18.0sp</dimen>
+    <dimen name="text_size_medium_large">16.0sp</dimen>
     <dimen name="text_size_medium">14.0sp</dimen>
     <dimen name="text_size_small">10.0sp</dimen>
 

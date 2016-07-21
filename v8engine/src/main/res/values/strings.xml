@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 20/07/2016.
+  ~ Modified by SithEngineer on 21/07/2016.
   -->
 
 <resources>
@@ -156,4 +156,6 @@
     <string name="login">Login</string>
     <string name="follow">Follow</string>
     <string name="followed">Followed</string>
+    <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
+    <string name="rate_this_app">Rate this app</string>
 </resources>

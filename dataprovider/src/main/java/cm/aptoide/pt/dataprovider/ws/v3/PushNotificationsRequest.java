@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 21/07/2016.
+ */
+
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import cm.aptoide.accountmanager.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -14,31 +20,35 @@ import rx.Observable;
 /**
  * Created by trinkes on 7/13/16.
  */
-public class PushNotificationsRequest extends PushNotifications<GetPushNotificationsResponse> {
+public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
+
+	protected PushNotificationsRequest(Map<String,String> args) {
+		super(BASE_HOST, args);
+	}
 
 	public static PushNotificationsRequest of() {
-		return new PushNotificationsRequest();
+		HashMap<String,String> args = new HashMap<>();
+
+		String oemid = DataProvider.getConfiguration().getExtraId();
+		if (!TextUtils.isEmpty(oemid)) {
+			args.put("oem_id", oemid);
+		}
+		args.put("mode", "json");
+		args.put("limit", "1");
+		args.put("lang", AptoideUtils.SystemU.getCountryCode());
+
+		// TODO: 7/13/16 trinkes verify this to work with aptoide toolbox
+		if (BuildConfig.DEBUG) {
+			args.put("notification_type", "aptoide_tests");
+		} else {
+			args.put("notification_type", "aptoide_vanilla");
+		}
+		args.put("id", String.valueOf(ManagerPreferences.getLastPushNotificationId()));
+		return new PushNotificationsRequest(args);
 	}
 
 	@Override
 	protected Observable<GetPushNotificationsResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		HashMap<String,String> parameters = new HashMap<String,String>();
-
-		String oemid = DataProvider.getConfiguration().getExtraId();
-		if (!TextUtils.isEmpty(oemid)) {
-			parameters.put("oem_id", oemid);
-		}
-		parameters.put("mode", "json");
-		parameters.put("limit", "1");
-		parameters.put("lang", AptoideUtils.SystemU.getCountryCode());
-
-		// TODO: 7/13/16 trinkes verify this to work with aptoide toolbox
-		if (BuildConfig.DEBUG) {
-			parameters.put("notification_type", "aptoide_tests");
-		} else {
-			parameters.put("notification_type", "aptoide_vanilla");
-		}
-		parameters.put("id", String.valueOf(ManagerPreferences.getLastPushNotificationId()));
-		return interfaces.getPushNotifications(parameters);
+		return interfaces.getPushNotifications(args, bypassCache);
 	}
 }

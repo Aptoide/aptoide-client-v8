@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 13/07/2016.
+  ~ Modified by SithEngineer on 21/07/2016.
   -->
 
 <LinearLayout
@@ -64,8 +64,12 @@
             android:ellipsize="end"
             android:gravity="top|left|start"
             android:hint="@string/title"
+            android:lines="1"
             android:maxLines="1"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textAlignment="textStart"
+            android:textColorHint="@color/black"
+            android:textSize="@dimen/text_size_medium"
+            />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -81,8 +85,10 @@
             android:ellipsize="end"
             android:gravity="top|left|start"
             android:hint="@string/review_optional"
+            android:lines="5"
             android:maxLines="6"
-            android:minLines="3"
+            android:textAlignment="textStart"
+            android:textColorHint="@color/black"
             android:textSize="@dimen/text_size_medium"
             />
 

@@ -39,7 +39,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -49,6 +48,7 @@ import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
+import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -127,16 +127,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		fragment.setArguments(bundle);
 
 		return fragment;
-	}
-
-	public static long sumFileSizes(long fileSize, Obb obb) {
-		if (obb == null || obb.getMain() == null) {
-			return fileSize;
-		} else if (obb.getPatch() == null) {
-			return fileSize + obb.getMain().getFilesize();
-		} else {
-			return fileSize + obb.getMain().getFilesize() + obb.getPatch().getFilesize();
-		}
 	}
 
 	private void setupObservables(GetApp getApp) {
@@ -447,7 +437,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				}
 			});
 
-			fileSize.setText(AptoideUtils.StringU.formatBits(sumFileSizes(app.getSize(), app.getObb())));
+			fileSize.setText(AptoideUtils.StringU.formatBits(AppUtils.sumFileSizes(app.getSize(), app.getObb())));
 
 			downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -25,6 +25,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -164,7 +165,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragmentWithDecorator {
 
 		public void setup(GetAppMeta.App data) {
 			GetAppMeta.Stats stats = data.getStats();
-			usersVoted.setText(String.format(Locale.getDefault(), "%d", stats.getDownloads()));
+			usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getDownloads()));
 			ratingValue.setText(String.format(Locale.getDefault(), "%.1f", stats.getRating().getAvg()));
 			ratingBar.setRating(stats.getRating().getAvg());
 		}
@@ -205,7 +206,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragmentWithDecorator {
 		public void setup(int total, int count) {
 			progressBar.setMax(total);
 			progressBar.setProgress(count);
-			text.setText(String.format(Locale.getDefault(), "%d", count));
+			text.setText(AptoideUtils.StringU.withSuffix(count));
 		}
 	}
 }

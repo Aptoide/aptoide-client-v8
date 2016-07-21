@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.preferences.managed;
@@ -53,5 +53,17 @@ public class ManagerPreferences {
 		} catch (Exception e) {
 			return 200;
 		}
+	}
+
+	public static boolean getAndResetForceServerRefresh() {
+		boolean state = PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.FORCE_SERVER_REFRESH_FLAG, false);
+		if (state) {
+			setForceServerRefreshFlag(false);
+		}
+		return state;
+	}
+
+	public static void setForceServerRefreshFlag(boolean state) {
+		Preferences.get().edit().putBoolean(ManagedKeys.FORCE_SERVER_REFRESH_FLAG, state).apply();
 	}
 }

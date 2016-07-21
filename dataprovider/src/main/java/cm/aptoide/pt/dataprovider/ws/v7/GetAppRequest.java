@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
@@ -33,9 +34,11 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 	public static GetAppRequest of(long appId) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
+		boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+
 		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, appId));
+				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
+				appId, forceServerRefresh));
 	}
 
 	@Override
@@ -47,10 +50,12 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 	public static class Body extends BaseBody {
 
 		@Getter private Long appId;
+		@Getter private Boolean refresh;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long appId) {
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long appId, Boolean refresh) {
 			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
 			this.appId = appId;
+			this.refresh = refresh;
 		}
 	}
 }

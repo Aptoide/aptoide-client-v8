@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 21/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.DialogPermissions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -116,6 +116,9 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 					.string.not_available)));
 		}
 
-		permissionsLabel.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
+		permissionsLabel.setOnClickListener(v -> {
+			DialogPermissions dialogPermissions = DialogPermissions.newInstance(displayable.getPojo());
+			dialogPermissions.show(getContext().getSupportFragmentManager(), "");
+		});
 	}
 }
