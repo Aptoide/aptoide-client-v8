@@ -110,18 +110,25 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param extras        Extras to add on created intent (to login or register activity)
 	 * @param openMyAccount true if is expeted to open myAccountActivity after login
 	 */
-	public static void openAccountManager(Context context, @Nullable Bundle extras, boolean
-			openMyAccount) {
-		if (isLogin) {
-			context.startActivity(new Intent(context, MyAccountActivity.class));
-		} else {
-			final Intent intent = new Intent(context, LoginActivity.class);
-			if (extras != null) {
-				intent.putExtras(extras);
-			}
-			intent.putExtra(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
-			context.startActivity(intent);
+	public static void openAccountManager(Context context, @Nullable Bundle extras, boolean openMyAccount) {
+		if (extras == null) {
+			extras = new Bundle();
 		}
+		extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
+		openAccountManager(context, extras);
+	}
+
+	/**
+	 * This method should be used to open login or account activity
+	 *
+	 * @param useSkip       true if skip button should be displayed and back arrow hided
+	 * @param openMyAccount true if is expeted to open myAccountActivity after login
+	 */
+	public static void openAccountManager(Context context, boolean useSkip, boolean openMyAccount) {
+		Bundle extras = new Bundle();
+		extras.putBoolean(LoginActivity.SKIP_BUTTON, useSkip);
+		extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
+		openAccountManager(context, extras);
 	}
 
 	/**
@@ -130,13 +137,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param openMyAccount true if is expeted to open myAccountActivity after login
 	 */
 	public static void openAccountManager(Context context, boolean openMyAccount) {
-		if (isLogin) {
-			context.startActivity(new Intent(context, MyAccountActivity.class));
-		} else {
-			final Intent intent = new Intent(context, LoginActivity.class);
-			intent.putExtra(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
-			context.startActivity(intent);
-		}
+		Bundle extras = new Bundle();
+		extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
+		openAccountManager(context,extras);
 	}
 
 	/**
