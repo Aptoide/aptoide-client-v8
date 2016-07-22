@@ -61,7 +61,12 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

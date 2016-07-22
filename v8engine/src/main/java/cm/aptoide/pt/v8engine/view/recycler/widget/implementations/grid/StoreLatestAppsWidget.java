@@ -61,7 +61,12 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 		appsContaner.removeAllViews();
 	}
 }

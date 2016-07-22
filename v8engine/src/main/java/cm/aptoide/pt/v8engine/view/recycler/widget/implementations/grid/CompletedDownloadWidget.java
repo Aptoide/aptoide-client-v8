@@ -67,7 +67,12 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

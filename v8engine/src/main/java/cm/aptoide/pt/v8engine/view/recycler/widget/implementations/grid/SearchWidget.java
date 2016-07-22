@@ -165,7 +165,12 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

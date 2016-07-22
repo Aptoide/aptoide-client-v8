@@ -41,7 +41,12 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

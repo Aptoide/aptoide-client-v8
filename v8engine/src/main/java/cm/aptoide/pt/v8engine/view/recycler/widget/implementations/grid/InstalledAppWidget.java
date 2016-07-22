@@ -62,7 +62,12 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

@@ -41,8 +41,15 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	}
 
 	@Override
+	public void onViewAttachedToWindow(Widget holder) {
+		super.onViewAttachedToWindow(holder);
+		holder.onViewAttached();
+	}
+
+	@Override
 	public void onViewDetachedFromWindow(Widget holder) {
-		holder.unbindView();
+		super.onViewDetachedFromWindow(holder);
+		holder.onViewDetached();
 	}
 
 	@Override

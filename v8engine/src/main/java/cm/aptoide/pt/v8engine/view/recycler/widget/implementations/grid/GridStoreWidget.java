@@ -86,7 +86,12 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

@@ -43,7 +43,12 @@ public class AddMoreStoresWidget extends Widget<AddMoreStoresDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

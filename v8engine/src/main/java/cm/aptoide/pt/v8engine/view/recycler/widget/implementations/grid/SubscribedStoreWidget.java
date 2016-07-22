@@ -100,7 +100,12 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

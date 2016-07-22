@@ -99,7 +99,12 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

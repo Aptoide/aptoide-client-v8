@@ -93,7 +93,12 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 

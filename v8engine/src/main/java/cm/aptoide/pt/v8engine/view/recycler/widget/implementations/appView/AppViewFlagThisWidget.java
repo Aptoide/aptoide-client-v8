@@ -162,7 +162,12 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 

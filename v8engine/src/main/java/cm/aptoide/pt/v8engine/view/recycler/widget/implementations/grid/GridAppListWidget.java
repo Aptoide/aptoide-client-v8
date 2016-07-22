@@ -68,7 +68,12 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

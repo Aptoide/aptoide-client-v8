@@ -53,7 +53,12 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 

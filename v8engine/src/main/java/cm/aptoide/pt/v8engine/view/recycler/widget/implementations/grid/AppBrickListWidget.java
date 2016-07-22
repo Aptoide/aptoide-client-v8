@@ -49,7 +49,12 @@ public class AppBrickListWidget extends Widget<GridAppGraphicDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

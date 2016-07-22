@@ -65,7 +65,12 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 

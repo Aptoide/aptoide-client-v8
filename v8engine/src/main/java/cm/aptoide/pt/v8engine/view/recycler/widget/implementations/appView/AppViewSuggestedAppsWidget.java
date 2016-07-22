@@ -62,7 +62,12 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 

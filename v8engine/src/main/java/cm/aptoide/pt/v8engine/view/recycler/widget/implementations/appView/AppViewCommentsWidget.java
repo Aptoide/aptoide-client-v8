@@ -39,7 +39,12 @@ public class AppViewCommentsWidget extends Widget<AppViewCommentsDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

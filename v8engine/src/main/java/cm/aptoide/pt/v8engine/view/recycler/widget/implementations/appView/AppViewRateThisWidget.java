@@ -87,7 +87,12 @@ public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 

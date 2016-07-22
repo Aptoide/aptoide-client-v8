@@ -136,7 +136,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 	}
 
 	private void setupUpgradeDowngradeOpenActions(GetApp getApp, Installed installed, AppViewInstallDisplayable displayable) {

@@ -135,7 +135,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 

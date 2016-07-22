@@ -34,7 +34,12 @@ public class AppViewRateResultsWidget extends Widget<AppViewRateResultsDisplayab
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

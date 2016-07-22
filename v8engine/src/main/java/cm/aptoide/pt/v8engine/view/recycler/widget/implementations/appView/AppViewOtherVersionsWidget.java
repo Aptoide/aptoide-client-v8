@@ -35,7 +35,12 @@ public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDispl
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

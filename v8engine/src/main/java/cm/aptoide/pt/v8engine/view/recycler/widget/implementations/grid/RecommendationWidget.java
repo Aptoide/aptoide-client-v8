@@ -67,7 +67,12 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

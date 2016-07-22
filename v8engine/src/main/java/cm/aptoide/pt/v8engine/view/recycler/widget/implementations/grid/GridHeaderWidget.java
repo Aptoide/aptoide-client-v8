@@ -60,7 +60,12 @@ public class GridHeaderWidget extends Widget<GridHeaderDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 }

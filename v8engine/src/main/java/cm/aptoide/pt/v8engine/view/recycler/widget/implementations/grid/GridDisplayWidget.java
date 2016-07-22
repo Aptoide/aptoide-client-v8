@@ -77,7 +77,12 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 	}
 
 	@Override
-	public void unbindView() {
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
 
 	}
 
