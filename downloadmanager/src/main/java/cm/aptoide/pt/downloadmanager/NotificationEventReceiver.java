@@ -39,7 +39,7 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
 						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
 						if (appid > 0) {
-							Download download = downloadManager.getDownloadObject(appid);
+							Download download = downloadManager.getStoredDownload(appid);
 							if (download != null) {
 								downloadManager.startDownload(download);
 							}

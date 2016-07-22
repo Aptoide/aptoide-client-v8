@@ -10,8 +10,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -41,9 +44,15 @@ public class DownloadService extends Service {
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			Download download = downloadManager.getDownloadObject(appId);
+			Download download = downloadManager.getStoredDownload(appId);
 			if (download != null) {
-				downloadManager.startDownload(download);
+				downloadManager.startDownload(download)
+						.first()
+						.subscribeOn(Schedulers.computation())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(download1 -> Logger.d(TAG, "startDownload" +
+								"() " +
+								"called with: " + "appId = [" + appId + "]"), Throwable::printStackTrace);
 				setupNotifications();
 			}
 		}

@@ -50,18 +50,21 @@ public class DownloadServiceHelper {
 	 * @return An observable that reports the download state
 	 */
 	public Observable<Download> startDownload(Download download) {
-		aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(download1 -> {
-			startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-		}, throwable -> {
+		return aptoideDownloadManager.getDownload(download.getAppId()).first().onErrorResumeNext(throwable -> {
 			if (throwable instanceof DownloadNotFoundException) {
-				@Cleanup
-				Realm realm = Database.get();
-				Database.save(download.clone(), realm);
-				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-			}
-		});
+				return Observable.fromCallable(() -> {
 
-		return aptoideDownloadManager.getDownload(download.getAppId());
+					@Cleanup
+					Realm realm = Database.get();
+					Database.save(download.clone(), realm);
+					return download;
+				});
+			}
+			return Observable.error(throwable);
+		}).concatWith(Observable.fromCallable(() -> {
+			startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+			return download;
+		})).concatWith(aptoideDownloadManager.getDownload(download.getAppId()));
 	}
 
 	private void startDownloadService(long appId, String action) {

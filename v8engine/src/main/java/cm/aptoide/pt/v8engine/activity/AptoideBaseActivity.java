@@ -18,7 +18,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -49,7 +48,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		super.onCreate(savedInstanceState);
 		// https://fabric.io/downloads/gradle/ndk
 		// Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
-		AptoideDownloadManager.getInstance().setPermissionRequest(this);
 		if (getIntent().getExtras() != null) {
 			loadExtras(getIntent().getExtras());
 		}

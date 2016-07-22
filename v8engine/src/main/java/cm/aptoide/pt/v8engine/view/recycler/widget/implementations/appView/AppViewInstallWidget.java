@@ -308,7 +308,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 							break;
 						}
 					}
-				});
+				}, Throwable::printStackTrace);
 			}, () -> {
 				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 			});

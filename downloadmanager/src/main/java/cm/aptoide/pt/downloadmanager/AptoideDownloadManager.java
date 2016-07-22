@@ -14,7 +14,6 @@ import com.liulishuo.filedownloader.FileDownloader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -28,7 +27,6 @@ import io.realm.Sort;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
-import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -55,8 +53,6 @@ public class AptoideDownloadManager {
 	private boolean isDownloading = false;
 	@Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface downloadNotificationActionsInterface;
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
-	@Setter
-	private PermissionRequest permissionRequest;
 
 	public static Context getContext() {
 		return context;
@@ -69,13 +65,19 @@ public class AptoideDownloadManager {
 		return instance;
 	}
 
-	private static Observable<Download> getDownload(Realm realm, long appId) {
-		return Observable.fromCallable(() -> realm.where(Download.class).equalTo("appId", appId).findFirst()).flatMap(download -> {
-			if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download
+	private Observable<Download> getDownload(Realm realm, long appId) {
+		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
+		if (download == null) {
+			return Observable.error(new DownloadNotFoundException());
+		}
+		return download.<Download> asObservable().map(Download::clone).flatMap(clonedDownload -> {
+			if ((clonedDownload.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(clonedDownload) == Download
 					.FILE_MISSING)) {
 				return Observable.error(new DownloadNotFoundException());
+			} else if (clonedDownload.getOverallDownloadStatus() == Download.ERROR) {
+				return Observable.error(new DownloadErrorException());
 			}
-			return download.asObservable();
+			return Observable.just(clonedDownload);
 		});
 	}
 
@@ -103,15 +105,7 @@ public class AptoideDownloadManager {
 		if (getDownloadStatus(download.getAppId()) == Download.COMPLETED) {
 			return Observable.fromCallable(() -> download);
 		}
-		if (permissionRequest != null) {
-			permissionRequest.requestAccessToExternalFileSystem(() -> {
-				startNewDownload(download);
-			}, ()-> {
-				Logger.e(TAG, "unable to start new download");
-			});
-		} else {
-			startNewDownload(download);
-		}
+		startNewDownload(download);
 		return getDownload(download.getAppId());
 	}
 
@@ -127,7 +121,7 @@ public class AptoideDownloadManager {
 
 	public void pauseDownload(long appId) {
 		@Cleanup Realm realm = Database.get();
-		Download download = getDownloadObject(appId);
+		Download download = getStoredDownload(appId);
 		if (download != null) {
 			if (download.getOverallDownloadStatus() != Download.PROGRESS) {
 				download.setOverallDownloadStatus(Download.PAUSED);
@@ -149,9 +143,7 @@ public class AptoideDownloadManager {
 	public Observable<Download> getDownload(long appId) {
 		@Cleanup
 		Realm realm = Database.get();
-		return getDownload(realm, appId).takeUntil(download -> download.getOverallDownloadStatus() != Download.PROGRESS && download.getOverallDownloadStatus()
-				!= Download.IN_QUEUE && download
-				.getOverallDownloadStatus() != Download.PENDING && download.getOverallDownloadStatus() != Download.INVALID_STATUS).map(Download::clone);
+		return getDownload(realm, appId).takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
 	}
 
 	Observable<Download> getCurrentDownload() {
@@ -214,7 +206,7 @@ public class AptoideDownloadManager {
 	}
 
 	private int getDownloadStatus(long appId) {
-		Download download = getDownloadObject(appId);
+		Download download = getStoredDownload(appId);
 		if (download != null) {
 			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 				return getStateIfFileExists(download);
@@ -308,7 +300,7 @@ public class AptoideDownloadManager {
 		}, Throwable::printStackTrace);
 	}
 
-	public Download getDownloadObject(long appId) {
+	public Download getStoredDownload(long appId) {
 		@Cleanup
 		Realm realm = Database.get();
 		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
