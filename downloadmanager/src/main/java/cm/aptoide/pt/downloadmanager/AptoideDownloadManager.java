@@ -65,19 +65,13 @@ public class AptoideDownloadManager {
 		return instance;
 	}
 
-	private Observable<Download> getDownload(Realm realm, long appId) {
-		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
-		if (download == null) {
-			return Observable.error(new DownloadNotFoundException());
-		}
-		return download.<Download> asObservable().map(Download::clone).flatMap(clonedDownload -> {
-			if ((clonedDownload.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(clonedDownload) == Download
+	private static Observable<Download> getDownload(Realm realm, long appId) {
+		return Observable.fromCallable(() -> realm.where(Download.class).equalTo("appId", appId).findFirst()).flatMap(download -> {
+			if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download
 					.FILE_MISSING)) {
 				return Observable.error(new DownloadNotFoundException());
-			} else if (clonedDownload.getOverallDownloadStatus() == Download.ERROR) {
-				return Observable.error(new DownloadErrorException());
 			}
-			return Observable.just(clonedDownload);
+			return download.asObservable();
 		});
 	}
 

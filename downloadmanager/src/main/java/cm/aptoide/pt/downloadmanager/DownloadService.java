@@ -13,8 +13,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -48,8 +46,6 @@ public class DownloadService extends Service {
 			if (download != null) {
 				downloadManager.startDownload(download)
 						.first()
-						.subscribeOn(Schedulers.computation())
-						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(download1 -> Logger.d(TAG, "startDownload" +
 								"() " +
 								"called with: " + "appId = [" + appId + "]"), Throwable::printStackTrace);
