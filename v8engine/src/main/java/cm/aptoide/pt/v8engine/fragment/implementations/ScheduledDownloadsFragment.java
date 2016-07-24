@@ -38,8 +38,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	private TextView emptyData;
 	private Subscription subscription;
 
-	public ScheduledDownloadsFragment() {
-	}
+	public ScheduledDownloadsFragment() { }
 
 	public static ScheduledDownloadsFragment newInstance() {
 		return new ScheduledDownloadsFragment();
