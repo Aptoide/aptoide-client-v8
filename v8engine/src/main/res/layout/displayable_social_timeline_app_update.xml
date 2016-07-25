@@ -20,7 +20,7 @@
                 android:id="@+id/displayable_social_timeline_app_update_card_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_margin="16dp"
+                android:layout_margin="12dp"
                 tools:ignore="contentDescription"
                 tools:src="@drawable/img_people_mockup"/>
 
@@ -53,10 +53,14 @@
                 tools:text="Há duas horas"/>
 
             <View
+                android:layout_marginLeft="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.7dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/separators_grey"/>
+                android:background="@color/timeline_separator"/>
         </RelativeLayout>
 
 
@@ -69,7 +73,7 @@
                 android:id="@+id/displayable_social_timeline_app_update_icon"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:layout_margin="16dp"
+                android:layout_margin="12dp"
                 android:scaleType="fitCenter"
                 tools:ignore="contentDescription"
                 tools:src="@mipmap/ic_launcher"/>
@@ -108,6 +112,7 @@
 
                 <TextView
                     android:id="@+id/displayable_social_timeline_app_update_version"
+                    style="@style/Widget.Aptoide.Card.Subtitle.Large"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -127,13 +132,14 @@
                     android:textColor="@color/red_700"
                     android:visibility="gone"
                     tools:text="Update Error"
-                    tools:visibility="visible"/>
+                    tools:visibility="gone"/>
 
                 <Button
                     android:id="@+id/displayable_social_timeline_app_update_button"
                     style="@style/Widget.Aptoide.Card.Button"
+                    android:layout_marginBottom="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="30dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:drawableLeft="@drawable/timeline_update_app"

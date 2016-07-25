@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 
 import java.util.Date;
@@ -72,8 +73,8 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Spannable getAppTitle(Context context) {
-		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_name,
-				appName), Typeface.BOLD, appName);
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_name,
+				appName), ContextCompat.getColor(context, R.color.black), appName);
 	}
 
 	public String getHoursSinceLastUpdate(Context context) {
@@ -82,12 +83,13 @@ public class AppUpdateDisplayable extends Displayable {
 
 	public Spannable getHasUpdateText(Context context) {
 		final String update = context.getString(R.string.displayable_social_timeline_app_update);
-		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update), Typeface.BOLD, update);
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update),
+				ContextCompat.getColor(context, R.color.orange_700), update);
 	}
 
 	public Spannable getVersionText(Context context) {
-		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_version,
-				appVersioName), Typeface.BOLD, appVersioName);
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_version,
+				appVersioName), ContextCompat.getColor(context, R.color.black), appVersioName);
 	}
 
 	public Spannable getUpdateAppText(Context context) {

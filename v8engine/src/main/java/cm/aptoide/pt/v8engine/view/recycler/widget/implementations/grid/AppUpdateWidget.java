@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.annotation.NonNull;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,7 +63,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 		appVersion.setText(displayable.getVersionText(getContext()));
 
 		ImageLoader.load(displayable.getAppIconUrl(), appIcon);
-		ImageLoader.load(displayable.getStoreIconUrl(), storeImage);
+		ImageLoader.loadWithCircleTransform(displayable.getStoreIconUrl(), storeImage);
 		storeName.setText(displayable.getStoreName());
 		updateDate.setText(displayable.getHoursSinceLastUpdate(getContext()));
 	}
