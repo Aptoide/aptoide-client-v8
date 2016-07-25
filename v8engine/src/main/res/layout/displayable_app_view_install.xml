@@ -2,15 +2,15 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 20/07/2016.
+  ~ Modified by SithEngineer on 25/07/2016.
   -->
 
-<LinearLayout
+<RelativeLayout
     style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="88.6dp"
     android:orientation="vertical"
     >
     <!-- progress bar while installing -->
@@ -95,21 +95,38 @@
     </RelativeLayout>
 
     <!-- install latest version buttons -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/install_and_latest_version_layout"
         android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingBottom="19dp"
+        android:paddingTop="21.3dp"
         android:visibility="visible"
-        android:weightSum="2"
         tools:visibility="visible"
         >
 
+        <Button
+            android:id="@+id/action_btn"
+            style="?attr/customButton"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/rounded_corners_primary2"
+            android:text="@string/install"
+            android:textAllCaps="true"
+            android:textSize="14.7sp"
+            />
+
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/action_btn"
+            android:layout_toStartOf="@id/action_btn"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             >
@@ -125,19 +142,17 @@
                 android:maxWidth="70dp"
                 android:text="@string/appview_other_versions"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="11sp"
                 />
 
             <include
                 layout="@layout/separator_vertical"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginEnd="13.7dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="13.7dp"
+                android:layout_marginStart="17dp"
                 />
 
             <LinearLayout
@@ -149,7 +164,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="2"
@@ -162,27 +176,37 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     >
 
                     <ImageView
-                        android:layout_width="34dp"
-                        android:layout_height="match_parent"
+                        android:layout_width="21.3dp"
+                        android:layout_height="36.7dp"
                         android:src="@drawable/ic_latest_version"
+                        android:tint="@color/green_tint_default"
+                        />
+
+                    <ImageView
+                        android:layout_width="7dp"
+                        android:layout_height="7dp"
+                        android:src="@drawable/ic_appview_version"
+                        android:tint="@color/green_tint_default"
                         />
 
                     <TextView
                         android:id="@+id/store_version_name"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:ellipsize="middle"
                         android:gravity="center"
                         android:maxLines="1"
                         android:maxWidth="70dp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="@dimen/text_size_medium"
+                        android:textColor="@color/almost_black"
+                        android:textSize="11.6sp"
                         android:textStyle="bold"
                         tools:text="1.07.6"
                         />
@@ -193,18 +217,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/action_btn"
-            style="?attr/customButton"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corners_primary"
-            android:text="@string/install"
-            android:textAllCaps="true"
-            />
+    </RelativeLayout>
 
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

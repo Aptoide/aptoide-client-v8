@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 25/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -75,6 +76,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private String packageName;
 	private String storeName;
 
+	private ProgressBar topReviewsProgressBar;
+
 	public AppViewRateAndReviewsWidget(View itemView) {
 		super(itemView);
 	}
@@ -92,6 +95,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
 		rateThisAppButton = (Button) itemView.findViewById(R.id.rate_this_app_button);
+
+		topReviewsProgressBar = (ProgressBar) itemView.findViewById(R.id.top_reviews_progress_bar);
 	}
 
 	@Override
@@ -205,6 +210,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	public void loadTopComments(String storeName, String packageName) {
 		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
+			topReviewsProgressBar.setVisibility(View.GONE);
+			topCommentsPager.setVisibility(View.VISIBLE);
 					List<Review> reviews = listReviews.getDatalist().getList();
 					if (reviews == null || reviews.isEmpty()) {
 						emptyReviewsLayout.setVisibility(View.VISIBLE);
@@ -219,10 +226,10 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 					topReviewsAdapter.notifyDataSetChanged();
 					scheduleAnimations();
 				}, e -> {
-
 					emptyReviewsLayout.setVisibility(View.VISIBLE);
 					ratingLayout.setVisibility(View.GONE);
 					commentsLayout.setVisibility(View.GONE);
+			topReviewsProgressBar.setVisibility(View.GONE);
 
 					topReviewsAdapter.setReviews(null);
 					topReviewsAdapter.notifyDataSetChanged();

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/07/2016.
+ * Modified by SithEngineer on 25/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Intent;
+import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -14,10 +14,10 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -55,8 +55,9 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
 	@Override
 	public void bindView(RowReviewDisplayable displayable) {
 
-		Review review = displayable.getPojo();
-		GetAppMeta.App app;
+		Pair<Review,GetAppMeta.App> pair = displayable.getPojo();
+		Review review = pair.first;
+		GetAppMeta.App app = pair.second;
 
 		// TODO: 22/07/2016 get app from review
 
@@ -81,13 +82,13 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
 //			score.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 //		}
 
-		itemView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, ReviewActivity.class);
-				intent.putExtra("review_id", appItem.reviewId);
-				context.startActivity(intent);
-			}
+		itemView.setOnClickListener(v -> {
+			ShowMessage.asSnack(v, "finish this method");
+			/*
+			Intent intent = new Intent(v.getContext(), ReviewActivity.class);
+			intent.putExtra("review_id", appItem.reviewId);
+			context.startActivity(intent);
+			*/
 		});
 
 	}

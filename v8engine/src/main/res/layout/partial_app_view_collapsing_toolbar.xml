@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 12/07/2016.
+  ~ Modified by SithEngineer on 25/07/2016.
   -->
 <!--
     tools:background="#BB000000"
@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         app:contentScrim="?attr/colorPrimary"
-        app:expandedTitleMarginBottom="50dp"
+        app:expandedTitleMarginBottom="34.3dp"
         app:expandedTitleMarginEnd="@dimen/appview_title_right_margin"
         app:expandedTitleMarginStart="@dimen/appview_title_left_margin"
         app:expandedTitleTextAppearance="@style/AppViewHeaderTextAppView"
@@ -61,9 +61,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="@dimen/appview_header_bottom_margin"
-                android:layout_marginEnd="6dp"
                 android:layout_marginLeft="@dimen/appview_header_side_margin"
-                android:layout_marginRight="6dp"
                 android:layout_marginStart="@dimen/appview_header_side_margin"
                 android:scaleType="centerCrop"
                 app:layout_anchor="@id/app_bar"
@@ -77,6 +75,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/appview_header_bottom_margin"
+                android:layout_marginLeft="12.3dp"
+                android:layout_marginStart="12.3dp"
                 android:layout_toEndOf="@id/app_icon"
                 android:layout_toRightOf="@id/app_icon"
                 >
@@ -86,16 +86,16 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="1.3dp"
                     android:gravity="bottom"
                     android:orientation="horizontal"
-                    android:weightSum="2">
+                    >
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_weight="1"
+                        android:layout_marginEnd="7.3dp"
+                        android:layout_marginRight="7.3dp"
                         >
 
                         <ImageView
@@ -115,17 +115,16 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_medium"
+                            android:textSize="@dimen/text_size_extra_small"
                             tools:text="1.2.3.4.5.6.7"
                             />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:layout_weight="1"
                         >
 
                         <ImageView
@@ -144,7 +143,7 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_medium"
+                            android:textSize="@dimen/text_size_extra_small"
                             tools:text="12345"
                             />
 
@@ -171,8 +170,8 @@
                     -->
                     <ImageView
                         android:id="@+id/badge_img"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_width="29dp"
+                        android:layout_height="31.7dp"
                         android:layout_gravity="center_horizontal"
                         android:scaleType="centerInside"
                         tools:src="@color/red"

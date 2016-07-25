@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 25/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,7 +58,7 @@ import rx.functions.Action0;
 public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	private RelativeLayout downloadProgressLayout;
-	private LinearLayout installAndLatestVersionLayout;
+	private RelativeLayout installAndLatestVersionLayout;
 
 	//
 	// downloading views
@@ -86,7 +85,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	protected void assignViews(View itemView) {
 		downloadProgressLayout = (RelativeLayout) itemView.findViewById(R.id.download_progress_layout);
-		installAndLatestVersionLayout = (LinearLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
+		installAndLatestVersionLayout = (RelativeLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
 		shareInTimeline = (CheckBox) itemView.findViewById(R.id.share_in_timeline);
 		downloadProgress = (ProgressBar) itemView.findViewById(R.id.download_progress);
 		textProgress = (TextView) itemView.findViewById(R.id.text_progress);

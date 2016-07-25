@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 21/07/2016.
+  ~ Modified by SithEngineer on 25/07/2016.
   -->
 
 <resources>
@@ -16,6 +16,7 @@
     <dimen name="text_size_medium_large">16.0sp</dimen>
     <dimen name="text_size_medium">14.0sp</dimen>
     <dimen name="text_size_small">10.0sp</dimen>
+    <dimen name="text_size_extra_small">8.0sp</dimen>
 
     <dimen name="text_size_medium_small">12.0sp</dimen>
 
@@ -28,7 +29,7 @@
     <!-- Height of the tab indicator (colorstrip) -->
     <dimen name="carousel_indicator_height">5.0dip</dimen>
 
-    <dimen name="appview_title_text_size">16sp</dimen>
+    <dimen name="appview_title_text_size">19sp</dimen>
 
     <dimen name="this_app_in_other_store_text_margin_left">3sp</dimen>
 
@@ -49,8 +50,8 @@
     <dimen name="appview_badge_size">30dp</dimen>
     <dimen name="appview_rating_indicator_text_size">20sp</dimen>
     <dimen name="black_header_background_height">70dp</dimen>
-    <dimen name="appview_header_app_image_size">104dp</dimen>
-    <dimen name="appview_store_icon_size">40dp</dimen>
+    <dimen name="appview_header_app_image_size">99dp</dimen>
+    <dimen name="appview_store_icon_size">33dp</dimen>
     <dimen name="appview_frags_size">50dp</dimen>
     <dimen name="excludeUpdatePadding">10dp</dimen>
     <dimen name="separatorMargin">10dp</dimen>
@@ -68,15 +69,15 @@
 
     <dimen name="appview_developer_padding">10dp</dimen>
     <dimen name="appview_title_left_margin">120dp</dimen>
-    <dimen name="appview_title_right_margin">84dp</dimen>
-    <dimen name="appview_header_height">256dp</dimen>
+    <dimen name="appview_title_right_margin">74dp</dimen>
+    <dimen name="appview_header_height">257.3dp</dimen>
     <dimen name="appview_top_rating_top_margin">80dp</dimen>
     <dimen name="custom_snackbar_height">44dp</dimen>
     <dimen name="flag_width">84dp</dimen>
     <dimen name="appview_vertical_margin">4dp</dimen>
     <dimen name="appview_header_side_margin">10dp</dimen>
-    <dimen name="appview_header_bottom_margin">20dp</dimen>
-    <dimen name="appview_badge_icon_size">16dp</dimen>
+    <dimen name="appview_header_bottom_margin">11dp</dimen>
+    <dimen name="appview_badge_icon_size">9dp</dimen>
     <dimen name="other_versions_header_height">164dp</dimen>
     <dimen name="other_version_header_app_image_size">84dp</dimen>
     <dimen name="other_version_icon_size">20dp</dimen>
