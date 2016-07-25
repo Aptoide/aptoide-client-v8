@@ -37,18 +37,31 @@
         android:lines="4"
         tools:text="Best backup apps: save all your Android's innards"/>
 
-    <Button
+    <View
+        android:id="@+id/partial_social_timeline_thumbnail_divider"
         android:layout_below="@id/partial_social_timeline_thumbnail_image"
+        android:layout_marginLeft="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:background="@color/timeline_separator"/>
+
+    <Button
+        android:layout_below="@id/partial_social_timeline_thumbnail_divider"
         android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
         style="@style/Widget.Aptoide.Card.Button"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginLeft="72dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
-        tools:text="Get app Game of War"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"/>
+        tools:text="Get app Game of War"/>
 </RelativeLayout>
 
 
