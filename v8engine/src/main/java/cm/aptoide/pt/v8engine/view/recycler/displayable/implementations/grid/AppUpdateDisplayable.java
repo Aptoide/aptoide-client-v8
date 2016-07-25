@@ -4,12 +4,13 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Spannable;
 
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -28,24 +29,37 @@ public class AppUpdateDisplayable extends Displayable {
 	private String appVersioName;
 	private SpannableFactory spannableFactory;
 	private String appName;
+	private int versionCode;
+	private String packageName;
 	private Download download;
 	private DownloadServiceHelper downloadManager;
+	private InstallManager installManager;
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, DownloadServiceHelper
-			downloadManager) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(), downloadFactory.create(appUpdate),
-				downloadManager);
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
+	                                        DownloadServiceHelper downloadManager, InstallManager installManager) {
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
+				appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory.create(appUpdate), downloadManager, installManager);
 	}
 
 	public AppUpdateDisplayable() {
 	}
 
-	public Observable<Download> getDownload() {
-		return downloadManager.getDownload(download.getAppId());
+	public Observable<Boolean> isInstalled() {
+		return installManager.isInstalled(download.getAppId());
 	}
 
-	public Observable<Download> startDownload() {
-		return downloadManager.startDownload(download);
+	public Observable<Void> install(Context context) {
+		return installManager.install(context, (PermissionRequest) context, download.getAppId());
+	}
+
+	public Observable<Download> download(Context context) {
+		return downloadManager.startDownload(context, download);
+	}
+
+	public Observable<Integer> downloadStatus() {
+		return downloadManager.getDownload(download.getAppId())
+				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
+				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
 	}
 
 	public Spannable getAppTitle(Context context) {

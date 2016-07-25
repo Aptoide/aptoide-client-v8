@@ -14,6 +14,7 @@ import com.liulishuo.filedownloader.FileDownloader;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -65,16 +66,6 @@ public class AptoideDownloadManager {
 		return instance;
 	}
 
-	private static Observable<Download> getDownload(Realm realm, long appId) {
-		return Observable.fromCallable(() -> realm.where(Download.class).equalTo("appId", appId).findFirst()).flatMap(download -> {
-			if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download
-					.FILE_MISSING)) {
-				return Observable.error(new DownloadNotFoundException());
-			}
-			return download.asObservable();
-		});
-	}
-
 	void initDownloadService(Context context) {
 		AptoideDownloadManager.context = context;
 		createDownloadDirs();
@@ -115,7 +106,7 @@ public class AptoideDownloadManager {
 
 	public void pauseDownload(long appId) {
 		@Cleanup Realm realm = Database.get();
-		Download download = getStoredDownload(appId);
+		Download download = getStoredDownload(appId, realm);
 		if (download != null) {
 			if (download.getOverallDownloadStatus() != Download.PROGRESS) {
 				download.setOverallDownloadStatus(Download.PAUSED);
@@ -135,16 +126,22 @@ public class AptoideDownloadManager {
 	 * @return observable for download state changes.
 	 */
 	public Observable<Download> getDownload(long appId) {
-		@Cleanup
 		Realm realm = Database.get();
-		return getDownload(realm, appId).takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
+		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
+		if (download == null ||
+				(download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING)) {
+			realm.close();
+			return Observable.error(new DownloadNotFoundException());
+		} else {
+			return download.<Download>asObservable().map(Download::clone).takeUntil(storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
+		}
 	}
 
-	Observable<Download> getCurrentDownload() {
+	public Observable<Download> getCurrentDownload() {
 		return getDownloads().flatMapIterable(downloads -> downloads).filter(downloads -> downloads.getOverallDownloadStatus() == Download.PROGRESS);
 	}
 
-	Observable<List<Download>> getCurrentDownloads() {
+	public Observable<List<Download>> getCurrentDownloads() {
 		@Cleanup
 		Realm realm = Database.get();
 		RealmResults<Download> download = realm.where(Download.class).findAll();
@@ -164,21 +161,16 @@ public class AptoideDownloadManager {
 		}
 	}
 
-	Observable<List<Download>> getDownloads() {
+	public Observable<List<Download>> getDownloads() {
 		@Cleanup
 		Realm realm = Database.get();
-		RealmResults<Download> download = realm.where(Download.class).findAll();
-		if (download.size() >= 0) {
-			return download.asObservable().map(results -> {
-				List<Download> list = new ArrayList<>();
-				for (final Download result : results) {
-					list.add(result.clone());
-				}
-				return list;
-			});
-		} else {
-			return Observable.error(new DownloadNotFoundException());
-		}
+		return realm.where(Download.class).findAll().asObservable().map(results -> {
+			List<Download> list = new ArrayList<>();
+			for (final Download result : results) {
+				list.add(result.clone());
+			}
+			return list;
+		});
 	}
 
 	/**
@@ -186,6 +178,7 @@ public class AptoideDownloadManager {
 	 */
 	public void pauseAllDownloads() {
 		FileDownloader.getImpl().pauseAll();
+
 		getCurrentDownloads().first().subscribe(downloads -> {
 			@Cleanup
 			Realm realm = Database.get();
@@ -200,7 +193,8 @@ public class AptoideDownloadManager {
 	}
 
 	private int getDownloadStatus(long appId) {
-		Download download = getStoredDownload(appId);
+		@Cleanup Realm realm = Database.get();
+		Download download = getStoredDownload(appId, realm);
 		if (download != null) {
 			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 				return getStateIfFileExists(download);
@@ -223,13 +217,13 @@ public class AptoideDownloadManager {
 		if (TextUtils.isEmpty(OBB_PATH)) {
 			OBB_PATH = GENERIC_PATH;
 		}
-
 	}
 
 	@NonNull
 	@Download.DownloadState
-	int getStateIfFileExists(Download downloadToCheck) {
-		@Download.DownloadState int downloadStatus = Download.COMPLETED;
+	private int getStateIfFileExists(Download downloadToCheck) {
+		@Download.DownloadState
+		int downloadStatus = Download.COMPLETED;
 		for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
 			if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
 				downloadStatus = Download.FILE_MISSING;
@@ -283,21 +277,21 @@ public class AptoideDownloadManager {
 
 	public void removeDownload(long appId) {
 		@Cleanup
-		Realm realm1 = Database.get();
-		getDownload(realm1, appId).subscribe(download -> {
+		Realm realm = Database.get();
+		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
+		if (download != null) {
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileUtils.removeFile(fileToDownload.getFilePath());
 			}
-			@Cleanup
-			Realm realm = Database.get();
 			Database.delete(download, realm);
-		}, Throwable::printStackTrace);
+		}
 	}
 
-	public Download getStoredDownload(long appId) {
-		@Cleanup
-		Realm realm = Database.get();
+	public Download getStoredDownload(long appId, Realm realm) {
 		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
-		return download != null ? download.clone() : null;
+		if (download != null) {
+			return download.clone();
+		}
+		return null;
 	}
 }

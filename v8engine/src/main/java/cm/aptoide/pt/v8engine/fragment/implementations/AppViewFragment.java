@@ -29,11 +29,14 @@ import com.trello.rxlifecycle.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -44,6 +47,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -100,7 +104,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private Action0 unInstallAction;
 	private MenuItem uninstallMenuItem;
-
+	private DownloadServiceHelper downloadManager;
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -134,7 +138,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		installManager = new InstallManager(getContext().getPackageManager());
+		final PermissionManager permissionManager = new PermissionManager();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(),
+				new DownloadInstallationProvider(downloadManager));
 	}
 
 	private void setupObservables(GetApp getApp) {
@@ -158,7 +165,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd != null ? minimalAd.getCpdUrl() : null));
+		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd != null ? minimalAd.getCpdUrl() : null,
+				downloadManager));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));

@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -11,15 +12,15 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
 
-	private DownloadServiceHelper downloadServiceHelper;
+	private DownloadServiceHelper downloadManager;
 
 	public ActiveDownloadDisplayable() {
 		super();
 	}
 
-	public ActiveDownloadDisplayable(Download pojo, DownloadServiceHelper downloadServiceHelper) {
+	public ActiveDownloadDisplayable(Download pojo, DownloadServiceHelper downloadManager) {
 		super(pojo);
-		this.downloadServiceHelper = downloadServiceHelper;
+		this.downloadManager = downloadManager;
 	}
 
 	public ActiveDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
@@ -36,7 +37,7 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
 		return R.layout.active_donwload_row_layout;
 	}
 
-	public void pauseDownload(Download download) {
-		downloadServiceHelper.pauseDownload(download.getAppId());
+	public void pauseInstall(Download download) {
+		downloadManager.pauseDownload(download.getAppId());
 	}
 }

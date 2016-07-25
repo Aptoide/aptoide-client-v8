@@ -9,9 +9,12 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import io.realm.Realm;
+import lombok.Cleanup;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -42,9 +45,10 @@ public class DownloadService extends Service {
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			Download download = downloadManager.getStoredDownload(appId);
+			@Cleanup Realm realm = Database.get();
+			Download download = downloadManager.getStoredDownload(appId, realm);
 			if (download != null) {
-				downloadManager.startDownload(download)
+				downloadManager.startDownload(download.clone())
 						.first()
 						.subscribe(download1 -> Logger.d(TAG, "startDownload" +
 								"() " +
@@ -57,7 +61,6 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
 		downloadManager = AptoideDownloadManager.getInstance();
 		downloadManager.initDownloadService(this);
 		subscriptions = new CompositeSubscription();

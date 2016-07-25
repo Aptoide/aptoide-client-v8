@@ -17,9 +17,10 @@ import android.util.Base64;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionManager;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -30,13 +31,30 @@ import rx.schedulers.Schedulers;
 @AllArgsConstructor
 public class InstallManager {
 
+	private final PermissionManager permissionManager;
 	private final PackageManager packageManager;
+	private final InstallationProvider installationProvider;
 
-	public Observable<Void> install(Context context, File file, String packageName) {
-		return systemInstall(context, file).onErrorResumeNext(Observable.fromCallable(() -> {
-			rootInstall(file, packageName);
-			return null;
-		})).onErrorResumeNext(defaultInstall(context, file, packageName)).subscribeOn(Schedulers.computation());
+	public Observable<Boolean> isInstalled(long installationId) {
+		return installationProvider.getInstallation(installationId)
+				.map(installation -> isInstalled(installation.getPackageName(), installation.getVersionCode()))
+				.onErrorReturn(throwable -> false);
+	}
+
+	public Observable<Void> install(Context context, PermissionRequest permissionRequest, long installationId) {
+		return permissionManager.requestExternalStoragePermission(permissionRequest).ignoreElements()
+				.concatWith(installationProvider.getInstallation(installationId).observeOn(Schedulers
+				.computation())
+				.flatMap(installation -> {
+			if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
+				return Observable.just(null);
+			} else {
+				return systemInstall(context, installation.getFile()).onErrorResumeNext(Observable.fromCallable(() -> rootInstall(installation.getFile(),
+						installation
+						.getPackageName(), installation.getVersionCode())))
+						.onErrorResumeNext(defaultInstall(context, installation.getFile(), installation.getPackageName()));
+			}
+		}));
 	}
 
 	public Observable<Void> uninstall(Context context, String packageName) {
@@ -72,7 +90,7 @@ public class InstallManager {
 		return Observable.create(new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
 	}
 
-	private void rootInstall(File file, String packageName) throws InstallationException {
+	private Void rootInstall(File file, String packageName, int versionCode) throws InstallationException {
 		try {
 			if (isRooted()) {
 				// Preform su to get root privledges
@@ -91,10 +109,10 @@ public class InstallManager {
 				//Wait for operation result
 				p.waitFor();
 
-				final PackageInfo info = packageManager.getPackageInfo(packageName, 0);
-				if (info == null) {
+				if (!isInstalled(packageName, versionCode)) {
 					throw new RuntimeException("Could not verify installation.");
 				}
+				return null;
 			} else {
 				throw new RuntimeException("Device not rooted.");
 			}
@@ -167,5 +185,15 @@ public class InstallManager {
 	private Observable<Void> packageIntent(Context context, IntentFilter intentFilter, String packageName) {
 		return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
 				.filter(intent -> intent.getData().toString().contains(packageName)).<Void> map(intent -> null).first();
+	}
+
+	private boolean isInstalled(String packageName, int versionCode) {
+		final PackageInfo info;
+		try {
+			info = packageManager.getPackageInfo(packageName, 0);
+			return (info != null && info.versionCode == versionCode);
+		} catch (PackageManager.NameNotFoundException e) {
+			return false;
+		}
 	}
 }

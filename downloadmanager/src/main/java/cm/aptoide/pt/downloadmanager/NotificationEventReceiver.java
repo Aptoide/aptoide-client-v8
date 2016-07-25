@@ -4,7 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
+import io.realm.Realm;
+import lombok.Cleanup;
 
 /**
  * Created by trinkes on 6/23/16.
@@ -39,9 +42,10 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
 						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
 						if (appid > 0) {
-							Download download = downloadManager.getStoredDownload(appid);
+							@Cleanup Realm realm = Database.get();
+							Download download = downloadManager.getStoredDownload(appid, realm);
 							if (download != null) {
-								downloadManager.startDownload(download);
+								downloadManager.startDownload(download.clone());
 							}
 						}
 					}

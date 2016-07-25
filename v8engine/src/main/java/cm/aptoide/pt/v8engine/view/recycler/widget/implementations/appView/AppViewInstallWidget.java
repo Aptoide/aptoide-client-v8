@@ -19,8 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.File;
-
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
@@ -227,7 +226,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
-				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
+				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 
 				actionPauseResume.setOnClickListener(view -> {
 					downloadServiceHelper.pauseDownload(app.getId());
@@ -252,7 +251,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				downloadProgressLayout.setVisibility(View.VISIBLE);
 				actionPauseResume.setImageResource(R.drawable.ic_pause);
 
-				downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
+				downloadServiceHelper.startDownload(getContext(), appDownload).subscribe(download -> {
 
 					// TODO: 19/07/16 sithengineer logic to show / hide pause / resume download and show download progress
 
@@ -261,7 +260,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.PAUSED: {
 							actionPauseResume.setOnClickListener(view -> {
 
-								downloadServiceHelper.startDownload(download);
+								downloadServiceHelper.startDownload(getContext(), download);
 
 								//actionPauseResume.setImageResource(R.drawable.ic_); // missing the changing of the drawable
 								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -290,7 +289,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(v.getContext(), new File(download.getFilesToDownload().get(0).getFilePath()), packageName)
+							displayable.install(v.getContext())
 									.observeOn(AndroidSchedulers.mainThread())
 									.subscribe(success -> {
 										if (actionButton.getVisibility() == View.VISIBLE) {
@@ -332,12 +331,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 					DownloadFactory factory = new DownloadFactory();
 					Download appDownload = factory.create(app);
-					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
-					downloadServiceHelper.startDownload(appDownload).subscribe(download -> {
+					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+					downloadServiceHelper.startDownload(getContext(), appDownload).subscribe(download -> {
 						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 							final String packageName = app.getPackageName();
 							final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-							displayable.downgrade(getContext(), new File(downloadedFile.getFilePath()), packageName).subscribe();
+							displayable.downgrade(getContext()).subscribe();
 						}
 					});
 				}, () -> {
@@ -361,7 +360,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		private Action0 newUninstallListener(View itemView, String packageName, AppViewInstallDisplayable displayable) {
 			return () -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUninstallAction(packageName));
-				displayable.uninstall(getContext(), packageName).subscribe();
+				displayable.uninstall(getContext()).subscribe();
 			};
 		}
 	}

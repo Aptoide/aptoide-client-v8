@@ -30,6 +30,8 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	private ImageView pauseCancelButton;
 	private ImageView appIcon;
 	private Subscription subscribe;
+	private Download download;
+	private ActiveDownloadDisplayable displayable;
 
 	public ActiveDownloadWidget(View itemView) {
 		super(itemView);
@@ -47,7 +49,8 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 
 	@Override
 	public void bindView(ActiveDownloadDisplayable displayable) {
-		Download download = displayable.getPojo();
+		this.displayable = displayable;
+		download = displayable.getPojo();
 		appName.setText(download.getAppName());
 		if (!TextUtils.isEmpty(download.getIcon())) {
 			ImageLoader.load(download.getIcon(), appIcon);
@@ -65,12 +68,15 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 			subscribe.unsubscribe();
 		}
 		subscribe = RxView.clicks(pauseCancelButton).subscribe(aVoid -> {
-			displayable.pauseDownload(download);
+			displayable.pauseInstall(download);
 		});
 	}
 
 	@Override
 	public void onViewAttached() {
+		if (subscribe == null) {
+			subscribe = RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall(download));
+		}
 
 	}
 

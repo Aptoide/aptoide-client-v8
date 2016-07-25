@@ -1,17 +1,12 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.widget.ImageView;
 
-import java.io.File;
-
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -22,17 +17,17 @@ import rx.Observable;
  */
 public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 
-	private DownloadServiceHelper downloadServiceHelper;
 	private InstallManager installManager;
+	private DownloadServiceHelper downloadManager;
 
 	public CompletedDownloadDisplayable() {
 		super();
 	}
 
-	public CompletedDownloadDisplayable(Download pojo, DownloadServiceHelper downloadServiceHelper, InstallManager installManager) {
+	public CompletedDownloadDisplayable(Download pojo, InstallManager installManager, DownloadServiceHelper downloadManager) {
 		super(pojo);
-		this.downloadServiceHelper = downloadServiceHelper;
 		this.installManager = installManager;
+		this.downloadManager = downloadManager;
 	}
 
 	public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
@@ -50,10 +45,26 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 	}
 
 	public void removeDownload(Download download) {
-		downloadServiceHelper.removeDownload(download.getAppId());
+		downloadManager.removeDownload(download.getAppId());
 	}
 
-	public Observable<Download> resumeDownload(Context context, Download download, ImageView resumeDownloadButton) {
-		return downloadServiceHelper.startDownload(download);
+	public Observable<Integer> downloadStatus(Download download) {
+		return downloadManager.getDownload(download.getAppId())
+				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
+				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
+	}
+
+	public Observable<Download> resumeDownload(Context context, Download download) {
+		return downloadManager.startDownload(context, download);
+	}
+
+	public Observable<Void> installOrOpenDownload(Context context, Download download) {
+		return installManager.isInstalled(download.getAppId()).flatMap(installed -> {
+			if (installed) {
+				AptoideUtils.SystemU.openApp(download.getFilesToDownload().get(0).getPackageName());
+				return Observable.empty();
+			}
+			return installManager.install(context, (PermissionRequest) context, download.getAppId());
+		});
 	}
 }

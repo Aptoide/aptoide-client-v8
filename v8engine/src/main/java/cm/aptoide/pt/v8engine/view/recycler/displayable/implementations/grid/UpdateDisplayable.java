@@ -5,16 +5,17 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.app.DownloadManager;
 import android.content.Context;
 
-import java.io.File;
-
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installation;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.AllArgsConstructor;
@@ -42,24 +43,23 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private String patchObbPath;
 	@Getter private String patchObbMd5;
 
+	private int versionCode;
 	private InstallManager installManager;
-	private DownloadServiceHelper downloadServiceHelper;
 	private Download download;
+	private DownloadServiceHelper downloadManager;
 
 	public UpdateDisplayable() {
 	}
 
-	public static UpdateDisplayable create(Update update, InstallManager installManager, DownloadServiceHelper downloadServiceHelper, DownloadFactory
-			downloadFactory) {
+	public static UpdateDisplayable create(Update update, InstallManager installManager, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
 		return new UpdateDisplayable(update.getPackageName(),update.getAppId(), update.getLabel(), update.getIcon(), update.getMd5(), update.getApkPath(),
 				update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
-				update.getPatchObbMd5(), installManager, downloadServiceHelper, downloadFactory.create(update));
+				update.getPatchObbMd5(), update.getVersionCode(), installManager, downloadFactory.create(update), downloadManager);
 	}
 
-	public Observable<Void> updateApp(Context context) {
-		return downloadServiceHelper.startDownload(download)
-				.last()
-				.flatMap(download -> installManager.install(context, new File(download.getFilesToDownload().get(0).getFilePath()), packageName));
+	public Observable<Void> downloadAndInstall(Context context) {
+		return downloadManager.startDownload(context, download).ignoreElements().cast(Void.class)
+				.concatWith(installManager.install(context, (PermissionRequest) context, download.getAppId()));
 	}
 
 	@Override

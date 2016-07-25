@@ -39,6 +39,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	private TextView updateVernameTextView;
 	private ViewGroup updateButtonLayout;
 	private Subscription subscription;
+	private UpdateDisplayable displayable;
 
 	public UpdateWidget(View itemView) {
 		super(itemView);
@@ -57,7 +58,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	@Override
 	public void bindView(UpdateDisplayable updateDisplayable) {
 		@Cleanup Realm realm = Database.get();
-
+		this.displayable = updateDisplayable;
 		final String packageName = updateDisplayable.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 
@@ -67,14 +68,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 
 		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
-
-		subscription = RxView.clicks(updateButtonLayout)
-				.flatMap(click -> updateDisplayable.updateApp(getContext()))
-				.subscribe();
-
 		updateRowRelativeLayout.setOnLongClickListener(v -> {
 			AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());
-
 			builder.setTitle(R.string.ignore_update)
 					.setCancelable(true)
 					.setNegativeButton(R.string.no, null)
@@ -96,13 +91,19 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	@Override
 	public void onViewAttached() {
-
+		if (subscription == null) {
+			subscription = RxView.clicks(updateButtonLayout)
+					.flatMap(click -> displayable.downloadAndInstall(getContext()))
+					.retry()
+					.subscribe();
+		}
 	}
 
 	@Override
 	public void onViewDetached() {
 		if (subscription != null) {
 			subscription.unsubscribe();
+			subscription = null;
 		}
 	}
 }
