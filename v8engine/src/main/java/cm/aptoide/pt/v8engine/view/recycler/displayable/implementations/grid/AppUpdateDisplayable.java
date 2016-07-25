@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Spannable;
 
+import java.util.Date;
+
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -25,7 +27,10 @@ import rx.Observable;
 public class AppUpdateDisplayable extends Displayable {
 
 	@Getter private String appIconUrl;
+	@Getter private String storeIconUrl;
+	@Getter private String storeName;
 
+	private Date dateUpdated;
 	private String appVersioName;
 	private SpannableFactory spannableFactory;
 	private String appName;
@@ -34,11 +39,15 @@ public class AppUpdateDisplayable extends Displayable {
 	private Download download;
 	private DownloadServiceHelper downloadManager;
 	private InstallManager installManager;
+	private DateCalculator dateCalculator;
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-	                                        DownloadServiceHelper downloadManager, InstallManager installManager) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
-				appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory.create(appUpdate), downloadManager, installManager);
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(), appUpdate
+				.getFile().getVername
+				(),
+				spannableFactory,	appUpdate
+				.getName(),
+				appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator);
 	}
 
 	public AppUpdateDisplayable() {
@@ -65,6 +74,10 @@ public class AppUpdateDisplayable extends Displayable {
 	public Spannable getAppTitle(Context context) {
 		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_name,
 				appName), Typeface.BOLD, appName);
+	}
+
+	public String getHoursSinceLastUpdate(Context context) {
+		return dateCalculator.getTimeSinceDate(context, dateUpdated);
 	}
 
 	public Spannable getHasUpdateText(Context context) {
@@ -104,4 +117,5 @@ public class AppUpdateDisplayable extends Displayable {
 	public int getViewLayout() {
 		return R.layout.displayable_social_timeline_app_update;
 	}
+
 }

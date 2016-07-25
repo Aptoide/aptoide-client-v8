@@ -279,7 +279,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		} else if (card instanceof StoreLatestApps) {
 			return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator);
 		} else if (card instanceof AppUpdate) {
-			return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory, downloadManager, installManager);
+			return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory, downloadManager, installManager, dateCalculator);
 		} else if (card instanceof Recommendation) {
 			return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory);
 		}

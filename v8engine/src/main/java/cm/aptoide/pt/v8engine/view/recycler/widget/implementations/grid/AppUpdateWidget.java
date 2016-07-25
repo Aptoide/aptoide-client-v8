@@ -33,6 +33,9 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 	private CompositeSubscription downloadSubscription;
 	private TextView errorText;
 	private AppUpdateDisplayable displayable;
+	private ImageView storeImage;
+	private TextView storeName;
+	private TextView updateDate;
 
 	public AppUpdateWidget(View itemView) {
 		super(itemView);
@@ -46,6 +49,9 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 		updateButton = (Button) itemView.findViewById(R.id.displayable_social_timeline_app_update_button);
 		errorText = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_error);
 		appUpdate = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update);
+		storeImage = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_image);
+		storeName = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_title);
+		updateDate = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_card_subtitle);
 	}
 
 	@Override
@@ -56,6 +62,9 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 		appVersion.setText(displayable.getVersionText(getContext()));
 
 		ImageLoader.load(displayable.getAppIconUrl(), appIcon);
+		ImageLoader.load(displayable.getStoreIconUrl(), storeImage);
+		storeName.setText(displayable.getStoreName());
+		updateDate.setText(displayable.getHoursSinceLastUpdate(getContext()));
 	}
 
 	@Override
