@@ -142,7 +142,7 @@
     <color name="black_gradient_start">#dd000000</color>
     <color name="black_gradient_end">#2f000000</color>
     <color name="app_view_follow_orange">#b64735</color>
-    
+    <color name="card_store_title">#ff6d00</color>
 
 
 </resources>

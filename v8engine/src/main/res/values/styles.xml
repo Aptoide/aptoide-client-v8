@@ -51,7 +51,7 @@
     </style>
 
     <style name="Widget.Aptoide.Card.Title.LatestApps">
-        <item name="android:textColor">@color/orange_700</item>
+        <item name="android:textColor">@color/card_store_title</item>
     </style>
 
     <style name="Widget.Aptoide.Card.Thumbnail" parent="Base.TextAppearance.AppCompat.Small">

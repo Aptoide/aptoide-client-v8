@@ -84,7 +84,7 @@ public class AppUpdateDisplayable extends Displayable {
 	public Spannable getHasUpdateText(Context context) {
 		final String update = context.getString(R.string.displayable_social_timeline_app_update);
 		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update),
-				ContextCompat.getColor(context, R.color.orange_700), update);
+				ContextCompat.getColor(context, R.color.card_store_title), update);
 	}
 
 	public Spannable getVersionText(Context context) {
