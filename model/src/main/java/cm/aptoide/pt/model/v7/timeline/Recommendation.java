@@ -6,8 +6,10 @@
 package cm.aptoide.pt.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
 import java.util.List;
 
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -24,7 +26,8 @@ public class Recommendation implements TimelineCard {
 	@Getter private final App recommendedApp;
 	@Getter private final List<App> similarApps;
 
-	@JsonCreator public Recommendation(@JsonProperty("uid") String cardId, @JsonProperty("app") App recommendedApp, @JsonProperty("apps") List<App> similarApps) {
+	@JsonCreator public Recommendation(@JsonProperty("uid") String cardId, @JsonProperty("app") App recommendedApp, @JsonProperty("apps") List<App>
+			similarApps) {
 		this.cardId = cardId;
 		this.recommendedApp = recommendedApp;
 		this.similarApps = similarApps;

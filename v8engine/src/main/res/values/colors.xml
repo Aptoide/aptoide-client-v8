@@ -145,6 +145,7 @@
     <color name="app_view_follow_orange">#b64735</color>
     <color name="almost_black">#403f3d</color>
     <color name="green_tint_default">#45d316</color>
+    <color name="card_store_title">#ff6d00</color>
 
 
 </resources>

@@ -1,12 +1,6 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 26/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import java.util.Date;
 
@@ -14,8 +8,10 @@ import cm.aptoide.pt.utils.AptoideUtils;
 
 public class DateCalculator {
 
-	@NonNull
-	public String getTimeSinceDate(@NonNull Context context, @NonNull Date date) {
+	public String getTimeSinceDate(Context context, Date date) {
+		if (date == null) {
+			return "";
+		}
 		return AptoideUtils.DateTimeU.getInstance(context).getTimeDiffAll(context, date.getTime());
 	}
 }

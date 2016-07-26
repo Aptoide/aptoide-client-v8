@@ -48,7 +48,7 @@ public class ArticleDisplayable extends Displayable {
 	public ArticleDisplayable() {
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, date);
 	}
 

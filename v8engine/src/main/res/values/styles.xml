@@ -18,6 +18,7 @@
     </style>
 
     <style name="Widget.Aptoide.Card" parent="">
+        <item name="cardCornerRadius">8.3dp</item>
         <item name="android:background">@drawable/dialog_bg</item>
     </style>
 
@@ -46,11 +47,11 @@
     </style>
 
     <style name="Widget.Aptoide.Card.Title.Feature">
-        <item name="android:textColor">@color/aptoide_orange</item>
+        <item name="android:textColor">#ff7200</item>
     </style>
 
     <style name="Widget.Aptoide.Card.Title.LatestApps">
-        <item name="android:textColor">@color/orange_700</item>
+        <item name="android:textColor">@color/card_store_title</item>
     </style>
 
     <style name="Widget.Aptoide.Card.Thumbnail" parent="Base.TextAppearance.AppCompat.Small">
@@ -76,7 +77,8 @@
     </style>>
 
     <style name="Widget.Aptoide.Card.Headline" parent="Base.TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#43484e</item>
     </style>
 
     <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">

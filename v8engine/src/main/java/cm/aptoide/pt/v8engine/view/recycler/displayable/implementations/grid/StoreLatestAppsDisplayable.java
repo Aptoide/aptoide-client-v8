@@ -21,7 +21,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class StoreLatestAppsDisplayable extends Displayable {
 
-	@Getter private String title;
+	@Getter private String storeName;
 	@Getter private String avatarUrl;
 	@Getter private List<LatestApp> latestApps;
 
@@ -33,14 +33,14 @@ public class StoreLatestAppsDisplayable extends Displayable {
 		for (App app : storeLatestApps.getApps()) {
 			latestApps.add(new LatestApp(app.getId(), app.getIcon()));
 		}
-		return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(), storeLatestApps.getStore()
-				.getAvatar(), latestApps, dateCalculator, storeLatestApps.getLatestUpdate());
+		return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(), storeLatestApps.getStore().getAvatar(), latestApps, dateCalculator,
+				storeLatestApps.getLatestUpdate());
 	}
 
 	public StoreLatestAppsDisplayable() {
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, date);
 	}
 

@@ -5,7 +5,7 @@
              android:background="@android:color/transparent"
              tools:src="@drawable/icon_brand_aptoide"
              tools:ignore="contentDescription"
-             android:scaleType="centerInside"
-             android:layout_margin="4dp"
-             android:layout_width="48dp"
-             android:layout_height="48dp"/>
+             android:scaleType="fitCenter"
+             android:layout_margin="6dp"
+             android:layout_width="56dp"
+             android:layout_height="56dp"/>

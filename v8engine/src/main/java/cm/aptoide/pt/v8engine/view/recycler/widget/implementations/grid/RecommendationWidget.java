@@ -14,7 +14,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -51,9 +50,9 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 	public void bindView(RecommendationDisplayable displayable) {
 
 		title.setText(displayable.getTitle(getContext()));
-		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
+		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
-		ImageLoader.loadWithCircleTransform(displayable.getAvatarResource(), image);
+		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
 		ImageLoader.load(displayable.getAppIcon(), appIcon);
 

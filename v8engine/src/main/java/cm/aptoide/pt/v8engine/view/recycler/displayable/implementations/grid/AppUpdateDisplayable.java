@@ -42,13 +42,11 @@ public class AppUpdateDisplayable extends Displayable {
 	private InstallManager installManager;
 	private DateCalculator dateCalculator;
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(), appUpdate
-				.getFile().getVername
-				(),
-				spannableFactory,	appUpdate
-				.getName(),
-				appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator);
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
+	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
+				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(),
+				downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator);
 	}
 
 	public AppUpdateDisplayable() {
@@ -77,14 +75,14 @@ public class AppUpdateDisplayable extends Displayable {
 				appName), ContextCompat.getColor(context, R.color.black), appName);
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, dateUpdated);
 	}
 
 	public Spannable getHasUpdateText(Context context) {
 		final String update = context.getString(R.string.displayable_social_timeline_app_update);
 		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update),
-				ContextCompat.getColor(context, R.color.orange_700), update);
+				ContextCompat.getColor(context, R.color.card_store_title), update);
 	}
 
 	public Spannable getVersionText(Context context) {

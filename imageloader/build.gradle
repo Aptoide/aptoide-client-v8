@@ -15,7 +15,7 @@ android {
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 15
         consumerProguardFiles "proguard-rules.txt"
     }
 

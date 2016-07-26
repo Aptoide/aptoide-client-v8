@@ -45,9 +45,9 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 	@Override
 	public void bindView(FeatureDisplayable displayable) {
 		title.setText(displayable.getTitle(getContext()));
-		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
+		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
 		articleTitle.setText(displayable.getTitleResource());
-		ImageLoader.loadWithCircleTransform(displayable.getAvatarResource(), image);
+		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
 		if (displayable.isGetApp()) {

@@ -45,11 +45,9 @@ public class RecommendationDisplayable extends Displayable {
 		for (App similarApp: recommendation.getSimilarApps()) {
 			similarAppsNames.add(similarApp.getName());
 		}
-		return new RecommendationDisplayable(R.mipmap.ic_launcher, R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, recommendation
-				.getRecommendedApp()
-				.getId(),
-				recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(), similarAppsNames, new Date(), dateCalculator,
-				spannableFactory);
+		return new RecommendationDisplayable(R.mipmap.ic_launcher, R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, recommendation.getRecommendedApp().getId(),
+				recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(), similarAppsNames,
+				recommendation.getRecommendedApp().getUpdated(), dateCalculator, spannableFactory);
 	}
 
 	public RecommendationDisplayable() {
@@ -79,7 +77,7 @@ public class RecommendationDisplayable extends Displayable {
 				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), Typeface.BOLD, appName);
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, date);
 	}
 

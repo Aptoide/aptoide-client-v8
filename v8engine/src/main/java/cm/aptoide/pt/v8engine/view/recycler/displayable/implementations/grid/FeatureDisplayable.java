@@ -51,7 +51,7 @@ public class FeatureDisplayable extends Displayable {
 		return context.getString(titleResource);
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, date);
 	}
 
