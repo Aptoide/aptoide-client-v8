@@ -9,6 +9,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 public class DateCalculator {
 
 	public String getTimeSinceDate(Context context, Date date) {
+		if (date == null) {
+			return "";
+		}
 		return AptoideUtils.DateTimeU.getInstance(context).getTimeDiffAll(context, date.getTime());
 	}
 }

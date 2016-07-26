@@ -64,7 +64,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 		ImageLoader.load(displayable.getAppIconUrl(), appIcon);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getStoreIconUrl(), storeImage);
 		storeName.setText(displayable.getStoreName());
-		updateDate.setText(displayable.getHoursSinceLastUpdate(getContext()));
+		updateDate.setText(displayable.getTimeSinceLastUpdate(getContext()));
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class StoreLatestAppsDisplayable extends Displayable {
 	public StoreLatestAppsDisplayable() {
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, date);
 	}
 

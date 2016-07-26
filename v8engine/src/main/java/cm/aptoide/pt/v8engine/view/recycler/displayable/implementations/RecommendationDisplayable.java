@@ -79,7 +79,7 @@ public class RecommendationDisplayable extends Displayable {
 				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), Typeface.BOLD, appName);
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, date);
 	}
 

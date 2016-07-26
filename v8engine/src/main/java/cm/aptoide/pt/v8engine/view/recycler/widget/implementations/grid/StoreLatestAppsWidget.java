@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,7 +40,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 	@Override
 	public void bindView(StoreLatestAppsDisplayable displayable) {
 		title.setText(displayable.getTitle());
-		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
+		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 
 		View latestAppView;

@@ -77,7 +77,7 @@ public class AppUpdateDisplayable extends Displayable {
 				appName), ContextCompat.getColor(context, R.color.black), appName);
 	}
 
-	public String getHoursSinceLastUpdate(Context context) {
+	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, dateUpdated);
 	}
 
