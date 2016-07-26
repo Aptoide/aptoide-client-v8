@@ -59,28 +59,8 @@ public class TimelineRepository {
 		cardDataList.setLoaded(itemDataList.isLoaded());
 		cardDataList.setLimit(itemDataList.getLimit());
 		cardDataList.setNext(itemDataList.getNext());
-		list.add(getMockedAppUpdate());
 		cardDataList.setList(list);
 		return cardDataList;
-	}
-
-	private TimelineCard getMockedAppUpdate() {
-		AppUpdate app = new AppUpdate("1234");
-		app.setId(19347406);
-		app.setName("Clash of Clans");
-		app.setPackageName("com.supercell.clashofclans");
-		Store store = new Store();
-		store.setAvatar("http://pool.img.aptoide.com/milaupv/ffa8bf1178dd61576f099644622b8bed_ravatar.jpg");
-		store.setName("milaupv");
-		app.setStore(store);
-		File file = new File();
-		file.setVername("8.3332.14");
-		file.setVercode(774);
-		file.setPath("http://pool.apk.aptoide.com/milaupv/com-supercell-clashofclans-774-19621630-e308cca924efb5e52545fea11e5eae9a.apk");
-		app.setFile(file);
-		app.setUpdated(new Date());
-		app.setIcon("http://cdn6.aptoide.com/imgs/a/a/e/aae8e02f62bf4a4008769ddb14b8fd89_icon_96x96.png");
-		return app;
 	}
 
 	private List<TimelineItem<TimelineCard>> getTimelineList(Datalist<TimelineItem<TimelineCard>> datalist) {
