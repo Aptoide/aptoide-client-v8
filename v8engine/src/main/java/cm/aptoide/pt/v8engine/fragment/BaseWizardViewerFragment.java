@@ -13,12 +13,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.adapters.ViewPagerAdapter;
+import cm.aptoide.pt.v8engine.adapters.ViewPagerAdapterWizard;
 
 
 /**
  * Created by jandrade on 18-07-2016.
- * This Fragment inflates the Wizard layout and uses the ViewPagerAdapter to inflate each Wizard Page.
+ * This Fragment inflates the Wizard layout and uses the ViewPagerAdapterWizard to inflate each Wizard Page.
  * It also manages swapping pages and UI changes (Indicator + skip/next arrow)
  */
 public class BaseWizardViewerFragment extends Fragment {
@@ -39,8 +39,8 @@ public class BaseWizardViewerFragment extends Fragment {
 
     private void setUpView(View view){
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        mViewPager.setAdapter(viewPagerAdapter);
+        ViewPagerAdapterWizard viewPagerAdapterWizard = new ViewPagerAdapterWizard(getActivity().getSupportFragmentManager());
+        mViewPager.setAdapter(viewPagerAdapterWizard);
         mViewPager.setCurrentItem(0);
     }
 
@@ -51,7 +51,7 @@ public class BaseWizardViewerFragment extends Fragment {
         final ImageView nextIcon = (ImageView) view.findViewById(R.id.wizard_next_arrow_icon);
 
         nextIconSpace.setOnClickListener(view1 -> {
-            if(mViewPager.getCurrentItem() < ViewPagerAdapter.NUMBER_OF_WIZARD_PAGES-1) {
+            if(mViewPager.getCurrentItem() < ViewPagerAdapterWizard.NUMBER_OF_WIZARD_PAGES-1) {
                 mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
             }else{
                 getActivity().onBackPressed();

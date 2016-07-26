@@ -12,10 +12,10 @@ import cm.aptoide.pt.v8engine.fragment.implementations.WizardPageTwoFragment;
  * Created by jdandrade on 18-07-2016.
  * This class determines how many pages exist and which fragment to display for each page.
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapterWizard extends FragmentPagerAdapter {
     public static final int NUMBER_OF_WIZARD_PAGES = 3;
 
-    public ViewPagerAdapter(FragmentManager fragmentManager) {
+    public ViewPagerAdapterWizard(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
