@@ -12,6 +12,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/displayable_social_timeline_store_latest_apps_header"
             android:layout_width="match_parent"
             android:layout_height="72dp"
             android:orientation="horizontal">
@@ -19,14 +20,14 @@
             <ImageView
                 tools:ignore="contentDescription"
                 tools:src="@drawable/img_people_mockup"
-                android:id="@+id/card_image"
+                android:id="@+id/displayable_social_timeline_store_latest_apps_card_image"
                 android:layout_margin="12dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
 
             <TextView
                 android:layout_marginTop="16dp"
-                android:id="@+id/card_title"
+                android:id="@+id/displayable_social_timeline_store_latest_apps_card_title"
                 style="@style/Widget.Aptoide.Card.Title.LatestApps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,11 +42,11 @@
             <TextView
                 android:lines="1"
                 android:ellipsize="end"
-                android:id="@+id/card_subtitle"
+                android:id="@+id/displayable_social_timeline_store_latest_apps_card_subtitle"
                 style="@style/Widget.Aptoide.Card.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/card_title"
+                android:layout_below="@id/displayable_social_timeline_store_latest_apps_card_title"
                 android:layout_marginStart="72dp"
                 android:layout_marginLeft="72dp"
                 android:layout_marginEnd="48dp"

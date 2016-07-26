@@ -11,6 +11,8 @@ import com.jakewharton.rxbinding.view.RxView;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import rx.Observable;
@@ -30,12 +32,13 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 	private TextView appUpdate;
 
 	private Button updateButton;
-	private CompositeSubscription downloadSubscription;
+	private CompositeSubscription subscriptions;
 	private TextView errorText;
 	private AppUpdateDisplayable displayable;
 	private ImageView storeImage;
 	private TextView storeName;
 	private TextView updateDate;
+	private View store;
 
 	public AppUpdateWidget(View itemView) {
 		super(itemView);
@@ -52,6 +55,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 		storeImage = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_image);
 		storeName = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_title);
 		updateDate = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_card_subtitle);
+		store = itemView.findViewById(R.id.displayable_social_timeline_app_update_header);
 	}
 
 	@Override
@@ -69,15 +73,18 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
 	@Override
 	public void onViewAttached() {
-		if (downloadSubscription == null) {
-			downloadSubscription = new CompositeSubscription();
+		if (subscriptions == null) {
+			subscriptions = new CompositeSubscription();
 
-			downloadSubscription.add(displayable.downloadStatus()
+			subscriptions.add(RxView.clicks(store)
+					.subscribe(click -> ((FragmentShower) getContext()).pushFragmentV4(StoreFragment.newInstance(displayable.getStoreName()))));
+
+			subscriptions.add(displayable.downloadStatus()
 					.flatMap(completedToPause())
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(status -> updateDownloadStatus(displayable, status), throwable -> showDownloadError(displayable, throwable)));
 
-			downloadSubscription.add(RxView.clicks(updateButton).flatMap(click -> displayable.downloadStatus().first().flatMap(status -> {
+			subscriptions.add(RxView.clicks(updateButton).flatMap(click -> displayable.downloadStatus().first().flatMap(status -> {
 				if (status == Download.COMPLETED) {
 					return displayable.install(getContext()).map(success -> Download.COMPLETED);
 				}
@@ -91,9 +98,9 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
 	@Override
 	public void onViewDetached() {
-		if (downloadSubscription != null) {
-			downloadSubscription.unsubscribe();
-			downloadSubscription = null;
+		if (subscriptions != null) {
+			subscriptions.unsubscribe();
+			subscriptions = null;
 		}
 	}
 

@@ -42,13 +42,11 @@ public class AppUpdateDisplayable extends Displayable {
 	private InstallManager installManager;
 	private DateCalculator dateCalculator;
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(), appUpdate
-				.getFile().getVername
-				(),
-				spannableFactory,	appUpdate
-				.getName(),
-				appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator);
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
+	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
+				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(),
+				downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator);
 	}
 
 	public AppUpdateDisplayable() {
