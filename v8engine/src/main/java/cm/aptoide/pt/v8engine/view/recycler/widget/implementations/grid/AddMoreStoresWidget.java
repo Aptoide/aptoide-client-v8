@@ -41,4 +41,14 @@ public class AddMoreStoresWidget extends Widget<AddMoreStoresDisplayable> {
 			}
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

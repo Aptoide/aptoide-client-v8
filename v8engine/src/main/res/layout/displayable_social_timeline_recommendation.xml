@@ -25,7 +25,7 @@
                 android:id="@+id/displayable_social_timeline_recommendation_card_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_margin="16dp"
+                android:layout_margin="12dp"
                 tools:ignore="contentDescription"
                 tools:src="@drawable/img_people_mockup"/>
 
@@ -41,7 +41,7 @@
                 android:layout_marginTop="16dp"
                 android:ellipsize="end"
                 android:lines="1"
-                tools:text="Aptoide Team"/>
+                tools:text="Aptoide recommnends"/>
 
             <TextView
                 android:id="@+id/displayable_social_timeline_recommendation_card_subtitle"
@@ -58,10 +58,14 @@
                 tools:text="Há duas horas"/>
 
             <View
+                android:layout_marginLeft="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.7dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/separators_grey"/>
+                android:background="@color/timeline_separator"/>
         </RelativeLayout>
 
 
@@ -89,7 +93,7 @@
 
                 <TextView
                     android:id="@+id/displayable_social_timeline_recommendation_name"
-                    style="@style/Widget.Aptoide.Card.Title.Large"
+                    style="@style/Widget.Aptoide.Card.Title.Large.Black"
                     android:textColor="@color/black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -100,8 +104,9 @@
                     tools:text="Clash Royale"/>
 
                 <TextView
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="2dp"
                     android:id="@+id/displayable_social_timeline_recommendation_similar_apps"
+                    style="@style/Widget.Aptoide.Card.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -115,10 +120,11 @@
                     style="@style/Widget.Aptoide.Card.Button"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
-                    android:gravity="center_vertical"
-                    tools:text="Get app Clash Royale"
+                    android:layout_marginBottom="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"/>
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    tools:text="Get app Clash Royale"/>
 
             </LinearLayout>
         </RelativeLayout>

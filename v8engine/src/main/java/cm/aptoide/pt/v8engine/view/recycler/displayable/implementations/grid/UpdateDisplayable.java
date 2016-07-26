@@ -5,12 +5,22 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.app.DownloadManager;
+import android.content.Context;
+
+import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installation;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import rx.Observable;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -33,26 +43,23 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private String patchObbPath;
 	@Getter private String patchObbMd5;
 
+	private int versionCode;
+	private InstallManager installManager;
+	private Download download;
+	private DownloadServiceHelper downloadManager;
+
 	public UpdateDisplayable() {
 	}
 
-	public static UpdateDisplayable create(Update update) {
-		UpdateDisplayable updateDisplayable = new UpdateDisplayable();
+	public static UpdateDisplayable create(Update update, InstallManager installManager, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
+		return new UpdateDisplayable(update.getPackageName(),update.getAppId(), update.getLabel(), update.getIcon(), update.getMd5(), update.getApkPath(),
+				update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
+				update.getPatchObbMd5(), update.getVersionCode(), installManager, downloadFactory.create(update), downloadManager);
+	}
 
-		updateDisplayable.packageName = update.getPackageName();
-		updateDisplayable.appId = update.getAppId();
-		updateDisplayable.label = update.getLabel();
-		updateDisplayable.icon = update.getIcon();
-		updateDisplayable.md5 = update.getMd5();
-		updateDisplayable.apkPath = update.getApkPath();
-		updateDisplayable.alternativeApkPath = update.getAlternativeApkPath();
-		updateDisplayable.updateVersionName = update.getUpdateVersionName();
-		updateDisplayable.mainObbPath = update.getMainObbPath();
-		updateDisplayable.mainObbMd5 = update.getMainObbMd5();
-		updateDisplayable.patchObbPath = update.getPatchObbPath();
-		updateDisplayable.patchObbMd5 = update.getPatchObbMd5();
-
-		return updateDisplayable;
+	public Observable<Void> downloadAndInstall(Context context) {
+		return downloadManager.startDownload(context, download).ignoreElements().cast(Void.class)
+				.concatWith(installManager.install(context, (PermissionRequest) context, download.getAppId()));
 	}
 
 	@Override

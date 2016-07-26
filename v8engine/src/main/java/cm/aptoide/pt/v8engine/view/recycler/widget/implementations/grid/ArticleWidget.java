@@ -47,7 +47,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
 		articleTitle.setText(displayable.getArticleTitle());
-		ImageLoader.load(displayable.getAvatarUrl(), image);
+		ImageLoader.loadWithCircleTransform(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
 		if (displayable.isGetApp()) {
@@ -65,5 +65,16 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
 			}
 		});
+	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+		url.setOnClickListener(null);
+		getAppButton.setOnClickListener(null);
 	}
 }

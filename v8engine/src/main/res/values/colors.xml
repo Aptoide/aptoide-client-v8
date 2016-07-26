@@ -138,10 +138,13 @@
 
     <color name="separators_grey">#1f000000</color>
 
+    <color name="timeline_separator">#edf0f4</color>
+
     <color name="black_gradient_start">#dd000000</color>
     <color name="black_gradient_end">#2f000000</color>
     <color name="app_view_follow_orange">#b64735</color>
     <color name="almost_black">#403f3d</color>
     <color name="green_tint_default">#45d316</color>
+
 
 </resources>

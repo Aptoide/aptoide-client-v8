@@ -5,6 +5,8 @@ import android.content.Intent;
 
 import java.util.List;
 
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
@@ -18,15 +20,17 @@ import rx.Observable;
 public class DownloadServiceHelper {
 
 	private final AptoideDownloadManager aptoideDownloadManager;
+	private PermissionManager permissionManager;
 
-	public DownloadServiceHelper(AptoideDownloadManager aptoideDownloadManager) {
+	public DownloadServiceHelper(AptoideDownloadManager aptoideDownloadManager, PermissionManager permissionManager) {
 		this.aptoideDownloadManager = aptoideDownloadManager;
+		this.permissionManager = permissionManager;
 	}
 
 	/**
 	 * Pause all the running downloads
 	 */
-	public static void pauseAllDownloads() {
+	public void pauseAllDownloads() {
 		Context context = Application.getContext();
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE);
@@ -45,23 +49,25 @@ public class DownloadServiceHelper {
 	/**
 	 * Starts a download. If there is a download running it is added to queue
 	 *
+	 * @param context
 	 * @param download Download to provide info to be able to make the download
 	 *
 	 * @return An observable that reports the download state
 	 */
-	public Observable<Download> startDownload(Download download) {
-		aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(download1 -> {
-			startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-		}, throwable -> {
-			if (throwable instanceof DownloadNotFoundException) {
-				@Cleanup
-				Realm realm = Database.get();
-				Database.save(download.clone(), realm);
+	public Observable<Download> startDownload(Context context, Download download) {
+		return permissionManager.requestExternalStoragePermission((PermissionRequest) context).flatMap(success -> Observable.fromCallable(() -> {
+			aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
 				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-			}
-		});
-
-		return aptoideDownloadManager.getDownload(download.getAppId());
+			}, throwable -> {
+				if (throwable instanceof DownloadNotFoundException) {
+					@Cleanup
+					Realm realm = Database.get();
+					Database.save(download, realm);
+					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+				}
+			});
+			return download;
+		}).flatMap(aDownload -> aptoideDownloadManager.getDownload(download.getAppId())));
 	}
 
 	private void startDownloadService(long appId, String action) {

@@ -98,4 +98,14 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 					});
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

@@ -57,6 +57,16 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
 		);
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private boolean isMediaAvailable(GetAppMeta.Media media) {
 		if(media!=null) {
 			List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();

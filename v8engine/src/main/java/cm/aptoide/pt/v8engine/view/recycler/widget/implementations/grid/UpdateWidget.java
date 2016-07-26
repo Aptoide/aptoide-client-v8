@@ -11,22 +11,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.Subscription;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -40,6 +38,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	private TextView installedVernameTextView;
 	private TextView updateVernameTextView;
 	private ViewGroup updateButtonLayout;
+	private Subscription subscription;
+	private UpdateDisplayable displayable;
 
 	public UpdateWidget(View itemView) {
 		super(itemView);
@@ -58,7 +58,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	@Override
 	public void bindView(UpdateDisplayable updateDisplayable) {
 		@Cleanup Realm realm = Database.get();
-
+		this.displayable = updateDisplayable;
 		final String packageName = updateDisplayable.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
 
@@ -68,19 +68,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 
 		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
-
-		updateButtonLayout.setOnClickListener(view -> {
-			new DownloadServiceHelper(AptoideDownloadManager.getInstance()).startDownload(new DownloadFactory().create(updateDisplayable))
-					.subscribe(download -> {
-				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-					AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
-				}
-			});
-		});
-
 		updateRowRelativeLayout.setOnLongClickListener(v -> {
 			AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());
-
 			builder.setTitle(R.string.ignore_update)
 					.setCancelable(true)
 					.setNegativeButton(R.string.no, null)
@@ -98,5 +87,23 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 			return true;
 		});
+	}
+
+	@Override
+	public void onViewAttached() {
+		if (subscription == null) {
+			subscription = RxView.clicks(updateButtonLayout)
+					.flatMap(click -> displayable.downloadAndInstall(getContext()))
+					.retry()
+					.subscribe();
+		}
+	}
+
+	@Override
+	public void onViewDetached() {
+		if (subscription != null) {
+			subscription.unsubscribe();
+			subscription = null;
+		}
 	}
 }

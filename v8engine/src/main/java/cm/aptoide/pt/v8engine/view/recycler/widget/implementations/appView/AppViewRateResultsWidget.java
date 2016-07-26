@@ -32,4 +32,14 @@ public class AppViewRateResultsWidget extends Widget<AppViewRateResultsDisplayab
 		final GetApp pojo = displayable.getPojo();
 		// TODO
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

@@ -52,6 +52,16 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 		handleSeeMore(app);
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private void handleSeeMore(GetAppMeta.App app) {
 		readMoreBtn.setOnClickListener(seeMoreHandler(app.getId()));
 	}

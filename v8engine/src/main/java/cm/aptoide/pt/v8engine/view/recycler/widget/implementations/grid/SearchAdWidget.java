@@ -64,4 +64,14 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 			((FragmentShower) view.getContext()).pushFragmentV4(AppViewFragment.newInstance(ad));
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

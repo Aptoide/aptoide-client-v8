@@ -76,6 +76,16 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 		});
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private void sendActionEvent(String eventActionUrl) {
 		Intent i;
 		if (eventActionUrl != null) {

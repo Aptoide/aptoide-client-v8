@@ -121,4 +121,14 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 			dialogPermissions.show(getContext().getSupportFragmentManager(), "");
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

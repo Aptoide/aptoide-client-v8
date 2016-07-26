@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.dataprovider.PackageRepository;
 import cm.aptoide.pt.dataprovider.TimelineRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
@@ -32,6 +33,8 @@ import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -66,6 +69,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private TimelineRepository timelineRepository;
 	private PackageRepository packageRepository;
 	private List<String> packages;
+	private InstallManager installManager;
 
 	public static AppsTimelineFragment newInstance(String action) {
 		AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -82,8 +86,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		dateCalculator = new DateCalculator();
 		spannableFactory = new SpannableFactory();
 		downloadFactory = new DownloadFactory();
-		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
 		packageRepository = new PackageRepository(getContext().getPackageManager());
+		final PermissionManager permissionManager = new PermissionManager();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
 		timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY), new TimelineRepository.TimelineCardDuplicateFilter(new HashSet<>()));
 	}
 
@@ -273,7 +279,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		} else if (card instanceof StoreLatestApps) {
 			return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator);
 		} else if (card instanceof AppUpdate) {
-			return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory, downloadManager);
+			return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory, downloadManager, installManager, dateCalculator);
 		} else if (card instanceof Recommendation) {
 			return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory);
 		}

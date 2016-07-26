@@ -54,4 +54,14 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 			}
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

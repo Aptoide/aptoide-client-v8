@@ -49,4 +49,14 @@ public class FooterWidget extends Widget<FooterDisplayable> {
 					.getTitle()));
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

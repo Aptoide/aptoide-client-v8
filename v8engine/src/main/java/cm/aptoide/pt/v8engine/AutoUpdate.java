@@ -23,12 +23,13 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 
 public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
@@ -36,10 +37,16 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 	private final String url = Application.getConfiguration().getAutoUpdateUrl();
 
 	private AptoideBaseActivity activity;
+	private InstallManager installManager;
+	private DownloadFactory downloadFactory;
+	private DownloadServiceHelper downloadManager;
 	private ProgressDialog dialog;
 
-	public AutoUpdate(AptoideBaseActivity activity) {
+	public AutoUpdate(AptoideBaseActivity activity, InstallManager installManager, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
 		this.activity = activity;
+		this.installManager = installManager;
+		this.downloadFactory = downloadFactory;
+		this.downloadManager = downloadManager;
 	}
 
 	@Override
@@ -108,20 +115,20 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 			dialog = new ProgressDialog(activity);
 			dialog.setMessage(activity.getString(R.string.retrieving_update));
 			dialog.show();
-			DownloadFactory downloadFactory = new DownloadFactory();
-			DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance());
-			downloadServiceHelper.startDownload(downloadFactory.create(autoUpdateInfo)).subscribe(download -> {
+			downloadManager.startDownload(activity, downloadFactory.create(autoUpdateInfo))
+					.subscribe(download -> {
 				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 					if (activity.is_resumed() && this.dialog.isShowing()) {
 						this.dialog.dismiss();
 					}
-					if (!(autoUpdateInfo.md5 == null)) {
+					if (autoUpdateInfo.md5 != null) {
 						try {
-							Logger.d("Aptoide", "requestUpdateSelf: " + download.getFilesToDownload().get(0).getFilePath());
-							File apk = new File(download.getFilesToDownload().get(0).getFilePath());
+							FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+							Logger.d("Aptoide", "requestUpdateSelf: " + downloadedFile.getFilePath());
+							File apk = new File(downloadedFile.getFilePath());
 							String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
 							if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-								AptoideUtils.SystemU.installApp(download.getFilesToDownload().get(0).getFilePath());
+								installManager.install(activity, activity, download.getAppId()).toBlocking().subscribe();
 							} else {
 								Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
 								throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);

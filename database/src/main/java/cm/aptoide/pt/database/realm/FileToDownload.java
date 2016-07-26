@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmObject;
+import lombok.Getter;
 
 /**
  * Created by trinkes on 5/16/16.
@@ -31,32 +32,20 @@ public class FileToDownload extends RealmObject {
 	int status;
 	private String md5;
 	private String fileName;
+	@Getter private int versionCode;
 
-	/**
-	 * @param link
-	 * @param appId
-	 * @param md5
-	 * @param fileName
-	 * @param fileType use FileTypeConverter class to get this value
-	 *
-	 * @return
-	 */
-	public static FileToDownload createFileToDownload(String link, String altLink, long appId, String md5, String fileName, int fileType) {
+	public static FileToDownload createFileToDownload(String link, String altLink, long appId, String md5, String fileName, int fileType, String packageName,
+	                                                  int versionCode) {
 		FileToDownload fileToDownload = new FileToDownload();
 		fileToDownload.setLink(link);
 		fileToDownload.setAppId(appId);
 		fileToDownload.setMd5(md5);
 		fileToDownload.setAltLink(altLink);
+		fileToDownload.versionCode = versionCode;
 		if (!TextUtils.isEmpty(fileName)) {
 			fileToDownload.setFileName(fileName);
 		}
 		fileToDownload.setFileType(fileType);
-
-		return fileToDownload;
-	}
-
-	public static FileToDownload createFileToDownload(String link, String altLink, long appId, String md5, String fileName, int fileType, String packageName) {
-		FileToDownload fileToDownload = createFileToDownload(link, altLink, appId, md5, fileName, fileType);
 		fileToDownload.setPackageName(packageName);
 		return fileToDownload;
 	}
@@ -81,7 +70,7 @@ public class FileToDownload extends RealmObject {
 
 	public String getFileName() {
 		if (TextUtils.isEmpty(fileName)) {
-			fileName = TextUtils.isEmpty(getMd5()) ? IdUtils.randomString() : getMd5();
+			return TextUtils.isEmpty(getMd5()) ? IdUtils.randomString() : getMd5();
 		}
 		return fileName;
 	}
@@ -177,6 +166,7 @@ public class FileToDownload extends RealmObject {
 		clone.setDownloadId(this.getDownloadId());
 		clone.setFileType(this.getFileType());
 		clone.setProgress(this.getProgress());
+		clone.versionCode = versionCode;
 		if (this.getMd5() != null) {
 			clone.setMd5(new String(this.getMd5()));
 		}

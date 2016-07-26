@@ -139,6 +139,16 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		loadTopComments(app.getStore().getName(), app.getPackageName());
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private void showRateDialog() {
 		final Context ctx = getContext();
 		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_rate_app, null);

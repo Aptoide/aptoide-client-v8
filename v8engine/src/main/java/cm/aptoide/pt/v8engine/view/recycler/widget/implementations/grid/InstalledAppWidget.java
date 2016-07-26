@@ -60,4 +60,14 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 			ShowMessage.asToast(getContext(), "Create Review");
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

@@ -163,4 +163,14 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 		itemView.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance
 				(pojo.getId(), pojo.getStore().getAppearance().getTheme())));
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

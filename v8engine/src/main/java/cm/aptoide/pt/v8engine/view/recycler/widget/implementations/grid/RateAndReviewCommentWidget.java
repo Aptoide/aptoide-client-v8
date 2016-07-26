@@ -97,4 +97,14 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 			ShowMessage.asSnack(v, "TO DO: show / hide replies");
 		});
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

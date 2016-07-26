@@ -61,6 +61,16 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
 		// TODO
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private static final class SuggestedAppExtraInfo {
 
 		private View extraInfoLayout;

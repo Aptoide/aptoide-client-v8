@@ -44,7 +44,6 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
 		ImageLoader.loadWithCircleTransform(displayable.getAvatarUrl(), image);
 
-		appsContaner.removeAllViews();
 		View latestAppView;
 		ImageView latestAppIcon;
 		for (StoreLatestAppsDisplayable.LatestApp latestApp: displayable.getLatestApps()) {
@@ -59,5 +58,15 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 			ImageLoader.load(latestApp.getIconUrl(), latestAppIcon);
 			appsContaner.addView(latestAppView);
 		}
+	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+		appsContaner.removeAllViews();
 	}
 }

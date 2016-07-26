@@ -33,4 +33,14 @@ public class EmptyWidget extends Widget {
 	public void bindView(Displayable displayable) {
 		// TODO
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

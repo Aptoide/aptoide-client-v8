@@ -687,19 +687,6 @@ public class AptoideUtils {
 			}
 		}
 
-		public static void installApp(String apkPath) {
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setDataAndType(Uri.fromFile(new File(apkPath)), "application/vnd.android.package-archive");
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(intent);
-		}
-
-		public static void uninstallApp(Context context, String packageName) {
-			Uri uri = Uri.fromParts("package", packageName, null);
-			Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-			context.startActivity(intent);
-		}
-
 		public static String getConnectionType() {
 			final ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			final NetworkInfo info = manager.getActiveNetworkInfo();

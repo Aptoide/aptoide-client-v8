@@ -8,11 +8,16 @@ package cm.aptoide.pt.dataprovider;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.Datalist;
+import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.listapp.File;
+import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import rx.Observable;

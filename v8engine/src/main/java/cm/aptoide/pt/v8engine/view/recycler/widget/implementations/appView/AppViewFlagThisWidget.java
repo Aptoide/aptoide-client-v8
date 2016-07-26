@@ -161,6 +161,16 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 		};
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private void applyCount(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type, int count) {
 		String countAsString = Integer.toString(count);
 		switch (type) {

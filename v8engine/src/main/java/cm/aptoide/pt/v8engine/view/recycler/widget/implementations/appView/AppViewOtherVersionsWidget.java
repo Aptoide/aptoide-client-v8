@@ -33,4 +33,14 @@ public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDispl
 		final GetApp pojo = displayable.getPojo();
 		// TODO
 	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
 }

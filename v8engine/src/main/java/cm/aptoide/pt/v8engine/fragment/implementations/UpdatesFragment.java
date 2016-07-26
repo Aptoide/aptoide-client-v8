@@ -6,21 +6,28 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
@@ -38,10 +45,22 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	private List<Displayable> installedDisplayablesList = new LinkedList<>();
 	private Subscription installedSubscription;
 	private Subscription updatesSubscription;
+	private InstallManager installManager;
+	private DownloadFactory downloadFactory;
+	private DownloadServiceHelper downloadManager;
 
 	public static UpdatesFragment newInstance() {
 		UpdatesFragment fragment = new UpdatesFragment();
 		return fragment;
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		PermissionManager permissionManager = new PermissionManager();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+		downloadFactory = new DownloadFactory();
 	}
 
 	@Override
@@ -82,7 +101,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
-									updatesDisplayablesList.add(UpdateDisplayable.create(update));
+									updatesDisplayablesList.add(UpdateDisplayable.create(update, installManager, downloadFactory, downloadManager));
 								}
 							}
 

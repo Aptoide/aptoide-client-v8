@@ -92,6 +92,16 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 		}
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private void setBadge(App app, ImageView trustedBadge) {
 		@DrawableRes
 		int badgeResId;
