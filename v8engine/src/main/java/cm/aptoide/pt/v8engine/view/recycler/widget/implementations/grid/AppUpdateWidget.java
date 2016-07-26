@@ -91,7 +91,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				return displayable.download(getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(completedToPause());
 			})).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
 				showDownloadError(displayable, error);
-				return null;
+				return Observable.just(null);
 			})).subscribe(status -> updateDownloadStatus(displayable, status)));
 		}
 	}
