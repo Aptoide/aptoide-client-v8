@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 26/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -47,6 +47,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		Logger.d(TAG, String.format("refresh excluded updates? %s", refresh ? "yes" : "no"));
+
 		fetchScheduledDownloads();
 	}
 

@@ -2,9 +2,9 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 20/07/2016.
+  ~ Modified by SithEngineer on 26/07/2016.
   -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,11 +26,21 @@
 
     <include
         layout="@layout/partial_view_incl_no_network"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
         tools:visibility="gone"
         />
 
     <include
         layout="@layout/partial_view_error"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
         tools:visibility="gone"
         />
 
@@ -38,6 +48,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
         >
 
         <include
@@ -54,23 +65,25 @@
         android:id="@+id/empty_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
         android:padding="@dimen/label_padding"
         android:textAlignment="center"
         android:textSize="16sp"
         android:visibility="gone"
         tools:text="@string/no_excluded_updates_msg"
-        tools:visibility="visible"
+        tools:visibility="gone"
         />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
         android:clipToPadding="false"
         android:paddingLeft="@dimen/recycler_margin"
         android:paddingRight="@dimen/recycler_margin"
-        android:visibility="visible"
-        tools:visibility="gone"
+        android:visibility="gone"
+        tools:visibility="visible"
         />
 
-</LinearLayout>
+</RelativeLayout>

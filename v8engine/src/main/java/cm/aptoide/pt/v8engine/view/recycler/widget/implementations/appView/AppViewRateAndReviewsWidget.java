@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/07/2016.
+ * Modified by SithEngineer on 26/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -126,13 +126,13 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		};
 		rateThisButton.setOnClickListener(rateOnClickListener);
 		ratingLayout.setOnClickListener(rateOnClickListener);
+		rateThisAppButton.setOnClickListener(rateOnClickListener);
 
 		View.OnClickListener commentsOnClickListener = v -> {
 			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getStore().getName(), app.getPackageName()));
 		};
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
-		rateThisAppButton.setOnClickListener(commentsOnClickListener);
 
 		topReviewsAdapter = new TopReviewsAdapter(getContext().getSupportFragmentManager());
 		topCommentsPager.setAdapter(topReviewsAdapter);
@@ -220,8 +220,9 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	public void loadTopComments(String storeName, String packageName) {
 		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
+
 			topReviewsProgressBar.setVisibility(View.GONE);
-			topCommentsPager.setVisibility(View.VISIBLE);
+
 					List<Review> reviews = listReviews.getDatalist().getList();
 					if (reviews == null || reviews.isEmpty()) {
 						emptyReviewsLayout.setVisibility(View.VISIBLE);
@@ -232,6 +233,10 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 						return;
 					}
 
+					emptyReviewsLayout.setVisibility(View.GONE);
+					ratingLayout.setVisibility(View.VISIBLE);
+					commentsLayout.setVisibility(View.VISIBLE);
+			topReviewsProgressBar.setVisibility(View.GONE);
 					topReviewsAdapter.setReviews(listReviews.getDatalist().getList());
 					topReviewsAdapter.notifyDataSetChanged();
 					scheduleAnimations();
@@ -239,7 +244,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 					emptyReviewsLayout.setVisibility(View.VISIBLE);
 					ratingLayout.setVisibility(View.GONE);
 					commentsLayout.setVisibility(View.GONE);
-			topReviewsProgressBar.setVisibility(View.GONE);
+					topReviewsProgressBar.setVisibility(View.GONE);
 
 					topReviewsAdapter.setReviews(null);
 					topReviewsAdapter.notifyDataSetChanged();

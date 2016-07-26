@@ -2,7 +2,7 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/07/2016.
+  ~ Modified by SithEngineer on 26/07/2016.
   -->
 
 <RelativeLayout
@@ -164,6 +164,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="2"
@@ -177,6 +179,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     >

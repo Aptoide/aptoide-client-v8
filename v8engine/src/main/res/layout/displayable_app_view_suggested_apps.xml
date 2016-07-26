@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/07/2016.
+  ~ Modified by SithEngineer on 26/07/2016.
   -->
 
 <LinearLayout
@@ -18,19 +18,19 @@
         android:id="@+id/apkinfoheader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/backgroundSecondary"
         android:paddingBottom="15dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        >
 
         <TextView
             android:id="@+id/middleAppViewHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="8dp"
             android:text="@string/recommended_for_you"
             android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="?android:attr/textColorSecondary"/>
+            android:textColor="@color/aptoide_orange"
+            android:textSize="18sp"
+            />
 
         <LinearLayout
             android:id="@+id/icon_layout"
@@ -48,7 +48,8 @@
                 android:layout_height="88dp"
                 android:layout_gravity="right"
                 android:layout_margin="5dp"
-                android:src="@drawable/icon_brand_aptoide"/>
+                android:src="@drawable/icon_brand_aptoide"
+                />
 
         </LinearLayout>
 
@@ -170,18 +171,21 @@
             tools:visibility="visible"
             >
 
-
+            <!--
+                android:background="?attr/selectableItemBackground"
+            -->
             <LinearLayout
                 android:id="@+id/badge_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground">
+                >
 
                 <ImageView
                     android:id="@+id/app_badge"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    />
 
                 <TextView
                     android:id="@+id/app_badge_text"
@@ -189,7 +193,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    />
             </LinearLayout>
 
         </RelativeLayout>

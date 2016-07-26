@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 26/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.v7.widget.AppCompatRatingBar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,21 +18,21 @@ import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by sithengineer on 14/07/16.
  */
 @Displayables({RateAndReviewCommentDisplayable.class})
-public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDisplayable> {
+public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentDisplayable> {
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
 
-	private Button reply;
-	private Button flagHelfull;
-	private Button flagNotHelfull;
-	private Button showHideReplies;
+	private TextView reply;
+	private TextView showHideReplies;
+	//private Button flagHelfull;
+	//private Button flagNotHelfull;
 
 	private AppCompatRatingBar ratingBar;
 	private TextView reviewTitle;
@@ -50,10 +49,10 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 
 	@Override
 	protected void assignViews(View itemView) {
-		reply = (Button) itemView.findViewById(R.id.write_reply_btn);
-		flagHelfull = (Button) itemView.findViewById(R.id.helpful_btn);
-		flagNotHelfull = (Button) itemView.findViewById(R.id.not_helpful_btn);
-		showHideReplies = (Button) itemView.findViewById(R.id.show_replies_btn);
+		reply = (TextView) itemView.findViewById(R.id.write_reply_btn);
+		showHideReplies = (TextView) itemView.findViewById(R.id.show_replies_btn);
+		//flagHelfull = (Button) itemView.findViewById(R.id.helpful_btn);
+		//flagNotHelfull = (Button) itemView.findViewById(R.id.not_helpful_btn);
 
 		ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
 		reviewTitle = (TextView) itemView.findViewById(R.id.comment_title);
@@ -85,6 +84,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 			ShowMessage.asSnack(v, "TO DO: write reply");
 		});
 
+		/*
 		flagHelfull.setOnClickListener(v -> {
 			ShowMessage.asSnack(v, "TO DO: flag as helpful");
 		});
@@ -92,19 +92,10 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 		flagNotHelfull.setOnClickListener(v -> {
 			ShowMessage.asSnack(v, "TO DO: flag as NOT helpful");
 		});
+		*/
 
 		showHideReplies.setOnClickListener(v -> {
 			ShowMessage.asSnack(v, "TO DO: show / hide replies");
 		});
-	}
-
-	@Override
-	public void onViewAttached() {
-
-	}
-
-	@Override
-	public void onViewDetached() {
-
 	}
 }

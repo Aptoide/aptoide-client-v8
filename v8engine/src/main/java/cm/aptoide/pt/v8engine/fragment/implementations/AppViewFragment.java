@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 26/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -47,9 +47,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
-import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
@@ -142,6 +142,14 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(),
 				new DownloadInstallationProvider(downloadManager));
+	}
+
+	@Override
+	public void loadExtras(Bundle args) {
+		super.loadExtras(args);
+		appId = args.getLong(BundleKeys.APP_ID.name());
+		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
+		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
 
 	private void setupObservables(GetApp getApp) {
@@ -281,7 +289,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			realm.copyToRealmOrUpdate(scheduled);
 			realm.commitTransaction();
 
-			ShowMessage.asSnack(item.getActionView(), R.string.added_to_scheduled);
+			String str = this.getString(R.string.added_to_scheduled);
+			ShowMessage.asSnack(this.getView(), str);
 			return true;
 		} else if (i == R.id.menu_uninstall && unInstallAction != null) {
 			unInstallAction.call();
@@ -289,14 +298,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void loadExtras(Bundle args) {
-		super.loadExtras(args);
-		appId = args.getLong(BundleKeys.APP_ID.name());
-		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
-		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
 
 	//

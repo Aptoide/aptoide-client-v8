@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/07/2016.
+  ~ Modified by SithEngineer on 26/07/2016.
   -->
 
 <LinearLayout
@@ -16,7 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/toolbar"/>
+        <include
+            layout="@layout/toolbar"
+            />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -105,8 +107,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/users_icon_layout"
                 android:gravity="center"
+                android:includeFontPadding="false"
+                android:lineSpacingMultiplier="0.9"
+                android:maxLines="1"
                 android:textColor="@color/white"
-                android:textSize="44.5sp"
+                android:textSize="42sp"
                 tools:text="4.2"
                 />
 
@@ -150,243 +155,171 @@
 
                 <TextView
                     android:id="@+id/five_rate_star_label"
+                    style="@style/FragmentRateAndReviewsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/grid_item_star_full_small"
-                    android:drawablePadding="6dp"
-                    android:gravity="center"
                     android:text="@string/five_numeric"
-                    android:textSize="8.3sp"
                     />
 
                 <TextView
                     android:id="@+id/five_rate_star_count"
-                    android:layout_width="wrap_content"
+                    style="@style/FragmentRateAndReviewsCount"
+                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:text="@string/zero"
-                    android:textSize="8.3sp"
                     tools:text="7914"
                     />
 
                 <ProgressBar
                     android:id="@+id/five_rate_star_progress"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    style="@style/FragmentRateAndReviewsProgressBar"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginStart="10dp"
                     android:layout_toLeftOf="@id/five_rate_star_count"
                     android:layout_toRightOf="@id/five_rate_star_label"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar"
+                    tools:progress="80"
                     />
 
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/four_rate_star_layout"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:orientation="horizontal"
-                android:weightSum="7"
                 >
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:id="@+id/four_rate_star_label"
+                    style="@style/FragmentRateAndReviewsLabel"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/grid_item_star_full_small"
-                    android:drawablePadding="6dp"
-                    android:gravity="center"
                     android:text="@string/four_numeric"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/four_rate_star_progress"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="4"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
                     android:id="@+id/four_rate_star_count"
-                    android:layout_width="0dp"
+                    style="@style/FragmentRateAndReviewsCount"
+                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="2"
-                    android:paddingEnd="4dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingStart="4dp"
-                    android:text="@string/zero"
-                    android:textSize="14sp"
-                    tools:text="192"
+                    tools:text="301"
                     />
 
-            </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/four_rate_star_progress"
+                    style="@style/FragmentRateAndReviewsProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_toLeftOf="@id/four_rate_star_count"
+                    android:layout_toRightOf="@id/four_rate_star_label"
+                    tools:progress="30"
+                    />
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/three_rate_star_layout"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:orientation="horizontal"
-                android:weightSum="7"
                 >
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:id="@+id/three_rate_star_label"
+                    style="@style/FragmentRateAndReviewsLabel"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/star_full_small"
-                    android:gravity="center"
                     android:text="@string/three_numeric"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/three_rate_star_progress"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="4"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
                     android:id="@+id/three_rate_star_count"
-                    android:layout_width="0dp"
+                    style="@style/FragmentRateAndReviewsCount"
+                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="2"
-                    android:paddingEnd="4dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingStart="4dp"
-                    android:text="@string/zero"
-                    android:textSize="14sp"
-                    tools:text="4548"
+                    tools:text="4087"
                     />
 
-            </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/three_rate_star_progress"
+                    style="@style/FragmentRateAndReviewsProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_toLeftOf="@id/three_rate_star_count"
+                    android:layout_toRightOf="@id/three_rate_star_label"
+                    tools:progress="50"
+                    />
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/two_rate_star_layout"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:orientation="horizontal"
-                android:weightSum="7"
                 >
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:id="@+id/two_rate_star_label"
+                    style="@style/FragmentRateAndReviewsLabel"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/star_full_small"
-                    android:gravity="center"
                     android:text="@string/two_numeric"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/two_rate_star_progress"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="4"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
                     android:id="@+id/two_rate_star_count"
-                    android:layout_width="0dp"
+                    style="@style/FragmentRateAndReviewsCount"
+                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="2"
-                    android:paddingEnd="4dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingStart="4dp"
-                    android:text="@string/zero"
-                    android:textSize="14sp"
-                    tools:text="123"
+                    tools:text="5"
                     />
 
-            </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/two_rate_star_progress"
+                    style="@style/FragmentRateAndReviewsProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_toLeftOf="@id/two_rate_star_count"
+                    android:layout_toRightOf="@id/two_rate_star_label"
+                    tools:progress="1"
+                    />
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/one_rate_star_layout"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:orientation="horizontal"
-                android:weightSum="7"
                 >
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:id="@+id/one_rate_star_label"
+                    style="@style/FragmentRateAndReviewsLabel"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/star_full_small"
-                    android:gravity="center"
                     android:text="@string/one_numeric"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/one_rate_star_progress"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="4"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar"
                     />
 
                 <TextView
                     android:id="@+id/one_rate_star_count"
-                    android:layout_width="0dp"
+                    style="@style/FragmentRateAndReviewsCount"
+                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="2"
-                    android:paddingEnd="4dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingStart="4dp"
-                    android:text="@string/zero"
-                    android:textSize="14sp"
-                    tools:text="2"
+                    tools:text="12"
                     />
 
-            </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/one_rate_star_progress"
+                    style="@style/FragmentRateAndReviewsProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_toLeftOf="@id/one_rate_star_count"
+                    android:layout_toRightOf="@id/one_rate_star_label"
+                    tools:progress="12"
+                    />
+
+            </RelativeLayout>
 
 
         </LinearLayout>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/07/2016.
+ * Modified by SithEngineer on 26/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -20,12 +20,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
 
 /**
  * created by SithEngineer
  */
-public class RowReviewWidget extends Widget<RowReviewDisplayable> {
+public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 
 	//private final EnumStoreTheme theme;
 	//private boolean isCommunity;

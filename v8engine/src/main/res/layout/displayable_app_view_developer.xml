@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 06/07/2016.
+  ~ Modified by SithEngineer on 26/07/2016.
   -->
 
 <LinearLayout
-    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background_window"
+    android:background="#ebebeb"
     android:orientation="vertical"
-    android:paddingEnd="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingStart="0dp"
     >
 
     <TextView
         android:id="@+id/additional_info"
-        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:drawablePadding="18dp"
         android:drawableRight="@drawable/ic_down_arrow"
-        android:padding="@dimen/appview_developer_padding"
+        android:gravity="center_vertical"
+        android:paddingEnd="17.3dp"
+        android:paddingLeft="13.3dp"
+        android:paddingRight="17.3dp"
+        android:paddingStart="13.3dp"
         android:text="@string/additional_information"
+        android:textColor="#403f3d"
+        android:textSize="18sp"
         />
 
     <LinearLayout
@@ -32,7 +34,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingEnd="17.3dp"
+        android:paddingLeft="13.3dp"
+        android:paddingRight="17.3dp"
+        android:paddingStart="13.3dp"
         android:visibility="gone"
+        tools:visibility="visible"
         >
 
         <TextView
@@ -41,8 +48,11 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_map_appview"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:padding="@dimen/appview_developer_padding"
             android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            tools:text="www.aptoide.com"
             />
 
         <TextView
@@ -51,8 +61,11 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_mail_appview"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:padding="@dimen/appview_developer_padding"
             android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            tools:text="fabio.dias@aptoide.com"
             />
 
         <TextView
@@ -62,9 +75,12 @@
             android:drawableLeft="@drawable/ic_locked_appview"
             android:drawablePadding="8dp"
             android:ellipsize="end"
+            android:gravity="center_vertical"
             android:maxLines="1"
             android:padding="@dimen/appview_developer_padding"
             android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            tools:text="N.A."
             />
 
         <TextView
@@ -74,9 +90,11 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_permissions_appview"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:padding="@dimen/appview_developer_padding"
             android:text="@string/permissions"
             android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
             />
     </LinearLayout>
 
