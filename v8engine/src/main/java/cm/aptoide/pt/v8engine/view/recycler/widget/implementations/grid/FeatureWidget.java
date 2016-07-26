@@ -47,7 +47,7 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
 		title.setText(displayable.getTitle(getContext()));
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
 		articleTitle.setText(displayable.getTitleResource());
-		ImageLoader.loadWithCircleTransform(displayable.getAvatarResource(), image);
+		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
 		if (displayable.isGetApp()) {

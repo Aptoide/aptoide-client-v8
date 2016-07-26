@@ -53,7 +53,7 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 		title.setText(displayable.getTitle(getContext()));
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
 
-		ImageLoader.loadWithCircleTransform(displayable.getAvatarResource(), image);
+		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
 		ImageLoader.load(displayable.getAppIcon(), appIcon);
 

@@ -47,7 +47,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
 		articleTitle.setText(displayable.getArticleTitle());
-		ImageLoader.loadWithCircleTransform(displayable.getAvatarUrl(), image);
+		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
 		if (displayable.isGetApp()) {

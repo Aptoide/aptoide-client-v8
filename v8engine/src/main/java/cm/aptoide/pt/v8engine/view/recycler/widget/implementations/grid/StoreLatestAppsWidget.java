@@ -42,7 +42,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 	public void bindView(StoreLatestAppsDisplayable displayable) {
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getHoursSinceLastUpdate(getContext()));
-		ImageLoader.loadWithCircleTransform(displayable.getAvatarUrl(), image);
+		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 
 		View latestAppView;
 		ImageView latestAppIcon;
