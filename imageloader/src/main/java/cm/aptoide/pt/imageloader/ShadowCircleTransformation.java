@@ -57,14 +57,15 @@ public class ShadowCircleTransformation extends BitmapTransformation {
 		Paint strokePaint = new Paint();
 		strokePaint.setColor(Color.WHITE);
 		strokePaint.setStyle(Paint.Style.FILL);
-		strokePaint.setShadowLayer(5.0f, 0.0f, 0.0f, Color.GRAY);
+		float shadowRadius = size * 0.02f;
+		strokePaint.setShadowLayer(shadowRadius, 0.0f, 0.0f, Color.GRAY);
 		strokePaint.setAntiAlias(true);
-		canvas.drawCircle(r, r, r - 5.0f, strokePaint);
+		canvas.drawCircle(r, r, r - shadowRadius, strokePaint);
 
 		Paint paint = new Paint();
 		paint.setShader(new BitmapShader(squared, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
 		paint.setAntiAlias(true);
-		canvas.drawCircle(r, r, r - 15f, paint);
+		canvas.drawCircle(r, r, r - (size * 0.08f), paint);
 
 
 		return result;
