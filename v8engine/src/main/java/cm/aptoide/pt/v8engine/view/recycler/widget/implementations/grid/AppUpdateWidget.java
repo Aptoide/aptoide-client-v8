@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 26/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -93,7 +94,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				if (status == Download.COMPLETED) {
 					return displayable.install(getContext()).map(success -> Download.COMPLETED);
 				}
-				return displayable.download(getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(completedToPause());
+				return displayable.download((PermissionRequest) getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(completedToPause());
 			})).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
 				showDownloadError(displayable, error);
 				return Observable.just(null);

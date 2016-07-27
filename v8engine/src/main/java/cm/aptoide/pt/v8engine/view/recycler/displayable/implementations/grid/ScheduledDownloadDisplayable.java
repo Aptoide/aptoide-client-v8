@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
@@ -8,14 +8,12 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePojo;
 
 /**
  * created by SithEngineer
  */
-public class ScheduledDownloadDisplayable extends DisplayablePojo<Scheduled> {
-
-	private boolean selected;
+public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Scheduled> {
 
 	public ScheduledDownloadDisplayable() {
 	}
@@ -36,13 +34,5 @@ public class ScheduledDownloadDisplayable extends DisplayablePojo<Scheduled> {
 	@Override
 	public int getViewLayout() {
 		return R.layout.displayable_scheduled_download_row;
-	}
-
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
 	}
 }

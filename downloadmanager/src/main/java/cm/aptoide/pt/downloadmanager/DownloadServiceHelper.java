@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 27/07/2016.
+ */
+
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
@@ -49,13 +54,13 @@ public class DownloadServiceHelper {
 	/**
 	 * Starts a download. If there is a download running it is added to queue
 	 *
-	 * @param context
+	 * @param permissionRequest
 	 * @param download Download to provide info to be able to make the download
 	 *
 	 * @return An observable that reports the download state
 	 */
-	public Observable<Download> startDownload(Context context, Download download) {
-		return permissionManager.requestExternalStoragePermission((PermissionRequest) context).flatMap(success -> Observable.fromCallable(() -> {
+	public Observable<Download> startDownload(PermissionRequest permissionRequest, Download download) {
+		return permissionManager.requestExternalStoragePermission(permissionRequest).flatMap(success -> Observable.fromCallable(() -> {
 			aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
 				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 			}, throwable -> {

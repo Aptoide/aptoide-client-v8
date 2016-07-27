@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 18/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.install;
@@ -19,8 +19,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionRequest;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -42,19 +42,18 @@ public class InstallManager {
 	}
 
 	public Observable<Void> install(Context context, PermissionRequest permissionRequest, long installationId) {
-		return permissionManager.requestExternalStoragePermission(permissionRequest).ignoreElements()
-				.concatWith(installationProvider.getInstallation(installationId).observeOn(Schedulers
-				.computation())
-				.flatMap(installation -> {
-			if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
-				return Observable.just(null);
-			} else {
-				return systemInstall(context, installation.getFile()).onErrorResumeNext(Observable.fromCallable(() -> rootInstall(installation.getFile(),
-						installation
-						.getPackageName(), installation.getVersionCode())))
-						.onErrorResumeNext(defaultInstall(context, installation.getFile(), installation.getPackageName()));
-			}
-		}));
+		return permissionManager.requestExternalStoragePermission(permissionRequest)
+				.ignoreElements()
+				.concatWith(installationProvider.getInstallation(installationId).observeOn(Schedulers.computation()).flatMap(installation -> {
+					if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
+						return Observable.just(null);
+					} else {
+						return systemInstall(context, installation.getFile()).onErrorResumeNext(Observable.fromCallable(() -> rootInstall(installation.getFile
+								(), installation
+								.getPackageName(), installation.getVersionCode())))
+								.onErrorResumeNext(defaultInstall(context, installation.getFile(), installation.getPackageName()));
+					}
+				}));
 	}
 
 	public Observable<Void> uninstall(Context context, String packageName) {
@@ -100,6 +99,7 @@ public class InstallManager {
 				DataOutputStream os = new DataOutputStream(p.getOutputStream());
 				byte[] arrayOfByte = Base64.decode("cG0gaW5zdGFsbCAtciA=", Base64.DEFAULT);
 				String install = new String(arrayOfByte, "UTF-8");
+				//String install = new String("adb install", "UTF-8");
 				os.writeBytes(install + "\"" + file.getPath() + "\"\n");
 
 				// Close the terminal

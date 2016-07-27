@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 27/07/2016.
+ */
+
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.text.TextUtils;
@@ -8,6 +13,7 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -74,7 +80,7 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 			subscription.add(RxView.clicks(resumeDownloadButton)
 					.flatMap(click -> displayable.downloadStatus(download)
 							.filter(status -> status == Download.PAUSED)
-							.flatMap(status -> displayable.resumeDownload(getContext(), download)))
+							.flatMap(status -> displayable.resumeDownload((PermissionRequest) getContext(), download)))
 					.retry()
 					.subscribe(success -> {}, throwable -> throwable.printStackTrace()));
 

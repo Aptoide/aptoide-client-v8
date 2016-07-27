@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 27/07/2016.
+ */
+
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
@@ -42,14 +47,14 @@ public class AppUpdateDisplayable extends Displayable {
 	private InstallManager installManager;
 	private DateCalculator dateCalculator;
 
+	public AppUpdateDisplayable() {
+	}
+
 	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
 	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
 		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
 				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(),
 				downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator);
-	}
-
-	public AppUpdateDisplayable() {
 	}
 
 	public Observable<Boolean> isInstalled() {
@@ -60,8 +65,8 @@ public class AppUpdateDisplayable extends Displayable {
 		return installManager.install(context, (PermissionRequest) context, download.getAppId());
 	}
 
-	public Observable<Download> download(Context context) {
-		return downloadManager.startDownload(context, download);
+	public Observable<Download> download(PermissionRequest permissionRequest) {
+		return downloadManager.startDownload(permissionRequest, download);
 	}
 
 	public Observable<Integer> downloadStatus() {

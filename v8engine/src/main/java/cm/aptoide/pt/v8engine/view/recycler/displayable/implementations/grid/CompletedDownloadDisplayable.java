@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 27/07/2016.
+ */
+
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
@@ -54,8 +59,8 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
 	}
 
-	public Observable<Download> resumeDownload(Context context, Download download) {
-		return downloadManager.startDownload(context, download);
+	public Observable<Download> resumeDownload(PermissionRequest permissionRequest, Download download) {
+		return downloadManager.startDownload(permissionRequest, download);
 	}
 
 	public Observable<Void> installOrOpenDownload(Context context, Download download) {

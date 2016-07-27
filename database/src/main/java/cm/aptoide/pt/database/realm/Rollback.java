@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -9,6 +9,8 @@ import android.content.pm.PackageInfo;
 
 import java.util.Calendar;
 
+import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -25,7 +27,7 @@ public class Rollback extends RealmObject {
 	public static final String VERSION_CODE = "versionCode";
 	public static final String PACKAGE_NAME = "packageName";
 	public static final String TIMESTAMP = "timestamp";
-	public static final String NAME = "name";
+	public static final String APP_NAME = "app_name";
 	public static final String ICON = "icon";
 	public static final String ACTION = "action";
 	public static final String MD5 = "md5";
@@ -33,7 +35,7 @@ public class Rollback extends RealmObject {
 	public static final String REFERRER = "referrer";
 
 	//	@PrimaryKey private int id = -1;
-	private String name;
+	private String appName;
 	private String packageName;
 	private String icon;
 	private String versionName;
@@ -45,6 +47,15 @@ public class Rollback extends RealmObject {
 	private String referrer;
 	private String cpiUrl;
 
+	private long appId;
+	private String alternativeApkPath;
+	private String apkPath;
+	private String patchObbMd5;
+	private String patchObbPath;
+	private String mainObbMd5;
+	private String mainObbPath;
+	private double fileSize;
+
 	// TODO: 27-05-2016 neuro Nem sei o k fazer a isto..
 //	private String previousVersionName;
 //	private String storeName;
@@ -52,20 +63,50 @@ public class Rollback extends RealmObject {
 	public Rollback() {
 	}
 
-	public Rollback(PackageInfo packageInfo, Action action) {
+	public Rollback(GetAppMeta.App app, PackageInfo packageInfo, Action action) {
 		setAction(action.name());
 		setPackageName(packageInfo.packageName);
 		setVersionCode(packageInfo.versionCode);
-		setName(AptoideUtils.SystemU.getApkLabel(packageInfo));
+		setAppName(AptoideUtils.SystemU.getApkLabel(packageInfo));
 		setIconPath(AptoideUtils.SystemU.getApkIconPath(packageInfo));
 		setVersionName(packageInfo.versionName);
 		setTimestamp(Calendar.getInstance().getTimeInMillis());
 		setMd5(AptoideUtils.AlgorithmU.computeMd5(packageInfo));
 //		computeId();
+
+		appId = app.getId();
+		appName = app.getName();
+		icon = app.getIcon();
+
+		packageName = app.getPackageName();
+		//		versionCode = app.getFile().getVercode();
+		//		signature = app.get;
+		//		timestamp = app.getModified();
+		md5 = app.getFile().getMd5sum();
+		apkPath = app.getFile().getPath();
+		fileSize = app.getFile().getFilesize();
+		versionName = app.getFile().getVername();
+		alternativeApkPath = app.getFile().getPathAlt();
+		versionCode = app.getFile().getVercode();
+
+		Obb obb = app.getObb();
+		if (obb != null) {
+			Obb.ObbItem obbMain = obb.getMain();
+			if (obbMain != null) {
+				mainObbPath = obbMain.getPath();
+				mainObbMd5 = obbMain.getMd5sum();
+			}
+
+			Obb.ObbItem patch = obb.getPatch();
+			if (patch != null) {
+				patchObbPath = patch.getPath();
+				patchObbMd5 = patch.getMd5sum();
+			}
+		}
 	}
 
-	public Rollback(PackageInfo packageInfo, Action action, String cpiUrl) {
-		this(packageInfo, action);
+	public Rollback(GetAppMeta.App app, PackageInfo packageInfo, Action action, String cpiUrl) {
+		this(app, packageInfo, action);
 		this.cpiUrl = cpiUrl;
 	}
 
@@ -131,15 +172,15 @@ public class Rollback extends RealmObject {
 //		this.previousVersionName = previousVersionName;
 //	}
 
-	public String getName() {
-		return name;
+	public String getAppName() {
+		return appName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 
-	public boolean getConfirmed() {
+	public boolean isConfirmed() {
 		return confirmed;
 	}
 
@@ -147,7 +188,7 @@ public class Rollback extends RealmObject {
 		this.confirmed = confirmed;
 	}
 
-//	public String getStoreName() {
+	//	public String getStoreName() {
 //		return storeName;
 //	}
 
@@ -205,6 +246,70 @@ public class Rollback extends RealmObject {
 
 	public void setCpiUrl(String cpiUrl) {
 		this.cpiUrl = cpiUrl;
+	}
+
+	public long getAppId() {
+		return appId;
+	}
+
+	public void setAppId(long appId) {
+		this.appId = appId;
+	}
+
+	public String getAlternativeApkPath() {
+		return alternativeApkPath;
+	}
+
+	public void setAlternativeApkPath(String alternativeApkPath) {
+		this.alternativeApkPath = alternativeApkPath;
+	}
+
+	public String getApkPath() {
+		return apkPath;
+	}
+
+	public void setApkPath(String apkPath) {
+		this.apkPath = apkPath;
+	}
+
+	public String getPatchObbMd5() {
+		return patchObbMd5;
+	}
+
+	public void setPatchObbMd5(String patchObbMd5) {
+		this.patchObbMd5 = patchObbMd5;
+	}
+
+	public String getPatchObbPath() {
+		return patchObbPath;
+	}
+
+	public void setPatchObbPath(String patchObbPath) {
+		this.patchObbPath = patchObbPath;
+	}
+
+	public String getMainObbMd5() {
+		return mainObbMd5;
+	}
+
+	public void setMainObbMd5(String mainObbMd5) {
+		this.mainObbMd5 = mainObbMd5;
+	}
+
+	public String getMainObbPath() {
+		return mainObbPath;
+	}
+
+	public void setMainObbPath(String mainObbPath) {
+		this.mainObbPath = mainObbPath;
+	}
+
+	public double getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(double fileSize) {
+		this.fileSize = fileSize;
 	}
 
 	public enum Action {

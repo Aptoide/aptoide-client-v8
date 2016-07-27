@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -31,7 +31,6 @@ import java.util.TreeMap;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -83,7 +82,9 @@ public class RollbackFragment extends GridRecyclerFragment {
 			getActivity().onBackPressed();
 			return true;
 		} else if (itemId == R.id.menu_clear) {
-			ShowMessage.asSnack(this, "TO DO: clear");
+			Database.RollbackQ.deleteAll(realm);
+			clearDisplayables();
+			finishLoading();
 			return true;
 		}
 

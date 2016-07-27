@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
@@ -67,6 +68,20 @@ public class DownloadFactory {
 				.getAlternativeApkPath(), update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update
 						.getPatchObbPath(), update
 				.getPatchObbMd5(), update.getVersionCode()));
+		return download;
+	}
+
+	public Download create(Rollback rollback) {
+		validateApp(rollback.getAppId(), null, rollback.getPackageName(), rollback.getAppName(), rollback.getApkPath(), rollback.getAlternativeApkPath());
+		Download download = new Download();
+		download.setAppId(rollback.getAppId());
+		download.setIcon(rollback.getIcon());
+		download.setAppName(rollback.getAppName());
+		download.setFilesToDownload(createFileList(rollback.getAppId(), rollback.getPackageName(), rollback.getApkPath(), rollback.getAlternativeApkPath(),
+				rollback
+				.getMd5(), rollback
+
+				.getMainObbPath(), rollback.getMainObbMd5(), rollback.getPatchObbPath(), rollback.getPatchObbMd5(), rollback.getVersionCode()));
 		return download;
 	}
 

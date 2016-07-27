@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -22,7 +22,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -41,7 +40,6 @@ import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
-import cm.aptoide.pt.v8engine.util.RollbackUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -62,7 +60,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	//
 	// downloading views
 	//
-	private CheckBox shareInTimeline;
+	private CheckBox shareInTimeline; // FIXME: 27/07/16 sithengineer what does this flag do ??
 	private ProgressBar downloadProgress;
 	private TextView textProgress;
 	private ImageView actionPauseResume;
@@ -125,7 +123,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			// app installed
 
 			// setup un-install button in menu
-			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(new Listeners().newUninstallListener(itemView, installed
+			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(new Listeners().newUninstallListener(app, itemView, installed
 					.getPackageName(), displayable));
 
 			// is it an upgrade, downgrade or open app?
@@ -203,7 +201,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v, AppViewInstallDisplayable displayable) {
 			String packageName = app.getPackageName();
-			AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
+			AptoideUtils.ThreadU.runOnIoThread(() -> {
+				@Cleanup
+				Realm realm = Database.get();
+				Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
+			});
 			if (cpdUrl != null) {
 				DataproviderUtils.knock(cpdUrl);
 			}
@@ -217,7 +219,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			}
 
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
-			PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+			final PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 
 			permissionRequest.requestAccessToExternalFileSystem(() -> {
 
@@ -250,7 +252,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				downloadProgressLayout.setVisibility(View.VISIBLE);
 				actionPauseResume.setImageResource(R.drawable.ic_pause);
 
-				downloadServiceHelper.startDownload(getContext(), appDownload).subscribe(download -> {
+				final FragmentActivity fragmentActivity = getContext();
+				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
 
 					// TODO: 19/07/16 sithengineer logic to show / hide pause / resume download and show download progress
 
@@ -259,7 +262,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.PAUSED: {
 							actionPauseResume.setOnClickListener(view -> {
 
-								downloadServiceHelper.startDownload(getContext(), download);
+								downloadServiceHelper.startDownload(permissionRequest, download);
 
 								//actionPauseResume.setImageResource(R.drawable.ic_); // missing the changing of the drawable
 								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -288,14 +291,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(v.getContext())
+							displayable.install(fragmentActivity)
 									.observeOn(AndroidSchedulers.mainThread())
 									.subscribe(success -> {
 										if (actionButton.getVisibility() == View.VISIBLE) {
 											actionButton.setText(R.string.open);
 											// FIXME: 20/07/16 sithengineer refactor this ugly code
 											((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-												new Listeners().newUninstallListener(itemView, app.getPackageName(), displayable).call();
+												new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
 											});
 										}
 									});
@@ -310,7 +313,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		private View.OnClickListener newUpdateListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 			return v -> {
-				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUpdateAction(app.getPackageName()));
+				AptoideUtils.ThreadU.runOnIoThread(() -> {
+					@Cleanup
+					Realm realm = Database.get();
+					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.UPDATE);
+				});
 				innerInstallAction(app, R.string.updating_msg, v, displayable);
 			};
 		}
@@ -320,10 +327,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 			return view -> {
 
-				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUpdateAction(app.getPackageName()));
+				AptoideUtils.ThreadU.runOnIoThread(() -> {
+					@Cleanup
+					Realm realm = Database.get();
+					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.DOWNGRADE);
+				});
 				final Context context = view.getContext();
 				ContextWrapper contextWrapper = (ContextWrapper) context;
-				PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
+				final PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
 
 				permissionRequest.requestAccessToExternalFileSystem(() -> {
 					ShowMessage.asSnack(view, R.string.downgrading_msg);
@@ -331,10 +342,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					DownloadFactory factory = new DownloadFactory();
 					Download appDownload = factory.create(app);
 					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-					downloadServiceHelper.startDownload(getContext(), appDownload).subscribe(download -> {
+					downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
 						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-							final String packageName = app.getPackageName();
-							final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+							//final String packageName = app.getPackageName();
+							//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
 							displayable.downgrade(getContext()).subscribe();
 						}
 					});
@@ -356,9 +367,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			};
 		}
 
-		private Action0 newUninstallListener(View itemView, String packageName, AppViewInstallDisplayable displayable) {
+		private Action0 newUninstallListener(GetAppMeta.App app, View itemView, String packageName, AppViewInstallDisplayable displayable) {
 			return () -> {
-				AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addUninstallAction(packageName));
+				AptoideUtils.ThreadU.runOnIoThread(() -> {
+					@Cleanup
+					Realm realm = Database.get();
+					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.UNINSTALL);
+				});
 				displayable.uninstall(getContext()).subscribe();
 			};
 		}

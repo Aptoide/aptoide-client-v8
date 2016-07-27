@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 26/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -52,7 +52,6 @@ import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
-import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -428,6 +427,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			collapsingToolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
 			collapsingToolbar.setContentScrimColor(ContextCompat.getColor(getActivity(), storeThemeEnum.getStoreHeader()));
 			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+			// un-comment the following lines to give app icon a fading effect when user expands / collapses the action bar
+			/*
 			appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
 				@Override
@@ -453,6 +454,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 					}
 				}
 			});
+			*/
 
 			fileSize.setText(AptoideUtils.StringU.formatBits(AppUtils.sumFileSizes(app.getSize(), app.getObb())));
 

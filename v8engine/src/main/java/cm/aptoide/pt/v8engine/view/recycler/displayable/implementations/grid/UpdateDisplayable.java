@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import android.app.DownloadManager;
 import android.content.Context;
 
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -15,7 +14,6 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.Installation;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.AllArgsConstructor;
@@ -57,9 +55,11 @@ public class UpdateDisplayable extends Displayable {
 				update.getPatchObbMd5(), update.getVersionCode(), installManager, downloadFactory.create(update), downloadManager);
 	}
 
-	public Observable<Void> downloadAndInstall(Context context) {
-		return downloadManager.startDownload(context, download).ignoreElements().cast(Void.class)
-				.concatWith(installManager.install(context, (PermissionRequest) context, download.getAppId()));
+	public Observable<Void> downloadAndInstall(Context context, PermissionRequest permissionRequest) {
+		return downloadManager.startDownload(permissionRequest, download)
+				.ignoreElements()
+				.cast(Void.class)
+				.concatWith(installManager.install(context, permissionRequest, download.getAppId()));
 	}
 
 	@Override

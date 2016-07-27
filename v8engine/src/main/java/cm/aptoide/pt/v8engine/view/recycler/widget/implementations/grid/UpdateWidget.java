@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -92,8 +94,10 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	@Override
 	public void onViewAttached() {
 		if (subscription == null) {
-			subscription = RxView.clicks(updateButtonLayout)
-					.flatMap(click -> displayable.downloadAndInstall(getContext()))
+			Context context = getContext();
+			PermissionRequest permissionRequest = (PermissionRequest) context;
+
+			subscription = RxView.clicks(updateButtonLayout).flatMap(click -> displayable.downloadAndInstall(context, permissionRequest))
 					.retry()
 					.subscribe();
 		}

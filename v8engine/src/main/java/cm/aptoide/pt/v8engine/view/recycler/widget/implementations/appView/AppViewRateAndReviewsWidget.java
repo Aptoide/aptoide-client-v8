@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 26/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -186,7 +186,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 					ManagerPreferences.setForceServerRefreshFlag(true);
 					Logger.d(TAG, "review added");
-
 				}, e -> {
 					Logger.e(TAG, e);
 					ShowMessage.asSnack(ratingLayout, R.string.error_occured);

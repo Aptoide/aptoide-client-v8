@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 27/07/2016.
  */
 
 package cm.aptoide.pt.database;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.ExcludedAd;
@@ -14,7 +15,9 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -232,6 +235,31 @@ public class Database {
 			Rollback rollback = get(packageName, Rollback.Action.INSTALL, realm);
 			if (rollback != null) {
 				rollback.setReferrer(referrer);
+			}
+		}
+
+		public static void deleteAll(Realm realm) {
+			realm.beginTransaction();
+			realm.delete(Rollback.class);
+			realm.commitTransaction();
+		}
+
+		public static void upadteRollbackWithAction(Realm realm, String packageName, Rollback.Action action) {
+			Rollback rollback = realm.where(Rollback.class).equalTo(Rollback.PACKAGE_NAME, packageName).findFirst();
+			realm.beginTransaction();
+			rollback.setAction(action.name());
+			realm.copyToRealmOrUpdate(rollback);
+			realm.commitTransaction();
+		}
+
+		public static void addRollbackWithAction(Realm realm, GetAppMeta.App app, Rollback.Action action) {
+			PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(app.getPackageName());
+
+			if (packageInfo != null) {
+				Rollback rollback = new Rollback(app, packageInfo, action);
+				realm.beginTransaction();
+				realm.copyToRealmOrUpdate(rollback);
+				realm.commitTransaction();
 			}
 		}
 	}
