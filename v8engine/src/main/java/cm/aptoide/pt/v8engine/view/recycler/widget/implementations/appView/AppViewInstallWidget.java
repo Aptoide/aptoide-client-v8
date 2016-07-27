@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -188,14 +190,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		private View.OnClickListener newBuyListener() {
 			return v -> {
-				ContextWrapper ctx = (ContextWrapper) v.getContext();
-				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
-				permissionRequest.requestAccessToExternalFileSystem(() -> {
-					// TODO: 15/07/16 sithengineer Paid Apps feature
-				}, () -> {
-					Logger.e(TAG, "unable to access FS");
-				});
-			};
+				if (!AptoideAccountManager.isLoggedIn()) {
+					AptoideAccountManager.openAccountManager(getContext());
+				}
+ 			};
 		}
 
 		private View.OnClickListener newInstallListener(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
