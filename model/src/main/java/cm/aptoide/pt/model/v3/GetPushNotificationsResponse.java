@@ -79,10 +79,4 @@ public class GetPushNotificationsResponse {
 			}
 		}
 	}
-
-	public class ErrorResponse {
-
-		public String code;
-		public String msg;
-	}
 }

@@ -8,14 +8,14 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 import android.content.Context;
 
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.Installation;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.model.MinimalAd;
+import cm.aptoide.pt.v8engine.repository.AppRepository;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -25,40 +25,44 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
-	@Getter @Setter private String cpdUrl;
-	@Getter @Setter private String cpiUrl;
+	@Getter private String cpdUrl;
+	@Getter private String cpiUrl;
+	@Getter private GetApkInfoJson.Payment payment;
 	private InstallManager installManager;
 	private DownloadServiceHelper downloadManager;
-	private Download download;
+	private long appId;
+	private String packageName;
+	private String storeName;
 
 	public AppViewInstallDisplayable() {
 	}
 
-	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, DownloadServiceHelper downloadManager) {
-		this(getApp, false, null);
-		this.installManager = installManager;
-		this.downloadManager = downloadManager;
-		this.download = new DownloadFactory().create(getApp.getNodes().getMeta().getData());
-	}
-
-	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, String cpdUrl, DownloadServiceHelper downloadManager) {
-		this(getApp, false, cpdUrl);
-		this.installManager = installManager;
-		this.download = new DownloadFactory().create(getApp.getNodes().getMeta().getData());
-	}
-
-	public AppViewInstallDisplayable(GetApp getApp, boolean fixedPerLineCount, String cpdUrl) {
-		super(getApp, fixedPerLineCount);
+	public AppViewInstallDisplayable(InstallManager installManager, DownloadServiceHelper downloadManager, GetApp getApp, MinimalAd ad) {
+		super(getApp, false);
 		this.cpdUrl = cpdUrl;
-		this.download = new DownloadFactory().create(getApp.getNodes().getMeta().getData());
+		this.installManager = installManager;
+		this.appId = getApp.getNodes().getMeta().getData().getId();
+		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
+		this.storeName = getApp.getNodes().getMeta().getData().getStore().getName();
+		this.payment = getApp.getNodes().getMeta().getData().getPayment();
+		this.cpdUrl = ad != null? ad.getCpdUrl() : null;
+		this.cpiUrl = ad != null? ad.getCpiUrl() : null;
+	}
+
+	public boolean isPaidApp() {
+		return payment != null;
+	}
+
+	public boolean shouldCharge() {
+		return payment.getStatus().equals("FAIL");
 	}
 
 	public Observable<Void> install(Context context) {
-		return installManager.install(context, (PermissionRequest) context, download.getAppId());
+		return installManager.install(context, (PermissionRequest) context, appId);
 	}
 
 	public Observable<Void> uninstall(Context context) {
-		return installManager.uninstall(context, download.getFilesToDownload().get(0).getPackageName());
+		return installManager.uninstall(context, packageName);
 	}
 
 	public Observable<Void> downgrade(Context context) {

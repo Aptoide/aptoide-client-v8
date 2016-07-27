@@ -160,7 +160,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void setupInstallButton(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 		//check if the app is payed
-		if (app.getPay() != null && app.getPay().getPrice() > 0) {
+		if (displayable.isPaidApp()) {
 			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
 			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay().getSymbol() + " " + app.getPay().getPrice() + ")");
 			actionButton.setOnClickListener(new Listeners().newBuyListener());

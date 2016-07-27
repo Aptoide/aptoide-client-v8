@@ -8,11 +8,12 @@ package cm.aptoide.pt.database.realm;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import lombok.AllArgsConstructor;
 
 /**
  * Created by sithengineer on 12/05/16.
  */
-
+@AllArgsConstructor
 public class Scheduled extends RealmObject {
 
 	public static final String APP_ID = "appId";
@@ -28,11 +29,8 @@ public class Scheduled extends RealmObject {
 
 	public Scheduled() { }
 
-	public Scheduled(GetAppMeta.App app) {
-		appId = app.getId();
-		name = app.getName();
-		versionName = app.getFile().getVername();
-		icon = app.getIcon();
+	public static Scheduled from(GetAppMeta.App app) {
+		return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon());
 	}
 
 	public long getAppId() {

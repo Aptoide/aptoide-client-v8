@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,9 +34,8 @@ import java.util.List;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -52,6 +53,8 @@ import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.model.MinimalAd;
+import cm.aptoide.pt.v8engine.repository.AdRepository;
+import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -69,6 +72,9 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Getter;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 /**
@@ -99,12 +105,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	//
 	private MinimalAd minimalAd;
 	// Stored to postpone ads logic
-	private AppViewInstallDisplayable appViewInstallDisplayable;
 	private InstallManager installManager;
 
 	private Action0 unInstallAction;
 	private MenuItem uninstallMenuItem;
 	private DownloadServiceHelper downloadManager;
+	private AppRepository appRepository;
+	private Subscription subscription;
+	private AdRepository adRepository;
+	private boolean sponsored;
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -127,7 +136,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	public static AppViewFragment newInstance(GetAdsResponse.Ad ad) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(BundleKeys.APP_ID.name(), ad.getData().getId());
-		bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), new MinimalAd(ad));
+		bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), MinimalAd.from(ad));
 
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
@@ -142,6 +151,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(),
 				new DownloadInstallationProvider(downloadManager));
+		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
+		adRepository = new AdRepository();
 	}
 
 	@Override
@@ -149,6 +160,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name());
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
+		sponsored = minimalAd != null;
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
 
@@ -173,8 +185,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(appViewInstallDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd != null ? minimalAd.getCpdUrl() : null,
-				downloadManager));
+		displayables.add(new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -193,38 +204,45 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
-		GetAppRequest.of(appId).execute(getApp -> {
-			if (minimalAd == null) {
-				GetAdsRequest.ofAppview(getApp.getNodes().getMeta().getData().getPackageName(), getApp.getNodes().getMeta().getData().getStore().getName())
-						.execute(getAdsResponse -> {
-							List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
-							if (ads == null || ads.get(0) == null) {
-								return;
-							}
-							GetAdsResponse.Ad ad = ads.get(0);
-							minimalAd = new MinimalAd(getAdsResponse.getAds().get(0));
 
-							if (appViewInstallDisplayable != null) {
-								appViewInstallDisplayable.setCpdUrl(ad.getInfo().getCpdUrl());
-								appViewInstallDisplayable.setCpiUrl(ad.getInfo().getCpiUrl());
-							}
-							DataproviderUtils.knock(minimalAd.getCpcUrl());
-						});
-			}
+		if (subscription != null) {
+			subscription.unsubscribe();
+		}
 
-			if (storeTheme == null) {
-				storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
-			}
+		subscription = appRepository.getApp(appId, refresh, sponsored)
+				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+				.flatMap(getApp -> manageAds(getApp))
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(getApp -> {
+					if (storeTheme == null) {
+						storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+					}
 
-			// useful data for the schedule updates menu option
-			GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-			scheduled = new Scheduled(app);
+					// useful data for the schedule updates menu option
+					GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+					scheduled = Scheduled.from(app);
 
-			header.setup(getApp);
-			setupDisplayables(getApp);
-			setupObservables(getApp);
-			finishLoading();
-		}, refresh);
+					header.setup(getApp);
+					setupDisplayables(getApp);
+					setupObservables(getApp);
+					finishLoading();
+				}, throwable -> finishLoading(throwable));
+	}
+
+	private Observable<GetApp> manageAds(GetApp getApp) {
+		if (minimalAd == null) {
+			String packageName = getApp.getNodes().getMeta().getData().getPackageName();
+			String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
+
+			return adRepository.getAd(packageName, storeName)
+					.doOnNext(ad -> {
+						minimalAd = ad;
+						DataproviderUtils.knock(minimalAd.getCpcUrl());
+					})
+					.map(ad -> getApp)
+					.onErrorReturn(throwable -> getApp);
+		}
+		return Observable.just(getApp);
 	}
 
 	@Override

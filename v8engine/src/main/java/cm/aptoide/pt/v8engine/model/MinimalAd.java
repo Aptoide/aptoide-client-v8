@@ -9,12 +9,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * Created by neuro on 20-06-2016.
  */
-@Data
 public class MinimalAd implements Parcelable {
 
 	public static final Creator<MinimalAd> CREATOR = new Creator<MinimalAd>() {
@@ -28,22 +29,30 @@ public class MinimalAd implements Parcelable {
 			return new MinimalAd[size];
 		}
 	};
-	private final String packageName;
-	private final long networkId;
-	private final String clickUrl;
-	private final String cpcUrl;
-	private final String cpdUrl;
-	private final long appId;
-	private final long adId;
 
-	public MinimalAd(GetAdsResponse.Ad ad) {
-		packageName = ad.getData().getPackageName();
-		networkId = ad.getPartner().getInfo().getId();
-		clickUrl = ad.getPartner().getData().getClickUrl();
-		cpcUrl = ad.getInfo().getCpcUrl();
-		cpdUrl = ad.getInfo().getCpdUrl();
-		appId = ad.getData().getId();
-		adId = ad.getInfo().getAdId();
+	@Getter private final String packageName;
+	@Getter private final long networkId;
+	@Getter private final String clickUrl;
+	@Getter private final String cpcUrl;
+	@Getter private final String cpdUrl;
+	@Getter private final long appId;
+	@Getter private final long adId;
+	@Getter private String cpiUrl;
+
+	public static MinimalAd from(GetAdsResponse.Ad ad) {
+		return new MinimalAd(ad.getData().getPackageName(), ad.getPartner().getInfo().getId(), ad.getPartner().getData().getClickUrl(), ad.getInfo()
+				.getCpcUrl(), ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(), ad.getInfo().getCpiUrl());
+	}
+
+	public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl, String cpdUrl, long appId, long adId, String cpiUrl) {
+		this.packageName = packageName;
+		this.networkId = networkId;
+		this.clickUrl = clickUrl;
+		this.cpcUrl = cpcUrl;
+		this.cpdUrl = cpdUrl;
+		this.appId = appId;
+		this.adId = adId;
+		this.cpiUrl = cpiUrl;
 	}
 
 	protected MinimalAd(Parcel in) {
