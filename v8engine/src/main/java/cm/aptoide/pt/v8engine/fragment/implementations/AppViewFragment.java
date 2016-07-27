@@ -229,22 +229,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				}, throwable -> finishLoading(throwable));
 	}
 
-	private Observable<GetApp> manageAds(GetApp getApp) {
-		if (minimalAd == null) {
-			String packageName = getApp.getNodes().getMeta().getData().getPackageName();
-			String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
-
-			return adRepository.getAd(packageName, storeName)
-					.doOnNext(ad -> {
-						minimalAd = ad;
-						DataproviderUtils.knock(minimalAd.getCpcUrl());
-					})
-					.map(ad -> getApp)
-					.onErrorReturn(throwable -> getApp);
-		}
-		return Observable.just(getApp);
-	}
-
 	@Override
 	public int getContentViewId() {
 		return VIEW_ID;
@@ -276,6 +260,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		super.bindViews(view);
 		header = new AppViewHeader(view);
 		setHasOptionsMenu(true);
+	}
+
+	private Observable<GetApp> manageAds(GetApp getApp) {
+		if (minimalAd == null) {
+			String packageName = getApp.getNodes().getMeta().getData().getPackageName();
+			String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
+
+			return adRepository.getAd(packageName, storeName).doOnNext(ad -> {
+				minimalAd = ad;
+				DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd.getCpcUrl());
+			}).map(ad -> getApp).onErrorReturn(throwable -> getApp);
+		}
+		return Observable.just(getApp);
 	}
 
 	@Override

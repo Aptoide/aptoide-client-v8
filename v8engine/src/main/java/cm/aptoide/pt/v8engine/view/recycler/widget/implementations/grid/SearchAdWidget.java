@@ -60,7 +60,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 		itemView.setOnClickListener(view -> {
 			// TODO: 20-06-2016 neuro
 			//	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
-			DataproviderUtils.knock(displayable.getPojo().getInfo().getCpcUrl());
+			DataproviderUtils.AdNetworksUtils.knockCpc(displayable.getPojo().getInfo().getCpcUrl());
 			((FragmentShower) view.getContext()).pushFragmentV4(AppViewFragment.newInstance(ad));
 		});
 	}

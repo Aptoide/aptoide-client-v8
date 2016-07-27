@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
@@ -204,7 +203,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			String packageName = app.getPackageName();
 			AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
 			if (cpdUrl != null) {
-				DataproviderUtils.knock(cpdUrl);
+				DataproviderUtils.AdNetworksUtils.knockCpd(cpdUrl);
 			}
 
 			@Cleanup

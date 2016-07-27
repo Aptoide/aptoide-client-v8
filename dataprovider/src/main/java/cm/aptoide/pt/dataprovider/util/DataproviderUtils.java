@@ -99,5 +99,21 @@ public class DataproviderUtils {
 		public static boolean isGooglePlayServicesAvailable() {
 			return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
 		}
+
+		public static void knockCpc(String cpcUrl) {
+			knock(cpcUrl);
+		}
+
+		public static void knockCpd(String cpdUrl) {
+			knock(cpdUrl);
+		}
+
+		public static void knockCpi(String cpiUrl) {
+			knock(cpiUrl);
+		}
+
+		public static void knockImpression(String impressionUrlString) {
+			knockCpd(impressionUrlString);
+		}
 	}
 }

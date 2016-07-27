@@ -90,7 +90,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		if (rollback != null) {
 			confirmAction(packageName, Rollback.Action.INSTALL);
 			ReferrerUtils.broadcastReferrer(packageName, rollback.getReferrer());
-			DataproviderUtils.knock(rollback.getCpiUrl());
+			DataproviderUtils.AdNetworksUtils.knockCpi(rollback.getCpiUrl());
 		}
 	}
 

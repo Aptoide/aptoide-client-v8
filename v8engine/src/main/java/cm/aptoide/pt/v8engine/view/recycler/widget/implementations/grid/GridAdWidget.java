@@ -45,7 +45,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 		ImageLoader.load(pojo.getData().getIcon(), icon);
 
 		itemView.setOnClickListener(v -> {
-			DataproviderUtils.knock(displayable.getPojo().getInfo().getCpcUrl());
+			DataproviderUtils.AdNetworksUtils.knockCpc(displayable.getPojo().getInfo().getCpcUrl());
 			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo));
 		});
 	}

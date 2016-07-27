@@ -140,7 +140,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
 						impressionUrlString = DataproviderUtils.AdNetworksUtils.parseMacros(impressionUrlString);
 
-						DataproviderUtils.knock(impressionUrlString);
+						DataproviderUtils.AdNetworksUtils.knockImpression(impressionUrlString);
 					} catch (Exception ignored) {
 					}
 				}
