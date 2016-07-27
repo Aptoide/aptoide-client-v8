@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.dataprovider.PackageRepository;
-import cm.aptoide.pt.dataprovider.TimelineRepository;
+import cm.aptoide.pt.v8engine.repository.PackageRepository;
+import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;

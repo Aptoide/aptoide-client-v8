@@ -1,4 +1,9 @@
-package cm.aptoide.pt.dataprovider;
+/*
+ * Copyright (c) 2016.
+ * Modified by Marcelo Benites on 27/07/2016.
+ */
+
+package cm.aptoide.pt.dataprovider.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
