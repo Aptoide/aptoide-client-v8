@@ -15,9 +15,11 @@ import java.io.IOException;
 import java.util.Date;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.IdsRepository;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -88,7 +90,9 @@ public class DataproviderUtils {
 
 			IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
-			clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
+			if (idsRepository.getAndroidId() != null) {
+				clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
+			}
 			clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getAptoideClientUUID());
 			clickUrl = clickUrl.replace("[USER_AAID]", idsRepository.getAdvertisingId());
 			clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
@@ -98,6 +102,25 @@ public class DataproviderUtils {
 
 		public static boolean isGooglePlayServicesAvailable() {
 			return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
+		}
+
+		public static void knockCpc(MinimalAd minimalAd) {
+			// TODO: 28-07-2016 Baikova clicked on ad.
+			knock(minimalAd.getCpcUrl());
+		}
+
+		public static void knockCpd(MinimalAd minimalAd) {
+			// TODO: 28-07-2016 Baikova clicked on download button.
+			knock(minimalAd.getCpdUrl());
+		}
+
+		public static void knockCpi(StoredMinimalAd minimalAd) {
+			// TODO: 28-07-2016 Baikova ad installed.
+			knock(minimalAd.getCpiUrl());
+		}
+
+		public static void knockImpression(MinimalAd minimalAd) {
+			knockCpd(minimalAd);
 		}
 	}
 }

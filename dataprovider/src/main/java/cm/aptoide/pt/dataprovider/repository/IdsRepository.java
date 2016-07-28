@@ -1,4 +1,9 @@
-package cm.aptoide.pt.dataprovider;
+/*
+ * Copyright (c) 2016.
+ * Modified by Marcelo Benites on 27/07/2016.
+ */
+
+package cm.aptoide.pt.dataprovider.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,6 +27,7 @@ public class IdsRepository {
 	private static final String ADVERTISING_ID_CLIENT = "advertisingIdClient";
 	private static final String ANDROID_ID_CLIENT = "androidId";
 	private static final String GOOGLE_ADVERTISING_ID_CLIENT = "googleAdvertisingId";
+	private static final String GOOGLE_ADVERTISING_ID_CLIENT_SET = "googleAdvertisingIdSet";
 
 	private final SharedPreferences sharedPreferences;
 	private final Context context;
@@ -47,7 +53,7 @@ public class IdsRepository {
 	}
 
 	public String getGoogleAdvertisingId() {
-		if (!sharedPreferences.contains(GOOGLE_ADVERTISING_ID_CLIENT)) {
+		if (!sharedPreferences.contains(GOOGLE_ADVERTISING_ID_CLIENT_SET)) {
 			generateGAID();
 		}
 
@@ -67,6 +73,7 @@ public class IdsRepository {
 		}
 
 		sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, gaid).apply();
+		sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
 	}
 
 	public String getAdvertisingId() {
@@ -80,10 +87,6 @@ public class IdsRepository {
 	}
 
 	private void setAdvertisingId(String aaid) {
-		if (getAdvertisingId() != null) {
-			throw new RuntimeException("Advertising ID already set!");
-		}
-
 		sharedPreferences.edit().putString(ADVERTISING_ID_CLIENT, aaid).apply();
 	}
 

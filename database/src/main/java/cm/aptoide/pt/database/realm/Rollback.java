@@ -44,8 +44,7 @@ public class Rollback extends RealmObject {
 	private String action;
 	@PrimaryKey private String md5;
 	private boolean confirmed;
-	private String referrer;
-	private String cpiUrl;
+	//	private String referrer;
 
 	private long appId;
 	private String alternativeApkPath;
@@ -103,11 +102,6 @@ public class Rollback extends RealmObject {
 				patchObbMd5 = patch.getMd5sum();
 			}
 		}
-	}
-
-	public Rollback(GetAppMeta.App app, PackageInfo packageInfo, Action action, String cpiUrl) {
-		this(app, packageInfo, action);
-		this.cpiUrl = cpiUrl;
 	}
 
 	public void confirm(Realm realm) {
@@ -220,13 +214,13 @@ public class Rollback extends RealmObject {
 		this.versionCode = versionCode;
 	}
 
-	public String getReferrer() {
-		return referrer;
-	}
+	//	public String getReferrer() {
+	//		return referrer;
+	//	}
 
-	public void setReferrer(String referrer) {
-		this.referrer = referrer;
-	}
+	//	public void setReferrer(String referrer) {
+	//		this.referrer = referrer;
+	//	}
 
 	//	public void computeId() {
 //		@Cleanup Realm realm = Database.get(Application.getContext());
@@ -240,13 +234,13 @@ public class Rollback extends RealmObject {
 //		id = n;
 //	}
 
-	public String getCpiUrl() {
-		return cpiUrl;
-	}
-
-	public void setCpiUrl(String cpiUrl) {
-		this.cpiUrl = cpiUrl;
-	}
+	//	public String getCpiUrl() {
+	//		return cpiUrl;
+	//	}
+	//
+	//	public void setCpiUrl(String cpiUrl) {
+	//		this.cpiUrl = cpiUrl;
+	//	}
 
 	public long getAppId() {
 		return appId;

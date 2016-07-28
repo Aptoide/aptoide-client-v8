@@ -5,9 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
+import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -42,5 +44,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces,U> {
 		@POST("addApkFlag")
 		@FormUrlEncoded
 		Observable<GenericResponseV2> addApkFlag(@FieldMap Map<String,String> arg, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("getApkInfo")
+		@FormUrlEncoded
+		Observable<GetApkInfoJson> getApkInfo(@FieldMap Map<String, String> args, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }

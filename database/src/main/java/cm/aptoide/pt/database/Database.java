@@ -14,6 +14,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.Application;
@@ -54,7 +55,7 @@ public class Database {
 			StringBuilder strBuilder = new StringBuilder(KEY);
 			strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
 			strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
-			strBuilder.append(extract(cm.aptoide.pt.database.BuildConfig.APPLICATION_ID));
+			strBuilder.append(extract(BuildConfig.APPLICATION_ID));
 			strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
 
 			// Beware this is the app context
@@ -64,7 +65,7 @@ public class Database {
 			if (BuildConfig.DEBUG) {
 				realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
 						// Must be bumped when the schema changes
-						.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
+						.schemaVersion(BuildConfig.VERSION_CODE)
 						// Migration to run instead of throwing an exception
 						.migration(MIGRATION).build();
 			} else {
@@ -72,13 +73,13 @@ public class Database {
 						.modules(MODULE)
 						.encryptionKey(strBuilder.toString().substring(0, 64).getBytes())
 						// Must be bumped when the schema changes
-						.schemaVersion(cm.aptoide.pt.database.BuildConfig.VERSION_CODE)
+						.schemaVersion(BuildConfig.VERSION_CODE)
 						// Migration to run instead of throwing an exception
 						.migration(MIGRATION)
 						.build();
 			}
 
-			if (cm.aptoide.pt.database.BuildConfig.DELETE_DB) {
+			if (BuildConfig.DELETE_DB) {
 				Realm.deleteRealm(realmConfig);
 			}
 			Realm.setDefaultConfiguration(realmConfig);
@@ -231,13 +232,6 @@ public class Database {
 			}
 		}
 
-		public static void setReferrer(String packageName, String referrer, Realm realm) {
-			Rollback rollback = get(packageName, Rollback.Action.INSTALL, realm);
-			if (rollback != null) {
-				rollback.setReferrer(referrer);
-			}
-		}
-
 		public static void deleteAll(Realm realm) {
 			realm.beginTransaction();
 			realm.delete(Rollback.class);
@@ -275,5 +269,13 @@ public class Database {
 		public static RealmResults<Scheduled> getAll(Realm realm) {
 			return realm.where(Scheduled.class).findAll();
 		}
+	}
+
+	public static class ReferrerQ {
+
+		public static StoredMinimalAd get(String packageName, Realm realm) {
+			return realm.where(StoredMinimalAd.class).equalTo(StoredMinimalAd.PACKAGE_NAME, packageName).findFirst();
+		}
+
 	}
 }

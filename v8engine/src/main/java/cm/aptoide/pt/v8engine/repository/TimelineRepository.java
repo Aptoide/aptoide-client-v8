@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by Marcelo Benites on 27/07/2016.
  */
 
-package cm.aptoide.pt.dataprovider;
+package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
 

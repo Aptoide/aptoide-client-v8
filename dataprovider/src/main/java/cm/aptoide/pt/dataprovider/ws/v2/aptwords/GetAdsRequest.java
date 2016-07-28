@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.IdsRepository;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -140,12 +141,14 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
 						impressionUrlString = DataproviderUtils.AdNetworksUtils.parseMacros(impressionUrlString);
 
-						DataproviderUtils.knock(impressionUrlString);
+						DataproviderUtils.AdNetworksUtils.knockImpression(MinimalAd.from(ad));
 					} catch (Exception ignored) {
 					}
 				}
 			}
 		});
+
+		// TODO: 28-07-2016 Baikova getAds called.
 
 		return result;
 	}

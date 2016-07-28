@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.networkclient.WebService;

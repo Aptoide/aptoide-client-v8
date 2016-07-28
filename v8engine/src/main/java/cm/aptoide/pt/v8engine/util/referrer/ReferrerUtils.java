@@ -29,14 +29,15 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.model.MinimalAd;
 import io.realm.Realm;
 import lombok.Cleanup;
 
@@ -108,11 +109,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 						} else {
 							@Cleanup
 							Realm realm = Database.get();
-							Database.RollbackQ.setReferrer(packageName, referrer, realm);
+							Database.save(new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(), minimalAd.getAdId()), realm);
 						}
 
 						future.cancel(false);
-						postponeReferrerExtraction(0, true);
+						postponeReferrerExtraction(minimalAd, 0, true);
 
 						return true;
 					}
@@ -125,19 +126,19 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 					super.onPageStarted(view, url, favicon);
 
 					if (future == null) {
-						future = postponeReferrerExtraction(TIME_OUT, retries);
+						future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries);
 					}
 				}
 
-				private ScheduledFuture<Void> postponeReferrerExtraction(int delta, int retries) {
-					return postponeReferrerExtraction(delta, false, retries);
+				private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta, int retries) {
+					return postponeReferrerExtraction(minimalAd, delta, false, retries);
 				}
 
-				private ScheduledFuture<Void> postponeReferrerExtraction(int delta, boolean success) {
-					return postponeReferrerExtraction(delta, success, 0);
+				private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta, boolean success) {
+					return postponeReferrerExtraction(minimalAd, delta, success, 0);
 				}
 
-				private ScheduledFuture<Void> postponeReferrerExtraction(int delta, final boolean success, final int retries) {
+				private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta, final boolean success, final int retries) {
 					Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
 					Callable<Void> callable = () -> {
@@ -162,8 +163,10 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+							// TODO: 28-07-2016 Baikova Failed to extract referrer.
 						} else {
 							// A lista de excluded networks deve ser limpa a cada "ronda"
+							// TODO: 28-07-2016 Baikova referrer successfully extracted.
 							excludedNetworks.remove(packageName);
 						}
 
@@ -175,6 +178,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 			});
 
 			wv.loadUrl(internalClickUrl[0]);
+
+			// TODO: 28-07-2016 Baikova Opened click_url
 
 			windowManager.addView(view, params);
 		} catch (Exception e) {
@@ -205,5 +210,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 		i.putExtra("referrer", referrer);
 		DataProvider.getContext().sendBroadcast(i);
 		Logger.d("InstalledBroadcastReceiver", "Sent broadcast to " + packageName + " with referrer " + referrer);
+		// TODO: 28-07-2016 Baikova referrer broadcasted.
 	}
 }

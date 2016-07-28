@@ -18,12 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -72,8 +74,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	// app info
 	private TextView versionName;
 	private TextView otherVersions;
-	private String cpdUrl;
-	private String cpiUrl;
+	private MinimalAd minimalAd;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -96,8 +97,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
 
-		cpdUrl = displayable.getCpdUrl();
-		cpiUrl = displayable.getCpdUrl();
+		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
@@ -157,14 +157,18 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 
 	public void setupInstallButton(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+
+		//<editor-fold desc="Avoid commit when crashing plz!! :D lol">
 		//check if the app is payed
-		if (app.getPay() != null && app.getPay().getPrice() > 0) {
-			actionButton.setText(R.string.buy);
-			actionButton.setOnClickListener(new Listeners().newBuyListener());
-		} else {
+		//		if (displayable.isPaidApp()) {
+		//			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
+		//			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay().getSymbol() + " " + app.getPay().getPrice() + ")");
+		//			actionButton.setOnClickListener(new Listeners().newBuyListener());
+		//		} else {
 			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
-		}
+		//		}
+		//</editor-fold>
 	}
 
 	private boolean isLatestAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
@@ -185,14 +189,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		private View.OnClickListener newBuyListener() {
 			return v -> {
-				ContextWrapper ctx = (ContextWrapper) v.getContext();
-				PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
-				permissionRequest.requestAccessToExternalFileSystem(() -> {
-					// TODO: 15/07/16 sithengineer Paid Apps feature
-				}, () -> {
-					Logger.e(TAG, "unable to access FS");
-				});
-			};
+				if (!AptoideAccountManager.isLoggedIn()) {
+					AptoideAccountManager.openAccountManager(getContext());
+				}
+ 			};
 		}
 
 		private View.OnClickListener newInstallListener(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
@@ -200,22 +200,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 
 		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v, AppViewInstallDisplayable displayable) {
-			String packageName = app.getPackageName();
 			AptoideUtils.ThreadU.runOnIoThread(() -> {
 				@Cleanup
 				Realm realm = Database.get();
 				Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
 			});
-			if (cpdUrl != null) {
-				DataproviderUtils.knock(cpdUrl);
-			}
-
-			@Cleanup
-			Realm realm = Database.get();
-			Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
-			if (rollback != null) {
-				rollback.setCpiUrl(cpiUrl);
-				Database.save(rollback, realm);
+			if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+				DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
 			}
 
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
