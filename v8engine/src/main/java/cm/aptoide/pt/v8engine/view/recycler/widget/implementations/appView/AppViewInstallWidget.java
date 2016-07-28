@@ -25,6 +25,7 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -74,8 +75,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	// app info
 	private TextView versionName;
 	private TextView otherVersions;
-	private String cpdUrl;
-	private String cpiUrl;
+	private MinimalAd minimalAd;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -98,8 +98,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
 
-		cpdUrl = displayable.getCpdUrl();
-		cpiUrl = displayable.getCpdUrl();
+		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
@@ -204,8 +203,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v, AppViewInstallDisplayable displayable) {
 			String packageName = app.getPackageName();
 			AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
-			if (cpdUrl != null) {
-				DataproviderUtils.AdNetworksUtils.knockCpd(cpdUrl);
+			if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+				DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
 			}
 
 			ContextWrapper ctx = (ContextWrapper) v.getContext();

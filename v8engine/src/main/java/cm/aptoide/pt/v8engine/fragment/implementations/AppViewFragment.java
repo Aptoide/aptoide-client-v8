@@ -271,7 +271,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			return adRepository.getAdFromAppView(packageName, storeName).doOnNext(ad -> {
 				minimalAd = ad;
 				AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false));
-				DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd.getCpcUrl());
+				DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
 			}).map(ad -> getApp).onErrorReturn(throwable -> getApp);
 		} else {
 			AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false));

@@ -13,8 +13,8 @@ import android.util.Log;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Referrer;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -72,10 +72,10 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void checkAndBroadcastReferrer(String packageName) {
-		Referrer referrer = Database.ReferrerQ.get(packageName, realm);
-		if (referrer != null) {
-			ReferrerUtils.broadcastReferrer(packageName, referrer.getReferrer());
-			DataproviderUtils.AdNetworksUtils.knockCpi(referrer.getCpiUrl());
+		StoredMinimalAd storedMinimalAd = Database.ReferrerQ.get(packageName, realm);
+		if (storedMinimalAd != null) {
+			ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer());
+			DataproviderUtils.AdNetworksUtils.knockCpi(storedMinimalAd);
 		}
 	}
 

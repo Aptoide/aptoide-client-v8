@@ -23,9 +23,8 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
-	@Getter private String cpdUrl;
-	@Getter private String cpiUrl;
 	@Getter private GetApkInfoJson.Payment payment;
+	@Getter private MinimalAd minimalAd;
 	private InstallManager installManager;
 	private DownloadServiceHelper downloadManager;
 	private long appId;
@@ -37,14 +36,12 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
 	public AppViewInstallDisplayable(InstallManager installManager, DownloadServiceHelper downloadManager, GetApp getApp, MinimalAd ad) {
 		super(getApp, false);
-		this.cpdUrl = cpdUrl;
 		this.installManager = installManager;
 		this.appId = getApp.getNodes().getMeta().getData().getId();
 		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
 		this.storeName = getApp.getNodes().getMeta().getData().getStore().getName();
 		this.payment = getApp.getNodes().getMeta().getData().getPayment();
-		this.cpdUrl = ad != null? ad.getCpdUrl() : null;
-		this.cpiUrl = ad != null? ad.getCpiUrl() : null;
+		this.minimalAd = ad;
 	}
 
 	public boolean isPaidApp() {

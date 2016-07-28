@@ -15,8 +15,10 @@ import java.io.IOException;
 import java.util.Date;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -102,20 +104,23 @@ public class DataproviderUtils {
 			return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
 		}
 
-		public static void knockCpc(String cpcUrl) {
-			knock(cpcUrl);
+		public static void knockCpc(MinimalAd minimalAd) {
+			// TODO: 28-07-2016 Baikova clicked on ad.
+			knock(minimalAd.getCpcUrl());
 		}
 
-		public static void knockCpd(String cpdUrl) {
-			knock(cpdUrl);
+		public static void knockCpd(MinimalAd minimalAd) {
+			// TODO: 28-07-2016 Baikova clicked on download button.
+			knock(minimalAd.getCpdUrl());
 		}
 
-		public static void knockCpi(String cpiUrl) {
-			knock(cpiUrl);
+		public static void knockCpi(StoredMinimalAd minimalAd) {
+			// TODO: 28-07-2016 Baikova ad installed.
+			knock(minimalAd.getCpiUrl());
 		}
 
-		public static void knockImpression(String impressionUrlString) {
-			knockCpd(impressionUrlString);
+		public static void knockImpression(MinimalAd minimalAd) {
+			knockCpd(minimalAd);
 		}
 	}
 }

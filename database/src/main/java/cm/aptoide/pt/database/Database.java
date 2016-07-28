@@ -10,10 +10,10 @@ import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Referrer;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
@@ -245,8 +245,8 @@ public class Database {
 
 	public static class ReferrerQ {
 
-		public static Referrer get(String packageName, Realm realm) {
-			return realm.where(Referrer.class).equalTo(Referrer.PACKAGE_NAME, packageName).findFirst();
+		public static StoredMinimalAd get(String packageName, Realm realm) {
+			return realm.where(StoredMinimalAd.class).equalTo(StoredMinimalAd.PACKAGE_NAME, packageName).findFirst();
 		}
 
 	}

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -60,7 +61,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 		itemView.setOnClickListener(view -> {
 			// TODO: 20-06-2016 neuro
 			//	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
-			DataproviderUtils.AdNetworksUtils.knockCpc(displayable.getPojo().getInfo().getCpcUrl());
+			DataproviderUtils.AdNetworksUtils.knockCpc(MinimalAd.from(ad));
 			((FragmentShower) view.getContext()).pushFragmentV4(AppViewFragment.newInstance(ad));
 		});
 	}

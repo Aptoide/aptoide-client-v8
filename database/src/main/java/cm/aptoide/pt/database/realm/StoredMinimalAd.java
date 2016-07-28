@@ -7,7 +7,7 @@ import io.realm.annotations.Required;
 /**
  * Created by neuro on 28-07-2016.
  */
-public class Referrer extends RealmObject {
+public class StoredMinimalAd extends RealmObject {
 
 	public static final String PACKAGE_NAME = "packageName";
 	public static final String REFERRER = "referrer";
@@ -18,13 +18,17 @@ public class Referrer extends RealmObject {
 	private String cpiUrl;
 	private long timestamp;
 
-	public Referrer() {
+	private long adId;
+
+	public StoredMinimalAd() {
 	}
 
-	public Referrer(String packageName, String referrer, String cpiUrl) {
+	// apagar
+	public StoredMinimalAd(String packageName, String referrer, String cpiUrl, long adId) {
 		this.packageName = packageName;
 		this.referrer = referrer;
 		this.cpiUrl = cpiUrl;
+		this.adId = adId;
 		this.timestamp = System.currentTimeMillis();
 	}
 
@@ -58,5 +62,13 @@ public class Referrer extends RealmObject {
 
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public long getAdId() {
+		return adId;
+	}
+
+	public void setAdId(long adId) {
+		this.adId = adId;
 	}
 }

@@ -9,12 +9,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import io.realm.RealmObject;
 import lombok.Getter;
 
 /**
  * Created by neuro on 20-06-2016.
  */
-public class MinimalAd implements Parcelable {
+public class MinimalAd extends RealmObject implements Parcelable {
 
 	public static final Creator<MinimalAd> CREATOR = new Creator<MinimalAd>() {
 		@Override
