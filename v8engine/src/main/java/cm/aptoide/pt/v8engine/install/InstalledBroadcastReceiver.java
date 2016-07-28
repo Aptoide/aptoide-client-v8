@@ -13,6 +13,7 @@ import android.util.Log;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Referrer;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -67,6 +68,15 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Log.d(TAG, "Package added: " + packageName);
 
 		databaseOnPackageAdded(packageName);
+		checkAndBroadcastReferrer(packageName);
+	}
+
+	private void checkAndBroadcastReferrer(String packageName) {
+		Referrer referrer = Database.ReferrerQ.get(packageName, realm);
+		if (referrer != null) {
+			ReferrerUtils.broadcastReferrer(packageName, referrer.getReferrer());
+			DataproviderUtils.AdNetworksUtils.knockCpi(referrer.getCpiUrl());
+		}
 	}
 
 	protected void onPackageReplaced(String packageName) {
@@ -89,8 +99,6 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
 		if (rollback != null) {
 			confirmAction(packageName, Rollback.Action.INSTALL);
-			ReferrerUtils.broadcastReferrer(packageName, rollback.getReferrer());
-			DataproviderUtils.AdNetworksUtils.knockCpi(rollback.getCpiUrl());
 		}
 	}
 

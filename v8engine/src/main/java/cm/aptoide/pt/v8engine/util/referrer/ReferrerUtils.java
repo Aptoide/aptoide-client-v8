@@ -29,6 +29,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Referrer;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
@@ -108,7 +109,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 						} else {
 							@Cleanup
 							Realm realm = Database.get();
-							Database.RollbackQ.setReferrer(packageName, referrer, realm);
+							Database.save(new Referrer(packageName, referrer, minimalAd.getCpiUrl()), realm);
 						}
 
 						future.cancel(false);

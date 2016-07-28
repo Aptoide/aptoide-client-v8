@@ -60,6 +60,7 @@ import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
+import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -263,16 +264,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	private Observable<GetApp> manageAds(GetApp getApp) {
-		if (minimalAd == null) {
-			String packageName = getApp.getNodes().getMeta().getData().getPackageName();
-			String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
+		String packageName = getApp.getNodes().getMeta().getData().getPackageName();
+		String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
 
-			return adRepository.getAd(packageName, storeName).doOnNext(ad -> {
+		if (minimalAd == null) {
+			return adRepository.getAdFromAppView(packageName, storeName).doOnNext(ad -> {
 				minimalAd = ad;
+				AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false));
 				DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd.getCpcUrl());
 			}).map(ad -> getApp).onErrorReturn(throwable -> getApp);
+		} else {
+			AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false));
+			return Observable.just(getApp);
 		}
-		return Observable.just(getApp);
 	}
 
 	@Override

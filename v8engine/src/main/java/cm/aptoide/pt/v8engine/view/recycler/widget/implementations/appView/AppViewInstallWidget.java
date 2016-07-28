@@ -25,7 +25,6 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -160,15 +159,18 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 
 	public void setupInstallButton(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+
+		//<editor-fold desc="Avoid commit when crashing plz!! :D lol">
 		//check if the app is payed
-		if (displayable.isPaidApp()) {
-			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
-			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay().getSymbol() + " " + app.getPay().getPrice() + ")");
-			actionButton.setOnClickListener(new Listeners().newBuyListener());
-		} else {
+		//		if (displayable.isPaidApp()) {
+		//			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
+		//			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay().getSymbol() + " " + app.getPay().getPrice() + ")");
+		//			actionButton.setOnClickListener(new Listeners().newBuyListener());
+		//		} else {
 			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
-		}
+		//		}
+		//</editor-fold>
 	}
 
 	private boolean isLatestAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
@@ -204,14 +206,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			AptoideUtils.ThreadU.runOnIoThread(() -> RollbackUtils.addInstallAction(packageName));
 			if (cpdUrl != null) {
 				DataproviderUtils.AdNetworksUtils.knockCpd(cpdUrl);
-			}
-
-			@Cleanup
-			Realm realm = Database.get();
-			Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
-			if (rollback != null) {
-				rollback.setCpiUrl(cpiUrl);
-				Database.save(rollback, realm);
 			}
 
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
