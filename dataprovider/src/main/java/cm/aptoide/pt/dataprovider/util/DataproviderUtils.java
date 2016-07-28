@@ -88,7 +88,9 @@ public class DataproviderUtils {
 
 			IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
-			clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
+			if (idsRepository.getAndroidId() != null) {
+				clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
+			}
 			clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getAptoideClientUUID());
 			clickUrl = clickUrl.replace("[USER_AAID]", idsRepository.getAdvertisingId());
 			clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
