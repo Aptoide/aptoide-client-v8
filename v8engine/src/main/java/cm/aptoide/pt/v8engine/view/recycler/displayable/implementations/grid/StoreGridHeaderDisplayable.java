@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/06/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
@@ -14,17 +14,18 @@ import lombok.Getter;
 /**
  * Created by sithengineer on 29/04/16.
  */
-public class GridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
+public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
 	@Getter private String storeTheme;
 
-	public GridHeaderDisplayable() { }
+	public StoreGridHeaderDisplayable() {
+	}
 
-	public GridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
+	public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
 		super(pojo);
 	}
 
-	public GridHeaderDisplayable(GetStoreWidgets.WSWidget pojo, String storeTheme) {
+	public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo, String storeTheme) {
 		super(pojo);
 		this.storeTheme = storeTheme;
 	}

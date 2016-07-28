@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -45,12 +45,12 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppGraphicDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
@@ -59,6 +59,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Rol
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
@@ -86,12 +87,12 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleW
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CompletedDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppListWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisplayWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
@@ -102,6 +103,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Rollback
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ScheduledDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
@@ -123,7 +125,8 @@ public enum DisplayableType {
 	// grid widgets / displayables
 	GRID_APP(GridAppWidget.class, GridAppDisplayable.class),
 	GRID_DISPLAY(GridDisplayWidget.class, GridDisplayDisplayable.class),
-	GRID_HEADER(GridHeaderWidget.class, GridHeaderDisplayable.class),
+	GRID_HEADER(StoreGridHeaderWidget.class, StoreGridHeaderDisplayable.class),
+	FOOTER_ROW(FooterRowWidget.class, FooterRowDisplayable.class),
 	GRID_STORE(GridStoreWidget.class, GridStoreDisplayable.class),
 	ADS(GridAdWidget.class, GridAdDisplayable.class),
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -24,10 +24,8 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
@@ -77,29 +75,64 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
 		rollbackAction.setOnClickListener( view -> {
 
-			AptoideUtils.ThreadU.runOnIoThread(() -> {
-				@Cleanup
-				Realm realm = Database.get();
-				Database.RollbackQ.upadteRollbackWithAction(realm, pojo.getPackageName(), Rollback.Action.UPDATE);
-			});
+			@Cleanup
+			Realm realm = Database.get();
+			Database.RollbackQ.upadteRollbackWithAction(realm, pojo, Rollback.Action.UPDATE);
 
 			final Context context = view.getContext();
 			ContextWrapper contextWrapper = (ContextWrapper) context;
 			final PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
 
 			permissionRequest.requestAccessToExternalFileSystem(() -> {
-				ShowMessage.asSnack(view, R.string.downgrading_msg);
+				final DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+				final Download appDownload = displayable.getDownloadFromPojo();
+				Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
+				switch (action) {
+					case DOWNGRADE:
+						ShowMessage.asSnack(view, R.string.updating_msg);
+						// find app update and download it, uninstall current and install update
+						// TODO: 28/07/16 sithengineer
+						/*
+						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+								//final String packageName = app.getPackageName();
+								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+								displayable.upgrade(context).subscribe();
+							}
+						});
+						*/
+						break;
 
-				DownloadFactory factory = new DownloadFactory();
-				Download appDownload = factory.create(pojo);
-				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-					if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-						//final String packageName = app.getPackageName();
-						//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-						displayable.downgrade(getContext()).subscribe();
-					}
-				});
+					case INSTALL:
+						displayable.uninstall(getContext(), appDownload);
+						break;
+
+					case UNINSTALL:
+						ShowMessage.asSnack(view, R.string.installing_msg);
+						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+								//final String packageName = app.getPackageName();
+								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+								displayable.install(context, (PermissionRequest) context, appDownload.getAppId()).subscribe();
+							}
+						});
+						break;
+
+					case UPDATE:
+						ShowMessage.asSnack(view, R.string.downgrading_msg);
+						// find current installed app. download previous, uninstall current and install previous
+						// TODO: 28/07/16 sithengineer
+						/*
+						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+								//final String packageName = app.getPackageName();
+								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+								displayable.downgrade(context).subscribe();
+							}
+						});
+						*/
+						break;
+				}
 			}, () -> {
 				Logger.e(TAG, "unable to access to external FS");
 			});

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -26,7 +26,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDis
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 
 /**
  * Created by neuro on 01-05-2016.
@@ -49,7 +49,7 @@ public class DisplayablesFactory {
 						break;
 
 					case STORES_GROUP:
-						displayables.add(new GridHeaderDisplayable(wsWidget, storeTheme));
+						displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme));
 						displayables.add(getStores(wsWidget.getViewObject()));
 						break;
 
@@ -64,8 +64,8 @@ public class DisplayablesFactory {
 							LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
 							actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
 							wsWidget.setActions(actions);
-							GridHeaderDisplayable gridHeaderDisplayable = new GridHeaderDisplayable(wsWidget);
-							displayables.add(gridHeaderDisplayable);
+							StoreGridHeaderDisplayable storeGridHeaderDisplayable = new StoreGridHeaderDisplayable(wsWidget);
+							displayables.add(storeGridHeaderDisplayable);
 
 							displayables.add(ads);
 						}
@@ -131,7 +131,7 @@ public class DisplayablesFactory {
 			}
 		} else if (Layout.LIST.equals(wsWidget.getData().getLayout())) {
 			if (apps.size() > 0) {
-				displayables.add(new GridHeaderDisplayable(wsWidget));
+				displayables.add(new StoreGridHeaderDisplayable(wsWidget));
 			}
 
 			for (App app : apps) {
@@ -139,7 +139,7 @@ public class DisplayablesFactory {
 			}
 		} else {
 			if (apps.size() > 0) {
-				displayables.add(new GridHeaderDisplayable(wsWidget, storeTheme));
+				displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme));
 			}
 
 			for (App app : apps) {

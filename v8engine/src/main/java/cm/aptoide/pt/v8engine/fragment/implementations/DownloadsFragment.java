@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 28/07/2016.
+ */
+
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
@@ -8,6 +13,7 @@ import com.trello.rxlifecycle.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -16,12 +22,11 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import rx.Subscription;
 
 /**
@@ -64,11 +69,11 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 					}
 				}
 				if (completedDisplayablesList.size() > 0) {
-					completedDisplayablesList.add(0, new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R
+					completedDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R
 							.string.completed))));
 				}
 				if (activeDisplayablesList.size() > 0) {
-					activeDisplayablesList.add(0, new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R.string
+					activeDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R.string
 							.active))));
 				}
 				setDisplayables();

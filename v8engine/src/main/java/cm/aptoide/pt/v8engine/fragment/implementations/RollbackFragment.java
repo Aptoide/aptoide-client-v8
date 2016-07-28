@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -28,13 +29,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.HeaderDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -50,6 +57,8 @@ public class RollbackFragment extends GridRecyclerFragment {
 	private static final DateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 	private TextView emptyData;
 	private Subscription subscription;
+	private DownloadServiceHelper downloadManager;
+	private InstallManager installManager;
 
 	public RollbackFragment() {
 	}
@@ -94,7 +103,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		Logger.d(TAG, String.format("refresh rollbacks? %s", refresh ? "yes" : "no"));
-		fetchRollbacks();
+		AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
 	}
 
 	@Override
@@ -107,8 +116,13 @@ public class RollbackFragment extends GridRecyclerFragment {
 		super.bindViews(view);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		setHasOptionsMenu(true);
+
+		final PermissionManager permissionManager = new PermissionManager();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
 	}
 
+	@UiThread
 	private void fetchRollbacks() {
 		subscription = Database.RollbackQ.getAll(realm).sort(Rollback.TIMESTAMP, Sort.ASCENDING)
 				.asObservable()
@@ -144,6 +158,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 	}
 	
 	// FIXME: 21/07/2016 slow method. could this be improved ??
+	@UiThread
 	private void sortRollbacksAndAdd(RealmResults<Rollback> rollbacks) {
 		// group by timestamp
 		TreeMap<String,List<Displayable>> arrayOfDisplayables = new TreeMap<>(new Comparator<String>() {
@@ -164,13 +179,13 @@ public class RollbackFragment extends GridRecyclerFragment {
 				displayables = new LinkedList<>();
 				arrayOfDisplayables.put(timestampAsString, displayables);
 			}
-			displayables.add(new RollbackDisplayable(rollback));
+			displayables.add(new RollbackDisplayable(installManager, rollback));
 		}
 
 		// display headers and content
 		List<Displayable> displayablesToShow = new LinkedList<>();
 		for (Map.Entry<String,List<Displayable>> arrayOfDisplayablesEntry : arrayOfDisplayables.entrySet()) {
-			displayablesToShow.add(new HeaderDisplayable(arrayOfDisplayablesEntry.getKey()));
+			displayablesToShow.add(new FooterRowDisplayable(arrayOfDisplayablesEntry.getKey()));
 			displayablesToShow.addAll(arrayOfDisplayablesEntry.getValue());
 		}
 		setDisplayables(displayablesToShow);

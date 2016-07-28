@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
@@ -13,6 +13,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
 
@@ -22,16 +23,20 @@ import rx.Observable;
 public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
 	private InstallManager installManager;
-	private Download download;
 
 	public RollbackDisplayable() { }
 
-	public RollbackDisplayable(Rollback pojo) {
-		super(pojo);
+	public RollbackDisplayable(InstallManager installManager, Rollback pojo) {
+		this(installManager, pojo, false);
 	}
 
-	public RollbackDisplayable(Rollback pojo, boolean fixedPerLineCount) {
+	public RollbackDisplayable(InstallManager installManager, Rollback pojo, boolean fixedPerLineCount) {
 		super(pojo, fixedPerLineCount);
+		this.installManager = installManager;
+	}
+
+	public Download getDownloadFromPojo() {
+		return new DownloadFactory().create(getPojo());
 	}
 
 	@Override
@@ -44,15 +49,15 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 		return R.layout.rollback_row;
 	}
 
-	public Observable<Void> install(Context context) {
-		return installManager.install(context, (PermissionRequest) context, download.getAppId());
+	public Observable<Void> install(Context context, PermissionRequest permissionRequest, long appId) {
+		return installManager.install(context, permissionRequest, appId);
 	}
 
-	public Observable<Void> uninstall(Context context) {
-		return installManager.uninstall(context, download.getFilesToDownload().get(0).getPackageName());
+	public Observable<Void> uninstall(Context context, Download appDownload) {
+		return installManager.uninstall(context, appDownload.getFilesToDownload().get(0).getPackageName());
 	}
 
-	public Observable<Void> downgrade(Context context) {
-		return Observable.concat(uninstall(context).ignoreElements(), install(context));
+	public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest, Download currentDownload, long previousAppId) {
+		return Observable.concat(uninstall(context, currentDownload).ignoreElements(), install(context, permissionRequest, previousAppId));
 	}
 }

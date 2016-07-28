@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -238,12 +238,16 @@ public class Database {
 			realm.commitTransaction();
 		}
 
-		public static void upadteRollbackWithAction(Realm realm, String packageName, Rollback.Action action) {
-			Rollback rollback = realm.where(Rollback.class).equalTo(Rollback.PACKAGE_NAME, packageName).findFirst();
+		public static void upadteRollbackWithAction(Realm realm, Rollback rollback, Rollback.Action action) {
 			realm.beginTransaction();
 			rollback.setAction(action.name());
 			realm.copyToRealmOrUpdate(rollback);
 			realm.commitTransaction();
+		}
+
+		public static void upadteRollbackWithAction(Realm realm, String md5, Rollback.Action action) {
+			Rollback rollback = realm.where(Rollback.class).equalTo(Rollback.MD5, md5).findFirst();
+			upadteRollbackWithAction(realm, rollback, action);
 		}
 
 		public static void addRollbackWithAction(Realm realm, GetAppMeta.App app, Rollback.Action action) {
@@ -268,6 +272,12 @@ public class Database {
 
 		public static RealmResults<Scheduled> getAll(Realm realm) {
 			return realm.where(Scheduled.class).findAll();
+		}
+
+		public static void delete(Realm realm, Scheduled scheduled) {
+			realm.beginTransaction();
+			scheduled.deleteFromRealm();
+			realm.commitTransaction();
 		}
 	}
 

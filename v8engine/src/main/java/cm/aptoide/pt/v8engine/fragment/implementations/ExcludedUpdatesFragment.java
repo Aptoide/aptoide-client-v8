@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -117,8 +117,6 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
 			}
 			realm.copyToRealmOrUpdate(excludedUpdatesToRestore);
 			realm.commitTransaction();
-			
-			// FIXME: 19/07/16 sithengineer do I need to refresh this view ?
 
 			return true;
 		}

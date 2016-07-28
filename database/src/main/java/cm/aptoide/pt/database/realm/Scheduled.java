@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -20,17 +20,24 @@ public class Scheduled extends RealmObject {
 	public static final String NAME = "name";
 	public static final String VERSION_NAME = "versionName";
 	public static final String ICON = "icon";
+	public static final String PATH = "path";
+	public static final String MD5 = "md5";
+	public static final String VER_CODE = "verCode";
 
 
 	@PrimaryKey private long appId;
 	private String name;
 	private String versionName;
 	private String icon;
+	private String path;
+	private String md5;
+	private int verCode;
 
 	public Scheduled() { }
 
 	public static Scheduled from(GetAppMeta.App app) {
-		return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon());
+		return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon(), app.getFile().getPath(), app.getFile()
+				.getMd5sum(), app.getFile().getVercode());
 	}
 
 	public long getAppId() {
@@ -63,5 +70,29 @@ public class Scheduled extends RealmObject {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getMd5() {
+		return md5;
+	}
+
+	public void setMd5(String md5) {
+		this.md5 = md5;
+	}
+
+	public int getVerCode() {
+		return verCode;
+	}
+
+	public void setVerCode(int verCode) {
+		this.verCode = verCode;
 	}
 }

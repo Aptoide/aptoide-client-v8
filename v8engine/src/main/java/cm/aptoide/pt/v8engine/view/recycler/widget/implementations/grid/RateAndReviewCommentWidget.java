@@ -1,13 +1,16 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 26/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.res.Resources;
+import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +31,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentDisplayable> {
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
+
+	private RelativeLayout reviewMainLayout;
 
 	private TextView reply;
 	private TextView showHideReplies;
@@ -61,6 +66,8 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 		userImage = (ImageView) itemView.findViewById(R.id.user_icon);
 		username = (TextView) itemView.findViewById(R.id.user_name);
+
+		reviewMainLayout = (RelativeLayout) itemView.findViewById(R.id.review_main_layout);
 	}
 
 	@Override
@@ -97,5 +104,15 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		showHideReplies.setOnClickListener(v -> {
 			ShowMessage.asSnack(v, "TO DO: show / hide replies");
 		});
+
+		final Resources.Theme theme = getContext().getTheme();
+		final Resources res = getContext().getResources();
+		int color = getItemId() % 2 == 0 ? R.color.white : R.color.app_view_gray;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			reviewMainLayout.setBackgroundColor(res.getColor(color, theme));
+		} else {
+			reviewMainLayout.setBackgroundColor(res.getColor(color));
+		}
 	}
 }

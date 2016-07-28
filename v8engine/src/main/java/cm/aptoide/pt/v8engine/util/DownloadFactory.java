@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
@@ -144,6 +145,15 @@ public class DownloadFactory {
 		download.setAppName(Application.getConfiguration().getMarketName());
 		download.setAppId(appId);
 		download.setFilesToDownload(createFileList(appId, null, autoUpdateInfo.path, autoUpdateInfo.md5, null, null, autoUpdateInfo.vercode));
+		return download;
+	}
+
+	public Download create(Scheduled scheduled) {
+		Download download = new Download();
+		int appId = 1;
+		download.setAppName(Application.getConfiguration().getMarketName());
+		download.setAppId(appId);
+		download.setFilesToDownload(createFileList(appId, null, scheduled.getPath(), scheduled.getMd5(), null, null, scheduled.getVerCode()));
 		return download;
 	}
 }

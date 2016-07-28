@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -29,8 +29,8 @@ import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmResults;
 import rx.Subscription;
@@ -97,7 +97,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 							updatesDisplayablesList.clear();
 
 							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
+								updatesDisplayablesList.add(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
 										.getResString(R.string.updates))));
 
 								for (Update update : updates) {
@@ -119,7 +119,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 					.subscribe(installeds -> {
 						installedDisplayablesList.clear();
 
-						installedDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
+						installedDisplayablesList.add(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
 								.getResString(R.string.installed_tab))));
 
 						RealmResults<Installed> all = realmResults;

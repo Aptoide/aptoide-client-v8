@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 26/07/2016.
+  ~ Modified by SithEngineer on 28/07/2016.
   -->
 
 <RelativeLayout
+    android:id="@+id/review_main_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:layout_margin="16dp"
     >
 
     <!--
@@ -41,7 +42,7 @@
     <TextView
         android:id="@+id/write_reply_btn"
         android:layout_width="wrap_content"
-        android:layout_height="9.3dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/user_icon"
@@ -49,6 +50,7 @@
         android:drawableLeft="@drawable/ic_reply_white_18dp"
         android:drawablePadding="5.7dp"
         android:drawableTint="#757575"
+        android:gravity="center"
         android:text="@string/reply"
         android:textAllCaps="true"
         android:textSize="9sp"
@@ -145,13 +147,14 @@
     <TextView
         android:id="@+id/show_replies_btn"
         android:layout_width="wrap_content"
-        android:layout_height="7.7dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/comment"
         android:layout_marginTop="23.7dp"
         android:drawablePadding="10dp"
         android:drawableRight="@drawable/ic_down_arrow"
+        android:gravity="center"
         android:text="@string/comments"
         android:textAllCaps="true"
         android:textSize="8sp"

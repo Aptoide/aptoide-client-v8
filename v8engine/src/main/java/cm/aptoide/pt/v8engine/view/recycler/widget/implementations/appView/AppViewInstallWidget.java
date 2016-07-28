@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -200,14 +200,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 
 		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v, AppViewInstallDisplayable displayable) {
-			AptoideUtils.ThreadU.runOnIoThread(() -> {
-				@Cleanup
-				Realm realm = Database.get();
-				Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
-			});
-			if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-				DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
-			}
 
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
 			final PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
@@ -291,6 +283,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 											((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
 												new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
 											});
+
+											@Cleanup
+											Realm realm = Database.get();
+											Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
+											if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+												DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
+											}
 										}
 									});
 							break;
