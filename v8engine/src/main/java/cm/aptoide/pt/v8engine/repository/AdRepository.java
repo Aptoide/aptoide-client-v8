@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.v8engine.model.MinimalAd;
 import rx.Observable;
 
 /**

@@ -8,16 +8,14 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 import android.content.Context;
 
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.model.MinimalAd;
-import cm.aptoide.pt.v8engine.repository.AppRepository;
 import lombok.Getter;
-import lombok.Setter;
 import rx.Observable;
 
 /**

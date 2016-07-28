@@ -3,14 +3,12 @@
  * Modified by SithEngineer on 24/06/2016.
  */
 
-package cm.aptoide.pt.v8engine.model;
+package cm.aptoide.pt.dataprovider.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -39,11 +37,6 @@ public class MinimalAd implements Parcelable {
 	@Getter private final long adId;
 	@Getter private String cpiUrl;
 
-	public static MinimalAd from(GetAdsResponse.Ad ad) {
-		return new MinimalAd(ad.getData().getPackageName(), ad.getPartner().getInfo().getId(), ad.getPartner().getData().getClickUrl(), ad.getInfo()
-				.getCpcUrl(), ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(), ad.getInfo().getCpiUrl());
-	}
-
 	public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl, String cpdUrl, long appId, long adId, String cpiUrl) {
 		this.packageName = packageName;
 		this.networkId = networkId;
@@ -63,6 +56,11 @@ public class MinimalAd implements Parcelable {
 		cpdUrl = in.readString();
 		appId = in.readLong();
 		adId = in.readLong();
+	}
+
+	public static MinimalAd from(GetAdsResponse.Ad ad) {
+		return new MinimalAd(ad.getData().getPackageName(), ad.getPartner().getInfo().getId(), ad.getPartner().getData().getClickUrl(), ad.getInfo()
+				.getCpcUrl(), ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(), ad.getInfo().getCpiUrl());
 	}
 
 	@Override
