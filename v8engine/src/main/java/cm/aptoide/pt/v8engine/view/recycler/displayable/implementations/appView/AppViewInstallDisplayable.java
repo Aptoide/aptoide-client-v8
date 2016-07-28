@@ -45,7 +45,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	}
 
 	public boolean isPaidApp() {
-		return payment != null;
+		return !payment.amount.equals(0);
 	}
 
 	public boolean shouldCharge() {

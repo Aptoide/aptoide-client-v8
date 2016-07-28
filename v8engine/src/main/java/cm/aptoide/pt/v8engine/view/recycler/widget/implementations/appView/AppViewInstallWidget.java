@@ -159,17 +159,15 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void setupInstallButton(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 
-		//<editor-fold desc="Avoid commit when crashing plz!! :D lol">
 		//check if the app is payed
-		//		if (displayable.isPaidApp()) {
-		//			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
-		//			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay().getSymbol() + " " + app.getPay().getPrice() + ")");
-		//			actionButton.setOnClickListener(new Listeners().newBuyListener());
-		//		} else {
+		if (displayable.isPaidApp()) {
+			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
+			actionButton.setText(getContext().getString(R.string.buy) + " (" + displayable.getPayment().symbol + " " + displayable.getPayment().amount + ")");
+			actionButton.setOnClickListener(new Listeners().newBuyListener());
+		} else {
 			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
-		//		}
-		//</editor-fold>
+		}
 	}
 
 	private boolean isLatestAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
@@ -193,7 +191,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				if (!AptoideAccountManager.isLoggedIn()) {
 					AptoideAccountManager.openAccountManager(getContext());
 				}
- 			};
+			};
 		}
 
 		private View.OnClickListener newInstallListener(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
@@ -279,17 +277,15 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(v.getContext())
-									.observeOn(AndroidSchedulers.mainThread())
-									.subscribe(success -> {
-										if (actionButton.getVisibility() == View.VISIBLE) {
-											actionButton.setText(R.string.open);
-											// FIXME: 20/07/16 sithengineer refactor this ugly code
-											((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-												new Listeners().newUninstallListener(itemView, app.getPackageName(), displayable).call();
-											});
-										}
+							displayable.install(v.getContext()).observeOn(AndroidSchedulers.mainThread()).subscribe(success -> {
+								if (actionButton.getVisibility() == View.VISIBLE) {
+									actionButton.setText(R.string.open);
+									// FIXME: 20/07/16 sithengineer refactor this ugly code
+									((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
+										new Listeners().newUninstallListener(itemView, app.getPackageName(), displayable).call();
 									});
+								}
+							});
 							break;
 						}
 					}
