@@ -277,7 +277,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(v.getContext()).observeOn(AndroidSchedulers.mainThread()).subscribe(success -> {
+							displayable.install(getContext()).observeOn(AndroidSchedulers.mainThread()).subscribe(success -> {
 								if (actionButton.getVisibility() == View.VISIBLE) {
 									actionButton.setText(R.string.open);
 									// FIXME: 20/07/16 sithengineer refactor this ugly code
