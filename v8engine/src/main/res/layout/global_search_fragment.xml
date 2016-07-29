@@ -23,13 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
+        android:paddingTop="15dp"
         android:visibility="gone"
         >
 
         <LinearLayout
             android:id="@+id/buttons_layout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/search_buttons_background"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             >
@@ -38,14 +41,18 @@
                 android:id="@+id/subscribed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/search_button_background"
                 android:text="@string/subscribed"
+                android:textColor="@color/white"
                 android:visibility="gone"/>
 
             <Button
                 android:id="@+id/everywhere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:text="@string/everywhere"
+                android:textColor="@color/app_view_gray"
                 android:visibility="gone"/>
 
         </LinearLayout>
@@ -55,6 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/buttons_layout"
+            android:layout_marginTop="10dp"
             />
 
     </RelativeLayout>

@@ -119,6 +119,7 @@ public class DataproviderUtils {
 			knock(minimalAd.getCpiUrl());
 		}
 
+		// FIXME: 29-07-2016 neuro so wrong...
 		public static void knockImpression(MinimalAd minimalAd) {
 			knockCpd(minimalAd);
 		}
