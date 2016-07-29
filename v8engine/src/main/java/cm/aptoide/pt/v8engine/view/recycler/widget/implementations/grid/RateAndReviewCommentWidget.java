@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -9,14 +9,17 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -30,14 +33,13 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 @Displayables({RateAndReviewCommentDisplayable.class})
 public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentDisplayable> {
 
+	private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
-
-	private RelativeLayout reviewMainLayout;
 
 	private TextView reply;
 	private TextView showHideReplies;
-	//private Button flagHelfull;
-	//private Button flagNotHelfull;
+	private Button flagHelfull;
+	private Button flagNotHelfull;
 
 	private AppCompatRatingBar ratingBar;
 	private TextView reviewTitle;
@@ -56,8 +58,8 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 	protected void assignViews(View itemView) {
 		reply = (TextView) itemView.findViewById(R.id.write_reply_btn);
 		showHideReplies = (TextView) itemView.findViewById(R.id.show_replies_btn);
-		//flagHelfull = (Button) itemView.findViewById(R.id.helpful_btn);
-		//flagNotHelfull = (Button) itemView.findViewById(R.id.not_helpful_btn);
+		flagHelfull = (Button) itemView.findViewById(R.id.helpful_btn);
+		flagNotHelfull = (Button) itemView.findViewById(R.id.not_helpful_btn);
 
 		ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
 		reviewTitle = (TextView) itemView.findViewById(R.id.comment_title);
@@ -66,13 +68,11 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 		userImage = (ImageView) itemView.findViewById(R.id.user_icon);
 		username = (TextView) itemView.findViewById(R.id.user_name);
-
-		reviewMainLayout = (RelativeLayout) itemView.findViewById(R.id.review_main_layout);
 	}
 
 	@Override
 	public void bindView(RateAndReviewCommentDisplayable displayable) {
-		Review review = displayable.getPojo();
+		final Review review = displayable.getPojo();
 
 		ImageLoader.loadWithCircleTransform(review.getUser().getAvatar(), userImage);
 		username.setText(review.getUser().getName());
@@ -88,31 +88,52 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		reviewDate.setText(DATE_FORMAT.format(review.getAdded()));
 
 		reply.setOnClickListener(v -> {
-			ShowMessage.asSnack(v, "TO DO: write reply");
+			showCommentPopup(review.getId());
 		});
 
-		/*
 		flagHelfull.setOnClickListener(v -> {
-			ShowMessage.asSnack(v, "TO DO: flag as helpful");
+			setReviewRating(review.getId(), true);
 		});
 
 		flagNotHelfull.setOnClickListener(v -> {
-			ShowMessage.asSnack(v, "TO DO: flag as NOT helpful");
+			setReviewRating(review.getId(), false);
 		});
-		*/
 
 		showHideReplies.setOnClickListener(v -> {
-			ShowMessage.asSnack(v, "TO DO: show / hide replies");
+			loadCommentsForThisReview(review.getId());
 		});
 
 		final Resources.Theme theme = getContext().getTheme();
 		final Resources res = getContext().getResources();
-		int color = getItemId() % 2 == 0 ? R.color.white : R.color.app_view_gray;
+		int color = getItemId() % 2 == 0 ? R.color.white : R.color.displayable_rate_and_review_background;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			reviewMainLayout.setBackgroundColor(res.getColor(color, theme));
+			itemView.setBackgroundColor(res.getColor(color, theme));
 		} else {
-			reviewMainLayout.setBackgroundColor(res.getColor(color));
+			itemView.setBackgroundColor(res.getColor(color));
 		}
+	}
+
+	private void showCommentPopup(long reviewId) {
+		ShowMessage.asSnack(flagHelfull, "TO DO: write reply");
+	}
+
+	private void loadCommentsForThisReview(long reviewId) {
+		ShowMessage.asSnack(flagHelfull, "TO DO: show / hide replies");
+	}
+
+	private void setReviewRating(long reviewId, boolean positive) {
+		flagHelfull.setClickable(false);
+		flagNotHelfull.setClickable(false);
+
+		if (AptoideAccountManager.isLoggedIn()) {
+			SetReviewRatingRequest.of(reviewId, positive).execute(response -> {
+
+			}, err -> {
+				Logger.e(TAG, err);
+			}, true);
+		}
+
+		ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -27,7 +27,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import rx.Subscription;
@@ -35,7 +35,7 @@ import rx.Subscription;
 /**
  * Created by sithengineer on 13/05/16.
  */
-public class RateAndReviewsFragment extends GridRecyclerFragmentWithDecorator {
+public class RateAndReviewsFragment extends GridRecyclerFragment {
 
 	private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
 
@@ -51,6 +51,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragmentWithDecorator {
 
 	private RatingTotalsLayout ratingTotalsLayout;
 	private RatingBarsLayout ratingBarsLayout;
+
+	private ProgressBar progressBar;
 
 	public static RateAndReviewsFragment newInstance(long appId, String storeName, String packageName) {
 		RateAndReviewsFragment fragment = new RateAndReviewsFragment();
@@ -90,6 +92,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragmentWithDecorator {
 
 		ratingTotalsLayout = new RatingTotalsLayout(view);
 		ratingBarsLayout = new RatingBarsLayout(view);
+		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 	}
 
 	@Override
@@ -140,6 +143,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragmentWithDecorator {
 			}
 			setDisplayables(displayables);
 			finishLoading();
+			progressBar.setVisibility(View.GONE);
 		});
 	}
 

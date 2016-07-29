@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -116,6 +116,8 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
     //noinspection GradleDependency
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+    //noinspection GradleDependency
+    compile "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
     //noinspection GradleDependency
     compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
     //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"

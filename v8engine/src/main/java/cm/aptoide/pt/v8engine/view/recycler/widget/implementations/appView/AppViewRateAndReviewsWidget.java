@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -9,9 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.view.LayoutInflater;
@@ -45,7 +43,6 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import lombok.Setter;
 
 /**
  * Created by sithengineer on 30/06/16.
@@ -64,13 +61,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private TextView usersVoted;
 	private TextView ratingValue;
 	private AppCompatRatingBar ratingBar;
-	private ViewPager topCommentsPager;
 
 	private Button rateThisAppButton;
 	private Button rateThisButton;
 	private Button readAllButton;
 
-	private TopReviewsAdapter topReviewsAdapter;
+	private ViewPager topReviewsPager;
 
 	private String appName;
 	private String packageName;
@@ -91,11 +87,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		usersVoted = (TextView) itemView.findViewById(R.id.users_voted);
 		ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
 		ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
-		topCommentsPager = (ViewPager) itemView.findViewById(R.id.top_comments_pager);
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
 		rateThisAppButton = (Button) itemView.findViewById(R.id.rate_this_app_button);
 
+		topReviewsPager = (ViewPager) itemView.findViewById(R.id.top_comments_pager);
 		topReviewsProgressBar = (ProgressBar) itemView.findViewById(R.id.top_reviews_progress_bar);
 	}
 
@@ -133,10 +129,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		};
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
-
-		topReviewsAdapter = new TopReviewsAdapter(getContext().getSupportFragmentManager());
-		topCommentsPager.setAdapter(topReviewsAdapter);
-		loadTopComments(app.getStore().getName(), app.getPackageName());
+		loadTopReviews(app.getStore().getName(), app.getPackageName());
 	}
 
 	@Override
@@ -205,19 +198,20 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	}
 
 	private void scheduleAnimations() {
-		if (ManagerPreferences.getAnimationsEnabledStatus() && topReviewsAdapter.getCount() > 1) {
-			for (int i = 0 ; i < topReviewsAdapter.getCount() - 1 ; ++i) {
+		final int topReviewsCount = topReviewsPager.getAdapter().getCount();
+		if (ManagerPreferences.getAnimationsEnabledStatus() && topReviewsCount > 2) {
+			for (int i = 0 ; i < topReviewsCount - 1 ; ++i) {
 				final int count = i;
-				topCommentsPager.postDelayed(() -> {
-					topCommentsPager.setCurrentItem(count, true);
+				topReviewsPager.postDelayed(() -> {
+					topReviewsPager.setCurrentItem(count);
 				}, (count + 1) * 1200);
 			}
 		} else {
-			Logger.w(TAG, "Animations are disabled");
+			Logger.w(TAG, "Animations are disabled by the user. Unable to schedule top reviews paging animation.");
 		}
 	}
 
-	public void loadTopComments(String storeName, String packageName) {
+	public void loadTopReviews(String storeName, String packageName) {
 		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
 
 			topReviewsProgressBar.setVisibility(View.GONE);
@@ -227,26 +221,25 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 						emptyReviewsLayout.setVisibility(View.VISIBLE);
 						ratingLayout.setVisibility(View.GONE);
 						commentsLayout.setVisibility(View.GONE);
-						topReviewsAdapter.setReviews(null);
-						topReviewsAdapter.notifyDataSetChanged();
+						topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));
 						return;
 					}
 
-					emptyReviewsLayout.setVisibility(View.GONE);
-					ratingLayout.setVisibility(View.VISIBLE);
-					commentsLayout.setVisibility(View.VISIBLE);
+			//					ratingLayout.setVisibility(View.VISIBLE);
+			//					commentsLayout.setVisibility(View.VISIBLE);
+
+			commentsLayout.setVisibility(View.VISIBLE);
+			emptyReviewsLayout.setVisibility(View.GONE);
 			topReviewsProgressBar.setVisibility(View.GONE);
-					topReviewsAdapter.setReviews(listReviews.getDatalist().getList());
-					topReviewsAdapter.notifyDataSetChanged();
+			topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), listReviews.getDatalist().getList()));
 					scheduleAnimations();
+			topReviewsPager.invalidate();
 				}, e -> {
 					emptyReviewsLayout.setVisibility(View.VISIBLE);
 					ratingLayout.setVisibility(View.GONE);
 					commentsLayout.setVisibility(View.GONE);
 					topReviewsProgressBar.setVisibility(View.GONE);
-
-					topReviewsAdapter.setReviews(null);
-					topReviewsAdapter.notifyDataSetChanged();
+			topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));
 					Logger.e(TAG, e);
 				}, true // bypass cache flag
 		);
@@ -254,10 +247,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	private static final class TopReviewsAdapter extends FragmentPagerAdapter {
 
-		@Setter private List<Review> reviews;
+		private final List<Review> reviews;
 
-		public TopReviewsAdapter(FragmentManager fm) {
+		public TopReviewsAdapter(android.app.FragmentManager fm, List<Review> reviews) {
 			super(fm);
+			this.reviews = reviews;
 		}
 
 		@Override
@@ -266,11 +260,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		}
 
 		@Override
-		public Fragment getItem(int position) {
+		public android.app.Fragment getItem(int position) {
 			if (reviews != null && position < reviews.size()) {
 				return MiniTopReviewFragment.newInstance(reviews.get(position));
 			}
-			return new MiniTopReviewFragment(); // FIXME: 15/07/16 sithengineer this shouldn't happen
+			throw new IllegalStateException("Top Review Item doesn't exist for position " + position);
 		}
 	}
 

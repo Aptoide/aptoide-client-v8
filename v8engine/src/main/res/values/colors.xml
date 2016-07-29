@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/07/2016.
+  ~ Modified by SithEngineer on 29/07/2016.
   -->
 
 <resources>
@@ -128,6 +128,7 @@
     <color name="background_window">#FFE8E8E8</color>
     <color name="overlay_black">#77000000</color>
     <color name="app_view_gray">#999999</color>
+    <color name="displayable_rate_and_review_background">#f2f2f2</color>
 
 
     <color name="link">#2070DE</color>

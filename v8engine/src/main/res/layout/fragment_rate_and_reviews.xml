@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 28/07/2016.
+  ~ Modified by SithEngineer on 29/07/2016.
   -->
 
 <LinearLayout
@@ -40,8 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:indeterminate="true"
-        android:visibility="gone"
-        tools:visibility="visible"
+        android:visibility="visible"
         />
 
     <RelativeLayout
@@ -403,16 +402,10 @@
         -->
 
         <android.support.v7.widget.RecyclerView
-
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/ordering_buttons_layout"
-            android:clipToPadding="false"
-            android:paddingLeft="@dimen/recycler_margin"
-            android:paddingRight="@dimen/recycler_margin"
-            android:visibility="visible"
-            tools:visibility="visible"
             />
 
     </RelativeLayout>

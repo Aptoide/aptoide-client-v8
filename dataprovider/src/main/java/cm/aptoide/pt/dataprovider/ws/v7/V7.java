@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -181,5 +181,8 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 		@POST("setComment")
 		Observable<BaseV7Response> postComment(@Body PostCommentRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("setReviewRating")
+		Observable<BaseV7Response> setReviewRating(@Body SetReviewRatingRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }

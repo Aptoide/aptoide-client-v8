@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 26/07/2016.
+  ~ Modified by SithEngineer on 29/07/2016.
   -->
 
 <RelativeLayout
@@ -23,8 +23,7 @@
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
         android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        >
 
         <Button
             android:id="@+id/rate_this_button"
@@ -74,9 +73,9 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
                     android:gravity="center_vertical|left|start"
+                    android:text="@string/zero"
                     android:textColor="@color/white"
                     android:textSize="10.6sp"
-                    tools:text="2425"
                     />
             </LinearLayout>
 
@@ -89,9 +88,9 @@
                 android:includeFontPadding="false"
                 android:lineSpacingMultiplier="0.9"
                 android:maxLines="1"
+                android:text="@string/zero"
                 android:textColor="@color/white"
                 android:textSize="42sp"
-                tools:text="4.2"
                 />
 
             <android.support.v7.widget.AppCompatRatingBar
@@ -103,8 +102,8 @@
                 android:layout_centerInParent="true"
                 android:numStars="5"
                 android:progressDrawable="@drawable/rating_bar_extra_small"
+                android:rating="0"
                 android:stepSize="0.5"
-                tools:rating="3.0"
                 />
 
         </RelativeLayout>
@@ -118,8 +117,6 @@
         android:layout_marginLeft="10dp"
         android:layout_toEndOf="@id/rating_layout"
         android:layout_toRightOf="@id/rating_layout"
-        android:visibility="gone"
-        tools:visibility="visible"
         >
 
         <Button
@@ -164,16 +161,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
                 android:indeterminate="true"
-                android:visibility="visible"
-                tools:visbility="visible"
                 />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/top_comments_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                tools:visbility="gone"
                 />
         </RelativeLayout>
 

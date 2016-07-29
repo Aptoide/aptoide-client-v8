@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 28/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.model.v3;
 
 import lombok.Data;
-import lombok.Getter;
 
 /**
  * Created by marcelobenites on 7/28/16.
@@ -15,5 +14,4 @@ import lombok.Getter;
 public class PaymentResponse {
 
 	private String status;
-
 }

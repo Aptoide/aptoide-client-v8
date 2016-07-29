@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/06/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by neuro on 06-05-2016.
  */
-public abstract class BaseToolbarFragment extends BaseFragment {
+public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
 
 	protected Toolbar toolbar;
 

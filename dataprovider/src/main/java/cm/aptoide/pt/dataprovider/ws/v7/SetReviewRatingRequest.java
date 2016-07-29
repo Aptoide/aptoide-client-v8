@@ -30,21 +30,22 @@ public class SetReviewRatingRequest extends V7<BaseV7Response,SetReviewRatingReq
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
 	}
 
-	public static PostReviewRequest of(String storeName, String packageName, String title, String textBody, Integer rating) {
+	public static SetReviewRatingRequest of(long reviewId, boolean helpful) {
 		//
 		//  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
 		// .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
 		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
+		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+				Api
 
-				.isMature(), Api.Q, storeName, packageName, title, textBody, rating);
+				.isMature(), Api.Q, reviewId, helpful);
 		return new SetReviewRatingRequest(body, BASE_HOST);
 	}
 
 	@Override
 	protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.postReview(body, true);
+		return interfaces.setReviewRating(body, true);
 	}
 
 	@Data
@@ -52,20 +53,15 @@ public class SetReviewRatingRequest extends V7<BaseV7Response,SetReviewRatingReq
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private String storeName;
-		private String packageName;
-		private String title;
-		private String body;
-		private Integer rating;
+		private long reviewId;
+		private boolean helpful;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, String storeName, String packageName, String title, String body, Integer rating) {
+		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long reviewId, boolean
+				helpful) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
-			this.storeName = storeName;
-			this.packageName = packageName;
-			this.title = title;
-			this.body = body;
-			this.rating = rating;
+			this.reviewId = reviewId;
+			this.helpful = helpful;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -57,7 +57,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements Lifecy
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		realm = Database.get(getContext());
+		realm = Database.get(getActivity());
 
 		return inflater.inflate(getContentViewId(), container, false);
 	}
@@ -87,9 +87,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements Lifecy
 		try {
 			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
-					.class
-					.getName());
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
 		}
 	}
 
@@ -99,9 +97,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements Lifecy
 		try {
 			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
-					.class
-					.getName());
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
 		}
 	}
 
@@ -110,9 +106,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements Lifecy
 		try {
 			((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
-					.class
-					.getName());
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
 		}
 	}
 
@@ -121,9 +115,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements Lifecy
 		try {
 			((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
 		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest
-					.class
-					.getName());
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
 		}
 	}
 }
