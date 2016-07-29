@@ -16,11 +16,14 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 24-05-2016.
@@ -76,6 +79,15 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		if (storedMinimalAd != null) {
 			ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer());
 			DataproviderUtils.AdNetworksUtils.knockCpi(storedMinimalAd);
+			Database.delete(storedMinimalAd, realm);
+		} else {
+			GetAdsRequest.ofSecondInstall(packageName)
+					.observe()
+					.map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+					.observeOn(AndroidSchedulers.mainThread())
+					.doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
+					.onErrorReturn(null)
+					.subscribe();
 		}
 	}
 
