@@ -5,12 +5,12 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
+import cm.aptoide.pt.model.v3.PaymentResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
@@ -48,5 +48,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces,U> {
 		@POST("getApkInfo")
 		@FormUrlEncoded
 		Observable<GetApkInfoJson> getApkInfo(@FieldMap Map<String, String> args, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("checkProductPayment")
+		@FormUrlEncoded
+		Observable<PaymentResponse> checkProductPayment(@FieldMap Map<String, String> args);
 	}
 }

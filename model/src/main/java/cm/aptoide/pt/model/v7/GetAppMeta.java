@@ -42,7 +42,6 @@ public class GetAppMeta extends BaseV7Response {
 		private Urls urls;
 		private Stats stats;
 		private Obb obb;
-		private Pay pay;
 		private GetApkInfoJson.Payment payment;
 	}
 
