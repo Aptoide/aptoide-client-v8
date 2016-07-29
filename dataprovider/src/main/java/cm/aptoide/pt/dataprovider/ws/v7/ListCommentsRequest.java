@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -24,27 +24,36 @@ import rx.Observable;
 /**
  * Created by sithengineer on 20/07/16.
  */
+
+/**
+ * http://ws2.aptoide.com/api/7/listFullComments/info/1
+ * <p>
+ * http://ws2.aptoide.com/api/7/listComments/info/1
+ */
 public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Body> {
 
 	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
-	protected ListCommentsRequest(Body body, String baseHost) {
+	private final boolean getAppInfo;
+
+	protected ListCommentsRequest(Body body, String baseHost, boolean getAppInfo) {
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
+		this.getAppInfo = getAppInfo;
 	}
 
-	public static ListCommentsRequest of(long reviewId, int limit) {
+	public static ListCommentsRequest of(long reviewId, int limit, boolean getAppInfo) {
 		//
-		// http://ws75.aptoide.com/api/7/listComments/review_id/1/limit/2/sort/latest/order/desc/
+		//
 		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
 				.isMature(), Api.Q, limit, reviewId);
-		return new ListCommentsRequest(body, BASE_HOST);
+		return new ListCommentsRequest(body, BASE_HOST, getAppInfo);
 	}
 
 	@Override
 	protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listComments(body, bypassCache);
+		return getAppInfo ? interfaces.listFullComments(body, bypassCache) : interfaces.listComments(body, bypassCache);
 	}
 
 	@Data

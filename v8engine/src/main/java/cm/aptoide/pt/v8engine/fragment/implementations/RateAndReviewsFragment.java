@@ -135,7 +135,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchReviews() {
-		ListReviewsRequest.of(storeName, packageName).execute(listTopReviews -> {
+		ListReviewsRequest.of(storeName, packageName, false).execute(listTopReviews -> {
 			List<Review> reviews = listTopReviews.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();
 			for (final Review review : reviews) {

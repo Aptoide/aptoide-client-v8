@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 27/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.model.v3;
@@ -86,7 +86,7 @@ public class GetApkInfoJson {
 
 	public static class Payment {
 
-		public Number amount;
+		public Double amount;
 
 		@JsonProperty("currency_symbol")
 		public String symbol;
@@ -100,12 +100,12 @@ public class GetApkInfoJson {
 			return status;
 		}
 
-		public static class Metadata {
-			public int id;
-		}
-
 		public Number getAmount() {
 			return amount;
+		}
+
+		public static class Metadata {
+			public int id;
 		}
 	}
 
@@ -114,6 +114,10 @@ public class GetApkInfoJson {
 	 * Created by neuro on 16-02-2015.
 	 */
 	public static class CategoriesJson {
+
+		public String status;
+		public Categories categories;
+		List<Error> errors;
 
 		public String getStatus() {
 			return status;
@@ -139,11 +143,6 @@ public class GetApkInfoJson {
 			this.categories = categories;
 		}
 
-		public String status;
-		List<Error> errors;
-
-		public Categories categories;
-
 		public static class Categories {
 			public List<Category> standard;
 			public List<Category> custom;
@@ -167,6 +166,17 @@ public class GetApkInfoJson {
 
 		public static class Category{
 
+			public Number id;
+			public Number parent;
+			public String name;
+
+			public Category() {
+			}
+
+			public Category(int i) {
+				id = i;
+			}
+
 			public Number getId() {
 				return id;
 			}
@@ -189,17 +199,6 @@ public class GetApkInfoJson {
 
 			public void setName(String name) {
 				this.name = name;
-			}
-
-			public Number id;
-			public Number parent;
-			public String name;
-
-			public Category() {
-			}
-
-			public Category(int i) {
-				id = i;
 			}
 
 			@Override

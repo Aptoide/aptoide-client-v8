@@ -18,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -30,6 +32,7 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
@@ -40,8 +43,10 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
+import cm.aptoide.pt.v8engine.util.PaymentInfo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -133,7 +138,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	public void onViewAttached() {
-
 	}
 
 	@Override
@@ -162,7 +166,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		if (displayable.isPaidApp()) {
 			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
 			actionButton.setText(getContext().getString(R.string.buy) + " (" + displayable.getPayment().symbol + " " + displayable.getPayment().amount + ")");
-			actionButton.setOnClickListener(new Listeners().newBuyListener());
+			actionButton.setOnClickListener(new Listeners().newBuyListener(app, displayable.getPayment()));
 		} else {
 			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
@@ -185,10 +189,30 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//			widgetWeakRef = new WeakReference<>(widget);
 		//		}
 
-		private View.OnClickListener newBuyListener() {
+		private View.OnClickListener newBuyListener(GetAppMeta.App app, GetApkInfoJson.Payment payment) {
 			return v -> {
 				if (!AptoideAccountManager.isLoggedIn()) {
 					AptoideAccountManager.openAccountManager(getContext());
+				}
+				
+				// TODO: 29/07/16 sithengineer process payment, save info offline, send info to server and when server confirms the app purchase delete offline
+				// data
+
+				PaymentInfo paymentInfo = null;
+				switch (payment.symbol) {
+					case "€":
+						paymentInfo = PaymentInfo.inEuros(app.getId(), BigDecimal.valueOf(payment.amount));
+						break;
+
+					case "$":
+						paymentInfo = PaymentInfo.inAmericanDollar(app.getId(), BigDecimal.valueOf(payment.amount));
+						break;
+				}
+
+				if (paymentInfo != null) {
+					((Payments) ((FragmentShower) getContext()).getLastV4()).buyApp(paymentInfo);
+				} else {
+					throw new IllegalStateException("Unable to buy application due to missing logic to handle payment information");
 				}
 			};
 		}

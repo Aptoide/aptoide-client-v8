@@ -14,6 +14,14 @@
     android:paddingTop="15dp"
     >
 
+    <ProgressBar
+        android:id="@+id/top_reviews_progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        />
+
     <RelativeLayout
         android:id="@+id/rating_layout"
         android:layout_width="wrap_content"
@@ -23,6 +31,7 @@
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
         android:orientation="vertical"
+        android:visibility="invisible"
         >
 
         <Button
@@ -117,6 +126,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toEndOf="@id/rating_layout"
         android:layout_toRightOf="@id/rating_layout"
+        android:visibility="invisible"
         >
 
         <Button
@@ -154,14 +164,6 @@
             android:layout_below="@id/top_comments_title"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="4dp">
-
-            <ProgressBar
-                android:id="@+id/top_reviews_progress_bar"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:indeterminate="true"
-                />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/top_comments_pager"

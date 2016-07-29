@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 29/07/2016.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="left|center_vertical"
+        android:textColor="?colorPrimary"
+        android:textSize="@dimen/text_size_large"
+        tools:text="Boom Beach"
+        />
+
+    <include
+        layout="@layout/separator_horizontal"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        >
+
+        <EditText
+            android:id="@+id/input_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="none"
+            android:gravity="top|left|start"
+            android:hint="@string/write_your_comment"
+            android:lines="4"
+            android:textAlignment="textStart"
+            android:textColorHint="@color/app_view_gray"
+            android:textSize="@dimen/text_size_medium"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>
+

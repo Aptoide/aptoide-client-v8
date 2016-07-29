@@ -39,13 +39,13 @@ public class SetReviewRatingRequest extends V7<BaseV7Response,SetReviewRatingReq
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
 				Api
 
-				.isMature(), Api.Q, reviewId, helpful);
+						.isMature(), Api.Q, reviewId, helpful ? "up" : "down");
 		return new SetReviewRatingRequest(body, BASE_HOST);
 	}
 
 	@Override
 	protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.setReviewRating(body, true);
+		return interfaces.setReviewVote(body, true);
 	}
 
 	@Data
@@ -53,15 +53,14 @@ public class SetReviewRatingRequest extends V7<BaseV7Response,SetReviewRatingReq
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private long reviewId;
-		private boolean helpful;
+		private long review_id;
+		private String vote;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long reviewId, boolean
-				helpful) {
+		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long reviewId, String vote) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
-			this.reviewId = reviewId;
-			this.helpful = helpful;
+			this.review_id = reviewId;
+			this.vote = vote;
 		}
 	}
 }

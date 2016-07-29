@@ -5,22 +5,31 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
@@ -35,6 +44,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 	private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
+	private static final Locale LOCALE = Locale.getDefault();
 
 	private TextView reply;
 	private TextView showHideReplies;
@@ -88,7 +98,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		reviewDate.setText(DATE_FORMAT.format(review.getAdded()));
 
 		reply.setOnClickListener(v -> {
-			showCommentPopup(review.getId());
+			showCommentPopup(review.getId(), ""); // FIXME get app name from review
 		});
 
 		flagHelfull.setOnClickListener(v -> {
@@ -114,8 +124,54 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		}
 	}
 
-	private void showCommentPopup(long reviewId) {
-		ShowMessage.asSnack(flagHelfull, "TO DO: write reply");
+	private void showCommentPopup(long reviewId, String appName) {
+		final Context ctx = getContext();
+		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_comment_on_review, null);
+
+		final TextView titleTextView = (TextView) view.findViewById(R.id.title);
+		final EditText inputEditText = (EditText) view.findViewById(R.id.input_text);
+
+		titleTextView.setText(appName);
+
+		// build rating dialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
+		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
+			if (which == DialogInterface.BUTTON_POSITIVE) {
+
+				final String commentOnReviewText = inputEditText.getText().toString();
+
+				PostCommentRequest.of(reviewId, commentOnReviewText).execute(response -> {
+
+					if (response.getError() != null) {
+						Logger.e(TAG, response.getError().toString());
+						return;
+					}
+
+					List<BaseV7Response.Error> errors = response.getErrors();
+					if (errors != null && !errors.isEmpty()) {
+						for (final BaseV7Response.Error error : errors) {
+							Logger.e(TAG, error.toString());
+						}
+						return;
+					}
+
+					ManagerPreferences.setForceServerRefreshFlag(true);
+					Logger.d(TAG, "comment to review added");
+				}, e -> {
+					Logger.e(TAG, e);
+				});
+
+				ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
+			} else if (which == DialogInterface.BUTTON_NEGATIVE) {
+				// do nothing.
+			}
+			dialog.dismiss();
+		};
+		builder.setPositiveButton(R.string.comment, clickListener);
+		builder.setCancelable(true).setNegativeButton(R.string.cancel, clickListener);
+
+		// create and show rating dialog
+		builder.create().show();
 	}
 
 	private void loadCommentsForThisReview(long reviewId) {
@@ -126,8 +182,31 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		flagHelfull.setClickable(false);
 		flagNotHelfull.setClickable(false);
 
+		flagHelfull.setVisibility(View.INVISIBLE);
+		flagNotHelfull.setVisibility(View.INVISIBLE);
+
 		if (AptoideAccountManager.isLoggedIn()) {
 			SetReviewRatingRequest.of(reviewId, positive).execute(response -> {
+				if (response == null) {
+					Logger.e(TAG, "empty response");
+					return;
+				}
+
+				if (response.getError() != null) {
+					Logger.e(TAG, response.getError().getDescription());
+					return;
+				}
+
+				List<BaseV7Response.Error> errorList = response.getErrors();
+				if (errorList != null && !errorList.isEmpty()) {
+					for (final BaseV7Response.Error error : errorList) {
+						Logger.e(TAG, error.getDescription());
+					}
+					return;
+				}
+
+				// success
+				Logger.d(TAG, String.format("review %d was marked as %s", reviewId, positive ? "positive" : "negative"));
 
 			}, err -> {
 				Logger.e(TAG, err);

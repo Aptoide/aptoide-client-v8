@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -26,7 +28,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.paypal.android.sdk.payments.ProofOfPayment;
 import com.trello.rxlifecycle.FragmentEvent;
+
+import org.json.JSONException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -47,16 +57,18 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
+import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
-import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.AppUtils;
+import cm.aptoide.pt.v8engine.util.PaymentInfo;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -81,15 +93,20 @@ import rx.functions.Action0;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment implements Scrollable, AppMenuOptions {
+public class AppViewFragment extends GridRecyclerFragment implements Scrollable, AppMenuOptions, Payments {
 
 	public static final int VIEW_ID = R.layout.fragment_app_view;
-
 	//
 	// constants
 	//
 	private static final String TAG = AppViewFragment.class.getSimpleName();
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
+	private static final int PAY_APP_REQUEST_CODE = 12;
+	private static PayPalConfiguration config = new PayPalConfiguration()
+			// Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
+			// or live (ENVIRONMENT_PRODUCTION)
+			.environment(BuildConfig.DEBUG ? PayPalConfiguration.ENVIRONMENT_NO_NETWORK : PayPalConfiguration.ENVIRONMENT_PRODUCTION)
+			.clientId("<YOUR_CLIENT_ID>");
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -154,6 +171,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				new DownloadInstallationProvider(downloadManager));
 		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
 		adRepository = new AdRepository();
+
+		Context context = getContext();
+		Intent intent = new Intent(context, PayPalService.class);
+		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+		context.startService(intent);
 	}
 
 	@Override
@@ -196,6 +218,102 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		displayables.add(new AppViewDeveloperDisplayable(getApp));
 
 		setDisplayables(displayables);
+	}
+
+	public void buyApp(PaymentInfo paymentInfo) {
+		PayPalPayment payment = new PayPalPayment(paymentInfo.getValue(), paymentInfo.getThreeLetterName(), Long.toString(paymentInfo.getAppId()),
+				PayPalPayment.PAYMENT_INTENT_SALE);
+
+		Intent intent = new Intent(getContext(), PaymentActivity.class);
+		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+		startActivityForResult(intent, PAY_APP_REQUEST_CODE);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == PAY_APP_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+				PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+				if (confirm != null) {
+					try {
+						Logger.i(TAG, confirm.toJSONObject().toString(4));
+
+						// TODO: 29/07/16 sithengineer
+						// send 'confirm' to the server
+
+						ProofOfPayment proof = confirm.getProofOfPayment();
+
+						//						CheckProductPaymentRequest.ofPayPal(
+						//								confirm.getProofOfPayment().getPaymentId(),
+						//								confirm.getEnvironment(),
+						//								confirm.describeContents(),
+						//								??,
+						//								??,
+						//								??,
+						//								??,
+						//								??,
+						//								??
+						//						).execute(paymentResponse -> {
+						//							// TODO: 29/07/16 sithengineer
+						//
+						//						},
+						//						err ->{
+						//							Logger.e(TAG, err.getCause());
+						//						}, true);
+
+					} catch (JSONException e) {
+						Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
+					}
+				}
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Logger.i(TAG, "The user canceled.");
+			} else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+				Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+			}
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_appview_fragment, menu);
+		SearchUtils.setupGlobalSearchView(menu, getActivity());
+		uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int i = item.getItemId();
+
+		if (i == android.R.id.home) {
+
+			getActivity().onBackPressed();
+			return true;
+		} else if (i == R.id.menu_share) {
+
+			ShowMessage.asSnack(item.getActionView(), "TO DO");
+			// TODO: 19/07/16 sithengineer
+			return true;
+		} else if (i == R.id.menu_schedule) {
+
+			@Cleanup
+			Realm realm = Database.get();
+			realm.beginTransaction();
+			realm.copyToRealmOrUpdate(scheduled);
+			realm.commitTransaction();
+
+			String str = this.getString(R.string.added_to_scheduled);
+			ShowMessage.asSnack(this.getView(), str);
+			return true;
+		} else if (i == R.id.menu_uninstall && unInstallAction != null) {
+			unInstallAction.call();
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -280,50 +398,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	@Override
-	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_appview_fragment, menu);
-		SearchUtils.setupGlobalSearchView(menu, getActivity());
-		uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int i = item.getItemId();
-
-		if (i == android.R.id.home) {
-
-			getActivity().onBackPressed();
-			return true;
-		} else if (i == R.id.menu_share) {
-
-			ShowMessage.asSnack(item.getActionView(), "TO DO");
-			// TODO: 19/07/16 sithengineer
-			return true;
-		} else if (i == R.id.menu_schedule) {
-
-			@Cleanup
-			Realm realm = Database.get();
-			realm.beginTransaction();
-			realm.copyToRealmOrUpdate(scheduled);
-			realm.commitTransaction();
-
-			String str = this.getString(R.string.added_to_scheduled);
-			ShowMessage.asSnack(this.getView(), str);
-			return true;
-		} else if (i == R.id.menu_uninstall && unInstallAction != null) {
-			unInstallAction.call();
-			return true;
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
-
-	//
-	// Scrollable interface
-	//
-
-	@Override
 	public void scroll(Position position) {
 		RecyclerView rView = getRecyclerView();
 		if (rView == null || getAdapter().getItemCount() == 0) {
@@ -337,6 +411,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			rView.smoothScrollToPosition(getAdapter().getItemCount());
 		}
 	}
+
+	//
+	// Scrollable interface
+	//
 
 	@Override
 	public void itemAdded(int pos) {
@@ -353,10 +431,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
-	//
-	// micro widget for header
-	//
-
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -365,6 +439,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			header.getAppBarLayout().setExpanded(isExpanded);
 		}
 	}
+
+	//
+	// micro widget for header
+	//
 
 	@Override
 	public void onPause() {
@@ -375,6 +453,13 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
 					.getVisibility() == View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void onDestroy() {
+		Context context = getContext();
+		context.stopService(new Intent(context, PayPalService.class));
+		super.onDestroy();
 	}
 
 	@Override

@@ -1,13 +1,19 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 07/06/2016.
+  ~ Modified by SithEngineer on 29/07/2016.
   -->
 
 <manifest package="cm.aptoide.pt.v8engine"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        tools:overrideLibrary="com.paypal.android.sdk.payments"
+        />
 
     <application
         android:allowBackup="true"

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -24,6 +24,12 @@ import rx.Observable;
 /**
  * Created by neuro on 04-07-2016.
  */
+
+/**
+ * http://ws2.aptoide.com/api/7/listFullReviews/info/1
+ * <p>
+ * http://ws2.aptoide.com/api/7/listReviews/info/1
+ */
 public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> {
 
 	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
@@ -31,40 +37,55 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 	private static final int MAX_REVIEWS = 10;
 	private static final int MAX_COMMENTS = 10;
 
-	protected ListReviewsRequest(Body body, String baseHost) {
+	private final boolean getAppInfo;
+
+	protected ListReviewsRequest(Body body, String baseHost, boolean getAppInfo) {
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
+		this.getAppInfo = getAppInfo;
 	}
 
-	public static ListReviewsRequest of(String storeName, String packageName) {
-		return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
+	public static ListReviewsRequest of(String storeName, String packageName, boolean getAppInfo) {
+		return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, getAppInfo);
 	}
 
-	public static ListReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
-		//
-		// http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
-		//
+	/**
+	 * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
+	 *
+	 * @param storeName
+	 * @param packageName
+	 * @param maxReviews
+	 * @param maxComments
+	 *
+	 * @return
+	 */
+	public static ListReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments, boolean getAppInfo) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
 				Api
 
 				.isMature(), Api.Q, storeName, packageName, maxReviews, maxComments);
-		return new ListReviewsRequest(body, BASE_HOST);
+		return new ListReviewsRequest(body, BASE_HOST, getAppInfo);
 	}
 
-	public static ListReviewsRequest ofTopReviews(String storeName, String packageName, int maxReviews) {
-		//
-		// http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
-		//
+	/**
+	 * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
+	 *
+	 * @param storeName
+	 * @param packageName
+	 * @param maxReviews
+	 *
+	 * @return
+	 */
+	public static ListReviewsRequest ofTopReviews(String storeName, String packageName, int maxReviews, boolean getAppInfo) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api
-				.isMature(), Api.Q, storeName, packageName, maxReviews, 0);
-		return new ListReviewsRequest(body, BASE_HOST);
+				Api.isMature(), Api.Q, storeName, packageName, maxReviews, 0);
+		return new ListReviewsRequest(body, BASE_HOST, getAppInfo);
 	}
 
 	@Override
 	protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listReviews(body, bypassCache);
+		return getAppInfo ? interfaces.listFullReviews(body, bypassCache) : interfaces.listReviews(body, bypassCache);
 	}
 
 	@Data

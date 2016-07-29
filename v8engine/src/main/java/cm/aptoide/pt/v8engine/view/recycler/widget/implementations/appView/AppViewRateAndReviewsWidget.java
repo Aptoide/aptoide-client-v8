@@ -212,7 +212,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	}
 
 	public void loadTopReviews(String storeName, String packageName) {
-		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
+		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, false).execute(listReviews -> {
 
 			topReviewsProgressBar.setVisibility(View.GONE);
 
@@ -225,10 +225,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 						return;
 					}
 
-			//					ratingLayout.setVisibility(View.VISIBLE);
-			//					commentsLayout.setVisibility(View.VISIBLE);
-
 			commentsLayout.setVisibility(View.VISIBLE);
+			ratingLayout.setVisibility(View.VISIBLE);
 			emptyReviewsLayout.setVisibility(View.GONE);
 			topReviewsProgressBar.setVisibility(View.GONE);
 			topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), listReviews.getDatalist().getList()));

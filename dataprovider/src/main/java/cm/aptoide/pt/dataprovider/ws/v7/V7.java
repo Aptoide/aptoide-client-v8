@@ -173,8 +173,14 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("listReviews")
 		Observable<ListReviews> listReviews(@Body ListReviewsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
+		@POST("listFullReviews")
+		Observable<ListReviews> listFullReviews(@Body ListReviewsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
 		@POST("listComments")
 		Observable<ListComments> listComments(@Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listFullComments")
+		Observable<ListComments> listFullComments(@Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("setReview")
 		Observable<BaseV7Response> postReview(@Body PostReviewRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -182,7 +188,7 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("setComment")
 		Observable<BaseV7Response> postComment(@Body PostCommentRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("setReviewRating")
-		Observable<BaseV7Response> setReviewRating(@Body SetReviewRatingRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		@POST("setReviewVote")
+		Observable<BaseV7Response> setReviewVote(@Body SetReviewRatingRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }
