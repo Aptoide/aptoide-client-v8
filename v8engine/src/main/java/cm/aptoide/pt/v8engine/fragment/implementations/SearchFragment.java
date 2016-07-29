@@ -39,7 +39,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	transient private boolean shouldFinishLoading = false;
 	// Views
 	private Button subscribedButton;
-	private View everywhereButton;
+	private Button everywhereButton;
 	private View noSearchLayout;
 	private EditText noSearchLayoutSearchQuery;
 	private ImageView noSearchLayoutSearchButton;
@@ -71,7 +71,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		super.bindViews(view);
 
 		subscribedButton = (Button) view.findViewById(R.id.subscribed);
-		everywhereButton = view.findViewById(R.id.everywhere);
+		everywhereButton = (Button) view.findViewById(R.id.everywhere);
 		noSearchLayout = view.findViewById(R.id.no_search_results_layout);
 		noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
 		noSearchLayoutSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
@@ -81,6 +81,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 	@Override
 	protected void setupViewPager() {
+		mViewPager.setPagingEnabled(false);
+
 		if (hasSubscribedResults || hasEverywhereResults) {
 			super.setupViewPager();
 		} else {
@@ -188,11 +190,25 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 	private void setupButtonsListeners() {
 		if (hasSubscribedResults) {
-			subscribedButton.setOnClickListener(v -> mViewPager.setCurrentItem(0));
+			subscribedButton.setOnClickListener(v -> {
+				mViewPager.setCurrentItem(0);
+				subscribedButton.setBackgroundResource(R.drawable.search_button_background);
+				subscribedButton.setTextColor(getResources().getColor(R.color.white));
+
+				everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+				everywhereButton.setBackgroundResource(0);
+			});
 		}
 
 		if (hasEverywhereResults) {
-			everywhereButton.setOnClickListener(v -> mViewPager.setCurrentItem(1));
+			everywhereButton.setOnClickListener(v -> {
+				mViewPager.setCurrentItem(1);
+				everywhereButton.setBackgroundResource(R.drawable.search_button_background);
+				everywhereButton.setTextColor(getResources().getColor(R.color.white));
+
+				subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+				subscribedButton.setBackgroundResource(0);
+			});
 		}
 	}
 
