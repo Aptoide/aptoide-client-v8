@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import io.realm.RealmObject;
@@ -29,14 +30,17 @@ public class MinimalAd extends RealmObject implements Parcelable {
 		}
 	};
 
-	@Getter private final String packageName;
-	@Getter private final long networkId;
-	@Getter private final String clickUrl;
-	@Getter private final String cpcUrl;
-	@Getter private final String cpdUrl;
-	@Getter private final long appId;
-	@Getter private final long adId;
+	@Getter private String packageName;
+	@Getter private long networkId;
+	@Getter private String clickUrl;
+	@Getter private String cpcUrl;
+	@Getter private String cpdUrl;
+	@Getter private long appId;
+	@Getter private long adId;
 	@Getter private String cpiUrl;
+
+	public MinimalAd() {
+	}
 
 	public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl, String cpdUrl, long appId, long adId, String cpiUrl) {
 		this.packageName = packageName;
@@ -59,7 +63,7 @@ public class MinimalAd extends RealmObject implements Parcelable {
 		adId = in.readLong();
 	}
 
-	public static MinimalAd from(GetAdsResponse.Ad ad) {
+	public static MinimalAd from(@NonNull GetAdsResponse.Ad ad) {
 		return new MinimalAd(ad.getData().getPackageName(), ad.getPartner().getInfo().getId(), ad.getPartner().getData().getClickUrl(), ad.getInfo()
 				.getCpcUrl(), ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(), ad.getInfo().getCpiUrl());
 	}

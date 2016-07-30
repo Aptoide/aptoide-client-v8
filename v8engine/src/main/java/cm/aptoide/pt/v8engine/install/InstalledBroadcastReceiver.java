@@ -85,8 +85,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 					.observe()
 					.map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
 					.observeOn(AndroidSchedulers.mainThread())
-					.doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
-					.onErrorReturn(null)
+					.doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true)).onErrorReturn(throwable1 -> new MinimalAd())
 					.subscribe();
 		}
 	}
