@@ -10,7 +10,7 @@ import android.view.MotionEvent;
  */
 public class AptoideViewPager extends ViewPager {
 
-	private boolean enabled;
+	private boolean enabled = true;
 
 	public AptoideViewPager(Context context) {
 		super(context);
