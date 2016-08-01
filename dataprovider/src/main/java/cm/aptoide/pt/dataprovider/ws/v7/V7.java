@@ -71,7 +71,8 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 	private Observable<U> retryOnTicket(Observable<U> observable) {
 		return observable.subscribeOn(Schedulers.io()).flatMap(t -> {
-			if (((BaseV7Response) t).getInfo().getStatus().equals(BaseV7Response.Info.Status.QUEUED)) {
+			// FIXME: 01-08-2016 damn jackson parsing black magic error :/
+			if (((BaseV7Response) t).getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(((BaseV7Response) t).getInfo().getStatus())) {
 				return Observable.error(new ToRetryThrowable());
 			} else {
 				return Observable.just(t);
