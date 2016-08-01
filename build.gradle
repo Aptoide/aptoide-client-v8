@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 30/06/2016.
+ * Modified by SithEngineer on 01/08/2016.
  */
 
 buildscript {
@@ -119,4 +119,6 @@ ext {
 
     // rounded image lib
     ROUNDED_IMG_LIB = '2.2.1'
+
+    PAYPAL_SDK = '2.14.4'
 }

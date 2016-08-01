@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 01/08/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -160,5 +160,5 @@ dependencies {
     compile "com.makeramen:roundedimageview:${ROUNDED_IMG_LIB}"
 
     // paypal SDK
-    compile 'com.paypal.sdk:paypal-android-sdk:2.14.4'
+    compile "com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}"
 }

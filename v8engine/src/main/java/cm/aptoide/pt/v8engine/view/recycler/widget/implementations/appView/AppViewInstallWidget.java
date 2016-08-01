@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -162,10 +162,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void setupInstallButton(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 
+		GetApkInfoJson.Payment payment = displayable.getPayment();
 		//check if the app is payed
-		if (displayable.isPaidApp()) {
+		if (payment != null && payment.isPaidApp()) {
 			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
-			actionButton.setText(getContext().getString(R.string.buy) + " (" + displayable.getPayment().symbol + " " + displayable.getPayment().amount + ")");
+			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.symbol + " " + payment.amount + ")");
 			actionButton.setOnClickListener(new Listeners().newBuyListener(app, displayable.getPayment()));
 		} else {
 			actionButton.setText(R.string.install);

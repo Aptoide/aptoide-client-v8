@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -102,11 +102,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private static final String TAG = AppViewFragment.class.getSimpleName();
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
 	private static final int PAY_APP_REQUEST_CODE = 12;
+
+	private static final String CONFIG_ENVIRONMENT = BuildConfig.DEBUG ? PayPalConfiguration.ENVIRONMENT_SANDBOX : PayPalConfiguration.ENVIRONMENT_PRODUCTION;
+	private static final String CONFIG_CLIENT_ID = BuildConfig.DEBUG ? "AQ7o2RBHX3UxiM3xhHccETYWVVLLU0nD7GXxsmQg2MhRajAZztqHeidrPgqr" :
+			"AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
 	private static PayPalConfiguration config = new PayPalConfiguration()
 			// Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
 			// or live (ENVIRONMENT_PRODUCTION)
-			.environment(BuildConfig.DEBUG ? PayPalConfiguration.ENVIRONMENT_NO_NETWORK : PayPalConfiguration.ENVIRONMENT_PRODUCTION)
-			.clientId("<YOUR_CLIENT_ID>");
+			.environment(CONFIG_ENVIRONMENT).clientId(CONFIG_CLIENT_ID);
+
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -289,16 +293,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		int i = item.getItemId();
 
 		if (i == android.R.id.home) {
-
 			getActivity().onBackPressed();
 			return true;
 		} else if (i == R.id.menu_share) {
 
-			ShowMessage.asSnack(item.getActionView(), "TO DO");
+			ShowMessage.asSnack(this.getView(), "TO DO");
 			// TODO: 19/07/16 sithengineer
+
 			return true;
 		} else if (i == R.id.menu_schedule) {
-
 			@Cleanup
 			Realm realm = Database.get();
 			realm.beginTransaction();

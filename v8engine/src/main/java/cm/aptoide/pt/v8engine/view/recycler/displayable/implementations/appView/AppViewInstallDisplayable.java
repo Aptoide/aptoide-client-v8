@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -42,10 +42,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		this.storeName = getApp.getNodes().getMeta().getData().getStore().getName();
 		this.payment = getApp.getNodes().getMeta().getData().getPayment();
 		this.minimalAd = ad;
-	}
-
-	public boolean isPaidApp() {
-		return !payment.amount.equals(0);
 	}
 
 	public boolean shouldCharge() {
