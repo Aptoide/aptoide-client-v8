@@ -66,6 +66,10 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 		}
 	}
 
+	public Event.Name getEventName(int position) {
+		return tabs.get(position).getEvent().getName();
+	}
+
 	private Fragment caseAPI(GetStoreTabs.Tab tab) {
 		Event event = tab.getEvent();
 		switch (event.getName()) {

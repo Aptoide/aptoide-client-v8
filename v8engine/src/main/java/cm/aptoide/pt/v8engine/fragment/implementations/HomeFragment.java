@@ -23,9 +23,11 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
@@ -144,7 +146,14 @@ public class HomeFragment extends StoreFragment {
 	protected void setupViewPager() {
 		super.setupViewPager();
 
-		updatesBadge = new BadgeView(getContext(), ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
+		StorePagerAdapter adapter = (StorePagerAdapter) mViewPager.getAdapter();
+		int count = adapter.getCount();
+		for (int i = 0 ; i < count ; i++) {
+			if (Event.Name.myUpdates.equals(adapter.getEventName(i))) {
+				updatesBadge = new BadgeView(getContext(), ((LinearLayout) pagerSlidingTabStrip.getChildAt(0)).getChildAt(i));
+				break;
+			}
+		}
 
 		Database.UpdatesQ.getAll(realm, false).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(updates -> {
 			refreshUpdatesBadge(updates.size());
@@ -173,6 +182,11 @@ public class HomeFragment extends StoreFragment {
 	}
 
 	public void refreshUpdatesBadge(int num) {
+		// No updates present
+		if (updatesBadge == null) {
+			return;
+		}
+
 		updatesBadge.setTextSize(11);
 
 		if (num > 0) {
