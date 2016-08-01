@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -28,6 +29,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
@@ -35,7 +37,7 @@ import cm.aptoide.pt.v8engine.view.BadgeView;
 /**
  * Created by neuro on 09-05-2016.
  */
-public class HomeFragment extends StoreFragment {
+public class HomeFragment extends StoreFragment implements DrawerFragment {
 
 	public static final String APTOIDE_FACEBOOK_LINK = "http://www.facebook.com/aptoide";
 	public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
@@ -199,5 +201,20 @@ public class HomeFragment extends StoreFragment {
 				updatesBadge.hide(true);
 			}
 		}
+	}
+
+	@Override
+	public boolean isDrawerOpened() {
+		return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
+	}
+
+	@Override
+	public void openDrawer() {
+		mDrawerLayout.openDrawer(Gravity.LEFT);
+	}
+
+	@Override
+	public void closeDrawer() {
+		mDrawerLayout.closeDrawers();
 	}
 }
