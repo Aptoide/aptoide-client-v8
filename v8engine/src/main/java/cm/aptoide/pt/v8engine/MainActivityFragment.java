@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,6 +20,7 @@ import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -53,7 +55,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	@Override
-	public void pushFragment(android.app.Fragment fragment) {
+	public void pushFragment(Fragment fragment) {
 		FragmentUtils.replaceFragment(this, fragment);
 	}
 
@@ -71,7 +73,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		return FragmentUtils.getFirstFragmentV4(this);
 	}
 
-	public android.app.Fragment getCurrent() {
+	public Fragment getCurrent() {
 		return FragmentUtils.getFirstFragment(this);
 	}
 
@@ -79,7 +81,24 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		return FragmentUtils.getLastFragmentV4(this);
 	}
 
-	public android.app.Fragment getLast() {
+	public Fragment getLast() {
 		return FragmentUtils.getLastFragment(this);
+	}
+
+	@Override
+	public void onBackPressed() {
+
+		// A little hammered to close the drawer on back pressed :)
+		if (getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getFragments().size() - 1) instanceof DrawerFragment) {
+			DrawerFragment fragment = (DrawerFragment) getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getFragments().size() - 1);
+			if (fragment.isDrawerOpened()) {
+				fragment.closeDrawer();
+				return;
+			} else {
+				super.onBackPressed();
+			}
+		}
+
+		super.onBackPressed();
 	}
 }

@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
+import android.content.pm.PackageInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedList;
@@ -55,9 +57,22 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
-				getInstalledApksDataWithoutExcluded(), StoreUtils
+				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, getInstalledApks(), StoreUtils
 				.getSubscribedStoresIds()), BASE_HOST);
+	}
+
+	private static List<ApksData> getInstalledApks() {
+		// TODO: 01-08-2016 neuro benchmark this, looks heavy
+		List<PackageInfo> allInstalledApps = AptoideUtils.SystemU.getAllInstalledApps();
+		LinkedList<ApksData> apksDatas = new LinkedList<>();
+
+		for (PackageInfo packageInfo : allInstalledApps) {
+			apksDatas.add(new ApksData(packageInfo.packageName, packageInfo.versionCode, AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo
+					.signatures[0].toByteArray())));
+		}
+
+		return apksDatas;
+
 	}
 
 	private static List<ApksData> getInstalledApksDataWithoutExcluded() {
