@@ -1,67 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 01/08/2016.
+  -->
+
 <RelativeLayout
+    android:id="@+id/partial_social_timeline_thumbnail"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/partial_social_timeline_thumbnail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true">
 
+    <!--
+        android:layout_width="120dp"
+    -->
     <ImageView
         android:id="@+id/partial_social_timeline_thumbnail_image"
-        android:layout_width="120dp"
+        android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="12dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginLeft="72dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginStart="22dp"
         android:layout_marginTop="12dp"
         android:scaleType="centerCrop"
         tools:ignore="contentDescription"
-        tools:src="@drawable/icon_brand_aptoide"/>
+        tools:src="@drawable/icon_brand_aptoide"
+        />
 
+    <!--
+        android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
+        android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
+        android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
+    -->
     <TextView
         android:id="@+id/partial_social_timeline_thumbnail_title"
         style="@style/Widget.Aptoide.Card.Thumbnail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
-        android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
+        android:layout_below="@id/partial_social_timeline_thumbnail_image"
+        android:layout_marginEnd="22dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginStart="22dp"
         android:ellipsize="end"
         android:lines="4"
-        tools:text="Best backup apps: save all your Android's innards"/>
+        tools:text="Best backup apps: save all your Android's innards"
+        />
 
     <View
         android:id="@+id/partial_social_timeline_thumbnail_divider"
-        android:layout_below="@id/partial_social_timeline_thumbnail_image"
-        android:layout_marginLeft="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginStart="12dp"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:background="@color/timeline_separator"/>
+        android:layout_below="@id/partial_social_timeline_thumbnail_title"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginStart="12dp"
+        android:background="@color/timeline_separator"
+        android:visibility="gone"
+        />
 
     <Button
-        android:layout_below="@id/partial_social_timeline_thumbnail_divider"
         android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
         style="@style/Widget.Aptoide.Card.Button"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:layout_below="@id/partial_social_timeline_thumbnail_divider"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginLeft="96dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="96dp"
-        android:layout_marginLeft="96dp"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
-        tools:text="Get app Game of War"/>
+        android:visibility="gone"
+        tools:text="Get app Game of War"
+        tools:visibility="visible"
+        />
 </RelativeLayout>
 
 

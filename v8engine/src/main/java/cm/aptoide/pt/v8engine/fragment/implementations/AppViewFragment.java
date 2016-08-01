@@ -104,8 +104,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private static final int PAY_APP_REQUEST_CODE = 12;
 
 	private static final String CONFIG_ENVIRONMENT = BuildConfig.DEBUG ? PayPalConfiguration.ENVIRONMENT_SANDBOX : PayPalConfiguration.ENVIRONMENT_PRODUCTION;
-	private static final String CONFIG_CLIENT_ID = BuildConfig.DEBUG ? "AQ7o2RBHX3UxiM3xhHccETYWVVLLU0nD7GXxsmQg2MhRajAZztqHeidrPgqr" :
+
+	private static final String CONFIG_CLIENT_ID = BuildConfig.DEBUG ? "ARhHzhAH_B_6_9ggd97pIHNduraLFU9jf7Wzw06QMyEj2pRotOf8vw3PM0Ls" :
 			"AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
+
 	private static PayPalConfiguration config = new PayPalConfiguration()
 			// Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
 			// or live (ENVIRONMENT_PRODUCTION)
@@ -272,8 +274,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				}
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Logger.i(TAG, "The user canceled.");
+				ShowMessage.asSnack(header.badge, R.string.user_canceled);
+
 			} else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
 				Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+				ShowMessage.asSnack(header.badge, R.string.unknown_error);
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);

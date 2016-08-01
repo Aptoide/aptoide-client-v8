@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
@@ -46,6 +46,7 @@ public class AppUpdateDisplayable extends Displayable {
 	private DownloadServiceHelper downloadManager;
 	private InstallManager installManager;
 	private DateCalculator dateCalculator;
+	private long appId;
 
 	public AppUpdateDisplayable() {
 	}
@@ -53,8 +54,8 @@ public class AppUpdateDisplayable extends Displayable {
 	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
 	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
 		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
-				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(),
-				downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator);
+				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory
+				.create(appUpdate), downloadManager, installManager, dateCalculator, appUpdate.getId());
 	}
 
 	public Observable<Boolean> isInstalled() {
@@ -121,6 +122,10 @@ public class AppUpdateDisplayable extends Displayable {
 	@Override
 	public int getViewLayout() {
 		return R.layout.displayable_social_timeline_app_update;
+	}
+
+	public long getAppId() {
+		return appId;
 	}
 
 }

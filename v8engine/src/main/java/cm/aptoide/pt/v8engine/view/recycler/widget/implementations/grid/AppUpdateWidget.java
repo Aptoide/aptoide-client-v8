@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -17,6 +17,7 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
@@ -89,6 +90,10 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 					.flatMap(completedToPause())
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(status -> updateDownloadStatus(displayable, status), throwable -> showDownloadError(displayable, throwable)));
+
+			subscriptions.add(RxView.clicks(appIcon).subscribe(click -> {
+				((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId()));
+			}));
 
 			subscriptions.add(RxView.clicks(updateButton).flatMap(click -> displayable.downloadStatus().first().flatMap(status -> {
 				if (status == Download.COMPLETED) {
