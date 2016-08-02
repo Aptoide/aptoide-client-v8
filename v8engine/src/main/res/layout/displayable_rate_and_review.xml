@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 02/08/2016.
   -->
 
 <RelativeLayout
@@ -46,7 +46,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/user_icon"
         android:layout_marginRight="15.7dp"
-        android:drawableLeft="@drawable/ic_reply_white_18dp"
+        android:drawableLeft="@drawable/ic_reply"
         android:drawablePadding="5.7dp"
         android:drawableTint="#757575"
         android:gravity="center"
