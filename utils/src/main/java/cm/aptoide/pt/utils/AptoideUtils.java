@@ -22,7 +22,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.DrawableRes;
@@ -177,7 +176,7 @@ public class AptoideUtils {
 		}
 
 		public static String computeSha1WithColon(byte[] bytes) {
-			return convToHexWithColon(computeSha1(bytes));
+			return convToHexWithColon(computeSha1(bytes)).toUpperCase(Locale.ENGLISH);
 		}
 
 		private static String convToHexWithColon(byte[] data) {

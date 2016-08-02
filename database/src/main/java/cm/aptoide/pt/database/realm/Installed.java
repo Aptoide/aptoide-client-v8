@@ -9,8 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import java.util.Locale;
-
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -44,8 +42,7 @@ public class Installed extends RealmObject {
 		setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
 		setName(AptoideUtils.SystemU.getApkLabel(packageInfo));
 		setPackageName(packageInfo.packageName);
-		setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray())
-				.toUpperCase(Locale.ENGLISH));
+		setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
 		setVersionCode(packageInfo.versionCode);
 		setVersionName(packageInfo.versionName);
 	}
