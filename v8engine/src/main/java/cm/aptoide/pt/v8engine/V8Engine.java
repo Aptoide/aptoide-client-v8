@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.Collections;
@@ -141,9 +140,9 @@ public abstract class V8Engine extends DataProvider {
 			Logger.w(TAG, "application has debug flag active");
 		}
 
-		if (BuildConfig.DEBUG) {
-			Stetho.initializeWithDefaults(this);
-		}
+		//		if (BuildConfig.DEBUG) {
+		//			Stetho.initializeWithDefaults(this);
+		//		}
 
 		setupCrashlytics();
 

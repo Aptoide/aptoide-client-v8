@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -135,8 +135,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchReviews() {
-		ListReviewsRequest.of(storeName, packageName, false).execute(listTopReviews -> {
-			List<Review> reviews = listTopReviews.getDatalist().getList();
+		ListReviewsRequest.of(storeName, packageName).execute(reviewsResponse -> {
+			List<Review> reviews = reviewsResponse.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();
 			for (final Review review : reviews) {
 				displayables.add(new RateAndReviewCommentDisplayable(review));

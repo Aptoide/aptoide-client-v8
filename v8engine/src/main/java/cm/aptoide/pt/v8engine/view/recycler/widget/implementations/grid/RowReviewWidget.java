@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 26/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -14,8 +13,8 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -55,21 +54,22 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 	@Override
 	public void bindView(RowReviewDisplayable displayable) {
 
-		Pair<Review,GetAppMeta.App> pair = displayable.getPojo();
-		Review review = pair.first;
-		GetAppMeta.App app = pair.second;
+		FullReview review = displayable.getPojo();
+		GetAppMeta.App app = review.getData();
 
-		// TODO: 22/07/2016 get app from review
+		if (app != null) {
+			appName.setText(app.getName());
+			ImageLoader.load(app.getIcon(), appIcon);
+		} else {
+			appName.setVisibility(View.INVISIBLE);
+			appIcon.setVisibility(View.INVISIBLE);
+		}
 
-		appName.setText(app.getName());
 		reviewBody.setText(review.getBody());
-
 		reviewer.setText(AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, review.getUser().getName()));
 
 		//rating.setText(AptoideUtils.StringUtils.getRoundedValueFromDouble(appItem.rating));
 		rating.setText(String.format(Locale.getDefault(), "%d", review.getStats().getPoints()));
-
-		ImageLoader.load(app.getIcon(), appIcon);
 		ImageLoader.load(review.getUser().getAvatar(), avatar);
 
 		//        ReviewViewHolder holder = (ReviewViewHolder) viewHolder;

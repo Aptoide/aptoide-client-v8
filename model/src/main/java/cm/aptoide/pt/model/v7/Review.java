@@ -1,11 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
-
-import android.support.annotation.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -25,7 +23,6 @@ public class Review {
 	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date modified;
 	private User user;
 	private Stats stats;
-	@Nullable private GetAppMeta.App data;
 
 	@Data
 	public static class User {

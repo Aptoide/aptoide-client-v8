@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -33,7 +33,6 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
-import com.paypal.android.sdk.payments.ProofOfPayment;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import org.json.JSONException;
@@ -57,7 +56,6 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
@@ -103,9 +101,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
 	private static final int PAY_APP_REQUEST_CODE = 12;
 
-	private static final String CONFIG_ENVIRONMENT = BuildConfig.DEBUG ? PayPalConfiguration.ENVIRONMENT_SANDBOX : PayPalConfiguration.ENVIRONMENT_PRODUCTION;
+	private static final String CONFIG_ENVIRONMENT = //BuildConfig.DEBUG ? PayPalConfiguration.ENVIRONMENT_SANDBOX :
+			PayPalConfiguration.ENVIRONMENT_PRODUCTION;
 
-	private static final String CONFIG_CLIENT_ID = BuildConfig.DEBUG ? "ARhHzhAH_B_6_9ggd97pIHNduraLFU9jf7Wzw06QMyEj2pRotOf8vw3PM0Ls" :
+	private static final String CONFIG_CLIENT_ID = //BuildConfig.DEBUG ? "ARhHzhAH_B_6_9ggd97pIHNduraLFU9jf7Wzw06QMyEj2pRotOf8vw3PM0Ls" :
 			"AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
 
 	private static PayPalConfiguration config = new PayPalConfiguration()
@@ -247,26 +246,27 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 						// TODO: 29/07/16 sithengineer
 						// send 'confirm' to the server
-
+						/*
 						ProofOfPayment proof = confirm.getProofOfPayment();
 
-						//						CheckProductPaymentRequest.ofPayPal(
-						//								confirm.getProofOfPayment().getPaymentId(),
-						//								confirm.getEnvironment(),
-						//								confirm.describeContents(),
-						//								??,
-						//								??,
-						//								??,
-						//								??,
-						//								??,
-						//								??
-						//						).execute(paymentResponse -> {
-						//							// TODO: 29/07/16 sithengineer
-						//
-						//						},
-						//						err ->{
-						//							Logger.e(TAG, err.getCause());
-						//						}, true);
+						CheckProductPaymentRequest.ofPayPal(
+								confirm.getProofOfPayment().getPaymentId(),
+								confirm.getEnvironment(),
+								confirm.describeContents(),
+								??,
+								??,
+								??,
+								??,
+								??,
+								??
+						).execute(paymentResponse -> {
+							// TODO: 29/07/16 sithengineer remove payment proof from local DB
+
+						},
+						err ->{
+							Logger.e(TAG, err.getCause());
+						}, true);
+						*/
 
 					} catch (JSONException e) {
 						Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
@@ -532,7 +532,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			}
 
 			if (app.getIcon() != null) {
-				ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+				ImageLoader.loadWithCircleTransform(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
 			}
 
 			collapsingToolbar.setTitle(app.getName());

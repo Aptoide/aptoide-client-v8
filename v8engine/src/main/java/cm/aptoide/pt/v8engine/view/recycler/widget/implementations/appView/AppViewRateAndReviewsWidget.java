@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -62,8 +60,9 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private TextView ratingValue;
 	private AppCompatRatingBar ratingBar;
 
-	private Button rateThisAppButton;
+	//private Button rateThisAppButton;
 	private Button rateThisButton;
+	private Button rateThisButtonLarge;
 	private Button readAllButton;
 
 	private ViewPager topReviewsPager;
@@ -88,8 +87,9 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
 		ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
+		rateThisButtonLarge = (Button) itemView.findViewById(R.id.rate_this_button2);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
-		rateThisAppButton = (Button) itemView.findViewById(R.id.rate_this_app_button);
+		//rateThisAppButton = (Button) itemView.findViewById(R.id.rate_this_app_button);
 
 		topReviewsPager = (ViewPager) itemView.findViewById(R.id.top_comments_pager);
 		topReviewsProgressBar = (ProgressBar) itemView.findViewById(R.id.top_reviews_progress_bar);
@@ -121,8 +121,9 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 			}
 		};
 		rateThisButton.setOnClickListener(rateOnClickListener);
+		rateThisButtonLarge.setOnClickListener(rateOnClickListener);
 		ratingLayout.setOnClickListener(rateOnClickListener);
-		rateThisAppButton.setOnClickListener(rateOnClickListener);
+		//rateThisAppButton.setOnClickListener(rateOnClickListener);
 
 		View.OnClickListener commentsOnClickListener = v -> {
 			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getStore().getName(), app.getPackageName()));
@@ -134,12 +135,10 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	@Override
 	public void onViewAttached() {
-
 	}
 
 	@Override
 	public void onViewDetached() {
-
 	}
 
 	private void showRateDialog() {
@@ -150,51 +149,90 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		final AppCompatRatingBar reviewRatingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
 		final EditText titleEditText = (EditText) view.findViewById(R.id.input_title);
 		final EditText reviewEditText = (EditText) view.findViewById(R.id.input_review);
+		final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
+		final Button rateBtn = (Button) view.findViewById(R.id.rate_button);
 
 		titleTextView.setText(String.format(LOCALE, ctx.getString(R.string.rate_app), appName));
 
 		// build rating dialog
+		//		AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
+		//		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
+		//			if (which == DialogInterface.BUTTON_POSITIVE) {
+		//
+		//				final String reviewTitle = titleEditText.getText().toString();
+		//				final String reviewText = reviewEditText.getText().toString();
+		//				final int reviewRating = Math.round(reviewRatingBar.getRating());
+		//
+		//				PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(response -> {
+		//
+		//					if (response.getError() != null) {
+		//						Logger.e(TAG, response.getError().toString());
+		//						return;
+		//					}
+		//
+		//					List<BaseV7Response.Error> errors = response.getErrors();
+		//					if (errors != null && !errors.isEmpty()) {
+		//						for (final BaseV7Response.Error error : errors) {
+		//							Logger.e(TAG, error.toString());
+		//						}
+		//						return;
+		//					}
+		//
+		//					ManagerPreferences.setForceServerRefreshFlag(true);
+		//					Logger.d(TAG, "review added");
+		//				}, e -> {
+		//					Logger.e(TAG, e);
+		//					ShowMessage.asSnack(ratingLayout, R.string.error_occured);
+		//				});
+		//
+		//				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
+		//			} else if (which == DialogInterface.BUTTON_NEGATIVE) {
+		//				// do nothing.
+		//			}
+		//			dialog.dismiss();
+		//		};
+		//		// 02/08/16 sithengineer removed this buttons from here to the layout
+		//		builder.setPositiveButton(R.string.rate, clickListener);
+		//		builder.setCancelable(true).setNegativeButton(R.string.cancel, clickListener);
+		//		return builder.create().show();
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
-		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
-			if (which == DialogInterface.BUTTON_POSITIVE) {
+		AlertDialog dialog = builder.create();
 
-				final String reviewTitle = titleEditText.getText().toString();
-				final String reviewText = reviewEditText.getText().toString();
-				final int reviewRating = Math.round(reviewRatingBar.getRating());
+		cancelBtn.setOnClickListener(v -> dialog.dismiss());
+		rateBtn.setOnClickListener(v -> {
+			final String reviewTitle = titleEditText.getText().toString();
+			final String reviewText = reviewEditText.getText().toString();
+			final int reviewRating = Math.round(reviewRatingBar.getRating());
 
-				PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(response -> {
+			PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(response -> {
 
-					if (response.getError() != null) {
-						Logger.e(TAG, response.getError().toString());
-						return;
+				if (response.getError() != null) {
+					Logger.e(TAG, response.getError().toString());
+					return;
+				}
+
+				List<BaseV7Response.Error> errors = response.getErrors();
+				if (errors != null && !errors.isEmpty()) {
+					for (final BaseV7Response.Error error : errors) {
+						Logger.e(TAG, error.toString());
 					}
+					return;
+				}
 
-					List<BaseV7Response.Error> errors = response.getErrors();
-					if (errors != null && !errors.isEmpty()) {
-						for (final BaseV7Response.Error error : errors) {
-							Logger.e(TAG, error.toString());
-						}
-						return;
-					}
+				ManagerPreferences.setForceServerRefreshFlag(true);
+				dialog.dismiss();
+				Logger.d(TAG, "review added");
+			}, e -> {
+				Logger.e(TAG, e);
+				ShowMessage.asSnack(ratingLayout, R.string.error_occured);
+			});
 
-					ManagerPreferences.setForceServerRefreshFlag(true);
-					Logger.d(TAG, "review added");
-				}, e -> {
-					Logger.e(TAG, e);
-					ShowMessage.asSnack(ratingLayout, R.string.error_occured);
-				});
-
-				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
-			} else if (which == DialogInterface.BUTTON_NEGATIVE) {
-				// do nothing.
-			}
-			dialog.dismiss();
-		};
-		builder.setPositiveButton(R.string.rate, clickListener);
-		builder.setCancelable(true).setNegativeButton(R.string.cancel, clickListener);
+			ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
+		});
 
 		// create and show rating dialog
-		builder.create().show();
+		dialog.show();
 	}
 
 	private void scheduleAnimations() {
@@ -212,35 +250,45 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	}
 
 	public void loadTopReviews(String storeName, String packageName) {
-		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, false).execute(listReviews -> {
-
-			topReviewsProgressBar.setVisibility(View.GONE);
+		ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS).execute(listReviews -> {
 
 					List<Review> reviews = listReviews.getDatalist().getList();
 					if (reviews == null || reviews.isEmpty()) {
-						emptyReviewsLayout.setVisibility(View.VISIBLE);
-						ratingLayout.setVisibility(View.GONE);
-						commentsLayout.setVisibility(View.GONE);
 						topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));
+						loadedData(false);
 						return;
 					}
 
-			commentsLayout.setVisibility(View.VISIBLE);
-			ratingLayout.setVisibility(View.VISIBLE);
-			emptyReviewsLayout.setVisibility(View.GONE);
-			topReviewsProgressBar.setVisibility(View.GONE);
-			topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), listReviews.getDatalist().getList()));
+					loadedData(true);
+					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), listReviews.getDatalist().getList()));
 					scheduleAnimations();
-			topReviewsPager.invalidate();
+					topReviewsPager.invalidate();
 				}, e -> {
-					emptyReviewsLayout.setVisibility(View.VISIBLE);
-					ratingLayout.setVisibility(View.GONE);
-					commentsLayout.setVisibility(View.GONE);
-					topReviewsProgressBar.setVisibility(View.GONE);
-			topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));
+					loadedData(false);
+					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));
 					Logger.e(TAG, e);
+
 				}, true // bypass cache flag
 		);
+	}
+
+	private void loadedData(boolean hasData) {
+
+		topReviewsProgressBar.setVisibility(View.GONE);
+
+		if (hasData) {
+			ratingLayout.setVisibility(View.VISIBLE);
+			emptyReviewsLayout.setVisibility(View.GONE);
+			commentsLayout.setVisibility(View.VISIBLE);
+			rateThisButtonLarge.setVisibility(View.GONE);
+			rateThisButton.setVisibility(View.VISIBLE);
+		} else {
+			ratingLayout.setVisibility(View.VISIBLE);
+			emptyReviewsLayout.setVisibility(View.VISIBLE);
+			commentsLayout.setVisibility(View.GONE);
+			rateThisButtonLarge.setVisibility(View.VISIBLE);
+			rateThisButton.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	private static final class TopReviewsAdapter extends FragmentPagerAdapter {
@@ -273,8 +321,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		private Review review;
 
 		private ImageView userIcon;
-		private RatingBar ratingBar;
-		private TextView commentTitle;
+		//		private RatingBar ratingBar;
+		//		private TextView commentTitle;
 		private TextView userName;
 		private TextView addedDate;
 		private TextView commentText;
@@ -296,8 +344,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		@Override
 		public void bindViews(@Nullable View view) {
 			userIcon = (ImageView) view.findViewById(R.id.user_icon);
-			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-			commentTitle = (TextView) view.findViewById(R.id.comment_title);
+			//			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+			//			commentTitle = (TextView) view.findViewById(R.id.comment_title);
 			userName = (TextView) view.findViewById(R.id.user_name);
 			addedDate = (TextView) view.findViewById(R.id.added_date);
 			commentText = (TextView) view.findViewById(R.id.comment);

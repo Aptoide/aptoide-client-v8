@@ -9,7 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.model.v7.ListReviews;
+import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -30,26 +30,26 @@ import rx.Observable;
  * <p>
  * http://ws2.aptoide.com/api/7/listReviews/info/1
  */
-public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> {
+public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRequest.Body> {
 
 	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
 	private static final int MAX_REVIEWS = 10;
 	private static final int MAX_COMMENTS = 10;
 
-	protected ListReviewsRequest(Body body, String baseHost) {
+	protected ListFullReviewsRequest(Body body, String baseHost) {
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
 	}
 
-	public static ListReviewsRequest of(long storeId, int limit, int offset) {
+	public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
 				Api
 				.isMature(), Api.Q, storeId, offset, limit);
-		return new ListReviewsRequest(body, BASE_HOST);
+		return new ListFullReviewsRequest(body, BASE_HOST);
 	}
 
-	public static ListReviewsRequest of(String storeName, String packageName) {
+	public static ListFullReviewsRequest of(String storeName, String packageName) {
 		return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
 	}
 
@@ -63,12 +63,12 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 	 *
 	 * @return
 	 */
-	public static ListReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
+	public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
 				Api
 				.isMature(), Api.Q, storeName, packageName, maxReviews, maxComments);
-		return new ListReviewsRequest(body, BASE_HOST);
+		return new ListFullReviewsRequest(body, BASE_HOST);
 	}
 
 	/**
@@ -80,16 +80,17 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 	 *
 	 * @return
 	 */
-	public static ListReviewsRequest ofTopReviews(String storeName, String packageName, int maxReviews) {
+	public static ListFullReviewsRequest ofTopReviews(String storeName, String packageName, int maxReviews) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api.isMature(), Api.Q, storeName, packageName, maxReviews, 0);
-		return new ListReviewsRequest(body, BASE_HOST);
+				Api
+				.isMature(), Api.Q, storeName, packageName, maxReviews, 0);
+		return new ListFullReviewsRequest(body, BASE_HOST);
 	}
 
 	@Override
-	protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listReviews(body, bypassCache);
+	protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+		return interfaces.listFullReviews(body, bypassCache);
 	}
 
 	@Data

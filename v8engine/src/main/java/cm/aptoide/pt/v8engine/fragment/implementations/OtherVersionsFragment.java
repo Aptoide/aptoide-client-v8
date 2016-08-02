@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -236,7 +236,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 		}
 
 		private void setImage(String imgUrl) {
-			ImageLoader.load(imgUrl, appIcon);
+			ImageLoader.loadWithCircleTransform(imgUrl, appIcon);
 		}
 	}
 }

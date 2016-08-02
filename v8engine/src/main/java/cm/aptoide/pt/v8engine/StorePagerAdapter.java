@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.LatestReviewsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
@@ -28,9 +29,11 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 	private final List<GetStoreTabs.Tab> tabs;
 	private String storeTheme;
+	private long storeId;
 
 	public StorePagerAdapter(FragmentManager fm, GetStore getStore) {
 		super(fm);
+		this.storeId = getStore.getNodes().getMeta().getData().getId();
 		tabs = getStore.getNodes().getTabs().getList();
 		if (getStore.getNodes().getMeta().getData().getId() != 15) {
 			storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
@@ -60,6 +63,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 				return caseAPI(tab);
 			case CLIENT:
 				return caseClient(event);
+			case v3:
+				return caseV3(event);
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.
 				throw new RuntimeException("Fragment type not implemented!");
@@ -88,6 +93,16 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 				return UpdatesFragment.newInstance();
 			case myDownloads:
 				return DownloadsFragment.newInstance();
+			default:
+				// Safe to throw exception as the tab should be filtered prior to getting here.
+				throw new RuntimeException("Fragment type not implemented!");
+		}
+	}
+
+	private Fragment caseV3(Event event) {
+		switch (event.getName()) {
+			case getReviews:
+				return LatestReviewsFragment.newInstance(storeId);
 			default:
 				// Safe to throw exception as the tab should be filtered prior to getting here.
 				throw new RuntimeException("Fragment type not implemented!");

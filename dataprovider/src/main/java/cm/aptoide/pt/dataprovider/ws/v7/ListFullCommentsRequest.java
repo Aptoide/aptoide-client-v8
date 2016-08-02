@@ -9,7 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -30,27 +30,28 @@ import rx.Observable;
  * <p>
  * http://ws2.aptoide.com/api/7/listComments/info/1
  */
-public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Body> {
+public class ListFullCommentsRequest extends V7<ListFullComments,ListFullCommentsRequest.Body> {
 
 	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
-	protected ListCommentsRequest(Body body, String baseHost) {
+	protected ListFullCommentsRequest(Body body, String baseHost) {
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
 	}
 
-	public static ListCommentsRequest of(long reviewId, int limit) {
+	public static ListFullCommentsRequest of(long reviewId, int limit) {
 		//
 		//
 		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
+		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+				Api
 				.isMature(), Api.Q, limit, reviewId);
-		return new ListCommentsRequest(body, BASE_HOST);
+		return new ListFullCommentsRequest(body, BASE_HOST);
 	}
 
 	@Override
-	protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listComments(body, bypassCache);
+	protected Observable<ListFullComments> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+		return interfaces.listFullComments(body, bypassCache);
 	}
 
 	@Data
