@@ -16,6 +16,7 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
@@ -61,9 +62,10 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		@Cleanup Realm realm = Database.get();
 		this.displayable = updateDisplayable;
 		final String packageName = updateDisplayable.getPackageName();
+		Installed installed = Database.InstalledQ.get(packageName, realm);
 
 		labelTextView.setText(updateDisplayable.getLabel());
-		installedVernameTextView.setText(updateDisplayable.getUpdateVersionName());
+		installedVernameTextView.setText(installed.getVersionName());
 		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 

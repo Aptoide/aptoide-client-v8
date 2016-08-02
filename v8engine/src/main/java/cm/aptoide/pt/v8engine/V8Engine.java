@@ -178,7 +178,7 @@ public abstract class V8Engine extends DataProvider {
 			Database.dropTable(Installed.class, realm);
 			// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
-			List<PackageInfo> installedApps = AptoideUtils.SystemU.getUserInstalledApps();
+			List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
 			Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
 
 			// Installed apps are inserted in database based on their firstInstallTime. Older comes first.

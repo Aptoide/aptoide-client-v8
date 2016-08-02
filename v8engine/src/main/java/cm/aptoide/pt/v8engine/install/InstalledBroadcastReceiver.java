@@ -45,7 +45,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 				onPackageAdded(packageName);
 				break;
 			case Intent.ACTION_PACKAGE_REPLACED:
-				onPackageReplaced(packageName);
+				onPackageReplaced(packageName, context);
 				break;
 			case Intent.ACTION_PACKAGE_REMOVED:
 				onPackageRemoved(packageName);
@@ -90,10 +90,10 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 
-	protected void onPackageReplaced(String packageName) {
+	protected void onPackageReplaced(String packageName, Context context) {
 		Log.d(TAG, "Packaged replaced: " + packageName);
 
-		databaseOnPackageReplaced(packageName);
+		databaseOnPackageReplaced(packageName, context);
 	}
 
 	protected void onPackageRemoved(String packageName) {
@@ -113,7 +113,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void databaseOnPackageReplaced(String packageName) {
+	private void databaseOnPackageReplaced(String packageName, Context context) {
 		Update update = Database.UpdatesQ.get(packageName, realm);
 
 		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
@@ -123,11 +123,9 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 			}
 		}
 
-		Installed installed = Database.InstalledQ.get(packageName, realm);
+		Database.save(new Installed(packageInfo, context.getPackageManager()), realm);
 
-		if (installed != null) {
-			confirmAction(packageName, Rollback.Action.UPDATE);
-		}
+		confirmAction(packageName, Rollback.Action.UPDATE);
 	}
 
 	private void databaseOnPackageRemoved(String packageName) {
