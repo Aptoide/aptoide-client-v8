@@ -6,7 +6,6 @@
 package cm.aptoide.pt.imageloader;
 
 import android.support.annotation.DrawableRes;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +30,14 @@ public class ImageLoader {
 
 	public static void load(@DrawableRes int drawableId, ImageView imageView) {
 		Glide.with(Application.getContext()).load(drawableId).into(imageView);
+	}
+
+	public static void loadWithCircleTransformAndPlaceHolder(String url, @DrawableRes ImageView imageView, @DrawableRes int placeHolderDrawableId) {
+		Glide.with(Application.getContext())
+				.load(url)
+				.transform(new CircleTransform(Application.getContext()))
+				.placeholder(placeHolderDrawableId)
+				.into(imageView);
 	}
 
 	public static void loadWithCircleTransform(@DrawableRes int drawableId, ImageView imageView) {

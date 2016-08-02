@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -16,10 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +31,7 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.BaseFragment;
@@ -60,7 +59,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private TextView ratingValue;
 	private AppCompatRatingBar ratingBar;
 
-	//private Button rateThisAppButton;
 	private Button rateThisButton;
 	private Button rateThisButtonLarge;
 	private Button readAllButton;
@@ -70,8 +68,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private String appName;
 	private String packageName;
 	private String storeName;
-
-	private ProgressBar topReviewsProgressBar;
 
 	public AppViewRateAndReviewsWidget(View itemView) {
 		super(itemView);
@@ -89,10 +85,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
 		rateThisButtonLarge = (Button) itemView.findViewById(R.id.rate_this_button2);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
-		//rateThisAppButton = (Button) itemView.findViewById(R.id.rate_this_app_button);
 
 		topReviewsPager = (ViewPager) itemView.findViewById(R.id.top_comments_pager);
-		topReviewsProgressBar = (ProgressBar) itemView.findViewById(R.id.top_reviews_progress_bar);
 	}
 
 	@Override
@@ -105,7 +99,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		packageName = app.getPackageName();
 		storeName = app.getStore().getName();
 
-		usersVoted.setText(String.format(LOCALE, "%d", stats.getDownloads()));
+		usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getDownloads()));
 
 		float ratingAvg = stats.getRating().getAvg();
 		ratingValue.setText(String.format(LOCALE, "%.1f", ratingAvg));
@@ -154,48 +148,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		titleTextView.setText(String.format(LOCALE, ctx.getString(R.string.rate_app), appName));
 
-		// build rating dialog
-		//		AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
-		//		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
-		//			if (which == DialogInterface.BUTTON_POSITIVE) {
-		//
-		//				final String reviewTitle = titleEditText.getText().toString();
-		//				final String reviewText = reviewEditText.getText().toString();
-		//				final int reviewRating = Math.round(reviewRatingBar.getRating());
-		//
-		//				PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(response -> {
-		//
-		//					if (response.getError() != null) {
-		//						Logger.e(TAG, response.getError().toString());
-		//						return;
-		//					}
-		//
-		//					List<BaseV7Response.Error> errors = response.getErrors();
-		//					if (errors != null && !errors.isEmpty()) {
-		//						for (final BaseV7Response.Error error : errors) {
-		//							Logger.e(TAG, error.toString());
-		//						}
-		//						return;
-		//					}
-		//
-		//					ManagerPreferences.setForceServerRefreshFlag(true);
-		//					Logger.d(TAG, "review added");
-		//				}, e -> {
-		//					Logger.e(TAG, e);
-		//					ShowMessage.asSnack(ratingLayout, R.string.error_occured);
-		//				});
-		//
-		//				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
-		//			} else if (which == DialogInterface.BUTTON_NEGATIVE) {
-		//				// do nothing.
-		//			}
-		//			dialog.dismiss();
-		//		};
-		//		// 02/08/16 sithengineer removed this buttons from here to the layout
-		//		builder.setPositiveButton(R.string.rate, clickListener);
-		//		builder.setCancelable(true).setNegativeButton(R.string.cancel, clickListener);
-		//		return builder.create().show();
-
 		AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
 		AlertDialog dialog = builder.create();
 
@@ -237,7 +189,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	private void scheduleAnimations() {
 		final int topReviewsCount = topReviewsPager.getAdapter().getCount();
-		if (ManagerPreferences.getAnimationsEnabledStatus() && topReviewsCount > 2) {
+		if (topReviewsCount > 2) {
 			for (int i = 0 ; i < topReviewsCount - 1 ; ++i) {
 				final int count = i;
 				topReviewsPager.postDelayed(() -> {
@@ -245,7 +197,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 				}, (count + 1) * 1200);
 			}
 		} else {
-			Logger.w(TAG, "Animations are disabled by the user. Unable to schedule top reviews paging animation.");
+			Logger.w(TAG, "Not enought top reviews to do paging animation.");
 		}
 	}
 
@@ -273,8 +225,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	}
 
 	private void loadedData(boolean hasData) {
-
-		topReviewsProgressBar.setVisibility(View.GONE);
 
 		if (hasData) {
 			ratingLayout.setVisibility(View.VISIBLE);
@@ -316,13 +266,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	public static final class MiniTopReviewFragment extends BaseFragment {
 
-		private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
+		private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 		private Review review;
 
 		private ImageView userIcon;
-		//		private RatingBar ratingBar;
-		//		private TextView commentTitle;
+		private RatingBar ratingBar;
+		private TextView commentTitle;
 		private TextView userName;
 		private TextView addedDate;
 		private TextView commentText;
@@ -342,10 +291,10 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		}
 
 		@Override
-		public void bindViews(@Nullable View view) {
+		public void bindViews(View view) {
 			userIcon = (ImageView) view.findViewById(R.id.user_icon);
-			//			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-			//			commentTitle = (TextView) view.findViewById(R.id.comment_title);
+			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+			commentTitle = (TextView) view.findViewById(R.id.comment_title);
 			userName = (TextView) view.findViewById(R.id.user_name);
 			addedDate = (TextView) view.findViewById(R.id.added_date);
 			commentText = (TextView) view.findViewById(R.id.comment);
@@ -353,15 +302,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		@Override
 		public void setupViews() {
-			if (review == null) {
-				return;
-			}
-			ImageLoader.load(review.getUser().getAvatar(), userIcon);
+			ImageLoader.loadWithCircleTransformAndPlaceHolder(review.getUser().getAvatar(), userIcon, R.drawable.layer_1);
 			userName.setText(review.getUser().getName());
-			//ratingBar.setRating( ?? );
-			//commentTitle.setText( ?? );
+			ratingBar.setRating(review.getStats().getRating());
+			commentTitle.setText(review.getTitle());
 			commentText.setText(review.getBody());
-			addedDate.setText(SIMPLE_DATE_FORMAT.format(review.getAdded()));
+			addedDate.setText(DATE_TIME_U.getTimeDiffString(getActivity(), review.getAdded().getTime()));
 		}
 	}
 }

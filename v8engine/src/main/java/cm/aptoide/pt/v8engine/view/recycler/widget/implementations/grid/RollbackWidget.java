@@ -11,10 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -24,6 +20,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
@@ -36,7 +33,7 @@ import lombok.Cleanup;
  */
 public class RollbackWidget extends Widget<RollbackDisplayable> {
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
+	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
 	private static final String TAG = RollbackWidget.class.getSimpleName();
 
@@ -68,8 +65,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 		appUpdateVersion.setText(pojo.getVersionName());
 		appState.setText(
 			String.format(
-				getContext().getString(R.string.rollback_updated_at),
-				DATE_FORMAT.format(new Date(pojo.getTimestamp()))
+				getContext().getString(R.string.rollback_updated_at), DATE_TIME_U.getTimeDiffString(getContext(), pojo.getTimestamp())
 			)
 		);
 

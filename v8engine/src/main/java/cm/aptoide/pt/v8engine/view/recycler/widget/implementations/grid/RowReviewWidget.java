@@ -14,7 +14,6 @@ import java.util.Locale;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.FullReview;
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -55,7 +54,7 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 	public void bindView(RowReviewDisplayable displayable) {
 
 		FullReview review = displayable.getPojo();
-		GetAppMeta.App app = review.getData();
+		FullReview.App app = review.getData().getApp();
 
 		if (app != null) {
 			appName.setText(app.getName());

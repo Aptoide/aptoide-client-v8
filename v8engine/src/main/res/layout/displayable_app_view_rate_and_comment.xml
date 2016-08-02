@@ -14,19 +14,6 @@
     android:paddingTop="15dp"
     >
 
-    <ProgressBar
-        android:id="@+id/top_reviews_progress_bar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:indeterminate="true"
-        />
-
-    <!--
-        android:visibility="gone"
-        tools:visibility="visible"
-    -->
-
     <RelativeLayout
         android:id="@+id/rating_layout"
         android:layout_width="wrap_content"
@@ -192,30 +179,6 @@
         tools:visibility="visible"
         >
 
-        <!--
-        <Button
-            android:id="@+id/rate_this_app_button"
-            android:layout_width="match_parent"
-            android:layout_height="39.3dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button_border_silver"
-            android:text="@string/rate_this_app"
-            android:textAllCaps="true"
-            android:textColor="@color/silver"
-            android:textSize="@dimen/text_size_medium"
-            />
-        -->
-
-        <!--
-            android:layout_marginEnd="55dp"
-            android:layout_marginLeft="55dp"
-            android:layout_marginRight="55dp"
-            android:layout_marginStart="55dp"
-            android:layout_above="@id/rate_this_app_button"
-        -->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -232,10 +195,6 @@
                 android:src="@drawable/vector_smart_object"
                 />
 
-            <!--
-                android:layout_marginLeft="17dp"
-                android:layout_marginStart="17dp"
-            -->
             <TextView
                 android:id="@+id/empty_review_text"
                 android:layout_width="match_parent"

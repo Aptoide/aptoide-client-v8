@@ -54,7 +54,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	}
 
 	/**
-	 * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
+	 * example call: http://ws75.aptoide.com/api/7/listFullReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
 	 *
 	 * @param storeName
 	 * @param packageName

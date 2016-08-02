@@ -18,14 +18,9 @@ import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -54,7 +49,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class RollbackFragment extends GridRecyclerFragment {
 
 	private static final String TAG = RollbackFragment.class.getSimpleName();
-	private static final DateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 	private TextView emptyData;
 	private Subscription subscription;
 	private DownloadServiceHelper downloadManager;
@@ -144,48 +139,38 @@ public class RollbackFragment extends GridRecyclerFragment {
 				});
 	}
 
-	private String timestampAsStringFromLong(long timestamp) {
-		return FORMAT.format(new Date(timestamp));
-	}
-
-	private long timestampAsLongFromString(String timestamp) {
-		try {
-			return FORMAT.parse(timestamp).getTime();
-		} catch (ParseException ex) {
-			Logger.e(TAG, "", ex);
-			throw new RuntimeException(ex);
-		}
+	private String prettyTimestamp(long timestamp) {
+		return DATE_TIME_U.getTimeDiffString(getActivity(), timestamp);
 	}
 	
 	// FIXME: 21/07/2016 slow method. could this be improved ??
 	@UiThread
 	private void sortRollbacksAndAdd(RealmResults<Rollback> rollbacks) {
 		// group by timestamp
-		TreeMap<String,List<Displayable>> arrayOfDisplayables = new TreeMap<>(new Comparator<String>() {
+		TreeMap<Long,List<Displayable>> arrayOfDisplayables = new TreeMap<>(new Comparator<Long>() {
 			@Override
-			public int compare(String lhs, String rhs) {
-				long lhsDate = timestampAsLongFromString(lhs);
-				long rhsDate = timestampAsLongFromString(rhs);
-				return ((int) (lhsDate - rhsDate));
+			public int compare(Long lhs, Long rhs) {
+				//				long lhsDate = timestampAsLongFromString(lhs);
+				//				long rhsDate = timestampAsLongFromString(rhs);
+				//				return ((int) (lhsDate - rhsDate));
+				return lhs.compareTo(rhs);
 			}
 		});
 
-		String timestampAsString = null;
 		List<Displayable> displayables = null;
 		for (Rollback rollback : rollbacks) {
-			timestampAsString = timestampAsStringFromLong(rollback.getTimestamp());
-			displayables = arrayOfDisplayables.get(timestampAsString);
+			displayables = arrayOfDisplayables.get(rollback.getTimestamp());
 			if (displayables == null) {
 				displayables = new LinkedList<>();
-				arrayOfDisplayables.put(timestampAsString, displayables);
+				arrayOfDisplayables.put(rollback.getTimestamp(), displayables);
 			}
 			displayables.add(new RollbackDisplayable(installManager, rollback));
 		}
 
 		// display headers and content
 		List<Displayable> displayablesToShow = new LinkedList<>();
-		for (Map.Entry<String,List<Displayable>> arrayOfDisplayablesEntry : arrayOfDisplayables.entrySet()) {
-			displayablesToShow.add(new FooterRowDisplayable(arrayOfDisplayablesEntry.getKey()));
+		for (Map.Entry<Long,List<Displayable>> arrayOfDisplayablesEntry : arrayOfDisplayables.entrySet()) {
+			displayablesToShow.add(new FooterRowDisplayable(prettyTimestamp(arrayOfDisplayablesEntry.getKey())));
 			displayablesToShow.addAll(arrayOfDisplayablesEntry.getValue());
 		}
 		setDisplayables(displayablesToShow);

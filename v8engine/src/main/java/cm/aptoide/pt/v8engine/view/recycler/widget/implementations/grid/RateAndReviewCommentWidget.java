@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -18,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,8 +26,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
@@ -43,7 +42,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentDisplayable> {
 
 	private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
+	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 	private static final Locale LOCALE = Locale.getDefault();
 
 	private TextView reply;
@@ -82,23 +81,22 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 	@Override
 	public void bindView(RateAndReviewCommentDisplayable displayable) {
-		final Review review = displayable.getPojo();
-
-		ImageLoader.loadWithCircleTransform(review.getUser().getAvatar(), userImage);
+		final FullReview review = displayable.getPojo();
+		ImageLoader.loadWithCircleTransformAndPlaceHolder(review.getUser().getAvatar(), userImage, R.drawable.layer_1);
 		username.setText(review.getUser().getName());
-
-		// TODO: 18/07/16 sithengineer ratingBar.setRating( ?? );
-		ratingBar.setVisibility(View.INVISIBLE);
-
-		// TODO: 18/07/16 sithengineer reviewTitle.setText( ?? );
-		reviewTitle.setVisibility(View.INVISIBLE);
-
+		ratingBar.setRating(review.getStats().getRating());
+		reviewTitle.setText(review.getTitle());
 		reviewText.setText(review.getBody());
-
-		reviewDate.setText(DATE_FORMAT.format(review.getAdded()));
+		reviewDate.setText(DATE_TIME_U.getTimeDiffString(getContext(), review.getAdded().getTime()));
 
 		reply.setOnClickListener(v -> {
-			showCommentPopup(review.getId(), ""); // FIXME get app name from review
+			if (AptoideAccountManager.isLoggedIn()) {
+				showCommentPopup(review.getId(), review.getData().getApp().getName());
+			} else {
+				ShowMessage.asSnack(ratingBar, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
+					AptoideAccountManager.openAccountManager(snackView.getContext());
+				});
+			}
 		});
 
 		flagHelfull.setOnClickListener(v -> {
@@ -124,54 +122,56 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		}
 	}
 
-	private void showCommentPopup(long reviewId, String appName) {
+	private void showCommentPopup(final long reviewId, String appName) {
 		final Context ctx = getContext();
 		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_comment_on_review, null);
 
 		final TextView titleTextView = (TextView) view.findViewById(R.id.title);
 		final EditText inputEditText = (EditText) view.findViewById(R.id.input_text);
+		final Button commentBtn = (Button) view.findViewById(R.id.comment_button);
+		final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
 
 		titleTextView.setText(appName);
 
 		// build rating dialog
-		AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
-		DialogInterface.OnClickListener clickListener = (dialog, which) -> {
-			if (which == DialogInterface.BUTTON_POSITIVE) {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
+		final AlertDialog dialog = builder.create();
 
-				final String commentOnReviewText = inputEditText.getText().toString();
+		commentBtn.setOnClickListener(v -> {
 
-				PostCommentRequest.of(reviewId, commentOnReviewText).execute(response -> {
+			final String commentOnReviewText = inputEditText.getText().toString();
 
-					if (response.getError() != null) {
-						Logger.e(TAG, response.getError().toString());
-						return;
+			PostCommentRequest.of(reviewId, commentOnReviewText).execute(response -> {
+
+				if (response.getError() != null) {
+					Logger.e(TAG, response.getError().toString());
+					return;
+				}
+
+				List<BaseV7Response.Error> errors = response.getErrors();
+				if (errors != null && !errors.isEmpty()) {
+					for (final BaseV7Response.Error error : errors) {
+						Logger.e(TAG, error.toString());
 					}
+					return;
+				}
 
-					List<BaseV7Response.Error> errors = response.getErrors();
-					if (errors != null && !errors.isEmpty()) {
-						for (final BaseV7Response.Error error : errors) {
-							Logger.e(TAG, error.toString());
-						}
-						return;
-					}
+				loadCommentsForThisReview(reviewId);
+				ManagerPreferences.setForceServerRefreshFlag(true);
+				Logger.d(TAG, "comment to review added");
+			}, e -> {
+				Logger.e(TAG, e);
+			});
 
-					ManagerPreferences.setForceServerRefreshFlag(true);
-					Logger.d(TAG, "comment to review added");
-				}, e -> {
-					Logger.e(TAG, e);
-				});
-
-				ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
-			} else if (which == DialogInterface.BUTTON_NEGATIVE) {
-				// do nothing.
-			}
+			ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
 			dialog.dismiss();
-		};
-		builder.setPositiveButton(R.string.comment, clickListener);
-		builder.setCancelable(true).setNegativeButton(R.string.cancel, clickListener);
+		});
 
-		// create and show rating dialog
-		builder.create().show();
+		cancelBtn.setOnClickListener(v -> {
+			dialog.dismiss();
+		});
+
+		dialog.show();
 	}
 
 	private void loadCommentsForThisReview(long reviewId) {

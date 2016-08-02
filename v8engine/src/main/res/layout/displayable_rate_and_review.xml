@@ -12,9 +12,6 @@
     android:padding="16dp"
     >
 
-    <!--
-    <com.makeramen.roundedimageview.RoundedImageView
-    -->
     <ImageView
         android:id="@+id/user_icon"
         android:layout_width="34dp"
@@ -59,9 +56,10 @@
         android:id="@+id/comment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/rating_bar"
+        android:layout_alignBottom="@id/rating_bar"
         android:layout_marginLeft="8.7dp"
         android:layout_marginStart="8.7dp"
+        android:layout_toEndOf="@id/rating_bar"
         android:layout_toLeftOf="@id/write_reply_btn"
         android:layout_toRightOf="@id/rating_bar"
         android:layout_toStartOf="@id/write_reply_btn"

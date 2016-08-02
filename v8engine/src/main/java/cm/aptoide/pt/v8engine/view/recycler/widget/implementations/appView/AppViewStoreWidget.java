@@ -89,9 +89,8 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
 		storeNameView.setText(store.getName());
 		storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeNumberUsersView.setText(String.format(Locale.getDefault(), V8Engine.getContext().getString(R.string.appview_followers_count_text), store
-				.getStats()
-				.getSubscribers()));
+		storeNumberUsersView.setText(String.format(Locale.getDefault(), V8Engine.getContext()
+				.getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers())));
 		followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			followButton.setElevation(0);
