@@ -48,8 +48,10 @@ public class Update extends RealmObject {
 	private boolean excluded;
 
 	// Obb
+	private String mainObbName;
 	private String mainObbPath;
 	private String mainObbMd5;
+	private String patchObbName;
 	private String patchObbPath;
 	private String patchObbMd5;
 
@@ -76,12 +78,14 @@ public class Update extends RealmObject {
 		if (obb != null) {
 			Obb.ObbItem obbMain = obb.getMain();
 			if (obbMain != null) {
+				mainObbName = obbMain.getFilename();
 				mainObbPath = obbMain.getPath();
 				mainObbMd5 = obbMain.getMd5sum();
 			}
 
 			Obb.ObbItem patch = obb.getPatch();
 			if (patch != null) {
+				patchObbName = patch.getFilename();
 				patchObbPath = patch.getPath();
 				patchObbMd5 = patch.getMd5sum();
 			}
@@ -230,5 +234,21 @@ public class Update extends RealmObject {
 
 	public void setExcluded(boolean excluded) {
 		this.excluded = excluded;
+	}
+
+	public String getMainObbName() {
+		return mainObbName;
+	}
+
+	public void setMainObbName(String mainObbName) {
+		this.mainObbName = mainObbName;
+	}
+
+	public String getPatchObbName() {
+		return patchObbName;
+	}
+
+	public void setPatchObbName(String patchObbName) {
+		this.patchObbName = patchObbName;
 	}
 }
