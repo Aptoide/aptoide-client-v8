@@ -14,7 +14,6 @@ import com.liulishuo.filedownloader.FileDownloader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
