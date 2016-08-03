@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
@@ -135,10 +135,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchReviews() {
-		ListReviewsRequest.of(storeName, packageName, false).execute(listTopReviews -> {
-			List<Review> reviews = listTopReviews.getDatalist().getList();
+		ListFullReviewsRequest.of(storeName, packageName).execute(reviewsResponse -> {
+			List<FullReview> reviews = reviewsResponse.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();
-			for (final Review review : reviews) {
+			for (final FullReview review : reviews) {
 				displayables.add(new RateAndReviewCommentDisplayable(review));
 			}
 			setDisplayables(displayables);

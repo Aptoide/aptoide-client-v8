@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -13,16 +13,16 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 /**
  * Created by sithengineer on 14/07/16.
  */
-public class RateAndReviewCommentDisplayable extends DisplayablePojo<Review> {
+public class RateAndReviewCommentDisplayable extends DisplayablePojo<FullReview> {
 
 	public RateAndReviewCommentDisplayable() {
 	}
 
-	public RateAndReviewCommentDisplayable(Review pojo) {
+	public RateAndReviewCommentDisplayable(FullReview pojo) {
 		super(pojo);
 	}
 
-	public RateAndReviewCommentDisplayable(Review pojo, boolean fixedPerLineCount) {
+	public RateAndReviewCommentDisplayable(FullReview pojo, boolean fixedPerLineCount) {
 		super(pojo, fixedPerLineCount);
 	}
 

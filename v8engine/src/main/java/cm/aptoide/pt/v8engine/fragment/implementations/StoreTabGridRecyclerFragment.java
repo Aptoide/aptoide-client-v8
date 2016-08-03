@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -116,7 +116,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				case getStore:
 				case getStoreWidgets:
 				case getReviews:
-				case getApkComments:
+					//case getApkComments:
 				case getAds:
 				case listStores:
 					return true;
@@ -305,10 +305,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					break;
 				case getReviews:
 					//todo
-					break;
-				case getApkComments:
+					//		break;
+					//	case getApkComments:
 					//todo
-					break;
+					//		break;
 				case getAds:
 					caseGetAds(refresh);
 					break;

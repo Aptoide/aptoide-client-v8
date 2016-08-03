@@ -12,12 +12,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -34,7 +34,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 
 	private static final String TAG = OtherVersionWidget.class.getSimpleName();
 	private static final Locale DEFAULT_LOCALE = Locale.getDefault();
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", DEFAULT_LOCALE);
+	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
 	// left side
 	//private ImageView versionBadge;
@@ -78,9 +78,11 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 
 			version.setText(app.getFile().getVername());
 			setBadge(app, trustedBadge);
-			date.setText(DATE_FORMAT.format(app.getModified()));
-			downloads.setText(String.format(DEFAULT_LOCALE, getContext().getString(R.string.other_versions_downloads_count_text), app.getStats()
-					.getDownloads()));
+			date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified().getTime()));
+			downloads.setText(String.format(DEFAULT_LOCALE, getContext().getString(R.string.other_versions_downloads_count_text), AptoideUtils.StringU
+					.withSuffix(app
+					.getStats()
+					.getDownloads())));
 
 			ImageLoader.load(app.getStore().getAvatar(), storeIcon);
 			storeName.setText(app.getStore().getName());

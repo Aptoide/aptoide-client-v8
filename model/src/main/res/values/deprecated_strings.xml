@@ -589,7 +589,7 @@
     <string name="subscribing_store_message">Unsubscribing %s</string>
 
     <!-- Search Fragment -->
-    <string name="subscribed">Subscribed</string>
-    <string name="everywhere">Everywhere</string>
+    <string name="all_stores">All Stores</string>
+    <string name="followed_stores">Followed Stores</string>
     <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
 </resources>

@@ -105,9 +105,9 @@ public class GetApkInfoJson {
 		}
 
 		public boolean isPaidApp() {
+			//			symbol = "$";
+			//			amount = 0.10;
 			return ((amount != null) && (amount > 0.0));
-			//			symbol = "€";
-			//			return true;
 		}
 
 		public static class Metadata {

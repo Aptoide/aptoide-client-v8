@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 02/08/2016.
   -->
 
 <RelativeLayout
@@ -14,14 +14,6 @@
     android:paddingTop="15dp"
     >
 
-    <ProgressBar
-        android:id="@+id/top_reviews_progress_bar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:indeterminate="true"
-        />
-
     <RelativeLayout
         android:id="@+id/rating_layout"
         android:layout_width="wrap_content"
@@ -31,7 +23,6 @@
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
         android:orientation="vertical"
-        android:visibility="invisible"
         >
 
         <Button
@@ -41,10 +32,12 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/button_border_silver"
+            android:gravity="center"
             android:text="@string/appview_rate_this_app"
             android:textAllCaps="true"
             android:textColor="@color/silver"
             android:textSize="@dimen/text_size_small"
+            android:visibility="invisible"
             />
 
         <RelativeLayout
@@ -126,7 +119,8 @@
         android:layout_marginLeft="10dp"
         android:layout_toEndOf="@id/rating_layout"
         android:layout_toRightOf="@id/rating_layout"
-        android:visibility="invisible"
+        android:visibility="gone"
+        tools:visibility="gone"
         >
 
         <Button
@@ -178,40 +172,26 @@
         android:id="@+id/empty_reviews_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@id/rating_layout"
+        android:layout_toRightOf="@id/rating_layout"
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
         >
-
-        <Button
-            android:id="@+id/rate_this_app_button"
-            android:layout_width="match_parent"
-            android:layout_height="39.3dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button_border_silver"
-            android:text="@string/rate_this_app"
-            android:textAllCaps="true"
-            android:textColor="@color/silver"
-            android:textSize="@dimen/text_size_medium"
-            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/rate_this_app_button"
             android:layout_centerInParent="true"
-            android:layout_marginEnd="55dp"
-            android:layout_marginLeft="55dp"
-            android:layout_marginRight="55dp"
-            android:layout_marginStart="55dp"
-            android:orientation="horizontal"
+            android:layout_marginBottom="33dp"
+            android:layout_marginTop="13dp"
+            android:orientation="vertical"
             >
 
             <ImageView
                 android:id="@+id/empty_review_icon"
-                android:layout_width="41dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
                 android:src="@drawable/vector_smart_object"
                 />
 
@@ -219,9 +199,9 @@
                 android:id="@+id/empty_review_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="17dp"
-                android:layout_marginStart="17dp"
-                android:gravity="center_vertical"
+                android:gravity="top|center_horizontal"
+                android:lines="2"
+                android:paddingTop="10dp"
                 android:text="@string/be_the_first_to_rate_this_app"
                 android:textColor="@color/app_view_gray"
                 android:textSize="@dimen/text_size_medium_large"
@@ -230,5 +210,19 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/rate_this_button2"
+        android:layout_width="match_parent"
+        android:layout_height="39.3dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_border_silver"
+        android:gravity="center"
+        android:text="@string/appview_rate_this_app"
+        android:textAllCaps="true"
+        android:textColor="@color/silver"
+        android:textSize="@dimen/text_size_small"
+        />
 
 </RelativeLayout>

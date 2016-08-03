@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 buildscript {
@@ -95,7 +95,7 @@ ext {
     LEAK_CANARY_VERSION = '1.4-beta2'
 
     // Debug only
-    STETHO_VERSION = '1.3.1'
+    //STETHO_VERSION = '1.3.1'
 
     // Lombok plugin
     LOMBOK_VERSION = '1.16.8'
@@ -118,7 +118,7 @@ ext {
     FILE_DOWNLOADER_VERSION = '0.3.2'
 
     // rounded image lib
-    ROUNDED_IMG_LIB = '2.2.1'
+    //ROUNDED_IMG_LIB = '2.2.1'
 
     PAYPAL_SDK = '2.14.4'
 }

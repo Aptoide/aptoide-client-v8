@@ -50,5 +50,41 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <Button
+            android:id="@+id/comment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:padding="6dp"
+            android:text="@string/comment"
+            android:textAllCaps="true"
+            android:textColor="?colorPrimary"
+            android:textSize="@dimen/text_size_medium"
+            />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_toLeftOf="@id/comment_button"
+            android:layout_toStartOf="@id/comment_button"
+            android:background="@null"
+            android:padding="6dp"
+            android:text="@string/cancel"
+            android:textAllCaps="true"
+            android:textColor="@color/app_view_gray"
+            android:textSize="@dimen/text_size_medium"
+            />
+    </RelativeLayout>
+
 </LinearLayout>
 

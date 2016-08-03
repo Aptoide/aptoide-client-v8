@@ -11,9 +11,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -31,6 +28,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 @Displayables({GridAppDisplayable.class})
 public class GridAppWidget extends Widget<GridAppDisplayable> {
 
+	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
+
 	private TextView name;
 	private ImageView icon;
 	private TextView downloads;
@@ -38,8 +37,6 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 	private TextView tvStoreName;
 	private TextView tvAddedTime;
 	private String storeTheme;
-
-	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
 	public GridAppWidget(View itemView) {
 		super(itemView);
@@ -67,7 +64,7 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 				.getDownloads()) + V8Engine.getContext().getString(R.string._downloads));
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
-		tvAddedTime.setText(dateFormatter.format(pojo.getAdded()));
+		tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(getContext(), pojo.getAdded().getTime()));
 		/*try {
 			storeTheme = pojo.getStore().getAppearance().getTheme();
 		} catch (NullPointerException e) {

@@ -11,9 +11,6 @@
     android:layout_height="88.6dp"
     >
 
-    <!--
-    <com.makeramen.roundedimageview.RoundedImageView
-    -->
     <ImageView
         android:id="@+id/user_icon"
         android:layout_width="34dp"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/07/2016.
+  ~ Modified by SithEngineer on 02/08/2016.
   -->
 <!--
     tools:background="#BB000000"
@@ -54,6 +54,7 @@
                     />
             </FrameLayout>
 
+            <!--
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/app_icon"
                 android:layout_width="@dimen/appview_header_app_image_size"
@@ -67,6 +68,21 @@
                 app:layout_anchor="@id/app_bar"
                 app:layout_anchorGravity="bottom|left|start"
                 app:riv_corner_radius="15dp"
+                tools:src="@color/blue_700"
+                />
+            -->
+            <ImageView
+                android:id="@+id/app_icon"
+                android:layout_width="@dimen/appview_header_app_image_size"
+                android:layout_height="@dimen/appview_header_app_image_size"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="@dimen/appview_header_bottom_margin"
+                android:layout_marginLeft="@dimen/appview_header_side_margin"
+                android:layout_marginStart="@dimen/appview_header_side_margin"
+                android:scaleType="centerCrop"
+                app:layout_anchor="@id/app_bar"
+                app:layout_anchorGravity="bottom|left|start"
                 tools:src="@color/blue_700"
                 />
 

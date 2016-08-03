@@ -847,6 +847,9 @@ public class AptoideUtils {
 		private static DateTimeU instance;
 		private static String[] weekdays = new DateFormatSymbols().getWeekdays(); // get day names
 
+		public static DateTimeU getInstance() {
+			return getInstance(getContext());
+		}
 		/**
 		 * Singleton constructor, needed to get access to the application context & strings for i18n
 		 *

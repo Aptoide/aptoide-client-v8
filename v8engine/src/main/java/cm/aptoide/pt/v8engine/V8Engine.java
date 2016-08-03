@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.Collections;
@@ -141,9 +140,9 @@ public abstract class V8Engine extends DataProvider {
 			Logger.w(TAG, "application has debug flag active");
 		}
 
-		if (BuildConfig.DEBUG) {
-			Stetho.initializeWithDefaults(this);
-		}
+		//		if (BuildConfig.DEBUG) {
+		//			Stetho.initializeWithDefaults(this);
+		//		}
 
 		setupCrashlytics();
 
@@ -179,7 +178,7 @@ public abstract class V8Engine extends DataProvider {
 			Database.dropTable(Installed.class, realm);
 			// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
-			List<PackageInfo> installedApps = AptoideUtils.SystemU.getUserInstalledApps();
+			List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
 			Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
 
 			// Installed apps are inserted in database based on their firstInstallTime. Older comes first.

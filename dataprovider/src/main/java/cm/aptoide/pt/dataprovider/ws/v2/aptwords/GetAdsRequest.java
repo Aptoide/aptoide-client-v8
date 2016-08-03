@@ -129,10 +129,9 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
 		parameters.put("excluded_partners", excludedNetworks);
 
-		Observable<GetAdsResponse> result = interfaces.getAds(parameters);
+		Observable<GetAdsResponse> result = interfaces.getAds(parameters).doOnNext(getAdsResponse -> {
 
-		// Impression click for those networks who need it
-		result.doOnNext(getAdsResponse -> {
+			// Impression click for those networks who need it
 			for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
 
 				if (ad.getPartner() != null) {

@@ -67,7 +67,7 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 
 	@Override
 	public void onViewAttached() {
-		if (subscription == null) {
+		if (subscription == null || subscription.isUnsubscribed()) {
 			subscription = new CompositeSubscription();
 
 			subscription.add(RxView.clicks(itemView)

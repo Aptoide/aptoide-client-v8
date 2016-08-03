@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -22,7 +22,8 @@ public class Event {
 
 	public enum Type {
 		API,
-		CLIENT
+		CLIENT,
+		v3
 	}
 
 	public enum Name {
@@ -31,8 +32,8 @@ public class Event {
 		listStores,
 		getStore,
 		getStoreWidgets,
-		getReviews,
-		getApkComments,
+		//getReviews,
+		//getApkComments,
 		getUserTimeline,
 
 		// Client
@@ -47,6 +48,9 @@ public class Event {
 		// Displays
 		facebook,
 		twitch,
-		youtube
+		youtube,
+
+		// v3
+		getReviews
 	}
 }

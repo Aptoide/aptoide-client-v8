@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 01/08/2016.
+ */
+
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
@@ -50,14 +55,15 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
-		if (displayable.isGetApp()) {
+		if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
 			getAppButton.setVisibility(View.VISIBLE);
 			getAppButton.setText(displayable.getAppText(getContext()));
 			getAppButton.setOnClickListener(view -> ((FragmentShower) getContext())
 					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
-		} else {
-			getAppButton.setVisibility(View.GONE);
 		}
+		//		else {
+		//			getAppButton.setVisibility(View.GONE);
+		//		}
 
 		url.setOnClickListener(new View.OnClickListener() {
 			@Override
