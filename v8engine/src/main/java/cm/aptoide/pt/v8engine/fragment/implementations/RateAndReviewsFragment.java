@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -28,8 +30,11 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
+import io.realm.Realm;
+import lombok.Cleanup;
 import rx.Subscription;
 
 /**
@@ -42,17 +47,21 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	private static final String APP_ID = "app_id";
 	private static final String PACKAGE_NAME = "package_name";
 	private static final String STORE_NAME = "store_name";
+	private static final String REVIEW_ID = "review_id";
 	private long appId;
 	private String packageName;
 	private String storeName;
+	private long reviewId;
 
 	private TextView emptyData;
 	private Subscription subscription;
 
+	private MenuItem installButton;
 	private RatingTotalsLayout ratingTotalsLayout;
 	private RatingBarsLayout ratingBarsLayout;
 
 	private ProgressBar progressBar;
+	private MenuItem installMenuItem;
 
 	public static RateAndReviewsFragment newInstance(long appId, String storeName, String packageName) {
 		RateAndReviewsFragment fragment = new RateAndReviewsFragment();
@@ -64,12 +73,24 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		return fragment;
 	}
 
+	public static RateAndReviewsFragment newInstance(long appId, String storeName, String packageName, long reviewId) {
+		RateAndReviewsFragment fragment = new RateAndReviewsFragment();
+		Bundle args = new Bundle();
+		args.putLong(APP_ID, appId);
+		args.putString(STORE_NAME, storeName);
+		args.putString(PACKAGE_NAME, packageName);
+		args.putLong(REVIEW_ID, reviewId);
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public void loadExtras(Bundle args) {
 		super.loadExtras(args);
 		appId = args.getLong(APP_ID);
 		packageName = args.getString(PACKAGE_NAME);
 		storeName = args.getString(STORE_NAME);
+		reviewId = args.getLong(REVIEW_ID, -1);
 	}
 
 	@Override
@@ -107,7 +128,18 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_empty, menu);
+		inflater.inflate(R.menu.menu_install, menu);
+		installMenuItem = menu.findItem(R.id.menu_install);
+
+		@Cleanup
+		Realm realm = Database.get();
+		Installed installed = Database.InstalledQ.get(packageName, realm);
+
+		//check if the app is installed
+		if (installed != null) {
+			// app installed... update text
+			installMenuItem.setTitle(R.string.open);
+		}
 	}
 
 	@Override
@@ -115,6 +147,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		int itemId = item.getItemId();
 		if (itemId == android.R.id.home) {
 			getActivity().onBackPressed();
+			return true;
+		}
+		if (itemId == R.id.menu_install) {
+			((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(appId));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -138,12 +174,20 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		ListFullReviewsRequest.of(storeName, packageName).execute(reviewsResponse -> {
 			List<FullReview> reviews = reviewsResponse.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();
+			int index = 0;
+			int count = 0;
 			for (final FullReview review : reviews) {
 				displayables.add(new RateAndReviewCommentDisplayable(review));
+				if (review.getId() == reviewId) {
+					index = count;
+				}
+				count++;
 			}
 			setDisplayables(displayables);
 			finishLoading();
 			progressBar.setVisibility(View.GONE);
+			recyclerView.scrollToPosition(index);
+			installMenuItem.setVisible(reviewId >= 0);
 		});
 	}
 

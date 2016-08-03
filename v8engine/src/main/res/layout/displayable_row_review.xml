@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 03/08/2016.
+  -->
+
 <RelativeLayout
     style="?attr/backgroundCard"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="120dp">
 
     <ImageView
         android:id="@+id/app_icon"
@@ -11,7 +17,9 @@
         android:layout_height="96dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_margin="5dp"/>
+        android:layout_margin="5dp"
+        tools:src="@drawable/icon_brand_aptoide"
+        />
 
     <FrameLayout
         android:id="@+id/score"
@@ -28,7 +36,9 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="?attr/inverseTextColor"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            tools:text="4.0"
+            />
 
     </FrameLayout>
 
@@ -50,7 +60,9 @@
             android:layout_marginBottom="2dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            tools:text="Pokemon Go"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,7 +75,9 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                tools:src="@drawable/icon_user"
+                />
 
             <TextView
                 android:id="@+id/reviewer"
@@ -72,7 +86,9 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                tools:text="Fábio Dias"
+                />
 
         </LinearLayout>
 
@@ -87,6 +103,8 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="2"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        tools:text="This is a big description about this app in this store"
+        />
 
 </RelativeLayout>

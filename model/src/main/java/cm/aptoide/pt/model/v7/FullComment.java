@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -18,15 +18,6 @@ public class FullComment {
 	@Data
 	public static class AppData {
 
-		//		private GetAppMeta.App app;
-		private App app;
-	}
-
-	@Data
-	public static class App {
-
-		private long id;
-		private String name;
-		private String icon;
+		private GetAppMeta.App app;
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -14,9 +14,11 @@ import java.util.Locale;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.FullReview;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
 
@@ -54,7 +56,7 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 	public void bindView(RowReviewDisplayable displayable) {
 
 		FullReview review = displayable.getPojo();
-		FullReview.App app = review.getData().getApp();
+		GetAppMeta.App app = review.getData().getApp();
 
 		if (app != null) {
 			appName.setText(app.getName());
@@ -82,12 +84,8 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 //		}
 
 		itemView.setOnClickListener(v -> {
-			ShowMessage.asSnack(v, "finish this method");
-			/*
-			Intent intent = new Intent(v.getContext(), ReviewActivity.class);
-			intent.putExtra("review_id", appItem.reviewId);
-			context.startActivity(intent);
-			*/
+			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getStore()
+					.getName(), app.getPackageName(), review.getId()));
 		});
 
 	}

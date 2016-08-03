@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -43,6 +43,7 @@ public class GetAppMeta extends BaseV7Response {
 		private Stats stats;
 		private Obb obb;
 		private GetApkInfoJson.Payment payment;
+		private Pay pay;
 	}
 
 	@Data

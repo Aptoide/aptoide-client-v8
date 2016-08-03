@@ -2,7 +2,7 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 03/08/2016.
   -->
 
 <RelativeLayout
@@ -163,6 +163,7 @@
                 >
 
                 <TextView
+                    android:id="@+id/latest_available_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
@@ -176,6 +177,8 @@
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="@dimen/text_size_small"
                     android:textStyle="bold"
+                    android:visibility="invisible"
+                    tools:visibility="visible"
                     />
 
                 <LinearLayout

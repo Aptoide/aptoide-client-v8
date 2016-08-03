@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -175,12 +175,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 				ManagerPreferences.setForceServerRefreshFlag(true);
 				dialog.dismiss();
 				Logger.d(TAG, "review added");
+				ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
 			}, e -> {
 				Logger.e(TAG, e);
 				ShowMessage.asSnack(ratingLayout, R.string.error_occured);
 			});
-
-			ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
 		});
 
 		// create and show rating dialog
@@ -189,15 +188,15 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	private void scheduleAnimations() {
 		final int topReviewsCount = topReviewsPager.getAdapter().getCount();
-		if (topReviewsCount > 2) {
+		if (topReviewsCount > 1) {
 			for (int i = 0 ; i < topReviewsCount - 1 ; ++i) {
-				final int count = i;
+				final int count = i + 1;
 				topReviewsPager.postDelayed(() -> {
 					topReviewsPager.setCurrentItem(count);
-				}, (count + 1) * 1200);
+				}, count * 1000);
 			}
 		} else {
-			Logger.w(TAG, "Not enought top reviews to do paging animation.");
+			Logger.w(TAG, "Not enough top reviews to do paging animation.");
 		}
 	}
 

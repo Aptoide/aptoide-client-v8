@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
@@ -48,6 +48,10 @@ public abstract class V3<U> extends WebService<V3.Interfaces,U> {
 		@POST("getApkInfo")
 		@FormUrlEncoded
 		Observable<GetApkInfoJson> getApkInfo(@FieldMap Map<String, String> args, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("processInAppBilling")
+		@FormUrlEncoded
+		Observable<PaymentResponse> processInAppBilling(@FieldMap Map<String,String> args);
 
 		@POST("checkProductPayment")
 		@FormUrlEncoded

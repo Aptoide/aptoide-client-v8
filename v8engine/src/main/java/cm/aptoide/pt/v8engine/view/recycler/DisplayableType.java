@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -56,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Ins
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
@@ -100,6 +101,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Progress
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RateAndReviewCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RowReviewWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ScheduledDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
@@ -185,7 +187,8 @@ public enum DisplayableType {
 	RATE_AND_REVIEW(RateAndReviewCommentWidget.class, RateAndReviewCommentDisplayable.class),
 	SCHEDULED_DOWNLOAD(ScheduledDownloadWidget.class, ScheduledDownloadDisplayable.class),
 	COMPLETED_DOWNLOAD(CompletedDownloadWidget.class, CompletedDownloadDisplayable.class),
-	ACTIVE_DOWNLOAD(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class);
+	ACTIVE_DOWNLOAD(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class),
+	ROW_REVIEW(RowReviewWidget.class, RowReviewDisplayable.class);
 
 	private static final String TAG = DisplayableType.class.getName();
 	private static List<Displayable> cachedDisplayables;

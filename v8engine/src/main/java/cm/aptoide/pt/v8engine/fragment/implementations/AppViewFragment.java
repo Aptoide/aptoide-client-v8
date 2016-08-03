@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 03/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -33,19 +33,23 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.paypal.android.sdk.payments.ProofOfPayment;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import org.json.JSONException;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.PaymentPayload;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -65,8 +69,8 @@ import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
+import cm.aptoide.pt.v8engine.services.ValidatePaymentsService;
 import cm.aptoide.pt.v8engine.util.AppUtils;
-import cm.aptoide.pt.v8engine.util.PaymentInfo;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -225,13 +229,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		setDisplayables(displayables);
 	}
 
-	public void buyApp(PaymentInfo paymentInfo) {
-		PayPalPayment payment = new PayPalPayment(paymentInfo.getValue(), paymentInfo.getThreeLetterName(), Long.toString(paymentInfo.getAppId()),
+	public void buyApp(GetAppMeta.App app) {
+		GetAppMeta.Pay payment = app.getPay();
+
+		PayPalPayment payPalPayment = new PayPalPayment(BigDecimal.valueOf(payment.getPrice()), payment.getCurrency(), Long.toString(app.getId()),
 				PayPalPayment.PAYMENT_INTENT_SALE);
 
 		Intent intent = new Intent(getContext(), PaymentActivity.class);
 		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+		intent.putExtra(CheckProductPaymentRequest.Constants.STORE, app.getStore().getName());
+		intent.putExtra(CheckProductPaymentRequest.Constants.PRICE, payment.getPrice());
+		intent.putExtra(CheckProductPaymentRequest.Constants.CURRENCY, payment.getCurrency());
+		intent.putExtra(CheckProductPaymentRequest.Constants.TAX_RATE, app.getPayment().payment_services.get(0).getTaxRate());
 		startActivityForResult(intent, PAY_APP_REQUEST_CODE);
 	}
 
@@ -246,27 +256,28 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 						// TODO: 29/07/16 sithengineer
 						// send 'confirm' to the server
-						/*
 						ProofOfPayment proof = confirm.getProofOfPayment();
 
-						CheckProductPaymentRequest.ofPayPal(
-								confirm.getProofOfPayment().getPaymentId(),
-								confirm.getEnvironment(),
-								confirm.describeContents(),
-								??,
-								??,
-								??,
-								??,
-								??,
-								??
-						).execute(paymentResponse -> {
-							// TODO: 29/07/16 sithengineer remove payment proof from local DB
+						PaymentPayload paymentPayload = new PaymentPayload();
+						paymentPayload.setPayType(1); // magic value: paypal payment type id
+						paymentPayload.setApiVersion("3"); // magic value: webservice version
+						paymentPayload.setProductId(appId);
+						paymentPayload.setStore(data.getStringExtra(CheckProductPaymentRequest.Constants.STORE));
+						paymentPayload.setPrice(data.getDoubleExtra(CheckProductPaymentRequest.Constants.PRICE, 0.0));
+						paymentPayload.setCurrency(data.getStringExtra(CheckProductPaymentRequest.Constants.CURRENCY));
+						paymentPayload.setPayKey(proof.getPaymentId());
+						paymentPayload.setTaxRate(data.getDoubleExtra(CheckProductPaymentRequest.Constants.TAX_RATE, 0.0));
 
-						},
-						err ->{
-							Logger.e(TAG, err.getCause());
-						}, true);
-						*/
+						final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+						paymentPayload.setSimCountryCode(telephonyManager.getSimCountryIso());
+
+						@Cleanup
+						Realm realm = Database.get();
+						realm.beginTransaction();
+						realm.copyToRealmOrUpdate(paymentPayload);
+						realm.commitTransaction();
+
+						getActivity().startService(ValidatePaymentsService.getIntent(getActivity()));
 
 					} catch (JSONException e) {
 						Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
@@ -532,7 +543,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			}
 
 			if (app.getIcon() != null) {
-				ImageLoader.loadWithCircleTransform(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+				ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
 			}
 
 			collapsingToolbar.setTitle(app.getName());
