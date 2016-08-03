@@ -188,15 +188,15 @@
                     >
 
                     <ImageView
-                        android:layout_width="21.3dp"
-                        android:layout_height="36.7dp"
+                        android:layout_width="29.5dp"
+                        android:layout_height="wrap_content"
                         android:src="@drawable/ic_latest_version"
                         android:tint="@color/green_tint_default"
                         />
 
                     <ImageView
-                        android:layout_width="7dp"
-                        android:layout_height="7dp"
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
                         android:src="@drawable/ic_appview_version"
                         android:tint="@color/green_tint_default"
                         />
