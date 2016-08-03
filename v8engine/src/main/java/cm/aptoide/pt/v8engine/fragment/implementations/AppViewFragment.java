@@ -125,6 +125,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
+	private String packageName;
 	private Scheduled scheduled;
 	private String storeTheme;
 	//
@@ -141,6 +142,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private Subscription subscription;
 	private AdRepository adRepository;
 	private boolean sponsored;
+
+	public static AppViewFragment newInstance(String packageName) {
+		Bundle bundle = new Bundle();
+		bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+
+		AppViewFragment fragment = new AppViewFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -190,7 +200,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void loadExtras(Bundle args) {
 		super.loadExtras(args);
-		appId = args.getLong(BundleKeys.APP_ID.name());
+		appId = args.getLong(BundleKeys.APP_ID.name(), -1);
+		packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 		sponsored = minimalAd != null;
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
@@ -347,24 +358,47 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			subscription.unsubscribe();
 		}
 
-		subscription = appRepository.getApp(appId, refresh, sponsored)
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-				.flatMap(getApp -> manageAds(getApp))
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(getApp -> {
-					if (storeTheme == null) {
-						storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
-					}
+		if (appId >= 0) {
+			Logger.d(TAG, "loading app info using app ID");
+			subscription = appRepository.getApp(appId, refresh, sponsored)
+					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+					.flatMap(getApp -> manageAds(getApp))
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(getApp -> {
+						if (storeTheme == null) {
+							storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+						}
 
-					// useful data for the schedule updates menu option
-					GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-					scheduled = Scheduled.from(app);
+						// useful data for the schedule updates menu option
+						GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+						scheduled = Scheduled.from(app);
 
-					header.setup(getApp);
-					setupDisplayables(getApp);
-					setupObservables(getApp);
-					finishLoading();
-				}, throwable -> finishLoading(throwable));
+						header.setup(getApp);
+						setupDisplayables(getApp);
+						setupObservables(getApp);
+						finishLoading();
+					}, throwable -> finishLoading(throwable));
+		} else {
+			Logger.d(TAG, "loading app info using app package name");
+			subscription = appRepository.getApp(packageName, refresh, sponsored)
+					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+					.flatMap(getApp -> manageAds(getApp))
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(getApp -> {
+						if (storeTheme == null) {
+							storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+						}
+
+						// useful data for the schedule updates menu option
+						GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+						scheduled = Scheduled.from(app);
+
+						header.setup(getApp);
+						setupDisplayables(getApp);
+						setupObservables(getApp);
+						finishLoading();
+					}, throwable -> finishLoading(throwable));
+		}
 	}
 
 	@Override
@@ -489,7 +523,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private enum BundleKeys {
 		APP_ID,
-		MINIMAL_AD
+		MINIMAL_AD,
+		PACKAGE_NAME
 	}
 
 	private final class AppViewHeader {

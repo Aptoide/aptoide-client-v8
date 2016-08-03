@@ -150,7 +150,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 			return true;
 		}
 		if (itemId == R.id.menu_install) {
-			((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(appId));
+			((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(packageName));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

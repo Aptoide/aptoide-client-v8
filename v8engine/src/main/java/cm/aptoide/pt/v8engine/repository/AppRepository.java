@@ -34,6 +34,19 @@ public class AppRepository {
 		});
 	}
 
+	public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored) {
+		return GetAppRequest.of(packageName).observe(refresh).flatMap(app -> {
+			if (app.getNodes().getMeta().getData().getPay() != null) {
+				return getPayment(app.getNodes().getMeta().getData().getId(), sponsored, app.getNodes()
+						.getMeta()
+						.getData()
+						.getStore()
+						.getName()).map(payment -> addPayment(app, payment));
+			}
+			return Observable.just(app);
+		});
+	}
+
 	private GetApp addPayment(GetApp app, GetApkInfoJson.Payment payment) {
 		app.getNodes().getMeta().getData().setPayment(payment);
 		return app;
