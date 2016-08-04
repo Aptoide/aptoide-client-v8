@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    style="@style/AppViewWidget"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/flag_results"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/aptoide_orange"
+        android:textSize="18sp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/button_border_silver"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:id="@+id/working_well_layout"
+            android:layout_width="77dp"
+            android:layout_height="77dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/holo_red_dark"
+            android:clickable="true"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/working_well_count_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="@string/working_well"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="italic"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/virus_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/virus_count_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="@string/appview_good_app_guaranteed"
+                android:textAllCaps="false"
+                android:textColor="@color/green_700"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/virus_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="1dp"
+                android:gravity="left"
+                android:lines="3"
+                android:maxLines="4"
+                android:text="@string/appview_good_app_description"
+                android:textColor="@color/dark_custom_gray"
+                android:textSize="@dimen/text_size_small"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
