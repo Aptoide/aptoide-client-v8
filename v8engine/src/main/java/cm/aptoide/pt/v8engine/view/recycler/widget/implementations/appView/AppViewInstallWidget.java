@@ -9,8 +9,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,18 +19,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -42,7 +39,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
@@ -51,7 +47,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -127,8 +122,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			// app installed
 
 			// setup un-install button in menu
-			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(new Listeners().newUninstallListener(app, itemView, installed
-					.getPackageName(), displayable));
+			//			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(new Listeners().newUninstallListener(app, itemView,
+			// installed
+			//					.getPackageName(), displayable));
+			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
+				displayable.uninstall(getContext(), app);
+			});
 
 			// is it an upgrade, downgrade or open app?
 			setupUpgradeDowngradeOpenActions(getApp, installed, displayable);
@@ -149,10 +148,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		if (!isLatestAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
 			actionButton.setText(R.string.update);
-			actionButton.setOnClickListener(new Listeners().newUpdateListener(app, displayable));
+			actionButton.setOnClickListener(installOrUpgradeListener(R.string.updating_msg, app, displayable));
 		} else if (app.getFile().getVercode() < installed.getVersionCode()) {
 			actionButton.setText(R.string.downgrade);
-			actionButton.setOnClickListener(new Listeners().newDowngradeListener(app, displayable));
+			actionButton.setOnClickListener(downgradeListener(app, displayable));
 		} else {
 			actionButton.setText(R.string.open);
 			latestAvailableLabel.setVisibility(View.VISIBLE);
@@ -167,13 +166,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		if (payment != null && payment.isPaidApp()) {
 			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
 			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.symbol + " " + payment.amount + ")");
-			actionButton.setOnClickListener(new Listeners().newBuyListener(app, displayable.getPayment()));
+			actionButton.setOnClickListener(v -> {
+				displayable.buyApp(getContext(), app);
+			});
 		} else {
 			actionButton.setText(R.string.install);
-			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
+			actionButton.setOnClickListener(installOrUpgradeListener(R.string.installing_msg, app, displayable));
 			if (displayable.isShouldInstall()) {
 				actionButton.postDelayed(() -> {
-					actionButton.performClick();
 					actionButton.performClick();
 				}, 1000);
 			}
@@ -185,39 +185,49 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		return !canCompare || (app.getFile().getVercode() >= appVersions.getList().get(0).getFile().getVercode());
 	}
 
-	//private static class Listeners {
-	private class Listeners {
+	private View.OnClickListener getLatestListener(GetApp getApp) {
+		return v -> {
+			long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
+			FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(latestAppId));
+		};
+	}
 
-		private final String TAG = Listeners.class.getSimpleName();
+	private View.OnClickListener downgradeListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+		// FIXME: 15/07/16 sithengineer show notification to user saying it will lose all his data
 
-		//		private final WeakReference<AppViewInstallWidget> widgetWeakRef;
-		//
-		//		public Listeners(AppViewInstallWidget widget) {
-		//			widgetWeakRef = new WeakReference<>(widget);
-		//		}
+		return view -> {
+			final Context context = view.getContext();
+			ContextWrapper contextWrapper = (ContextWrapper) context;
+			final PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
 
-		private View.OnClickListener newBuyListener(GetAppMeta.App app, GetApkInfoJson.Payment payment) {
-			return v -> {
-				if (!AptoideAccountManager.isLoggedIn()) {
-					AptoideAccountManager.openAccountManager(getContext());
-				}
-				// process payment, save info offline, send info to server and when server confirms the app purchase delete offline data
-				((Payments) ((FragmentShower) getContext()).getLastV4()).buyApp(app);
-			};
-		}
+			permissionRequest.requestAccessToExternalFileSystem(() -> {
+				ShowMessage.asSnack(view, R.string.downgrading_msg);
 
-		private View.OnClickListener newInstallListener(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
-			return v -> innerInstallAction(app, R.string.installing_msg, v, displayable);
-		}
+				DownloadFactory factory = new DownloadFactory();
+				Download appDownload = factory.create(app);
+				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+					if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+						//final String packageName = app.getPackageName();
+						//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+						displayable.downgrade(getContext(), app).subscribe();
+					}
+				});
+			}, () -> {
+				ShowMessage.asSnack(view, R.string.needs_permission_to_fs);
+			});
+		};
+	}
 
-		private void innerInstallAction(GetAppMeta.App app, final int msgId, View v, AppViewInstallDisplayable displayable) {
+	private View.OnClickListener installOrUpgradeListener(@StringRes final int installOrUpgradeMsg, GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 
+		return v -> {
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
 			final PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 
 			permissionRequest.requestAccessToExternalFileSystem(() -> {
 
-				ShowMessage.asSnack(v, msgId);
+				ShowMessage.asSnack(v, installOrUpgradeMsg);
 
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
@@ -246,7 +256,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				downloadProgressLayout.setVisibility(View.VISIBLE);
 				actionPauseResume.setImageResource(R.drawable.ic_pause);
 
-				final FragmentActivity fragmentActivity = getContext();
 				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
 
 					// TODO: 19/07/16 sithengineer logic to show / hide pause / resume download and show download progress
@@ -285,10 +294,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(getContext()).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
-								@Cleanup
-								Realm realm = Database.get();
-								Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
+							displayable.install(getContext(), app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
 								if (minimalAd != null && minimalAd.getCpdUrl() != null) {
 									DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
 								}
@@ -299,7 +305,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 									Fragment fragmentShower = ((FragmentShower) getContext()).getLastV4();
 									if (AppMenuOptions.class.isAssignableFrom(fragmentShower.getClass())) {
 										((AppMenuOptions) fragmentShower).setUnInstallMenuOptionVisible(() -> {
-											new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
+											//new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
+											displayable.uninstall(ctx, app).subscribe(aVoid -> {
+											});
 										});
 									}
 								}
@@ -311,64 +319,49 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			}, () -> {
 				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 			});
-		}
+		};
+	}
 
-		private View.OnClickListener newUpdateListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
-			return v -> {
-				AptoideUtils.ThreadU.runOnIoThread(() -> {
-					@Cleanup
-					Realm realm = Database.get();
-					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.UPDATE);
-				});
-				innerInstallAction(app, R.string.updating_msg, v, displayable);
-			};
-		}
+	private static class Listeners {
+		//	private class Listeners {
 
-		private View.OnClickListener newDowngradeListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
-			// FIXME: 15/07/16 sithengineer show notification to user saying it will lose all his data
+		//		private final WeakReference<AppViewInstallWidget> widgetWeakRef;
+		//
+		//		public Listeners(AppViewInstallWidget widget) {
+		//			widgetWeakRef = new WeakReference<>(widget);
+		//		}
 
-			return view -> {
+		//		private View.OnClickListener newBuyListener(GetAppMeta.App app) {
+		//			return v -> {
+		//				if (!AptoideAccountManager.isLoggedIn()) {
+		//					AptoideAccountManager.openAccountManager(getContext());
+		//				}
+		//				// process payment, save info offline, send info to server and when server confirms the app purchase delete offline data
+		//				((Payments) ((FragmentShower) getContext()).getLastV4()).buyApp(app);
+		//			};
+		//		}
 
-				AptoideUtils.ThreadU.runOnIoThread(() -> {
-					@Cleanup
-					Realm realm = Database.get();
-					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.DOWNGRADE);
-				});
-				final Context context = view.getContext();
-				ContextWrapper contextWrapper = (ContextWrapper) context;
-				final PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
+		//		private View.OnClickListener newInstallListener(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+		//			return v -> innerInstallAction(app, R.string.installing_msg, v, displayable);
+		//		}
 
-				permissionRequest.requestAccessToExternalFileSystem(() -> {
-					ShowMessage.asSnack(view, R.string.downgrading_msg);
-
-					DownloadFactory factory = new DownloadFactory();
-					Download appDownload = factory.create(app);
-					DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-					downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-						if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-							//final String packageName = app.getPackageName();
-							//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-							displayable.downgrade(getContext()).subscribe();
-						}
-					});
-				}, () -> {
-					Logger.e(TAG, "unable to access to external FS");
-				});
-			};
-		}
+		//		private View.OnClickListener newUpdateListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+		//			return v -> {
+		//				AptoideUtils.ThreadU.runOnIoThread(() -> {
+		//					@Cleanup
+		//					Realm realm = Database.get();
+		//					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.UPDATE);
+		//				});
+		//				innerInstallAction(app, R.string.updating_msg, v, displayable);
+		//			};
+		//		}
 
 		private View.OnClickListener newOpenAppListener(String packageName) {
 			return v -> AptoideUtils.SystemU.openApp(packageName);
 		}
 
-		private View.OnClickListener newGetLatestListener(FragmentActivity fragmentActivity, GetApp getApp) {
-			return v -> {
-				long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
-
-				FragmentUtils.replaceFragmentV4(fragmentActivity, AppViewFragment.newInstance(latestAppId));
-			};
-		}
-
+		// TODO: 04/08/16 sithengineer delete this
+		/*
 		private Action0 newUninstallListener(GetAppMeta.App app, View itemView, String packageName, AppViewInstallDisplayable displayable) {
 			return () -> {
 				AptoideUtils.ThreadU.runOnIoThread(() -> {
@@ -379,5 +372,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				displayable.uninstall(getContext()).subscribe();
 			};
 		}
+		*/
 	}
 }
