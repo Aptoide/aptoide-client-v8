@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -23,25 +23,33 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
+	@Getter private boolean shouldInstall;
 	@Getter private GetApkInfoJson.Payment payment;
 	@Getter private MinimalAd minimalAd;
 	private InstallManager installManager;
-	private DownloadServiceHelper downloadManager;
+	//private DownloadServiceHelper downloadManager;
 	private long appId;
 	private String packageName;
-	private String storeName;
+	//private String storeName;
 
 	public AppViewInstallDisplayable() {
 	}
 
-	public AppViewInstallDisplayable(InstallManager installManager, DownloadServiceHelper downloadManager, GetApp getApp, MinimalAd ad) {
+	public AppViewInstallDisplayable(InstallManager installManager, DownloadServiceHelper downloadManager, GetApp getApp, MinimalAd minimalAd) {
+		this(installManager, downloadManager, getApp, minimalAd, false);
+	}
+
+	public AppViewInstallDisplayable(InstallManager installManager, DownloadServiceHelper downloadManager, GetApp getApp, MinimalAd minimalAd, boolean
+			shouldInstall) {
 		super(getApp, false);
 		this.installManager = installManager;
+		//this.downloadManager = downloadManager;
 		this.appId = getApp.getNodes().getMeta().getData().getId();
 		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
-		this.storeName = getApp.getNodes().getMeta().getData().getStore().getName();
+		//this.storeName = getApp.getNodes().getMeta().getData().getStore().getName();
 		this.payment = getApp.getNodes().getMeta().getData().getPayment();
-		this.minimalAd = ad;
+		this.minimalAd = minimalAd;
+		this.shouldInstall = shouldInstall;
 	}
 
 	public boolean shouldCharge() {

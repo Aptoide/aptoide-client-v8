@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v2;
@@ -22,5 +22,13 @@ public class GenericResponseV2 {
 
 	public List<ErrorResponse> getErrors() {
 		return errors;
+	}
+
+	public boolean hasErrors() {
+		return errors != null && !errors.isEmpty();
+	}
+
+	public boolean isOk() {
+		return status != null && status.equalsIgnoreCase("ok");
 	}
 }

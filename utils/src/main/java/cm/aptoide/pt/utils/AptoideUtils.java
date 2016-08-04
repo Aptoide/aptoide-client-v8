@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -36,6 +36,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -548,9 +549,9 @@ public class AptoideUtils {
 	public static final class StringU {
 
 		/**
-		 * <p>Joins the elements of the provided {@code Iterator} into a single String containing the provided elements.</p>
-		 * <p>
-		 * <p>No delimiter is added before or after the list. A {@code null} separator is the same as an empty String ("").</p>
+		 * <p>Joins the elements of the provided {@code Iterator} into a single String containing the provided elements.</p> <p> <p>No delimiter is added
+		 * before
+		 * or after the list. A {@code null} separator is the same as an empty String ("").</p>
 		 *
 		 * @param iterator  the {@code Iterator} of values to join together, may be null
 		 * @param separator the separator character to use, null treated as ""
@@ -592,9 +593,9 @@ public class AptoideUtils {
 		}
 
 		/**
-		 * <p>Joins the elements of the provided {@code Iterable} into a single String containing the provided elements.</p>
-		 * <p>
-		 * <p>No delimiter is added before or after the list. A {@code null} separator is the same as an empty String ("").</p>
+		 * <p>Joins the elements of the provided {@code Iterable} into a single String containing the provided elements.</p> <p> <p>No delimiter is added
+		 * before
+		 * or after the list. A {@code null} separator is the same as an empty String ("").</p>
 		 *
 		 * @param iterable  the {@code Iterable} providing the values to join together, may be null
 		 * @param separator the separator character to use, null treated as ""
@@ -837,6 +838,14 @@ public class AptoideUtils {
 			Collections.sort(list, (lhs, rhs) -> lhs.getName().compareTo(rhs.getName()));
 
 			return list;
+		}
+
+		public static void hideKeyboard(Activity activity) {
+			View view = activity.getCurrentFocus();
+			if (view != null) {
+				((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).
+						hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+			}
 		}
 	}
 

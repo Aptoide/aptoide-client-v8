@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -62,7 +62,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
 		@Getter private Long appId;
 		@Getter private String packageName;
-		@Getter private Boolean refresh;
+		@Getter private boolean refresh;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long appId, Boolean refresh) {
 			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);

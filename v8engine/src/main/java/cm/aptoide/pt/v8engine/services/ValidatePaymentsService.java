@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.services;
@@ -9,6 +9,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.UiThread;
 
 import cm.aptoide.pt.database.Database;
@@ -45,7 +46,7 @@ public class ValidatePaymentsService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		handler = new Handler();
+		handler = new Handler(Looper.getMainLooper());
 
 		@Cleanup
 		Realm realm = Database.get();

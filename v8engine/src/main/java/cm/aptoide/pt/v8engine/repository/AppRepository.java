@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.repository;
@@ -20,10 +20,6 @@ import rx.Observable;
 public class AppRepository {
 
 	private final NetworkOperatorManager operatorManager;
-
-	private Observable<GetApkInfoJson.Payment> getPayment(long appId, boolean fromSponsored, String storeName) {
-		return GetApkInfoRequest.of(appId, operatorManager, fromSponsored, storeName).observe(true).map(app -> app.getPayment());
-	}
 
 	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored) {
 		return GetAppRequest.of(appId).observe(refresh).flatMap(app -> {
@@ -45,6 +41,10 @@ public class AppRepository {
 			}
 			return Observable.just(app);
 		});
+	}
+
+	private Observable<GetApkInfoJson.Payment> getPayment(long appId, boolean fromSponsored, String storeName) {
+		return GetApkInfoRequest.of(appId, operatorManager, fromSponsored, storeName).observe(true).map(app -> app.getPayment());
 	}
 
 	private GetApp addPayment(GetApp app, GetApkInfoJson.Payment payment) {

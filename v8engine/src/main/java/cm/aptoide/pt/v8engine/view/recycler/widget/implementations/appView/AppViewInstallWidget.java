@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -170,6 +170,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		} else {
 			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
+			if (displayable.isShouldInstall()) {
+				actionButton.postDelayed(() -> {
+					actionButton.performClick();
+					actionButton.performClick();
+				}, 1000);
+			}
 		}
 	}
 
@@ -278,20 +284,20 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(getContext()).observeOn(AndroidSchedulers.mainThread()).subscribe(success -> {
+							displayable.install(getContext()).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+								@Cleanup
+								Realm realm = Database.get();
+								Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
+								if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+									DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
+								}
+							}).subscribe(success -> {
 								if (actionButton.getVisibility() == View.VISIBLE) {
 									actionButton.setText(R.string.open);
 									// FIXME: 20/07/16 sithengineer refactor this ugly code
 									((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
 										new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
 									});
-
-									@Cleanup
-									Realm realm = Database.get();
-									Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
-									if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-										DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
-									}
 								}
 							});
 							break;

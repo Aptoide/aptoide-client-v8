@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
@@ -43,9 +44,9 @@ public class ListFullCommentsRequest extends V7<ListFullComments,ListFullComment
 		//
 		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api
-				.isMature(), Api.Q, limit, reviewId);
+		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
+				.isMature(), Api.Q, limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
+
 		return new ListFullCommentsRequest(body, BASE_HOST);
 	}
 
@@ -64,15 +65,17 @@ public class ListFullCommentsRequest extends V7<ListFullComments,ListFullComment
 		//private String lang;
 		//private boolean mature;
 		private String q = Api.Q;
+		@Getter private boolean refresh;
 
 		private long reviewId;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, int limit, long
-				reviewId) {
+		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, int limit, long reviewId,
+		            Boolean refresh) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
 			this.limit = limit;
 			this.reviewId = reviewId;
+			this.refresh = refresh;
 		}
 	}
 }

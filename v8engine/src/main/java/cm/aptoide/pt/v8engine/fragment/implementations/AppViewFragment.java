@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -49,8 +49,8 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -127,6 +127,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	//	private GetAppMeta.App app;
 	private long appId;
 	private String packageName;
+	private boolean shouldInstall;
 	private Scheduled scheduled;
 	private String storeTheme;
 	//
@@ -145,9 +146,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private boolean sponsored;
 	private List<GetAdsResponse.Ad> suggestedAds;
 
-	public static AppViewFragment newInstance(String packageName) {
+	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
 		bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+		bundle.putBoolean(BundleKeys.SHOULD_INSTALL.name(), shouldInstall);
 
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
@@ -208,6 +210,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name(), -1);
 		packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
+		shouldInstall = args.getBoolean(BundleKeys.SHOULD_INSTALL.name(), false);
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 		sponsored = minimalAd != null;
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
@@ -234,7 +237,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd));
+		displayables.add(new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd, shouldInstall));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -480,9 +483,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		}
 
 		if (position == Position.FIRST) {
-			rView.smoothScrollToPosition(0);
+			rView.scrollToPosition(0);
 		} else if (position == Position.LAST) {
-			rView.smoothScrollToPosition(getAdapter().getItemCount());
+			rView.scrollToPosition(getAdapter().getItemCount());
 		}
 	}
 
@@ -512,6 +515,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
 			header.getAppBarLayout().setExpanded(isExpanded);
 		}
+
+		// restore download bar status
+		// TODO: 04/08/16 sithengineer restore download bar status
 	}
 
 	//
@@ -522,11 +528,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	public void onPause() {
 		super.onPause();
 
+		// save header status
 		if (header != null && header.getAppBarLayout() != null) {
 			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
 			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
 					.getVisibility() == View.VISIBLE);
 		}
+
+		// save download bar status
+		// TODO: 04/08/16 sithengineer save download bar status
 	}
 
 	@Override
@@ -545,7 +555,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private enum BundleKeys {
 		APP_ID,
 		MINIMAL_AD,
-		PACKAGE_NAME
+		PACKAGE_NAME,
+		SHOULD_INSTALL
 	}
 
 	private final class AppViewHeader {

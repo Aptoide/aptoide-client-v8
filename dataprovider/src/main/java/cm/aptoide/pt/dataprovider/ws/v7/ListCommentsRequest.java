@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
@@ -44,7 +45,7 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
-				.isMature(), Api.Q, limit, reviewId);
+				.isMature(), Api.Q, limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListCommentsRequest(body, BASE_HOST);
 	}
 
@@ -63,15 +64,17 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		//private String lang;
 		//private boolean mature;
 		private String q = Api.Q;
+		@Getter private boolean refresh;
 
 		private long reviewId;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, int limit, long
-				reviewId) {
+		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, int limit, long reviewId,
+		            boolean refresh) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
 			this.limit = limit;
 			this.reviewId = reviewId;
+			this.refresh = refresh;
 		}
 	}
 }

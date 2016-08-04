@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
@@ -65,9 +65,9 @@ public class DownloadFactory {
 		download.setIcon(update.getIcon());
 		download.setAppName(update.getLabel());
 		download.setFilesToDownload(createFileList(update.getAppId(), update.getPackageName(), update.getApkPath(),
-				update
-				.getAlternativeApkPath(), update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update
-						.getPatchObbPath(), update.getPatchObbMd5(), update.getVersionCode(), update.getMainObbName(), update.getPatchObbName()));
+				update.getAlternativeApkPath(), update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(), update
+						.getPatchObbMd5(), update
+						.getVersionCode(), update.getMainObbName(), update.getPatchObbName()));
 		return download;
 	}
 

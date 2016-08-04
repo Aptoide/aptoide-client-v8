@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -9,11 +9,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,11 +22,13 @@ import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.ListFullCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.FullComment;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -44,6 +47,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 	private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
 	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 	private static final Locale LOCALE = Locale.getDefault();
+	private static final int DEFAULT_LIMIT = 3;
 
 	private TextView reply;
 	private TextView showHideReplies;
@@ -127,7 +131,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_comment_on_review, null);
 
 		final TextView titleTextView = (TextView) view.findViewById(R.id.title);
-		final EditText inputEditText = (EditText) view.findViewById(R.id.input_text);
+		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.input_layout_title);
 		final Button commentBtn = (Button) view.findViewById(R.id.comment_button);
 		final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
 
@@ -139,32 +143,33 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 		commentBtn.setOnClickListener(v -> {
 
-			final String commentOnReviewText = inputEditText.getText().toString();
+			AptoideUtils.SystemU.hideKeyboard(getContext());
+
+			final String commentOnReviewText = textInputLayout.getEditText().getText().toString();
+
+			if (TextUtils.isEmpty(commentOnReviewText)) {
+				textInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+				return;
+			}
+
+			textInputLayout.setErrorEnabled(false);
+			dialog.dismiss();
 
 			PostCommentRequest.of(reviewId, commentOnReviewText).execute(response -> {
-
-				if (response.getError() != null) {
-					Logger.e(TAG, response.getError().toString());
-					return;
+				dialog.dismiss();
+				if (response.isOk()) {
+					ManagerPreferences.setForceServerRefreshFlag(true);
+					loadCommentsForThisReview(reviewId);
+					Logger.d(TAG, "comment to review added");
+					ShowMessage.asSnack(flagHelfull, R.string.comment_submitted);
+				} else {
+					ShowMessage.asSnack(flagHelfull, R.string.error_occured);
 				}
-
-				List<BaseV7Response.Error> errors = response.getErrors();
-				if (errors != null && !errors.isEmpty()) {
-					for (final BaseV7Response.Error error : errors) {
-						Logger.e(TAG, error.toString());
-					}
-					return;
-				}
-
-				loadCommentsForThisReview(reviewId);
-				ManagerPreferences.setForceServerRefreshFlag(true);
-				Logger.d(TAG, "comment to review added");
 			}, e -> {
+				dialog.dismiss();
 				Logger.e(TAG, e);
+				ShowMessage.asSnack(flagHelfull, R.string.error_occured);
 			});
-
-			ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
-			dialog.dismiss();
 		});
 
 		cancelBtn.setOnClickListener(v -> {
@@ -175,7 +180,24 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 	}
 
 	private void loadCommentsForThisReview(long reviewId) {
-		ShowMessage.asSnack(flagHelfull, "TO DO: show / hide replies");
+		loadCommentsForThisReview(reviewId, DEFAULT_LIMIT);
+	}
+
+	private void loadCommentsForThisReview(long reviewId, int limit) {
+		ListFullCommentsRequest.of(reviewId, limit).execute(listFullComments -> {
+			if (listFullComments.isOk()) {
+				List<FullComment> comments = listFullComments.getDatalist().getList();
+
+				// TODO: 04/08/16 sithengineer add comments to the recycler view
+
+			} else {
+				Logger.e(TAG, "error loading comments");
+				ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+			}
+		}, err -> {
+			Logger.e(TAG, err);
+			ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+		}, true);
 	}
 
 	private void setReviewRating(long reviewId, boolean positive) {

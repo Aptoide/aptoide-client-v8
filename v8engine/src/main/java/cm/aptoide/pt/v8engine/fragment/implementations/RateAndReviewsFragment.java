@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -150,7 +150,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 			return true;
 		}
 		if (itemId == R.id.menu_install) {
-			((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(packageName));
+			((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(packageName, true));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -213,7 +213,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
 		public void setup(GetAppMeta.App data) {
 			GetAppMeta.Stats stats = data.getStats();
-			usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getDownloads()));
+			usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating().getTotal()));
 			ratingValue.setText(String.format(Locale.getDefault(), "%.1f", stats.getRating().getAvg()));
 			ratingBar.setRating(stats.getRating().getAvg());
 		}

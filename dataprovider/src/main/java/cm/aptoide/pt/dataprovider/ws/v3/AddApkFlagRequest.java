@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -22,7 +22,7 @@ public class AddApkFlagRequest extends V3<GenericResponseV2> {
 	}
 
 	public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag) {
-		Map<String,String> args = new HashMapNotNull<>();
+		Map<String,String> args = new HashMap<>();
 
 		args.put("repo", storeName);
 		args.put("md5sum", appMd5sum);
