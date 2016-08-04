@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
@@ -26,6 +27,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDis
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 
 /**
@@ -69,6 +71,9 @@ public class DisplayablesFactory {
 
 							displayables.add(ads);
 						}
+						break;
+					case STORE_META:
+						displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
 						break;
 				}
 			}

@@ -53,6 +53,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
@@ -96,6 +97,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAdWi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppListWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisplayWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreMetaWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
@@ -132,6 +134,7 @@ public enum DisplayableType {
 	GRID_HEADER(StoreGridHeaderWidget.class, StoreGridHeaderDisplayable.class),
 	FOOTER_ROW(FooterRowWidget.class, FooterRowDisplayable.class),
 	GRID_STORE(GridStoreWidget.class, GridStoreDisplayable.class),
+	STORE_META(GridStoreMetaWidget.class, GridStoreMetaDisplayable.class),
 	ADS(GridAdWidget.class, GridAdDisplayable.class),
 
 	// Multi Layout

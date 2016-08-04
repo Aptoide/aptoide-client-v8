@@ -146,10 +146,6 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<GetStore> getStore(@Path(value = "url", encoded = true) String path, @Body GetStoreRequest.Body
 				body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("getStoreMeta")
-		Observable<GetStoreMeta> getStoreMeta(@Body GetStoreMetaRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
-
 		@POST("getStoreDisplays{url}")
 		Observable<GetStoreDisplays> getStoreDisplays(@Path(value = "url", encoded = true) String path, @Body
 		GetStoreDisplaysRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -161,6 +157,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("listStores{url}")
 		Observable<ListStores> listStores(@Path(value = "url", encoded = true) String path, @Body ListStoresRequest
 				.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("getStoreMeta{url}")
+		Observable<GetStoreMeta> getStoreMeta(@Path(value = "url", encoded = true) String path, @Body GetStoreMetaRequest.Body body, @Header(RequestCache
+				.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("listSearchApps")
 		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body, @Header(RequestCache
