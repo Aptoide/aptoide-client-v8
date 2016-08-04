@@ -5,14 +5,20 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
-import cm.aptoide.pt.model.v7.GetApp;
+import java.util.LinkedList;
+import java.util.List;
+
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -23,15 +29,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 @Displayables({AppViewSuggestedAppsDisplayable.class})
 public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDisplayable> {
 
-	private ImageView appIcon;
-	private TextView appName;
-	private RatingBar ratingBar;
-	private TextView size;
-	private TextView sponsored;
-	private TextView description;
-	private Button installButton;
-
-	private SuggestedAppExtraInfo extraInfoLayout;
+	private RecyclerView recyclerView;
 
 	public AppViewSuggestedAppsWidget(View itemView) {
 		super(itemView);
@@ -39,54 +37,33 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
 
 	@Override
 	protected void assignViews(View itemView) {
-		appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
-		appName = (TextView) itemView.findViewById(R.id.app_name);
-		ratingBar = (RatingBar) itemView.findViewById(R.id.rating_label);
-		size = (TextView) itemView.findViewById(R.id.size_value);
-		sponsored = (TextView) itemView.findViewById(R.id.sponsored);
-		description = (TextView) itemView.findViewById(R.id.description);
-		installButton = (Button) itemView.findViewById(R.id.btinstall);
-
-		extraInfoLayout = new SuggestedAppExtraInfo(itemView);
+		recyclerView = (RecyclerView) itemView.findViewById(R.id.appview_suggested_recycler_view);
 	}
 
 	@Override
 	public void bindView(AppViewSuggestedAppsDisplayable displayable) {
-		final GetApp pojo = displayable.getPojo();
+		final List<GetAdsResponse.Ad> ads = displayable.getPojo();
 
-		if (extraInfoLayout != null) {
-			extraInfoLayout.bindView(pojo);
+		List<Displayable> displayables = new LinkedList<>();
+		for (GetAdsResponse.Ad ad : ads) {
+			displayables.add(new AppViewSuggestedAppDisplayable(MinimalAd.from(ad)));
 		}
 
-		// TODO
+		BaseAdapter adapter = new BaseAdapter(displayables) {
+			@Override
+			public int getItemCount() {
+				return super.getItemCount();
+			}
+		};
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), OrientationHelper.HORIZONTAL, false));
+		recyclerView.setAdapter(adapter);
 	}
 
 	@Override
 	public void onViewAttached() {
-
 	}
 
 	@Override
 	public void onViewDetached() {
-
-	}
-
-	private static final class SuggestedAppExtraInfo {
-
-		private View extraInfoLayout;
-		private ImageView badge;
-		private TextView text;
-
-		public SuggestedAppExtraInfo(View view) {
-			extraInfoLayout = view.findViewById(R.id.extra_info_layout);
-			if (extraInfoLayout != null) {
-				badge = (ImageView) extraInfoLayout.findViewById(R.id.app_badge);
-				text = (TextView) extraInfoLayout.findViewById(R.id.app_badge_text);
-			}
-		}
-
-		public void bindView(GetApp getApp) {
-			// TODO
-		}
 	}
 }

@@ -20,8 +20,8 @@ public class MinimalAd extends RealmObject implements Parcelable {
 
 	public static final Creator<MinimalAd> CREATOR = new Creator<MinimalAd>() {
 		@Override
-		public MinimalAd createFromParcel(Parcel in) {
-			return new MinimalAd(in);
+		public MinimalAd createFromParcel(Parcel source) {
+			return new MinimalAd(source);
 		}
 
 		@Override
@@ -29,7 +29,7 @@ public class MinimalAd extends RealmObject implements Parcelable {
 			return new MinimalAd[size];
 		}
 	};
-
+	@Getter private String description;
 	@Getter private String packageName;
 	@Getter private long networkId;
 	@Getter private String clickUrl;
@@ -38,11 +38,13 @@ public class MinimalAd extends RealmObject implements Parcelable {
 	@Getter private long appId;
 	@Getter private long adId;
 	@Getter private String cpiUrl;
+	@Getter private String name;
+	@Getter private String iconPath;
 
 	public MinimalAd() {
 	}
 
-	public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl, String cpdUrl, long appId, long adId, String cpiUrl) {
+	public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl, String cpdUrl, long appId, long adId, String cpiUrl, String name, String iconPath, String description) {
 		this.packageName = packageName;
 		this.networkId = networkId;
 		this.clickUrl = clickUrl;
@@ -51,21 +53,35 @@ public class MinimalAd extends RealmObject implements Parcelable {
 		this.appId = appId;
 		this.adId = adId;
 		this.cpiUrl = cpiUrl;
+		this.name = name;
+		this.iconPath = iconPath;
+		this.description = description;
 	}
 
 	protected MinimalAd(Parcel in) {
-		packageName = in.readString();
-		networkId = in.readLong();
-		clickUrl = in.readString();
-		cpcUrl = in.readString();
-		cpdUrl = in.readString();
-		appId = in.readLong();
-		adId = in.readLong();
+		this.description = in.readString();
+		this.packageName = in.readString();
+		this.networkId = in.readLong();
+		this.clickUrl = in.readString();
+		this.cpcUrl = in.readString();
+		this.cpdUrl = in.readString();
+		this.appId = in.readLong();
+		this.adId = in.readLong();
+		this.cpiUrl = in.readString();
+		this.name = in.readString();
+		this.iconPath = in.readString();
 	}
 
 	public static MinimalAd from(@NonNull GetAdsResponse.Ad ad) {
-		return new MinimalAd(ad.getData().getPackageName(), ad.getPartner().getInfo().getId(), ad.getPartner().getData().getClickUrl(), ad.getInfo()
-				.getCpcUrl(), ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(), ad.getInfo().getCpiUrl());
+		GetAdsResponse.Partner partner = ad.getPartner();
+		int id = 0;
+		String clickUrl = null;
+		if (partner != null) {
+			id = partner.getInfo().getId();
+			clickUrl = partner.getData().getClickUrl();
+		}
+		return new MinimalAd(ad.getData().getPackageName(), id, clickUrl, ad.getInfo().getCpcUrl(), ad.getInfo().getCpdUrl(), ad.getData().getId(), ad
+				.getInfo().getAdId(), ad.getInfo().getCpiUrl(), ad.getData().getName(), ad.getData().getIcon(), ad.getData().getDescription());
 	}
 
 	@Override
@@ -75,13 +91,16 @@ public class MinimalAd extends RealmObject implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-
-		dest.writeString(packageName);
-		dest.writeLong(networkId);
-		dest.writeString(clickUrl);
-		dest.writeString(cpcUrl);
-		dest.writeString(cpdUrl);
-		dest.writeLong(appId);
-		dest.writeLong(adId);
+		dest.writeString(this.description);
+		dest.writeString(this.packageName);
+		dest.writeLong(this.networkId);
+		dest.writeString(this.clickUrl);
+		dest.writeString(this.cpcUrl);
+		dest.writeString(this.cpdUrl);
+		dest.writeLong(this.appId);
+		dest.writeLong(this.adId);
+		dest.writeString(this.cpiUrl);
+		dest.writeString(this.name);
+		dest.writeString(this.iconPath);
 	}
 }

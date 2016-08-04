@@ -48,18 +48,6 @@ public abstract class V8Engine extends DataProvider {
 
 	@Getter static DownloadService downloadService;
 
-//	private ServiceConnection downloadServiceConnection = new ServiceConnection() {
-//		@Override
-//		public void onServiceConnected(ComponentName className, IBinder service) {
-//			DownloadService.LocalBinder binder = (DownloadService.LocalBinder) service;
-//			downloadService = binder.getService();
-//		}
-//
-//		@Override
-//		public void onServiceDisconnected(ComponentName arg0) {
-//		}
-//	};
-
 	public static void loadStores() {
 
 		AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
@@ -114,17 +102,17 @@ public abstract class V8Engine extends DataProvider {
 		}
 
 		if (SecurePreferences.isFirstRun()) {
-			loadInstalledApps();
-
-			if (AptoideAccountManager.isLoggedIn()) {
-				if (!SecurePreferences.isUserDataLoaded()) {
-					loadUserData();
-					SecurePreferences.setUserDataLoaded();
+			loadInstalledApps().doOnNext(o -> {
+				if (AptoideAccountManager.isLoggedIn()) {
+					if (!SecurePreferences.isUserDataLoaded()) {
+						loadUserData();
+						SecurePreferences.setUserDataLoaded();
+					}
+				} else {
+					generateAptoideUUID().subscribe(success -> addDefaultStore());
 				}
-			} else {
-				generateAptoideUUID().subscribe(success -> addDefaultStore());
-			}
-//			SecurePreferences.setFirstRun(false);    //jdandrade - Disabled this line so i could run first run wizard.
+				//			    SecurePreferences.setFirstRun(false);    //jdandrade - Disabled this line so i could run first run wizard.
+			}).subscribe();
 		}
 
 		final int appSignature = SecurityUtils.checkAppSignature(this);
@@ -172,8 +160,8 @@ public abstract class V8Engine extends DataProvider {
 		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> DataproviderUtils.checkUpdates(), null);
 	}
 
-	private void loadInstalledApps() {
-		Observable.fromCallable(() -> {
+	private Observable<?> loadInstalledApps() {
+		return Observable.fromCallable(() -> {
 			@Cleanup Realm realm = Database.get(this);
 			Database.dropTable(Installed.class, realm);
 			// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
@@ -189,7 +177,7 @@ public abstract class V8Engine extends DataProvider {
 				Database.save(installed, realm);
 			}
 			return null;
-		}).subscribeOn(Schedulers.io()).subscribe();
+		}).subscribeOn(Schedulers.io());
 
 	}
 

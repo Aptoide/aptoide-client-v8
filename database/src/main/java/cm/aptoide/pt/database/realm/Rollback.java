@@ -49,8 +49,10 @@ public class Rollback extends RealmObject {
 	private long appId;
 	private String alternativeApkPath;
 	private String apkPath;
+	private String mainObbName;
 	private String patchObbMd5;
 	private String patchObbPath;
+	private String patchObbName;
 	private String mainObbMd5;
 	private String mainObbPath;
 	private double fileSize;
@@ -92,12 +94,14 @@ public class Rollback extends RealmObject {
 		if (obb != null) {
 			Obb.ObbItem obbMain = obb.getMain();
 			if (obbMain != null) {
+				mainObbName = obbMain.getFilename();
 				mainObbPath = obbMain.getPath();
 				mainObbMd5 = obbMain.getMd5sum();
 			}
 
 			Obb.ObbItem patch = obb.getPatch();
 			if (patch != null) {
+				patchObbName = patch.getFilename();
 				patchObbPath = patch.getPath();
 				patchObbMd5 = patch.getMd5sum();
 			}
@@ -304,6 +308,22 @@ public class Rollback extends RealmObject {
 
 	public void setFileSize(double fileSize) {
 		this.fileSize = fileSize;
+	}
+
+	public String getMainObbName() {
+		return mainObbName;
+	}
+
+	public void setMainObbName(String mainObbName) {
+		this.mainObbName = mainObbName;
+	}
+
+	public String getPatchObbName() {
+		return patchObbName;
+	}
+
+	public void setPatchObbName(String patchObbName) {
+		this.patchObbName = patchObbName;
 	}
 
 	public enum Action {

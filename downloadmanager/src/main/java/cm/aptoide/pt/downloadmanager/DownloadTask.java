@@ -74,7 +74,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				path = AptoideDownloadManager.APK_PATH;
 				break;
 			case FileToDownload.OBB:
-				path = AptoideDownloadManager.OBB_PATH + fileToDownload.getPackageName();
+				path = AptoideDownloadManager.OBB_PATH + fileToDownload.getPackageName() + "/";
 				break;
 			case FileToDownload.GENERIC:
 			default:
@@ -138,8 +138,9 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	private synchronized void saveDownloadInDb(Download download) {
 		Observable.fromCallable(() -> {
-			@Cleanup Realm realm = Database.get();
+			Realm realm = Database.get();
 			Database.save(download, realm);
+			realm.close();
 			return null;
 		}).subscribeOn(Schedulers.io()).subscribe();
 	}
@@ -194,7 +195,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				.flatMap(file -> {
 					file.setPath(getFilePathFromFileType(file));
 					file.setStatus(Download.COMPLETED);
-					return moveFileToRightPlace(download).doOnNext(success -> file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE));
+					return moveFileToRightPlace(download).doOnNext(fileMoved -> file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE));
 				})
 				.doOnUnsubscribe(() -> AptoideDownloadManager.getInstance().setDownloading(false))
 				.subscribeOn(Schedulers.io())
@@ -262,10 +263,14 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	private Observable<Void> moveFileToRightPlace(Download download) {
 		for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 			if (fileToDownload.getStatus() != Download.COMPLETED) {
-				return Observable.error(new IllegalArgumentException("All files must be completed!"));
+				return Observable.just(null);
 			}
 		}
-		return Observable.from(download.getFilesToDownload())
-				.flatMap(file -> FileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, file.getPath(), file.getFileName()));
+		return Observable.fromCallable(() -> {
+			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+				FileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, fileToDownload.getPath(), fileToDownload.getFileName());
+			}
+			return null;
+		});
 	}
 }

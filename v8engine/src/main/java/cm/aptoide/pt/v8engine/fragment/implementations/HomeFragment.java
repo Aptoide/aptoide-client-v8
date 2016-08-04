@@ -16,7 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.webkit.URLUtil;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
@@ -24,7 +27,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -131,13 +136,39 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		setHasOptionsMenu(true);
 	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
+	private void setUserDataOnHeader(){
+		TextView userEmail = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_email_text);
+		TextView userUsername = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_name_text);
+		ImageView userAvatar = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_image);
 
-		mDrawerLayout = null;
-		mNavigationView = null;
+		if(AptoideAccountManager.isLoggedIn()) {
+			userEmail.setText(AptoideAccountManager.getUserName());
+			userUsername.setText(AptoideAccountManager.getUserInfo().getNickName());
+			if (URLUtil.isValidUrl(AptoideAccountManager.getUserInfo().getUserAvatar()))
+				ImageLoader.load(AptoideAccountManager.getUserInfo().getUserAvatar(),userAvatar);
+			else
+				userAvatar.setImageResource(R.drawable.ic_user_icon);
+		}
+		else{
+			userEmail.setText("");
+			userUsername.setText("");
+			userAvatar.setImageResource(R.drawable.ic_user_icon);
+		}
 	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		setUserDataOnHeader();
+	}
+
+//	@Override
+//	public void onDestroyView() {
+//		super.onDestroyView();
+//
+//		mDrawerLayout = null;
+//		mNavigationView = null;
+//	}
 
 	@Override
 	public int getContentViewId() {
@@ -204,17 +235,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	}
 
 	@Override
-	public boolean isDrawerOpened() {
-		return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
-	}
+	public boolean isDrawerOpened() {return mDrawerLayout.isDrawerOpen(Gravity.LEFT);}
 
 	@Override
-	public void openDrawer() {
-		mDrawerLayout.openDrawer(Gravity.LEFT);
-	}
+	public void openDrawer() {mDrawerLayout.openDrawer(Gravity.LEFT);}
 
 	@Override
-	public void closeDrawer() {
-		mDrawerLayout.closeDrawers();
-	}
+	public void closeDrawer() {mDrawerLayout.closeDrawers();}
 }
