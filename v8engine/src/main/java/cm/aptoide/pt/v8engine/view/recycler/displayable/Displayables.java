@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+
 /**
  * Created by neuro on 18-04-2016.
  */
@@ -20,6 +22,11 @@ public class Displayables {
 	}
 
 	public void add(int position, Displayable displayable) {
+		// Ignore empty displayables
+		if (displayable instanceof EmptyDisplayable) {
+			return;
+		}
+
 		if (displayable instanceof DisplayableGroup) {
 			add(position, ((DisplayableGroup) displayable).getChildren());
 		} else {
@@ -34,6 +41,11 @@ public class Displayables {
 	}
 
 	public void add(Displayable displayable) {
+		// Ignore empty displayables
+		if (displayable instanceof EmptyDisplayable) {
+			return;
+		}
+
 		if (displayable instanceof DisplayableGroup) {
 			add(((DisplayableGroup) displayable).getChildren());
 		} else {
