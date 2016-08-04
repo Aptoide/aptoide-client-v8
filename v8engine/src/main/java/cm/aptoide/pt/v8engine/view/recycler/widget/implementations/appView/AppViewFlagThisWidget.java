@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -93,6 +94,16 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 		virusLayout.setOnClickListener(buttonListener);
 	}
 
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
+	}
+
 	private View.OnClickListener handleButtonClick(final String storeName, final String md5) {
 		return v -> {
 
@@ -103,72 +114,81 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 				return;
 			}
 
-			ShowMessage.asSnack(v, R.string.casting_vote);
-
-			v.setSelected(true);
-			v.setPressed(false);
-			workingWellLayout.setClickable(false);
-			needsLicenseLayout.setClickable(false);
-			fakeAppLayout.setClickable(false);
-			virusLayout.setClickable(false);
+			//ShowMessage.asSnack(v, R.string.casting_vote);
+			setButtonPressed(v);
 
 			final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
-			AddApkFlagRequest.of(storeName, md5, "").execute(response -> {
-				boolean voteSubmitted = false;
-				switch (type) {
-					case GOOD:
-						voteSubmitted = true;
-						workingWellText.setText(Integer.toString(Integer.parseInt(workingWellText.getText().toString()) + 1));
-						break;
+			AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase()).execute(response -> {
+				if (response.isOk() && !response.hasErrors()) {
+					boolean voteSubmitted = false;
+					switch (type) {
+						case GOOD:
+							voteSubmitted = true;
+							workingWellText.setText(Integer.toString(Integer.parseInt(workingWellText.getText().toString()) + 1));
+							break;
 
-					case LICENSE:
-						voteSubmitted = true;
-						needsLicenceText.setText(Integer.toString(Integer.parseInt(needsLicenceText.getText().toString()) + 1));
-						break;
+						case LICENSE:
+							voteSubmitted = true;
+							needsLicenceText.setText(Integer.toString(Integer.parseInt(needsLicenceText.getText().toString()) + 1));
+							break;
 
-					case FAKE:
-						voteSubmitted = true;
-						fakeAppText.setText(Integer.toString(Integer.parseInt(fakeAppText.getText().toString()) + 1));
-						break;
+						case FAKE:
+							voteSubmitted = true;
+							fakeAppText.setText(Integer.toString(Integer.parseInt(fakeAppText.getText().toString()) + 1));
+							break;
 
-					case VIRUS:
-						voteSubmitted = true;
-						virusText.setText(Integer.toString(Integer.parseInt(virusText.getText().toString()) + 1));
-						break;
+						case VIRUS:
+							voteSubmitted = true;
+							virusText.setText(Integer.toString(Integer.parseInt(virusText.getText().toString()) + 1));
+							break;
 
-					case FREEZE:
-						// un-used type
-						break;
+						case FREEZE:
+							// un-used type
+							break;
 
-					default:
-						throw new IllegalArgumentException("Unable to find Type " + type.name());
+						default:
+							throw new IllegalArgumentException("Unable to find Type " + type.name());
+					}
+
+					if (voteSubmitted) {
+						ShowMessage.asSnack(v, R.string.vote_submitted);
+						return;
+					}
 				}
 
-				if (voteSubmitted) {
-					ShowMessage.asSnack(v, R.string.vote_submitted);
-				} else {
-					workingWellLayout.setClickable(true);
-					needsLicenseLayout.setClickable(true);
-					fakeAppLayout.setClickable(true);
-					virusLayout.setClickable(true);
-					v.setSelected(false);
-					v.setPressed(false);
+				if (response.hasErrors()) {
+					for (final ErrorResponse errorResponse : response.getErrors()) {
+						Logger.e(TAG, errorResponse.getErrorDescription());
+					}
 				}
+
+				setAllButtonsUnPressed(v);
+				ShowMessage.asSnack(v, R.string.unknown_error);
 			}, error -> {
 				Logger.e(TAG, error);
+				setAllButtonsUnPressed(v);
+				ShowMessage.asSnack(v, R.string.unknown_error);
 			}, true);
 		};
 	}
 
-	@Override
-	public void onViewAttached() {
-
+	private void setButtonPressed(View v) {
+		v.setSelected(true);
+		v.setPressed(false);
+		workingWellLayout.setClickable(false);
+		needsLicenseLayout.setClickable(false);
+		fakeAppLayout.setClickable(false);
+		virusLayout.setClickable(false);
 	}
 
-	@Override
-	public void onViewDetached() {
-
+	private void setAllButtonsUnPressed(View v) {
+		workingWellLayout.setClickable(true);
+		needsLicenseLayout.setClickable(true);
+		fakeAppLayout.setClickable(true);
+		virusLayout.setClickable(true);
+		v.setSelected(false);
+		v.setPressed(false);
 	}
 
 	private void applyCount(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type, int count) {

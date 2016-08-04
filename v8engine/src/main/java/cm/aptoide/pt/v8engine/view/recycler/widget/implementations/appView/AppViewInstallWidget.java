@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
@@ -17,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.math.BigDecimal;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -46,7 +45,6 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
-import cm.aptoide.pt.v8engine.util.PaymentInfo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -78,6 +76,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	// app info
 	private TextView versionName;
+	private TextView latestAvailableLabel;
 	private TextView otherVersions;
 	private MinimalAd minimalAd;
 
@@ -97,6 +96,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton = (Button) itemView.findViewById(R.id.action_btn);
 		versionName = (TextView) itemView.findViewById(R.id.store_version_name);
 		otherVersions = (TextView) itemView.findViewById(R.id.other_versions);
+		latestAvailableLabel = (TextView) itemView.findViewById(R.id.latest_available_label);
 	}
 
 	@Override
@@ -105,19 +105,18 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+		final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
 		versionName.setText(app.getFile().getVername());
 		otherVersions.setOnClickListener(v -> {
 			OtherVersionsFragment fragment = OtherVersionsFragment.newInstance(app.getName(), app.getIcon(), app.getPackageName());
-			((FragmentShower) getContext()).pushFragmentV4(fragment);
+			fragmentShower.pushFragmentV4(fragment);
 		});
 
 		@Cleanup
 		Realm realm = Database.get();
 		String packageName = app.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
-
-		final FragmentShower fragmentShower = (FragmentShower) getContext();
 
 		//check if the app is installed
 		if (installed == null) {
@@ -156,6 +155,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			actionButton.setOnClickListener(new Listeners().newDowngradeListener(app, displayable));
 		} else {
 			actionButton.setText(R.string.open);
+			latestAvailableLabel.setVisibility(View.VISIBLE);
 			actionButton.setOnClickListener(new Listeners().newOpenAppListener(app.getPackageName()));
 		}
 	}
@@ -171,12 +171,18 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		} else {
 			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(new Listeners().newInstallListener(app, displayable));
+			if (displayable.isShouldInstall()) {
+				actionButton.postDelayed(() -> {
+					actionButton.performClick();
+					actionButton.performClick();
+				}, 1000);
+			}
 		}
 	}
 
 	private boolean isLatestAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
-		return appVersions != null && !appVersions.getList().isEmpty() &&
-				(app.getFile().getVercode() < appVersions.getList().get(0).getFile().getVercode());
+		boolean canCompare = appVersions != null && appVersions.getList() != null && !appVersions.getList().isEmpty();
+		return !canCompare || (app.getFile().getVercode() >= appVersions.getList().get(0).getFile().getVercode());
 	}
 
 	//private static class Listeners {
@@ -195,26 +201,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				if (!AptoideAccountManager.isLoggedIn()) {
 					AptoideAccountManager.openAccountManager(getContext());
 				}
-				
-				// TODO: 29/07/16 sithengineer process payment, save info offline, send info to server and when server confirms the app purchase delete offline
-				// data
-
-				PaymentInfo paymentInfo = null;
-				switch (payment.symbol) {
-					case "€":
-						paymentInfo = PaymentInfo.inEuros(app.getId(), BigDecimal.valueOf(payment.amount));
-						break;
-
-					case "$":
-						paymentInfo = PaymentInfo.inAmericanDollar(app.getId(), BigDecimal.valueOf(payment.amount));
-						break;
-				}
-
-				if (paymentInfo != null) {
-					((Payments) ((FragmentShower) getContext()).getLastV4()).buyApp(paymentInfo);
-				} else {
-					throw new IllegalStateException("Unable to buy application due to missing logic to handle payment information");
-				}
+				// process payment, save info offline, send info to server and when server confirms the app purchase delete offline data
+				((Payments) ((FragmentShower) getContext()).getLastV4()).buyApp(app);
 			};
 		}
 
@@ -297,19 +285,22 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
-							displayable.install(getContext()).observeOn(AndroidSchedulers.mainThread()).subscribe(success -> {
+							displayable.install(getContext()).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+								@Cleanup
+								Realm realm = Database.get();
+								Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
+								if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+									DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
+								}
+							}).subscribe(success -> {
 								if (actionButton.getVisibility() == View.VISIBLE) {
 									actionButton.setText(R.string.open);
 									// FIXME: 20/07/16 sithengineer refactor this ugly code
-									((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-										new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
-									});
-
-									@Cleanup
-									Realm realm = Database.get();
-									Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.INSTALL);
-									if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-										DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
+									Fragment fragmentShower = ((FragmentShower) getContext()).getLastV4();
+									if (AppMenuOptions.class.isAssignableFrom(fragmentShower.getClass())) {
+										((AppMenuOptions) fragmentShower).setUnInstallMenuOptionVisible(() -> {
+											new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
+										});
 									}
 								}
 							});

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.model;
@@ -44,7 +44,8 @@ public class MinimalAd extends RealmObject implements Parcelable {
 	public MinimalAd() {
 	}
 
-	public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl, String cpdUrl, long appId, long adId, String cpiUrl, String name, String iconPath, String description) {
+	public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl, String cpdUrl, long appId, long adId, String cpiUrl, String name,
+	                 String iconPath, String description) {
 		this.packageName = packageName;
 		this.networkId = networkId;
 		this.clickUrl = clickUrl;
@@ -81,7 +82,8 @@ public class MinimalAd extends RealmObject implements Parcelable {
 			clickUrl = partner.getData().getClickUrl();
 		}
 		return new MinimalAd(ad.getData().getPackageName(), id, clickUrl, ad.getInfo().getCpcUrl(), ad.getInfo().getCpdUrl(), ad.getData().getId(), ad
-				.getInfo().getAdId(), ad.getInfo().getCpiUrl(), ad.getData().getName(), ad.getData().getIcon(), ad.getData().getDescription());
+				.getInfo()
+				.getAdId(), ad.getInfo().getCpiUrl(), ad.getData().getName(), ad.getData().getIcon(), ad.getData().getDescription());
 	}
 
 	@Override

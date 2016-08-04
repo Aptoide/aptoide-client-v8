@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
@@ -43,9 +44,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 
 	public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api
-				.isMature(), Api.Q, storeId, offset, limit);
+		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
+				.isMature(), Api.Q, storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListFullReviewsRequest(body, BASE_HOST);
 	}
 
@@ -65,9 +65,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	 */
 	public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api
-				.isMature(), Api.Q, storeName, packageName, maxReviews, maxComments);
+		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
+				.isMature(), Api.Q, storeName, packageName, maxReviews, maxComments, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListFullReviewsRequest(body, BASE_HOST);
 	}
 
@@ -84,7 +83,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
 				Api
-				.isMature(), Api.Q, storeName, packageName, maxReviews, 0);
+				.isMature(), Api.Q, storeName, packageName, maxReviews, 0, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListFullReviewsRequest(body, BASE_HOST);
 	}
 
@@ -103,6 +102,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		private String lang;
 		private boolean mature;
 		private String q = Api.Q;
+		@Getter private boolean refresh;
 
 		private Order order;
 		private Sort sort;
@@ -114,22 +114,24 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		private Integer subLimit;
 
 		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long storeId, int limit,
-		            int subLimit) {
+		            int subLimit, boolean refresh) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
 			this.storeId = storeId;
 			this.limit = limit;
 			this.subLimit = subLimit;
+			this.refresh = refresh;
 		}
 
 		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, String storeName, String
-				packageName, int limit, int subLimit) {
+				packageName, int limit, int subLimit, boolean refresh) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
 			this.packageName = packageName;
 			this.storeName = storeName;
 			this.limit = limit;
 			this.subLimit = subLimit;
+			this.refresh = refresh;
 		}
 
 		public enum Sort {

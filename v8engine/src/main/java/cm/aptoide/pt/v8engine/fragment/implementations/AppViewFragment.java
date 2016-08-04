@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -33,20 +33,24 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.paypal.android.sdk.payments.ProofOfPayment;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import org.json.JSONException;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.PaymentPayload;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -66,8 +70,8 @@ import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
+import cm.aptoide.pt.v8engine.services.ValidatePaymentsService;
 import cm.aptoide.pt.v8engine.util.AppUtils;
-import cm.aptoide.pt.v8engine.util.PaymentInfo;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -122,6 +126,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private AppViewHeader header;
 	//	private GetAppMeta.App app;
 	private long appId;
+	private String packageName;
+	private boolean shouldInstall;
 	private Scheduled scheduled;
 	private String storeTheme;
 	//
@@ -139,6 +145,16 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private AdRepository adRepository;
 	private boolean sponsored;
 	private List<GetAdsResponse.Ad> suggestedAds;
+
+	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
+		Bundle bundle = new Bundle();
+		bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+		bundle.putBoolean(BundleKeys.SHOULD_INSTALL.name(), shouldInstall);
+
+		AppViewFragment fragment = new AppViewFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -192,7 +208,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void loadExtras(Bundle args) {
 		super.loadExtras(args);
-		appId = args.getLong(BundleKeys.APP_ID.name());
+		appId = args.getLong(BundleKeys.APP_ID.name(), -1);
+		packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
+		shouldInstall = args.getBoolean(BundleKeys.SHOULD_INSTALL.name(), false);
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 		sponsored = minimalAd != null;
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
@@ -219,7 +237,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd));
+		displayables.add(new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd, shouldInstall));
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -233,13 +251,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		setDisplayables(displayables);
 	}
 
-	public void buyApp(PaymentInfo paymentInfo) {
-		PayPalPayment payment = new PayPalPayment(paymentInfo.getValue(), paymentInfo.getThreeLetterName(), Long.toString(paymentInfo.getAppId()),
+	public void buyApp(GetAppMeta.App app) {
+		GetAppMeta.Pay payment = app.getPay();
+
+		PayPalPayment payPalPayment = new PayPalPayment(BigDecimal.valueOf(payment.getPrice()), payment.getCurrency(), Long.toString(app.getId()),
 				PayPalPayment.PAYMENT_INTENT_SALE);
 
 		Intent intent = new Intent(getContext(), PaymentActivity.class);
 		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+		intent.putExtra(CheckProductPaymentRequest.Constants.STORE, app.getStore().getName());
+		intent.putExtra(CheckProductPaymentRequest.Constants.PRICE, payment.getPrice());
+		intent.putExtra(CheckProductPaymentRequest.Constants.CURRENCY, payment.getCurrency());
+		intent.putExtra(CheckProductPaymentRequest.Constants.TAX_RATE, app.getPayment().payment_services.get(0).getTaxRate());
 		startActivityForResult(intent, PAY_APP_REQUEST_CODE);
 	}
 
@@ -254,27 +278,28 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 						// TODO: 29/07/16 sithengineer
 						// send 'confirm' to the server
-						/*
 						ProofOfPayment proof = confirm.getProofOfPayment();
 
-						CheckProductPaymentRequest.ofPayPal(
-								confirm.getProofOfPayment().getPaymentId(),
-								confirm.getEnvironment(),
-								confirm.describeContents(),
-								??,
-								??,
-								??,
-								??,
-								??,
-								??
-						).execute(paymentResponse -> {
-							// TODO: 29/07/16 sithengineer remove payment proof from local DB
+						PaymentPayload paymentPayload = new PaymentPayload();
+						paymentPayload.setPayType(1); // magic value: paypal payment type id
+						paymentPayload.setApiVersion("3"); // magic value: webservice version
+						paymentPayload.setProductId(appId);
+						paymentPayload.setStore(data.getStringExtra(CheckProductPaymentRequest.Constants.STORE));
+						paymentPayload.setPrice(data.getDoubleExtra(CheckProductPaymentRequest.Constants.PRICE, 0.0));
+						paymentPayload.setCurrency(data.getStringExtra(CheckProductPaymentRequest.Constants.CURRENCY));
+						paymentPayload.setPayKey(proof.getPaymentId());
+						paymentPayload.setTaxRate(data.getDoubleExtra(CheckProductPaymentRequest.Constants.TAX_RATE, 0.0));
 
-						},
-						err ->{
-							Logger.e(TAG, err.getCause());
-						}, true);
-						*/
+						final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+						paymentPayload.setSimCountryCode(telephonyManager.getSimCountryIso());
+
+						@Cleanup
+						Realm realm = Database.get();
+						realm.beginTransaction();
+						realm.copyToRealmOrUpdate(paymentPayload);
+						realm.commitTransaction();
+
+						getActivity().startService(ValidatePaymentsService.getIntent(getActivity()));
 
 					} catch (JSONException e) {
 						Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
@@ -344,24 +369,47 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			subscription.unsubscribe();
 		}
 
-		subscription = appRepository.getApp(appId, refresh, sponsored)
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-				.flatMap(getApp -> manageOrganicAds(getApp)).flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(getApp -> {
-					if (storeTheme == null) {
-						storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
-					}
+		if (appId >= 0) {
+			Logger.d(TAG, "loading app info using app ID");
+			subscription = appRepository.getApp(appId, refresh, sponsored)
+					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+					.flatMap(getApp -> manageOrganicAds(getApp))
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(getApp -> {
+						if (storeTheme == null) {
+							storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+						}
 
-					// useful data for the schedule updates menu option
-					GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-					scheduled = Scheduled.from(app);
+						// useful data for the schedule updates menu option
+						GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+						scheduled = Scheduled.from(app);
 
-					header.setup(getApp);
-					setupDisplayables(getApp);
-					setupObservables(getApp);
-					finishLoading();
-				}, throwable -> finishLoading(throwable));
+						header.setup(getApp);
+						setupDisplayables(getApp);
+						setupObservables(getApp);
+						finishLoading();
+					}, throwable -> finishLoading(throwable));
+		} else {
+			Logger.d(TAG, "loading app info using app package name");
+			subscription = appRepository.getApp(packageName, refresh, sponsored)
+					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+					.flatMap(getApp -> manageOrganicAds(getApp))
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(getApp -> {
+						if (storeTheme == null) {
+							storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+						}
+
+						// useful data for the schedule updates menu option
+						GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+						scheduled = Scheduled.from(app);
+
+						header.setup(getApp);
+						setupDisplayables(getApp);
+						setupObservables(getApp);
+						finishLoading();
+					}, throwable -> finishLoading(throwable));
+		}
 	}
 
 	@Override
@@ -435,9 +483,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		}
 
 		if (position == Position.FIRST) {
-			rView.smoothScrollToPosition(0);
+			rView.scrollToPosition(0);
 		} else if (position == Position.LAST) {
-			rView.smoothScrollToPosition(getAdapter().getItemCount());
+			rView.scrollToPosition(getAdapter().getItemCount());
 		}
 	}
 
@@ -467,6 +515,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
 			header.getAppBarLayout().setExpanded(isExpanded);
 		}
+
+		// restore download bar status
+		// TODO: 04/08/16 sithengineer restore download bar status
 	}
 
 	//
@@ -477,11 +528,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	public void onPause() {
 		super.onPause();
 
+		// save header status
 		if (header != null && header.getAppBarLayout() != null) {
 			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
 			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
 					.getVisibility() == View.VISIBLE);
 		}
+
+		// save download bar status
+		// TODO: 04/08/16 sithengineer save download bar status
 	}
 
 	@Override
@@ -499,7 +554,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private enum BundleKeys {
 		APP_ID,
-		MINIMAL_AD
+		MINIMAL_AD,
+		PACKAGE_NAME,
+		SHOULD_INSTALL
 	}
 
 	private final class AppViewHeader {
@@ -553,7 +610,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			}
 
 			if (app.getIcon() != null) {
-				ImageLoader.loadWithCircleTransform(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+				ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
 			}
 
 			collapsingToolbar.setTitle(app.getName());

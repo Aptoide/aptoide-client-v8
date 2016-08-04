@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 02/08/2016.
+  ~ Modified by SithEngineer on 03/08/2016.
   -->
 <!--
     tools:background="#BB000000"
+    android:background="#80000000"
 -->
 <android.support.design.widget.AppBarLayout
     android:id="@+id/app_bar"
@@ -13,7 +14,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/appview_header_height"
-    android:background="#80000000"
+    android:background="@drawable/app_view_header_gradient"
     android:fitsSystemWindows="true"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     tools:showIn="@layout/fragment_app_view"
@@ -54,23 +55,6 @@
                     />
             </FrameLayout>
 
-            <!--
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/app_icon"
-                android:layout_width="@dimen/appview_header_app_image_size"
-                android:layout_height="@dimen/appview_header_app_image_size"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="@dimen/appview_header_bottom_margin"
-                android:layout_marginLeft="@dimen/appview_header_side_margin"
-                android:layout_marginStart="@dimen/appview_header_side_margin"
-                android:scaleType="centerCrop"
-                app:layout_anchor="@id/app_bar"
-                app:layout_anchorGravity="bottom|left|start"
-                app:riv_corner_radius="15dp"
-                tools:src="@color/blue_700"
-                />
-            -->
             <ImageView
                 android:id="@+id/app_icon"
                 android:layout_width="@dimen/appview_header_app_image_size"
@@ -95,11 +79,12 @@
                 android:layout_marginStart="12.3dp"
                 android:layout_toEndOf="@id/app_icon"
                 android:layout_toRightOf="@id/app_icon"
+                tools:visibility="visible"
                 >
 
                 <LinearLayout
                     android:id="@+id/badges_layout"
-                    android:layout_width="180dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="1.3dp"
@@ -113,6 +98,35 @@
                         android:layout_marginEnd="7.3dp"
                         android:layout_marginRight="7.3dp"
                         >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginRight="4dp"
+                            >
+
+                            <ImageView
+                                android:layout_width="@dimen/appview_badge_icon_size"
+                                android:layout_height="@dimen/appview_badge_icon_size"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_appview_download_icon"/>
+
+                            <TextView
+                                android:id="@+id/downloads_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginStart="2dp"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size_small"
+                                tools:text="12345"
+                                />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="@dimen/appview_badge_icon_size"
@@ -131,38 +145,9 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_extra_small"
+                            android:textSize="@dimen/text_size_small"
                             tools:text="1.2.3.4.5.6.7"
                             />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp"
-                        >
-
-                        <ImageView
-                            android:layout_width="@dimen/appview_badge_icon_size"
-                            android:layout_height="@dimen/appview_badge_icon_size"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_appview_download_icon"/>
-
-                        <TextView
-                            android:id="@+id/downloads_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginStart="2dp"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_extra_small"
-                            tools:text="12345"
-                            />
-
                     </LinearLayout>
 
                 </LinearLayout>
@@ -170,20 +155,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="@dimen/appview_header_side_margin"
+                    android:layout_marginLeft="4dp"
                     android:layout_marginRight="@dimen/appview_header_side_margin"
+                    android:layout_marginStart="4dp"
                     android:layout_toEndOf="@id/badges_layout"
                     android:layout_toRightOf="@id/badges_layout"
                     android:gravity="bottom"
                     android:orientation="vertical"
                     >
 
-                    <!--
-                    @drawable/ic_badge_trusted
-                    @drawable/ic_badge_unknown
-                    @drawable/ic_badge_warning
-                    -->
                     <ImageView
                         android:id="@+id/badge_img"
                         android:layout_width="29dp"
@@ -193,11 +176,6 @@
                         tools:src="@color/red"
                         />
 
-                    <!--
-                    @string/appview_header_trusted_text
-                    @string/unknown
-                    @string/warning
-                    -->
                     <TextView
                         android:id="@+id/badge_text"
                         android:layout_width="90dp"

@@ -1,19 +1,20 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.support.design.widget.TextInputLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -26,7 +27,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
@@ -99,7 +99,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		packageName = app.getPackageName();
 		storeName = app.getStore().getName();
 
-		usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getDownloads()));
+		usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating().getTotal()));
 
 		float ratingAvg = stats.getRating().getAvg();
 		ratingValue.setText(String.format(LOCALE, "%.1f", ratingAvg));
@@ -124,7 +124,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		};
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
-		loadTopReviews(app.getStore().getName(), app.getPackageName());
+
+		loadReviews();
 	}
 
 	@Override
@@ -135,14 +136,18 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	public void onViewDetached() {
 	}
 
+	private void loadReviews() {
+		loadTopReviews(storeName, packageName);
+	}
+
 	private void showRateDialog() {
 		final Context ctx = getContext();
 		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_rate_app, null);
 
 		final TextView titleTextView = (TextView) view.findViewById(R.id.title);
 		final AppCompatRatingBar reviewRatingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
-		final EditText titleEditText = (EditText) view.findViewById(R.id.input_title);
-		final EditText reviewEditText = (EditText) view.findViewById(R.id.input_review);
+		final TextInputLayout titleTextInputLayout = (TextInputLayout) view.findViewById(R.id.input_layout_title);
+		final TextInputLayout reviewTextInputLayout = (TextInputLayout) view.findViewById(R.id.input_layout_review);
 		final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
 		final Button rateBtn = (Button) view.findViewById(R.id.rate_button);
 
@@ -153,34 +158,35 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		cancelBtn.setOnClickListener(v -> dialog.dismiss());
 		rateBtn.setOnClickListener(v -> {
-			final String reviewTitle = titleEditText.getText().toString();
-			final String reviewText = reviewEditText.getText().toString();
+
+			AptoideUtils.SystemU.hideKeyboard(getContext());
+
+			final String reviewTitle = titleTextInputLayout.getEditText().getText().toString();
+			final String reviewText = reviewTextInputLayout.getEditText().getText().toString();
 			final int reviewRating = Math.round(reviewRatingBar.getRating());
 
+			if (TextUtils.isEmpty(reviewTitle)) {
+				titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+				return;
+			}
+
+			titleTextInputLayout.setErrorEnabled(false);
+			dialog.dismiss();
+
+			dialog.dismiss();
 			PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating).execute(response -> {
-
-				if (response.getError() != null) {
-					Logger.e(TAG, response.getError().toString());
-					return;
+				if (response.isOk()) {
+					Logger.d(TAG, "review added");
+					ShowMessage.asSnack(ratingLayout, R.string.review_success);
+					ManagerPreferences.setForceServerRefreshFlag(true);
+					loadReviews();
+				} else {
+					ShowMessage.asSnack(ratingLayout, R.string.error_occured);
 				}
-
-				List<BaseV7Response.Error> errors = response.getErrors();
-				if (errors != null && !errors.isEmpty()) {
-					for (final BaseV7Response.Error error : errors) {
-						Logger.e(TAG, error.toString());
-					}
-					return;
-				}
-
-				ManagerPreferences.setForceServerRefreshFlag(true);
-				dialog.dismiss();
-				Logger.d(TAG, "review added");
 			}, e -> {
 				Logger.e(TAG, e);
 				ShowMessage.asSnack(ratingLayout, R.string.error_occured);
 			});
-
-			ShowMessage.asSnack(ratingLayout, R.string.thank_you_for_your_opinion);
 		});
 
 		// create and show rating dialog
@@ -189,15 +195,15 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	private void scheduleAnimations() {
 		final int topReviewsCount = topReviewsPager.getAdapter().getCount();
-		if (topReviewsCount > 2) {
+		if (topReviewsCount > 1) {
 			for (int i = 0 ; i < topReviewsCount - 1 ; ++i) {
-				final int count = i;
+				final int count = i + 1;
 				topReviewsPager.postDelayed(() -> {
 					topReviewsPager.setCurrentItem(count);
-				}, (count + 1) * 1200);
+				}, count * 1000);
 			}
 		} else {
-			Logger.w(TAG, "Not enought top reviews to do paging animation.");
+			Logger.w(TAG, "Not enough top reviews to do paging animation.");
 		}
 	}
 
@@ -214,7 +220,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 					loadedData(true);
 					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), listReviews.getDatalist().getList()));
 					scheduleAnimations();
-					topReviewsPager.invalidate();
 				}, e -> {
 					loadedData(false);
 					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));

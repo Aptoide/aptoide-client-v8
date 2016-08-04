@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -26,6 +26,10 @@ public class BaseV7Response {
 		} else {
 			return null;
 		}
+	}
+
+	public boolean isOk() {
+		return info != null && info.getStatus() == Info.Status.OK;
 	}
 
 	@Data

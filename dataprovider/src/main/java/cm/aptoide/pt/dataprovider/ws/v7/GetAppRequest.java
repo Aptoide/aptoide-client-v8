@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -31,6 +31,17 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		super(body, httpClient, converterFactory, baseHost);
 	}
 
+	public static GetAppRequest of(String packageName) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+
+		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, new Body(idsRepository
+				.getAptoideClientUUID(), AptoideAccountManager
+
+				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, packageName, forceServerRefresh));
+	}
+
 	public static GetAppRequest of(long appId) {
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
@@ -50,11 +61,19 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 	public static class Body extends BaseBody {
 
 		@Getter private Long appId;
-		@Getter private Boolean refresh;
+		@Getter private String packageName;
+		@Getter private boolean refresh;
 
 		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long appId, Boolean refresh) {
 			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
 			this.appId = appId;
+			this.refresh = refresh;
+		}
+
+		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, String packageName, Boolean
+				refresh) {
+			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+			this.packageName = packageName;
 			this.refresh = refresh;
 		}
 	}

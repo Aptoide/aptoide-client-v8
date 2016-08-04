@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -29,7 +29,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -136,20 +135,20 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		setHasOptionsMenu(true);
 	}
 
-	private void setUserDataOnHeader(){
+	private void setUserDataOnHeader() {
 		TextView userEmail = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_email_text);
 		TextView userUsername = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_name_text);
 		ImageView userAvatar = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_image);
 
-		if(AptoideAccountManager.isLoggedIn()) {
+		if (AptoideAccountManager.isLoggedIn()) {
 			userEmail.setText(AptoideAccountManager.getUserName());
 			userUsername.setText(AptoideAccountManager.getUserInfo().getNickName());
-			if (URLUtil.isValidUrl(AptoideAccountManager.getUserInfo().getUserAvatar()))
-				ImageLoader.load(AptoideAccountManager.getUserInfo().getUserAvatar(),userAvatar);
-			else
+			if (URLUtil.isValidUrl(AptoideAccountManager.getUserInfo().getUserAvatar())) {
+				ImageLoader.load(AptoideAccountManager.getUserInfo().getUserAvatar(), userAvatar);
+			} else {
 				userAvatar.setImageResource(R.drawable.ic_user_icon);
-		}
-		else{
+			}
+		} else {
 			userEmail.setText("");
 			userUsername.setText("");
 			userAvatar.setImageResource(R.drawable.ic_user_icon);
@@ -157,18 +156,18 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	}
 
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		setUserDataOnHeader();
 	}
 
-//	@Override
-//	public void onDestroyView() {
-//		super.onDestroyView();
-//
-//		mDrawerLayout = null;
-//		mNavigationView = null;
-//	}
+	//	@Override
+	//	public void onDestroyView() {
+	//		super.onDestroyView();
+	//
+	//		mDrawerLayout = null;
+	//		mNavigationView = null;
+	//	}
 
 	@Override
 	public int getContentViewId() {
@@ -235,11 +234,17 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	}
 
 	@Override
-	public boolean isDrawerOpened() {return mDrawerLayout.isDrawerOpen(Gravity.LEFT);}
+	public boolean isDrawerOpened() {
+		return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
+	}
 
 	@Override
-	public void openDrawer() {mDrawerLayout.openDrawer(Gravity.LEFT);}
+	public void openDrawer() {
+		mDrawerLayout.openDrawer(Gravity.LEFT);
+	}
 
 	@Override
-	public void closeDrawer() {mDrawerLayout.closeDrawers();}
+	public void closeDrawer() {
+		mDrawerLayout.closeDrawers();
+	}
 }

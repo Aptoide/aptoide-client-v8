@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 02/08/2016.
+  ~ Modified by SithEngineer on 04/08/2016.
   -->
 
 <RelativeLayout
@@ -177,7 +177,7 @@
         android:layout_toEndOf="@id/rating_layout"
         android:layout_toRightOf="@id/rating_layout"
         android:visibility="gone"
-        tools:visibility="visible"
+        tools:visibility="gone"
         >
 
         <LinearLayout
@@ -224,6 +224,7 @@
         android:textAllCaps="true"
         android:textColor="@color/silver"
         android:textSize="@dimen/text_size_small"
+        tools:visibility="gone"
         />
 
 </RelativeLayout>

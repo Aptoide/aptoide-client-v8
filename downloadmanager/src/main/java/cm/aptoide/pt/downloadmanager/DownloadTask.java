@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 04/08/2016.
+ */
+
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Intent;
@@ -174,7 +179,12 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
 		for (FileToDownload fileToDownload : download.getFilesToDownload()) {
 			if (fileToDownload.getDownloadId() == task.getId()) {
-				fileToDownload.setProgress((int) Math.floor((float) soFarBytes / totalBytes * AptoideDownloadManager.PROGRESS_MAX_VALUE));
+				//sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
+				if (totalBytes > 0) {
+					fileToDownload.setProgress((int) Math.floor((float) soFarBytes / totalBytes * AptoideDownloadManager.PROGRESS_MAX_VALUE));
+				} else {
+					fileToDownload.setProgress(0);
+				}
 			}
 		}
 		this.download.setDownloadSpeed(task.getSpeed() * 1024);
