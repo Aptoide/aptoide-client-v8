@@ -87,6 +87,11 @@
     <string name="displayable_social_timeline_app_update_updating">Updating</string>
     <string name="displayable_social_timeline_app_update_error">Update Error</string>
 
+        <!-- Added on 4/08, need translation -->
+    <string name="appview_good_app_guaranteed">Good App Guaranteed!</string>
+    <string name="appview_good_app_description">This applications passed the security test for virus, malware and other malicious attacks and doesn\'t
+        contain any threats!</string>
+
     <!-- Preferences -->
     <string name="animations">Animations</string>
     <string name="animations_enabled">Animations enabled</string>

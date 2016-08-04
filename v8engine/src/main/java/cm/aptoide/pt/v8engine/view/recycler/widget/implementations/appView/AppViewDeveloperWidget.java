@@ -5,8 +5,12 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
@@ -100,6 +104,13 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 			websiteLabel.setText(String.format(ctx.getString(R.string.developer_website), ctx.getString(R.string
 					.not_available)));
 		}
+		websiteLabel.setOnClickListener(v -> {
+			if(!TextUtils.isEmpty(app.getDeveloper().getWebsite())) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper().getWebsite()));
+				ctx.startActivity(browserIntent);
+			}
+
+		});
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getEmail())) {
 			emailLabel.setText(String.format(ctx.getString(R.string.developer_email), app.getDeveloper().getEmail()));
@@ -107,6 +118,14 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 			emailLabel.setText(String.format(ctx.getString(R.string.developer_email), ctx.getString(R.string
 					.not_available)));
 		}
+		emailLabel.setOnClickListener(v -> {
+			if(!TextUtils.isEmpty(app.getDeveloper().getEmail())) {
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				Uri data = Uri.parse("mailto:" + app.getDeveloper().getEmail() + "?subject=" + "Feedback" + "&body=" + "");
+				intent.setData(data);
+				ctx.startActivity(intent);
+			}
+		});
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getPrivacy())) {
 			privacyPolicyLabel.setText(String.format(ctx.getString(R.string.developer_privacy_policy), app.getDeveloper()
@@ -115,6 +134,13 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 			privacyPolicyLabel.setText(String.format(ctx.getString(R.string.developer_privacy_policy), ctx.getString(R
 					.string.not_available)));
 		}
+		privacyPolicyLabel.setOnClickListener(v -> {
+			if(!TextUtils.isEmpty(app.getDeveloper().getPrivacy())) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper().getPrivacy()));
+				ctx.startActivity(browserIntent);
+			}
+
+		});
 
 		permissionsLabel.setOnClickListener(v -> {
 			DialogPermissions dialogPermissions = DialogPermissions.newInstance(displayable.getPojo());

@@ -19,6 +19,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -39,6 +40,10 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 		String action = intent.getAction();
 		String packageName = intent.getData().getEncodedSchemeSpecificPart();
+
+		if(!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false))
+			return;
+		Logger.d(TAG, "Action : " + action);
 
 		switch (action) {
 			case Intent.ACTION_PACKAGE_ADDED:
