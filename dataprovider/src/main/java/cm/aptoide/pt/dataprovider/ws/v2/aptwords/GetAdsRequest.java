@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -78,11 +79,20 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 		return of(Location.homepage, 50);
 	}
 
-	public static GetAdsRequest ofAppview(String packageName, String storeName) {
+	public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName) {
 
 		GetAdsRequest getAdsRequest = ofPackageName(Location.appview, packageName);
 
 		getAdsRequest.setRepo(storeName);
+
+		return getAdsRequest;
+	}
+
+	public static GetAdsRequest ofAppviewSuggested(List<String> keywords) {
+
+		GetAdsRequest getAdsRequest = of(Location.middleappview, 3);
+
+		getAdsRequest.setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
 
 		return getAdsRequest;
 	}
@@ -169,6 +179,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 	private enum Location {
 		homepage,
 		appview,
+		middleappview,
 		search,
 		secondinstall,
 		secondtry

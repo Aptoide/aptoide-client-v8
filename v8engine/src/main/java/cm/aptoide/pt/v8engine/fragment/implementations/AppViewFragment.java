@@ -46,6 +46,7 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -137,6 +138,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private Subscription subscription;
 	private AdRepository adRepository;
 	private boolean sponsored;
+	private List<GetAdsResponse.Ad> suggestedAds;
 
 	public static AppViewFragment newInstance(long appId) {
 		Bundle bundle = new Bundle();
@@ -156,15 +158,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		return fragment;
 	}
 
-	public static AppViewFragment newInstance(GetAdsResponse.Ad ad) {
+	public static AppViewFragment newInstance(MinimalAd minimalAd) {
 		Bundle bundle = new Bundle();
-		bundle.putLong(BundleKeys.APP_ID.name(), ad.getData().getId());
-		bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), MinimalAd.from(ad));
+		bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
+		bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
 
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
 
 		return fragment;
+	}
+
+	public static AppViewFragment newInstance(GetAdsResponse.Ad ad) {
+		return newInstance(MinimalAd.from(ad));
 	}
 
 	@Override
@@ -219,7 +225,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		displayables.add(new AppViewScreenshotsDisplayable(app));
 		displayables.add(new AppViewDescriptionDisplayable(getApp));
 		displayables.add(new AppViewFlagThisDisplayable(getApp));
-		displayables.add(new AppViewSuggestedAppsDisplayable(getApp));
+		if (suggestedAds != null) {
+			displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds));
+		}
 		displayables.add(new AppViewDeveloperDisplayable(getApp));
 
 		setDisplayables(displayables);
@@ -338,7 +346,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		subscription = appRepository.getApp(appId, refresh, sponsored)
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-				.flatMap(getApp -> manageAds(getApp))
+				.flatMap(getApp -> manageOrganicAds(getApp)).flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(getApp -> {
 					if (storeTheme == null) {
@@ -389,7 +397,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		setHasOptionsMenu(true);
 	}
 
-	private Observable<GetApp> manageAds(GetApp getApp) {
+	private Observable<GetApp> manageOrganicAds(GetApp getApp) {
 		String packageName = getApp.getNodes().getMeta().getData().getPackageName();
 		String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
 
@@ -403,6 +411,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false));
 			return Observable.just(getApp);
 		}
+	}
+
+	@NonNull
+	private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
+		List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
+
+		return GetAdsRequest.ofAppviewSuggested(keywords).observe().map(getAdsResponse -> {
+			if (AdRepository.validAds(getAdsResponse)) {
+				suggestedAds = getAdsResponse.getAds();
+			}
+
+			return getApp1;
+		});
 	}
 
 	@Override

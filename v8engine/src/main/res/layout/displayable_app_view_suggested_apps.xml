@@ -5,201 +5,34 @@
   -->
 
 <LinearLayout
-    android:id="@+id/app_view_middle_sugested"
+    android:id="@+id/app_view_suggested"
     style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
 
-    <RelativeLayout
-        android:id="@+id/apkinfoheader"
+    <include layout="@layout/separator_horizontal"/>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
-        android:paddingTop="10dp"
-        >
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/recommended_for_you"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/aptoide_orange"
+        android:textSize="18sp"
+        />
 
-        <TextView
-            android:id="@+id/middleAppViewHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/recommended_for_you"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@color/aptoide_orange"
-            android:textSize="18sp"
-            />
+    <android.support.v7.widget.RecyclerView
 
-        <LinearLayout
-            android:id="@+id/icon_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/middleAppViewHeader"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:orientation="vertical"
-            >
-
-            <ImageView
-                android:id="@+id/app_icon"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:layout_gravity="right"
-                android:layout_margin="5dp"
-                android:src="@drawable/icon_brand_aptoide"
-                />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/icon_layout"
-            android:layout_toLeftOf="@+id/btinstall"
-            android:layout_toRightOf="@+id/icon_layout"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:paddingRight="6dp"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="16dp"
-            tools:text="lorem ipsum"/>
-
-        <RatingBar
-            android:id="@+id/rating_label"
-            style="?attr/gridItemRatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/app_name"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/icon_layout"
-            android:numStars="5"
-            tools:rating="3.4"/>
-
-
-        <TextView
-            android:id="@+id/size_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rating_label"
-            android:layout_toRightOf="@+id/icon_layout"
-            android:ellipsize="end"
-            android:gravity="top"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="Size: "
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="10dp"
-            android:visibility="visible"/>
-
-        <TextView
-            android:id="@+id/size_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rating_label"
-            android:layout_toRightOf="@+id/size_label"
-            android:ellipsize="end"
-            android:gravity="top"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="?android:attr/textColorSecondary"
-
-            android:textSize="10dp"
-            android:visibility="visible"/>
-
-        <TextView
-            android:id="@+id/sponsored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rating_label"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/size_value"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="@string/sponsored"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="@dimen/text_size_small"
-            />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/size_label"
-            android:layout_marginTop="4dp"
-            android:layout_toRightOf="@+id/icon_layout"
-            android:ellipsize="end"
-            android:gravity="top"
-            android:maxLines="2"
-            android:textColor="?android:attr/textColorSecondary"
-
-            android:textSize="13dp"
-            android:visibility="visible"/>
-
-
-        <Button
-            android:id="@+id/btinstall"
-            style="?attr/customButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/app_name"
-            android:text="@string/install"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-
-
-        <RelativeLayout
-            android:id="@+id/extra_info_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btinstall"
-            android:gravity="center"
-            android:padding="2dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            >
-
-            <!--
-                android:background="?attr/selectableItemBackground"
-            -->
-            <LinearLayout
-                android:id="@+id/badge_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
-
-                <ImageView
-                    android:id="@+id/app_badge"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_horizontal"
-                    />
-
-                <TextView
-                    android:id="@+id/app_badge_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:textSize="12sp"
-                    />
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+        android:id="@+id/appview_suggested_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        />
 
 
 </LinearLayout>
