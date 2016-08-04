@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
@@ -295,9 +296,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 								if (actionButton.getVisibility() == View.VISIBLE) {
 									actionButton.setText(R.string.open);
 									// FIXME: 20/07/16 sithengineer refactor this ugly code
-									((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-										new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
-									});
+									Fragment fragmentShower = ((FragmentShower) getContext()).getLastV4();
+									if (AppMenuOptions.class.isAssignableFrom(fragmentShower.getClass())) {
+										((AppMenuOptions) fragmentShower).setUnInstallMenuOptionVisible(() -> {
+											new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
+										});
+									}
 								}
 							});
 							break;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -41,18 +41,6 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	}
 
 	@Override
-	public void onViewAttachedToWindow(Widget holder) {
-		super.onViewAttachedToWindow(holder);
-		holder.onViewAttached();
-	}
-
-	@Override
-	public void onViewDetachedFromWindow(Widget holder) {
-		super.onViewDetachedFromWindow(holder);
-		holder.onViewDetached();
-	}
-
-	@Override
 	public int getItemViewType(int position) {
 		return displayables.get(position).getViewLayout();
 	}
@@ -65,6 +53,18 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	@Override
 	public int getItemCount() {
 		return displayables.size();
+	}
+
+	@Override
+	public void onViewAttachedToWindow(Widget holder) {
+		super.onViewAttachedToWindow(holder);
+		holder.onViewAttached();
+	}
+
+	@Override
+	public void onViewDetachedFromWindow(Widget holder) {
+		super.onViewDetachedFromWindow(holder);
+		holder.onViewDetached();
 	}
 
 	public Displayable popDisplayable() {
@@ -106,5 +106,9 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		if (notifyDataSetChanged) {
 			AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 		}
+	}
+
+	public void onResume() {
+
 	}
 }
