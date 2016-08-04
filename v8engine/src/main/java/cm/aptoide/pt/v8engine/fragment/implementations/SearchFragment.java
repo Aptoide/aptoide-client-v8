@@ -12,6 +12,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -267,6 +268,17 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		} else {
 			handleFinishLoading();
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int i = item.getItemId();
+
+		if (i == android.R.id.home) {
+			getActivity().onBackPressed();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	protected static class BundleCons {
