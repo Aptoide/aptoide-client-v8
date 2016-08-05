@@ -45,6 +45,9 @@ public enum Type {
 	APP_VIEW_FLAG_THIS,
 	APP_VIEW_RATE_AND_COMMENT,
 
+	// Reviews screen
+	APP_COMMENT_TO_REVIEW,
+
 	// Client
 	SUBSCRIBED_STORE(2),
 	ADD_MORE_STORES(true),

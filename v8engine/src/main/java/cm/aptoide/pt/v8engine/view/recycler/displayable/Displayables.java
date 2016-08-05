@@ -81,6 +81,33 @@ public class Displayables implements LifecycleSchim {
 		}
 	}
 
+	public void remove(int pos) {
+		if (pos >= 0 && pos < displayables.size()) {
+			displayables.remove(pos);
+		}
+	}
+
+	/**
+	 * remove displayables from <code>startPos</code> startPos until the <code>endPos</code>(inclusive)
+	 *
+	 * @param startPos position of the first element to be removed
+	 * @param endPos   position of the last element to be removed
+	 */
+	public int remove(int startPos, int endPos) {
+		if (startPos >= 0 && startPos < size() && endPos >= startPos && endPos <= size()) {
+			int numberLoops = (endPos + 1) - startPos;
+			if (numberLoops == 0) {
+				remove(startPos);
+				return 1;
+			}
+			for (int i = 0 ; i < numberLoops ; i++) {
+				displayables.remove(startPos);
+			}
+			return numberLoops;
+		}
+		return 0;
+	}
+
 	public int size() {
 		return displayables.size();
 	}

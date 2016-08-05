@@ -16,26 +16,37 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 13/05/16.
@@ -43,7 +54,6 @@ import rx.Subscription;
 public class RateAndReviewsFragment extends GridRecyclerFragment {
 
 	private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-
 	private static final String APP_ID = "app_id";
 	private static final String PACKAGE_NAME = "package_name";
 	private static final String STORE_NAME = "store_name";
@@ -52,14 +62,11 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	private String packageName;
 	private String storeName;
 	private long reviewId;
-
 	private TextView emptyData;
 	private Subscription subscription;
-
 	private MenuItem installButton;
 	private RatingTotalsLayout ratingTotalsLayout;
 	private RatingBarsLayout ratingBarsLayout;
-
 	private ProgressBar progressBar;
 	private MenuItem installMenuItem;
 
@@ -82,6 +89,11 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		args.putLong(REVIEW_ID, reviewId);
 		fragment.setArguments(args);
 		return fragment;
+	}
+
+	@Override
+	protected BaseAdapter createAdapter() {
+		return new ReviewsAndCommentsAdapter();
 	}
 
 	@Override
@@ -114,6 +126,11 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		ratingTotalsLayout = new RatingTotalsLayout(view);
 		ratingBarsLayout = new RatingBarsLayout(view);
 		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+	}
+
+	@Override
+	public ReviewsAndCommentsAdapter getAdapter() {
+		return (ReviewsAndCommentsAdapter) super.getAdapter();
 	}
 
 	@Override
@@ -171,24 +188,66 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchReviews() {
-		ListFullReviewsRequest.of(storeName, packageName).execute(reviewsResponse -> {
+		ListFullReviewsRequest.of(storeName, packageName).observe().map(reviewsResponse -> {
 			List<FullReview> reviews = reviewsResponse.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();
+			CountDownLatch countDownLatch = new CountDownLatch(reviews.size());
+
+			Observable.from(reviews)
+					.forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(), fullReview.getId(), 3).execute(listComments -> {
+						fullReview.setCommentList(listComments);
+						countDownLatch.countDown();
+					}, e -> countDownLatch.countDown()));
+
+			try {
+				countDownLatch.await(5, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			int index = 0;
 			int count = 0;
 			for (final FullReview review : reviews) {
-				displayables.add(new RateAndReviewCommentDisplayable(review));
+				displayables.add(new RateAndReviewCommentDisplayable(review, new CommentAdder(count) {
+					@Override
+					public void addComment(List<Comment> comments) {
+						List<Displayable> displayableList = new ArrayList<>();
+						createDisplayableComments(comments, displayableList);
+						int reviewPosition = getAdapter().getReviewPosition(reviewIndex);
+						getAdapter().addDisplayables(reviewPosition + 1, displayableList);
+					}
+
+					@Override
+					public void collapseComments() {
+						ReviewsAndCommentsAdapter adapter = getAdapter();
+						int start = adapter.getReviewPosition(reviewIndex);
+						int next = adapter.getReviewPosition(reviewIndex + 1);
+						next = next == -1 ? getAdapter().getItemCount() : next;
+						adapter.removeDisplayables(start + 1, next - 1); // the -1 because we don't want to remove the next review,only until the comment
+						// before the review
+					}
+				}));
 				if (review.getId() == reviewId) {
 					index = count;
 				}
+				createDisplayableComments(review.getCommentList().getDatalist().getList(), displayables);
 				count++;
 			}
+
+			return displayables;
+		}).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(displayables -> {
 			setDisplayables(displayables);
 			finishLoading();
 			progressBar.setVisibility(View.GONE);
-			recyclerView.scrollToPosition(index);
+			//			recyclerView.scrollToPosition(reviewIndex);
 			installMenuItem.setVisible(reviewId >= 0);
 		});
+	}
+
+	private List<Displayable> createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
+		for (final Comment comment : comments) {
+			displayables.add(new CommentDisplayable(comment));
+		}
+		return displayables;
 	}
 
 	public void setupTitle(String title) {
@@ -256,5 +315,18 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 			progressBar.setProgress(count);
 			text.setText(AptoideUtils.StringU.withSuffix(count));
 		}
+	}
+
+	public static abstract class CommentAdder {
+
+		final int reviewIndex;
+
+		public CommentAdder(int reviewIndex) {
+			this.reviewIndex = reviewIndex;
+		}
+
+		public abstract void addComment(List<Comment> comments);
+
+		public abstract void collapseComments();
 	}
 }

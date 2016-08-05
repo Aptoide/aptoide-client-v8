@@ -185,6 +185,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		@POST("listFullComments")
 		Observable<ListFullComments> listFullComments(@Body ListFullCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
+		@POST
+		Observable<ListComments> listComments(@Url String url, @Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
+				bypassCache);
+
 		@POST("setReview")
 		Observable<BaseV7Response> postReview(@Body PostReviewRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 

@@ -25,6 +25,7 @@ public class Review {
 	private User user;
 	private Stats stats;
 	private Comments comments;
+	private ListComments commentList;
 
 	@Data
 	public static class User {

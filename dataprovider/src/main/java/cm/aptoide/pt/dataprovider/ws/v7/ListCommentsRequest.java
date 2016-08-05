@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.text.TextUtils;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
@@ -34,9 +36,15 @@ import rx.Observable;
 public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Body> {
 
 	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
+	private static String url;
 
 	protected ListCommentsRequest(Body body, String baseHost) {
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
+	}
+
+	public static ListCommentsRequest of(String url, long reviewId, int limit) {
+		ListCommentsRequest.url = url;
+		return of(reviewId, limit);
 	}
 
 	public static ListCommentsRequest of(long reviewId, int limit) {
@@ -45,13 +53,18 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		//
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
-				.isMature(), Api.Q, limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
+
+				.isMature(), Api.Q, limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
 		return new ListCommentsRequest(body, BASE_HOST);
 	}
 
 	@Override
 	protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listComments(body, bypassCache);
+		if (TextUtils.isEmpty(url)) {
+			return interfaces.listComments(body, bypassCache);
+		} else {
+			return interfaces.listComments(url, body, bypassCache);
+		}
 	}
 
 	@Data
@@ -64,17 +77,19 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		//private String lang;
 		//private boolean mature;
 		private String q = Api.Q;
+		private Order order;
 		@Getter private boolean refresh;
 
 		private long reviewId;
 
 		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, int limit, long reviewId,
-		            boolean refresh) {
+		            boolean refresh, Order order) {
 			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
 			this.limit = limit;
 			this.reviewId = reviewId;
 			this.refresh = refresh;
+			this.order = order;
 		}
 	}
 }

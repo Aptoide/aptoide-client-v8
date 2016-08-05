@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Adu
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
@@ -88,6 +89,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrick
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CompletedDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
@@ -194,7 +196,8 @@ public enum DisplayableType {
 	SCHEDULED_DOWNLOAD(ScheduledDownloadWidget.class, ScheduledDownloadDisplayable.class),
 	COMPLETED_DOWNLOAD(CompletedDownloadWidget.class, CompletedDownloadDisplayable.class),
 	ACTIVE_DOWNLOAD(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class),
-	ROW_REVIEW(RowReviewWidget.class, RowReviewDisplayable.class);
+	ROW_REVIEW(RowReviewWidget.class, RowReviewDisplayable.class),
+	APP_COMMENT_TO_REVIEW(CommentWidget.class, CommentDisplayable.class);
 
 	private static final String TAG = DisplayableType.class.getName();
 	private static List<Displayable> cachedDisplayables;
