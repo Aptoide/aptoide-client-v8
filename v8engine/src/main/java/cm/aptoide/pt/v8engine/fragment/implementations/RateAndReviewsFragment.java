@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -40,6 +41,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -213,16 +215,18 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 						List<Displayable> displayableList = new ArrayList<>();
 						createDisplayableComments(comments, displayableList);
 						int reviewPosition = getAdapter().getReviewPosition(reviewIndex);
+						displayableList.add(createReadMoreDisplayable(reviewPosition, review));
 						getAdapter().addDisplayables(reviewPosition + 1, displayableList);
 					}
 
 					@Override
 					public void collapseComments() {
 						ReviewsAndCommentsAdapter adapter = getAdapter();
-						int start = adapter.getReviewPosition(reviewIndex);
-						int next = adapter.getReviewPosition(reviewIndex + 1);
-						next = next == -1 ? getAdapter().getItemCount() : next;
-						adapter.removeDisplayables(start + 1, next - 1); // the -1 because we don't want to remove the next review,only until the comment
+						int reviewIndex = adapter.getReviewPosition(this.reviewIndex);
+						int nextReview = adapter.getReviewPosition(this.reviewIndex + 1);
+						nextReview = nextReview == -1 ? getAdapter().getItemCount() : nextReview;
+						adapter.removeDisplayables(reviewIndex + 1, nextReview - 1); // the -1 because we don't want to remove the next review,only until the
+						// comment
 						// before the review
 					}
 				}));
@@ -230,6 +234,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 					index = count;
 				}
 				createDisplayableComments(review.getCommentList().getDatalist().getList(), displayables);
+				displayables.add(createReadMoreDisplayable(count, review));
 				count++;
 			}
 
@@ -240,6 +245,26 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 			progressBar.setVisibility(View.GONE);
 			//			recyclerView.scrollToPosition(reviewIndex);
 			installMenuItem.setVisible(reviewId >= 0);
+		});
+	}
+
+	@NonNull
+	private CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, FullReview review) {
+		return new CommentsReadMoreDisplayable(review, review.getCommentList().getDatalist().getNext(), new CommentAdder(count) {
+			@Override
+			public void addComment(List<Comment> comments) {
+				int nextReviewPosition = getAdapter().getReviewPosition(reviewIndex + 1);
+				nextReviewPosition = nextReviewPosition == -1 ? getAdapter().getItemCount() : nextReviewPosition;
+				getAdapter().removeDisplayable(nextReviewPosition - 1);
+				List<Displayable> displayableList = new ArrayList<>();
+				createDisplayableComments(comments, displayableList);
+				getAdapter().addDisplayables(nextReviewPosition - 1, displayableList);
+			}
+
+			@Override
+			public void collapseComments() {
+
+			}
 		});
 	}
 

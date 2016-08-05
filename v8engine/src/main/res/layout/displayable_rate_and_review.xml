@@ -160,7 +160,7 @@
         android:layout_below="@id/comment"
         android:layout_marginTop="23.7dp"
         android:drawablePadding="10dp"
-        android:drawableRight="@drawable/ic_down_arrow"
+        android:drawableRight="@drawable/ic_up_arrow"
         android:gravity="center"
         android:text="@string/comments"
         android:textAllCaps="true"

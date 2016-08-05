@@ -45,7 +45,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 @Displayables({RateAndReviewCommentDisplayable.class})
 public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentDisplayable> {
 
-	public static final int FULL_COMMENTS_LIMIT = 1000;
+	public static final int FULL_COMMENTS_LIMIT = 3;
 	private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
 	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 	private static final Locale LOCALE = Locale.getDefault();
@@ -117,11 +117,11 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		showHideReplies.setOnClickListener(v -> {
 			if (isCommentsCollapsed) {
 				loadCommentsForThisReview(review.getId(), FULL_COMMENTS_LIMIT, displayable.getCommentAdder());
-				showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down_arrow, 0);
+				showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_up_arrow, 0);
 				isCommentsCollapsed = false;
 			} else {
 				displayable.getCommentAdder().collapseComments();
-				showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_up_arrow, 0);
+				showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down_arrow, 0);
 				isCommentsCollapsed = true;
 			}
 		});
@@ -170,6 +170,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 				dialog.dismiss();
 				if (response.isOk()) {
 					ManagerPreferences.setForceServerRefreshFlag(true);
+					commentAdder.collapseComments();
 					loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
 					Logger.d(TAG, "comment to review added");
 					ShowMessage.asSnack(flagHelfull, R.string.comment_submitted);
@@ -195,7 +196,6 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 			if (listComments.isOk()) {
 				List<Comment> comments = listComments.getDatalist().getList();
 				commentAdder.addComment(comments);
-
 			} else {
 				Logger.e(TAG, "error loading comments");
 				ShowMessage.asSnack(flagHelfull, R.string.unknown_error);

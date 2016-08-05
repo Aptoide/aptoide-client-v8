@@ -47,6 +47,12 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		return of(reviewId, limit);
 	}
 
+	public static ListCommentsRequest of(long reviewId, int offset, int limit) {
+		ListCommentsRequest listCommentsRequest = of(reviewId, limit);
+		listCommentsRequest.getBody().setOffset(offset);
+		return listCommentsRequest;
+	}
+
 	public static ListCommentsRequest of(long reviewId, int limit) {
 		//
 		//
