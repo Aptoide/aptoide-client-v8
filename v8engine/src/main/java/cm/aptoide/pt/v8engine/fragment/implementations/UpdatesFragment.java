@@ -107,7 +107,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 							setDisplayables();
 						}
-					});
+					}, Throwable::printStackTrace);
 		}
 	}
 
@@ -132,7 +132,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 						}
 
 						setDisplayables();
-					});
+					}, Throwable::printStackTrace);
 			if (realmResults.size() == 0) {
 				finishLoading();
 			}
