@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -69,6 +70,7 @@ import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
+import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.services.ValidatePaymentsService;
@@ -313,7 +315,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						// TODO: 05/08/16 sithengineer download app
 
 						// install app
-						installDisplayable.installOrUpgradeListener(false, boughtApp, null, getActivity());
+						FragmentActivity fragmentActivity = getActivity();
+						Intent installApp = new Intent(fragmentActivity, AppBoughtReceiver.class);
+						installApp.setAction(AppBoughtReceiver.APP_BOUGHT);
+						installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+						fragmentActivity.sendBroadcast(installApp);
 						boughtApp = null;
 
 					} catch (JSONException e) {

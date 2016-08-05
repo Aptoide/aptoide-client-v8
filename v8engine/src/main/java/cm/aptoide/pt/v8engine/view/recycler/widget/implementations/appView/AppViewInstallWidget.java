@@ -184,7 +184,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				@Override
 				public void appBought(long appId) {
 					if (app.getId() == appId) {
-						installOrUpgradeListener(true, app, getApp.getNodes().getVersions(), displayable);
+						installOrUpgradeListener(true, app, getApp.getNodes().getVersions(), displayable).onClick(actionButton);
 					}
 				}
 			};
