@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -13,6 +15,7 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -31,6 +34,8 @@ import rx.Observable;
  * Created by sithengineer on 06/05/16.
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
+
+	private static final String TAG = AppViewInstallDisplayable.class.getName();
 
 	@Getter private boolean shouldInstall;
 	@Getter private GetApkInfoJson.Payment payment;
@@ -134,5 +139,29 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	@Override
 	public int getViewLayout() {
 		return R.layout.displayable_app_view_install;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Logger.i(TAG, "onResume");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Logger.i(TAG, "onPause");
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Logger.i(TAG, "onSaveInstanceState");
+	}
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		Logger.i(TAG, "onViewStateRestored");
 	}
 }

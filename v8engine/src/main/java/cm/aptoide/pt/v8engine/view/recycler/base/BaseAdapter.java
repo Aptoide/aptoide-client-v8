@@ -5,12 +5,14 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.List;
 
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -19,7 +21,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 /**
  * Created by neuro on 16-04-2016.
  */
-public class BaseAdapter extends RecyclerView.Adapter<Widget> {
+public class BaseAdapter extends RecyclerView.Adapter<Widget> implements LifecycleSchim {
 
 	private final Displayables displayables = new Displayables();
 
@@ -37,7 +39,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onBindViewHolder(Widget holder, int position) {
-		holder.bindView(displayables.get(position));
+		holder.internalBindView(displayables.get(position));
 	}
 
 	@Override
@@ -108,7 +110,23 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		}
 	}
 
-	public void onResume() {
+	//
+	// LifecycleShim interface
+	//
 
+	public void onResume() {
+		displayables.onResume();
+	}
+
+	public void onPause() {
+		displayables.onPause();
+	}
+
+	public void onSaveInstanceState(Bundle outState) {
+		displayables.onSaveInstanceState(outState);
+	}
+
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		displayables.onViewStateRestored(savedInstanceState);
 	}
 }

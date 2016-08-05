@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
@@ -21,8 +22,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
-		BaseLoaderToolbarFragment {
+public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends BaseLoaderToolbarFragment implements LifecycleSchim {
 
 	@Getter protected T adapter;
 	@Getter
@@ -106,5 +106,45 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends
 	public void clearDisplayables() {
 		this.displayables.clear();
 		adapter.clearDisplayables();
+	}
+
+	//
+	// Lifecycle interface
+	//
+
+	/**
+	 * This method will not call "onResume" in the adapter elements because in the first run despite de adapter is not null it is empty. Further calls to this
+	 * method will invoke the proper "onRsume" event in the adapters elements.
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (adapter != null) {
+			adapter.onResume();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (adapter != null) {
+			adapter.onPause();
+		}
+	}
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (adapter != null) {
+			adapter.onViewStateRestored(savedInstanceState);
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (adapter != null) {
+			adapter.onSaveInstanceState(outState);
+		}
 	}
 }

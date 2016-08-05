@@ -41,4 +41,8 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 		return (FragmentActivity) itemView.getContext();
 	}
 
+	public void internalBindView(T displayable) {
+		displayable.setVisible(true);
+		bindView(displayable);
+	}
 }

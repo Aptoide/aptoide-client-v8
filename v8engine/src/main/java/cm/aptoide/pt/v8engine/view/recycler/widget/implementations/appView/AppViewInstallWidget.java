@@ -10,7 +10,6 @@ import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -174,7 +173,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			actionButton.setOnClickListener(installOrUpgradeListener(R.string.installing_msg, app, displayable));
 			if (displayable.isShouldInstall()) {
 				actionButton.postDelayed(() -> {
-					actionButton.performClick();
+					if (displayable.isVisible()) {
+						actionButton.performClick();
+					}
 				}, 1000);
 			}
 		}
@@ -302,11 +303,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 								if (actionButton.getVisibility() == View.VISIBLE) {
 									actionButton.setText(R.string.open);
 									// FIXME: 20/07/16 sithengineer refactor this ugly code
-									Fragment fragmentShower = ((FragmentShower) getContext()).getLastV4();
-									if (AppMenuOptions.class.isAssignableFrom(fragmentShower.getClass())) {
-										((AppMenuOptions) fragmentShower).setUnInstallMenuOptionVisible(() -> {
+									if (displayable.isVisible()) {
+										((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
 											//new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
 											displayable.uninstall(ctx, app).subscribe(aVoid -> {
+												// ?? what should I do here ??
 											});
 										});
 									}

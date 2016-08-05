@@ -5,14 +5,19 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
+
 /**
  * Created by neuro on 18-04-2016.
  */
-public class Displayables {
+public class Displayables implements LifecycleSchim {
 
 	private final List<Displayable> displayables = new LinkedList<>();
 
@@ -70,5 +75,33 @@ public class Displayables {
 
 	public void clear() {
 		displayables.clear();
+	}
+
+	//
+	// LifecycleSchim interface
+	//
+
+	public void onResume() {
+		for (final Displayable displayable : displayables) {
+			displayable.onResume();
+		}
+	}
+
+	public void onPause() {
+		for (final Displayable displayable : displayables) {
+			displayable.onPause();
+		}
+	}
+
+	public void onSaveInstanceState(Bundle outState) {
+		for (final Displayable displayable : displayables) {
+			displayable.onSaveInstanceState(outState);
+		}
+	}
+
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		for (final Displayable displayable : displayables) {
+			displayable.onViewStateRestored(savedInstanceState);
+		}
 	}
 }

@@ -5,12 +5,16 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -19,10 +23,11 @@ import lombok.experimental.Accessors;
  */
 @Ignore
 @Accessors(chain = true)
-public abstract class Displayable {
+public abstract class Displayable implements LifecycleSchim {
 
 	private Boolean fixedPerLineCount;
 	@Setter private Integer defaultPerLineCount;
+	@Setter @Getter private boolean isVisible = false;
 
 	/**
 	 * Needed for reflective {@link Class#newInstance()}.
@@ -68,5 +73,23 @@ public abstract class Displayable {
 
 	public int getSpanSize() {
 		return WidgetFactory.getColumnSize() / getPerLineCount();
+	}
+
+	//
+	// LifecycleSchim interface
+	// optional methods
+
+	public void onResume() {
+		isVisible = true;
+	}
+
+	public void onPause() {
+		isVisible = false;
+	}
+
+	public void onSaveInstanceState(Bundle outState) {
+	}
+
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 	}
 }
