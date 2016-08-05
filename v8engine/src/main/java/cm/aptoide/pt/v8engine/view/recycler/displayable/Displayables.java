@@ -8,12 +8,11 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
-
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 
 /**
@@ -39,7 +38,9 @@ public class Displayables implements LifecycleSchim {
 		}
 	}
 
-	public void add(int position, Collection<? extends Displayable> collection) {
+	public void add(int position, List<? extends Displayable> collection) {
+		Collections.reverse(collection);
+
 		for (Displayable displayable : collection) {
 			add(position, displayable);
 		}
@@ -58,8 +59,7 @@ public class Displayables implements LifecycleSchim {
 		}
 	}
 
-
-	public void add(Collection<? extends Displayable> collection) {
+	public void add(List<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
 			add(displayable);
 		}
