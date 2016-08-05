@@ -22,18 +22,19 @@ import java.util.List;
 import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.ListFullCommentsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.FullComment;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -44,11 +45,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 @Displayables({RateAndReviewCommentDisplayable.class})
 public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentDisplayable> {
 
+	public static final int FULL_COMMENTS_LIMIT = 3;
 	private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
 	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 	private static final Locale LOCALE = Locale.getDefault();
 	private static final int DEFAULT_LIMIT = 3;
-
 	private TextView reply;
 	private TextView showHideReplies;
 	private Button flagHelfull;
@@ -61,6 +62,8 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 	private ImageView userImage;
 	private TextView username;
+
+	private boolean isCommentsCollapsed = false;
 
 	
 	public RateAndReviewCommentWidget(View itemView) {
@@ -95,7 +98,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 		reply.setOnClickListener(v -> {
 			if (AptoideAccountManager.isLoggedIn()) {
-				showCommentPopup(review.getId(), review.getData().getApp().getName());
+				showCommentPopup(review.getId(), review.getData().getApp().getName(), displayable.getCommentAdder());
 			} else {
 				ShowMessage.asSnack(ratingBar, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
 					AptoideAccountManager.openAccountManager(snackView.getContext());
@@ -112,7 +115,15 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		});
 
 		showHideReplies.setOnClickListener(v -> {
-			loadCommentsForThisReview(review.getId());
+			if (isCommentsCollapsed) {
+				loadCommentsForThisReview(review.getId(), FULL_COMMENTS_LIMIT, displayable.getCommentAdder());
+				showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_up_arrow, 0);
+				isCommentsCollapsed = false;
+			} else {
+				displayable.getCommentAdder().collapseComments();
+				showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down_arrow, 0);
+				isCommentsCollapsed = true;
+			}
 		});
 
 		final Resources.Theme theme = getContext().getTheme();
@@ -126,7 +137,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		}
 	}
 
-	private void showCommentPopup(final long reviewId, String appName) {
+	private void showCommentPopup(final long reviewId, String appName, RateAndReviewsFragment.CommentAdder commentAdder) {
 		final Context ctx = getContext();
 		final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_comment_on_review, null);
 
@@ -159,7 +170,8 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 				dialog.dismiss();
 				if (response.isOk()) {
 					ManagerPreferences.setForceServerRefreshFlag(true);
-					loadCommentsForThisReview(reviewId);
+					commentAdder.collapseComments();
+					loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
 					Logger.d(TAG, "comment to review added");
 					ShowMessage.asSnack(flagHelfull, R.string.comment_submitted);
 				} else {
@@ -179,17 +191,11 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		dialog.show();
 	}
 
-	private void loadCommentsForThisReview(long reviewId) {
-		loadCommentsForThisReview(reviewId, DEFAULT_LIMIT);
-	}
-
-	private void loadCommentsForThisReview(long reviewId, int limit) {
-		ListFullCommentsRequest.of(reviewId, limit).execute(listFullComments -> {
-			if (listFullComments.isOk()) {
-				List<FullComment> comments = listFullComments.getDatalist().getList();
-
-				// TODO: 04/08/16 sithengineer add comments to the recycler view
-
+	private void loadCommentsForThisReview(long reviewId, int limit, RateAndReviewsFragment.CommentAdder commentAdder) {
+		ListCommentsRequest.of(reviewId, limit).execute(listComments -> {
+			if (listComments.isOk()) {
+				List<Comment> comments = listComments.getDatalist().getList();
+				commentAdder.addComment(comments);
 			} else {
 				Logger.e(TAG, "error loading comments");
 				ShowMessage.asSnack(flagHelfull, R.string.unknown_error);

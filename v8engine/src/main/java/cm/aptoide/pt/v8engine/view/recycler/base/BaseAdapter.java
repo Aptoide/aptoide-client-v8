@@ -96,7 +96,17 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
 
 	public void addDisplayables(int position, List<? extends Displayable> displayables) {
 		this.displayables.add(position, displayables);
-		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRangeInserted(position, displayables.size()));
+	}
+
+	public void removeDisplayables(int startPosition, int endPosition) {
+		int numberRemovedItems = this.displayables.remove(startPosition, endPosition);
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRangeRemoved(startPosition, numberRemovedItems));
+	}
+
+	public void removeDisplayable(int position) {
+		this.displayables.remove(position);
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRemoved(position));
 	}
 
 	public void clearDisplayables() {
