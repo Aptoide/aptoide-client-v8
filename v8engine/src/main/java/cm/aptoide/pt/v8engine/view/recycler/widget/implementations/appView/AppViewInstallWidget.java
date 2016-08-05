@@ -45,6 +45,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -133,7 +134,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			// installed
 			//					.getPackageName(), displayable));
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-				displayable.uninstall(getContext(), app);
+				displayable.uninstall(getContext(), app).subscribe(aVoid -> {
+				});
 			});
 
 			// is it an upgrade, downgrade or open app?
@@ -155,14 +157,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		if (!isLatestAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
 			actionButton.setText(R.string.update);
-			actionButton.setOnClickListener(installOrUpgradeListener(R.string.updating_msg, app, getApp.getNodes().getVersions(), displayable));
+			actionButton.setOnClickListener(installOrUpgradeListener(true, app, getApp.getNodes().getVersions(), displayable));
 		} else if (app.getFile().getVercode() < installed.getVersionCode()) {
 			actionButton.setText(R.string.downgrade);
 			actionButton.setOnClickListener(downgradeListener(app, displayable));
 		} else {
 			actionButton.setText(R.string.open);
 			latestAvailableLabel.setVisibility(View.VISIBLE);
-			actionButton.setOnClickListener(new Listeners().newOpenAppListener(app.getPackageName()));
+			actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
 		}
 	}
 
@@ -171,16 +173,24 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
 		GetApkInfoJson.Payment payment = displayable.getPayment();
-		//check if the app is payed
+		//check if the app is paid
 		if (payment != null && payment.isPaidApp()) {
 			// TODO: 05/08/16 sithengineer replace that for placeholders in resources as soon as we are able to add new strings for translation
 			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.symbol + " " + payment.amount + ")");
 			actionButton.setOnClickListener(v -> {
-				displayable.buyApp(getContext(), app);
+				displayable.buyApp(getContext(), app).subscribe();
 			});
+			new AppBoughtReceiver() {
+				@Override
+				public void appBought(long appId) {
+					if (app.getId() == appId) {
+						installOrUpgradeListener(true, app, getApp.getNodes().getVersions(), displayable);
+					}
+				}
+			};
 		} else {
 			actionButton.setText(R.string.install);
-			actionButton.setOnClickListener(installOrUpgradeListener(R.string.installing_msg, app, getApp.getNodes().getVersions(), displayable));
+			actionButton.setOnClickListener(installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
 			if (displayable.isShouldInstall()) {
 				actionButton.postDelayed(() -> {
 					if (displayable.isVisible()) {
@@ -228,8 +238,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		};
 	}
 
-	private View.OnClickListener installOrUpgradeListener(@StringRes final int installOrUpgradeMsg, GetAppMeta.App app, ListAppVersions appVersions,
-	                                                      AppViewInstallDisplayable displayable) {
+	public View.OnClickListener installOrUpgradeListener(boolean isUpdate, GetAppMeta.App app, ListAppVersions appVersions, AppViewInstallDisplayable
+			displayable) {
+
+		final Context context = getContext();
+
+		@StringRes
+		final int installOrUpgradeMsg = isUpdate ? R.string.updating_msg : R.string.installing_msg;
 		final View.OnClickListener installHandler = v -> {
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
 			final PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
@@ -246,9 +261,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					downloadServiceHelper.pauseDownload(app.getId());
 
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-						actionPauseResume.setBackgroundColor(getContext().getColor(R.color.default_color));
+						actionPauseResume.setBackgroundColor(context.getColor(R.color.default_color));
 					} else {
-						actionPauseResume.setBackgroundColor(getContext().getResources().getColor(R.color.default_color));
+						actionPauseResume.setBackgroundColor(context.getResources().getColor(R.color.default_color));
 					}
 				});
 
@@ -278,9 +293,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 								//actionPauseResume.setImageResource(R.drawable.ic_); // missing the changing of the drawable
 								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-									actionPauseResume.setBackgroundColor(getContext().getColor(android.R.color.transparent));
+									actionPauseResume.setBackgroundColor(context.getColor(android.R.color.transparent));
 								} else {
-									actionPauseResume.setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
+									actionPauseResume.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
 								}
 							});
 							break;
@@ -304,7 +319,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
 
-							displayable.install(getContext(), app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+							displayable.install(context, app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
 								if (minimalAd != null && minimalAd.getCpdUrl() != null) {
 									DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
 								}
@@ -313,11 +328,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 									actionButton.setText(R.string.open);
 									// FIXME: 20/07/16 sithengineer refactor this ugly code
 									if (displayable.isVisible()) {
-										((AppMenuOptions) ((FragmentShower) getContext()).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-											//new Listeners().newUninstallListener(app, itemView, app.getPackageName(), displayable).call();
-											displayable.uninstall(ctx, app).subscribe(aVoid -> {
-												// ?? what should I do here ??
-											});
+										((AppMenuOptions) ((FragmentShower) context).getLastV4()).setUnInstallMenuOptionVisible(() -> {
+											displayable.uninstall(ctx, app).subscribe();
 										});
 									}
 								}
@@ -343,17 +355,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				// search for a trusted version
 				fragment = SearchFragment.newInstance(app.getName(), true);
 			}
-			((FragmentShower) getContext()).pushFragmentV4(fragment);
+			((FragmentShower) context).pushFragmentV4(fragment);
 		};
 
 		return v -> {
-			Context ctx = getContext();
 			final Malware.Rank rank = app.getFile().getMalware().getRank();
 			if (!Malware.Rank.TRUSTED.equals(rank)) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-				View alertView = LayoutInflater.from(ctx).inflate(R.layout.dialog_install_warning, null);
+				AlertDialog.Builder builder = new AlertDialog.Builder(context);
+				View alertView = LayoutInflater.from(context).inflate(R.layout.dialog_install_warning, null);
 				builder.setView(alertView);
-				new InstallWarningDialog(rank, hasTrustedVersion, ctx, installHandler, onSearchHandler).getDialog().show();
+				new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler, onSearchHandler).getDialog().show();
 			}
 		};
 	}
@@ -365,65 +376,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			for (App version : appVersions.getList()) {
 				if (app.getId() != version.getId() && version.getFile() != null && version.getFile().getMalware() != null && Malware.Rank.TRUSTED.equals
 						(version
-						.getFile()
-						.getMalware()
-						.getRank())) {
+
+								.getFile().getMalware().getRank())) {
 					trustedVersion = version;
 				}
 			}
 		}
-	}
-
-	private static class Listeners {
-		//	private class Listeners {
-
-		//		private final WeakReference<AppViewInstallWidget> widgetWeakRef;
-		//
-		//		public Listeners(AppViewInstallWidget widget) {
-		//			widgetWeakRef = new WeakReference<>(widget);
-		//		}
-
-		//		private View.OnClickListener newBuyListener(GetAppMeta.App app) {
-		//			return v -> {
-		//				if (!AptoideAccountManager.isLoggedIn()) {
-		//					AptoideAccountManager.openAccountManager(getContext());
-		//				}
-		//				// process payment, save info offline, send info to server and when server confirms the app purchase delete offline data
-		//				((Payments) ((FragmentShower) getContext()).getLastV4()).buyApp(app);
-		//			};
-		//		}
-
-		//		private View.OnClickListener newInstallListener(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
-		//			return v -> innerInstallAction(app, R.string.installing_msg, v, displayable);
-		//		}
-
-		//		private View.OnClickListener newUpdateListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
-		//			return v -> {
-		//				AptoideUtils.ThreadU.runOnIoThread(() -> {
-		//					@Cleanup
-		//					Realm realm = Database.get();
-		//					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.UPDATE);
-		//				});
-		//				innerInstallAction(app, R.string.updating_msg, v, displayable);
-		//			};
-		//		}
-
-		private View.OnClickListener newOpenAppListener(String packageName) {
-			return v -> AptoideUtils.SystemU.openApp(packageName);
-		}
-
-		// TODO: 04/08/16 sithengineer delete this
-		/*
-		private Action0 newUninstallListener(GetAppMeta.App app, View itemView, String packageName, AppViewInstallDisplayable displayable) {
-			return () -> {
-				AptoideUtils.ThreadU.runOnIoThread(() -> {
-					@Cleanup
-					Realm realm = Database.get();
-					Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.UNINSTALL);
-				});
-				displayable.uninstall(getContext()).subscribe();
-			};
-		}
-		*/
 	}
 }

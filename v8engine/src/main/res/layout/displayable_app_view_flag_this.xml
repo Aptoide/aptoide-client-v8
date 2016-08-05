@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 26/07/2016.
+  ~ Modified by SithEngineer on 05/08/2016.
   -->
 
 <LinearLayout
@@ -26,9 +26,93 @@
         />
 
     <LinearLayout
+        android:id="@+id/good_app_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_border_silver"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+        <LinearLayout
+            android:layout_width="77dp"
+            android:layout_height="77dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/working_well"
+            android:clickable="true"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="29dp"
+                android:gravity="center"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="@string/working_well"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="italic|bold"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="@string/appview_good_app_guaranteed"
+                android:textAllCaps="false"
+                android:textColor="@color/working_well_text_color"
+                android:textSize="@dimen/text_size_large"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="1dp"
+                android:gravity="left"
+                android:lines="3"
+                android:maxLines="4"
+                android:text="@string/appview_good_app_description"
+                android:textColor="@color/dark_custom_gray"
+                android:textSize="@dimen/text_size_medium_small"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rating_flags_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="visible"
+        tools:visibility="visible"
         >
 
         <LinearLayout
@@ -36,7 +120,7 @@
             android:layout_width="77dp"
             android:layout_height="77dp"
             android:layout_margin="4dp"
-            android:background="@drawable/working_well"
+            android:background="@drawable/working_well_btn"
             android:clickable="true"
             android:orientation="vertical"
             >

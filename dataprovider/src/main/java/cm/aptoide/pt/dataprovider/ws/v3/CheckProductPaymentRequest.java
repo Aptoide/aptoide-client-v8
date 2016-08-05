@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
@@ -50,11 +50,4 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 		return interfaces.checkProductPayment(args);
 	}
 
-	public static class Constants {
-
-		public static final String STORE = "store";
-		public static final String PRICE = "price";
-		public static final String CURRENCY = "currency";
-		public static final String TAX_RATE = "taxRate";
-	}
 }

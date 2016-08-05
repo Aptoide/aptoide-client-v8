@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -50,7 +50,6 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -148,6 +147,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private boolean sponsored;
 	private List<GetAdsResponse.Ad> suggestedAds;
 
+	// buy app vars
+	private String storeName;
+	private float priceValue;
+	private String currency;
+	private double taxRate;
+
+	private AppViewInstallDisplayable installDisplayable;
+	private GetAppMeta.App boughtApp;
+
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
 		bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
@@ -239,7 +247,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd, shouldInstall));
+		installDisplayable = new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd, shouldInstall);
+		displayables.add(installDisplayable);
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -253,6 +262,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		setDisplayables(displayables);
 	}
 
+
 	public void buyApp(GetAppMeta.App app) {
 		GetAppMeta.Pay payment = app.getPay();
 
@@ -262,10 +272,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		Intent intent = new Intent(getContext(), PaymentActivity.class);
 		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
 		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
-		intent.putExtra(CheckProductPaymentRequest.Constants.STORE, app.getStore().getName());
-		intent.putExtra(CheckProductPaymentRequest.Constants.PRICE, payment.getPrice());
-		intent.putExtra(CheckProductPaymentRequest.Constants.CURRENCY, payment.getCurrency());
-		intent.putExtra(CheckProductPaymentRequest.Constants.TAX_RATE, app.getPayment().payment_services.get(0).getTaxRate());
+		boughtApp = app;
 		startActivityForResult(intent, PAY_APP_REQUEST_CODE);
 	}
 
@@ -278,19 +285,18 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 					try {
 						Logger.i(TAG, confirm.toJSONObject().toString(4));
 
-						// TODO: 29/07/16 sithengineer
 						// send 'confirm' to the server
 						ProofOfPayment proof = confirm.getProofOfPayment();
 
 						PaymentPayload paymentPayload = new PaymentPayload();
 						paymentPayload.setPayType(1); // magic value: paypal payment type id
 						paymentPayload.setApiVersion("3"); // magic value: webservice version
-						paymentPayload.setProductId(appId);
-						paymentPayload.setStore(data.getStringExtra(CheckProductPaymentRequest.Constants.STORE));
-						paymentPayload.setPrice(data.getDoubleExtra(CheckProductPaymentRequest.Constants.PRICE, 0.0));
-						paymentPayload.setCurrency(data.getStringExtra(CheckProductPaymentRequest.Constants.CURRENCY));
 						paymentPayload.setPayKey(proof.getPaymentId());
-						paymentPayload.setTaxRate(data.getDoubleExtra(CheckProductPaymentRequest.Constants.TAX_RATE, 0.0));
+						paymentPayload.setProductId(boughtApp.getId());
+						paymentPayload.setStore(boughtApp.getStore().getName());
+						paymentPayload.setPrice(boughtApp.getPay().getPrice());
+						paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
+						paymentPayload.setTaxRate(boughtApp.getPayment().payment_services.get(0).getTaxRate());
 
 						final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
 						paymentPayload.setSimCountryCode(telephonyManager.getSimCountryIso());
@@ -302,6 +308,13 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						realm.commitTransaction();
 
 						getActivity().startService(ValidatePaymentsService.getIntent(getActivity()));
+
+						// download app
+						// TODO: 05/08/16 sithengineer download app
+
+						// install app
+						installDisplayable.installOrUpgradeListener(false, boughtApp, null, getActivity());
+						boughtApp = null;
 
 					} catch (JSONException e) {
 						Logger.e(TAG, "an extremely unlikely failure occurred: ", e);

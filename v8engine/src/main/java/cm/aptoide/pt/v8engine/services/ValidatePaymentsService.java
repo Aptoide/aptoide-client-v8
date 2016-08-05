@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.services;
@@ -38,6 +38,7 @@ public class ValidatePaymentsService extends IntentService {
 	 */
 	public ValidatePaymentsService() {
 		super("Validate Payments Service");
+		handler = new Handler(Looper.getMainLooper());
 	}
 
 	public static Intent getIntent(Context context) {
@@ -46,8 +47,6 @@ public class ValidatePaymentsService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		handler = new Handler(Looper.getMainLooper());
-
 		@Cleanup
 		Realm realm = Database.get();
 		for (PaymentPayload paymentPayload : Database.PaymentPayloadQ.getAll(realm)) {

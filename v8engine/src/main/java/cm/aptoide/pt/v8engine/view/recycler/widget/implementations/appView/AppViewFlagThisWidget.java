@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -32,6 +32,9 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 	private static final String TAG = AppViewFlagThisWidget.class.getSimpleName();
 
 	private final Map<Integer,GetAppMeta.GetAppMetaFile.Flags.Vote.Type> viewIdTypeMap;
+
+	private View goodAppLayoutWrapper;
+	private View flagsLayoutWrapper;
 
 	private View workingWellLayout;
 	private View needsLicenseLayout;

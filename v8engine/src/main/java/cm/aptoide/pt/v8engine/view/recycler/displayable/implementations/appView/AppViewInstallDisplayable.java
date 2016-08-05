@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -9,6 +9,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -20,6 +26,7 @@ import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
@@ -36,7 +43,20 @@ import rx.Observable;
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
 	private static final String TAG = AppViewInstallDisplayable.class.getName();
-
+	// get app, upgrade and downgrade button
+	public Button actionButton;
+	//
+	// downloading views
+	//
+	// FIXME: 05/08/16 sithengineer refactor this code
+	public CheckBox shareInTimeline; // FIXME: 27/07/16 sithengineer what does this flag do ??
+	public ProgressBar downloadProgress;
+	public TextView textProgress;
+	public ImageView actionPauseResume;
+	public ImageView actionCancel;
+	//private String storeName;
+	public RelativeLayout downloadProgressLayout;
+	public RelativeLayout installAndLatestVersionLayout;
 	@Getter private boolean shouldInstall;
 	@Getter private GetApkInfoJson.Payment payment;
 	@Getter private MinimalAd minimalAd;
@@ -44,7 +64,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	//private DownloadServiceHelper downloadManager;
 	private long appId;
 	private String packageName;
-	//private String storeName;
+	private App trustedVersion;
 
 	public AppViewInstallDisplayable() {
 	}
