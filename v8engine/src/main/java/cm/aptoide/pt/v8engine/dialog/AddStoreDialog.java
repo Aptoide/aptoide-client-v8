@@ -27,6 +27,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 
 /**
  * Created with IntelliJ IDEA. User: rmateus Date: 18-10-2013 Time: 17:27 To change this template use File | Settings |
@@ -92,7 +93,7 @@ public class AddStoreDialog extends DialogFragment {
 	}
 
 	private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
-		StoreUtils.subscribeStore(getStoreMetaRequest, getStoreMeta1->{
+		StoreUtilsProxy.subscribeStore(getStoreMetaRequest, getStoreMeta1->{
 			ShowMessage.asSnack(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_subscribed,
 					storeName));
 
@@ -115,7 +116,7 @@ public class AddStoreDialog extends DialogFragment {
 				dismissLoadingDialog();
 				Toast.makeText(V8Engine.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
 			}
-		});
+		}, storeName);
 	}
 
 	private GetStoreMetaRequest buildRequest(String storeName) {

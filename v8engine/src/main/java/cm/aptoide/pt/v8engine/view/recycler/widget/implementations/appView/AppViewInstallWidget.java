@@ -34,6 +34,7 @@ import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
@@ -226,6 +227,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
 			final PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 
+			if(installOrUpgradeMsg == R.string.installing_msg) {
+				Analytics.ClickedOnInstallButton.clicked(app);
+			}
+
 			permissionRequest.requestAccessToExternalFileSystem(() -> {
 
 				ShowMessage.asSnack(v, installOrUpgradeMsg);
@@ -293,6 +298,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						}
 
 						case Download.COMPLETED: {
+							Analytics.DownloadComplete.downloadComplete(app);
+
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
 							displayable.install(getContext(), app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {

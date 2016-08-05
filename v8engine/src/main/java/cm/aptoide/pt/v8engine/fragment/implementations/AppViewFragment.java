@@ -62,6 +62,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
@@ -675,6 +676,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			ImageLoader.load(badgeResId, badge);
 			badgeText.setText(badgeMessageId);
+
+			Analytics.ViewedApplication.view(app.getPackageName(), app.getFile().getMalware().getRank().name());
 		}
 	}
 }

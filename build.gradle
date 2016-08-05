@@ -7,6 +7,7 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'http://maven.localytics.com/public'}
         mavenLocal()
     }
     dependencies {
@@ -35,6 +36,8 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'http://maven.localytics.com/public'}
+
     }
 }
 
@@ -121,4 +124,10 @@ ext {
     //ROUNDED_IMG_LIB = '2.2.1'
 
     PAYPAL_SDK = '2.14.4'
+
+    // Localytics Android SDK
+    LOCALYTICS_VERSION = '4.0.1'
+
+    // Flurry Android SDK
+    FLURRY_VERSION = '6.3.1'
 }

@@ -22,10 +22,18 @@ Properties localProperties = new Properties()
 localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 def fabricApiKey = localProperties.FABRIC_API_KEY
+def localyticsApiKey = localProperties.LOCALYTICS_DEBUG_KEY
+def flurryApiDebugKey = localProperties.FLURRY_DEBUG_KEY
+def flurryApiKey = localProperties.FLURRY_KEY
 
 android {
+
     def BOOLEAN = "boolean"
+    def STRING = "String"
     def FABRIC_CONFIGURED = "FABRIC_CONFIGURED"
+    def LOCALYTICS_CONFIGURED = "LOCALYTICS_CONFIGURED"
+    def FLURRY_CONFIGURED = "FLURRY_CONFIGURED"
+    def FLURRY_KEY = "FLURRY_KEY"
 
     // Websockets
     useLibrary 'org.apache.http.legacy'
@@ -37,6 +45,8 @@ android {
         minSdkVersion 15
 
         buildConfigField BOOLEAN, FABRIC_CONFIGURED, (fabricApiKey != null).toString()
+        buildConfigField BOOLEAN, LOCALYTICS_CONFIGURED, (localyticsApiKey != null).toString()
+
         consumerProguardFiles "proguard-rules.txt"
     }
 
@@ -50,10 +60,15 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
+            buildConfigField BOOLEAN, FLURRY_CONFIGURED, (flurryApiKey != null).toString()
+            buildConfigField STRING, FLURRY_KEY, "\"" + flurryApiKey.toString() + "\""
+
         }
         debug {
             minifyEnabled false
             shrinkResources false
+            buildConfigField BOOLEAN, FLURRY_CONFIGURED, (flurryApiDebugKey != null).toString()
+            buildConfigField STRING, FLURRY_KEY, "\"" + flurryApiDebugKey.toString() + "\""
         }
     }
 
@@ -161,4 +176,10 @@ dependencies {
 
     // paypal SDK
     compile "com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}"
+
+    // Localytics sdk
+    compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
+
+    // Flurry Android sdk
+    compile "com.flurry.android:analytics:${FLURRY_VERSION}"
 }

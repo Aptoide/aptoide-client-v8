@@ -22,6 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
@@ -74,6 +75,14 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 	protected void onPackageAdded(String packageName) {
 		Log.d(TAG, "Package added: " + packageName);
+
+		Rollback rollback = Database.RollbackQ.get(packageName,Rollback.Action.INSTALL,realm);
+		if(rollback != null) {
+			String packageNameFromRollbackQ = rollback.getPackageName();
+			String trustedBadge = rollback.getTrustedBadge();
+			Logger.d(TAG, "LOCALYTICS TESTING : APPLICATION INSTALL - PACKAGE NAME: " + packageNameFromRollbackQ + " trustedBadge: " + trustedBadge);
+			Analytics.ApplicationInstall.installed(packageName, trustedBadge);
+		}
 
 		databaseOnPackageAdded(packageName);
 		checkAndBroadcastReferrer(packageName);

@@ -44,6 +44,7 @@ public class Rollback extends RealmObject {
 	private String action;
 	@PrimaryKey private String md5;
 	private boolean confirmed;
+	private String trustedBadge;
 	//	private String referrer;
 
 	private long appId;
@@ -78,6 +79,8 @@ public class Rollback extends RealmObject {
 		appId = app.getId();
 		appName = app.getName();
 		icon = app.getIcon();
+
+		trustedBadge = app.getFile().getMalware().getRank().name();
 
 		packageName = app.getPackageName();
 		//		versionCode = app.getFile().getVercode();
@@ -324,6 +327,10 @@ public class Rollback extends RealmObject {
 
 	public void setPatchObbName(String patchObbName) {
 		this.patchObbName = patchObbName;
+	}
+
+	public String getTrustedBadge() {
+		return trustedBadge;
 	}
 
 	public enum Action {
