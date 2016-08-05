@@ -50,6 +50,7 @@ public enum Type {
 	ADD_MORE_STORES(true),
 	SEARCH_AD(1),
 	ADULT_ROW(1, true),
+	UPDATES_HEADER(1, true),
 
 	// Updates
 	INSTALLED(1),

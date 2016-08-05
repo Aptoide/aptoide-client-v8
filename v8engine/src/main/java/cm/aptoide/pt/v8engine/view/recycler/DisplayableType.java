@@ -66,6 +66,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sto
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
@@ -113,6 +114,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGri
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdatesHeaderWidget;
 
 /**
  * Created by neuro on 11-05-2016.
@@ -145,6 +147,7 @@ public enum DisplayableType {
 	INSTALLED_APP(InstalledAppWidget.class, InstalledAppDisplayable.class),
 	UPDATE(UpdateWidget.class, UpdateDisplayable.class),
 	EXCLUDED_UPDATE(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class),
+	UPDATES_HEADER(UpdatesHeaderWidget.class, UpdatesHeaderDisplayable.class),
 
 	// Social Timeline
 	SOCIAL_TIMELINE_ARTICLE(ArticleWidget.class, ArticleDisplayable.class),

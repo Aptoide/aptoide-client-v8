@@ -32,6 +32,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import io.realm.RealmResults;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -97,8 +98,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 							updatesDisplayablesList.clear();
 
 							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
-										.getResString(R.string.updates))));
+								updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager, AptoideUtils.StringU.getResString(R.string.updates)));
 
 								for (Update update : updates) {
 									updatesDisplayablesList.add(UpdateDisplayable.create(update, installManager, downloadFactory, downloadManager));
