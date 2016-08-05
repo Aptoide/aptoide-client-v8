@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -10,6 +10,9 @@ import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,8 +20,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -41,10 +42,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -78,6 +79,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private TextView latestAvailableLabel;
 	private TextView otherVersions;
 	private MinimalAd minimalAd;
+
+	private App trustedVersion;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -120,7 +123,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//check if the app is installed
 		if (installed == null) {
 			// app not installed
-			setupInstallButton(app, displayable);
+			setupInstallButton(getApp, displayable);
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
 		} else {
 			// app installed
@@ -163,19 +166,21 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 	}
 
-	public void setupInstallButton(GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+	public void setupInstallButton(GetApp getApp, AppViewInstallDisplayable displayable) {
+
+		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
 		GetApkInfoJson.Payment payment = displayable.getPayment();
 		//check if the app is payed
 		if (payment != null && payment.isPaidApp()) {
-			// TODO replace that for placeholders in resources as soon as we are able to add new strings for translation.
+			// TODO: 05/08/16 sithengineer replace that for placeholders in resources as soon as we are able to add new strings for translation
 			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.symbol + " " + payment.amount + ")");
 			actionButton.setOnClickListener(v -> {
 				displayable.buyApp(getContext(), app);
 			});
 		} else {
 			actionButton.setText(R.string.install);
-			actionButton.setOnClickListener(installOrUpgradeListener(R.string.installing_msg, app, displayable));
+			actionButton.setOnClickListener(installOrUpgradeListener(R.string.installing_msg, app, getApp.getNodes().getVersions(), displayable));
 			if (displayable.isShouldInstall()) {
 				actionButton.postDelayed(() -> {
 					if (displayable.isVisible()) {
@@ -191,16 +196,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		return !canCompare || (app.getFile().getVercode() >= appVersions.getList().get(0).getFile().getVercode());
 	}
 
-	private View.OnClickListener getLatestListener(GetApp getApp) {
-		return v -> {
-			long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
-			FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(latestAppId));
-		};
-	}
+	//	private View.OnClickListener getLatestListener(GetApp getApp) {
+	//		return v -> {
+	//			long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
+	//			FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(latestAppId));
+	//		};
+	//	}
 
 	private View.OnClickListener downgradeListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
-		// FIXME: 15/07/16 sithengineer show notification to user saying it will lose all his data
-
 		return view -> {
 			final Context context = view.getContext();
 			ContextWrapper contextWrapper = (ContextWrapper) context;
@@ -227,8 +230,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	private View.OnClickListener installOrUpgradeListener(@StringRes final int installOrUpgradeMsg, GetAppMeta.App app, ListAppVersions appVersions,
 	                                                      AppViewInstallDisplayable displayable) {
-
-		return v -> {
+		final View.OnClickListener installHandler = v -> {
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
 			final PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 
@@ -302,12 +304,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
 
-							final Malware.Rank rank = app.getFile().getMalware().getRank();
-							if (!Malware.Rank.TRUSTED.equals(rank)) {
-								InstallWarningDialog.newInstance(rank, hasTrustedVersion(app, appVersions))
-										.show(getContext().getFragmentManager(), "InstallWarningDialog");
-							}
-
 							displayable.install(getContext(), app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
 								if (minimalAd != null && minimalAd.getCpdUrl() != null) {
 									DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
@@ -334,9 +330,35 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 			});
 		};
+
+		findTrustedVersion(app, appVersions);
+		final boolean hasTrustedVersion = trustedVersion != null;
+
+		final View.OnClickListener onSearchHandler = v -> {
+			Fragment fragment;
+			if (hasTrustedVersion) {
+				// go to app view of the trusted version
+				fragment = AppViewFragment.newInstance(trustedVersion.getId());
+			} else {
+				// search for a trusted version
+				fragment = SearchFragment.newInstance(app.getName(), true);
+			}
+			((FragmentShower) getContext()).pushFragmentV4(fragment);
+		};
+
+		return v -> {
+			Context ctx = getContext();
+			final Malware.Rank rank = app.getFile().getMalware().getRank();
+			if (!Malware.Rank.TRUSTED.equals(rank)) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+				View alertView = LayoutInflater.from(ctx).inflate(R.layout.dialog_install_warning, null);
+				builder.setView(alertView);
+				new InstallWarningDialog(rank, hasTrustedVersion, ctx, installHandler, onSearchHandler).getDialog().show();
+			}
+		};
 	}
 
-	private boolean hasTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
+	private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
 
 		if (app.getFile() != null && app.getFile().getMalware() != null && !Malware.Rank.TRUSTED.equals(app.getFile().getMalware().getRank())) {
 
@@ -346,21 +368,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						.getFile()
 						.getMalware()
 						.getRank())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private void setTrustedVersion(GetAppMeta.App currentVersion, List<ViewItem> versions) {
-		if (currentVersion.file != null && currentVersion.file.malware != null && !TRUSTED.equals(currentVersion.file.malware.rank)) {
-
-			for (ViewItem version : versions) {
-				if (!currentVersion.id.equals(version.id) && version.file != null && version.file.malware != null && TRUSTED.equals(version.file.malware
-						.rank)) {
 					trustedVersion = version;
-					break;
 				}
 			}
 		}

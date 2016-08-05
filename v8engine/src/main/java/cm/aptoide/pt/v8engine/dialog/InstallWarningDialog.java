@@ -1,15 +1,13 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 05/08/2016.
+ */
+
 package cm.aptoide.pt.v8engine.dialog;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,107 +19,62 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.InstallWarningDialogListener;
+import lombok.Getter;
 
-public class InstallWarningDialog extends DialogFragment {
+public class InstallWarningDialog {
 
-	private static final String INSTALL_WARNING_DIALOG_APP_RANK = "INSTALL_WARNING_DIALOG_APP_RANK";
-	private static final String INSTALL_WARNING_DIALOG_TRUSTED_APP_AVAILABLE = "INSTALL_WARNING_DIALOG_TRUSTED_APP_AVAILABLE";
-
-	private InstallWarningDialogListener listener;
-	private String rank;
+	private final boolean trustedVersionAvailable;
+	private final Malware.Rank rank;
+	@Getter private AlertDialog dialog;
 	private Button trustedAppButton;
-	private boolean trustedVersionAvailable;
 	private Button proceedButton;
 
-	public static InstallWarningDialog newInstance(String rank, boolean trustedVersionAvailable) {
-
-		final InstallWarningDialog dialog = new InstallWarningDialog();
-
-		final Bundle bundle = new Bundle();
-		bundle.putString(INSTALL_WARNING_DIALOG_APP_RANK, rank);
-		bundle.putBoolean(INSTALL_WARNING_DIALOG_TRUSTED_APP_AVAILABLE, trustedVersionAvailable);
-		dialog.setArguments(bundle);
-
-		return dialog;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (activity instanceof InstallWarningDialogListener) {
-			listener = (InstallWarningDialogListener) activity;
-		} else {
-			throw new IllegalStateException("Activity must implement " +
-					InstallWarningDialogListener.class.getSimpleName() + "in order to show this " +
-					"dialog");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		listener = null;
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
-		} else {
-			setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Dialog);
-		}
-		rank = getArguments().getString(INSTALL_WARNING_DIALOG_APP_RANK);
-		trustedVersionAvailable = getArguments().getBoolean(INSTALL_WARNING_DIALOG_TRUSTED_APP_AVAILABLE);
-	}
-
 	@SuppressLint("InflateParams")
-	@NonNull
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		final LayoutInflater inflater = LayoutInflater.from(getActivity());
-		final View contentView = inflater.inflate(R.layout.dialog_install_warning, null);
+	public InstallWarningDialog(Malware.Rank rank, boolean trustedVersionAvailable, Context ctx, View.OnClickListener installHandler, View.OnClickListener
+			searchTrustedHandler) {
+
+		this.trustedVersionAvailable = trustedVersionAvailable;
+		this.rank = rank;
+
+		View contentView = LayoutInflater.from(ctx).inflate(R.layout.dialog_install_warning, null);
+		AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+		builder.setView(contentView);
+
+		proceedButton = (Button) contentView.findViewById(R.id.dialog_install_warning_proceed_button);
+		proceedButton.setOnClickListener(new ViewOnClickListenerComposite(installHandler, onDestroy()));
+
+		trustedAppButton = (Button) contentView.findViewById(R.id.dialog_install_warning_trusted_app_button);
+		trustedAppButton.setOnClickListener(new ViewOnClickListenerComposite(searchTrustedHandler, onDestroy()));
 
 		setRank(contentView);
 		setTextBadges(contentView);
-		setProceedButton(contentView);
 		setTrustedAppButton(contentView);
-		dialogBuilder.setView(contentView);
 
-		return dialogBuilder.create();
+		dialog = builder.create();
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		proceedButton.setOnClickListener(null);
-		trustedAppButton.setOnClickListener(null);
-		proceedButton = null;
-		trustedAppButton = null;
+	public View.OnClickListener onDestroy() {
+		return v -> {
+			proceedButton.setOnClickListener(null);
+			trustedAppButton.setOnClickListener(null);
+			proceedButton = null;
+			trustedAppButton = null;
+			dialog.dismiss();
+			dialog = null;
+		};
 	}
 
 	private void setRank(View contentView) {
 		TextView badge = (TextView) contentView.findViewById(R.id.dialog_install_warning_rank_text);
-		switch (rank) {
-			case Malware.Rank.WARNING:
-				badge.setText(R.string.warning);
-				badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_dialog_badge_warning, 0, 0, 0);
-				break;
-			case GetAppMeta.File.Malware.UNKNOWN:
-				badge.setText(R.string.unknown);
-				badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_badge_unknown, 0, 0, 0);
-				break;
+		if (rank == Malware.Rank.WARNING) {
+
+			badge.setText(R.string.warning);
+			badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_badge_warning, 0, 0, 0);
+		} else if (rank == Malware.Rank.UNKNOWN) {
+			badge.setText(R.string.unknown);
+			badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_badge_unknown, 0, 0, 0);
 		}
 	}
 
@@ -133,29 +86,13 @@ public class InstallWarningDialog extends DialogFragment {
 		final SpannableString text = new SpannableString(stringText);
 
 		final int placeholderIndex = stringText.indexOf(placeholder);
-		final ImageSpan trustedBadge = new ImageSpan(contentView.getContext(), R.drawable.ic_badge_trusted_small);
+		final ImageSpan trustedBadge = new ImageSpan(contentView.getContext(), R.drawable.ic_badge_trusted);
 
 		text.setSpan(trustedBadge, placeholderIndex, placeholderIndex + placeholder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		((TextView) contentView.findViewById(R.id.dialog_install_warning_credibility_text)).setText(text);
 	}
 
-	private void setProceedButton(View contentView) {
-		proceedButton = (Button) contentView.findViewById(R.id.dialog_install_warning_proceed_button);
-		proceedButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (listener != null) {
-					listener.installApp();
-					Analytics.ClickonWarningPopupButtons.sendClickonWarningPopupButtons("Proceed");
-				}
-				dismiss();
-			}
-		});
-	}
-
 	public void setTrustedAppButton(View contentView) {
-
-		trustedAppButton = (Button) contentView.findViewById(R.id.dialog_install_warning_trusted_app_button);
 		final String topString;
 		final String bottonString;
 		if (trustedVersionAvailable) {
@@ -171,20 +108,22 @@ public class InstallWarningDialog extends DialogFragment {
 		final Spannable span = new SpannableString(topString + "\n" + bottonString);
 		span.setSpan(new StyleSpan(Typeface.BOLD), topStringLength, (topStringLength + bottonStringLength + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		trustedAppButton.setText(span);
+	}
 
-		trustedAppButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (listener != null) {
-					Analytics.ClickonWarningPopupButtons.sendClickonWarningPopupButtons("Search for trusted Apps");
-					if (trustedVersionAvailable) {
-						listener.getTrustedAppVersion();
-					} else {
-						listener.searchForTrustedApp();
-					}
-				}
-				dismiss();
-			}
-		});
+	private static class ViewOnClickListenerComposite implements View.OnClickListener {
+
+		private final View.OnClickListener first;
+		private final View.OnClickListener second;
+
+		public ViewOnClickListenerComposite(View.OnClickListener first, View.OnClickListener second) {
+			this.first = first;
+			this.second = second;
+		}
+
+		@Override
+		public void onClick(View v) {
+			first.onClick(v);
+			second.onClick(v);
+		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -68,6 +68,24 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
 					.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
 					Endless.DEFAULT_LIMIT, query, false), BASE_HOST);
+		}
+	}
+
+	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores, boolean trustedOnly) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		if (addSubscribedStores) {
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+					.getAptoideClientUUID(), AptoideAccountManager
+
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, Endless.DEFAULT_LIMIT, query, StoreUtils
+					.getSubscribedStoresIds(), StoreUtils
+					.getSubscribedStoresAuthMap(), trustedOnly), BASE_HOST);
+		} else {
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
+					.getAptoideClientUUID(), AptoideAccountManager
+					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, Endless.DEFAULT_LIMIT, query, trustedOnly),
+					BASE_HOST);
 		}
 	}
 
