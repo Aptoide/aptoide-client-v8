@@ -11,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Type;
@@ -41,16 +42,19 @@ public class WSWidgetsUtils {
 					break;
 				case STORES_GROUP:
 					ioScheduler(ListStoresRequest.ofAction(url)
-							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
-							countDownLatch, listApps), action1);
+							.observe(refresh)).subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores), action1);
 					break;
 				case DISPLAYS:
 					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
-							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
+							.observe(refresh)).subscribe(getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays), action1);
 					break;
 				case ADS:
-					ioScheduler(GetAdsRequest.ofHomepage().observe()).subscribe(listApps -> setObjectView(wsWidget,
-							countDownLatch, listApps), action1);
+					ioScheduler(GetAdsRequest.ofHomepage()
+							.observe()).subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse), action1);
+					break;
+				case STORE_META:
+					ioScheduler(GetStoreMetaRequest.ofAction(url)
+							.observe(refresh)).subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta), action1);
 					break;
 				default:
 					// In case a known enum is not implemented

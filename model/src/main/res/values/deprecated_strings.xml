@@ -586,7 +586,7 @@
     <string name="website_copied">Website copied to clipboard</string>
     <string name="email_copied">E-mail copied to clipboard</string>
     <string name="privacy_copied">Privacy link copied to clipboard</string>
-    <string name="subscribing_store_message">Unsubscribing %s</string>
+    <string name="unsubscribing_store_message">Unsubscribing %s</string>
 
     <!-- Search Fragment -->
     <string name="all_stores">All Stores</string>

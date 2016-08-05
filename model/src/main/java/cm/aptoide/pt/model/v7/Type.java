@@ -20,6 +20,7 @@ public enum Type {
 	STORES_GROUP(2),
 	DISPLAYS(2, true),
 	ADS(3),
+	STORE_META(1, true),
 
 	// Multi Layout
 	APPS_GROUP_LIST(1),

@@ -14,6 +14,8 @@ import java.util.List;
 
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
 
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+
 /**
  * Created by neuro on 18-04-2016.
  */
@@ -25,6 +27,11 @@ public class Displayables implements LifecycleSchim {
 	}
 
 	public void add(int position, Displayable displayable) {
+		// Ignore empty displayables
+		if (displayable instanceof EmptyDisplayable) {
+			return;
+		}
+
 		if (displayable instanceof DisplayableGroup) {
 			add(position, ((DisplayableGroup) displayable).getChildren());
 		} else {
@@ -39,6 +46,11 @@ public class Displayables implements LifecycleSchim {
 	}
 
 	public void add(Displayable displayable) {
+		// Ignore empty displayables
+		if (displayable instanceof EmptyDisplayable) {
+			return;
+		}
+
 		if (displayable instanceof DisplayableGroup) {
 			add(((DisplayableGroup) displayable).getChildren());
 		} else {

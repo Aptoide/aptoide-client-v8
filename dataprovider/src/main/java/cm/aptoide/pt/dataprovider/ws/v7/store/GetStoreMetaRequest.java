@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -29,8 +30,37 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta,GetStoreMetaRequest.Body> {
 
+	private String url;
+
 	private GetStoreMetaRequest(OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, Body body) {
 		super(body, httpClient, converterFactory, baseHost);
+	}
+
+	public GetStoreMetaRequest(String url, Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
+	}
+
+	public static GetStoreMetaRequest ofAction(String url) {
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		V7Url v7Url = new V7Url(url).remove("getStoreMeta");
+		Long storeId = v7Url.getStoreId();
+		final StoreCredentials store;
+		final Body body;
+		if (storeId != null) {
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeId);
+			store = getStore(storeId);
+		} else {
+			String storeName = v7Url.getStoreName();
+			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
+					Api.isMature(), Api.Q, storeName);
+			store = getStore(storeName);
+		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
+		return new GetStoreMetaRequest(v7Url.get(), body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST);
 	}
 
 	public static GetStoreMetaRequest of(String storeName, String username, String passwordSha1) {
@@ -58,7 +88,7 @@ public class GetStoreMetaRequest extends BaseRequestWithStore<GetStoreMeta,GetSt
 
 	@Override
 	protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.getStoreMeta(body, bypassCache);
+		return interfaces.getStoreMeta(url != null ? url : "", body, bypassCache);
 	}
 
 	@EqualsAndHashCode(callSuper = true)
