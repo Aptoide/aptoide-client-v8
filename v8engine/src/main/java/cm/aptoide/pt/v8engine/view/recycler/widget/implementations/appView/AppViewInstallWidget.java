@@ -18,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -30,10 +32,13 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
@@ -147,7 +152,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		if (!isLatestAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
 			actionButton.setText(R.string.update);
-			actionButton.setOnClickListener(installOrUpgradeListener(R.string.updating_msg, app, displayable));
+			actionButton.setOnClickListener(installOrUpgradeListener(R.string.updating_msg, app, getApp.getNodes().getVersions(), displayable));
 		} else if (app.getFile().getVercode() < installed.getVersionCode()) {
 			actionButton.setText(R.string.downgrade);
 			actionButton.setOnClickListener(downgradeListener(app, displayable));
@@ -220,7 +225,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		};
 	}
 
-	private View.OnClickListener installOrUpgradeListener(@StringRes final int installOrUpgradeMsg, GetAppMeta.App app, AppViewInstallDisplayable displayable) {
+	private View.OnClickListener installOrUpgradeListener(@StringRes final int installOrUpgradeMsg, GetAppMeta.App app, ListAppVersions appVersions,
+	                                                      AppViewInstallDisplayable displayable) {
 
 		return v -> {
 			ContextWrapper ctx = (ContextWrapper) v.getContext();
@@ -295,6 +301,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						case Download.COMPLETED: {
 							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
 							downloadProgressLayout.setVisibility(View.GONE);
+
+							final Malware.Rank rank = app.getFile().getMalware().getRank();
+							if (!Malware.Rank.TRUSTED.equals(rank)) {
+								InstallWarningDialog.newInstance(rank, hasTrustedVersion(app, appVersions))
+										.show(getContext().getFragmentManager(), "InstallWarningDialog");
+							}
+
 							displayable.install(getContext(), app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
 								if (minimalAd != null && minimalAd.getCpdUrl() != null) {
 									DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
@@ -321,6 +334,36 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 			});
 		};
+	}
+
+	private boolean hasTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
+
+		if (app.getFile() != null && app.getFile().getMalware() != null && !Malware.Rank.TRUSTED.equals(app.getFile().getMalware().getRank())) {
+
+			for (App version : appVersions.getList()) {
+				if (app.getId() != version.getId() && version.getFile() != null && version.getFile().getMalware() != null && Malware.Rank.TRUSTED.equals
+						(version
+						.getFile()
+						.getMalware()
+						.getRank())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private void setTrustedVersion(GetAppMeta.App currentVersion, List<ViewItem> versions) {
+		if (currentVersion.file != null && currentVersion.file.malware != null && !TRUSTED.equals(currentVersion.file.malware.rank)) {
+
+			for (ViewItem version : versions) {
+				if (!currentVersion.id.equals(version.id) && version.file != null && version.file.malware != null && TRUSTED.equals(version.file.malware
+						.rank)) {
+					trustedVersion = version;
+					break;
+				}
+			}
+		}
 	}
 
 	private static class Listeners {

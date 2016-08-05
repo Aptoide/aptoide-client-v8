@@ -58,10 +58,12 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
@@ -445,6 +447,33 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		setHasOptionsMenu(true);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
+			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
+			header.getAppBarLayout().setExpanded(isExpanded);
+		}
+
+		// restore download bar status
+		// TODO: 04/08/16 sithengineer restore download bar status
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		// save header status
+		if (header != null && header.getAppBarLayout() != null) {
+			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
+					.getVisibility() == View.VISIBLE);
+		}
+
+		// save download bar status
+		// TODO: 04/08/16 sithengineer save download bar status
+	}
+
 	private Observable<GetApp> manageOrganicAds(GetApp getApp) {
 		String packageName = getApp.getNodes().getMeta().getData().getPackageName();
 		String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
@@ -460,6 +489,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			return Observable.just(getApp);
 		}
 	}
+
+	//
+	// Scrollable interface
+	//
 
 	@NonNull
 	private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
@@ -489,10 +522,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		}
 	}
 
-	//
-	// Scrollable interface
-	//
-
 	@Override
 	public void itemAdded(int pos) {
 		getLayoutManager().onItemsAdded(getRecyclerView(), pos, 1);
@@ -503,40 +532,13 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		getLayoutManager().onItemsRemoved(getRecyclerView(), pos, 1);
 	}
 
-	@Override
-	public void itemChanged(int pos) {
-		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
-			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
-			header.getAppBarLayout().setExpanded(isExpanded);
-		}
-
-		// restore download bar status
-		// TODO: 04/08/16 sithengineer restore download bar status
-	}
-
 	//
 	// micro widget for header
 	//
 
 	@Override
-	public void onPause() {
-		super.onPause();
-
-		// save header status
-		if (header != null && header.getAppBarLayout() != null) {
-			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
-			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
-					.getVisibility() == View.VISIBLE);
-		}
-
-		// save download bar status
-		// TODO: 04/08/16 sithengineer save download bar status
+	public void itemChanged(int pos) {
+		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
 	@Override
@@ -560,6 +562,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	private final class AppViewHeader {
+
+		private static final String BADGE_DIALOG_TAG = "badgeDialog";
 
 		private final boolean animationsEnabled;
 
@@ -675,6 +679,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			ImageLoader.load(badgeResId, badge);
 			badgeText.setText(badgeMessageId);
+
+			final Malware malware = app.getFile().getMalware();
+			badge.setOnClickListener(v -> {
+				DialogBadgeV7.newInstance(malware, app.getName(), malware.getRank()).show(getFragmentManager(), BADGE_DIALOG_TAG);
+			});
 		}
 	}
 }
