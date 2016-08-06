@@ -32,19 +32,21 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private long appId;
 	@Getter private String label;
 	@Getter private String icon;
+	@Getter private int versionCode;
 	@Getter private String md5;
 	@Getter private String apkPath;
 	@Getter private String alternativeApkPath;
 	@Getter private String updateVersionName;
 
 	// Obb
+	@Getter private String mainObbName;
 	@Getter private String mainObbPath;
 	@Getter private String mainObbMd5;
+	@Getter private String patchObbName;
 	@Getter private String patchObbPath;
 	@Getter private String patchObbMd5;
 
-	private int versionCode;
-	private InstallManager installManager;
+	@Getter private InstallManager installManager;
 	private Download download;
 	private DownloadServiceHelper downloadManager;
 
@@ -52,9 +54,12 @@ public class UpdateDisplayable extends Displayable {
 	}
 
 	public static UpdateDisplayable create(Update update, InstallManager installManager, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
-		return new UpdateDisplayable(update.getPackageName(),update.getAppId(), update.getLabel(), update.getIcon(), update.getMd5(), update.getApkPath(),
-				update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
-				update.getPatchObbMd5(), update.getVersionCode(), installManager, downloadFactory.create(update), downloadManager);
+
+		return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(), update.getIcon(), update.getVersionCode(), update.getMd5()
+				, update
+				.getApkPath(), update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(), update.getMainObbPath(), update
+				.getMainObbMd5(), update
+				.getPatchObbName(), update.getPatchObbPath(), update.getPatchObbMd5(), installManager, downloadFactory.create(update), downloadManager);
 	}
 
 	public Observable<Void> downloadAndInstall(Context context, PermissionRequest permissionRequest) {
@@ -62,7 +67,7 @@ public class UpdateDisplayable extends Displayable {
 		Analytics.Updates.update();
 
 		return downloadManager.startDownload(permissionRequest, download)
-				.ignoreElements()
+				//				.ignoreElements()
 				.cast(Void.class)
 				.concatWith(installManager.install(context, permissionRequest, download.getAppId()));
 	}

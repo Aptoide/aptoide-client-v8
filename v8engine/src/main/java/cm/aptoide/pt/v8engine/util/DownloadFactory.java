@@ -19,6 +19,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
 
 /**
@@ -39,6 +40,22 @@ public class DownloadFactory {
 		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload
 				.getFile()
 				.getMd5sum(), appToDownload.getObb(), appToDownload.getFile().getPathAlt(), appToDownload.getFile().getVercode()));
+		return download;
+	}
+
+	public Download create(UpdateDisplayable updateDisplayable) {
+		validateApp(updateDisplayable.getAppId(), null, updateDisplayable.getPackageName(), updateDisplayable.getLabel(), updateDisplayable.getApkPath(),
+				updateDisplayable
+				.getAlternativeApkPath());
+		Download download = new Download();
+		download.setAppId(updateDisplayable.getAppId());
+		download.setIcon(updateDisplayable.getIcon());
+		download.setAppName(updateDisplayable.getLabel());
+		download.setFilesToDownload(createFileList(updateDisplayable.getAppId(), updateDisplayable.getPackageName(), updateDisplayable.getApkPath(),
+				updateDisplayable
+				.getAlternativeApkPath(), updateDisplayable.getMd5(), updateDisplayable.getMainObbPath(), updateDisplayable.getMainObbMd5(), updateDisplayable
+						.getPatchObbPath(), updateDisplayable
+				.getPatchObbMd5(), updateDisplayable.getVersionCode(), updateDisplayable.getMainObbName(), updateDisplayable.getPatchObbName()));
 		return download;
 	}
 
