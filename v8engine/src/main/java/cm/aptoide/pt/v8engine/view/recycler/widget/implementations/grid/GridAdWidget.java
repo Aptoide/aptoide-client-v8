@@ -9,13 +9,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
@@ -48,9 +44,6 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 		ImageLoader.load(pojo.getData().getIcon(), icon);
 
 		itemView.setOnClickListener(v -> {
-			Analytics.LTV.cpi(pojo.getData().getPackageName());
-
-			DataproviderUtils.AdNetworksUtils.knockCpc(MinimalAd.from(pojo));
 			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo));
 		});
 	}

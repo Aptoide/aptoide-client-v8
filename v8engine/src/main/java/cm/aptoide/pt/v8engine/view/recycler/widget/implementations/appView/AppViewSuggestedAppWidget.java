@@ -11,10 +11,8 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppDisplayable;
@@ -50,8 +48,6 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
 		descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
 
 		layout.setOnClickListener(v -> {
-			Analytics.LTV.cpi(pojo.getPackageName());
-
 			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo));
 		});
 	}
