@@ -375,6 +375,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			subscription = appRepository.getApp(appId, refresh, sponsored)
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.flatMap(getApp -> manageOrganicAds(getApp))
+					.flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(getApp -> {
 						if (storeTheme == null) {
@@ -446,6 +447,33 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		setHasOptionsMenu(true);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
+			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
+			header.getAppBarLayout().setExpanded(isExpanded);
+		}
+
+		// restore download bar status
+		// TODO: 04/08/16 sithengineer restore download bar status
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		// save header status
+		if (header != null && header.getAppBarLayout() != null) {
+			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
+			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
+					.getVisibility() == View.VISIBLE);
+		}
+
+		// save download bar status
+		// TODO: 04/08/16 sithengineer save download bar status
+	}
+
 	private Observable<GetApp> manageOrganicAds(GetApp getApp) {
 		String packageName = getApp.getNodes().getMeta().getData().getPackageName();
 		String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
@@ -461,6 +489,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			return Observable.just(getApp);
 		}
 	}
+
+	//
+	// Scrollable interface
+	//
 
 	@NonNull
 	private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
@@ -490,10 +522,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		}
 	}
 
-	//
-	// Scrollable interface
-	//
-
 	@Override
 	public void itemAdded(int pos) {
 		getLayoutManager().onItemsAdded(getRecyclerView(), pos, 1);
@@ -504,40 +532,13 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		getLayoutManager().onItemsRemoved(getRecyclerView(), pos, 1);
 	}
 
-	@Override
-	public void itemChanged(int pos) {
-		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (memoryArgs.containsKey(BAR_EXPANDED) && header != null && header.getAppBarLayout() != null) {
-			boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
-			header.getAppBarLayout().setExpanded(isExpanded);
-		}
-
-		// restore download bar status
-		// TODO: 04/08/16 sithengineer restore download bar status
-	}
-
 	//
 	// micro widget for header
 	//
 
 	@Override
-	public void onPause() {
-		super.onPause();
-
-		// save header status
-		if (header != null && header.getAppBarLayout() != null) {
-			boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
-			memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f : header.getAppIcon()
-					.getVisibility() == View.VISIBLE);
-		}
-
-		// save download bar status
-		// TODO: 04/08/16 sithengineer save download bar status
+	public void itemChanged(int pos) {
+		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
 	}
 
 	@Override
