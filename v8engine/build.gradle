@@ -17,23 +17,10 @@ crashlytics {
     androidNdkLibsOut 'src/main/libs'
 }
 
-// Should be moved to application module when possible
 Properties localProperties = new Properties()
 localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
-def fabricApiKey = localProperties.FABRIC_API_KEY
-def localyticsApiKey = localProperties.LOCALYTICS_DEBUG_KEY
-def flurryApiDebugKey = localProperties.FLURRY_DEBUG_KEY
-def flurryApiKey = localProperties.FLURRY_KEY
-
 android {
-
-    def BOOLEAN = "boolean"
-    def STRING = "String"
-    def FABRIC_CONFIGURED = "FABRIC_CONFIGURED"
-    def LOCALYTICS_CONFIGURED = "LOCALYTICS_CONFIGURED"
-    def FLURRY_CONFIGURED = "FLURRY_CONFIGURED"
-    def FLURRY_KEY = "FLURRY_KEY"
 
     // Websockets
     useLibrary 'org.apache.http.legacy'
@@ -43,10 +30,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-
-        buildConfigField BOOLEAN, FABRIC_CONFIGURED, (fabricApiKey != null).toString()
-        buildConfigField BOOLEAN, LOCALYTICS_CONFIGURED, (localyticsApiKey != null).toString()
-
+        configureFabric delegate, localProperties.FABRIC_API_KEY
         consumerProguardFiles "proguard-rules.txt"
     }
 
@@ -60,15 +44,15 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
-            buildConfigField BOOLEAN, FLURRY_CONFIGURED, (flurryApiKey != null).toString()
-            buildConfigField STRING, FLURRY_KEY, "\"" + flurryApiKey.toString() + "\""
-
+            configureFlurry delegate, localProperties.FLURRY_KEY
+            configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
         }
+
         debug {
             minifyEnabled false
             shrinkResources false
-            buildConfigField BOOLEAN, FLURRY_CONFIGURED, (flurryApiDebugKey != null).toString()
-            buildConfigField STRING, FLURRY_KEY, "\"" + flurryApiDebugKey.toString() + "\""
+            configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
+            configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
         }
     }
 
@@ -82,6 +66,22 @@ android {
             res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
         }
     }
+}
+
+void configureFabric(androidDelegate, key) {
+    androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
+}
+
+void configureFlurry(androidDelegate, key) {
+    boolean keyExists = key != null
+    androidDelegate.buildConfigField "boolean", "FLURRY_CONFIGURED", keyExists.toString()
+    androidDelegate.buildConfigField "String", "FLURRY_KEY", "\"" + key.toString() + "\""
+}
+
+void configureLocalytics(androidDelegate, key) {
+    boolean keyExists = key != null
+    androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
+    androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists? key : ""]
 }
 
 dependencies {

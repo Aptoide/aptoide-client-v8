@@ -32,9 +32,6 @@ if (fabricConfigured) {
 
 android {
 
-    def BOOLEAN = "boolean"
-    def LOCALYTICS_CONFIGURED = "LOCALYTICS_CONFIGURED"
-
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
@@ -111,11 +108,6 @@ android {
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.release
-
-            def localyticsKey = localProperties.LOCALYTICS_RELEASE_KEY
-            def localyticsKeyExists = localyticsKey != null
-            buildConfigField BOOLEAN, LOCALYTICS_CONFIGURED, localyticsKeyExists.toString()
-            manifestPlaceholders = [ LOCALYTICS_APP_KEY:localyticsKeyExists ? localyticsKey : ""]
         }
 
         debug {
@@ -123,11 +115,6 @@ android {
             zipAlignEnabled false
             minifyEnabled false
             shrinkResources false
-
-            def localyticsKey = localProperties.LOCALYTICS_DEBUG_KEY
-            def localyticsKeyExists = localyticsKey != null
-            buildConfigField BOOLEAN, LOCALYTICS_CONFIGURED, localyticsKeyExists.toString()
-            manifestPlaceholders = [ LOCALYTICS_APP_KEY:localyticsKeyExists ? localyticsKey : ""]
         }
     }
 
