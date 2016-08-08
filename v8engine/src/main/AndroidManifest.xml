@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 08/08/2016.
   -->
 
 <manifest package="cm.aptoide.pt.v8engine"
@@ -55,6 +55,7 @@
         </receiver>
 
         <service android:name=".services.PullingContentService"/>
+        <service android:name=".services.ValidatePaymentsService"/>
         <receiver android:name=".receivers.PullingContentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

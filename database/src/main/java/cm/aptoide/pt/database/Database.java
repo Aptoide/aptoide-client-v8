@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 08/08/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -11,7 +11,6 @@ import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.PaymentPayload;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
@@ -286,19 +285,6 @@ public class Database {
 
 		public static StoredMinimalAd get(String packageName, Realm realm) {
 			return realm.where(StoredMinimalAd.class).equalTo(StoredMinimalAd.PACKAGE_NAME, packageName).findFirst();
-		}
-	}
-
-	public static class PaymentPayloadQ {
-
-		public static RealmResults<PaymentPayload> getAll(Realm realm) {
-			return realm.where(PaymentPayload.class).findAll();
-		}
-
-		public static void delete(Realm realm, PaymentPayload paymentPayload) {
-			realm.beginTransaction();
-			paymentPayload.deleteFromRealm();
-			realm.commitTransaction();
 		}
 	}
 }

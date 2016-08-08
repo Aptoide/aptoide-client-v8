@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/08/2016.
+ * Modified by SithEngineer on 08/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -88,12 +88,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
 	public boolean shouldCharge() {
 		return payment.getStatus().equals("FAIL");
-	}
-
-	public Observable<Void> openApp() {
-		return Observable.create(aVoid -> {
-			AptoideUtils.SystemU.openApp(packageName);
-		});
 	}
 
 	public Observable<Void> buyApp(Context context, GetAppMeta.App app) {

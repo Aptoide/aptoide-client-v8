@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 08/08/2016.
  */
 
 package cm.aptoide.pt.model.v3;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.model.v3;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 
@@ -23,6 +24,15 @@ public class PaymentResponse {
 
 	private String status;
 	@JsonProperty("publisher_response") private PublisherResponse publisherResponse;
+	private List<ErrorResponse> errors;
+
+	public boolean isOk() {
+		return status!=null && status.equalsIgnoreCase("ok");
+	}
+
+	public boolean hasErrors() {
+		return errors!=null && !errors.isEmpty();
+	}
 
 	@Data
 	public static class PublisherResponse {

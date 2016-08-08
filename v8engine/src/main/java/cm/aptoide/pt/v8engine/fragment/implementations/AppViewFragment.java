@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/08/2016.
+ * Modified by SithEngineer on 08/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -45,7 +45,6 @@ import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.PaymentPayload;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -56,6 +55,7 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.model.v3.PaymentPayload;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
@@ -294,7 +294,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						paymentPayload.setPayType(1); // magic value: paypal payment type id
 						paymentPayload.setApiVersion("3"); // magic value: webservice version
 						paymentPayload.setPayKey(proof.getPaymentId());
-						paymentPayload.setProductId(boughtApp.getId());
+						paymentPayload.setAptoidePaymentId(boughtApp.getPayment().metadata.id);
 						paymentPayload.setStore(boughtApp.getStore().getName());
 						paymentPayload.setPrice(boughtApp.getPay().getPrice());
 						paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
@@ -303,13 +303,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
 						paymentPayload.setSimCountryCode(telephonyManager.getSimCountryIso());
 
-						@Cleanup
-						Realm realm = Database.get();
-						realm.beginTransaction();
-						realm.copyToRealmOrUpdate(paymentPayload);
-						realm.commitTransaction();
-
-						getActivity().startService(ValidatePaymentsService.getIntent(getActivity()));
+						getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
 
 						// download app
 						// TODO: 05/08/16 sithengineer download app

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/08/2016.
+ * Modified by SithEngineer on 08/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -134,8 +133,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			// installed
 			//					.getPackageName(), displayable));
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-				displayable.uninstall(getContext(), app).subscribe(aVoid -> {
-				});
+				displayable.uninstall(getContext(), app).subscribe();
 			});
 
 			// is it an upgrade, downgrade or open app?
@@ -259,12 +257,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				actionPauseResume.setOnClickListener(view -> {
 					downloadServiceHelper.pauseDownload(app.getId());
-
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-						actionPauseResume.setBackgroundColor(context.getColor(R.color.default_color));
-					} else {
-						actionPauseResume.setBackgroundColor(context.getResources().getColor(R.color.default_color));
-					}
+					actionPauseResume.setImageResource(R.drawable.play);
 				});
 
 				actionCancel.setOnClickListener(view -> {
@@ -288,15 +281,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 						case Download.PAUSED: {
 							actionPauseResume.setOnClickListener(view -> {
-
 								downloadServiceHelper.startDownload(permissionRequest, download);
-
-								//actionPauseResume.setImageResource(R.drawable.ic_); // missing the changing of the drawable
-								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-									actionPauseResume.setBackgroundColor(context.getColor(android.R.color.transparent));
-								} else {
-									actionPauseResume.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
-								}
+								actionPauseResume.setImageResource(R.drawable.pause);
 							});
 							break;
 						}
