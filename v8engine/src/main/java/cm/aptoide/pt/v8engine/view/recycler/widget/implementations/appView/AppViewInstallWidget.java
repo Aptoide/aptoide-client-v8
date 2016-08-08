@@ -278,7 +278,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				installAndLatestVersionLayout.setVisibility(View.GONE);
 				downloadProgressLayout.setVisibility(View.VISIBLE);
-				actionPauseResume.setImageResource(R.drawable.ic_pause);
+				actionPauseResume.setImageResource(R.drawable.pause);
 
 				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
 

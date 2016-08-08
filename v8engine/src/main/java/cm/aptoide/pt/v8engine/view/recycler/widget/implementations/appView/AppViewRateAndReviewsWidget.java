@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -212,17 +213,17 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 					List<Review> reviews = listReviews.getDatalist().getList();
 					if (reviews == null || reviews.isEmpty()) {
-						topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));
+						topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null, getContext()));
 						loadedData(false);
 						return;
 					}
 
 					loadedData(true);
-					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), listReviews.getDatalist().getList()));
+					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), listReviews.getDatalist().getList(), getContext()));
 					scheduleAnimations();
 				}, e -> {
 					loadedData(false);
-					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null));
+					topReviewsPager.setAdapter(new TopReviewsAdapter(getContext().getFragmentManager(), null, getContext()));
 					Logger.e(TAG, e);
 
 				}, true // bypass cache flag
@@ -249,10 +250,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private static final class TopReviewsAdapter extends FragmentPagerAdapter {
 
 		private final List<Review> reviews;
+		private final Context context;
 
-		public TopReviewsAdapter(android.app.FragmentManager fm, List<Review> reviews) {
+		public TopReviewsAdapter(android.app.FragmentManager fm, List<Review> reviews, Context context) {
 			super(fm);
 			this.reviews = reviews;
+			this.context = context;
 		}
 
 		@Override
@@ -263,7 +266,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		@Override
 		public android.app.Fragment getItem(int position) {
 			if (reviews != null && position < reviews.size()) {
-				return MiniTopReviewFragment.newInstance(reviews.get(position));
+				return MiniTopReviewFragment.newInstance(context, reviews.get(position));
 			}
 			throw new IllegalStateException("Top Review Item doesn't exist for position " + position);
 		}
@@ -272,9 +275,22 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	public static final class MiniTopReviewFragment extends BaseFragment {
 
 		private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
-		private Review review;
 
-		private ImageView userIcon;
+		private static final String USER_ICON = "userIcon";
+		private static final String USER_NAME = "userName";
+		private static final String RATING = "rating";
+		private static final String COMMENT_TITLE = "commentTitle";
+		private static final String COMMENT_TEXT = "commentText";
+		private static final String ADDED_DATE = "addedDate";
+
+		private String userIconUrl;
+		private String userNameText;
+		private float ratingValue;
+		private String commentTitleText;
+		private String commentBodyText;
+		private String commentAddedDate;
+
+		private ImageView userIconImageView;
 		private RatingBar ratingBar;
 		private TextView commentTitle;
 		private TextView userName;
@@ -284,10 +300,27 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		public MiniTopReviewFragment() {
 		}
 
-		public static MiniTopReviewFragment newInstance(Review review) {
+		public static MiniTopReviewFragment newInstance(Context context, Review review) {
 			MiniTopReviewFragment fragment = new MiniTopReviewFragment();
-			fragment.review = review;
+			Bundle bundle = new Bundle();
+			bundle.putString(USER_ICON, review.getUser().getAvatar());
+			bundle.putString(USER_NAME, review.getUser().getName());
+			bundle.putFloat(RATING, review.getStats().getRating());
+			bundle.putString(COMMENT_TITLE, review.getTitle());
+			bundle.putString(COMMENT_TEXT, review.getBody());
+			bundle.putString(ADDED_DATE, DATE_TIME_U.getTimeDiffString(context, review.getAdded().getTime()));
 			return fragment;
+		}
+
+		@Override
+		public void loadExtras(Bundle args) {
+			super.loadExtras(args);
+			userIconUrl = args.getString(USER_ICON);
+			userNameText = args.getString(USER_NAME);
+			ratingValue = args.getFloat(RATING);
+			commentTitleText = args.getString(COMMENT_TITLE);
+			commentBodyText = args.getString(COMMENT_TEXT);
+			commentAddedDate = args.getString(ADDED_DATE);
 		}
 
 		@Override
@@ -297,7 +330,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		@Override
 		public void bindViews(View view) {
-			userIcon = (ImageView) view.findViewById(R.id.user_icon);
+			userIconImageView = (ImageView) view.findViewById(R.id.user_icon);
 			ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 			commentTitle = (TextView) view.findViewById(R.id.comment_title);
 			userName = (TextView) view.findViewById(R.id.user_name);
@@ -307,12 +340,12 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		@Override
 		public void setupViews() {
-			ImageLoader.loadWithCircleTransformAndPlaceHolder(review.getUser().getAvatar(), userIcon, R.drawable.layer_1);
-			userName.setText(review.getUser().getName());
-			ratingBar.setRating(review.getStats().getRating());
-			commentTitle.setText(review.getTitle());
-			commentText.setText(review.getBody());
-			addedDate.setText(DATE_TIME_U.getTimeDiffString(getActivity(), review.getAdded().getTime()));
+			ImageLoader.loadWithCircleTransformAndPlaceHolder(userIconUrl, userIconImageView, R.drawable.layer_1);
+			userName.setText(userNameText);
+			ratingBar.setRating(ratingValue);
+			commentTitle.setText(commentTitleText);
+			commentText.setText(commentBodyText);
+			addedDate.setText(commentAddedDate);
 		}
 	}
 }
