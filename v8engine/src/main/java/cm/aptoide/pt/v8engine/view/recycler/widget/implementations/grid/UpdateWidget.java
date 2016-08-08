@@ -10,16 +10,22 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -42,6 +48,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	private ViewGroup updateButtonLayout;
 	private Subscription subscription;
 	private UpdateDisplayable displayable;
+	private LinearLayout updateLayout;
 
 	public UpdateWidget(View itemView) {
 		super(itemView);
@@ -55,6 +62,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		installedVernameTextView = (TextView) itemView.findViewById(R.id.app_installed_version);
 		updateVernameTextView = (TextView) itemView.findViewById(R.id.app_update_version);
 		updateButtonLayout = (ViewGroup) itemView.findViewById(R.id.updateButtonLayout);
+		updateLayout = (LinearLayout) itemView.findViewById(R.id.update_layout);
 	}
 
 	@Override
@@ -89,6 +97,14 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 			return true;
 		});
+
+		updateLayout.setOnClickListener(v -> new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager()).startDownload(
+				(PermissionRequest) getContext(), new DownloadFactory()
+				.create(displayable))
+				.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+				.flatMap(download -> displayable.getInstallManager().install(getContext(), (PermissionRequest) getContext(), download.getAppId()))
+				.onErrorReturn(throwable -> null)
+				.subscribe());
 	}
 
 	@Override

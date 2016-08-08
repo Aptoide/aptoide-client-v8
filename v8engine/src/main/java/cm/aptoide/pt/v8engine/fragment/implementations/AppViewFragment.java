@@ -64,6 +64,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
@@ -389,6 +390,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			subscription = appRepository.getApp(appId, refresh, sponsored)
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.flatMap(getApp -> manageOrganicAds(getApp))
+					.flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(getApp -> {
 						if (storeTheme == null) {
@@ -494,13 +496,18 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		if (minimalAd == null) {
 			return adRepository.getAdFromAppView(packageName, storeName).doOnNext(ad -> {
 				minimalAd = ad;
-				AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false));
-				DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
+				handleAdsLogic(minimalAd);
 			}).map(ad -> getApp).onErrorReturn(throwable -> getApp);
 		} else {
-			AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false));
+			handleAdsLogic(minimalAd);
 			return Observable.just(getApp);
 		}
+	}
+
+	private void handleAdsLogic(MinimalAd minimalAd) {
+		DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
+		Analytics.LTV.cpi(minimalAd.getPackageName());
+		AptoideUtils.ThreadU.runOnUiThread(() -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false));
 	}
 
 	//
@@ -692,6 +699,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			ImageLoader.load(badgeResId, badge);
 			badgeText.setText(badgeMessageId);
+
+			Analytics.ViewedApplication.view(app.getPackageName(), app.getFile().getMalware().getRank().name());
 
 			final Malware malware = app.getFile().getMalware();
 			badge.setOnClickListener(v -> {

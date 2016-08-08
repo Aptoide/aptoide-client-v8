@@ -45,6 +45,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
 
@@ -156,6 +157,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 					}).show();
 				}
 				else {
+					Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : LOCK ADULT CONTENT");
+					Analytics.AdultContent.lock();
 					AptoideAccountManager.updateMatureSwitch(false);
 				}
 

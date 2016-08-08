@@ -23,6 +23,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
 import lombok.Getter;
 import rx.functions.Action0;
@@ -48,6 +49,11 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		super.onCreate(savedInstanceState);
 		// https://fabric.io/downloads/gradle/ndk
 		// Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+
+		Analytics.Lifecycle.Application.onCreate(getApplication());
+		Analytics.Lifecycle.Activity.onCreate(this);
+		Analytics.ApplicationLaunch.launcher();
+
 		if (getIntent().getExtras() != null) {
 			loadExtras(getIntent().getExtras());
 		}
@@ -60,6 +66,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	@Override
 	protected void onStop() {
 		super.onStop();
+		Analytics.Lifecycle.Activity.onStop(this);
 	}
 
 	@Override
@@ -81,17 +88,20 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	protected void onPause() {
 		super.onPause();
 		_resumed = false;
+		Analytics.Lifecycle.Activity.onPause(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		_resumed = true;
+		Analytics.Lifecycle.Activity.onResume(this);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
+		Analytics.Lifecycle.Activity.onStart(this);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)

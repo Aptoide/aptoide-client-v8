@@ -9,8 +9,10 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 
 /**
  * Created by rmateus on 07-03-2014.
@@ -62,16 +64,15 @@ public class AdultDialog extends DialogFragment {
 				.setPositiveButton(R.string.yes, new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(android.content.DialogInterface dialog, int which) {
-//                        FlurryAgent.logEvent("Dialog_Adult_Content_Confirmed_More_Than_21_Years_Old");
+						Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : UNLOCK ADULT CONTENT");
+						Analytics.AdultContent.unlock();
 						positiveButtonlistener.onClick(dialog, which);
-						//Analytics.AdultContent.unlock();
 					}
 				})
 				.setNegativeButton(R.string.no, new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(android.content.DialogInterface dialog, int which) {
 						dialog.cancel();
-						//Analytics.AdultContent.lock();
 					}
 				})
 				.create();
@@ -83,16 +84,15 @@ public class AdultDialog extends DialogFragment {
 				.setPositiveButton(R.string.yes, new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(android.content.DialogInterface dialog, int which) {
-						//                        FlurryAgent.logEvent("Dialog_Adult_Content_Confirmed_More_Than_21_Years_Old");
 						positiveButtonlistener.onClick(dialog, which);
-						//Analytics.AdultContent.unlock();
+						Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : UNLOCK ADULT CONTENT");
+						Analytics.AdultContent.unlock();
 					}
 				})
 				.setNegativeButton(R.string.no, new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(android.content.DialogInterface dialog, int which) {
 						dialog.cancel();
-						//Analytics.AdultContent.lock();
 						cancelListener.onCancel(dialog);
 					}
 				}).setOnCancelListener(dialog -> cancelListener.onCancel(dialog))

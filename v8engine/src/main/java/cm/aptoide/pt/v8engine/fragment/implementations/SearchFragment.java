@@ -21,9 +21,11 @@ import android.widget.ImageView;
 import java.util.List;
 
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -93,6 +95,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		if (hasSubscribedResults || hasEverywhereResults) {
 			super.setupViewPager();
 		} else {
+			Logger.d(this.getClass().getName(), "LOCALYTICS TESTING - NO SEARCH RESULT: " + query);
+			Analytics.Search.noSearchResults(query);
+
 			noSearchLayout.setVisibility(View.VISIBLE);
 			noSearchLayoutSearchButton.setOnClickListener(v -> {
 				String s = noSearchLayoutSearchQuery.getText().toString();
@@ -141,6 +146,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	}
 
 	private void executeSearchRequests() {
+		Logger.d(this.getClass().getName(), "LOCALYTICS TESTING - SEARCH CLICKED. QUERY: " + query);
+
+		Analytics.Search.searchTerm(query);
 
 		if (storeName != null) {
 			shouldFinishLoading = true;

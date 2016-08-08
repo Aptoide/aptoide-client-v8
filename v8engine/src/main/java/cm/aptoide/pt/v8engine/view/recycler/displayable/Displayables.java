@@ -8,12 +8,11 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
-
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 
 /**
@@ -39,7 +38,9 @@ public class Displayables implements LifecycleSchim {
 		}
 	}
 
-	public void add(int position, Collection<? extends Displayable> collection) {
+	public void add(int position, List<? extends Displayable> collection) {
+		Collections.reverse(collection);
+
 		for (Displayable displayable : collection) {
 			add(position, displayable);
 		}
@@ -58,8 +59,7 @@ public class Displayables implements LifecycleSchim {
 		}
 	}
 
-
-	public void add(Collection<? extends Displayable> collection) {
+	public void add(List<? extends Displayable> collection) {
 		for (Displayable displayable : collection) {
 			add(displayable);
 		}
@@ -79,6 +79,33 @@ public class Displayables implements LifecycleSchim {
 		} else {
 			return null;
 		}
+	}
+
+	public void remove(int pos) {
+		if (pos >= 0 && pos < displayables.size()) {
+			displayables.remove(pos);
+		}
+	}
+
+	/**
+	 * remove displayables from <code>startPos</code> startPos until the <code>endPos</code>(inclusive)
+	 *
+	 * @param startPos position of the first element to be removed
+	 * @param endPos   position of the last element to be removed
+	 */
+	public int remove(int startPos, int endPos) {
+		if (startPos >= 0 && startPos < size() && endPos >= startPos && endPos <= size()) {
+			int numberLoops = (endPos + 1) - startPos;
+			if (numberLoops == 0) {
+				remove(startPos);
+				return 1;
+			}
+			for (int i = 0 ; i < numberLoops ; i++) {
+				displayables.remove(startPos);
+			}
+			return numberLoops;
+		}
+		return 0;
 	}
 
 	public int size() {

@@ -46,6 +46,7 @@ public class Update extends RealmObject {
 	private String alternativeApkPath;
 	private int updateVersionCode;
 	private boolean excluded;
+	private String trustedBadge;
 
 	// Obb
 	private String mainObbName;
@@ -73,6 +74,7 @@ public class Update extends RealmObject {
 		updateVersionName = app.getFile().getVername();
 		alternativeApkPath = app.getFile().getPathAlt();
 		updateVersionCode = app.getFile().getVercode();
+		trustedBadge = app.getFile().getMalware().getRank().name();
 
 		Obb obb = app.getObb();
 		if (obb != null) {

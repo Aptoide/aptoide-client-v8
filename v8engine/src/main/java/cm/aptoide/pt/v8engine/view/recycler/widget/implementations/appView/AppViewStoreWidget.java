@@ -16,7 +16,6 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -28,6 +27,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -125,7 +125,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
 		private View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
 			return v -> {
-				StoreUtils.subscribeStore(storeName, getStoreMeta -> {
+				StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
 					ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_subscribed, storeName));
 				}, Throwable::printStackTrace);
 			};

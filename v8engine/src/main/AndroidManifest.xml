@@ -68,6 +68,17 @@
             android:authorities="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
             android:exported="false"/>
 
+        <meta-data android:name="LOCALYTICS_APP_KEY" android:value="${LOCALYTICS_APP_KEY}"/>
+
+        <receiver
+            android:name="com.localytics.android.ReferralReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

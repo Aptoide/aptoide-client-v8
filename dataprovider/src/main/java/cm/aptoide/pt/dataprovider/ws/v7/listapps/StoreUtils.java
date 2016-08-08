@@ -74,11 +74,27 @@ public class StoreUtils {
 		return storesAuthMap.size() > 0 ? storesAuthMap : null;
 	}
 
+	/**
+	 * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore instead, else, use this
+	 *
+	 * @param storeName
+	 * @param successRequestListener
+	 * @param errorRequestListener
+	 */
+	@Deprecated
 	public static void subscribeStore(String storeName, @Nullable SuccessRequestListener<GetStoreMeta>
 			successRequestListener, @Nullable ErrorRequestListener errorRequestListener) {
 		subscribeStore(GetStoreMetaRequest.of(storeName), successRequestListener, errorRequestListener);
 	}
 
+	/**
+	 * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore instead, else, use this.
+	 *
+	 * @param getStoreMetaRequest
+	 * @param successRequestListener
+	 * @param errorRequestListener
+	 */
+	@Deprecated
 	public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest, @Nullable
 	SuccessRequestListener<GetStoreMeta> successRequestListener, @Nullable ErrorRequestListener errorRequestListener) {
 		getStoreMetaRequest.execute(getStoreMeta -> {

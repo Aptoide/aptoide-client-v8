@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -56,6 +58,9 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 		});
 
 		createReviewLayout.setOnClickListener(v -> {
+			Logger.d(this.getClass().getName(), "LOCALYTICS TESTING - REVIEW CLICK");
+			Analytics.Updates.createReview();
+
 			// TODO: 25-05-2016 neuro create review
 			ShowMessage.asToast(getContext(), "Create Review");
 		});

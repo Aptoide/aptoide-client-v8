@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.Collections;
@@ -95,6 +96,10 @@ public abstract class V8Engine extends DataProvider {
 
 		super.onCreate();
 		generateAptoideUUID().subscribe();
+
+		new FlurryAgent.Builder()
+				.withLogEnabled(false)
+				.build(this, BuildConfig.FLURRY_KEY);
 
 		if (BuildConfig.DEBUG) {
 			LeakCanary.install(this);

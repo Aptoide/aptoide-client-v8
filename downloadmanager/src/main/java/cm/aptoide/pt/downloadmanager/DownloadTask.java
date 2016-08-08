@@ -54,6 +54,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				.subscribeOn(Schedulers.io())
 				.takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS && download.getOverallDownloadStatus() != Download.IN_QUEUE &&
 						download.getOverallDownloadStatus() != Download.PENDING)
+				.filter(aLong1 -> download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.COMPLETED)
 				.map(aLong -> updateProgress())
 				.filter(updatedDownload -> {
 					if (updatedDownload.getOverallProgress() <= AptoideDownloadManager.PROGRESS_MAX_VALUE && download
