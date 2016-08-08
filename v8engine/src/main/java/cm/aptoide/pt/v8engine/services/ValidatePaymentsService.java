@@ -77,7 +77,10 @@ public class ValidatePaymentsService extends IntentService {
 			CheckProductPaymentRequest.ofPayPal(paymentPayload).execute(paymentResponse -> {
 				// to run this handler in the main thread
 				handler.post(() -> handlePaymentResponse(paymentPayload, paymentResponse));
-			}, err -> logError(paymentPayload.getAptoidePaymentId(), err), true);
+			}, err -> {
+				logError(paymentPayload.getAptoidePaymentId(), err);
+				reScheduleSync(paymentPayload);
+			});
 		} catch (IOException e) {
 			Logger.e(TAG, e);
 		}
