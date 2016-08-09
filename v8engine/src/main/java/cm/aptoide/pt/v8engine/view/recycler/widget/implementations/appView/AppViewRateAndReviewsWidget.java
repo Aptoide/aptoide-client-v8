@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 09/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -121,7 +121,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		//rateThisAppButton.setOnClickListener(rateOnClickListener);
 
 		View.OnClickListener commentsOnClickListener = v -> {
-			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getStore().getName(), app.getPackageName()));
+			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getName(), app.getStore()
+					.getName(), app.getPackageName()));
 		};
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
@@ -324,6 +325,16 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		}
 
 		@Override
+		public void setupViews() {
+			ImageLoader.loadWithCircleTransformAndPlaceHolder(userIconUrl, userIconImageView, R.drawable.layer_1);
+			userName.setText(userNameText);
+			ratingBar.setRating(ratingValue);
+			commentTitle.setText(commentTitleText);
+			commentText.setText(commentBodyText);
+			addedDate.setText(commentAddedDate);
+		}
+
+		@Override
 		public int getContentViewId() {
 			return R.layout.mini_top_comment;
 		}
@@ -336,16 +347,6 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 			userName = (TextView) view.findViewById(R.id.user_name);
 			addedDate = (TextView) view.findViewById(R.id.added_date);
 			commentText = (TextView) view.findViewById(R.id.comment);
-		}
-
-		@Override
-		public void setupViews() {
-			ImageLoader.loadWithCircleTransformAndPlaceHolder(userIconUrl, userIconImageView, R.drawable.layer_1);
-			userName.setText(userNameText);
-			ratingBar.setRating(ratingValue);
-			commentTitle.setText(commentTitleText);
-			commentText.setText(commentBodyText);
-			addedDate.setText(commentAddedDate);
 		}
 	}
 }

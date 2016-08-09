@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 09/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -29,7 +29,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.FullReview;
+import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -88,7 +88,9 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 	@Override
 	public void bindView(RateAndReviewCommentDisplayable displayable) {
-		final FullReview review = displayable.getPojo();
+		final Review review = displayable.getPojo().getReview();
+		final String appName = displayable.getPojo().getAppName();
+
 		ImageLoader.loadWithCircleTransformAndPlaceHolder(review.getUser().getAvatar(), userImage, R.drawable.layer_1);
 		username.setText(review.getUser().getName());
 		ratingBar.setRating(review.getStats().getRating());
@@ -98,7 +100,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 
 		reply.setOnClickListener(v -> {
 			if (AptoideAccountManager.isLoggedIn()) {
-				showCommentPopup(review.getId(), review.getData().getApp().getName(), displayable.getCommentAdder());
+				showCommentPopup(review.getId(), appName, displayable.getCommentAdder());
 			} else {
 				ShowMessage.asSnack(ratingBar, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
 					AptoideAccountManager.openAccountManager(snackView.getContext());

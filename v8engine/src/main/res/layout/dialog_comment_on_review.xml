@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 09/08/2016.
   -->
 
 <LinearLayout
@@ -21,11 +21,13 @@
         android:gravity="left|center_vertical"
         android:textColor="?colorPrimary"
         android:textSize="@dimen/text_size_large"
+        android:visibility="gone"
         tools:text="Boom Beach"
         />
 
     <include
         layout="@layout/separator_horizontal"
+        android:visibility="gone"
         />
 
     <android.support.design.widget.TextInputLayout
