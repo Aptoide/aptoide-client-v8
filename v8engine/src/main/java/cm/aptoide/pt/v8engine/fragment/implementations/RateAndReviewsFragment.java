@@ -33,6 +33,8 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
@@ -43,12 +45,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import io.realm.Realm;
 import lombok.Cleanup;
 import rx.Observable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 13/05/16.
@@ -73,6 +74,65 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	private RatingBarsLayout ratingBarsLayout;
 	private ProgressBar progressBar;
 	private MenuItem installMenuItem;
+	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+	private transient SuccessRequestListener<ListFullReviews> listFullReviewsSuccessRequestListener = listFullReviews -> {
+		AptoideUtils.ThreadU.runOnIoThread(() -> {
+			List<FullReview> reviews = listFullReviews.getDatalist().getList();
+			List<Displayable> displayables = new LinkedList<>();
+			CountDownLatch countDownLatch = new CountDownLatch(reviews.size());
+
+			Observable.from(reviews)
+					.forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(), fullReview.getId(), 3).execute(listComments -> {
+						fullReview.setCommentList(listComments);
+						countDownLatch.countDown();
+					}, e -> countDownLatch.countDown()));
+
+			try {
+				countDownLatch.await(5, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			AptoideUtils.ThreadU.runOnUiThread(() -> {
+				int index = 0;
+				int count = 0;
+				for (final FullReview review : reviews) {
+					displayables.add(new RateAndReviewCommentDisplayable(review, new CommentAdder(count) {
+						@Override
+						public void addComment(List<Comment> comments) {
+							List<Displayable> displayableList = new ArrayList<>();
+							createDisplayableComments(comments, displayableList);
+							int reviewPosition = getAdapter().getReviewPosition(reviewIndex);
+							displayableList.add(createReadMoreDisplayable(reviewPosition, review));
+							getAdapter().addDisplayables(reviewPosition + 1, displayableList);
+						}
+
+						@Override
+						public void collapseComments() {
+							ReviewsAndCommentsAdapter adapter = getAdapter();
+							int reviewIndex = adapter.getReviewPosition(this.reviewIndex);
+							int nextReview = adapter.getReviewPosition(this.reviewIndex + 1);
+							nextReview = nextReview == -1 ? getAdapter().getItemCount() : nextReview;
+							adapter.removeDisplayables(reviewIndex + 1, nextReview - 1); // the -1 because we don't want to remove the next review,only until
+							// the
+							// comment
+							// before the review
+						}
+					}));
+					if (review.getId() == reviewId) {
+						index = count;
+					}
+					if (review.getCommentList() != null && review.getCommentList().getDatalist() != null && review.getCommentList()
+							.getDatalist()
+							.getLimit() != null) {
+						createDisplayableComments(review.getCommentList().getDatalist().getList(), displayables);
+						displayables.add(createReadMoreDisplayable(count, review));
+					}
+					count++;
+				}
+				addDisplayables(displayables);
+			});
+		});
+	};
 
 	public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName, String packageName) {
 		RateAndReviewsFragment fragment = new RateAndReviewsFragment();
@@ -193,6 +253,14 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		ratingTotalsLayout.setup(data);
 		ratingBarsLayout.setup(data);
 	}
+
+//	private void fetchReviews() {
+//		ListFullReviewsRequest of = ListFullReviewsRequest.of(storeName, packageName);
+//
+//		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of, listFullReviewsSuccessRequestListener, errorRequestListener, false);
+//		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+//		endlessRecyclerOnScrollListener.onLoadMore(false);
+//	}
 
 	private void fetchReviews() {
 		ListReviewsRequest.of(storeName, packageName).observe().map(reviewsResponse -> {

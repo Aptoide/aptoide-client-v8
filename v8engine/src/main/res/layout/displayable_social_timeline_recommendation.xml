@@ -78,7 +78,7 @@
                 android:id="@+id/displayable_social_timeline_recommendation_icon"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:layout_margin="16dp"
+                android:layout_margin="12dp"
                 android:scaleType="fitCenter"
                 tools:ignore="contentDescription"
                 tools:src="@mipmap/ic_launcher"/>
