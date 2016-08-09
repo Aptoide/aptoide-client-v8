@@ -32,8 +32,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -75,9 +75,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	private ProgressBar progressBar;
 	private MenuItem installMenuItem;
 	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
-	private transient SuccessRequestListener<ListFullReviews> listFullReviewsSuccessRequestListener = listFullReviews -> {
+
+	private transient SuccessRequestListener<ListReviews> listFullReviewsSuccessRequestListener = listFullReviews -> {
 		AptoideUtils.ThreadU.runOnIoThread(() -> {
-			List<FullReview> reviews = listFullReviews.getDatalist().getList();
+			List<Review> reviews = listFullReviews.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();
 			CountDownLatch countDownLatch = new CountDownLatch(reviews.size());
 
@@ -95,8 +96,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 			AptoideUtils.ThreadU.runOnUiThread(() -> {
 				int index = 0;
 				int count = 0;
-				for (final FullReview review : reviews) {
-					displayables.add(new RateAndReviewCommentDisplayable(review, new CommentAdder(count) {
+				for (final Review review : reviews) {
+					displayables.add(new RateAndReviewCommentDisplayable(new RateAndReviewCommentDisplayable.ReviewWithAppName(appName, review), new
+							CommentAdder(count) {
 						@Override
 						public void addComment(List<Comment> comments) {
 							List<Displayable> displayableList = new ArrayList<>();
@@ -118,6 +120,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 							// before the review
 						}
 					}));
+
 					if (review.getId() == reviewId) {
 						index = count;
 					}
@@ -254,14 +257,16 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		ratingBarsLayout.setup(data);
 	}
 
-//	private void fetchReviews() {
-//		ListFullReviewsRequest of = ListFullReviewsRequest.of(storeName, packageName);
-//
-//		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of, listFullReviewsSuccessRequestListener, errorRequestListener, false);
-//		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-//		endlessRecyclerOnScrollListener.onLoadMore(false);
-//	}
+	private void fetchReviews() {
+		ListReviewsRequest of = ListReviewsRequest.of(storeName, packageName);
 
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of, listFullReviewsSuccessRequestListener,
+				errorRequestListener, false);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(false);
+	}
+
+	/*
 	private void fetchReviews() {
 		ListReviewsRequest.of(storeName, packageName).observe().map(reviewsResponse -> {
 			List<Review> reviews = reviewsResponse.getDatalist().getList();
@@ -325,6 +330,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 			installMenuItem.setVisible(reviewId >= 0);
 		});
 	}
+	*/
 
 	@NonNull
 	private CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
