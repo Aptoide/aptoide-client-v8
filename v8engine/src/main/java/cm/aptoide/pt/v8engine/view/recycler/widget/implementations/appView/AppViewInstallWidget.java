@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/08/2016.
+ * Modified by SithEngineer on 09/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -29,6 +29,7 @@ import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -38,8 +39,8 @@ import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
@@ -59,6 +60,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 @Displayables({AppViewInstallDisplayable.class})
 public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
+
+	private static final String TAG = AppViewInstallWidget.class.getSimpleName();
 
 	private RelativeLayout downloadProgressLayout;
 	private RelativeLayout installAndLatestVersionLayout;
@@ -82,6 +85,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private MinimalAd minimalAd;
 
 	private App trustedVersion;
+	private DownloadServiceHelper downloadServiceHelper;
+	private PermissionRequest permissionRequest;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -105,6 +110,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
 
+		downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
@@ -124,7 +130,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//check if the app is installed
 		if (installed == null) {
 			// app not installed
-			setupInstallButton(getApp, displayable);
+			checkOnGoingDownload(getApp, displayable);
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
 		} else {
 			// app installed
@@ -138,8 +144,15 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			});
 
 			// is it an upgrade, downgrade or open app?
-			setupUpgradeDowngradeOpenActions(getApp, installed, displayable);
+			setupActionsForInstalledApp(getApp, installed, displayable);
 		}
+
+		if (isThisTheLatestVersionAvailable(app, getApp.getNodes().getVersions())) {
+			latestAvailableLabel.setVisibility(View.VISIBLE);
+		}
+
+		ContextWrapper ctx = (ContextWrapper) versionName.getContext();
+		permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 	}
 
 	@Override
@@ -148,13 +161,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	public void onViewDetached() {
+		actionButton.setOnClickListener(null);
+		actionPauseResume.setOnClickListener(null);
+		actionCancel.setOnClickListener(null);
 	}
 
-	private void setupUpgradeDowngradeOpenActions(GetApp getApp, Installed installed, AppViewInstallDisplayable displayable) {
+	private void setupActionsForInstalledApp(GetApp getApp, Installed installed, AppViewInstallDisplayable displayable) {
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		if (!isLatestAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
+		if (!isThisTheLatestVersionAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
 			actionButton.setText(R.string.update);
 			actionButton.setOnClickListener(installOrUpgradeListener(true, app, getApp.getNodes().getVersions(), displayable));
 		} else if (app.getFile().getVercode() < installed.getVersionCode()) {
@@ -162,15 +178,39 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			actionButton.setOnClickListener(downgradeListener(app, displayable));
 		} else {
 			actionButton.setText(R.string.open);
-			latestAvailableLabel.setVisibility(View.VISIBLE);
 			actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
 		}
 	}
 
-	public void setupInstallButton(GetApp getApp, AppViewInstallDisplayable displayable) {
+	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
+		DownloadFactory factory = new DownloadFactory();
+		Download appDownload = factory.create(app);
+		int downloadStatus = appDownload.getOverallDownloadStatus();
+		if (downloadStatus == Download.PROGRESS || downloadStatus == Download.PAUSED || downloadStatus == Download.STARTED || downloadStatus == Download
+				.IN_QUEUE) {
+
+			// show download progress bar
+			downloadServiceHelper.getDownload(app.getId()).subscribe(download -> {
+				if (download != null) {
+
+					setDownloadBarVisible(true);
+					manageDownload(download, displayable, app);
+					return;
+				}
+
+				setupInstallButton(displayable, getApp);
+			});
+			return;
+		}
+
+		setupInstallButton(displayable, getApp);
+	}
+
+	private void setupInstallButton(AppViewInstallDisplayable displayable, GetApp getApp) {
+		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		GetApkInfoJson.Payment payment = displayable.getPayment();
 		//check if the app is paid
 		if (payment != null && payment.isPaidApp()) {
@@ -200,18 +240,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 	}
 
-	private boolean isLatestAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
-		boolean canCompare = appVersions != null && appVersions.getList() != null && !appVersions.getList().isEmpty();
-		return !canCompare || (app.getFile().getVercode() >= appVersions.getList().get(0).getFile().getVercode());
-	}
-
-	//	private View.OnClickListener getLatestListener(GetApp getApp) {
-	//		return v -> {
-	//			long latestAppId = getApp.getNodes().getVersions().getList().get(0).getId();
-	//			FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(latestAppId));
-	//		};
-	//	}
-
 	private View.OnClickListener downgradeListener(final GetAppMeta.App app, AppViewInstallDisplayable displayable) {
 		return view -> {
 			final Context context = view.getContext();
@@ -223,7 +251,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
-				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
 					if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 						//final String packageName = app.getPackageName();
@@ -245,8 +272,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		@StringRes
 		final int installOrUpgradeMsg = isUpdate ? R.string.updating_msg : R.string.installing_msg;
 		final View.OnClickListener installHandler = v -> {
-			ContextWrapper ctx = (ContextWrapper) v.getContext();
-			final PermissionRequest permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 
 			if(installOrUpgradeMsg == R.string.installing_msg) {
 				Analytics.ClickedOnInstallButton.clicked(app);
@@ -258,79 +283,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
-				DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 
-				actionPauseResume.setOnClickListener(view -> {
-					downloadServiceHelper.pauseDownload(app.getId());
-					actionPauseResume.setImageResource(R.drawable.play);
+				setupDownloadControls(app.getId(), downloadServiceHelper);
+
+				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> manageDownload(download, displayable, app), err -> {
+					Logger.e(TAG, err);
 				});
 
-				actionCancel.setOnClickListener(view -> {
-					//download.cancel();
-					//downloadServiceHelper.cancelDownload(app.getId());
-					downloadServiceHelper.pauseDownload(app.getId());
-
-					installAndLatestVersionLayout.setVisibility(View.VISIBLE);
-					downloadProgressLayout.setVisibility(View.GONE);
-				});
-
-				installAndLatestVersionLayout.setVisibility(View.GONE);
-				downloadProgressLayout.setVisibility(View.VISIBLE);
-				actionPauseResume.setImageResource(R.drawable.pause);
-
-				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-
-					// TODO: 19/07/16 sithengineer logic to show / hide pause / resume download and show download progress
-
-					switch (download.getOverallDownloadStatus()) {
-
-						case Download.PAUSED: {
-							actionPauseResume.setOnClickListener(view -> {
-								downloadServiceHelper.startDownload(permissionRequest, download);
-								actionPauseResume.setImageResource(R.drawable.pause);
-							});
-							break;
-						}
-
-						case Download.PROGRESS: {
-							downloadProgress.setProgress(download.getOverallProgress());
-							//textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) +
-							// "/s");
-							textProgress.setText(download.getOverallProgress() + "%");
-							break;
-						}
-
-						case Download.ERROR: {
-							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
-							downloadProgressLayout.setVisibility(View.GONE);
-							break;
-						}
-
-						case Download.COMPLETED: {
-							Analytics.DownloadComplete.downloadComplete(app);
-
-							installAndLatestVersionLayout.setVisibility(View.VISIBLE);
-							downloadProgressLayout.setVisibility(View.GONE);
-
-							displayable.install(context, app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
-								if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-									DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
-								}
-							}).subscribe(success -> {
-								if (actionButton.getVisibility() == View.VISIBLE) {
-									actionButton.setText(R.string.open);
-									// FIXME: 20/07/16 sithengineer refactor this ugly code
-									if (displayable.isVisible()) {
-										((AppMenuOptions) ((FragmentShower) context).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-											displayable.uninstall(ctx, app).subscribe();
-										});
-									}
-								}
-							});
-							break;
-						}
-					}
-				}, Throwable::printStackTrace);
 			}, () -> {
 				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 			});
@@ -358,8 +317,89 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				View alertView = LayoutInflater.from(context).inflate(R.layout.dialog_install_warning, null);
 				builder.setView(alertView);
 				new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler, onSearchHandler).getDialog().show();
+			} else {
+				installHandler.onClick(v);
 			}
 		};
+	}
+
+	private void manageDownload(Download download, AppViewInstallDisplayable displayable, GetAppMeta.App app) {
+
+		Context ctx = getContext();
+
+		switch (download.getOverallDownloadStatus()) {
+
+			case Download.PAUSED: {
+				actionPauseResume.setOnClickListener(view -> {
+					downloadServiceHelper.startDownload(permissionRequest, download);
+					actionPauseResume.setImageResource(R.drawable.pause);
+				});
+				break;
+			}
+
+			case Download.PROGRESS: {
+				downloadProgress.setProgress(download.getOverallProgress());
+				//textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) +
+				// "/s");
+				textProgress.setText(download.getOverallProgress() + "%");
+				break;
+			}
+
+			case Download.ERROR: {
+				setDownloadBarVisible(false);
+				break;
+			}
+
+			case Download.COMPLETED: {
+				Analytics.DownloadComplete.downloadComplete(app);
+
+				setDownloadBarVisible(false);
+
+				displayable.install(ctx, app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+					if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+						DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
+					}
+				}).subscribe(success -> {
+					if (actionButton.getVisibility() == View.VISIBLE) {
+						actionButton.setText(R.string.open);
+						// FIXME: 20/07/16 sithengineer refactor this ugly code
+						if (displayable.isVisible()) {
+							((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(() -> {
+								displayable.uninstall(ctx, app).subscribe();
+							});
+						}
+					}
+				});
+				break;
+			}
+		}
+	}
+
+	private void setupDownloadControls(long appId, DownloadServiceHelper downloadServiceHelper) {
+
+		actionPauseResume.setOnClickListener(view -> {
+			downloadServiceHelper.pauseDownload(appId);
+			actionPauseResume.setImageResource(R.drawable.play);
+		});
+
+		actionCancel.setOnClickListener(view -> {
+			downloadServiceHelper.pauseDownload(appId);
+			//downloadServiceHelper.removeDownload(appId);
+			setDownloadBarVisible(false);
+		});
+
+		setDownloadBarVisible(true);
+		actionPauseResume.setImageResource(R.drawable.pause);
+	}
+
+	private void setDownloadBarVisible(boolean visible) {
+		installAndLatestVersionLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
+		downloadProgressLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
+
+	private boolean isThisTheLatestVersionAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
+		boolean canCompare = appVersions != null && appVersions.getList() != null && !appVersions.getList().isEmpty();
+		return !canCompare || (app.getFile().getVercode() >= appVersions.getList().get(0).getFile().getVercode());
 	}
 
 	private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
