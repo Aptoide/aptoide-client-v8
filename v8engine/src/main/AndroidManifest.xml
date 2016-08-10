@@ -36,8 +36,6 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <activity android:name=".activities.StoreActivity"/>
-
         <receiver android:name=".receivers.LoginBroadcastReceiver">
             <intent-filter>
                 <action android:name="${applicationId}.accountmanager.broadcast.login"/>
