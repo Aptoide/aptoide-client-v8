@@ -21,6 +21,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
@@ -61,6 +62,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 			// Deep Links
 			if (getIntent().hasExtra(DeepLinksArgs.NEW_REPO_EXTRA) && getIntent().getFlags() == DeepLinksArgs.NEW_REPO_FLAG) {
 				newrepoDeepLink(getIntent());
+			} else if (getIntent().hasExtra(DeepLinksArgs.FROM_DOWNLOAD_NOTIFICATION)) {
+				downloadNotificationDeepLink(getIntent());
 			}
 		}
 	}
@@ -76,7 +79,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 					ShowMessage.asToast(this, getString(R.string.store_already_added));
 				} else {
 					StoreUtilsProxy.subscribeStore(storeName);
-					setViewPagerPosition(Event.Name.myStores);
+					setMainPagerPosition(Event.Name.myStores);
 				}
 			}
 
@@ -84,7 +87,12 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		}
 	}
 
-	private void setViewPagerPosition(Event.Name name) {
+	private void downloadNotificationDeepLink(Intent intent) {
+		Analytics.ApplicationLaunch.downloadingUpdates();
+		setMainPagerPosition(Event.Name.myStores);
+	}
+
+	private void setMainPagerPosition(Event.Name name) {
 		// TODO: 10-08-2016 neuro
 	}
 
@@ -140,5 +148,6 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
 		public final static String NEW_REPO_EXTRA = "newrepo";
 		public final static int NEW_REPO_FLAG = 12345;
+		public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
 	}
 }
