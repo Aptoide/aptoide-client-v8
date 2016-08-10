@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 		@JsonSubTypes.Type(value = StoreLatestAppsTimelineItem.class, name = "APPS_LATEST"),
 		@JsonSubTypes.Type(value = AppUpdateTimelineItem.class, name = "APP_UPDATE"),
 		@JsonSubTypes.Type(value = RecommendationTimelineItem.class, name = "RECOMMENDATION"),
+		@JsonSubTypes.Type(value = VideoTimelineItem.class, name = "VIDEO"),
 })
 public interface TimelineItem<T> {
 
