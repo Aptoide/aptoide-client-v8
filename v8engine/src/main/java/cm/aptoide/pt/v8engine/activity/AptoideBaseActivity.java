@@ -52,7 +52,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 		Analytics.Lifecycle.Application.onCreate(getApplication());
 		Analytics.Lifecycle.Activity.onCreate(this);
-		Analytics.ApplicationLaunch.launcher();
 
 		if (getIntent().getExtras() != null) {
 			loadExtras(getIntent().getExtras());

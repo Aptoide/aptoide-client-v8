@@ -69,6 +69,9 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 				fromTimelineDeepLink(getIntent());
 			} else if (getIntent().hasExtra(DeepLinksIds.NEW_UPDATES)) {
 				newUpdatesDeepLink(getIntent());
+			} else {
+				// TODO: 10-08-2016 jdandrade mudei isto da AptoideBaseActivity para aqui, confirma se é o que pretendes.
+				Analytics.ApplicationLaunch.launcher();
 			}
 		}
 	}
