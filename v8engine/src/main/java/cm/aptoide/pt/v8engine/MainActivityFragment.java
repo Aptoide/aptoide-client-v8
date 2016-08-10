@@ -19,6 +19,7 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -93,7 +94,15 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	private void setMainPagerPosition(Event.Name name) {
-		// TODO: 10-08-2016 neuro
+		AptoideUtils.ThreadU.runOnIoThread(() -> {
+			AptoideUtils.ThreadU.runOnUiThread(() -> {
+				if (!(getCurrentFragment() instanceof HomeFragment)) {
+					return;
+				}
+
+				((HomeFragment) getCurrentFragment()).setDesiredViewPagerItem(name);
+			});
+		});
 	}
 
 	@Override
