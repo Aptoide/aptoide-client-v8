@@ -125,6 +125,7 @@
                     android:scheme="http"/>
             </intent-filter>
         </activity>
+        <activity android:name=".payment.service.paypal.PayPalPaymentActivity"/>
 
         <receiver android:name=".receivers.LoginBroadcastReceiver">
             <intent-filter>

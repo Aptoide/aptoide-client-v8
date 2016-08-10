@@ -29,19 +29,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PayPalService;
-import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
-import com.paypal.android.sdk.payments.ProofOfPayment;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,9 +49,7 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.PaymentPayload;
-import cm.aptoide.pt.model.v3.PaymentServices;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
@@ -78,6 +67,13 @@ import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
+import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
+import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
+import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
+import cm.aptoide.pt.v8engine.payment.PaymentService;
+import cm.aptoide.pt.v8engine.payment.PaymentServiceFactory;
+import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.services.ValidatePaymentsService;
@@ -116,18 +112,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private static final String BAR_EXPANDED = "BAR_EXPANDED";
 	private static final int PAY_APP_REQUEST_CODE = 12;
 
-	private static final String CONFIG_ENVIRONMENT = //BuildConfig.DEBUG ? PayPalConfiguration.ENVIRONMENT_SANDBOX :
-			PayPalConfiguration.ENVIRONMENT_PRODUCTION;
-
-	private static final String CONFIG_CLIENT_ID = //BuildConfig.DEBUG ? "ARhHzhAH_B_6_9ggd97pIHNduraLFU9jf7Wzw06QMyEj2pRotOf8vw3PM0Ls" :
-			"AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
-	private static final String BOUGHT_APP = "boughtApp";
-
-	private static PayPalConfiguration config = new PayPalConfiguration()
-			// Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
-			// or live (ENVIRONMENT_PRODUCTION)
-			.environment(CONFIG_ENVIRONMENT).clientId(CONFIG_CLIENT_ID);
-
 	// FIXME restoreInstanteState doesn't work in this case
 	private final Bundle memoryArgs = new Bundle();
 	//private static final String TAG = AppViewFragment.class.getName();
@@ -157,6 +141,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private boolean sponsored;
 	private List<GetAdsResponse.Ad> suggestedAds;
 
+	private PaymentService paymentService;
+	private Payment payment;
+
 	// buy app vars
 	private String storeName;
 	private float priceValue;
@@ -164,7 +151,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private double taxRate;
 
 	private AppViewInstallDisplayable installDisplayable;
-	private GetAppMeta.App boughtApp;
 
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
@@ -214,15 +200,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		super.onCreate(savedInstanceState);
 		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(),
-				new DownloadInstallationProvider(downloadManager));
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
 		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
 		adRepository = new AdRepository();
-
-		Context context = getContext();
-		Intent intent = new Intent(context, PayPalService.class);
-		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-		context.startService(intent);
+		paymentService = new PaymentServiceFactory().create(getContext(), PaymentServiceFactory.PAYPAL);
 	}
 
 	@Override
@@ -293,41 +274,42 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		return false;
 	}
 
+	public void buyApp(final GetAppMeta.App app) {
+		if (!paymentService.isProcessingPayment()) {
+			payment = new Payment(String.valueOf(app.getId()), app.getPay().getCurrency(), BigDecimal.valueOf(app.getPay().getPrice()), app.getPayment().payment_services.get(0).getTaxRate());
 
-	public void buyApp(GetAppMeta.App app) {
-		GetAppMeta.Pay payment = app.getPay();
+			paymentService.processPayment(payment, new PaymentService.PaymentConfirmationListener() {
+				@Override
+				public void onSuccess(PaymentConfirmation paymentConfirmation) {
+					PaymentPayload paymentPayload = new PaymentPayload();
+					paymentPayload.setPayKey(paymentConfirmation.getPayment().getPaymentId());
+					paymentPayload.setAptoidePaymentId(app.getPayment().metadata.id);
+					paymentPayload.setStore(app.getStore().getName());
+					paymentPayload.setPrice(paymentConfirmation.getPayment().getPrice().doubleValue());
+					paymentPayload.setCurrency(paymentConfirmation.getPayment().getCurrency());
+					paymentPayload.setTaxRate(paymentConfirmation.getPayment().getTaxRate());
 
-		PayPalPayment payPalPayment = new PayPalPayment(BigDecimal.valueOf(payment.getPrice()), payment.getCurrency(), Long.toString(app.getId()),
-				PayPalPayment.PAYMENT_INTENT_SALE);
+					getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
 
-		Intent intent = new Intent(getContext(), PaymentActivity.class);
-		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
-		boughtApp = app;
-
-		//startActivityForResult(intent, PAY_APP_REQUEST_CODE);
-		// FIXME: 16/08/16 sithengineer remove this method
-		mockScheduleSendPaymentConfirmation();
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == PAY_APP_REQUEST_CODE) {
-			if (resultCode == Activity.RESULT_OK) {
-				PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-				if (confirm != null) {
-					scheduleSendPaymentConfirmation(confirm);
+					// download app and install app
+					FragmentActivity fragmentActivity = getActivity();
+					Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
+					installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+					fragmentActivity.sendBroadcast(installApp);
 				}
-			} else if (resultCode == Activity.RESULT_CANCELED) {
-				Logger.i(TAG, "The user canceled.");
-				ShowMessage.asSnack(header.badge, R.string.user_canceled);
 
-			} else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-				Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
-				ShowMessage.asSnack(header.badge, R.string.unknown_error);
-			}
-		} else {
-			super.onActivityResult(requestCode, resultCode, data);
+				@Override
+				public void onError(PaymentException exception) {
+					Logger.i(TAG, "The user canceled.");
+					if (exception instanceof PaymentCancellationException) {
+						Logger.i(TAG, "The user canceled.");
+						ShowMessage.asSnack(header.badge, R.string.user_canceled);
+					} else {
+						Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+						ShowMessage.asSnack(header.badge, R.string.unknown_error);
+					}
+				}
+			});
 		}
 	}
 
@@ -367,82 +349,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void mockScheduleSendPaymentConfirmation() {
-		PaymentPayload paymentPayload = new PaymentPayload();
-		paymentPayload.setPayKey("PAY-2fb892f98748685999ea");
-
-		GetApkInfoJson.Payment.Metadata metadata = boughtApp.getPayment().metadata;
-		paymentPayload.setAptoidePaymentId(metadata != null ? metadata.id : 0);
-
-		paymentPayload.setStore(boughtApp.getStore().getName());
-		paymentPayload.setPrice(boughtApp.getPay().getPrice());
-		paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
-
-		List<PaymentServices> paymentServices = boughtApp.getPayment().payment_services;
-		if (paymentServices != null && !paymentServices.isEmpty()) {
-			paymentPayload.setTaxRate(paymentServices.get(0).getTaxRate());
-		} else {
-			paymentPayload.setTaxRate(0.0);
-		}
-
-		getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
-
-		// reset bought app variable
-		boughtApp = null;
-
-		// download app and install app
-		FragmentActivity fragmentActivity = getActivity();
-		Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
-		installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
-		fragmentActivity.sendBroadcast(installApp);
-	}
-
-	private void scheduleSendPaymentConfirmation(PaymentConfirmation confirm) {
-		try {
-			Logger.i(TAG, confirm.toJSONObject().toString(4));
-
-			// send 'confirm' to the server
-			PaymentPayload paymentPayload = buildPaymentPayload(confirm);
-
-			getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
-
-			// reset bought app variable
-			boughtApp = null;
-
-			// download app and install app
-			FragmentActivity fragmentActivity = getActivity();
-			Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
-			installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
-			fragmentActivity.sendBroadcast(installApp);
-		} catch (JSONException e) {
-			Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
-		}
-	}
-
-	@NonNull
-	private PaymentPayload buildPaymentPayload(PaymentConfirmation confirm) {
-		ProofOfPayment proof = confirm.getProofOfPayment();
-
-		PaymentPayload paymentPayload = new PaymentPayload();
-		paymentPayload.setPayKey(proof.getPaymentId());
-
-		GetApkInfoJson.Payment.Metadata metadata = boughtApp.getPayment().metadata;
-		paymentPayload.setAptoidePaymentId(metadata != null ? metadata.id : 0);
-
-		paymentPayload.setStore(boughtApp.getStore().getName());
-		paymentPayload.setPrice(boughtApp.getPay().getPrice());
-		paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
-
-		List<PaymentServices> paymentServices = boughtApp.getPayment().payment_services;
-		if (paymentServices != null && !paymentServices.isEmpty()) {
-			paymentPayload.setTaxRate(paymentServices.get(0).getTaxRate());
-		} else {
-			paymentPayload.setTaxRate(0.0);
-		}
-
-		return paymentPayload;
 	}
 
 	@Override
@@ -528,6 +434,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		if (storeTheme != null) {
 			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
 		}
+		if (paymentService.isProcessingPayment()) {
+			paymentService.stopPaymentProcess();
+		}
 	}
 
 	@Override
@@ -562,32 +471,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		// save download bar status
 		// TODO: 04/08/16 sithengineer save download bar status
-	}
-
-	@Override
-	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-		super.onViewStateRestored(savedInstanceState);
-		if (savedInstanceState != null && savedInstanceState.containsKey(BOUGHT_APP)) {
-			// TODO: 16/08/16 sithengineer use parcel deserializer -> object
-			ObjectMapper mapper = new ObjectMapper();
-			try {
-				boughtApp = mapper.readValue(savedInstanceState.getString(BOUGHT_APP), GetAppMeta.App.class);
-			} catch (IOException e) {
-				Logger.e(TAG, e);
-			}
-		}
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		// TODO: 16/08/16 sithengineer use object -> parcel serializer
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			outState.putString(BOUGHT_APP, mapper.writeValueAsString(boughtApp));
-		} catch (JsonProcessingException e) {
-			Logger.e(TAG, e);
-		}
 	}
 
 	private Observable<GetApp> manageOrganicAds(GetApp getApp) {
@@ -660,13 +543,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void itemChanged(int pos) {
 		getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
-	}
-
-	@Override
-	public void onDestroy() {
-		Context context = getContext();
-		context.stopService(new Intent(context, PayPalService.class));
-		super.onDestroy();
 	}
 
 	@Override
