@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 10/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,31 +45,33 @@ import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.PaymentPayload;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.model.v3.PaymentPayload;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
+import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.services.ValidatePaymentsService;
@@ -146,6 +149,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private AdRepository adRepository;
 	private boolean sponsored;
 	private List<GetAdsResponse.Ad> suggestedAds;
+
+	// buy app vars
+	private String storeName;
+	private float priceValue;
+	private String currency;
+	private double taxRate;
+
+	private AppViewInstallDisplayable installDisplayable;
+	private GetAppMeta.App boughtApp;
 
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
@@ -238,7 +250,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		displayables.add(new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd, shouldInstall));
+		installDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
+		displayables.add(installDisplayable);
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
 		displayables.add(new AppViewScreenshotsDisplayable(app));
@@ -252,6 +265,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		setDisplayables(displayables);
 	}
 
+
 	public void buyApp(GetAppMeta.App app) {
 		GetAppMeta.Pay payment = app.getPay();
 
@@ -261,10 +275,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		Intent intent = new Intent(getContext(), PaymentActivity.class);
 		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
 		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
-		intent.putExtra(CheckProductPaymentRequest.Constants.STORE, app.getStore().getName());
-		intent.putExtra(CheckProductPaymentRequest.Constants.PRICE, payment.getPrice());
-		intent.putExtra(CheckProductPaymentRequest.Constants.CURRENCY, payment.getCurrency());
-		intent.putExtra(CheckProductPaymentRequest.Constants.TAX_RATE, app.getPayment().payment_services.get(0).getTaxRate());
+		boughtApp = app;
 		startActivityForResult(intent, PAY_APP_REQUEST_CODE);
 	}
 
@@ -277,30 +288,34 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 					try {
 						Logger.i(TAG, confirm.toJSONObject().toString(4));
 
-						// TODO: 29/07/16 sithengineer
 						// send 'confirm' to the server
 						ProofOfPayment proof = confirm.getProofOfPayment();
 
 						PaymentPayload paymentPayload = new PaymentPayload();
 						paymentPayload.setPayType(1); // magic value: paypal payment type id
 						paymentPayload.setApiVersion("3"); // magic value: webservice version
-						paymentPayload.setProductId(appId);
-						paymentPayload.setStore(data.getStringExtra(CheckProductPaymentRequest.Constants.STORE));
-						paymentPayload.setPrice(data.getDoubleExtra(CheckProductPaymentRequest.Constants.PRICE, 0.0));
-						paymentPayload.setCurrency(data.getStringExtra(CheckProductPaymentRequest.Constants.CURRENCY));
 						paymentPayload.setPayKey(proof.getPaymentId());
-						paymentPayload.setTaxRate(data.getDoubleExtra(CheckProductPaymentRequest.Constants.TAX_RATE, 0.0));
+						paymentPayload.setAptoidePaymentId(boughtApp.getPayment().metadata.id);
+						paymentPayload.setStore(boughtApp.getStore().getName());
+						paymentPayload.setPrice(boughtApp.getPay().getPrice());
+						paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
+						paymentPayload.setTaxRate(boughtApp.getPayment().payment_services.get(0).getTaxRate());
 
 						final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
 						paymentPayload.setSimCountryCode(telephonyManager.getSimCountryIso());
 
-						@Cleanup
-						Realm realm = Database.get();
-						realm.beginTransaction();
-						realm.copyToRealmOrUpdate(paymentPayload);
-						realm.commitTransaction();
+						getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
 
-						getActivity().startService(ValidatePaymentsService.getIntent(getActivity()));
+						// download app
+						// TODO: 05/08/16 sithengineer download app
+
+						// install app
+						FragmentActivity fragmentActivity = getActivity();
+						Intent installApp = new Intent(fragmentActivity, AppBoughtReceiver.class);
+						installApp.setAction(AppBoughtReceiver.APP_BOUGHT);
+						installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+						fragmentActivity.sendBroadcast(installApp);
+						boughtApp = null;
 
 					} catch (JSONException e) {
 						Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
@@ -568,6 +583,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private final class AppViewHeader {
 
+		private static final String BADGE_DIALOG_TAG = "badgeDialog";
+
 		private final boolean animationsEnabled;
 
 		// views
@@ -685,6 +702,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			Analytics.ViewedApplication.view(app.getPackageName(), app.getFile().getMalware().getRank().name());
 			Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(), app.getDeveloper().getName(), app.getFile().getMalware().getRank().name());
+
+			final Malware malware = app.getFile().getMalware();
+			badge.setOnClickListener(v -> {
+				DialogBadgeV7.newInstance(malware, app.getName(), malware.getRank()).show(getFragmentManager(), BADGE_DIALOG_TAG);
+			});
 		}
 	}
 }

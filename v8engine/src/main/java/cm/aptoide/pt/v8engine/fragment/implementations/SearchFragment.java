@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by SithEngineer on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -47,11 +47,17 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	private EditText noSearchLayoutSearchQuery;
 	private ImageView noSearchLayoutSearchButton;
 	private String storeName;
+	private boolean onlyTrustedApps;
 
 	public static SearchFragment newInstance(String query) {
+		return newInstance(query, false);
+	}
+
+	public static SearchFragment newInstance(String query, boolean onlyTrustedApps) {
 		Bundle args = new Bundle();
 
 		args.putString(BundleCons.QUERY, query);
+		args.putBoolean(BundleCons.ONLY_TRUSTED, onlyTrustedApps);
 
 		SearchFragment fragment = new SearchFragment();
 		fragment.setArguments(args);
@@ -159,7 +165,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 				}
 			}, e -> finishLoading());
 		} else {
-			ListSearchAppsRequest.of(query, true).execute(listSearchApps -> {
+			ListSearchAppsRequest.of(query, true, onlyTrustedApps).execute(listSearchApps -> {
 				List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
 				if (list != null && list.size() > 0) {
@@ -172,7 +178,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 			}, e -> finishLoading());
 
 			// Other stores
-			ListSearchAppsRequest.of(query, false).execute(listSearchApps -> {
+			ListSearchAppsRequest.of(query, false, onlyTrustedApps).execute(listSearchApps -> {
 				List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
 				if (list != null && list.size() > 0) {
@@ -183,6 +189,20 @@ public class SearchFragment extends BasePagerToolbarFragment {
 					handleFinishLoading();
 				}
 			}, e -> finishLoading());
+
+			// could this be a solution ?? despite the boolean flags
+			//			Observable.concat(ListSearchAppsRequest.of(query, true).observe(),ListSearchAppsRequest.of(query, false).observe()).subscribe
+			// (listSearchApps -> {
+			//				List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+			//
+			//				if (list != null && list.size() > 0) {
+			//					hasEverywhereResults = true;
+			//					handleFinishLoading();
+			//				} else {
+			//					hasEverywhereResults = false;
+			//					handleFinishLoading();
+			//				}
+			//			}, e -> finishLoading());
 		}
 	}
 
@@ -232,6 +252,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 		query = args.getString(BundleCons.QUERY);
 		storeName = args.getString(BundleCons.STORE_NAME);
+		onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
 	}
 
 	@Override
@@ -252,6 +273,17 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		} else {
 			SearchUtils.setupGlobalSearchView(menu, getActivity());
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int i = item.getItemId();
+
+		if (i == android.R.id.home) {
+			getActivity().onBackPressed();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -278,20 +310,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		}
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int i = item.getItemId();
-
-		if (i == android.R.id.home) {
-			getActivity().onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	protected static class BundleCons {
 
 		public static final String QUERY = "query";
 		public static final String STORE_NAME = "storeName";
+		public static final String ONLY_TRUSTED = "onlyTrustedApps";
 	}
 }

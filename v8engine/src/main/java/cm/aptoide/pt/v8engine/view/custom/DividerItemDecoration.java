@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.custom;
 
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -47,15 +48,21 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 		}
 
 		// Add top margin only for the first item to avoid double space between items
+		RecyclerView.LayoutManager parentLayoutManager = parent.getLayoutManager();
 
-		if(parent.getLayoutManager() instanceof GridLayoutManager){
-
-			int colcount = ((GridLayoutManager) parent.getLayoutManager()).getSpanCount();
-
-			if(parent.getChildPosition(view) < colcount){
+		if (parentLayoutManager instanceof LinearLayoutManager) {
+			LinearLayoutManager manager = ((LinearLayoutManager) parentLayoutManager);
+			if (manager.getOrientation() == LinearLayoutManager.VERTICAL && manager.getPosition(view) == 0) {
 				outRect.top = space;
 			}
-
+		} else if(GridLayoutManager.class.isAssignableFrom(parentLayoutManager.getClass())){
+			GridLayoutManager manager = ((GridLayoutManager) parentLayoutManager);
+			if(manager.getOrientation() == LinearLayoutManager.VERTICAL){
+				int colcount = manager.getSpanCount();
+				if(parent.getChildPosition(view) < colcount){
+					outRect.top = space;
+				}
+			}
 		}else if(parent.getChildPosition(view) == 0){
 			outRect.top = space;
 		}

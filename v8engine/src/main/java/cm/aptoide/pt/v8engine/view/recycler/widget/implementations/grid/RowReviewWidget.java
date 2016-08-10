@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 09/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -84,7 +84,7 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 //		}
 
 		itemView.setOnClickListener(v -> {
-			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getStore()
+			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getName(), app.getStore()
 					.getName(), app.getPackageName(), review.getId()));
 		});
 

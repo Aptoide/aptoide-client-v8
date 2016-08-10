@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 05/08/2016.
   -->
 
 <resources>
@@ -146,6 +146,7 @@
     <color name="app_view_follow_orange">#b64735</color>
     <color name="almost_black">#403f3d</color>
     <color name="green_tint_default">#45d316</color>
+    <color name="working_well_text_color">#98cf1c</color>
     <color name="card_store_title">#ff6d00</color>
 
 

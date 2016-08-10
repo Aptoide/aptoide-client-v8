@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 09/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -26,6 +26,12 @@ public class Review {
 	private Stats stats;
 	private Comments comments;
 	private ListComments commentList;
+
+	public boolean hasComments() {
+		return commentList != null && commentList.getDatalist() != null && commentList.getDatalist().getList() != null && !commentList.getDatalist()
+				.getList()
+				.isEmpty();
+	}
 
 	@Data
 	public static class User {

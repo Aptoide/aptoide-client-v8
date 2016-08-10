@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 05/08/2016.
+  -->
+
 <LinearLayout
     style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
@@ -24,16 +28,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/button_border_silver"
-        android:weightSum="1">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        >
 
         <LinearLayout
             android:id="@+id/working_well_layout"
             android:layout_width="77dp"
             android:layout_height="77dp"
             android:layout_margin="4dp"
-            android:background="@android:color/holo_red_dark"
+            android:background="@drawable/working_well"
             android:clickable="true"
             android:orientation="vertical"
             >
@@ -46,7 +52,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="29dp"
                 android:gravity="center"
                 android:lines="2"
                 android:maxLines="2"
@@ -54,7 +60,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_small"
-                android:textStyle="italic"
+                android:textStyle="italic|bold"
                 />
 
 
@@ -77,8 +83,8 @@
                 android:maxLines="2"
                 android:text="@string/appview_good_app_guaranteed"
                 android:textAllCaps="false"
-                android:textColor="@color/green_700"
-                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/working_well_text_color"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold"
                 />
 
@@ -97,7 +103,7 @@
                 android:maxLines="4"
                 android:text="@string/appview_good_app_description"
                 android:textColor="@color/dark_custom_gray"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_medium_small"
                 />
 
         </LinearLayout>
