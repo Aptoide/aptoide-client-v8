@@ -684,6 +684,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			badgeText.setText(badgeMessageId);
 
 			Analytics.ViewedApplication.view(app.getPackageName(), app.getFile().getMalware().getRank().name());
+			Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(), app.getDeveloper().getName(), app.getFile().getMalware().getRank().name());
 		}
 	}
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppGraphicDisplayable;
@@ -45,7 +46,10 @@ public class AppBrickListWidget extends Widget<GridAppGraphicDisplayable> {
 		ImageLoader.load(app.getGraphic(), R.drawable.placeholder_705x345, graphic);
 		name.setText(app.getName());
 		ratingBar.setRating(app.getStats().getRating().getAvg());
-		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(app.getId())));
+		itemView.setOnClickListener(v -> {
+			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(app.getId()));
+			Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),app.getPackageName(),false);
+		});
 	}
 
 	@Override

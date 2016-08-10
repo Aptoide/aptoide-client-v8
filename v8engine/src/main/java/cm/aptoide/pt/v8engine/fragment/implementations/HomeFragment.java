@@ -33,6 +33,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -131,6 +132,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		super.bindViews(view);
 		mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
 		mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+		Analytics.AppViewViewedFrom.addStepToList("HOME");
 
 		setHasOptionsMenu(true);
 	}
