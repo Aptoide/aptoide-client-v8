@@ -67,6 +67,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 				downloadNotificationDeepLink(getIntent());
 			} else if (getIntent().hasExtra(DeepLinksIds.FROM_TIMELINE)) {
 				fromTimelineDeepLink(getIntent());
+			} else if (getIntent().hasExtra(DeepLinksIds.NEW_UPDATES)) {
+				newUpdatesDeepLink(getIntent());
 			}
 		}
 	}
@@ -100,6 +102,12 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.timelineNotification();
 		setMainPagerPosition(Event.Name.getUserTimeline);
+	}
+
+	private void newUpdatesDeepLink(Intent intent) {
+		// TODO: 10-08-2016 jdandrade
+		Analytics.ApplicationLaunch.newUpdatesNotification();
+		setMainPagerPosition(Event.Name.myUpdates);
 	}
 
 	private void setMainPagerPosition(Event.Name name) {
@@ -168,5 +176,6 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		public final static int NEW_REPO_FLAG = 12345;
 		public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
 		public static final String FROM_TIMELINE = "fromTimeline";
+		public static final String NEW_UPDATES = "new_updates";
 	}
 }
