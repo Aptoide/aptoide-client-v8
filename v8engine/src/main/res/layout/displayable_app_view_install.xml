@@ -2,7 +2,7 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 08/08/2016.
+  ~ Modified by SithEngineer on 10/08/2016.
   -->
 
 <RelativeLayout
@@ -82,7 +82,7 @@
                 />
 
             <ImageView
-                android:id="@+id/ic_action_pause_resume"
+                android:id="@+id/ic_action_pause"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
@@ -91,6 +91,20 @@
                 android:contentDescription="@null"
                 android:padding="15dp"
                 android:src="@drawable/pause"
+                />
+
+            <ImageView
+                android:id="@+id/ic_action_resume"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:padding="15dp"
+                android:src="@drawable/play"
+                android:visibility="gone"
+                tools:visibility="visible"
                 />
 
         </LinearLayout>

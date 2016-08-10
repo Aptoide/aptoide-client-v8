@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/08/2016.
+ * Modified by SithEngineer on 10/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.Collections;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -72,7 +74,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private CheckBox shareInTimeline; // FIXME: 27/07/16 sithengineer what does this flag do ??
 	private ProgressBar downloadProgress;
 	private TextView textProgress;
-	private ImageView actionPauseResume;
+	private ImageView actionResume;
+	private ImageView actionPause;
 	private ImageView actionCancel;
 
 	// get app, upgrade and downgrade button
@@ -99,7 +102,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		shareInTimeline = (CheckBox) itemView.findViewById(R.id.share_in_timeline);
 		downloadProgress = (ProgressBar) itemView.findViewById(R.id.download_progress);
 		textProgress = (TextView) itemView.findViewById(R.id.text_progress);
-		actionPauseResume = (ImageView) itemView.findViewById(R.id.ic_action_pause_resume);
+		actionPause = (ImageView) itemView.findViewById(R.id.ic_action_pause);
+		actionResume = (ImageView) itemView.findViewById(R.id.ic_action_resume);
 		actionCancel = (ImageView) itemView.findViewById(R.id.ic_action_cancel);
 		actionButton = (Button) itemView.findViewById(R.id.action_btn);
 		versionName = (TextView) itemView.findViewById(R.id.store_version_name);
@@ -162,7 +166,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	public void onViewDetached() {
 		actionButton.setOnClickListener(null);
-		actionPauseResume.setOnClickListener(null);
+		actionPause.setOnClickListener(null);
 		actionCancel.setOnClickListener(null);
 	}
 
@@ -183,30 +187,28 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
-
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-
-		DownloadFactory factory = new DownloadFactory();
-		Download appDownload = factory.create(app);
-		int downloadStatus = appDownload.getOverallDownloadStatus();
-		if (downloadStatus == Download.PROGRESS || downloadStatus == Download.PAUSED || downloadStatus == Download.STARTED || downloadStatus == Download
-				.IN_QUEUE) {
-
-			// show download progress bar
-			downloadServiceHelper.getDownload(app.getId()).subscribe(download -> {
-				if (download != null) {
-
+		downloadServiceHelper.getAllDownloads().firstOrDefault(Collections.emptyList()).subscribe(downloads -> {
+			for (Download download : downloads) {
+				int downloadStatus = download.getOverallDownloadStatus();
+				if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING || downloadStatus ==
+						Download.PAUSED) && download
+						.getAppId() == app.getId()) {
 					setDownloadBarVisible(true);
-					manageDownload(download, displayable, app);
+					setupDownloadControls(app, download, displayable);
+					downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
+						manageDownload(onGoingDownload, displayable, app);
+					}, err -> {
+						Logger.e(TAG, err);
+					});
 					return;
 				}
-
-				setupInstallButton(displayable, getApp);
-			});
-			return;
-		}
-
-		setupInstallButton(displayable, getApp);
+			}
+			setupInstallButton(displayable, getApp);
+		}, err -> {
+			Logger.e(TAG, err);
+			setupInstallButton(displayable, getApp);
+		});
 	}
 
 	private void setupInstallButton(AppViewInstallDisplayable displayable, GetApp getApp) {
@@ -284,7 +286,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
 
-				setupDownloadControls(app.getId(), downloadServiceHelper);
+				setupDownloadControls(app, appDownload, displayable);
 
 				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> manageDownload(download, displayable, app), err -> {
 					Logger.e(TAG, err);
@@ -330,13 +332,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		switch (download.getOverallDownloadStatus()) {
 
 			case Download.PAUSED: {
-				actionPauseResume.setOnClickListener(view -> {
-					downloadServiceHelper.startDownload(permissionRequest, download);
-					actionPauseResume.setImageResource(R.drawable.pause);
-				});
+				actionResume.setVisibility(View.VISIBLE);
+				actionPause.setVisibility(View.GONE);
 				break;
 			}
 
+			case Download.IN_QUEUE:
 			case Download.PROGRESS: {
 				downloadProgress.setProgress(download.getOverallProgress());
 				//textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) +
@@ -375,12 +376,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		}
 	}
 
-	private void setupDownloadControls(long appId, DownloadServiceHelper downloadServiceHelper) {
+	private void setupDownloadControls(GetAppMeta.App app, Download download, AppViewInstallDisplayable displayable) {
 
-		actionPauseResume.setOnClickListener(view -> {
-			downloadServiceHelper.pauseDownload(appId);
-			actionPauseResume.setImageResource(R.drawable.play);
-		});
+		long appId = app.getId();
 
 		actionCancel.setOnClickListener(view -> {
 			downloadServiceHelper.pauseDownload(appId);
@@ -388,8 +386,32 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			setDownloadBarVisible(false);
 		});
 
+		actionPause.setOnClickListener(view -> {
+			downloadServiceHelper.pauseDownload(appId);
+			actionResume.setVisibility(View.VISIBLE);
+			actionPause.setVisibility(View.GONE);
+		});
+
+		actionResume.setOnClickListener(view -> {
+			downloadServiceHelper.startDownload(permissionRequest, download)
+					.subscribe(onGoingDownload -> manageDownload(onGoingDownload, displayable, app), err -> {
+						Logger.e(TAG, err);
+					});
+			actionResume.setVisibility(View.GONE);
+			actionPause.setVisibility(View.VISIBLE);
+		});
+
 		setDownloadBarVisible(true);
-		actionPauseResume.setImageResource(R.drawable.pause);
+		switch (download.getOverallDownloadStatus()) {
+			case Download.PAUSED:
+				downloadProgress.setProgress(download.getOverallProgress());
+				textProgress.setText(download.getOverallProgress() + "%");
+				actionResume.setVisibility(View.VISIBLE);
+				actionPause.setVisibility(View.GONE);
+			default:
+				actionResume.setVisibility(View.GONE);
+				actionPause.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void setDownloadBarVisible(boolean visible) {

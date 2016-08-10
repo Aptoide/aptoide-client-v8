@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/08/2016.
+ * Modified by SithEngineer on 10/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -63,8 +63,8 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
@@ -250,7 +250,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		installDisplayable = new AppViewInstallDisplayable(installManager, downloadManager, getApp, minimalAd, shouldInstall);
+		installDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
 		displayables.add(installDisplayable);
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
