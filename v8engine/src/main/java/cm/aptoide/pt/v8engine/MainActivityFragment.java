@@ -61,16 +61,18 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 			}
 
 			// Deep Links
-			if (getIntent().hasExtra(DeepLinksArgs.NEW_REPO_EXTRA) && getIntent().getFlags() == DeepLinksArgs.NEW_REPO_FLAG) {
+			if (getIntent().hasExtra(DeepLinksIds.NEW_REPO_EXTRA) && getIntent().getFlags() == DeepLinksIds.NEW_REPO_FLAG) {
 				newrepoDeepLink(getIntent());
-			} else if (getIntent().hasExtra(DeepLinksArgs.FROM_DOWNLOAD_NOTIFICATION)) {
+			} else if (getIntent().hasExtra(DeepLinksIds.FROM_DOWNLOAD_NOTIFICATION)) {
 				downloadNotificationDeepLink(getIntent());
+			} else if (getIntent().hasExtra(DeepLinksIds.FROM_TIMELINE)) {
+				fromTimelineDeepLink(getIntent());
 			}
 		}
 	}
 
 	private void newrepoDeepLink(Intent intent) {
-		ArrayList<String> repos = intent.getExtras().getStringArrayList(DeepLinksArgs.NEW_REPO_EXTRA);
+		ArrayList<String> repos = intent.getExtras().getStringArrayList(DeepLinksIds.NEW_REPO_EXTRA);
 		if (repos != null) {
 
 			for (final String repoUrl : repos) {
@@ -84,13 +86,20 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 				}
 			}
 
-			getIntent().removeExtra(DeepLinksArgs.NEW_REPO_EXTRA);
+			getIntent().removeExtra(DeepLinksIds.NEW_REPO_EXTRA);
 		}
 	}
 
 	private void downloadNotificationDeepLink(Intent intent) {
+		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.downloadingUpdates();
 		setMainPagerPosition(Event.Name.myStores);
+	}
+
+	private void fromTimelineDeepLink(Intent intent) {
+		// TODO: 10-08-2016 jdandrade
+		Analytics.ApplicationLaunch.timelineNotification();
+		setMainPagerPosition(Event.Name.getUserTimeline);
 	}
 
 	private void setMainPagerPosition(Event.Name name) {
@@ -153,10 +162,11 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		super.onBackPressed();
 	}
 
-	public static class DeepLinksArgs {
+	public static class DeepLinksIds {
 
 		public final static String NEW_REPO_EXTRA = "newrepo";
 		public final static int NEW_REPO_FLAG = 12345;
 		public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
+		public static final String FROM_TIMELINE = "fromTimeline";
 	}
 }
