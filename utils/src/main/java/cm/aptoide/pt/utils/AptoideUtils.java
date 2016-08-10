@@ -1041,8 +1041,8 @@ public class AptoideUtils {
 							.WidgetProvider_timestamp_days_ago, diffDays);
 				} else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
 					int diffDays = Double.valueOf(Math.ceil(diffTime / WEEK_IN_MILLIS)).intValue();
-					return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(R.string
-							.WidgetProvider_timestamp_months_ago, diffDays);
+					return diffDays == 1 ? mTimestampLabelWeekAgo : AptoideUtils.StringU.getFormattedString(R.string
+							.WidgetProvider_timestamp_weeks_ago, diffDays);
 				} else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
 					int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4))).intValue();
 					return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(R.string
