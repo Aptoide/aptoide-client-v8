@@ -27,6 +27,7 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -117,41 +118,62 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
-		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+		GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
 		final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
-		versionName.setText(app.getFile().getVername());
+		versionName.setText(currentApp.getFile().getVername());
 		otherVersions.setOnClickListener(v -> {
-			OtherVersionsFragment fragment = OtherVersionsFragment.newInstance(app.getName(), app.getIcon(), app.getPackageName());
+			OtherVersionsFragment fragment = OtherVersionsFragment.newInstance(currentApp.getName(), currentApp.getIcon(), currentApp.getPackageName());
 			fragmentShower.pushFragmentV4(fragment);
 		});
 
+		String packageName = currentApp.getPackageName();
+
 		@Cleanup
 		Realm realm = Database.get();
-		String packageName = app.getPackageName();
 		Installed installed = Database.InstalledQ.get(packageName, realm);
+		Update update = Database.UpdatesQ.get(packageName, realm);
 
-		//check if the app is installed
-		if (installed == null) {
-			// app not installed
-			checkOnGoingDownload(getApp, displayable);
+		//check if the app is installed or has an update
+		if (update != null) {
+			// app installed and has a pending update. setup update buttons
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-		} else {
-			// app installed
+			actionButton.setText(R.string.update);
+			actionButton.setOnClickListener(installOrUpgradeListener(true, currentApp, getApp.getNodes().getVersions(), displayable));
 
-			// setup un-install button in menu
-			//			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(new Listeners().newUninstallListener(app, itemView,
-			// installed
-			//					.getPackageName(), displayable));
+			// setup un-install button as visible in fragment menu
 			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-				displayable.uninstall(getContext(), app).subscribe();
+				displayable.uninstall(getContext(), currentApp).subscribe();
 			});
+		} else if (update == null && installed != null) {
 
-			// is it an upgrade, downgrade or open app?
-			setupActionsForInstalledApp(getApp, installed, displayable);
+			// app installed and does not have a pending update. we can show open or downgrade buttons here.
+			// it is a downgrade if the appview version is inferior to the installed version
+			// it is a open if the appview version is equal to the installed version
+
+			if (currentApp.getFile().getVercode() < installed.getVersionCode()) {
+				actionButton.setText(R.string.downgrade);
+				actionButton.setOnClickListener(downgradeListener(currentApp, displayable));
+			} else {
+				actionButton.setText(R.string.open);
+				actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+			}
+
+			// setup un-install button as visible in fragment menu
+			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
+				displayable.uninstall(getContext(), currentApp).subscribe();
+			});
+		} else {
+			// app not installed
+			setupInstallOrBuyButton(displayable, getApp);
+
+			// setup un-install button as invisible in fragment menu
+			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
 		}
 
-		if (isThisTheLatestVersionAvailable(app, getApp.getNodes().getVersions())) {
+		checkOnGoingDownload(getApp, displayable);
+
+		if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
 			latestAvailableLabel.setVisibility(View.VISIBLE);
 		}
 
@@ -168,22 +190,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton.setOnClickListener(null);
 		actionPause.setOnClickListener(null);
 		actionCancel.setOnClickListener(null);
-	}
-
-	private void setupActionsForInstalledApp(GetApp getApp, Installed installed, AppViewInstallDisplayable displayable) {
-
-		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-
-		if (!isThisTheLatestVersionAvailable(app, getApp.getNodes().getVersions()) || app.getFile().getVercode() > installed.getVersionCode()) {
-			actionButton.setText(R.string.update);
-			actionButton.setOnClickListener(installOrUpgradeListener(true, app, getApp.getNodes().getVersions(), displayable));
-		} else if (app.getFile().getVercode() < installed.getVersionCode()) {
-			actionButton.setText(R.string.downgrade);
-			actionButton.setOnClickListener(downgradeListener(app, displayable));
-		} else {
-			actionButton.setText(R.string.open);
-			actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
-		}
 	}
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
@@ -204,14 +210,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					return;
 				}
 			}
-			setupInstallButton(displayable, getApp);
 		}, err -> {
 			Logger.e(TAG, err);
-			setupInstallButton(displayable, getApp);
 		});
 	}
 
-	private void setupInstallButton(AppViewInstallDisplayable displayable, GetApp getApp) {
+	private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		GetApkInfoJson.Payment payment = displayable.getPayment();
 		//check if the app is paid
