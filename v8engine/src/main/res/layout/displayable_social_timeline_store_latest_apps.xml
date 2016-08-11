@@ -79,7 +79,9 @@
 
         <HorizontalScrollView
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="9.3dp"
             android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -94,7 +96,9 @@
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
-            android:layout_height="12dp"/>
+            android:layout_height="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>
 

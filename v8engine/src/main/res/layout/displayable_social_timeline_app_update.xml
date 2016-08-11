@@ -74,7 +74,8 @@
                 android:id="@+id/displayable_social_timeline_app_update_icon"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:layout_margin="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="9.3dp"
                 android:scaleType="fitCenter"
                 tools:ignore="contentDescription"
                 tools:src="@mipmap/ic_launcher"/>
@@ -85,6 +86,7 @@
                 android:layout_alignTop="@id/displayable_social_timeline_app_update_icon"
                 android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
                 android:layout_toRightOf="@id/displayable_social_timeline_app_update_icon"
+                android:layout_marginLeft="14.3dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -93,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="12dp"
                     android:ellipsize="end"
                     android:lines="1"
                     android:text="@string/displayable_social_timeline_app_update_name"
@@ -105,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="12dp"
                     android:ellipsize="end"
                     android:lines="1"
                     android:text="@string/displayable_social_timeline_app_has_update"
@@ -117,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="12dp"
                     android:layout_marginTop="4dp"
                     android:ellipsize="end"
                     android:lines="1"
@@ -142,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="12dp"
                     android:drawableLeft="@drawable/timeline_update_app"
                     android:drawableStart="@drawable/timeline_update_app"
                     android:gravity="center_vertical"
