@@ -14,7 +14,7 @@
         <RelativeLayout
             android:id="@+id/displayable_social_timeline_store_latest_apps_header"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
+            android:layout_height="63.3dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -22,11 +22,11 @@
                 tools:src="@drawable/img_people_mockup"
                 android:id="@+id/displayable_social_timeline_store_latest_apps_card_image"
                 android:layout_margin="12dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_width="38.3dp"
+                android:layout_height="38.3dp"/>
 
             <TextView
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14.7dp"
                 android:id="@+id/displayable_social_timeline_store_latest_apps_card_title"
                 style="@style/Widget.Aptoide.Card.Title.LatestApps"
                 android:layout_width="match_parent"
