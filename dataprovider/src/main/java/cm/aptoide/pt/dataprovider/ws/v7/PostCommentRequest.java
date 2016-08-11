@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -34,11 +35,10 @@ public class PostCommentRequest extends V7<BaseV7Response,PostCommentRequest.Bod
 		//
 		//  http://ws75-primary.aptoide.com/api/7/setComment/review_id/1/body/amazing%20review/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
 		//
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api
-				.isMature(), Api.Q, reviewId, text);
-		return new PostCommentRequest(body, BASE_HOST);
+		Body body = new Body(reviewId, text);
+		return new PostCommentRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
 
 	@Override
@@ -54,9 +54,8 @@ public class PostCommentRequest extends V7<BaseV7Response,PostCommentRequest.Bod
 		private long reviewId;
 		private String body;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long reviewId, String
+		public Body(long reviewId, String
 				text) {
-			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 			this.reviewId = reviewId;
 			this.body = text;
 		}

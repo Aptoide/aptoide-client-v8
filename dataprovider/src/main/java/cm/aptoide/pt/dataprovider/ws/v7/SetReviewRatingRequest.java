@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -35,12 +36,10 @@ public class SetReviewRatingRequest extends V7<BaseV7Response,SetReviewRatingReq
 		//  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
 		// .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
 		//
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-				Api
-
-						.isMature(), Api.Q, reviewId, helpful ? "up" : "down");
-		return new SetReviewRatingRequest(body, BASE_HOST);
+		Body body = new Body(reviewId, helpful ? "up" : "down");
+		return new SetReviewRatingRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
 
 	@Override
@@ -56,8 +55,7 @@ public class SetReviewRatingRequest extends V7<BaseV7Response,SetReviewRatingReq
 		private long review_id;
 		private String vote;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, long reviewId, String vote) {
-			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
+		public Body(long reviewId, String vote) {
 
 			this.review_id = reviewId;
 			this.vote = vote;

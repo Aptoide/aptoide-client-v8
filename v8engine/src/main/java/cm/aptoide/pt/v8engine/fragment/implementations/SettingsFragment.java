@@ -42,6 +42,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -161,6 +162,27 @@ public class SettingsFragment extends PreferenceFragmentCompat
 					Analytics.AdultContent.lock();
 					AptoideAccountManager.updateMatureSwitch(false);
 				}
+
+				return true;
+			}
+		});
+
+		findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(new Preference
+				.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				final CheckBoxPreference cb = (CheckBoxPreference) preference;
+				boolean filterApps = false;
+
+				if (cb.isChecked()) {
+					cb.setChecked(true);
+					filterApps = true;
+				}
+				else {
+					cb.setChecked(false);
+				}
+
+				SecurePreferencesImplementation.getInstance().edit().putBoolean("FILTER_APPS", filterApps).commit();
 
 				return true;
 			}

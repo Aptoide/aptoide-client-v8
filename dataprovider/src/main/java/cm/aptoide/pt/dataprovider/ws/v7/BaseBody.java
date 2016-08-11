@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,15 +17,15 @@ import lombok.Setter;
 /**
  * Base body that every request should use. If more information should be provided this class should be extended.
  */
-@AllArgsConstructor
+@Data
 @EqualsAndHashCode
 public class BaseBody {
 
-	@Getter @JsonProperty("aptoide_uid") private String aptoideId;
-	@Setter @Getter private String accessToken;
-	@Getter private int aptoideVercode;
-	@Getter private String cdn;
-	@Getter private String lang;
-	@Getter private boolean mature;
-	@Getter private String q;
+	@JsonProperty("aptoide_uid") private String aptoideId;
+	private String accessToken;
+	private int aptoideVercode;
+	private String cdn;
+	private String lang;
+	private boolean mature;
+	private String q;
 }

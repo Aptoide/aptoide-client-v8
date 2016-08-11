@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -57,11 +58,12 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 		//
 		//
 		//
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-				.isMature(), Api.Q, limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
-		return new ListCommentsRequest(body, BASE_HOST);
+
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		Body body = new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
+		return new ListCommentsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
 
 	@Override
@@ -88,9 +90,8 @@ public class ListCommentsRequest extends V7<ListComments,ListCommentsRequest.Bod
 
 		private long reviewId;
 
-		public Body(String aptoideId, String accessToken, int aptoideVersionCode, String cdn, String lang, boolean mature, String q, int limit, long reviewId,
+		public Body(int limit, long reviewId,
 		            boolean refresh, Order order) {
-			super(aptoideId, accessToken, aptoideVersionCode, cdn, lang, mature, q);
 
 			this.limit = limit;
 			this.reviewId = reviewId;

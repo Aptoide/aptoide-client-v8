@@ -19,6 +19,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -54,11 +55,11 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	}
 
 	public static ListAppsUpdatesRequest of() {
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, getInstalledApks(), StoreUtils
-				.getSubscribedStoresIds()), BASE_HOST);
+		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body(getInstalledApks(),
+				StoreUtils
+				.getSubscribedStoresIds())), BASE_HOST);
 	}
 
 	private static List<ApksData> getInstalledApks() {
@@ -139,15 +140,13 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		@Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
 		@Getter private List<Long> storeIds;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, List<ApksData> apksData,
+		public Body(List<ApksData> apksData,
 		            List<Long> storeIds) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
 			this.apksData = apksData;
 			this.storeIds = storeIds;
 		}
 
 		public Body(Body body) {
-			super(body.getAptoideId(), body.getAccessToken(), body.getAptoideVercode(), body.getCdn(), body.getLang(), body.isMature(), body.getQ());
 			this.apksData = body.getApksData();
 			this.storeIds = body.getStoreIds();
 		}

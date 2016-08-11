@@ -22,15 +22,13 @@ public class BaseBodyWithStore extends BaseBody {
 	@Getter @Setter private String storeUser;
 	@Getter @Setter private String storePassSha1;
 
-	public BaseBodyWithStore(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long storeId) {
-		super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+	public BaseBodyWithStore(Long storeId) {
 		this.storeId = storeId;
 		this.storeUser = storeUser;
 		this.storePassSha1 = storePassSha1;
 	}
 
-	public BaseBodyWithStore(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, String storeName) {
-		super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+	public BaseBodyWithStore(String storeName) {
 		this.storeName = storeName;
 		this.storeUser = storeUser;
 		this.storePassSha1 = storePassSha1;

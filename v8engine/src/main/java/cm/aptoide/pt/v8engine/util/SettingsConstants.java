@@ -20,6 +20,7 @@ public class SettingsConstants {
 	public static final CharSequence SOCIAL_TIMELINE = "socialtimeline";
 	public static final CharSequence DISABLE_TIMELINE = "disablesocialtimeline";
 	public static final CharSequence HARDWARE_SPECS = "hwspecs";
+	public static final CharSequence FILTER_APPS = "hwspecsChkBox";
 	public static final CharSequence THEME = "theme";
 	public static final CharSequence ABOUT_DIALOG = "aboutDialog";
 }
