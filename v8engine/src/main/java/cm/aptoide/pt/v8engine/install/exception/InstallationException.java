@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 20/07/2016.
+ * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.install;
+package cm.aptoide.pt.v8engine.install.exception;
 
 /**
  * Created by marcelobenites on 7/20/16.

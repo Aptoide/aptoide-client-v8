@@ -1,42 +1,36 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 10/08/2016.
+ * Modified by Marcelo Benites on 11/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.payment;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
-import cm.aptoide.pt.v8engine.payment.service.PaymentConfirmationConverter;
-import cm.aptoide.pt.v8engine.payment.service.PaymentConverter;
-import cm.aptoide.pt.v8engine.payment.service.paypal.PayPalPaymentService;
+import cm.aptoide.pt.v8engine.payment.method.PayPalPaymentConverter;
+import cm.aptoide.pt.v8engine.payment.method.PayPalPaymentMethod;
 
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PaymentServiceFactory {
+public class PaymentMethodFactory {
 
 	public static final String PAYPAL = "PAYPAL";
 
-	public PaymentService create(Context context, String id) {
+	public PaymentMethod create(Context context, String id) {
 		switch (id) {
 			case PAYPAL:
-				return new PayPalPaymentService(context, id, getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter(), getConfirmationConverter());
+				return new PayPalPaymentMethod(context, id, getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter());
 			default:
 				throw new IllegalArgumentException("Payment not supported: " + id);
 		}
 	}
 
-	private PaymentConfirmationConverter getConfirmationConverter() {
-		return new PaymentConfirmationConverter();
-	}
-
-	private PaymentConverter getPaymentConverter() {
-		return new PaymentConverter();
+	private PayPalPaymentConverter getPaymentConverter() {
+		return new PayPalPaymentConverter();
 	}
 
 	private PayPalConfiguration getPayPalConfiguration() {

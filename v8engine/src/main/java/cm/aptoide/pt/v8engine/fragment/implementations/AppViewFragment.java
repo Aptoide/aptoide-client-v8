@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
-
-import org.json.JSONException;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -62,7 +59,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -71,9 +68,8 @@ import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
-import cm.aptoide.pt.v8engine.payment.PaymentService;
-import cm.aptoide.pt.v8engine.payment.PaymentServiceFactory;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.payment.PaymentMethod;
+import cm.aptoide.pt.v8engine.payment.PaymentMethodFactory;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.services.ValidatePaymentsService;
@@ -141,7 +137,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private boolean sponsored;
 	private List<GetAdsResponse.Ad> suggestedAds;
 
-	private PaymentService paymentService;
+	private PaymentMethod paymentMethod;
 	private Payment payment;
 
 	// buy app vars
@@ -203,7 +199,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
 		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
 		adRepository = new AdRepository();
-		paymentService = new PaymentServiceFactory().create(getContext(), PaymentServiceFactory.PAYPAL);
+		paymentMethod = new PaymentMethodFactory().create(getContext(), PaymentMethodFactory.PAYPAL);
 	}
 
 	@Override
@@ -275,10 +271,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	public void buyApp(final GetAppMeta.App app) {
-		if (!paymentService.isProcessingPayment()) {
+		if (!paymentMethod.isProcessingPayment()) {
 			payment = new Payment(String.valueOf(app.getId()), app.getPay().getCurrency(), BigDecimal.valueOf(app.getPay().getPrice()), app.getPayment().payment_services.get(0).getTaxRate());
 
-			paymentService.processPayment(payment, new PaymentService.PaymentConfirmationListener() {
+			paymentMethod.processPayment(payment, new PaymentMethod.PaymentConfirmationListener() {
 				@Override
 				public void onSuccess(PaymentConfirmation paymentConfirmation) {
 					PaymentPayload paymentPayload = new PaymentPayload();
@@ -434,8 +430,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		if (storeTheme != null) {
 			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
 		}
-		if (paymentService.isProcessingPayment()) {
-			paymentService.stopPaymentProcess();
+		if (paymentMethod.isProcessingPayment()) {
+			paymentMethod.stopPaymentProcess();
 		}
 	}
 

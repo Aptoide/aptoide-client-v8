@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public interface PaymentService {
+public interface PaymentMethod {
 
 	public String getId();
 

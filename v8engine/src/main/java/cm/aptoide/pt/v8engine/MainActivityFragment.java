@@ -30,7 +30,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;

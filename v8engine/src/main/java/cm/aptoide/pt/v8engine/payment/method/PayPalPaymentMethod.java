@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 10/08/2016.
+ * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.service.paypal;
+package cm.aptoide.pt.v8engine.payment.method;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,34 +17,30 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.payment.PaymentService;
+import cm.aptoide.pt.v8engine.payment.PaymentMethod;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.service.PaymentConfirmationConverter;
-import cm.aptoide.pt.v8engine.payment.service.PaymentConverter;
 
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PayPalPaymentService implements PaymentService {
+public class PayPalPaymentMethod implements PaymentMethod {
 
 	private String id;
 	private final Context context;
 	private final LocalBroadcastManager broadcastManager;
 	private final PayPalConfiguration configuration;
-	private final PaymentConverter paymentConverter;
-	private final PaymentConfirmationConverter confirmationConverter;
+	private final PayPalPaymentConverter converter;
 
 	private Payment currentPayment;
 	private PaymentConfirmationListener listener;
 	private PaymentConfirmationReceiver receiver;
 
-	public PayPalPaymentService(Context context, String id, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PaymentConverter paymentConverter, PaymentConfirmationConverter confirmationConverter) {
+	public PayPalPaymentMethod(Context context, String id, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PayPalPaymentConverter converter) {
 		this.id = id;
 		this.context = context;
 		this.broadcastManager = broadcastManager;
 		this.configuration = configuration;
-		this.paymentConverter = paymentConverter;
-		this.confirmationConverter = confirmationConverter;
+		this.converter = converter;
 	}
 
 	@Override
@@ -74,7 +70,7 @@ public class PayPalPaymentService implements PaymentService {
 			paymentResultFilter.addAction(PaymentConfirmationReceiver.PAYMENT_RESULT_ACTION);
 			receiver = new PaymentConfirmationReceiver();
 			broadcastManager.registerReceiver(receiver, paymentResultFilter);
-			context.startActivity(PayPalPaymentActivity.getIntent(context, paymentConverter.convertToPayPal(currentPayment), configuration));
+			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(currentPayment), configuration));
 		}
 	}
 
@@ -103,7 +99,7 @@ public class PayPalPaymentService implements PaymentService {
 						case PAYMENT_STATUS_OK:
 							payPalConfirmation = intent.getParcelableExtra(PAYMENT_CONFIRMATION_EXTRA);
 							if (payPalConfirmation != null && currentPayment.getPaymentId().equals(payPalConfirmation.getProofOfPayment().getPaymentId())) {
-								listener.onSuccess(confirmationConverter.convertFromPayPal(payPalConfirmation, currentPayment));
+								listener.onSuccess(converter.convertFromPayPal(payPalConfirmation, currentPayment));
 								stopPaymentProcess();
 							}
 							break;

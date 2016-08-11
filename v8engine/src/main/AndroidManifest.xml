@@ -36,6 +36,8 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
+        <activity android:name=".payment.method.PayPalPaymentActivity"/>
+
         <activity
             android:name=".receivers.DeepLinkIntentReceiver"
             android:exported="true">
@@ -125,7 +127,6 @@
                     android:scheme="http"/>
             </intent-filter>
         </activity>
-        <activity android:name=".payment.service.paypal.PayPalPaymentActivity"/>
 
         <receiver android:name=".receivers.LoginBroadcastReceiver">
             <intent-filter>

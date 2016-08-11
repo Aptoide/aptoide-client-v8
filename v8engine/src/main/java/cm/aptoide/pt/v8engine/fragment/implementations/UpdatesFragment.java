@@ -26,7 +26,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
