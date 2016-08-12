@@ -5,13 +5,10 @@
 
 package cm.aptoide.pt.database.realm;
 
-import android.content.pm.PackageInfo;
-
 import java.util.Calendar;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
-import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -65,15 +62,15 @@ public class Rollback extends RealmObject {
 	public Rollback() {
 	}
 
-	public Rollback(GetAppMeta.App app, PackageInfo packageInfo, Action action) {
+	public Rollback(GetAppMeta.App app, Action action) {
 		setAction(action.name());
-		setPackageName(packageInfo.packageName);
-		setVersionCode(packageInfo.versionCode);
-		setAppName(AptoideUtils.SystemU.getApkLabel(packageInfo));
-		setIconPath(AptoideUtils.SystemU.getApkIconPath(packageInfo));
-		setVersionName(packageInfo.versionName);
+		setPackageName(app.getPackageName());
+		setVersionCode(app.getFile().getVercode());
+		setAppName(app.getName());
+		setIconPath(app.getIcon());
+		setVersionName(app.getFile().getVername());
 		setTimestamp(Calendar.getInstance().getTimeInMillis());
-		setMd5(AptoideUtils.AlgorithmU.computeMd5(packageInfo));
+		setMd5(app.getFile().getMd5sum());
 //		computeId();
 
 		appId = app.getId();
