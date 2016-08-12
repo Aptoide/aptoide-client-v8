@@ -2,7 +2,7 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 10/08/2016.
+  ~ Modified by SithEngineer on 12/08/2016.
   -->
 
 <RelativeLayout
@@ -127,6 +127,7 @@
             style="?attr/customButton"
             android:layout_width="160dp"
             android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"

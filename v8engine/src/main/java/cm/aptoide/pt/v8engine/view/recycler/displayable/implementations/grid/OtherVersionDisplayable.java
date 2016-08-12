@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
@@ -28,7 +28,7 @@ public class OtherVersionDisplayable extends DisplayablePojo<App> {
 
 	@Override
 	public Type getType() {
-		return Type.OTHER_VERSION;
+		return Type.OTHER_VERSION_ROW;
 	}
 
 	@Override

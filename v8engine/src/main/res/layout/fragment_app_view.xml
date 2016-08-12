@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 05/07/2016.
+  ~ Modified by SithEngineer on 12/08/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -37,8 +37,8 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/AptoideAppView"
+            android:layout_gravity="center_horizontal"
             android:clipToPadding="false"
             />
 
