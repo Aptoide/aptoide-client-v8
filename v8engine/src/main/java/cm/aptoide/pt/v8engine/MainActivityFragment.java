@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -61,13 +62,13 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 			}
 
 			// Deep Links
-			if (getIntent().hasExtra(DeepLinksIds.NEW_REPO_EXTRA) && getIntent().getFlags() == DeepLinksIds.NEW_REPO_FLAG) {
+			if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO)) {
 				newrepoDeepLink(getIntent());
-			} else if (getIntent().hasExtra(DeepLinksIds.FROM_DOWNLOAD_NOTIFICATION)) {
+			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_DOWNLOAD_NOTIFICATION)) {
 				downloadNotificationDeepLink(getIntent());
-			} else if (getIntent().hasExtra(DeepLinksIds.FROM_TIMELINE)) {
+			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_TIMELINE)) {
 				fromTimelineDeepLink(getIntent());
-			} else if (getIntent().hasExtra(DeepLinksIds.NEW_UPDATES)) {
+			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_UPDATES)) {
 				newUpdatesDeepLink(getIntent());
 			} else {
 				// TODO: 10-08-2016 jdandrade mudei isto da AptoideBaseActivity para aqui, confirma se é o que pretendes.
@@ -77,7 +78,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	private void newrepoDeepLink(Intent intent) {
-		ArrayList<String> repos = intent.getExtras().getStringArrayList(DeepLinksIds.NEW_REPO_EXTRA);
+		ArrayList<String> repos = intent.getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO);
 		if (repos != null) {
 
 			for (final String repoUrl : repos) {
@@ -88,10 +89,11 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 				} else {
 					StoreUtilsProxy.subscribeStore(storeName);
 					setMainPagerPosition(Event.Name.myStores);
+					ShowMessage.asToast(this, AptoideUtils.StringU.getFormattedString(R.string.store_subscribed, storeName));
 				}
 			}
 
-			getIntent().removeExtra(DeepLinksIds.NEW_REPO_EXTRA);
+			getIntent().removeExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO);
 		}
 	}
 
@@ -173,12 +175,9 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		super.onBackPressed();
 	}
 
-	public static class DeepLinksIds {
+	public static class TargetFragment {
 
-		public final static String NEW_REPO_EXTRA = "newrepo";
-		public final static int NEW_REPO_FLAG = 12345;
-		public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
-		public static final String FROM_TIMELINE = "fromTimeline";
-		public static final String NEW_UPDATES = "new_updates";
+		public static final String APP_VIEW_FRAGMENT = "appViewFragment";
+		public static final String SEARCH_FRAGMENT = "searchFragment";
 	}
 }

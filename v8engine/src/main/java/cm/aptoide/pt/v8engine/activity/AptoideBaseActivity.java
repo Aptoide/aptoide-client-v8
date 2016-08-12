@@ -50,6 +50,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		// https://fabric.io/downloads/gradle/ndk
 		// Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
+		// TODO: 10-08-2016 jdandrade tens a certeza que queres isto aqui?
 		Analytics.Lifecycle.Application.onCreate(getApplication());
 		Analytics.Lifecycle.Activity.onCreate(this);
 
