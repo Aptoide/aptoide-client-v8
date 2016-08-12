@@ -9,6 +9,9 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'http://maven.localytics.com/public'}
         mavenLocal()
+        dependencies {
+            classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'

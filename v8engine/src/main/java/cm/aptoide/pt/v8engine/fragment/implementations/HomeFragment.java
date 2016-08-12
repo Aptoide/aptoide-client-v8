@@ -38,6 +38,8 @@ import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -52,6 +54,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	private DrawerLayout mDrawerLayout;
 	private NavigationView mNavigationView;
 	private BadgeView updatesBadge;
+	@Getter @Setter private Event.Name desiredViewPagerItem = null;
 
 	public static HomeFragment newInstance(String storeName) {
 		return newInstance(storeName, StoreContext.store);
@@ -158,12 +161,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		}
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		setUserDataOnHeader();
-	}
-
 	//	@Override
 	//	public void onDestroyView() {
 	//		super.onDestroyView();
@@ -171,6 +168,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	//		mDrawerLayout = null;
 	//		mNavigationView = null;
 	//	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		setUserDataOnHeader();
+	}
 
 	@Override
 	public int getContentViewId() {
@@ -193,6 +196,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		Database.UpdatesQ.getAll(realm, false).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(updates -> {
 			refreshUpdatesBadge(updates.size());
 		});
+
+		if (desiredViewPagerItem != null) {
+			if (adapter.containsEventName(desiredViewPagerItem)) {
+				mViewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
+			}
+		}
 	}
 
 	@Override

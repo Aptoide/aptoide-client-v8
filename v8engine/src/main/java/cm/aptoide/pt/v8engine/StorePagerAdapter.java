@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
 	private final List<GetStoreTabs.Tab> tabs;
+	private final EnumMap<Event.Name,Integer> availableEventsMap = new EnumMap<>(Event.Name.class);
 	private String storeTheme;
 	private long storeId;
 
@@ -39,6 +41,20 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 			storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
 		}
 		validateGetStore();
+
+		fillAvailableEventsMap(getStore);
+	}
+
+	private void fillAvailableEventsMap(GetStore getStore) {
+		List<GetStoreTabs.Tab> list = getStore.getNodes().getTabs().getList();
+		for (int i = 0 ; i < list.size() ; i++) {
+			Event event = list.get(i).getEvent();
+
+			if (!containsEventName(event.getName())) {
+				availableEventsMap.put(event.getName(), i);
+			}
+		}
+
 	}
 
 	private void validateGetStore() {
@@ -83,6 +99,14 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 			default:
 				return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel(), storeTheme);
 		}
+	}
+
+	public boolean containsEventName(Event.Name name) {
+		return availableEventsMap.containsKey(name);
+	}
+
+	public Integer getEventNamePosition(Event.Name name) {
+		return availableEventsMap.get(name);
 	}
 
 	private Fragment caseClient(Event event) {
