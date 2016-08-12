@@ -82,7 +82,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			startActivity(i);
 			finish();
 		} else if (uri.startsWith("aptoidesearch://")) {
-			startIntentFromPackageName(uri.split("aptoidesearch://")[1]);
+			startFromPackageName(uri.split("aptoidesearch://")[1]);
 		} else if (uri.startsWith("aptoidevoicesearch://")) {
 			aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
 		} else if (uri.startsWith("market")) {
@@ -93,13 +93,13 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			} else if (param.contains("pub:")) {
 				param = param.substring(4);
 			}
-			startIntentFromPackageName(param);
+			startFromPackageName(param);
 		} else if (uri.startsWith("http://market.android.com/details?id=")) {
 			String param = uri.split("=")[1];
-			startIntentFromPackageName(param);
+			startFromPackageName(param);
 		} else if (uri.startsWith("https://market.android.com/details?id=")) {
 			String param = uri.split("=")[1];
-			startIntentFromPackageName(param);
+			startFromPackageName(param);
 		} else if (uri.startsWith("https://play.google.com/store/apps/details?id=")) {
 			String params = uri.split("&")[0];
 			String param = params.split("=")[1];
@@ -108,7 +108,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			} else if (param.contains("pub:")) {
 				param = param.substring(4);
 			}
-			startIntentFromPackageName(param);
+			startFromPackageName(param);
 		} else if (uri.contains("aptword://")) {
 
 			String param = uri.substring("aptword://".length());
@@ -266,7 +266,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 		Analytics.ApplicationLaunch.newRepo();
 	}
 
-	public void startIntentFromPackageName(String packageName) {
+	public void startFromPackageName(String packageName) {
 		@Cleanup Realm realm = Database.get();
 
 		Intent i;

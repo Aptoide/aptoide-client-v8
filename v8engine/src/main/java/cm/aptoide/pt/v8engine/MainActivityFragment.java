@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine;
 
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -26,6 +27,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
@@ -65,10 +67,12 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 			// Deep Links
 			if (TargetFragment.APP_VIEW_FRAGMENT.equals(getIntent().getStringExtra(TargetFragment.KEY))) {
 				if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
-					fromAppViewDeepLink(getIntent().getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
+					appViewDeepLink(getIntent().getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
 				} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
-					fromAppViewDeepLink(getIntent().getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY));
+					appViewDeepLink(getIntent().getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY));
 				}
+			} else if (TargetFragment.SEARCH_FRAGMENT.equals(getIntent().getStringExtra(TargetFragment.KEY))) {
+				searchDeepLink(getIntent().getStringExtra(SearchManager.QUERY));
 			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO)) {
 				newrepoDeepLink(getIntent().getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO));
 			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_DOWNLOAD_NOTIFICATION)) {
@@ -84,11 +88,15 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		}
 	}
 
-	private void fromAppViewDeepLink(long appId) {
+	private void searchDeepLink(String query) {
+		pushFragmentV4(SearchFragment.newInstance(query));
+	}
+
+	private void appViewDeepLink(long appId) {
 		pushFragmentV4(AppViewFragment.newInstance(appId));
 	}
 
-	private void fromAppViewDeepLink(String packageName) {
+	private void appViewDeepLink(String packageName) {
 		pushFragmentV4(AppViewFragment.newInstance(packageName, false));
 	}
 
