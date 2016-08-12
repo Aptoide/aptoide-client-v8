@@ -111,6 +111,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			startFromPackageName(param);
 		} else if (uri.contains("aptword://")) {
 
+			// TODO: 12-08-2016 neuro aptword Seems discontinued???
 			String param = uri.substring("aptword://".length());
 
 			if (!TextUtils.isEmpty(param)) {
