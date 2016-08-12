@@ -7,9 +7,11 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -46,13 +49,12 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		// https://fabric.io/downloads/gradle/ndk
 		// Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
-		// TODO: 10-08-2016 jdandrade tens a certeza que queres isto aqui?
-		Analytics.Lifecycle.Application.onCreate(getApplication());
-		Analytics.Lifecycle.Activity.onCreate(this);
+		setUpAnalytics();
 
 		if (getIntent().getExtras() != null) {
 			loadExtras(getIntent().getExtras());
@@ -61,6 +63,15 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		bindViews(getWindow().getDecorView().getRootView());
 		setupToolbar();
 		setupViews();
+	}
+
+	private void setUpAnalytics() {
+		SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
+		Analytics.LocalyticsSessionControl.firstSession(sPref);
+		Analytics.Lifecycle.Activity.onCreate(this);
+		Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
+		Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
+		Analytics.Dimensions.setGmsPresent(DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable());
 	}
 
 	@Override
