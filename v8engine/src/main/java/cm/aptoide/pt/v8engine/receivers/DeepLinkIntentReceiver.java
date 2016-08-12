@@ -78,7 +78,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			String repo = uri.substring(13);
 			parseXmlString(repo);
 			Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-			i.putExtra(DeepLinksSources.NEW_REPO, repo);
+			i.putExtra(DeepLinksTargets.NEW_REPO, repo);
 			startActivity(i);
 		} else if (uri.startsWith("aptoidesearch://")) {
 			startFromPackageName(uri.split("aptoidesearch://")[1]);
@@ -130,7 +130,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
 				if (ad != null) {
 					Intent i = new Intent(this, startClass);
-					i.putExtra(DeepLinksSources.FROM_AD, MinimalAd.from(ad));
+					i.putExtra(DeepLinksTargets.FROM_AD, MinimalAd.from(ad));
 					startActivity(i);
 				} else {
 					finish();
@@ -192,7 +192,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 	public void startFromAppView(long id) {
 		Intent i = new Intent(this, startClass);
 
-		i.putExtra(MainActivityFragment.TargetFragment.KEY, MainActivityFragment.TargetFragment.APP_VIEW_FRAGMENT);
+		i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
 		i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
 
 		startActivity(i);
@@ -201,7 +201,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 	public void startFromAppView(String packageName) {
 		Intent i = new Intent(this, startClass);
 
-		i.putExtra(MainActivityFragment.TargetFragment.KEY, MainActivityFragment.TargetFragment.APP_VIEW_FRAGMENT);
+		i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
 		i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
 
 		startActivity(i);
@@ -210,7 +210,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 	public void startFromSearch(String query) {
 		Intent i = new Intent(this, startClass);
 
-		i.putExtra(MainActivityFragment.TargetFragment.KEY, MainActivityFragment.TargetFragment.SEARCH_FRAGMENT);
+		i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
 		i.putExtra(SearchManager.QUERY, query);
 
 		startActivity(i);
@@ -257,7 +257,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
 	public void startWithRepo(ArrayList<String> repo) {
 		Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-		i.putExtra(DeepLinksSources.NEW_REPO, repo);
+		i.putExtra(DeepLinksTargets.NEW_REPO, repo);
 		startActivity(i);
 
 		// TODO: 10-08-2016 jdandrade
@@ -345,16 +345,15 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 		}
 	}
 
-	public static class DeepLinksSources {
+	public static class DeepLinksTargets {
 
-		public final static String NEW_REPO = "newrepo";
-		//		public final static int NEW_REPO_FLAG = 12345;
+		public static final String NEW_REPO = "newrepo";
 		public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
 		public static final String FROM_TIMELINE = "fromTimeline";
 		public static final String NEW_UPDATES = "new_updates";
 		public static final String FROM_AD = "fromAd";
-		public static final String FROM_MYAPP = "fromMyapp";
-		public static final String MARKET_INTENT = "market_intent";
+		public static final String APP_VIEW_FRAGMENT = "appViewFragment";
+		public static final String SEARCH_FRAGMENT = "searchFragment";
 	}
 
 	public static class DeepLinksKeys {

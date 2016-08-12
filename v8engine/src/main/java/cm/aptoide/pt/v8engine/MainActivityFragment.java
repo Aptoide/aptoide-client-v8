@@ -69,21 +69,21 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	private void handleDeepLinks(Intent intent) {
-		if (TargetFragment.APP_VIEW_FRAGMENT.equals(intent.getStringExtra(TargetFragment.KEY))) {
+		if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
 			if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
 				appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
 			} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
 				appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY));
 			}
-		} else if (TargetFragment.SEARCH_FRAGMENT.equals(intent.getStringExtra(TargetFragment.KEY))) {
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SEARCH_FRAGMENT)) {
 			searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
-		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO)) {
-			newrepoDeepLink(intent.getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO));
-		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_DOWNLOAD_NOTIFICATION)) {
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
+			newrepoDeepLink(intent.getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO));
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
 			downloadNotificationDeepLink(intent);
-		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_TIMELINE)) {
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_TIMELINE)) {
 			fromTimelineDeepLink(intent);
-		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_UPDATES)) {
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
 			newUpdatesDeepLink(intent);
 		} else {
 			// TODO: 10-08-2016 jdandrade mudei isto da AptoideBaseActivity para aqui, confirma se é o que pretendes.
@@ -118,7 +118,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 				}
 			}
 
-			getIntent().removeExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO);
+			getIntent().removeExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO);
 		}
 	}
 
@@ -198,12 +198,5 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		}
 
 		super.onBackPressed();
-	}
-
-	public static class TargetFragment {
-
-		public static final String KEY = "targetFragment";
-		public static final String APP_VIEW_FRAGMENT = "appViewFragment";
-		public static final String SEARCH_FRAGMENT = "searchFragment";
 	}
 }

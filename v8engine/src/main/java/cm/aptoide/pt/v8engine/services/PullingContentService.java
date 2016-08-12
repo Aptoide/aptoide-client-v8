@@ -92,7 +92,7 @@ public class PullingContentService extends Service {
 
 	private void setUpdatesNotification(ListAppsUpdates listAppsUpdates) {
 		Intent resultIntent = new Intent(Application.getContext(), MainActivityFragment.class);
-		resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_UPDATES, true);
+		resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(Application.getContext(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		int numberUpdates = listAppsUpdates.getList().size();
