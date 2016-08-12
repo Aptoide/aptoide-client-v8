@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -25,8 +24,6 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import io.realm.Realm;
-import lombok.Cleanup;
 
 /**
  * Created by sithengineer on 14/06/16.
@@ -71,9 +68,9 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
 		rollbackAction.setOnClickListener( view -> {
 
-			@Cleanup
-			Realm realm = Database.get();
-			Database.RollbackQ.upadteRollbackWithAction(realm, pojo, Rollback.Action.UPDATE);
+			//			@Cleanup
+			//			Realm realm = Database.get();
+			//			Database.RollbackQ.upadteRollbackWithAction(realm, pojo, Rollback.Action.UPDATE);
 
 			final Context context = view.getContext();
 			ContextWrapper contextWrapper = (ContextWrapper) context;
@@ -100,7 +97,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 						break;
 
 					case INSTALL:
-						displayable.uninstall(getContext(), appDownload);
+						displayable.uninstall(getContext(), appDownload).subscribe();
 						break;
 
 					case UNINSTALL:
