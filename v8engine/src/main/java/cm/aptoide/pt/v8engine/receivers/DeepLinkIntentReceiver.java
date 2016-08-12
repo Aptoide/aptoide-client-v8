@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,6 +40,7 @@ import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -80,7 +80,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
 			i.putExtra(DeepLinksSources.NEW_REPO, repo);
 			startActivity(i);
-			finish();
 		} else if (uri.startsWith("aptoidesearch://")) {
 			startFromPackageName(uri.split("aptoidesearch://")[1]);
 		} else if (uri.startsWith("aptoidevoicesearch://")) {
@@ -133,9 +132,9 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 					Intent i = new Intent(this, startClass);
 					i.putExtra(DeepLinksSources.FROM_AD, MinimalAd.from(ad));
 					startActivity(i);
+				} else {
+					finish();
 				}
-
-				finish();
 			}
 		} else if (uri.contains("imgs.aptoide.com")) {
 
@@ -143,7 +142,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
 
 			startFromAppView(id);
-			finish();
 		} else if (uri.startsWith("http://webservices.aptoide.com")) {
 			/** refactored to remove org.apache libs */
 			Map<String,String> params = null;
@@ -168,7 +166,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 						startFromAppView(id);
 					} catch (NumberFormatException e) {
 						Logger.printException(e);
-						Toast.makeText(getApplicationContext(), R.string.simple_error_occured + uid, Toast.LENGTH_LONG).show();
+						ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
 					}
 				}
 			}
@@ -184,9 +182,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 				startFromAppView(id);
 			} catch (NumberFormatException e) {
 				Logger.printException(e);
+				finish();
 			}
-
-			finish();
 		} else {
 			finish();
 		}
@@ -343,7 +340,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 		if (server != null) {
 			startWithRepo(server);
 		} else {
-			Toast.makeText(this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+			ShowMessage.asToast(this, getString(R.string.error_occured));
 			finish();
 		}
 	}
@@ -419,7 +416,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 				////                        download.setId(id);
 				////                        ((Start)getApplicationContext()).installApp(0);
 				//
-				//                        Toast toast = Toast.makeText(IntentReceiver.this, getString(R.string.starting_download), Toast.LENGTH_SHORT);
+				//                        Toast toast = ShowMessage.asToast();(IntentReceiver.this, getString(R.strings;
 				//                        toast.show();
 				//                    }
 				//                });
