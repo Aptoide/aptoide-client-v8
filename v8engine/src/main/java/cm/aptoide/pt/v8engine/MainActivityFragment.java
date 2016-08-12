@@ -64,27 +64,30 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 				SecurePreferences.setFirstRun(false);
 			}
 
-			// Deep Links
-			if (TargetFragment.APP_VIEW_FRAGMENT.equals(getIntent().getStringExtra(TargetFragment.KEY))) {
-				if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
-					appViewDeepLink(getIntent().getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
-				} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
-					appViewDeepLink(getIntent().getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY));
-				}
-			} else if (TargetFragment.SEARCH_FRAGMENT.equals(getIntent().getStringExtra(TargetFragment.KEY))) {
-				searchDeepLink(getIntent().getStringExtra(SearchManager.QUERY));
-			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO)) {
-				newrepoDeepLink(getIntent().getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO));
-			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_DOWNLOAD_NOTIFICATION)) {
-				downloadNotificationDeepLink(getIntent());
-			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_TIMELINE)) {
-				fromTimelineDeepLink(getIntent());
-			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_UPDATES)) {
-				newUpdatesDeepLink(getIntent());
-			} else {
-				// TODO: 10-08-2016 jdandrade mudei isto da AptoideBaseActivity para aqui, confirma se é o que pretendes.
-				Analytics.ApplicationLaunch.launcher();
+			handleDeepLinks(getIntent());
+		}
+	}
+
+	private void handleDeepLinks(Intent intent) {
+		if (TargetFragment.APP_VIEW_FRAGMENT.equals(intent.getStringExtra(TargetFragment.KEY))) {
+			if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
+				appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
+			} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
+				appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY));
 			}
+		} else if (TargetFragment.SEARCH_FRAGMENT.equals(intent.getStringExtra(TargetFragment.KEY))) {
+			searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO)) {
+			newrepoDeepLink(intent.getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO));
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_DOWNLOAD_NOTIFICATION)) {
+			downloadNotificationDeepLink(intent);
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_TIMELINE)) {
+			fromTimelineDeepLink(intent);
+		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_UPDATES)) {
+			newUpdatesDeepLink(intent);
+		} else {
+			// TODO: 10-08-2016 jdandrade mudei isto da AptoideBaseActivity para aqui, confirma se é o que pretendes.
+			Analytics.ApplicationLaunch.launcher();
 		}
 	}
 
