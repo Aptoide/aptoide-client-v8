@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/08/2016.
+ * Modified by SithEngineer on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -46,6 +46,7 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 	private TextView fakeAppText;
 	private TextView virusText;
 
+
 	public AppViewFlagThisWidget(View itemView) {
 		super(itemView);
 		viewIdTypeMap = new HashMapNotNull<>();
@@ -57,6 +58,8 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 
 	@Override
 	protected void assignViews(View itemView) {
+		goodAppLayoutWrapper = itemView.findViewById(R.id.good_app_layout);
+		flagsLayoutWrapper = itemView.findViewById(R.id.rating_flags_layout);
 
 		workingWellLayout = itemView.findViewById(R.id.working_well_layout);
 		needsLicenseLayout = itemView.findViewById(R.id.needs_licence_layout);
@@ -67,34 +70,21 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 		needsLicenceText = (TextView) itemView.findViewById(R.id.needs_licence_count);
 		fakeAppText = (TextView) itemView.findViewById(R.id.fake_app_count);
 		virusText = (TextView) itemView.findViewById(R.id.virus_count);
-
 	}
 
 	@Override
 	public void bindView(AppViewFlagThisDisplayable displayable) {
 		GetApp pojo = displayable.getPojo();
+		GetAppMeta.App app = pojo.getNodes().getMeta().getData();
 
-		try {
-			GetAppMeta.GetAppMetaFile.Flags flags = pojo.getNodes().getMeta().getData().getFile().getFlags();
-			if (flags != null && flags.getVotes() != null && !flags.getVotes().isEmpty()) {
-				for (final GetAppMeta.GetAppMetaFile.Flags.Vote vote : flags.getVotes()) {
-					applyCount(vote.getType(), vote.getCount());
-				}
-			}
-		} catch (NullPointerException ex) {
-			Logger.e(TAG, ex);
+		if (app.getFile().isGoodApp()) {
+			goodAppLayoutWrapper.setVisibility(View.VISIBLE);
+			flagsLayoutWrapper.setVisibility(View.GONE);
+		} else {
+			goodAppLayoutWrapper.setVisibility(View.GONE);
+			flagsLayoutWrapper.setVisibility(View.VISIBLE);
+			bindFlagViews(app);
 		}
-
-		View.OnClickListener buttonListener = handleButtonClick(pojo.getNodes().getMeta().getData().getStore().getName(), pojo.getNodes()
-				.getMeta()
-				.getData()
-				.getFile()
-				.getMd5sum());
-
-		workingWellLayout.setOnClickListener(buttonListener);
-		needsLicenseLayout.setOnClickListener(buttonListener);
-		fakeAppLayout.setOnClickListener(buttonListener);
-		virusLayout.setOnClickListener(buttonListener);
 	}
 
 	@Override
@@ -105,6 +95,25 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 	@Override
 	public void onViewDetached() {
 
+	}
+
+	private void bindFlagViews(GetAppMeta.App app) {
+		try {
+			GetAppMeta.GetAppMetaFile.Flags flags = app.getFile().getFlags();
+			if (flags != null && flags.getVotes() != null && !flags.getVotes().isEmpty()) {
+				for (final GetAppMeta.GetAppMetaFile.Flags.Vote vote : flags.getVotes()) {
+					applyCount(vote.getType(), vote.getCount());
+				}
+			}
+		} catch (NullPointerException ex) {
+			Logger.e(TAG, ex);
+		}
+
+		View.OnClickListener buttonListener = handleButtonClick(app.getStore().getName(), app.getFile().getMd5sum());
+		workingWellLayout.setOnClickListener(buttonListener);
+		needsLicenseLayout.setOnClickListener(buttonListener);
+		fakeAppLayout.setOnClickListener(buttonListener);
+		virusLayout.setOnClickListener(buttonListener);
 	}
 
 	private View.OnClickListener handleButtonClick(final String storeName, final String md5) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 26/07/2016.
+  ~ Modified by SithEngineer on 12/08/2016.
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -720,6 +720,17 @@
         <item name="android:max">100</item>
         <item name="android:progress">0</item>
         <item name="android:progressDrawable">@drawable/dark_progress_bar</item>
+    </style>
+
+    <style name="WidgetButtonCustomAptoideTwoLines" parent="WidgetButtonCustomAptoide">
+        <item name="android:textSize">12sp</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="AptoideAppView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>

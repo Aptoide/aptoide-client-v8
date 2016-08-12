@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/08/2016.
+ * Modified by SithEngineer on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -267,7 +267,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		@Override
 		public android.app.Fragment getItem(int position) {
 			if (reviews != null && position < reviews.size()) {
-				return MiniTopReviewFragment.newInstance(context, reviews.get(position));
+				Review review = reviews.get(position);
+				if (review != null) {
+					return MiniTopReviewFragment.newInstance(context, review);
+				}
+				throw new IllegalStateException("Review is null.");
 			}
 			throw new IllegalStateException("Top Review Item doesn't exist for position " + position);
 		}
@@ -310,6 +314,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 			bundle.putString(COMMENT_TITLE, review.getTitle());
 			bundle.putString(COMMENT_TEXT, review.getBody());
 			bundle.putString(ADDED_DATE, DATE_TIME_U.getTimeDiffString(context, review.getAdded().getTime()));
+			fragment.setArguments(bundle);
 			return fragment;
 		}
 
