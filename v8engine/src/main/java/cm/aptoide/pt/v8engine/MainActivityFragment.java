@@ -24,6 +24,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
@@ -62,8 +63,14 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 			}
 
 			// Deep Links
-			if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO)) {
-				newrepoDeepLink(getIntent());
+			if (TargetFragment.APP_VIEW_FRAGMENT.equals(getIntent().getStringExtra(TargetFragment.KEY))) {
+				if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
+					fromAppViewDeepLink(getIntent().getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
+				} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
+					fromAppViewDeepLink(getIntent().getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY));
+				}
+			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO)) {
+				newrepoDeepLink(getIntent().getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO));
 			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_DOWNLOAD_NOTIFICATION)) {
 				downloadNotificationDeepLink(getIntent());
 			} else if (getIntent().hasExtra(DeepLinkIntentReceiver.DeepLinksSources.FROM_TIMELINE)) {
@@ -77,8 +84,15 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		}
 	}
 
-	private void newrepoDeepLink(Intent intent) {
-		ArrayList<String> repos = intent.getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksSources.NEW_REPO);
+	private void fromAppViewDeepLink(long appId) {
+		pushFragmentV4(AppViewFragment.newInstance(appId));
+	}
+
+	private void fromAppViewDeepLink(String packageName) {
+		pushFragmentV4(AppViewFragment.newInstance(packageName, false));
+	}
+
+	private void newrepoDeepLink(ArrayList<String> repos) {
 		if (repos != null) {
 
 			for (final String repoUrl : repos) {
@@ -177,6 +191,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
 	public static class TargetFragment {
 
+		public static final String KEY = "targetFragment";
 		public static final String APP_VIEW_FRAGMENT = "appViewFragment";
 		public static final String SEARCH_FRAGMENT = "searchFragment";
 	}

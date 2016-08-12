@@ -65,20 +65,20 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
 		TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
 		String uri = getIntent().getDataString();
+		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.website(uri);
 
 		if (uri.startsWith("aptoiderepo")) {
 
 			ArrayList<String> repo = new ArrayList<>();
 			repo.add(uri.substring(14));
-			startActivityWithRepo(repo);
+			startWithRepo(repo);
 		} else if (uri.startsWith("aptoidexml")) {
 
 			String repo = uri.substring(13);
 			parseXmlString(repo);
 			Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-			i.putExtra("newrepo", repo);
-			//			i.addFlags(DeepLinksSources.NEW_REPO_FLAG);
+			i.putExtra(DeepLinksSources.NEW_REPO, repo);
 			startActivity(i);
 			finish();
 		} else if (uri.startsWith("aptoidesearch://")) {
@@ -141,7 +141,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 			String[] strings = uri.split("-");
 			long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
 
-			startFromMyApp(id);
+			startFromAppView(id);
 			finish();
 		} else if (uri.startsWith("http://webservices.aptoide.com")) {
 			/** refactored to remove org.apache libs */
@@ -164,7 +164,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 				if (uid != null) {
 					try {
 						long id = Long.parseLong(uid);
-						startFromMyApp(id);
+						startFromAppView(id);
 					} catch (NumberFormatException e) {
 						Logger.printException(e);
 						Toast.makeText(getApplicationContext(), R.string.simple_error_occured + uid, Toast.LENGTH_LONG).show();
@@ -180,7 +180,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
 			try {
 				long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
-				startFromMyApp(id);
+				startFromAppView(id);
 			} catch (NumberFormatException e) {
 				Logger.printException(e);
 			}
@@ -191,12 +191,29 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 		}
 	}
 
-	public void startFromMyApp(long id) {
-		//		Intent i = new Intent(this, appViewClass);
+	public void startFromAppView(long id) {
 		Intent i = new Intent(this, startClass);
-		i.putExtra(MainActivityFragment.TargetFragment.APP_VIEW_FRAGMENT, true);
-		i.putExtra(DeepLinksSources.FROM_MYAPP, true);
+
+		i.putExtra(MainActivityFragment.TargetFragment.KEY, MainActivityFragment.TargetFragment.APP_VIEW_FRAGMENT);
 		i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
+
+		startActivity(i);
+	}
+
+	public void startFromAppView(String packageName) {
+		Intent i = new Intent(this, startClass);
+
+		i.putExtra(MainActivityFragment.TargetFragment.KEY, MainActivityFragment.TargetFragment.APP_VIEW_FRAGMENT);
+		i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+
+		startActivity(i);
+	}
+
+	public void startFromSearch(String query) {
+		Intent i = new Intent(this, startClass);
+
+		i.putExtra(MainActivityFragment.TargetFragment.KEY, MainActivityFragment.TargetFragment.SEARCH_FRAGMENT);
+		i.putExtra(SearchManager.QUERY, query);
 
 		startActivity(i);
 	}
@@ -240,34 +257,29 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 		}
 	}
 
-	public void startActivityWithRepo(ArrayList<String> repo) {
+	public void startWithRepo(ArrayList<String> repo) {
 		Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
 		i.putExtra(DeepLinksSources.NEW_REPO, repo);
-		//		i.addFlags(DeepLinksSources.NEW_REPO_FLAG);
 		startActivity(i);
-		Analytics.ApplicationLaunch.newRepo();
 
-		finish();
+		// TODO: 10-08-2016 jdandrade
+		Analytics.ApplicationLaunch.newRepo();
 	}
 
 	public void startIntentFromPackageName(String packageName) {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = Database.get();
 
 		Intent i;
 		if (Database.InstalledQ.isInstalled(packageName, realm)) {
-			//			i = new Intent(this, appViewClass);
-			i = new Intent(this, startClass);
-			i.putExtra(DeepLinksSources.MARKET_INTENT, true);
-			i.putExtra(DeepLinksKeys.PACKAGENAME_KEY, packageName);
+			startFromAppView(packageName);
 		} else {
-			//			i = new Intent(this, SearchActivity.class);
-			i = new Intent(this, startClass);
-			i.putExtra(MainActivityFragment.TargetFragment.SEARCH_FRAGMENT, packageName);
-			i.putExtra(SearchManager.QUERY, packageName);
+			startFromSearch(packageName);
 		}
+	}
 
-		startActivity(i);
+	@Override
+	public void startActivity(Intent intent) {
+		super.startActivity(intent);
 		finish();
 	}
 
@@ -328,7 +340,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
 	private void proceed() {
 		if (server != null) {
-			startActivityWithRepo(server);
+			startWithRepo(server);
 		} else {
 			Toast.makeText(this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
 			finish();
@@ -350,7 +362,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 	public static class DeepLinksKeys {
 
 		public static final String APP_ID_KEY = "appId";
-		public static final String PACKAGENAME_KEY = "packageName";
+		public static final String PACKAGE_NAME_KEY = "packageName";
 	}
 
 	class MyAppDownloader extends AsyncTask<String,Void,Void> {
