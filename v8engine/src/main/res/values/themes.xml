@@ -83,8 +83,8 @@
         <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
         <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
         <item name="icEmailDrawable">@drawable/ic_email</item>
-        <item name="icCancelDrawable">@drawable/ic_action_cancel</item>
-        <item name="icPlayDrawable">@drawable/ic_action_play</item>
+        <item name="icCancelDrawable">@drawable/close</item>
+        <item name="icPlayDrawable">@drawable/play</item>
         <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
         <item name="icUpdateDrawable">@drawable/ic_action_update</item>
         <item name="icAboutDrawable">@drawable/ic_action_about</item>
@@ -93,11 +93,11 @@
         <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
         <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
         <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
-        <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
+        <item name="icErrorDrawable">@drawable/close</item>
         <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
         <item name="icRollbackDrawable">@drawable/ic_action_time</item>
         <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
-        <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
+        <item name="icExcludedUpdatesDrawable">@drawable/close</item>
         <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
         <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
         <item name="icRevertDrawable">@drawable/ic_action_undo</item>

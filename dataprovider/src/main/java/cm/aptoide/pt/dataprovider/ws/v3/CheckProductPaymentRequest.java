@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -25,22 +26,35 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 		super(baseHost, args);
 	}
 
+	//
+	// sample WS payload
+	//
+//	paytype 1
+//	reqtype apkpurchasestatus
+//	price 0.87
+//	access_token 6920a21f32ab3aba7029a32b85e1527159237864
+//	payreqtype rest
+//	mode json
+//	apiversion null
+//	currency EUR
+//	taxrate 0.0
+//	productid 827
+//	paykey PAY-80505244U6383235AK6W3NVQ
+
 	public static CheckProductPaymentRequest ofPayPal(PaymentPayload paymentPayload) {
 
 		final Map<String,String> args = new HashMap<>();
-		args.put("mode", "json");
-		args.put("apiversion", paymentPayload.getApiVersion());
+		args.put("paytype", String.valueOf(1));
 		args.put("reqtype", "apkpurchasestatus");
-		args.put("paykey", paymentPayload.getPayKey());
-		args.put("payreqtype", "rest");
-		args.put("paytype", String.valueOf(paymentPayload.getPayType()));
-		args.put("repo", paymentPayload.getStore());
-		args.put("taxrate", String.valueOf(paymentPayload.getTaxRate()));
-		args.put("productid", String.valueOf(paymentPayload.getAptoidePaymentId()));
-		args.put("price", String.valueOf(paymentPayload.getPrice()));
+		args.put("price", String.format(Locale.ROOT, "%.2f", paymentPayload.getPrice()));
 		args.put("access_token", AptoideAccountManager.getAccessToken());
+		args.put("payreqtype", "rest");
+		args.put("mode", "json");
+		args.put("apiversion", null);
 		args.put("currency", paymentPayload.getCurrency());
-		args.put("simcc", paymentPayload.getSimCountryCode());
+		args.put("taxrate", String.format(Locale.ROOT, "%.2f", paymentPayload.getTaxRate()));
+		args.put("productid", String.valueOf(paymentPayload.getAptoidePaymentId()));
+		args.put("paykey", paymentPayload.getPayKey());
 
 		return new CheckProductPaymentRequest(BASE_HOST, args);
 	}

@@ -14,14 +14,11 @@ import lombok.Data;
 public class PaymentPayload {
 
 	private String payKey;
-	private String apiVersion;
-	private int payType;
 	private String store;
 	private double taxRate;
 	private long aptoidePaymentId;
 	private double price;
 	private String currency;
-	private String simCountryCode;
 
 	// intenal var
 	private int attempts;

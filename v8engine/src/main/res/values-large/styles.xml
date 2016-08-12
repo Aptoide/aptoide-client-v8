@@ -6,7 +6,7 @@
 
 <resources>
     <style name="AptoideAppView">
-        <item name="android:layout_width">600dp</item>
+        <item name="android:layout_width">640dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>
