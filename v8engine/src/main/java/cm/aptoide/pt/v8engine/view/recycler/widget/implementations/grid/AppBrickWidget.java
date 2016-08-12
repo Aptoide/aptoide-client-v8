@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
@@ -37,7 +38,10 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
 	public void bindView(AppBrickDisplayable displayable) {
 		ImageLoader.load(displayable.getPojo().getGraphic(), R.drawable.placeholder_705x345, graphic);
 
-		itemView.setOnClickListener(v -> ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getPojo().getId())));
+		itemView.setOnClickListener(v -> {
+			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getPojo().getId()));
+			Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(), displayable.getPojo().getPackageName(), true);
+		});
 	}
 
 	@Override

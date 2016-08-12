@@ -65,4 +65,12 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 		}
 
 	}
+
+	protected Fragment getCurrentFragment() {
+		if (getSupportFragmentManager().getFragments() != null && getSupportFragmentManager().getFragments().size() > 0) {
+			return getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getFragments().size() - 1);
+		} else {
+			return null;
+		}
+	}
 }

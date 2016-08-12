@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -53,6 +54,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 						.onErrorReturn(throwable -> null)
 						.subscribe();
 			}
+			Analytics.Updates.updateAll();
 		});
 	}
 

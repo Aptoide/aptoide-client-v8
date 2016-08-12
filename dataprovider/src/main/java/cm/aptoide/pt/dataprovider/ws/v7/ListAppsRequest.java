@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -37,7 +38,7 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 	}
 
 	public static ListAppsRequest ofAction(String url) {
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
 		V7Url v7Url = new V7Url(url).remove("listApps");
 		Long storeId = v7Url.getStoreId();
@@ -45,19 +46,17 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-					Api.isMature(), Api.Q, storeId);
+			body = new Body(storeId);
 		} else {
 			String storeName = v7Url.getStoreName();
 			store = getStore(storeName);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-					Api.isMature(), Api.Q, storeName);
+			body = new Body(storeName);
 		}
 
 		body.setStoreUser(store.getUsername());
 		body.setStorePassSha1(store.getPasswordSha1());
 
-		return new ListAppsRequest(v7Url.get(), body,
+		return new ListAppsRequest(v7Url.get(), (Body) decorator.decorate(body),
 				WebService.getDefaultConverter(), OkHttpClientFactory.getSingletonClient(), BASE_HOST);
 	}
 
@@ -73,12 +72,12 @@ public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequ
 		@Getter private Integer limit;
 		@Getter @Setter private int offset;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long storeId) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q, storeId);
+		public Body(Long storeId) {
+			super(storeId);
 		}
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, String storeName) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q, storeName);
+		public Body(String storeName) {
+			super(storeName);
 		}
 	}
 }

@@ -7,6 +7,7 @@ apply plugin: 'android-command'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.getkeepsafe.dexcount'
 retrolambda {
     jvmArgs '-noverify'
     //defaultMethods true
@@ -44,26 +45,26 @@ android {
         targetSdkVersion TARGET_SDK_VERSION
 
         // common proguard files to append and configure proguard for the whole project
-        proguardFile 'proguard_files/proguard-android-gif-drawable.pro'
-        proguardFile 'proguard_files/proguard-androidannotations.pro'
-        proguardFile 'proguard_files/proguard-support-v7-appcompat.pro'
-        proguardFile 'proguard_files/proguard-support-v7-cardview.pro'
-        //proguardFile 'proguard_files/proguard-google-analytics.pro'
-        //proguardFile 'proguard_files/proguard-google-admob.pro'
-        proguardFile 'proguard_files/proguard-sqlite.pro'
-        proguardFile 'proguard_files/proguard-glide.pro'
-        proguardFile 'proguard_files/proguard-retrolambda.pro'
-        proguardFile 'proguard_files/proguard-rx-java.pro'
-        proguardFile 'proguard_files/proguard-rxjava-promises.pro'
-        proguardFile 'proguard_files/proguard-jackson-2.pro'
-        proguardFile 'proguard_files/proguard-realm.pro'
-        proguardFile 'proguard_files/proguard-square-okhttp3.pro'
-        proguardFile 'proguard_files/proguard-square-retrofit2.pro'
-        proguardFile 'proguard_files/proguard-crashlytics-2.pro'
-        proguardFile 'proguard_files/proguard-fabric-twitter-kit.pro'
-        proguardFile 'proguard_files/proguard-facebook.pro'
-        proguardFile 'proguard_files/proguard-facebook-stetho.pro'
-        proguardFile 'proguard_files/proguard-square-okio.pro'
+//        proguardFile 'proguard_files/proguard-android-gif-drawable.pro'
+//        proguardFile 'proguard_files/proguard-androidannotations.pro'
+//        proguardFile 'proguard_files/proguard-support-v7-appcompat.pro'
+//        proguardFile 'proguard_files/proguard-support-v7-cardview.pro'
+//        //proguardFile 'proguard_files/proguard-google-analytics.pro'
+//        //proguardFile 'proguard_files/proguard-google-admob.pro'
+//        proguardFile 'proguard_files/proguard-sqlite.pro'
+//        proguardFile 'proguard_files/proguard-glide.pro'
+//        proguardFile 'proguard_files/proguard-retrolambda.pro'
+//        proguardFile 'proguard_files/proguard-rx-java.pro'
+//        proguardFile 'proguard_files/proguard-rxjava-promises.pro'
+//        proguardFile 'proguard_files/proguard-jackson-2.pro'
+//        proguardFile 'proguard_files/proguard-realm.pro'
+//        proguardFile 'proguard_files/proguard-square-okhttp3.pro'
+//        proguardFile 'proguard_files/proguard-square-retrofit2.pro'
+//        proguardFile 'proguard_files/proguard-crashlytics-2.pro'
+//        proguardFile 'proguard_files/proguard-fabric-twitter-kit.pro'
+//        proguardFile 'proguard_files/proguard-facebook.pro'
+//        proguardFile 'proguard_files/proguard-facebook-stetho.pro'
+//        proguardFile 'proguard_files/proguard-square-okio.pro'
         proguardFile 'proguard-rules.pro'
         proguardFile getDefaultProguardFile('proguard-android.txt')
         testProguardFile 'proguard-test-rules.pro'
@@ -103,7 +104,6 @@ android {
 
     buildTypes {
         release {
-            multiDexEnabled true
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true

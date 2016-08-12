@@ -11,12 +11,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.Store;
@@ -145,5 +147,37 @@ public class StoreUtils {
 	private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
 		return getStoreMetaRequest.getBody().getStoreUser() != null && getStoreMetaRequest.getBody()
 				.getStorePassSha1() != null;
+	}
+
+	public static boolean isSubscribedStore(String storeName) {
+		@Cleanup
+		Realm realm = Database.get(DataProvider.getContext());
+		return Database.StoreQ.get(storeName, realm) != null;
+	}
+
+	public static String split(String repoUrl) {
+		Logger.d("Aptoide-RepoUtils", "Splitting " + repoUrl);
+		repoUrl = formatRepoUri(repoUrl);
+		return repoUrl.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
+	}
+
+	public static String formatRepoUri(String repoUri) {
+
+		repoUri = repoUri.toLowerCase(Locale.ENGLISH);
+
+		if (repoUri.contains("http//")) {
+			repoUri = repoUri.replaceFirst("http//", "http://");
+		}
+
+		if (repoUri.length() != 0 && repoUri.charAt(repoUri.length() - 1) != '/') {
+			repoUri = repoUri + '/';
+			Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+		}
+		if (!repoUri.startsWith("http://")) {
+			repoUri = "http://" + repoUri;
+			Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+		}
+
+		return repoUri;
 	}
 }

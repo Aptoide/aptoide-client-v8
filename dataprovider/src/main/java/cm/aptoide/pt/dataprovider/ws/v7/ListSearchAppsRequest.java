@@ -14,6 +14,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
@@ -37,6 +38,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 	}
 
 	public static ListSearchAppsRequest of(String query, String storeName) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		List<String> stores = Collections.singletonList(storeName);
@@ -45,46 +47,46 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
 			Map<String, List<String>> storesAuthMap = new HashMap<>();
 			storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
-					Endless.DEFAULT_LIMIT, query, storesAuthMap,
-					stores, false), BASE_HOST);
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(new Body(Endless
+					.DEFAULT_LIMIT,
+					query, storesAuthMap,
+					stores, false)), BASE_HOST);
 		}
-		return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
-				Endless.DEFAULT_LIMIT, query, stores, false), BASE_HOST);
+		return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body(Endless
+				.DEFAULT_LIMIT, query,
+				stores, false)), BASE_HOST);
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		if (addSubscribedStores) {
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(new Body(
 					Endless.DEFAULT_LIMIT, query, StoreUtils
 					.getSubscribedStoresIds(), StoreUtils
-					.getSubscribedStoresAuthMap(), false), BASE_HOST);
+					.getSubscribedStoresAuthMap(), false)), BASE_HOST);
 		} else {
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
-					Endless.DEFAULT_LIMIT, query, false), BASE_HOST);
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body(Endless
+					.DEFAULT_LIMIT,
+					query, false)), BASE_HOST);
 		}
 	}
 
 	public static ListSearchAppsRequest of(String query, boolean addSubscribedStores, boolean trustedOnly) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		if (addSubscribedStores) {
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager
-
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, Endless.DEFAULT_LIMIT, query, StoreUtils
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(new Body(Endless
+					.DEFAULT_LIMIT,
+					query, StoreUtils
 					.getSubscribedStoresIds(), StoreUtils
-					.getSubscribedStoresAuthMap(), trustedOnly), BASE_HOST);
+					.getSubscribedStoresAuthMap(), trustedOnly)), BASE_HOST);
 		} else {
-			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-					.getAptoideClientUUID(), AptoideAccountManager
-					.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, Endless.DEFAULT_LIMIT, query, trustedOnly),
+			return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body(Endless
+					.DEFAULT_LIMIT,
+					query, trustedOnly)),
 					BASE_HOST);
 		}
 	}
@@ -106,9 +108,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		@Getter private Map<String, List<String>> storesAuthMap;
 		@Getter private Boolean trusted;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
-		            List<Long> storeIds, Map<String,List<String>> storesAuthMap, Boolean trusted) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+		public Body(Integer limit, String query, List<Long> storeIds, Map<String,List<String>> storesAuthMap, Boolean trusted) {
 			this.limit = limit;
 			this.query = query;
 			this.storeIds = storeIds;
@@ -116,27 +116,21 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 			this.trusted = trusted;
 		}
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
-		            List<String> storeNames, Boolean trusted) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+		public Body(Integer limit, String query, List<String> storeNames, Boolean trusted) {
 			this.limit = limit;
 			this.query = query;
 			this.storeNames = storeNames;
 			this.trusted = trusted;
 		}
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
-		            Map<String,List<String>> storesAuthMap, List<String> storeNames, Boolean trusted) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+		public Body(Integer limit, String query, Map<String,List<String>> storesAuthMap, List<String> storeNames, Boolean trusted) {
 			this.limit = limit;
 			this.query = query;
 			this.storeNames = storeNames;
 			this.trusted = trusted;
 		}
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, String query,
-		            Boolean trusted) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+		public Body(Integer limit, String query, Boolean trusted) {
 			this.limit = limit;
 			this.query = query;
 			this.trusted = trusted;

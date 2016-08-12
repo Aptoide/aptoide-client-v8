@@ -16,13 +16,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -87,7 +85,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 					public boolean onMenuItemClick(MenuItem menuItem) {
 						// TODO: 07-06-2016 neuro more versions
 //						Intent intent = new Intent(itemView.getContext(), MoreVersionsActivity.class);
-//						intent.putExtra(Constants.PACKAGENAME_KEY, appItem.packageName);
+						//						intent.putExtra(Constants.PACKAGE_NAME_KEY, appItem.packageName);
 //						intent.putExtra(Constants.EVENT_LABEL, appItem.name);
 //						itemView.getContext().startActivity(intent);
 						return true;

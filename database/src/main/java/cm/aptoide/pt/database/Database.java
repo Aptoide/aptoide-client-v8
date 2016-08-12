@@ -138,6 +138,10 @@ public class Database {
 				realm.commitTransaction();
 			}
 		}
+
+		public static boolean isInstalled(String packageName, Realm realm) {
+			return get(packageName, realm) != null;
+		}
 	}
 
 	public static class StoreQ {

@@ -49,6 +49,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -59,9 +61,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
@@ -678,6 +682,17 @@ public class AptoideUtils {
 			}
 
 			return s;
+		}
+
+		public static Map<String,String> splitQuery(URI uri) throws UnsupportedEncodingException {
+			Map<String,String> query_pairs = new LinkedHashMap<>();
+			String query = uri.getQuery();
+			String[] pairs = query.split("&");
+			for (String pair : pairs) {
+				int idx = pair.indexOf("=");
+				query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+			}
+			return query_pairs;
 		}
 	}
 

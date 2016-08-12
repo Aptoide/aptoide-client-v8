@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
@@ -39,40 +40,38 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 	}
 
 	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+
 		final StoreCredentials store = getStore(storeName);
-		final Body body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api
-				.LANG, Api
-				.isMature(), Api.Q, storeName, WidgetsArgs.createDefault());
+		final Body body = new Body(storeName, WidgetsArgs.createDefault());
 
 		body.setContext(storeContext);
 		body.setStoreUser(store.getUsername());
 		body.setStorePassSha1(store.getPasswordSha1());
 
-		return new GetStoreRequest("", OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
+		return new GetStoreRequest("", OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
 	}
 
 	public static GetStoreRequest ofAction(String url) {
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+
 		V7Url v7Url = new V7Url(url).remove("getStore");
 		Long storeId = v7Url.getStoreId();
 		final StoreCredentials store;
 		final Body body;
 		if (storeId != null) {
 			store = getStore(storeId);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-					Api.isMature(), Api.Q, storeId, WidgetsArgs
+			body = new Body(storeId, WidgetsArgs
 					.createDefault());
 		} else {
 			String storeName = v7Url.getStoreName();
 			store = getStore(storeName);
-			body = new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG,
-					Api.isMature(), Api.Q, storeName, WidgetsArgs
+			body = new Body(storeName, WidgetsArgs
 					.createDefault());
 		}
 		body.setStoreUser(store.getUsername());
 		body.setStorePassSha1(store.getPasswordSha1());
-		return new GetStoreRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, body);
+		return new GetStoreRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
 	}
 
 	@Override
@@ -86,15 +85,15 @@ public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequ
 		@Getter @Setter private StoreContext context;
 		@Getter private WidgetsArgs widgetsArgs;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long storeId,
+		public Body(Long storeId,
 		            WidgetsArgs widgetsArgs) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q, storeId);
+			super(storeId);
 			this.widgetsArgs = widgetsArgs;
 		}
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, String storeName,
+		public Body(String storeName,
 		            WidgetsArgs widgetsArgs) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q, storeName);
+			super(storeName);
 			this.widgetsArgs = widgetsArgs;
 		}
 	}

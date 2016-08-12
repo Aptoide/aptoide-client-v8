@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -37,10 +38,10 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 	}
 
 	public static GetUserTimelineRequest of(String url, Integer limit, int offset, List<String> packages) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
-		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, new Body(idsRepository.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core
-				.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, limit, offset, packages),
+		GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url, (Body) decorator.decorate(new Body(limit, offset, packages)),
 				OkHttpClientFactory.newClient(), WebService.getDefaultConverter(), BASE_HOST);
 		return getAppRequest;
 	}
@@ -57,9 +58,8 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 		@Getter @Setter private int offset;
 		@Getter private List<String> packageNames;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Integer limit, Integer
+		public Body(Integer limit, Integer
 				offset, List<String> packageNames) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
 			this.limit = limit;
 			this.offset = offset;
 			this.packageNames = packageNames;

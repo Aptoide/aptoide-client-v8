@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -32,24 +33,23 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 	}
 
 	public static GetAppRequest of(String packageName) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager
-
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q, packageName, forceServerRefresh));
+		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(new Body(packageName,
+				forceServerRefresh)));
 	}
 
 	public static GetAppRequest of(long appId) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
 		boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", Api.LANG, Api.isMature(), Api.Q,
-				appId, forceServerRefresh));
+		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(new Body(appId,
+				forceServerRefresh)));
 	}
 
 	@Override
@@ -64,15 +64,12 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		@Getter private String packageName;
 		@Getter private boolean refresh;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, Long appId, Boolean refresh) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+		public Body(Long appId, Boolean refresh) {
 			this.appId = appId;
 			this.refresh = refresh;
 		}
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String lang, boolean mature, String q, String packageName, Boolean
-				refresh) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, lang, mature, q);
+		public Body(String packageName, Boolean refresh) {
 			this.packageName = packageName;
 			this.refresh = refresh;
 		}

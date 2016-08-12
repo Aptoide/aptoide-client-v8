@@ -22,14 +22,12 @@
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="12dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginStart="22dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
         android:scaleType="centerCrop"
         tools:ignore="contentDescription"
-        tools:src="@drawable/icon_brand_aptoide"
+        tools:src="@drawable/background_card_dark"
         />
 
     <!--
@@ -41,17 +39,15 @@
         android:id="@+id/partial_social_timeline_thumbnail_title"
         style="@style/Widget.Aptoide.Card.Thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_below="@id/partial_social_timeline_thumbnail_image"
-        android:layout_marginBottom="3dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginStart="22dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:ellipsize="end"
         android:lines="2"
         android:maxLines="3"
-        tools:text="Best backup apps: save all your Android's innards"
+        tools:text="Best backup apps: save all your Android's innards fkgfkj fkjgfjfgkfj fgkjgfj"
         />
 
     <View

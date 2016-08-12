@@ -14,6 +14,7 @@ import java.util.List;
 
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
@@ -56,6 +57,7 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
 					.getActions()
 					.get(0)
 					.getEvent(), displayable.getPojo().getTitle(), displayable.getStoreTheme()));
+			Analytics.AppViewViewedFrom.addStepToList(pojo.getTitle());
 		});
 	}
 

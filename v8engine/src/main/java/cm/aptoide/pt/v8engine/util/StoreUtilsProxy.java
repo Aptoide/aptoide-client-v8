@@ -17,8 +17,13 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
  * Created by jdandrade on 02/08/16.
  */
 public class StoreUtilsProxy {
-    public static void subscribeStore(String storeName, @Nullable SuccessRequestListener<GetStoreMeta>
-            successRequestListener, @Nullable ErrorRequestListener errorRequestListener) {
+
+    public static void subscribeStore(String storeName) {
+        subscribeStore(GetStoreMetaRequest.of(storeName), null, null, storeName);
+    }
+
+    public static void subscribeStore(String storeName, @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener, @Nullable ErrorRequestListener
+            errorRequestListener) {
         subscribeStore(GetStoreMetaRequest.of(storeName), successRequestListener, errorRequestListener, storeName);
     }
 

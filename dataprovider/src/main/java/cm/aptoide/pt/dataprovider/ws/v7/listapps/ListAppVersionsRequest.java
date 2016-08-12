@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -39,19 +40,18 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 	}
 
 	public static ListAppVersionsRequest of() {
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool"), BASE_HOST);
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body()),
+				BASE_HOST);
 	}
 
 	public static ListAppVersionsRequest of(String packageName) {
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), new Body(idsRepository
-				.getAptoideClientUUID(), AptoideAccountManager
-				.getAccessToken(), AptoideUtils.Core.getVerCode(), "pool", packageName), BASE_HOST);
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(new Body
+				(packageName)),
+				BASE_HOST);
 	}
 
 	@Override
@@ -76,12 +76,10 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 		private List<Long> storeIds;
 		private List<String> storeNames;
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, Api.LANG, Api.isMature(), Api.Q);
+		public Body() {
 		}
 
-		public Body(String aptoideId, String accessToken, int aptoideVercode, String cdn, String packageName) {
-			super(aptoideId, accessToken, aptoideVercode, cdn, Api.LANG, Api.isMature(), Api.Q);
+		public Body(String packageName) {
 			this.packageName = packageName;
 		}
 	}
