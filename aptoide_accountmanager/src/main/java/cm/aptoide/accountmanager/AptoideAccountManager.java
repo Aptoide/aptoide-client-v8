@@ -370,6 +370,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	}
 
 	/**
+	 * Get state of the mature switch
+	 *
+	 * @return return true if the switch is on, false if off
+	 */
+	public static boolean isMatureSwitchOn(){
+		return AccountManagerPreferences.getMatureSwitch();
+	}
+
+	/**
 	 * Update the mature switch. If user is logged, it updates on aptoide's server too
 	 *
 	 * @param matureSwitch Switch state

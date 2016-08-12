@@ -139,6 +139,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				return true;
 			}
 		});
+
+		CheckBoxPreference matureChkBox = (CheckBoxPreference) findPreference("matureChkBox");
+		if(AptoideAccountManager.isMatureSwitchOn()){
+			matureChkBox.setChecked(true);
+		}
+		else {
+			matureChkBox.setChecked(false);
+		}
+
 		findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(new Preference
 				.OnPreferenceClickListener() {
 			@Override
