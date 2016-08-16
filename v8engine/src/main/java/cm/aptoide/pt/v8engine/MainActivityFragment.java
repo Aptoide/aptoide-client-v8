@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 						new DownloadFactory(), downloadManager).execute();
 			}
 			if(SecurePreferences.isFirstRun()){
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 				pushFragmentV4(new BaseWizardViewerFragment());
 				SecurePreferences.setFirstRun(false);
 			}
