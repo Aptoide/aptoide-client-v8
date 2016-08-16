@@ -125,7 +125,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
 	private void downloadNotificationDeepLink(Intent intent) {
 		Analytics.ApplicationLaunch.downloadingUpdates();
-		setMainPagerPosition(Event.Name.myStores);
+		setMainPagerPosition(Event.Name.myDownloads);
 	}
 
 	private void fromTimelineDeepLink(Intent intent) {
