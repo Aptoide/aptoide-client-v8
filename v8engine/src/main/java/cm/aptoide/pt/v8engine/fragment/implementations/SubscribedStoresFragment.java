@@ -6,13 +6,19 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.Button;
 
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
@@ -25,9 +31,27 @@ import rx.Observable;
  */
 public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator {
 
+	private Button addStoreButton;
+
 	public static SubscribedStoresFragment newInstance() {
 		SubscribedStoresFragment fragment = new SubscribedStoresFragment();
 		return fragment;
+	}
+
+	@Override
+	public void setupViews() {
+		super.setupViews();
+		RxView.clicks(addStoreButton).subscribe(view ->{
+			new AddStoreDialog().show(((FragmentActivity) getContext())
+					.getSupportFragmentManager(), "addStoreDialog");
+		});
+
+	}
+
+	@Override
+	public void bindViews(View view) {
+		super.bindViews(view);
+		addStoreButton = (Button) view.findViewById(R.id.add_more_stores);
 	}
 
 	@Override
@@ -45,9 +69,14 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 					}
 
 					// Add the final row as a button
-					displayables.add(new AddMoreStoresDisplayable());
+					//displayables.add(new AddMoreStoresDisplayable());
 
 					setDisplayables(displayables);
 				});
+	}
+
+	@Override
+	public int getContentViewId() {
+		return super.getContentViewId();
 	}
 }
