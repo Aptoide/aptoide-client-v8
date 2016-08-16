@@ -100,26 +100,25 @@
 
         <ImageView
             android:id="@+id/resume_download"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/view"
-            android:background="@drawable/ic_play"/>
+            android:background="@drawable/play"/>
         <View
             android:id="@+id/view"
             android:layout_width="1dip"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_margin="12dp"
             android:layout_toLeftOf="@+id/pause_cancel_button"
             android:background="?attr/separatorColor"/>
 
         <!--android:background="?attr/icCancelDrawable"-->
         <ImageView
             android:id="@+id/pause_cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"

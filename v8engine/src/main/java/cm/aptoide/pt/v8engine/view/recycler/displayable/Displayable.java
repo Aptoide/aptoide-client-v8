@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/06/2016.
+ * Modified by SithEngineer on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -25,6 +26,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public abstract class Displayable implements LifecycleSchim {
 
+	@Getter CompositeSubscription subscriptions;
 	private Boolean fixedPerLineCount;
 	@Setter private Integer defaultPerLineCount;
 	@Setter @Getter private boolean isVisible = false;

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 12/08/2016.
+ */
+
 package cm.aptoide.pt.v8engine;
 
 import android.app.AlertDialog;
@@ -52,12 +57,14 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 	@Override
 	protected AutoUpdateInfo doInBackground(Void... params) {
 
+		HttpURLConnection connection = null;
+
 		try {
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler();
 
 			Logger.d("TAG", "Requesting auto-update from " + url);
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection = (HttpURLConnection) new URL(url).openConnection();
 
 			connection.setConnectTimeout(10000);
 			connection.setReadTimeout(10000);
@@ -90,6 +97,10 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
 		}
 		return null;
 	}

@@ -385,8 +385,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		long appId = app.getId();
 
 		actionCancel.setOnClickListener(view -> {
-			downloadServiceHelper.pauseDownload(appId);
-			//downloadServiceHelper.removeDownload(appId);
+			downloadServiceHelper.removeDownload(appId);
 			setDownloadBarVisible(false);
 		});
 

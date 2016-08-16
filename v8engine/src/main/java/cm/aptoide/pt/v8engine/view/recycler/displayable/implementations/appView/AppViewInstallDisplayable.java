@@ -74,13 +74,13 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	}
 
 	private Observable<Void> installOrUpdate(Context context, GetAppMeta.App app, Rollback.Action action) {
-		return installManager.install(context, (PermissionRequest) context, appId).doOnNext(aVoid -> {
+		return Observable.<Void> fromCallable(() -> {
 			AptoideUtils.ThreadU.runOnIoThread(() -> {
-				@Cleanup
-				Realm realm = Database.get();
+				@Cleanup Realm realm = Database.get();
 				Database.RollbackQ.addRollbackWithAction(realm, app, action);
 			});
-		});
+			return null;
+		}).concatWith(installManager.install(context, (PermissionRequest) context, appId));
 	}
 
 	public Observable<Void> update(Context context, GetAppMeta.App app) {
@@ -92,25 +92,23 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	}
 
 	public Observable<Void> uninstall(Context context, GetAppMeta.App app) {
-		return installManager.uninstall(context, packageName).doOnNext(aVoid -> {
+		return Observable.<Void> fromCallable(() -> {
 			AptoideUtils.ThreadU.runOnIoThread(() -> {
-				@Cleanup
-				Realm realm = Database.get();
+				@Cleanup Realm realm = Database.get();
 				Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.UNINSTALL);
 			});
-		});
+			return null;
+		}).concatWith(installManager.uninstall(context, packageName));
 	}
 
 	public Observable<Void> downgrade(Context context, GetAppMeta.App app) {
-		return installManager.uninstall(context, packageName)
-				.concatWith(installManager.install(context, (PermissionRequest) context, appId))
-				.doOnNext(aVoid -> {
-					AptoideUtils.ThreadU.runOnIoThread(() -> {
-						@Cleanup
-						Realm realm = Database.get();
-						Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.DOWNGRADE);
-					});
-				});
+		return Observable.<Void> fromCallable(() -> {
+			AptoideUtils.ThreadU.runOnIoThread(() -> {
+				@Cleanup Realm realm = Database.get();
+				Database.RollbackQ.addRollbackWithAction(realm, app, Rollback.Action.DOWNGRADE);
+			});
+			return null;
+		}).concatWith(installManager.uninstall(context, packageName).concatWith(installManager.install(context, (PermissionRequest) context, appId)));
 	}
 
 	@Override

@@ -292,8 +292,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						ProofOfPayment proof = confirm.getProofOfPayment();
 
 						PaymentPayload paymentPayload = new PaymentPayload();
-						paymentPayload.setPayType(1); // magic value: paypal payment type id
-						paymentPayload.setApiVersion("3"); // magic value: webservice version
 						paymentPayload.setPayKey(proof.getPaymentId());
 						paymentPayload.setAptoidePaymentId(boughtApp.getPayment().metadata.id);
 						paymentPayload.setStore(boughtApp.getStore().getName());
@@ -301,15 +299,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
 						paymentPayload.setTaxRate(boughtApp.getPayment().payment_services.get(0).getTaxRate());
 
-						final TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-						paymentPayload.setSimCountryCode(telephonyManager.getSimCountryIso());
-
 						getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
 
-						// download app
-						// TODO: 05/08/16 sithengineer download app
-
-						// install app
+						// download app and install app
 						FragmentActivity fragmentActivity = getActivity();
 						Intent installApp = new Intent(fragmentActivity, AppBoughtReceiver.class);
 						installApp.setAction(AppBoughtReceiver.APP_BOUGHT);

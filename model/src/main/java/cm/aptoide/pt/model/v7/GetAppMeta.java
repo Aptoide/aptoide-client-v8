@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified by SithEngineer on 12/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -65,6 +65,10 @@ public class GetAppMeta extends BaseV7Response {
 		private GetAppMetaFile.Flags flags;
 		private List<String> usedFeatures;
 		private List<String> usedPermissions;
+
+		public boolean isGoodApp() {
+			return this.flags != null && flags.review != null && flags.review.equalsIgnoreCase(Flags.GOOD);
+		}
 
 		@Data
 		public static class Signature {
