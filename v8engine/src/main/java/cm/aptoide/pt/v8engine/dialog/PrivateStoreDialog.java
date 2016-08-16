@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -70,7 +71,7 @@ public class PrivateStoreDialog extends DialogFragment {
 
 		alertDialog.setOnShowListener(dialog->{
 
-			Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+			Button b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
 			b.setOnClickListener(view->{
 
 				storeUser = ((EditText) rootView.findViewById(R.id.edit_store_username)).getText().toString();

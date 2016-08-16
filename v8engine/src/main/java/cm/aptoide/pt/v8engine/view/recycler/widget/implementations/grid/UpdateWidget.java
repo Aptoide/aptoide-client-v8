@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 					.setCancelable(true)
 					.setNegativeButton(R.string.no, null)
 					.setPositiveButton(R.string.yes, (dialog, which) -> {
-						if (which == AlertDialog.BUTTON_POSITIVE) {
+						if (which == DialogInterface.BUTTON_POSITIVE) {
 							@Cleanup
 							Realm realm1 = Database.get();
 							Database.UpdatesQ.setExcluded(packageName, true, realm1);

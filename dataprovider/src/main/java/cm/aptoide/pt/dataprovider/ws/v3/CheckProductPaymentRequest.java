@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/08/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v3.PaymentPayload;
 import cm.aptoide.pt.model.v3.PaymentResponse;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -43,14 +43,14 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
 	public static CheckProductPaymentRequest ofPayPal(PaymentPayload paymentPayload) {
 
-		final Map<String,String> args = new HashMap<>();
+		final HashMapNotNull<String,String> args = new HashMapNotNull<>();
 		args.put("paytype", String.valueOf(1));
 		args.put("reqtype", "apkpurchasestatus");
 		args.put("price", String.format(Locale.ROOT, "%.2f", paymentPayload.getPrice()));
 		args.put("access_token", AptoideAccountManager.getAccessToken());
 		args.put("payreqtype", "rest");
 		args.put("mode", "json");
-		args.put("apiversion", null);
+		//args.put("apiversion", null);
 		args.put("currency", paymentPayload.getCurrency());
 		args.put("taxrate", String.format(Locale.ROOT, "%.2f", paymentPayload.getTaxRate()));
 		args.put("productid", String.valueOf(paymentPayload.getAptoidePaymentId()));

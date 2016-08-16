@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 02/08/2016.
+  ~ Modified by SithEngineer on 16/08/2016.
   -->
 
 <LinearLayout
@@ -38,8 +38,8 @@
         android:isIndicator="false"
         android:nextFocusForward="@+id/input_title"
         android:numStars="5"
+        android:rating="3.0"
         android:stepSize="1.0"
-        tools:rating="3.0"
         />
 
     <TextView

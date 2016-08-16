@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -121,7 +122,7 @@ public class AutoUpdate extends AsyncTask<Void,Void,AutoUpdate.AutoUpdateInfo> {
 		updateSelfDialog.setIcon(Application.getConfiguration().getIcon());
 		updateSelfDialog.setMessage(AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, Application.getConfiguration().getMarketName()));
 		updateSelfDialog.setCancelable(false);
-		updateSelfDialog.setButton(Dialog.BUTTON_POSITIVE, activity.getString(android.R.string.yes), (arg0, arg1) -> {
+		updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(android.R.string.yes), (arg0, arg1) -> {
 
 			dialog = new ProgressDialog(activity);
 			dialog.setMessage(activity.getString(R.string.retrieving_update));

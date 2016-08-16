@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 26/07/2016.
+  ~ Modified by SithEngineer on 16/08/2016.
   -->
 
 <LinearLayout
@@ -13,12 +13,15 @@
     android:orientation="vertical"
     >
 
+    <!--
+        android:drawablePadding="18dp"
+        android:drawableRight="@drawable/ic_down_arrow"
+    -->
+
     <TextView
         android:id="@+id/additional_info"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:drawablePadding="18dp"
-        android:drawableRight="@drawable/ic_down_arrow"
         android:gravity="center_vertical"
         android:paddingEnd="17.3dp"
         android:paddingLeft="13.3dp"
@@ -38,8 +41,7 @@
         android:paddingLeft="13.3dp"
         android:paddingRight="17.3dp"
         android:paddingStart="13.3dp"
-        android:visibility="gone"
-        tools:visibility="visible"
+        android:visibility="visible"
         >
 
         <TextView
