@@ -122,19 +122,16 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	private void downloadNotificationDeepLink(Intent intent) {
-		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.downloadingUpdates();
 		setMainPagerPosition(Event.Name.myStores);
 	}
 
 	private void fromTimelineDeepLink(Intent intent) {
-		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.timelineNotification();
 		setMainPagerPosition(Event.Name.getUserTimeline);
 	}
 
 	private void newUpdatesDeepLink(Intent intent) {
-		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.newUpdatesNotification();
 		setMainPagerPosition(Event.Name.myUpdates);
 	}
