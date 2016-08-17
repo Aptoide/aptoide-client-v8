@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 	private ImageView thumbnail;
 	private View url;
 	private Button getAppButton;
+	private CardView cardView;
 
 	public ArticleWidget(View itemView) {
 		super(itemView);
@@ -45,6 +47,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
 		url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
 		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
+		cardView = (CardView) itemView.findViewById(R.id.card);
 	}
 
 	@Override
@@ -52,6 +55,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
 		articleTitle.setText(displayable.getArticleTitle());
+		setCardviewMargin(displayable);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
@@ -71,6 +75,15 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
 			}
 		});
+	}
+
+	private void setCardviewMargin(ArticleDisplayable displayable) {
+		CardView.LayoutParams layoutParams = new CardView.LayoutParams(
+				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
+				.getMarginWidth
+						(getContext(), getContext().getResources().getConfiguration().orientation),0);
+		cardView.setLayoutParams(layoutParams);
 	}
 
 	@Override
