@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.model.v3;
@@ -102,6 +102,10 @@ public class GetApkInfoJson {
 
 		public Number getAmount() {
 			return amount;
+		}
+
+		public boolean alreadyPaid() {
+			return status != null && status.equalsIgnoreCase("OK");
 		}
 
 		public boolean isPaidApp() {

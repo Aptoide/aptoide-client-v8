@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -266,11 +266,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		if (isMediaAvailable(media)) {
 			displayables.add(new AppViewScreenshotsDisplayable(app));
 		}
-
-		// only show description if the app has it
-		if (hasDescription(media)) {
-			displayables.add(new AppViewDescriptionDisplayable(getApp));
-		}
+		displayables.add(new AppViewDescriptionDisplayable(getApp));
 
 		displayables.add(new AppViewFlagThisDisplayable(getApp));
 		if (suggestedAds != null) {
@@ -397,8 +393,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		// download app and install app
 		FragmentActivity fragmentActivity = getActivity();
-		Intent installApp = new Intent(fragmentActivity, AppBoughtReceiver.class);
-		installApp.setAction(AppBoughtReceiver.APP_BOUGHT);
+		Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
 		installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
 		fragmentActivity.sendBroadcast(installApp);
 	}
@@ -417,8 +412,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			// download app and install app
 			FragmentActivity fragmentActivity = getActivity();
-			Intent installApp = new Intent(fragmentActivity, AppBoughtReceiver.class);
-			installApp.setAction(AppBoughtReceiver.APP_BOUGHT);
+			Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
 			installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
 			fragmentActivity.sendBroadcast(installApp);
 		} catch (JSONException e) {

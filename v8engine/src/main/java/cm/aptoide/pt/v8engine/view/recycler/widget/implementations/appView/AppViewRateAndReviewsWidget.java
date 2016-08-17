@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -64,6 +65,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private Button readAllButton;
 
 	private RecyclerView topReviewsList;
+	private ProgressBar topReviewsProgress;
 
 	private String appName;
 	private String packageName;
@@ -86,7 +88,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		rateThisButtonLarge = (Button) itemView.findViewById(R.id.rate_this_button2);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
 
-		topReviewsList = (RecyclerView) itemView.findViewById(R.id.top_comments_pager);
+		topReviewsList = (RecyclerView) itemView.findViewById(R.id.top_comments_list);
+		topReviewsProgress = (ProgressBar) itemView.findViewById(R.id.top_comments_progress);
 	}
 
 	@Override
@@ -235,6 +238,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	}
 
 	private void loadedData(boolean hasData) {
+
+		topReviewsProgress.setVisibility(View.GONE);
 
 		if (hasData) {
 			ratingLayout.setVisibility(View.VISIBLE);

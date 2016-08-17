@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import java.util.List;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -19,7 +18,6 @@ import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,16 +39,17 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 
 	public static ListAppVersionsRequest of() {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body()),
+		Body body = new Body();
+		body.setLimit(10);
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(body),
 				BASE_HOST);
 	}
 
 	public static ListAppVersionsRequest of(String packageName) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-
-		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(new Body
-				(packageName)),
+		Body body = new Body(packageName);
+		body.setLimit(10);
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(body),
 				BASE_HOST);
 	}
 

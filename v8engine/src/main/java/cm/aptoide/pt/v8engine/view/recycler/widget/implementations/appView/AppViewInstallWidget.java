@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/08/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.IntentFilter;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -219,20 +220,23 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		GetApkInfoJson.Payment payment = displayable.getPayment();
 		//check if the app is paid
-		if (payment != null && payment.isPaidApp()) {
+		if (payment != null && payment.isPaidApp() && !payment.alreadyPaid()) {
 			// TODO: 05/08/16 sithengineer replace that for placeholders in resources as soon as we are able to add new strings for translation
 			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.symbol + " " + payment.amount + ")");
 			actionButton.setOnClickListener(v -> {
 				displayable.buyApp(getContext(), app).subscribe();
 			});
-			new AppBoughtReceiver() {
+			AppBoughtReceiver receiver = new AppBoughtReceiver() {
 				@Override
 				public void appBought(long appId) {
 					if (app.getId() == appId) {
-						installOrUpgradeListener(true, app, getApp.getNodes().getVersions(), displayable).onClick(actionButton);
+						actionButton.setText(R.string.install);
+						actionButton.setOnClickListener(installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
+						actionButton.performClick();
 					}
 				}
 			};
+			getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
 		} else {
 			actionButton.setText(R.string.install);
 			actionButton.setOnClickListener(installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
