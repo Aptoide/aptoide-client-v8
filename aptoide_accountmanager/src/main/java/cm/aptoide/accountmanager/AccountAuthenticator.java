@@ -143,6 +143,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 		if (result != null && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT) && !result
 				.containsKey(AccountManager.KEY_INTENT)) {
 			if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+				AptoideAccountManager.logout(null);
 				AptoideAccountManager.getInstance().sendRemoveLocalAccountBroadcaster();
 			}
 		}
