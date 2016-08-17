@@ -70,6 +70,7 @@ class AptoideLoginUtils {
 			AccountManagerPreferences.setAccessToken(accessToken);
 			AptoideAccountManager.getInstance()
 					.addLocalUserAccount(userName, password, null, refreshToken, accessToken);
+			AptoideAccountManager.setAccessTokenOnLocalAccount(accessToken, null, SecureKeys.ACCESS_TOKEN);
 			AptoideAccountManager.getInstance().onLoginSuccess();
 			activity.finish();
 		}

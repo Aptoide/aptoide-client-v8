@@ -47,6 +47,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import lombok.experimental.PackagePrivate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -171,15 +172,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		});
 	}
 
-	private static void logout(WeakReference<FragmentActivity> activityRef) {
+	@PackagePrivate
+	static void logout(WeakReference<FragmentActivity> activityRef) {
 		FacebookLoginUtils.logout();
 		getInstance().removeLocalAccount();
 		isLogin = false;
-		Activity activity = activityRef.get();
-		if (activity != null) {
-			GoogleLoginUtils.logout((FragmentActivity) activity);
-			openAccountManager(activity);
-			activity.finish();
+		if (activityRef != null) {
+			Activity activity = activityRef.get();
+			if (activity != null) {
+				GoogleLoginUtils.logout((FragmentActivity) activity);
+				openAccountManager(activity);
+				activity.finish();
+			}
 		}
 	}
 
@@ -188,13 +192,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	String getRefreshToken() {
 		String refreshToken = AccountManagerPreferences.getRefreshToken();
 		if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
-			AccountManager manager = android.accounts.AccountManager.get(cm.aptoide.pt.preferences
-					.Application
-					.getContext());
-			Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
-			refreshToken = manager.getUserData(accountsByType[0], SecureKeys.REFRESH_TOKEN);
+			refreshToken = getUserStringFromAndroidAccountManager(SecureKeys.REFRESH_TOKEN);
+			AccountManagerPreferences.setRefreshToken(refreshToken);
 		}
-		AccountManagerPreferences.setRefreshToken(refreshToken);
 		return refreshToken;
 	}
 
@@ -205,7 +205,35 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	@Nullable
 	public static String getAccessToken() {
-		return AccountManagerPreferences.getAccessToken();
+		String accessToken = AccountManagerPreferences.getAccessToken();
+		if (accessToken == null || TextUtils.isEmpty(accessToken)) {
+			accessToken = getUserStringFromAndroidAccountManager(SecureKeys.ACCESS_TOKEN);
+			AccountManagerPreferences.setAccessToken(accessToken);
+		}
+		return accessToken;
+	}
+
+	public static void setAccessTokenOnLocalAccount(String accessToken, @Nullable Account userAccount, @NonNull String dataKey) {
+		AccountManager accountManager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+		if (userAccount == null) {
+			Account[] accounts = accountManager.getAccounts();
+			for (final Account account : accounts) {
+				if (TextUtils.equals(account.name, AptoideAccountManager.getUserName())) {
+					userAccount = account;
+					break;
+				}
+			}
+		}
+		if (userAccount != null) {
+			accountManager.setUserData(userAccount, dataKey, accessToken);
+		}
+	}
+
+	private static String getUserStringFromAndroidAccountManager(String key) {
+		AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+		Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+		return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
 	}
 
 	@Nullable
@@ -273,6 +301,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				if (getInstance().addLocalUserAccount(userName, passwordOrToken, null, oAuth
 						.getRefresh_token(), oAuth
 						.getAccessToken())) {
+					setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
 					AccountManagerPreferences.setLoginMode(mode);
 					getInstance().onLoginSuccess();
 					if (finalGenericPleaseWaitDialog != null) {
@@ -449,8 +478,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				.observe()
 				.observeOn(AndroidSchedulers.mainThread())
 				.map(OAuth::getAccessToken)
-				.subscribeOn(Schedulers.io())
-				.doOnNext(AccountManagerPreferences::setAccessToken)
+				.subscribeOn(Schedulers.io()).doOnNext(accessToken -> {
+					setAccessTokenOnLocalAccount(accessToken, null, SecureKeys.ACCESS_TOKEN);
+					AccountManagerPreferences.setAccessToken(accessToken);
+				})
 				.doOnError(action1)
 				.observeOn(AndroidSchedulers.mainThread());
 	}

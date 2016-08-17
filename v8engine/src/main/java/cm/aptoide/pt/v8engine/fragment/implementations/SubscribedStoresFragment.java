@@ -21,7 +21,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import io.realm.RealmResults;
 import rx.Observable;
@@ -77,6 +76,6 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 
 	@Override
 	public int getContentViewId() {
-		return super.getContentViewId();
+		return R.layout.store_recycler_fragment;
 	}
 }
