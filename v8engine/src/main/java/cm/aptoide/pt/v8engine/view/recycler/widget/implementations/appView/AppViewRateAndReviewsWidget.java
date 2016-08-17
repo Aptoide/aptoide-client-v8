@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -38,6 +38,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmootheScroller;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -65,7 +66,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private Button readAllButton;
 
 	private RecyclerView topReviewsList;
-	private ProgressBar topReviewsProgress;
+	private ContentLoadingProgressBar topReviewsProgress;
 
 	private String appName;
 	private String packageName;
@@ -89,7 +90,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
 
 		topReviewsList = (RecyclerView) itemView.findViewById(R.id.top_comments_list);
-		topReviewsProgress = (ProgressBar) itemView.findViewById(R.id.top_comments_progress);
+		topReviewsProgress = (ContentLoadingProgressBar) itemView.findViewById(R.id.top_comments_progress);
 	}
 
 	@Override
@@ -129,7 +130,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		readAllButton.setOnClickListener(commentsOnClickListener);
 		commentsLayout.setOnClickListener(commentsOnClickListener);
 
-		LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+		LinearLayoutManagerWithSmootheScroller layoutManager = new LinearLayoutManagerWithSmootheScroller(getContext(), LinearLayoutManager.HORIZONTAL, false);
 		topReviewsList.setLayoutManager(layoutManager);
 
 		loadReviews();
@@ -206,7 +207,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 			for (int i = 0 ; i < topReviewsCount - 1 ; ++i) {
 				final int count = i + 1;
 				topReviewsList.postDelayed(() -> {
-					topReviewsList.scrollToPosition(count);
+					topReviewsList.smoothScrollToPosition(count);
 				}, count * 1000);
 			}
 		} else {

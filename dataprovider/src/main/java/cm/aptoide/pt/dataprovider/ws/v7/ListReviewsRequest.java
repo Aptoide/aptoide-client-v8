@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -15,7 +14,6 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -45,7 +43,7 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 
 	public static ListReviewsRequest of(long storeId, int limit, int offset) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		//IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
@@ -66,7 +64,7 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 	 */
 	public static ListReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		//IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(storeName, packageName, maxReviews, maxComments, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
@@ -82,7 +80,7 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 	 */
 	public static ListReviewsRequest ofTopReviews(String storeName, String packageName, int maxReviews) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		//IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(storeName, packageName, maxReviews, 0, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}

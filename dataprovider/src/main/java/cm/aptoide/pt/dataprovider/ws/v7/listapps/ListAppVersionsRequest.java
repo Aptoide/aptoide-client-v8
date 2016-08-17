@@ -22,6 +22,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -33,6 +34,8 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRequest.Body> {
 
+	private static final Integer MAX_LIMIT = 10;
+
 	private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
 		super(body, httpClient, converterFactory, baseHost);
 	}
@@ -40,7 +43,19 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 	public static ListAppVersionsRequest of() {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		Body body = new Body();
-		body.setLimit(10);
+		body.setLimit(MAX_LIMIT);
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(body),
+				BASE_HOST);
+	}
+
+	public static ListAppVersionsRequest of(int limit, int offset) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+				SecurePreferencesImplementation
+
+				.getInstance());
+		Body body = new Body();
+		body.setLimit(limit);
+		body.setOffset(offset);
 		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(body),
 				BASE_HOST);
 	}
@@ -48,9 +63,19 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 	public static ListAppVersionsRequest of(String packageName) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		Body body = new Body(packageName);
-		body.setLimit(10);
+		body.setLimit(MAX_LIMIT);
 		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(body),
 				BASE_HOST);
+	}
+
+	public static ListAppVersionsRequest of(String packageName, int limit, int offset) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+				SecurePreferencesImplementation
+				.getInstance());
+		Body body = new Body(packageName);
+		body.setLimit(limit);
+		body.setOffset(offset);
+		return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(body), BASE_HOST);
 	}
 
 	@Override
@@ -59,7 +84,7 @@ public class ListAppVersionsRequest extends V7<ListAppVersions,ListAppVersionsRe
 	}
 
 	@Data
-	//@Accessors(chain = true)
+	@Accessors(chain = false)
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody implements Endless {
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -30,7 +30,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
@@ -38,6 +37,7 @@ import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 
 /**
  * Created by sithengineer on 05/07/16.
@@ -55,9 +55,10 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 	private String appPackge;
 	// views
 	private ViewHeader header;
-	private TextView emptyData;
+	//private TextView emptyData;
+
 	// data
-	private ArrayList<Displayable> displayables;
+	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
 	/**
 	 * @param appName
@@ -102,7 +103,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 	public void bindViews(View view) {
 		super.bindViews(view);
 		header = new ViewHeader(view);
-		emptyData = (TextView) view.findViewById(R.id.empty_data);
+		//emptyData = (TextView) view.findViewById(R.id.empty_data);
 		setHasOptionsMenu(true);
 	}
 
@@ -152,24 +153,35 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchOtherVersions() {
-		ListAppVersionsRequest.of(appPackge).execute(new SuccessRequestListener<ListAppVersions>() {
-			@Override
-			public void call(ListAppVersions listAppVersions) {
-				List<App> apps = listAppVersions.getList();
-				displayables = new ArrayList<>(apps.size());
-				for (final App app : apps) {
-					displayables.add(new OtherVersionDisplayable(app));
-				}
-				setDisplayables(displayables);
-				//finishLoading();
+
+		final SuccessRequestListener<ListAppVersions> otherVersionsSuccessRequestListener = listAppVersions -> {
+			List<App> apps = listAppVersions.getList();
+			ArrayList<Displayable> displayables = new ArrayList<>(apps.size());
+			for (final App app : apps) {
+				displayables.add(new OtherVersionDisplayable(app));
 			}
-		}, new ErrorRequestListener() {
-			@Override
-			public void onError(Throwable e) {
-				finishLoading(e);
-			}
-		});
+			addDisplayables(displayables);
+		};
+
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), ListAppVersionsRequest.of(appPackge),
+				otherVersionsSuccessRequestListener, errorRequestListener, false);
+
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(false);
 	}
+
+	/*
+	private void otherVersionsSuccessRequestListener(ListAppVersions listAppVersions) {
+		List<App> apps = listAppVersions.getList();
+		displayables = new ArrayList<>(apps.size());
+		for (final App app : apps) {
+			displayables.add(new OtherVersionDisplayable(app));
+		}
+		setDisplayables(displayables);
+		//finishLoading();
+	}
+	*/
+
 
 	//
 	// micro widget for header

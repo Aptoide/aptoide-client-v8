@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/06/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.listeners;
@@ -82,6 +82,9 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 				offset = response.getDatalist().getNext();
 				v7request.getBody().setOffset(offset);
 			}
+
+			// FIXME: 17/08/16 sithengineer use response.getList() instead
+
 			successRequestListener.call(response);
 
 			loading = false;

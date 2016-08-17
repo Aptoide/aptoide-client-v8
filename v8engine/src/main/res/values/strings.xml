@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 17/08/2016.
   -->
 
 <resources>
@@ -175,4 +175,5 @@
     <string name="flag_results">Flag results</string>
     <string name="helpful">Helpful</string>
     <string name="not_helpful">Not Helpful</string>
+    <string name="description_not_available">No available description for this app</string>
 </resources>

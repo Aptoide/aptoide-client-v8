@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/07/2016.
+  ~ Modified by SithEngineer on 17/08/2016.
   -->
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="193.3dp"
-    android:layout_height="88.6dp"
+    android:layout_width="192dp"
+    android:layout_height="88dp"
     >
 
     <ImageView
@@ -24,8 +24,8 @@
         style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10.3dp"
-        android:layout_marginStart="10.3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_toRightOf="@id/user_icon"
         android:numStars="5"
         android:progressDrawable="@drawable/rating_bar_extra_small"
@@ -38,8 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rating_bar"
-        android:layout_marginLeft="10.3dp"
-        android:layout_marginStart="10.3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_toRightOf="@id/user_icon"
         android:ellipsize="end"
         android:maxLines="1"
@@ -53,9 +53,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/comment_title"
-        android:layout_marginLeft="10.3dp"
-        android:layout_marginStart="10.3dp"
-        android:layout_marginTop="7.7dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/user_icon"
         android:ellipsize="end"
         android:maxLines="1"
@@ -84,9 +84,9 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/user_name"
-        android:layout_marginTop="11.7dp"
+        android:layout_marginTop="12dp"
         android:ellipsize="end"
-        android:textSize="11.3sp"
+        android:textSize="11sp"
         tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
         />
 

@@ -169,16 +169,17 @@
 
     </RelativeLayout>
 
-    <ProgressBar
+    <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/top_comments_progress"
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="113dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/rating_layout"
         android:layout_toRightOf="@id/rating_layout"
         android:indeterminate="true"
-        android:padding="14dp"
+        android:padding="8dp"
         android:visibility="visible"
         />
 

@@ -48,7 +48,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 			readMoreBtn.setOnClickListener(seeMoreHandler(app.getId()));
 		} else {
 			// only show "default" description if the app doesn't have one
-			descriptionTextView.setText(R.string.error_APK_Description);
+			descriptionTextView.setText(R.string.description_not_available);
 			readMoreBtn.setVisibility(View.GONE);
 		}
 	}
