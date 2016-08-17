@@ -47,6 +47,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import lombok.experimental.PackagePrivate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -171,15 +172,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		});
 	}
 
-	private static void logout(WeakReference<FragmentActivity> activityRef) {
+	@PackagePrivate
+	static void logout(WeakReference<FragmentActivity> activityRef) {
 		FacebookLoginUtils.logout();
 		getInstance().removeLocalAccount();
 		isLogin = false;
-		Activity activity = activityRef.get();
-		if (activity != null) {
-			GoogleLoginUtils.logout((FragmentActivity) activity);
-			openAccountManager(activity);
-			activity.finish();
+		if (activityRef != null) {
+			Activity activity = activityRef.get();
+			if (activity != null) {
+				GoogleLoginUtils.logout((FragmentActivity) activity);
+				openAccountManager(activity);
+				activity.finish();
+			}
 		}
 	}
 

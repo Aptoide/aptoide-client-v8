@@ -25,6 +25,7 @@ import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import rx.Subscription;
@@ -73,8 +74,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 							.string.completed))));
 				}
 				if (activeDisplayablesList.size() > 0) {
-					activeDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R.string
-							.active))));
+					activeDisplayablesList.add(0, new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active), new
+							DownloadServiceHelper(AptoideDownloadManager
+							.getInstance(), new PermissionManager())));
 				}
 				setDisplayables();
 			});

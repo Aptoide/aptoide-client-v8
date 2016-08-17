@@ -1,13 +1,16 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.text.Spannable;
 
 import java.util.Date;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.Article;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -46,6 +49,22 @@ public class ArticleDisplayable extends Displayable {
 	}
 
 	public ArticleDisplayable() {
+	}
+
+	public int getMarginWidth(Context context, int orientation){
+		Logger.d(this.getClass().getName(), "dpi : " + AptoideUtils.ScreenU.getDensityDpi());
+		if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
+			return 0;
+		}
+
+		int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
+		Logger.d(this.getClass().getName(), "width: " + width);
+
+		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			return (int)(width * 0.2);
+		} else {
+			return (int)(width * 0.1);
+		}
 	}
 
 	public String getTimeSinceLastUpdate(Context context) {

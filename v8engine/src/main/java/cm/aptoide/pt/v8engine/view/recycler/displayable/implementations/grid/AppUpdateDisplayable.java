@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -15,8 +16,10 @@ import java.util.Date;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -74,6 +77,22 @@ public class AppUpdateDisplayable extends Displayable {
 		return downloadManager.getDownload(download.getAppId())
 				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
 				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
+	}
+
+	public int getMarginWidth(Context context, int orientation){
+		Logger.d(this.getClass().getName(), "dpi : " + AptoideUtils.ScreenU.getDensityDpi());
+		if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
+			return 0;
+		}
+
+		int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
+		Logger.d(this.getClass().getName(), "width: " + width);
+
+		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			return (int)(width * 0.2);
+		} else {
+			return (int)(width * 0.1);
+		}
 	}
 
 	public Spannable getAppTitle(Context context) {

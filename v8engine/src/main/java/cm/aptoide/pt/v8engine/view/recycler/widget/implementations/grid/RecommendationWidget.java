@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 	private TextView appName;
 	private TextView similarApps;
 	private Button getAppButton;
+	private CardView cardView;
 
 	public RecommendationWidget(View itemView) {
 		super(itemView);
@@ -43,6 +45,7 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 		appName = (TextView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_name);
 		similarApps = (TextView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
 		getAppButton = (Button) itemView.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
+		cardView = (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
 
 	}
 
@@ -51,6 +54,8 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 
 		title.setText(displayable.getTitle(getContext()));
 		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+
+		setCardviewMargin(displayable);
 
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
@@ -63,6 +68,15 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 		getAppButton.setVisibility(View.VISIBLE);
 		getAppButton.setText(displayable.getAppText(getContext()));
 		getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
+	}
+
+	private void setCardviewMargin(RecommendationDisplayable displayable) {
+		CardView.LayoutParams layoutParams = new CardView.LayoutParams(
+				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
+				.getMarginWidth
+				(getContext(), getContext().getResources().getConfiguration().orientation),0);
+		cardView.setLayoutParams(layoutParams);
 	}
 
 	@Override

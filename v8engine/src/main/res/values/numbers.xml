@@ -10,4 +10,6 @@
     <!-- configs for each screen width -->
     <bool name="use_big_app_brick">true</bool>
     <integer name="nr_small_app_bricks">2</integer>
+
+    <bool name="is_this_a_tablet_device">false</bool>
 </resources>
