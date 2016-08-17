@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
@@ -65,7 +64,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			media_layout.setForeground(
-					getContext().getResources().getDrawable(R.color.overlay_black, V8Engine.getContext()
+					getContext().getResources().getDrawable(R.color.overlay_black, getContext()
 							.getTheme())
 			);
 		}else {

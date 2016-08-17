@@ -35,7 +35,7 @@ public class UTMFileParser {
 	 *
 	 * @param key   Key to search in the parsed String in the UTM file.
 	 *
-	 * @return  String value of the searched key, null if no key found.
+	 * @return  String value of the searched key, empty string if no key found.
 	 */
 	public String valueExtracter(String key){
 				String[] utms = utm_line.split("&");
@@ -44,6 +44,6 @@ public class UTMFileParser {
 						return utm.substring(key.length() + 1);        // +1 because of =
 					}
 				}
-		return null;
+		return "";
 	}
 }

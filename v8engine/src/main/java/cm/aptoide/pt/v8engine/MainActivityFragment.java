@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 						new DownloadFactory(), downloadManager).execute();
 			}
 			if(SecurePreferences.isFirstRun()){
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 				pushFragmentV4(new BaseWizardViewerFragment());
 				SecurePreferences.setFirstRun(false);
 			}
@@ -86,7 +88,6 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 		} else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
 			newUpdatesDeepLink(intent);
 		} else {
-			// TODO: 10-08-2016 jdandrade mudei isto da AptoideBaseActivity para aqui, confirma se é o que pretendes.
 			Analytics.ApplicationLaunch.launcher();
 		}
 	}
@@ -123,19 +124,16 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	private void downloadNotificationDeepLink(Intent intent) {
-		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.downloadingUpdates();
-		setMainPagerPosition(Event.Name.myStores);
+		setMainPagerPosition(Event.Name.myDownloads);
 	}
 
 	private void fromTimelineDeepLink(Intent intent) {
-		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.timelineNotification();
 		setMainPagerPosition(Event.Name.getUserTimeline);
 	}
 
 	private void newUpdatesDeepLink(Intent intent) {
-		// TODO: 10-08-2016 jdandrade
 		Analytics.ApplicationLaunch.newUpdatesNotification();
 		setMainPagerPosition(Event.Name.myUpdates);
 	}

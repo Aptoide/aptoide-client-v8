@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.fragment;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ViewPagerAdapterWizard;
 
 
@@ -55,6 +58,7 @@ public class BaseWizardViewerFragment extends Fragment {
                 mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
             }else{
                 getActivity().onBackPressed();
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
         });
 

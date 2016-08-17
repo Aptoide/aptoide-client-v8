@@ -33,6 +33,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -96,6 +97,8 @@ public abstract class V8Engine extends DataProvider {
 
 		super.onCreate();
 		generateAptoideUUID().subscribe();
+
+		Analytics.Lifecycle.Application.onCreate(this);
 
 		new FlurryAgent.Builder()
 				.withLogEnabled(false)

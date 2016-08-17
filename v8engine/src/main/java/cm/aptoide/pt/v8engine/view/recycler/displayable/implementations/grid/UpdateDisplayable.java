@@ -63,7 +63,6 @@ public class UpdateDisplayable extends Displayable {
 	}
 
 	public Observable<Void> downloadAndInstall(Context context, PermissionRequest permissionRequest) {
-		Logger.d(this.getClass().getName(), "LOCALYTICS TESTING - UPDATES : ACTION - UPDATE CLICK");
 		Analytics.Updates.update();
 
 		return downloadManager.startDownload(permissionRequest, download)

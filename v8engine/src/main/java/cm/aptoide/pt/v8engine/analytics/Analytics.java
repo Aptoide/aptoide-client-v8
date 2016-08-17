@@ -1,6 +1,9 @@
 package cm.aptoide.pt.v8engine.analytics;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -9,10 +12,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.zip.ZipFile;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Constants;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 
@@ -25,9 +34,12 @@ import com.localytics.android.Localytics;
  */
 public class Analytics {
 
-    private static final boolean ACTIVATE = BuildConfig.LOCALYTICS_CONFIGURED;
+	private static final String TAG = Analytics.class.getSimpleName();
+
+	private static boolean ACTIVATE = BuildConfig.LOCALYTICS_CONFIGURED;
     private static final boolean ACTIVATE_FLURRY = BuildConfig.FLURRY_CONFIGURED;
-    private static final int ALL = Integer.MAX_VALUE;
+	private static boolean isFirstSession;
+	private static final int ALL = Integer.MAX_VALUE;
     private static final int LOCALYTICS = 1 << 0;
     private static final int FLURRY = 1 << 1;
 
@@ -57,10 +69,10 @@ public class Analytics {
 
             track(event, stringObjectHashMap, flags);
 
-            Logger.d("Analytics", "Event: " + event + ", Key: " + key + ", attr: " + attr);
+            Logger.d(TAG, "Event: " + event + ", Key: " + key + ", attr: " + attr);
 
         } catch (Exception e) {
-            Log.d("Analytics", e.getStackTrace().toString());
+            Log.d(TAG, e.getStackTrace().toString());
         }
 
     }
@@ -68,24 +80,24 @@ public class Analytics {
     private static void track(String event, HashMap map, int flags) {
         try {
             if (!ACTIVATE){
-                Logger.d(Analytics.class.getName(), "Localytics ACTIVATE value: " + ACTIVATE);
+                Logger.d(TAG, "Localytics ACTIVATE value: " + ACTIVATE);
 
                 return;
             }
             if(checkAcceptability(flags, LOCALYTICS)){
                 Localytics.tagEvent(event, map);
-                Logger.d("Analytics", "Localytics Event: " + event + ", Map: " + map);
+                Logger.d(TAG, "Localytics Event: " + event + ", Map: " + map);
 
             }
 
             if (checkAcceptability(flags, FLURRY)){
                 FlurryAgent.logEvent(event, map);
-                Logger.d("Analytics", "Flurry Event: " + event + ", Map: " + map);
+                Logger.d(TAG, "Flurry Event: " + event + ", Map: " + map);
             }
 
 
         } catch (Exception e) {
-            Log.d("Analytics", e.getStackTrace().toString());
+            Log.d(TAG, e.getStackTrace().toString());
         }
     }
 
@@ -101,7 +113,7 @@ public class Analytics {
             if (checkAcceptability(flags, FLURRY))
                 FlurryAgent.logEvent(event);
 
-            Logger.d("Analytics", "Event: " + event);
+            Logger.d(TAG, "Event: " + event);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,12 +126,18 @@ public class Analytics {
         public static class Application {
             public static void onCreate(android.app.Application application) {
 
-                if (!ACTIVATE)
-                    return;
+	            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
+	            ACTIVATE = ACTIVATE && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
+	            isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
+	            Logger.d(TAG, "teste : " + ACTIVATE + " : " + isFirstSession);
+	            if (!ACTIVATE && !isFirstSession) {
+		            return;
+	            }
 
                 // Integrate Localytics
                 Localytics.autoIntegrate(application);
                 checkForUTMFileInMetaINF();
+	            Logger.d(TAG, "Localytics session configured");
 
             }
 
@@ -134,18 +152,37 @@ public class Analytics {
                     UTMFileParser utmFileParser = new UTMFileParser(utmInputStream);
                     myZipFile.close();
 
-                    Logger.d(Lifecycle.class.getName(), UTMFileParser.UTM_SOURCE + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE));
-                    Logger.d(Lifecycle.class.getName(), UTMFileParser.UTM_MEDIUM + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM));
-                    Logger.d(Lifecycle.class.getName(), UTMFileParser.UTM_CAMPAIGN + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN));
-                    Logger.d(Lifecycle.class.getName(), UTMFileParser.UTM_CONTENT + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT));
+//                    Logger.d(TAG, UTMFileParser.UTM_SOURCE + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE));
+//                    Logger.d(TAG, UTMFileParser.UTM_MEDIUM + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM));
+//                    Logger.d(TAG, UTMFileParser.UTM_CAMPAIGN + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN));
+//                    Logger.d(TAG, UTMFileParser.UTM_CONTENT + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT));
 
-                    //TODO set dimensions according to UTM file variables      no UTM value = null so we need to check for that
+	                String utmSource = utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE);
+	                String utmMedium = utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM);
+	                String utmCampaign = utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN);
+	                String utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
+
+	                if (!utmSource.isEmpty()) {
+	                    Analytics.Dimensions.setUTMSource(utmSource);
+	                }
+
+	                if (!utmMedium.isEmpty()) {
+		                Analytics.Dimensions.setUTMMedium(utmMedium);
+	                }
+
+	                if (!utmCampaign.isEmpty()) {
+		                Analytics.Dimensions.setUTMCampaign(utmCampaign);
+	                }
+
+	                if (!utmContent.isEmpty()) {
+		                Analytics.Dimensions.setUTMContent(utmContent);
+	                }
 
                     utmInputStream.close();
                 } catch (IOException e) {
-                    Logger.d(Analytics.class.getName(), "problem parsing utm/no utm file");
+                    Logger.d(TAG, "problem parsing utm/no utm file");
                 } catch (PackageManager.NameNotFoundException e) {
-                    Logger.d(Analytics.class.getName(), "No package name utm file.");
+                    Logger.d(TAG, "No package name utm file.");
                 } catch (NullPointerException e){
                     if(myZipFile != null) {
                         try {
@@ -154,18 +191,16 @@ public class Analytics {
                             e1.printStackTrace();
                         }
                     }
-                    Logger.d(Analytics.class.getName(), "No utm file.");
+                    Logger.d(TAG, "No utm file.");
                 }
             }
         }
 
         public static class Activity {
 
-            private static final String TAG = Activity.class.getName();
-
             public static void onCreate(android.app.Activity activity) {
 
-                if (!ACTIVATE_FLURRY)
+                if (!ACTIVATE)
                     return;
 
             }
@@ -184,22 +219,28 @@ public class Analytics {
 
                 Localytics.onActivityResume(activity);
 
-//                if (!AptoideUtils.AccountUtils.isLoggedIn(activity)) {
-//                    Localytics.setCustomDimension(0, "Not Logged In");
-//                } else {
-//                    Localytics.setCustomDimension(0, "Logged In");
-//                }
-//
-//                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
+                if (!AptoideAccountManager.isLoggedIn()) {
+                    Localytics.setCustomDimension(0, "Not Logged In");
+                } else {
+                    Localytics.setCustomDimension(0, "Logged In");
+                }
+
+	            IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+	            String cpuid = idsRepository.getAptoideClientUUID();
+
+	            Localytics.setCustomerId(cpuid);
+
+	            //                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
 //                        .getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
-//
+
 //                Localytics.setCustomerId(cpuid);
 //
 //                if (screenName != null) {
 //                    Localytics.tagScreen(screenName);
 //                }
 //
-//                Localytics.handleTestMode(activity.getIntent());
+                Localytics.handleTestMode(activity.getIntent());
 //
 //                Logger.d("Analytics", "Event: CPU_ID: " + cpuid);
 //                Logger.d("Analytics", "Screen: " + screenName);
@@ -207,6 +248,9 @@ public class Analytics {
             }
 
             public static void onPause(android.app.Activity activity){
+	            if (!ACTIVATE && !isFirstSession)
+		            return;
+
                 Localytics.onActivityPaused(activity);
             }
 
@@ -230,6 +274,12 @@ public class Analytics {
                 FlurryAgent.onEndSession(activity);
 
             }
+	        public static void onNewIntent(android.app.Activity activity, Intent intent) {
+		        if (!ACTIVATE && !isFirstSession) {
+			        return;
+		        }
+		        Localytics.onNewIntent(activity, intent);
+	        }
         }
 
     }
@@ -241,7 +291,7 @@ public class Analytics {
             if (!ACTIVATE)
                 return;
 
-            Logger.d("Analytics", "Localytics: Screens: " + screenName);
+            Logger.d(TAG, "Localytics: Screens: " + screenName);
 
             Localytics.tagScreen(screenName);
             Localytics.upload();
@@ -357,7 +407,7 @@ public class Analytics {
             track(EVENT_NAME, ACTION, JOIN, ALL);
         }
 
-        public static void Login() {
+        public static void login() {
             track(EVENT_NAME, ACTION, LOGIN, ALL);
         }
     }
@@ -742,13 +792,15 @@ public class Analytics {
     }
 
     public static class Dimensions {
+	    public static final String VERTICAL = "smartphone";
+	    public static final String PARTNER = "vanilla";
 
         private static void setDimension(int i, String s) {
-            if (!ACTIVATE) {
-                return;
-            }
+	        if (!ACTIVATE && !isFirstSession) {
+		        return;
+	        }
 
-            Logger.d("Analytics", "Dimension: " + i + ", Value: " + s);
+            Logger.d(TAG, "Dimension: " + i + ", Value: " + s);
 
             Localytics.setCustomDimension(i, s);
         }
@@ -769,9 +821,20 @@ public class Analytics {
             }
         }
 
-        public static class Vertical {
-            public static final String SMARTPHONE = "smartphone";
-        }
+	    public static void setUTMSource(String utmSource){
+	    }
+
+	    public static void setUTMMedium(String utmMedium) {
+
+	    }
+
+	    public static void setUTMCampaign(String utmCampaign) {
+
+	    }
+
+	    public static void setUTMContent(String utmContent) {
+
+	    }
     }
 
     public static class AppViewViewedFrom {
@@ -784,11 +847,11 @@ public class Analytics {
         public static void appViewOpenFrom(String packageName, String developerName, String trustedBadge) {
 
             Collections.reverse(STEPS);
-            String stringForLogger = formatStepsToSingleEvent(STEPS);
-            if (stringForLogger.contains("home")) {
+            String stringForSourceEvent = formatStepsToSingleEvent(STEPS);
+            if (stringForSourceEvent.contains("home")) {
                 HashMap<String, String> map = new HashMap<>();
                 map.put("Package Name", packageName);
-                map.put("Source", formatStepsToSingleEvent(STEPS));
+                map.put("Source", stringForSourceEvent);
                 map.put("Trusted Badge", trustedBadge);
                 map.put("Application Publisher", developerName);
 
@@ -852,7 +915,7 @@ public class Analytics {
 
                 map.put("packageName", packageName);
 
-                Logger.d("Analytics", "LTV: " + eventName + ": " + packageName);
+                Logger.d(TAG, "LTV: " + eventName + ": " + packageName);
 
                 Localytics.tagEvent(eventName, map);
             } catch (NumberFormatException e) {
@@ -876,4 +939,49 @@ public class Analytics {
             track(HOME_PAGE_EDITORS_CHOICE, map, FLURRY);
         }
     }
+
+	public static class LocalyticsSessionControl{
+		public static void firstSession(SharedPreferences sPref) {
+			SharedPreferences.Editor edit = sPref.edit();
+			edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
+			Logger.d(TAG, "contains" + sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY));
+			if (!sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY)) {
+				Random random = new Random();
+				int i = random.nextInt(10);
+				Logger.d(TAG, "firstSession: " + i);
+				edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, true);
+				edit.putBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, i == 0);
+			}
+			edit.commit();
+			Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: "+ sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION,false));
+			Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: "+ sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY,false));
+		}
+	}
+
+    public static class Timeline{
+
+        public static void clickOnVideoCard(){
+
+        }
+
+        public static void clickOnArticleCard() {
+
+        }
+
+        public static void clickOnUpdateCard() {
+
+        }
+
+        public static void clickOnRecommendationCard(){
+
+        }
+
+	    public static void clickOnStoreLatestApps(){
+
+	    }
+    }
+
+//	public static class Viewed_Application{
+//		public static void
+//	}
 }
