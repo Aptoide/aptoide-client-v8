@@ -5,7 +5,10 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -55,6 +58,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	private NavigationView mNavigationView;
 	private BadgeView updatesBadge;
 	@Getter @Setter private Event.Name desiredViewPagerItem = null;
+	private ChangeTabReceiver receiver;
 
 	public static HomeFragment newInstance(String storeName) {
 		return newInstance(storeName, StoreContext.store);
@@ -176,6 +180,13 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	}
 
 	@Override
+	public void onDestroy() {
+		getContext().unregisterReceiver(receiver);
+		receiver = null;
+		super.onDestroy();
+	}
+
+	@Override
 	public int getContentViewId() {
 		return R.layout.activity_main;
 	}
@@ -202,6 +213,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 				mViewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
 			}
 		}
+		receiver = new ChangeTabReceiver();
+		getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
 	}
 
 	@Override
@@ -258,5 +271,22 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	@Override
 	public void closeDrawer() {
 		mDrawerLayout.closeDrawers();
+	}
+
+	public class ChangeTabReceiver extends BroadcastReceiver {
+
+		public static final String SET_TAB_EVENT = "SET_TAB_EVENT";
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Event.Name tabToChange = (Event.Name) intent.getSerializableExtra(SET_TAB_EVENT);
+			if (tabToChange != null) {
+				StorePagerAdapter storePagerAdapter = mViewPager.getAdapter() instanceof StorePagerAdapter ? ((StorePagerAdapter) mViewPager.getAdapter()) :
+						null;
+				if (storePagerAdapter != null) {
+					mViewPager.setCurrentItem(((StorePagerAdapter) mViewPager.getAdapter()).getEventNamePosition(tabToChange));
+				}
+			}
+		}
 	}
 }
