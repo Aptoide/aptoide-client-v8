@@ -35,7 +35,7 @@
     <string name="downgrade">Downgrade</string>
     <string name="reinstall">Reinstall</string>
     <string name="get_app">get app</string>
-    <string name="appview_follow_store_button_text">follow store</string>
+    <string name="appview_follow_store_button_text">following store</string>
     <string name="appview_followers_count_text">%1$s   Followers</string>
     <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 

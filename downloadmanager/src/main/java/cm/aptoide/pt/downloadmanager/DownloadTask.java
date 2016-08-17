@@ -264,7 +264,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 		this.download.setOverallDownloadStatus(status);
 		saveDownloadInDb(download);
-		if (status == Download.PROGRESS) {
+		if (status == Download.PROGRESS || status == Download.PENDING) {
 			AptoideDownloadManager.getInstance().setDownloading(true);
 		} else {
 			AptoideDownloadManager.getInstance().setDownloading(false);
