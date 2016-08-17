@@ -37,7 +37,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	private static final String TAG = AppViewInstallDisplayable.class.getName();
 
 	@Getter private boolean shouldInstall;
-	@Getter private GetApkInfoJson.Payment payment;
 	@Getter private MinimalAd minimalAd;
 
 	private InstallManager installManager;
@@ -45,27 +44,22 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	private long appId;
 	private String packageName;
 
+	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager, MinimalAd minimalAd, boolean shouldInstall) {
+		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
+	}
+
 	public AppViewInstallDisplayable() {
 		super();
 	}
 
-	public AppViewInstallDisplayable(GetApp getApp) {
-		super(getApp);
-	}
-
-	public AppViewInstallDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-		super(getApp, fixedPerLineCount);
-	}
-
-	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager, MinimalAd minimalAd, boolean shouldInstall) {
-		AppViewInstallDisplayable displayable = new AppViewInstallDisplayable(getApp);
-		displayable.installManager = installManager;
-		displayable.appId = getApp.getNodes().getMeta().getData().getId();
-		displayable.packageName = getApp.getNodes().getMeta().getData().getPackageName();
-		displayable.payment = getApp.getNodes().getMeta().getData().getPayment();
-		displayable.minimalAd = minimalAd;
-		displayable.shouldInstall = shouldInstall;
-		return displayable;
+	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean
+			shouldInstall) {
+		super(getApp, false);
+		this.installManager = installManager;
+		this.appId = getApp.getNodes().getMeta().getData().getId();
+		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
+		this.minimalAd = minimalAd;
+		this.shouldInstall = shouldInstall;
 	}
 
 	public Observable<Void> buyApp(Context context, GetAppMeta.App app) {
@@ -149,4 +143,5 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		super.onViewStateRestored(savedInstanceState);
 		Logger.i(TAG, "onViewStateRestored");
 	}
+
 }

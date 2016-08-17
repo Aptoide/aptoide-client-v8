@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:minWidth="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent">
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/separatorColor"/>
+            <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            <RelativeLayout
+                    android:id="@+id/content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <RelativeLayout
+                        android:background="?attr/backgroundHeaderLoggedIn"
+                        android:padding="5dp"
+                        android:id="@+id/linearLayout2"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginLeft="10dp"
+                                android:id="@+id/icon"/>
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:layout_alignParentRight="true"
+                            android:id="@+id/price"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginRight="10dp"
+                            android:textColor="?attr/customColor"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:textStyle="bold"
+                                android:layout_toRightOf="@id/icon"
+                                android:layout_toLeftOf="@id/price"
+                                android:layout_marginLeft="10dp"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/please_wait"
+                                android:id="@+id/title">
+                        </TextView>
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textStyle="italic"
+                            android:layout_toRightOf="@id/icon"
+                            android:layout_toLeftOf="@id/price"
+                            android:layout_below="@id/title"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/app_purchase_description" />
+
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/separatorColor"
+                        android:layout_below="@+id/linearLayout2"/>
+
+                <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/username"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_below="@+id/linearLayout2"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/payment_methods"
+                        android:id="@+id/pay_with"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_below="@+id/username"
+                        android:layout_alignLeft="@+id/username"
+                        android:layout_alignStart="@+id/username"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:layout_below="@+id/pay_with"
+                    android:orientation="vertical"
+                    android:id="@+id/payment_methods">
+
+                        <ProgressBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/pb"/>
+
+                    </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:id="@+id/layout_buttons">
+
+        <Button
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:text="@string/cancel"
+                android:background="?attr/backgroundHeaderLoggedIn"
+                android:id="@+id/buttonCancel"/>
+
+    </RelativeLayout>
+</LinearLayout>

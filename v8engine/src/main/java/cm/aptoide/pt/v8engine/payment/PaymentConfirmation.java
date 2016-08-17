@@ -5,24 +5,55 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PaymentConfirmation {
-	
-	private final Payment payment;
-	private final String transactionId;
+public class PaymentConfirmation implements Parcelable {
 
-	public PaymentConfirmation(Payment payment, String transactionId) {
-		this.payment = payment;
-		this.transactionId = transactionId;
+	public static final Creator<PaymentConfirmation> CREATOR = new Creator<PaymentConfirmation>() {
+		@Override
+		public PaymentConfirmation createFromParcel(Parcel in) {
+			return new PaymentConfirmation(in);
+		}
+
+		@Override
+		public PaymentConfirmation[] newArray(int size) {
+			return new PaymentConfirmation[size];
+		}
+	};
+
+	private final String paymentConfirmationId;
+	private final Product product;
+
+	public PaymentConfirmation(String paymentConfirmationId, Product product) {
+		this.paymentConfirmationId = paymentConfirmationId;
+		this.product = product;
 	}
 
-	public Payment getPayment() {
-		return payment;
+	protected PaymentConfirmation(Parcel in) {
+		paymentConfirmationId = in.readString();
+		product = in.readParcelable(Product.class.getClassLoader());
 	}
 
-	public String getTransactionId() {
-		return transactionId;
+	public Product getProduct() {
+		return product;
+	}
+
+	public String getPaymentConfirmationId() {
+		return paymentConfirmationId;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(paymentConfirmationId);
+		dest.writeParcelable(product, flags);
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
 	}
 }

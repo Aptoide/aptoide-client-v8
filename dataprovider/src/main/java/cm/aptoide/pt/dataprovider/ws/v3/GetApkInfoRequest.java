@@ -20,8 +20,11 @@ import rx.Observable;
  */
 public class GetApkInfoRequest extends V3<GetApkInfoJson> {
 
+	private Map<String,String> args;
+
 	protected GetApkInfoRequest(Map<String,String> args) {
-		super(BASE_HOST, args);
+		super(BASE_HOST);
+		this.args = args;
 	}
 
 	public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager, boolean fromSponsored, String storeName) {
@@ -46,8 +49,8 @@ public class GetApkInfoRequest extends V3<GetApkInfoJson> {
 		options.put("lang", Api.LANG);
 
 		if (operatorRepository.isSimStateReady()) {
-			options.put("mcc", operatorRepository.getMccCode());
-			options.put("mnc", operatorRepository.getMncCode());
+			options.put("mcc", operatorRepository.getMobileCountryCode());
+			options.put("mnc", operatorRepository.getMobileNetworkCode());
 		}
 
 		StringBuilder optionsBuilder = new StringBuilder();

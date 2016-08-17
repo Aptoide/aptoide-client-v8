@@ -40,10 +40,9 @@ public class AppUpdateDisplayable extends Displayable {
 	@Getter private String storeName;
 
 	private Date dateUpdated;
-	private String appVersioName;
+	private String appVersionName;
 	private SpannableFactory spannableFactory;
 	private String appName;
-	private int versionCode;
 	@Getter private String packageName;
 	private Download download;
 	private DownloadServiceHelper downloadManager;
@@ -56,8 +55,8 @@ public class AppUpdateDisplayable extends Displayable {
 
 	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
 	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
-				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
+				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getPackageName(), downloadFactory
 				.create(appUpdate), downloadManager, installManager, dateCalculator, appUpdate.getId());
 	}
 
@@ -108,8 +107,8 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Spannable getVersionText(Context context) {
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_version,
-				appVersioName), ContextCompat.getColor(context, R.color.black), appVersioName);
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName),
+				ContextCompat.getColor(context, R.color.black), appVersionName);
 	}
 
 	public Spannable getUpdateAppText(Context context) {

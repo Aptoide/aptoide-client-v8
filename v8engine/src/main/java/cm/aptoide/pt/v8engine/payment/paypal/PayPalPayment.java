@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.method;
+package cm.aptoide.pt.v8engine.payment.paypal;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,62 +15,94 @@ import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
-import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.payment.PaymentMethod;
+import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PayPalPaymentMethod implements PaymentMethod {
+public class PayPalPayment implements Payment {
 
-	private String id;
 	private final Context context;
+	private final int id;
+	private final int icon;
+	private final double price;
+	private final String currency;
+	private final double taxRate;
 	private final LocalBroadcastManager broadcastManager;
 	private final PayPalConfiguration configuration;
-	private final PayPalPaymentConverter converter;
+	private final PayPalConverter converter;
 
-	private Payment currentPayment;
-	private PaymentConfirmationListener listener;
 	private PaymentConfirmationReceiver receiver;
+	private PaymentConfirmationListener listener;
+	private boolean processing;
+	private Product product;
 
-	public PayPalPaymentMethod(Context context, String id, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PayPalPaymentConverter converter) {
-		this.id = id;
+	public PayPalPayment(Context context, int id, int icon, double price, String currency, double taxRate, LocalBroadcastManager broadcastManager,
+	                     PayPalConfiguration configuration, PayPalConverter converter) {
 		this.context = context;
+		this.id = id;
+		this.icon = icon;
+		this.price = price;
+		this.currency = currency;
+		this.taxRate = taxRate;
 		this.broadcastManager = broadcastManager;
 		this.configuration = configuration;
 		this.converter = converter;
 	}
 
 	@Override
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
 	@Override
-	public boolean isProcessingPayment() {
-		return currentPayment != null;
+	public int getIcon() {
+		return icon;
 	}
 
 	@Override
-	public void stopPaymentProcess() {
+	public double getPrice() {
+		return price;
+	}
+
+	@Override
+	public String getCurrency() {
+		return currency;
+	}
+
+	@Override
+	public double getTaxRate() {
+		return taxRate;
+	}
+
+	@Override
+	public boolean isProcessing() {
+		return processing;
+	}
+
+	@Override
+	public void cancel() {
 		broadcastManager.unregisterReceiver(receiver);
 		receiver = null;
-		currentPayment = null;
 		listener = null;
+		processing = false;
+		product = null;
 	}
 
 	@Override
-	public void processPayment(Payment payment, PaymentConfirmationListener listener) {
-		if (currentPayment == null) {
+	public void process(Product product, PaymentConfirmationListener listener) {
+		if (!processing) {
+			this.product = product;
+			processing = true;
 			this.listener = listener;
-			currentPayment = payment;
 			IntentFilter paymentResultFilter = new IntentFilter();
 			paymentResultFilter.addAction(PaymentConfirmationReceiver.PAYMENT_RESULT_ACTION);
 			receiver = new PaymentConfirmationReceiver();
 			broadcastManager.registerReceiver(receiver, paymentResultFilter);
-			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(currentPayment), configuration));
+			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(price, currency, product.getDescription()), configuration));
 		}
 	}
 
@@ -98,19 +130,19 @@ public class PayPalPaymentMethod implements PaymentMethod {
 					switch (intent.getIntExtra(PAYMENT_STATUS_EXTRA, PAYMENT_STATUS_FAILED)) {
 						case PAYMENT_STATUS_OK:
 							payPalConfirmation = intent.getParcelableExtra(PAYMENT_CONFIRMATION_EXTRA);
-							if (payPalConfirmation != null && currentPayment.getPaymentId().equals(payPalConfirmation.getProofOfPayment().getPaymentId())) {
-								listener.onSuccess(converter.convertFromPayPal(payPalConfirmation, currentPayment));
-								stopPaymentProcess();
+							if (payPalConfirmation != null) {
+								listener.onSuccess(converter.convertFromPayPal(payPalConfirmation, product));
+								cancel();
 							}
 							break;
 						case PAYMENT_STATUS_CANCELLED:
 							listener.onError(new PaymentCancellationException("PayPal payment cancelled by user"));
-							stopPaymentProcess();
+							cancel();
 							break;
 						case PAYMENT_STATUS_FAILED:
 						default:
 							listener.onError(new PaymentFailureException("PayPal payment failed"));
-							stopPaymentProcess();
+							cancel();
 							break;
 					}
 				}

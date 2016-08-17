@@ -10,27 +10,29 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
-import cm.aptoide.pt.v8engine.payment.method.PayPalPaymentConverter;
-import cm.aptoide.pt.v8engine.payment.method.PayPalPaymentMethod;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.payment.paypal.PayPalConverter;
+import cm.aptoide.pt.v8engine.payment.paypal.PayPalPayment;
 
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PaymentMethodFactory {
+public class PaymentFactory {
 
-	public static final String PAYPAL = "PAYPAL";
+	public static final String PAYPAL = "paypal";
 
-	public PaymentMethod create(Context context, String id) {
-		switch (id) {
+	public Payment create(Context context, String type, int id, double price, String currency, double taxRate) {
+		switch (type) {
 			case PAYPAL:
-				return new PayPalPaymentMethod(context, id, getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter());
+				return new PayPalPayment(context, id, R.drawable.visa_btn_default_focused_holo_light, price, currency, taxRate,
+						getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter());
 			default:
-				throw new IllegalArgumentException("Payment not supported: " + id);
+				throw new IllegalArgumentException("Payment not supported: " + type);
 		}
 	}
 
-	private PayPalPaymentConverter getPaymentConverter() {
-		return new PayPalPaymentConverter();
+	private PayPalConverter getPaymentConverter() {
+		return new PayPalConverter();
 	}
 
 	private PayPalConfiguration getPayPalConfiguration() {

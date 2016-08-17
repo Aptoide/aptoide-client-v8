@@ -7,6 +7,8 @@
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
+    <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
 
@@ -36,7 +38,8 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <activity android:name=".payment.method.PayPalPaymentActivity"/>
+        <activity android:name=".payment.PaymentActivity"/>
+        <activity android:name=".payment.paypal.PayPalPaymentActivity"/>
 
         <activity
             android:name=".receivers.DeepLinkIntentReceiver"
@@ -145,7 +148,7 @@
         </receiver>
 
         <service android:name=".services.PullingContentService"/>
-        <service android:name=".services.ValidatePaymentsService"/>
+        <service android:name=".payment.handler.PaymentConfirmationService"/>
         <receiver android:name=".receivers.PullingContentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -168,6 +171,15 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name="org.onepf.oms.BillingService"
+            android:exported="true"
+            android:permission="org.onepf.openiab.permission.BILLING">
+
+            <intent-filter>
+                <action android:name="org.onepf.oms.billing.BIND" />
+            </intent-filter>
+        </service>
 
     </application>
 

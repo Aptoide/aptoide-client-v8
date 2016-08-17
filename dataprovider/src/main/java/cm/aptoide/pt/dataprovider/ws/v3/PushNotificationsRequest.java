@@ -22,8 +22,11 @@ import rx.Observable;
  */
 public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
 
+	private Map<String,String> args;
+
 	protected PushNotificationsRequest(Map<String,String> args) {
-		super(BASE_HOST, args);
+		super(BASE_HOST);
+		this.args = args;
 	}
 
 	public static PushNotificationsRequest of() {

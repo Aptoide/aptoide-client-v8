@@ -5,65 +5,38 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
 
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class Payment {
+public interface Payment {
 
-	private final String paymentId;
-	private final String currency;
-	private final BigDecimal price;
-	private final double taxRate;
+	int getId();
 
-	public Payment(String paymentId, String currency, BigDecimal price, double taxRate) {
-		this.paymentId = paymentId;
-		this.currency = currency;
-		this.price = price;
-		this.taxRate = taxRate;
+	@DrawableRes int getIcon();
+
+	double getPrice();
+
+	String getCurrency();
+
+	double getTaxRate();
+
+	void cancel();
+
+	boolean isProcessing();
+
+	void process(Product product, PaymentConfirmationListener listener);
+
+	static interface PaymentConfirmationListener {
+
+		void onSuccess(PaymentConfirmation paymentConfirmation);
+
+		void onError(PaymentException exception);
 	}
-
-	public String getPaymentId() {
-		return paymentId;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public double getTaxRate() {
-		return taxRate;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		final Payment payment = (Payment) o;
-
-		if (!paymentId.equals(payment.paymentId)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return paymentId.hashCode();
-	}
-
 }

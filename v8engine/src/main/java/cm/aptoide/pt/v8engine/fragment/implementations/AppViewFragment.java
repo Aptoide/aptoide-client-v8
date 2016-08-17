@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +31,6 @@ import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
-import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,7 +46,6 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v3.PaymentPayload;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
@@ -63,16 +62,12 @@ import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
+import cm.aptoide.pt.v8engine.payment.PaymentActivity;
+import cm.aptoide.pt.v8engine.payment.PaymentFactory;
+import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
-import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
-import cm.aptoide.pt.v8engine.payment.PaymentMethod;
-import cm.aptoide.pt.v8engine.payment.PaymentMethodFactory;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
-import cm.aptoide.pt.v8engine.services.ValidatePaymentsService;
 import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -137,9 +132,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private boolean sponsored;
 	private List<GetAdsResponse.Ad> suggestedAds;
 
-	private PaymentMethod paymentMethod;
-	private Payment payment;
-
 	// buy app vars
 	private String storeName;
 	private float priceValue;
@@ -196,10 +188,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		super.onCreate(savedInstanceState);
 		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
-		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(),
+				new DownloadInstallationProvider(downloadManager));
+		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
+				new ProductFactory(), new PaymentFactory());
 		adRepository = new AdRepository();
-		paymentMethod = new PaymentMethodFactory().create(getContext(), PaymentMethodFactory.PAYPAL);
 	}
 
 	@Override
@@ -270,42 +263,34 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		return false;
 	}
 
-	public void buyApp(final GetAppMeta.App app) {
-		if (!paymentMethod.isProcessingPayment()) {
-			payment = new Payment(String.valueOf(app.getId()), app.getPay().getCurrency(), BigDecimal.valueOf(app.getPay().getPrice()), app.getPayment().payment_services.get(0).getTaxRate());
+	public void buyApp(GetAppMeta.App app) {
+		appRepository.getPaidAppProduct(app, sponsored, storeName)
+				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(product -> startActivityForResult(PaymentActivity.getIntent(getActivity(), product), PAY_APP_REQUEST_CODE),
+						throwable -> ShowMessage.asSnack(header.badge, R.string.unknown_error));
+	}
 
-			paymentMethod.processPayment(payment, new PaymentMethod.PaymentConfirmationListener() {
-				@Override
-				public void onSuccess(PaymentConfirmation paymentConfirmation) {
-					PaymentPayload paymentPayload = new PaymentPayload();
-					paymentPayload.setPayKey(paymentConfirmation.getPayment().getPaymentId());
-					paymentPayload.setAptoidePaymentId(app.getPayment().metadata.id);
-					paymentPayload.setStore(app.getStore().getName());
-					paymentPayload.setPrice(paymentConfirmation.getPayment().getPrice().doubleValue());
-					paymentPayload.setCurrency(paymentConfirmation.getPayment().getCurrency());
-					paymentPayload.setTaxRate(paymentConfirmation.getPayment().getTaxRate());
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == PAY_APP_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
 
-					getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
+				// download app and install app
+				FragmentActivity fragmentActivity = getActivity();
+				Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
+				installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+				fragmentActivity.sendBroadcast(installApp);
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Logger.i(TAG, "The user canceled.");
+				ShowMessage.asSnack(header.badge, R.string.user_canceled);
 
-					// download app and install app
-					FragmentActivity fragmentActivity = getActivity();
-					Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
-					installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
-					fragmentActivity.sendBroadcast(installApp);
-				}
-
-				@Override
-				public void onError(PaymentException exception) {
-					Logger.i(TAG, "The user canceled.");
-					if (exception instanceof PaymentCancellationException) {
-						Logger.i(TAG, "The user canceled.");
-						ShowMessage.asSnack(header.badge, R.string.user_canceled);
-					} else {
-						Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
-						ShowMessage.asSnack(header.badge, R.string.unknown_error);
-					}
-				}
-			});
+			} else {
+				Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+				ShowMessage.asSnack(header.badge, R.string.unknown_error);
+			}
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -429,9 +414,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		if (storeTheme != null) {
 			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
-		}
-		if (paymentMethod.isProcessingPayment()) {
-			paymentMethod.stopPaymentProcess();
 		}
 	}
 
