@@ -19,7 +19,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -28,6 +27,7 @@ import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 5/13/16.
@@ -89,7 +89,10 @@ public class AptoideDownloadManager {
 		if (getDownloadStatus(download.getAppId()) == Download.COMPLETED) {
 			return Observable.fromCallable(() -> download);
 		}
-		startNewDownload(download);
+		Observable.fromCallable(() -> {
+			startNewDownload(download);
+			return null;
+		}).subscribeOn(Schedulers.io()).subscribe();
 		return getDownload(download.getAppId());
 	}
 
@@ -177,18 +180,25 @@ public class AptoideDownloadManager {
 	 */
 	public void pauseAllDownloads() {
 		FileDownloader.getImpl().pauseAll();
-
-		getCurrentDownloads().first().subscribe(downloads -> {
-			@Cleanup
-			Realm realm = Database.get();
-			for (final Download download : downloads) {
-				download.setOverallDownloadStatus(Download.PAUSED);
-				Database.save(download, realm);
-			}
-		}, throwable -> {
-			Logger.d(TAG, "pauseAllDownloads: ");
-			throwable.printStackTrace();
-		});
+		Realm realm = Database.get();
+		realm.where(Download.class)
+				.equalTo("overallDownloadStatus", Download.IN_QUEUE)
+				.or()
+				.equalTo("overallDownloadStatus", Download.PENDING)
+				.findAll()
+				.asObservable()
+				.first()
+				.map(downloads -> {
+					realm.beginTransaction();
+					for (final Download download : downloads) {
+						download.setOverallDownloadStatus(Download.PAUSED);
+					}
+					realm.commitTransaction();
+					realm.close();
+					return null;
+				})
+				.subscribe(o -> {
+				}, Throwable::printStackTrace);
 	}
 
 	private int getDownloadStatus(long appId) {

@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -13,6 +16,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
@@ -48,15 +52,20 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 		more.setOnClickListener((view) -> {
 			Realm realm = Database.get();
 			RealmResults<Update> all = Database.UpdatesQ.getAll(realm);
+			AptoideUtils.Benchmarking benchmarking = AptoideUtils.Benchmarking.start("bindView");
+			List<Download> downloadList = new ArrayList<>();
 			for (Update update : all) {
-				new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager()).startDownload((PermissionRequest) getContext(), new
-						DownloadFactory()
-						.create(update))
-						.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-						.flatMap(download -> displayable.getInstallManager().install(getContext(), (PermissionRequest) getContext(), download.getAppId()))
-						.onErrorReturn(throwable -> null)
-						.subscribe();
+				downloadList.add(new DownloadFactory().create(update));
 			}
+			DownloadServiceHelper downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+			downloadManager.startDownload((PermissionRequest) getContext(), downloadList, appId -> downloadManager.getDownload(appId)
+					.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+					.flatMap(download -> displayable.getInstallManager().install(getContext(), (PermissionRequest) getContext(), download.getAppId()))
+					.subscribe(aVoid -> {
+					}, Throwable::printStackTrace));
+
+			benchmarking.end();
+			realm.close();
 			Intent intent = new Intent();
 			intent.setAction(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT);
 			intent.putExtra(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT, Event.Name.myDownloads);

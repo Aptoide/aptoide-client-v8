@@ -165,14 +165,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		}
 	}
 
-	//	@Override
-	//	public void onDestroyView() {
-	//		super.onDestroyView();
-	//
-	//		mDrawerLayout = null;
-	//		mNavigationView = null;
-	//	}
-
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -181,7 +173,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
 	@Override
 	public void onDestroy() {
-		getContext().unregisterReceiver(receiver);
+		if (receiver != null) {
+			getContext().unregisterReceiver(receiver);
+		}
 		receiver = null;
 		super.onDestroy();
 	}
@@ -280,7 +274,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Event.Name tabToChange = (Event.Name) intent.getSerializableExtra(SET_TAB_EVENT);
-			if (tabToChange != null) {
+			if (tabToChange != null && mViewPager != null) {
 				StorePagerAdapter storePagerAdapter = mViewPager.getAdapter() instanceof StorePagerAdapter ? ((StorePagerAdapter) mViewPager.getAdapter()) :
 						null;
 				if (storePagerAdapter != null) {

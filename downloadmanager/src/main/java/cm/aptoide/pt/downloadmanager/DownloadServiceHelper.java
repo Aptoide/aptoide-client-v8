@@ -18,6 +18,8 @@ import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
 import lombok.Cleanup;
 import rx.Observable;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 7/4/16.
@@ -69,17 +71,44 @@ public class DownloadServiceHelper {
 					Realm realm = Database.get();
 					Database.save(download, realm);
 					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+				} else {
+					throwable.printStackTrace();
 				}
 			});
 			return download;
 		}).flatMap(aDownload -> aptoideDownloadManager.getDownload(download.getAppId())));
 	}
 
+	public void startDownload(PermissionRequest permissionRequest, List<Download> downloads, Action1<Long> action) {
+		for (final Download download : downloads) {
+			permissionManager.requestExternalStoragePermission(permissionRequest).flatMap(success -> Observable.fromCallable(() -> {
+				aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
+					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+				}, throwable -> {
+					if (throwable instanceof DownloadNotFoundException) {
+						Realm realm = Database.get();
+						realm.executeTransactionAsync(realm1 -> realm1.copyToRealm(download), () -> {
+							startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+							action.call(download.getAppId());
+						});
+						realm.close();
+					} else {
+						throwable.printStackTrace();
+					}
+				});
+				return download;
+			})).subscribe();
+		}
+	}
+
 	private void startDownloadService(long appId, String action) {
-		Intent intent = new Intent(Application.getContext(), DownloadService.class);
-		intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, appId);
-		intent.setAction(action);
-		Application.getContext().startService(intent);
+		Observable.fromCallable(() -> {
+			Intent intent = new Intent(Application.getContext(), DownloadService.class);
+			intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, appId);
+			intent.setAction(action);
+			Application.getContext().startService(intent);
+			return null;
+		}).subscribeOn(Schedulers.io()).subscribe();
 	}
 
 	/**

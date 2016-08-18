@@ -112,7 +112,7 @@ public class DownloadService extends Service {
 		if (notificationUpdateSubscription == null || notificationUpdateSubscription.isUnsubscribed()) {
 			openAppsManagerIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null);
 
-			notificationUpdateSubscription = downloadManager.getCurrentDownload().subscribe(download -> {
+			notificationUpdateSubscription = downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
 				Bundle bundle = new Bundle();
 				bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
 				notificationClickIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION, bundle);
