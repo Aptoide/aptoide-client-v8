@@ -596,12 +596,12 @@ public class Analytics {
             innerTrack(packageName, INSTALLED, trustedBadge, ALL);
         }
 
-        public static void replaced(String packageName) {
-            innerTrack(packageName, REPLACED, null, ALL);
+        public static void replaced(String packageName, String trustedBadge) {
+            innerTrack(packageName, REPLACED, trustedBadge, ALL);
         }
 
-        public static void downgraded(String packageName) {
-            innerTrack(packageName, DOWNGRADED_ROLLBACK, null, ALL);
+        public static void downgraded(String packageName, String trustedBadge) {
+            innerTrack(packageName, DOWNGRADED_ROLLBACK, trustedBadge, ALL);
         }
     }
 
