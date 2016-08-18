@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.support.v4.app.FragmentActivity;
 import android.text.Spannable;
 
 import java.util.Date;

@@ -17,6 +17,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
@@ -111,6 +112,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
 			subscriptions.add(RxView.clicks(updateButton).flatMap(click -> displayable.downloadStatus().first().flatMap(status -> {
 				if (status == Download.COMPLETED) {
+					Logger.d(this.getClass().getName(), "download complete - success");
 					return displayable.install(getContext()).map(success -> Download.COMPLETED);
 				}
 				return displayable.download((PermissionRequest) getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(completedToPause());

@@ -58,18 +58,16 @@ public class StoreLatestAppsDisplayable extends Displayable {
 	}
 
 	public int getMarginWidth(Context context, int orientation){
-		Logger.d(this.getClass().getName(), "dpi : " + AptoideUtils.ScreenU.getDensityDpi());
 		if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
 			return 0;
 		}
 
 		int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-		Logger.d(this.getClass().getName(), "width: " + width);
 
 		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			return (int)(width * 0.2);
+			return (int)(width * 0.2); // 20 % margins if landscape
 		} else {
-			return (int)(width * 0.1);
+			return (int)(width * 0.1); // 10 % margins if portrait
 		}
 	}
 

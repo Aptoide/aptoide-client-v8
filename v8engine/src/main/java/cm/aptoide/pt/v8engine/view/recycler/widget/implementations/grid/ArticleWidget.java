@@ -9,16 +9,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -33,6 +38,9 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 	private View url;
 	private Button getAppButton;
 	private CardView cardView;
+	private CompositeSubscription subscriptions;
+	private View articleHeader;
+	private ArticleDisplayable displayable;
 
 	public ArticleWidget(View itemView) {
 		super(itemView);
@@ -48,10 +56,12 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
 		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
 		cardView = (CardView) itemView.findViewById(R.id.card);
+		articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
 	}
 
 	@Override
 	public void bindView(ArticleDisplayable displayable) {
+		this.displayable = displayable;
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
 		articleTitle.setText(displayable.getArticleTitle());
@@ -72,7 +82,9 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		url.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
+//				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
+				WebView webView = new WebView(getContext());
+				webView.loadUrl(displayable.getUrl());
 			}
 		});
 	}
@@ -82,13 +94,22 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
 				.getMarginWidth
-						(getContext(), getContext().getResources().getConfiguration().orientation),0);
+						(getContext(), getContext().getResources().getConfiguration().orientation),40);
 		cardView.setLayoutParams(layoutParams);
 	}
 
 	@Override
 	public void onViewAttached() {
 
+		// TODO: 18/08/16 click on article header. do not forget to unsubscribe
+//		if (subscriptions == null) {
+//			subscriptions = new CompositeSubscription();
+//
+//			subscriptions.add(RxView.clicks(articleHeader)
+//					.subscribe(click -> {
+//						getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
+//					}));
+//		}
 	}
 
 	@Override

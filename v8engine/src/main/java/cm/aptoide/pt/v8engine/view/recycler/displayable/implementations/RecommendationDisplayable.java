@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
@@ -61,13 +60,11 @@ public class RecommendationDisplayable extends Displayable {
 	}
 
 	public int getMarginWidth(Context context, int orientation){
-		Logger.d(this.getClass().getName(), "dpi : " + AptoideUtils.ScreenU.getDensityDpi());
 		if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
 			return 0;
 		}
 
 		int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-		Logger.d(this.getClass().getName(), "width: " + width);
 
 		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			return (int)(width * 0.2);
@@ -93,7 +90,7 @@ public class RecommendationDisplayable extends Displayable {
 
 	public Spannable getAppText(Context context) {
 		return spannableFactory.createStyleSpan(context
-				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), Typeface.BOLD, appName);
+				.getString(R.string.displayable_social_timeline_article_get_app_button, ""), Typeface.BOLD, "");
 	}
 
 	public String getTimeSinceLastUpdate(Context context) {
