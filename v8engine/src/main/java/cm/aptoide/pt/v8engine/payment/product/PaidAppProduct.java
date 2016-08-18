@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.payment.product;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import cm.aptoide.pt.v8engine.payment.Product;
 
@@ -27,70 +28,60 @@ public class PaidAppProduct implements Product {
 	};
 
 	private final int id;
-	private final String type;
 	private final String icon;
-	private final double price;
-	private final String currency;
-	private final double taxRate;
+	private final String title;
+	private final String description;
+	private final String price;
+
 	private final long appId;
-	private final String name;
 	private final String storeName;
 
-	public PaidAppProduct(int id, String type, String icon, double price, String currency, double taxRate, long appId, String name, String storeName) {
+	public PaidAppProduct(int id, String icon, String title, String description, String price, long appId, String storeName) {
 		this.id = id;
-		this.type = type;
 		this.icon = icon;
+		this.title = title;
+		this.description = description;
 		this.price = price;
-		this.currency = currency;
-		this.taxRate = taxRate;
 		this.appId = appId;
-		this.name = name;
 		this.storeName = storeName;
 	}
 
 	protected PaidAppProduct(Parcel in) {
 		id = in.readInt();
-		type = in.readString();
 		icon = in.readString();
-		price = in.readDouble();
-		currency = in.readString();
-		taxRate = in.readDouble();
+		title = in.readString();
+		description = in.readString();
+		price = in.readString();
 		appId = in.readLong();
-		name = in.readString();
 		storeName = in.readString();
 	}
 
+	@Override
 	public int getId() {
 		return id;
 	}
 
-	public String getType() {
-		return type;
-	}
-
+	@Override
 	public String getIcon() {
 		return icon;
 	}
 
-	public double getPrice() {
-		return price;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public double getTaxRate() {
-		return taxRate;
-	}
-
-	public long getAppId() {
-		return appId;
+	@Override
+	public String getTitle() {
+		return title;
 	}
 
 	@Override
 	public String getDescription() {
-		return name;
+		return description;
+	}
+
+	public String getPriceDescription() {
+		return price;
+	}
+
+	public long getAppId() {
+		return appId;
 	}
 
 	public String getStoreName() {
@@ -98,20 +89,19 @@ public class PaidAppProduct implements Product {
 	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
-		dest.writeString(type);
-		dest.writeString(icon);
-		dest.writeDouble(price);
-		dest.writeString(currency);
-		dest.writeDouble(taxRate);
-		dest.writeLong(appId);
-		dest.writeString(name);
-		dest.writeString(storeName);
+	public int describeContents() {
+		return 0;
 	}
 
 	@Override
-	public int describeContents() {
-		return 0;
+	public void writeToParcel(Parcel dest, int flags) {
+
+		dest.writeInt(id);
+		dest.writeString(icon);
+		dest.writeString(title);
+		dest.writeString(description);
+		dest.writeString(price);
+		dest.writeLong(appId);
+		dest.writeString(storeName);
 	}
 }

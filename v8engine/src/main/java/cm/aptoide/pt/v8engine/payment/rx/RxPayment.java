@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.payment.rx;
 
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.Product;
 import rx.Observable;
 
 /**
@@ -15,8 +14,8 @@ import rx.Observable;
  */
 public class RxPayment {
 
-	public static Observable<PaymentConfirmation> process(Payment payment, Product product) {
-		return Observable.create(new ProcessPaymentOnSubscribe(payment, product));
+	public static Observable<PaymentConfirmation> process(Payment payment) {
+		return Observable.create(new ProcessPaymentOnSubscribe(payment));
 	}
 
 	private RxPayment() {

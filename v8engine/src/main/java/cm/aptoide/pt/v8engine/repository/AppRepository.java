@@ -17,7 +17,6 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
-import cm.aptoide.pt.v8engine.payment.PaymentRepository;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
@@ -28,7 +27,7 @@ import rx.Observable;
  * Created by marcelobenites on 7/27/16.
  */
 @AllArgsConstructor
-public class AppRepository implements PaymentRepository {
+public class AppRepository {
 
 	private final NetworkOperatorManager operatorManager;
 	private final ProductFactory productFactory;
@@ -47,25 +46,15 @@ public class AppRepository implements PaymentRepository {
 				.map(response -> productFactory.create(app, response.getPayment()));
 	}
 
-	@Override
-	public Observable<List<Payment>> getProductPayments(Context context, Product product) {
-		return Observable.just(product instanceof PaidAppProduct).flatMap(isPaidApp -> {
-			if (isPaidApp) {
-				final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
-				return GetApkInfoRequest.of(paidAppProduct.getAppId(), operatorManager, false, paidAppProduct.getStoreName()).observe(true).flatMapIterable
-						(response -> response.getPayment().payment_services)
-						.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getPrice(),
-								paymentService.getCurrency(), paymentService.getTaxRate()))
-						.toList();
-
-			}
-			return Observable.error(new IllegalArgumentException("Product must be a paid app!"));
-		});
+	public Observable<List<Payment>> getPayments(Context context, PaidAppProduct product) {
+		return GetApkInfoRequest.of(product.getAppId(), operatorManager, false, product.getStoreName()).observe(true)
+				.flatMapIterable(response -> response.getPayment().payment_services)
+				.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getPrice(),
+						paymentService.getCurrency(), paymentService.getTaxRate(), product))
+				.toList();
 	}
 
 	private Observable<GetApkInfoJson.Payment> getPayment(long appId, boolean fromSponsored, String storeName) {
 		return GetApkInfoRequest.of(appId, operatorManager, fromSponsored, storeName).observe(true).map(app -> app.getPayment());
 	}
-
-
 }

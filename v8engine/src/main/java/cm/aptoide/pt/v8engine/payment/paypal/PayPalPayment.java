@@ -15,6 +15,7 @@ import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.Payment;
@@ -28,9 +29,7 @@ public class PayPalPayment implements Payment {
 	private final Context context;
 	private final int id;
 	private final int icon;
-	private final double price;
-	private final String currency;
-	private final double taxRate;
+	private final Price price;
 	private final LocalBroadcastManager broadcastManager;
 	private final PayPalConfiguration configuration;
 	private final PayPalConverter converter;
@@ -38,19 +37,17 @@ public class PayPalPayment implements Payment {
 	private PaymentConfirmationReceiver receiver;
 	private PaymentConfirmationListener listener;
 	private boolean processing;
-	private Product product;
+	private final Product product;
 
-	public PayPalPayment(Context context, int id, int icon, double price, String currency, double taxRate, LocalBroadcastManager broadcastManager,
-	                     PayPalConfiguration configuration, PayPalConverter converter) {
+	public PayPalPayment(Context context, int id, int icon, Price price, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PayPalConverter converter, Product product) {
 		this.context = context;
 		this.id = id;
 		this.icon = icon;
 		this.price = price;
-		this.currency = currency;
-		this.taxRate = taxRate;
 		this.broadcastManager = broadcastManager;
 		this.configuration = configuration;
 		this.converter = converter;
+		this.product = product;
 	}
 
 	@Override
@@ -64,18 +61,8 @@ public class PayPalPayment implements Payment {
 	}
 
 	@Override
-	public double getPrice() {
+	public Price getPrice() {
 		return price;
-	}
-
-	@Override
-	public String getCurrency() {
-		return currency;
-	}
-
-	@Override
-	public double getTaxRate() {
-		return taxRate;
 	}
 
 	@Override
@@ -89,21 +76,25 @@ public class PayPalPayment implements Payment {
 		receiver = null;
 		listener = null;
 		processing = false;
-		product = null;
 	}
 
 	@Override
-	public void process(Product product, PaymentConfirmationListener listener) {
+	public void process(PaymentConfirmationListener listener) {
 		if (!processing) {
-			this.product = product;
 			processing = true;
 			this.listener = listener;
 			IntentFilter paymentResultFilter = new IntentFilter();
 			paymentResultFilter.addAction(PaymentConfirmationReceiver.PAYMENT_RESULT_ACTION);
 			receiver = new PaymentConfirmationReceiver();
 			broadcastManager.registerReceiver(receiver, paymentResultFilter);
-			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(price, currency, product.getDescription()), configuration));
+			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(price.getPrice(), price.getCurrency(),
+					product.getDescription()), configuration));
 		}
+	}
+
+	@Override
+	public Product getProduct() {
+		return product;
 	}
 
 	private void startPayPalActivity() {
@@ -131,7 +122,7 @@ public class PayPalPayment implements Payment {
 						case PAYMENT_STATUS_OK:
 							payPalConfirmation = intent.getParcelableExtra(PAYMENT_CONFIRMATION_EXTRA);
 							if (payPalConfirmation != null) {
-								listener.onSuccess(converter.convertFromPayPal(payPalConfirmation, product));
+								listener.onSuccess(converter.convertFromPayPal(payPalConfirmation, id, product, price));
 								cancel();
 							}
 							break;

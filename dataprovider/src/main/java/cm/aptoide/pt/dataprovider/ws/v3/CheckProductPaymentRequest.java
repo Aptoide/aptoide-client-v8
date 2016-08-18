@@ -29,44 +29,29 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 		this.args = args;
 	}
 
-	public static CheckProductPaymentRequest of(String paymentConfirmationId, int productId, String packageName, int apiVersion, String currency, String developerPayload, double taxRate, double price, NetworkOperatorManager operatorManager) {
+	public static CheckProductPaymentRequest ofInAppBilling(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency, NetworkOperatorManager operatorManager, int apiVersion, String developerPayload) {
 		final Map<String,String> args = new HashMap<>();
-		addDefaultValues(paymentConfirmationId, productId, currency, taxRate, price, operatorManager, args);
-		args.put("paytype", "iab");
+		addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency, operatorManager, args);
+		args.put("reqtype", "iabpurchasestatus");
 		args.put("apiversion", String.valueOf(apiVersion));
+		args.put("developerPayload", developerPayload);
 		return new CheckProductPaymentRequest(BASE_HOST, args);
 	}
 
-	public static CheckProductPaymentRequest of(String paymentConfirmationId, int productId, String storeName, String currency, double taxRate, double price, NetworkOperatorManager operatorManager) {
+	public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String
+			currency, NetworkOperatorManager operatorManager, String storeName) {
 		final Map<String,String> args = new HashMap<>();
-		addDefaultValues(paymentConfirmationId, productId, currency, taxRate, price, operatorManager, args);
-		args.put("paytype", String.valueOf("paidapp"));
+		addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency, operatorManager, args);
+		args.put("reqtype", "apkpurchasestatus");
 		args.put("repo", storeName);
 		return new CheckProductPaymentRequest(BASE_HOST, args);
 	}
 
-	//
-	// sample WS payload
-	//
-//	paytype 1
-//	reqtype apkpurchasestatus
-//	price 0.87
-//	access_token 6920a21f32ab3aba7029a32b85e1527159237864
-//	payreqtype rest
-//	mode json
-//	apiversion null
-//	currency EUR
-//	taxrate 0.0
-//	productid 827
-//	paykey PAY-80505244U6383235AK6W3NVQ
-
-	private static void addDefaultValues(String paymentConfirmationId, int productId, String currency, double taxRate, double price, NetworkOperatorManager
-			operatorManager, Map<String,String> args) {
+	private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency, NetworkOperatorManager operatorManager, Map<String,String> args) {
 
 		args.put("mode", "json");
 		args.put("payreqtype", "rest");
-		args.put("reqtype", "apkpurchasestatus");
-		args.put("paytype", String.valueOf(1));
+		args.put("paytype", String.valueOf(paymentId));
 		args.put("paykey", paymentConfirmationId);
 		args.put("taxrate", String.format(Locale.ROOT, "%.2f", taxRate));
 		args.put("productid", String.valueOf(productId));
@@ -78,7 +63,6 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 			args.put("simcc", operatorManager.getSimCountryISO());
 		}
 	}
-
 
 	@Override
 	protected Observable<PaymentResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {

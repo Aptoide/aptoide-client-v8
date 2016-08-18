@@ -18,6 +18,7 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.payment.handler.PaymentConfirmationHandler;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
+import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentActivity extends RxAppCompatActivity {
@@ -44,14 +45,11 @@ public class PaymentActivity extends RxAppCompatActivity {
 		final NetworkOperatorManager operatorManager = new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
 		final ProductFactory productFactory = new ProductFactory();
 		final PaymentFactory paymentFactory = new PaymentFactory();
-		if (product.getType().equals("iab")) {
-			paymentRepository = new InAppBillingRepository(operatorManager, productFactory, paymentFactory);
-		} else {
-			paymentRepository = new AppRepository(operatorManager, productFactory, paymentFactory);
-		}
-		paymentManager = new PaymentManager(new PaymentConfirmationHandler(this));
-
-		paymentRepository.getProductPayments(this, product)
+		paymentRepository = new PaymentRepository(new AppRepository(operatorManager, productFactory, paymentFactory),
+				new InAppBillingRepository(operatorManager, productFactory, paymentFactory),
+				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory);
+		paymentManager = new PaymentManager(new PaymentConfirmationHandler(this, paymentRepository));
+		paymentRepository.getPayments(this, product)
 				.compose(bindUntilEvent(ActivityEvent.DESTROY))
 				.flatMap(payments -> paymentManager.pay(payments.get(0), product))
 				.observeOn(AndroidSchedulers.mainThread())

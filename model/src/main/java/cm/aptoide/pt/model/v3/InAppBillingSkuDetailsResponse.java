@@ -41,16 +41,13 @@ public class InAppBillingSkuDetailsResponse extends BaseV3Response {
 		private String price;
 		private String title;
 		private String description;
+		private String type;
 	}
 
 	@Data
 	public static class Metadata {
 		private int id;
 		private String icon;
-		private double price;
-		private String currency;
-		@JsonProperty("tax_rate")
-		private double taxRate;
 	}
 	
 }

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
@@ -15,16 +14,11 @@ public interface Product extends Parcelable {
 
 	int getId();
 
-	String getDescription();
-
-	String getType();
-
 	String getIcon();
 
-	double getPrice();
+	String getTitle();
 
-	String getCurrency();
+	String getDescription();
 
-	double getTaxRate();
-
+	String getPriceDescription();
 }

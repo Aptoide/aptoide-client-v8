@@ -243,7 +243,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//check if the app is paid
 		if (payment != null && payment.isPaidApp()) {
 			// TODO: 05/08/16 sithengineer replace that for placeholders in resources as soon as we are able to add new strings for translation
-			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.getSymbol() + " " + payment.getPrice()+ ")");
+			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.getPrice()+ ")");
 			actionButton.setOnClickListener(v -> {
 				displayable.buyApp(getContext(), app).subscribe();
 			});

@@ -21,17 +21,15 @@ public interface Payment {
 
 	@DrawableRes int getIcon();
 
-	double getPrice();
+	Product getProduct();
 
-	String getCurrency();
-
-	double getTaxRate();
+	Price getPrice();
 
 	void cancel();
 
 	boolean isProcessing();
 
-	void process(Product product, PaymentConfirmationListener listener);
+	void process(PaymentConfirmationListener listener);
 
 	static interface PaymentConfirmationListener {
 

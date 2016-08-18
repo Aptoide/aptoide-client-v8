@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
@@ -157,6 +158,23 @@ public class Database {
 		public static void delete(long storeId, Realm realm) {
 			realm.beginTransaction();
 			realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst().deleteFromRealm();
+			realm.commitTransaction();
+		}
+	}
+
+	public static class PaymentConfirmationQ {
+
+		public static PaymentConfirmation get(int productId, Realm realm) {
+			return realm.where(PaymentConfirmation.class).equalTo(PaymentConfirmation.PRODUCT_ID, productId).findFirstAsync();
+		}
+
+		public static RealmResults<PaymentConfirmation> getAll(Realm realm) {
+			return realm.where(PaymentConfirmation.class).findAllAsync();
+		}
+
+		public static void delete(String paymentConfirmationId, Realm realm) {
+			realm.beginTransaction();
+			realm.where(PaymentConfirmation.class).equalTo(PaymentConfirmation.PAYMENT_CONFIRMATION_ID, paymentConfirmationId).findFirst().deleteFromRealm();
 			realm.commitTransaction();
 		}
 	}

@@ -9,6 +9,7 @@ import android.content.Context;
 
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
+import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 
@@ -19,6 +20,7 @@ import rx.Observable;
 public class PaymentConfirmationHandler {
 
 	private final Context context;
+	private final PaymentRepository paymentRepository;
 
 	public Observable<Boolean> isHandled(Payment payment) {
 		return Observable.just(false);

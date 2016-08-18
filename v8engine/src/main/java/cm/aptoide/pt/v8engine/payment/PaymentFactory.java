@@ -21,11 +21,11 @@ public class PaymentFactory {
 
 	public static final String PAYPAL = "paypal";
 
-	public Payment create(Context context, String type, int id, double price, String currency, double taxRate) {
+	public Payment create(Context context, String type, int id, double price, String currency, double taxRate, Product product) {
 		switch (type) {
 			case PAYPAL:
-				return new PayPalPayment(context, id, R.drawable.visa_btn_default_focused_holo_light, price, currency, taxRate,
-						getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter());
+				return new PayPalPayment(context, id, R.drawable.visa_btn_default_focused_holo_light, new Price(price, currency, taxRate),
+						getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter(), product);
 			default:
 				throw new IllegalArgumentException("Payment not supported: " + type);
 		}

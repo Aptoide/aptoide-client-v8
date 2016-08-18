@@ -25,7 +25,7 @@ public class PaymentManager {
 				return Observable.just(null);
 			}
 
-			return RxPayment.process(payment, product)
+			return RxPayment.process(payment)
 					.flatMap(paymentConfirmation -> paymentConfirmationHandler.handle(paymentConfirmation));
 		});
 	}

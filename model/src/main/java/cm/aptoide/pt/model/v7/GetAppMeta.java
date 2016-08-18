@@ -191,5 +191,9 @@ public class GetAppMeta extends BaseV7Response {
 		public boolean isPaidApp() {
 			return price > 0.0f;
 		}
+
+		public String getPrice() {
+			return symbol + " " + String.valueOf(price);
+		}
 	}
 }

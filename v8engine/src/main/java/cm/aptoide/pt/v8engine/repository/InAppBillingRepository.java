@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.iab.InAppBillingSKU;
 import cm.aptoide.pt.v8engine.iab.InAppBillingPurchase;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
-import cm.aptoide.pt.v8engine.payment.PaymentRepository;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
@@ -32,7 +31,7 @@ import rx.functions.Func3;
  * Created by marcelobenites on 8/11/16.
  */
 @AllArgsConstructor
-public class InAppBillingRepository implements PaymentRepository {
+public class InAppBillingRepository {
 
 	private final NetworkOperatorManager operatorManager;
 	private final ProductFactory productFactory;
@@ -50,7 +49,8 @@ public class InAppBillingRepository implements PaymentRepository {
 
 	public Observable<Product> getInAppBillingProduct(Context context, int apiVersion, String packageName, String sku, String developerPayload) {
 		return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, sku, operatorManager).observe()
-				.map(response -> productFactory.create(response.getMetadata(), apiVersion, developerPayload, packageName, sku));
+				.map(response -> productFactory.create(response.getMetadata(), apiVersion, developerPayload, packageName,
+						response.getPublisherResponse().getDetailList().get(0)));
 	}
 
 	public Observable<List<InAppBillingSKU>> getSKUs(int apiVersion, String packageName, List<String> skuList) {
@@ -93,19 +93,11 @@ public class InAppBillingRepository implements PaymentRepository {
 		});
 	}
 
-	@Override
-	public Observable<List<Payment>> getProductPayments(Context context, Product product) {
-		return Observable.just(product instanceof InAppBillingProduct).flatMap(isPaidApp -> {
-			if (isPaidApp) {
-				final InAppBillingProduct inAppBillingProduct = (InAppBillingProduct) product;
-				return InAppBillingSkuDetailsRequest.of(inAppBillingProduct.getApiVersion(), inAppBillingProduct.getPackageName(), inAppBillingProduct.getDescription(),
-						operatorManager).observe(false)
-						.flatMapIterable(response -> response.getPaymentServices())
-						.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getPrice(),
-								paymentService.getCurrency(), paymentService.getTaxRate()))
-						.toList();
-			}
-			return Observable.error(new IllegalArgumentException("Product must be a in-app billing!"));
-		});
+	public Observable<List<Payment>> getPayments(Context context, InAppBillingProduct product) {
+		return InAppBillingSkuDetailsRequest.of(product.getApiVersion(), product.getPackageName(), product.getSku(), operatorManager).observe(false)
+				.flatMapIterable(response -> response.getPaymentServices())
+				.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getPrice(),
+						paymentService.getCurrency(), paymentService.getTaxRate(), product))
+				.toList();
 	}
 }

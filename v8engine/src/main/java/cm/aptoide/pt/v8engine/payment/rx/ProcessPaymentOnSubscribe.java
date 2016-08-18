@@ -21,14 +21,13 @@ import rx.subscriptions.Subscriptions;
 public class ProcessPaymentOnSubscribe implements Observable.OnSubscribe<PaymentConfirmation> {
 
 	private final Payment payment;
-	private final Product product;
 
 	@Override
 	public void call(Subscriber<? super PaymentConfirmation> subscriber) {
 
 		subscriber.add(Subscriptions.create(() -> payment.cancel()));
 
-		payment.process(product, new Payment.PaymentConfirmationListener() {
+		payment.process(new Payment.PaymentConfirmationListener() {
 			@Override
 			public void onSuccess(PaymentConfirmation paymentConfirmation) {
 				if (!subscriber.isUnsubscribed()) {

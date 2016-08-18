@@ -10,6 +10,7 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import java.math.BigDecimal;
 
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
+import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 
 /**
@@ -21,7 +22,7 @@ public class PayPalConverter {
 		return new PayPalPayment(BigDecimal.valueOf(price), currency, description, PayPalPayment.PAYMENT_INTENT_SALE);
 	}
 
-	public PaymentConfirmation convertFromPayPal(com.paypal.android.sdk.payments.PaymentConfirmation payPalConfirmation, Product product) {
-		return new PaymentConfirmation(payPalConfirmation.getProofOfPayment().getPaymentId(), product);
+	public PaymentConfirmation convertFromPayPal(com.paypal.android.sdk.payments.PaymentConfirmation payPalConfirmation, int paymentId, Product product, Price price) {
+		return new PaymentConfirmation(payPalConfirmation.getProofOfPayment().getPaymentId(), paymentId, product, price);
 	}
 }

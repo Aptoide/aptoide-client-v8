@@ -28,77 +28,56 @@ public class InAppBillingProduct implements Product {
 	};
 
 	private final int id;
-	private final String type;
 	private final String icon;
-	private final double price;
-	private final String currency;
-	private final double taxRate;
-
-	private final String developerPayload;
-	private final int apiVersion;
-	private final String packageName;
+	private final String title;
 	private final String description;
+	private final String price;
 
-	public InAppBillingProduct(int id, String type, String icon, double price, String currency, double taxRate, String developerPayload, int apiVersion, String packageName, String sku) {
+	private final int apiVersion;
+	private final String sku;
+	private final String packageName;
+	private final String developerPayload;
+	private final String type;
+
+	public InAppBillingProduct(int id, String icon, String title, String description, String price, int apiVersion, String sku, String packageName, String developerPayload, String type) {
 		this.id = id;
-		this.type = type;
 		this.icon = icon;
+		this.title = title;
+		this.description = description;
 		this.price = price;
-		this.currency = currency;
-		this.taxRate = taxRate;
-		this.developerPayload = developerPayload;
 		this.apiVersion = apiVersion;
+		this.sku = sku;
 		this.packageName = packageName;
-		this.description = sku;
+		this.developerPayload = developerPayload;
+		this.type = type;
 	}
 
 	protected InAppBillingProduct(Parcel in) {
 		id = in.readInt();
-		type = in.readString();
 		icon = in.readString();
-		price = in.readDouble();
-		currency = in.readString();
-		taxRate = in.readDouble();
-		developerPayload = in.readString();
-		apiVersion = in.readInt();
-		packageName = in.readString();
+		title = in.readString();
 		description = in.readString();
+		price = in.readString();
+		apiVersion = in.readInt();
+		sku = in.readString();
+		packageName = in.readString();
+		developerPayload = in.readString();
+		type = in.readString();
 	}
 
+	@Override
 	public int getId() {
 		return id;
 	}
 
-	public String getType() {
-		return type;
-	}
-
+	@Override
 	public String getIcon() {
 		return icon;
 	}
 
-	public double getPrice() {
-		return price;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public double getTaxRate() {
-		return taxRate;
-	}
-
-	public String getDeveloperPayload() {
-		return developerPayload;
-	}
-
-	public int getApiVersion() {
-		return apiVersion;
-	}
-
-	public String getPackageName() {
-		return packageName;
+	@Override
+	public String getTitle() {
+		return title;
 	}
 
 	@Override
@@ -107,21 +86,47 @@ public class InAppBillingProduct implements Product {
 	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
-		dest.writeString(type);
-		dest.writeString(icon);
-		dest.writeDouble(price);
-		dest.writeString(currency);
-		dest.writeDouble(taxRate);
-		dest.writeString(developerPayload);
-		dest.writeInt(apiVersion);
-		dest.writeString(packageName);
-		dest.writeString(description);
+	public String getPriceDescription() {
+		return price;
+	}
+
+	public int getApiVersion() {
+		return apiVersion;
+	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public String getDeveloperPayload() {
+		return developerPayload;
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	@Override
 	public int describeContents() {
 		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+
+		dest.writeInt(id);
+		dest.writeString(icon);
+		dest.writeString(title);
+		dest.writeString(description);
+		dest.writeString(price);
+		dest.writeInt(apiVersion);
+		dest.writeString(sku);
+		dest.writeString(packageName);
+		dest.writeString(developerPayload);
+		dest.writeString(type);
 	}
 }
