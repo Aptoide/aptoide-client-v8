@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -18,6 +19,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -35,6 +37,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 	private Button getAppButton;
 	private ImageView play_button;
 	private FrameLayout media_layout;
+	private CardView cardView;
 
 	public VideoWidget(View itemView) {
 		super(itemView);
@@ -51,6 +54,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 		thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
 		url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
 		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
+		cardView = (CardView) itemView.findViewById(R.id.card);
 	}
 
 	@Override
@@ -58,6 +62,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
 		videoTitle.setText(displayable.getVideoTitle());
+		setCardviewMargin(displayable);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 		play_button.setVisibility(View.VISIBLE);
@@ -85,6 +90,15 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			getContext().startActivity(intent);
 		});
+	}
+
+	private void setCardviewMargin(VideoDisplayable displayable) {
+		CardView.LayoutParams layoutParams = new CardView.LayoutParams(
+				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
+				.getMarginWidth
+						(getContext(), getContext().getResources().getConfiguration().orientation),0);
+		cardView.setLayoutParams(layoutParams);
 	}
 
 	@Override

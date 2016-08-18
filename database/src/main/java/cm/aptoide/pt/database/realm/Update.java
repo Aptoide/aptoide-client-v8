@@ -253,4 +253,8 @@ public class Update extends RealmObject {
 	public void setPatchObbName(String patchObbName) {
 		this.patchObbName = patchObbName;
 	}
+
+	public String getTrustedBadge() {
+		return trustedBadge;
+	}
 }

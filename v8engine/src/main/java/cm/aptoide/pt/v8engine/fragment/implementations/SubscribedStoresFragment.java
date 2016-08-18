@@ -40,10 +40,18 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 	@Override
 	public void setupViews() {
 		super.setupViews();
-		RxView.clicks(addStoreButton).subscribe(view ->{
+
+		addStoreButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				new AddStoreDialog().show(((FragmentActivity) getContext())
+						.getSupportFragmentManager(), "addStoreDialog");
+			}
+		});
+		/*RxView.clicks(addStoreButton).subscribe(view ->{
 			new AddStoreDialog().show(((FragmentActivity) getContext())
 					.getSupportFragmentManager(), "addStoreDialog");
-		});
+		});*/
 
 	}
 

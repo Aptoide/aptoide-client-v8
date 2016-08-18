@@ -5,8 +5,10 @@
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -98,6 +100,8 @@ public abstract class V8Engine extends DataProvider {
 		super.onCreate();
 		generateAptoideUUID().subscribe();
 
+		SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
+		Analytics.LocalyticsSessionControl.firstSession(sPref);
 		Analytics.Lifecycle.Application.onCreate(this);
 
 		new FlurryAgent.Builder()

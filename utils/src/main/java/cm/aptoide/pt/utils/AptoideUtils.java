@@ -19,6 +19,7 @@ import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,6 +35,7 @@ import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -433,6 +435,39 @@ public class AptoideUtils {
 		public static final float REFERENCE_WIDTH_DPI = 360;
 
 		private static ScreenUtilsCache screenWidthInDipCache = new ScreenUtilsCache();
+
+		private static int displayWidthCacheLandscape = -1;
+		private static int displayWidthCachePortrait = -1;
+
+		public static int getCachedDisplayWidth(int orientation){
+			if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				if (displayWidthCacheLandscape == -1) {
+					WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+					Display display = windowManager.getDefaultDisplay();
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+						Point point = new Point();
+						display.getSize(point);
+						displayWidthCacheLandscape = point.x;
+					} else {
+						displayWidthCacheLandscape = display.getWidth();
+					}
+				}
+				return displayWidthCacheLandscape;
+			} else {
+				if (displayWidthCachePortrait == -1) {
+					WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+					Display display = windowManager.getDefaultDisplay();
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+						Point point = new Point();
+						display.getSize(point);
+						displayWidthCachePortrait = point.y;
+					} else {
+						displayWidthCachePortrait = display.getHeight();  // test this if you use it please
+					}
+				}
+				return displayWidthCachePortrait;
+			}
+		}
 
 		public static int getCurrentOrientation() {
 			return context.getResources().getConfiguration().orientation;

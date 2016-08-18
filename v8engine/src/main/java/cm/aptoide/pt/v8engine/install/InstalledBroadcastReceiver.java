@@ -80,7 +80,6 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		if(rollback != null) {
 			String packageNameFromRollbackQ = rollback.getPackageName();
 			String trustedBadge = rollback.getTrustedBadge();
-			Logger.d(TAG, "LOCALYTICS TESTING : APPLICATION INSTALL - PACKAGE NAME: " + packageNameFromRollbackQ + " trustedBadge: " + trustedBadge);
 			Analytics.ApplicationInstall.installed(packageName, trustedBadge);
 		}
 
@@ -130,6 +129,10 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	private void databaseOnPackageReplaced(String packageName, Context context) {
 		Update update = Database.UpdatesQ.get(packageName, realm);
 
+		if(update != null && update.getPackageName() != null && update.getTrustedBadge() != null){
+			Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+		}
+
 		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 		if (update != null) {
 			if (packageInfo.versionCode >= update.getVersionCode()) {
@@ -149,6 +152,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.DOWNGRADE, realm);
 		if (rollback != null) {
 			confirmAction(packageName, Rollback.Action.DOWNGRADE);
+			Analytics.ApplicationInstall.downgraded(packageName, rollback.getTrustedBadge());
 		} else {
 			rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
 			if (rollback != null) {

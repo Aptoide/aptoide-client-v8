@@ -129,15 +129,15 @@ public class Analytics {
 	            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
 	            ACTIVATE = ACTIVATE && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
 	            isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-	            Logger.d(TAG, "teste : " + ACTIVATE + " : " + isFirstSession);
-	            if (!ACTIVATE && !isFirstSession) {
-		            return;
-	            }
+                Logger.d(TAG, "teste : " + ACTIVATE + " : " + isFirstSession);
+                if (!ACTIVATE && !isFirstSession) {
+                    return;
+                }
 
                 // Integrate Localytics
                 Localytics.autoIntegrate(application);
                 checkForUTMFileInMetaINF();
-	            Logger.d(TAG, "Localytics session configured");
+                Logger.d(TAG, "Localytics session configured");
 
             }
 
@@ -151,11 +151,6 @@ public class Analytics {
 
                     UTMFileParser utmFileParser = new UTMFileParser(utmInputStream);
                     myZipFile.close();
-
-//                    Logger.d(TAG, UTMFileParser.UTM_SOURCE + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE));
-//                    Logger.d(TAG, UTMFileParser.UTM_MEDIUM + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM));
-//                    Logger.d(TAG, UTMFileParser.UTM_CAMPAIGN + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN));
-//                    Logger.d(TAG, UTMFileParser.UTM_CONTENT + " : " + utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT));
 
 	                String utmSource = utmFileParser.valueExtracter(UTMFileParser.UTM_SOURCE);
 	                String utmMedium = utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM);
@@ -601,12 +596,12 @@ public class Analytics {
             innerTrack(packageName, INSTALLED, trustedBadge, ALL);
         }
 
-        public static void replaced(String packageName) {
-            innerTrack(packageName, REPLACED, null, ALL);
+        public static void replaced(String packageName, String trustedBadge) {
+            innerTrack(packageName, REPLACED, trustedBadge, ALL);
         }
 
-        public static void downgraded(String packageName) {
-            innerTrack(packageName, DOWNGRADED_ROLLBACK, null, ALL);
+        public static void downgraded(String packageName, String trustedBadge) {
+            innerTrack(packageName, DOWNGRADED_ROLLBACK, trustedBadge, ALL);
         }
     }
 
@@ -822,19 +817,21 @@ public class Analytics {
         }
 
 	    public static void setUTMSource(String utmSource){
+            setDimension(4, utmSource);
 	    }
 
 	    public static void setUTMMedium(String utmMedium) {
+            setDimension(5, utmMedium);
 
 	    }
 
 	    public static void setUTMCampaign(String utmCampaign) {
-
-	    }
+            setDimension(6, utmCampaign);
+        }
 
 	    public static void setUTMContent(String utmContent) {
-
-	    }
+            setDimension(7, utmContent);
+        }
     }
 
     public static class AppViewViewedFrom {

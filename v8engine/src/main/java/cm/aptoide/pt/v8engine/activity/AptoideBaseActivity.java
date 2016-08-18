@@ -64,8 +64,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	}
 
 	private void setUpAnalytics() {
-		SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
-		Analytics.LocalyticsSessionControl.firstSession(sPref);
 		Analytics.Lifecycle.Activity.onCreate(this);
 		Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
 		Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);

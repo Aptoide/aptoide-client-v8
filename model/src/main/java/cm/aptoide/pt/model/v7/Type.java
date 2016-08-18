@@ -70,6 +70,7 @@ public enum Type {
 
 	//Download tab
 	ACTIVE_DOWNLOAD,
+	ACTIVE_DOWNLOAD_HEADER,
 	COMPLETED_DOWNLOAD,
 
 	//Reviews Screen

@@ -37,6 +37,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
@@ -86,6 +87,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ActiveDownloadWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ActiveDownloadsHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreStoresWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AdultRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickListWidget;
@@ -204,6 +206,7 @@ public enum DisplayableType {
 	SCHEDULED_DOWNLOAD(ScheduledDownloadWidget.class, ScheduledDownloadDisplayable.class),
 	COMPLETED_DOWNLOAD(CompletedDownloadWidget.class, CompletedDownloadDisplayable.class),
 	ACTIVE_DOWNLOAD(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class),
+	ACTIVE_DOWNLOAD_HEADER(ActiveDownloadsHeaderWidget.class, ActiveDownloadsHeaderDisplayable.class),
 	ROW_REVIEW(RowReviewWidget.class, RowReviewDisplayable.class),
 	APP_COMMENT_TO_REVIEW(CommentWidget.class, CommentDisplayable.class),
 	READ_MORE_COMMENTS(CommentsReadMoreWidget.class, CommentsReadMoreDisplayable.class);
