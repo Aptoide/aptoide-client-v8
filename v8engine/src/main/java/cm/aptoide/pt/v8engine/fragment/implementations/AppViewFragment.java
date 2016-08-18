@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/08/2016.
+ * Modified by SithEngineer on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -723,11 +723,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			String headerImageUrl = app.getGraphic();
 			List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
 
+//			final Drawable colorDrawable = new ColorDrawable(Color.argb(255, 0, 0, 0));
+
 			if (!TextUtils.isEmpty(headerImageUrl)) {
-				ImageLoader.load(app.getGraphic(), featuredGraphic);
+				ImageLoader.load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//					((FrameLayout)featuredGraphic.getParent()).setForeground(colorDrawable);
+//				}
 			}
 			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(screenshots.get(0).getUrl())) {
-				ImageLoader.load(screenshots.get(0).getUrl(), featuredGraphic);
+				ImageLoader.load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient, featuredGraphic);
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//					((FrameLayout) featuredGraphic.getParent()).setForeground(colorDrawable);
+//				}
 			}
 
 			if (app.getIcon() != null) {

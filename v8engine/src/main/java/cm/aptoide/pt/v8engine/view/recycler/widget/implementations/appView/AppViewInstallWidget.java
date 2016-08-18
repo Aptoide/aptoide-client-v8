@@ -427,7 +427,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 
 	private boolean isThisTheLatestVersionAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
-		boolean canCompare = appVersions != null && appVersions.getList() != null && appVersions.getList()!=null && appVersions.getList().isEmpty();
+		boolean canCompare = appVersions != null && appVersions.getList() != null && appVersions.getList() != null && !appVersions.getList().isEmpty();
 		return !canCompare || (app.getFile().getVercode() >= appVersions.getList().get(0).getFile().getVercode());
 	}
 

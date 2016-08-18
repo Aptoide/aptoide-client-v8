@@ -3,9 +3,9 @@
   ~ Copyright (c) 2016.
   ~ Modified by SithEngineer on 18/08/2016.
   -->
+
 <!--
     tools:background="#BB000000"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 -->
 <android.support.design.widget.AppBarLayout
     android:id="@+id/app_bar"
@@ -14,8 +14,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/appview_header_height"
-    android:background="#BB000000"
+    android:background="#80000000"
     android:fitsSystemWindows="true"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     tools:showIn="@layout/fragment_app_view"
     >
 
@@ -42,7 +43,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/app_view_header_gradient"
+                android:foreground="@drawable/app_view_header_alfa_gradient"
                 app:layout_collapseMode="parallax"
                 >
 
