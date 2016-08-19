@@ -88,7 +88,7 @@ public class PayPalPayment implements Payment {
 			receiver = new PaymentConfirmationReceiver();
 			broadcastManager.registerReceiver(receiver, paymentResultFilter);
 			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(price.getPrice(), price.getCurrency(),
-					product.getDescription()), configuration));
+					product.getTitle()), configuration));
 		}
 	}
 

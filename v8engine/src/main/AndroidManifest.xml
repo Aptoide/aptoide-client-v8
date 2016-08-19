@@ -148,7 +148,7 @@
         </receiver>
 
         <service android:name=".services.PullingContentService"/>
-        <service android:name=".payment.handler.PaymentConfirmationService"/>
+        <service android:name=".payment.handler.PaymentConfirmationSyncService"/>
         <receiver android:name=".receivers.PullingContentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

@@ -10,6 +10,7 @@ import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 
@@ -23,11 +24,22 @@ public class PaymentConfirmationHandler {
 	private final PaymentRepository paymentRepository;
 
 	public Observable<Boolean> isHandled(Payment payment) {
-		return Observable.just(false);
+		return paymentRepository.getPaymentConfirmation(payment)
+				.first()
+				.flatMap(paymentConfirmation -> syncPaymentConfirmation(paymentConfirmation))
+				.map(synced -> true)
+				.onErrorResumeNext(throwable -> (throwable instanceof RepositoryItemNotFoundException)? Observable.just(false) : Observable.error(throwable));
 	}
 
 	public Observable<Void> handle(PaymentConfirmation paymentConfirmation) {
-//		context.startService(PaymentConfirmationService.getIntent(context, paymentConfirmation));
-		return Observable.just(null);
+		return paymentRepository.savePaymentConfirmation(paymentConfirmation)
+				.flatMap(saved -> syncPaymentConfirmation(paymentConfirmation));
+	}
+
+	private Observable<Void> syncPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+		return paymentRepository.getPaymentConfirmations()
+				.doOnSubscribe(() -> context.startService(PaymentConfirmationSyncService.getIntent(context)))
+				.filter(paymentConfirmations -> !paymentConfirmations.contains(paymentConfirmation))
+				.map(paymentConfirmations -> null);
 	}
 }

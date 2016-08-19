@@ -51,8 +51,8 @@ public class PaymentActivity extends RxAppCompatActivity {
 		paymentManager = new PaymentManager(new PaymentConfirmationHandler(this, paymentRepository));
 		paymentRepository.getPayments(this, product)
 				.compose(bindUntilEvent(ActivityEvent.DESTROY))
-				.flatMap(payments -> paymentManager.pay(payments.get(0), product))
 				.observeOn(AndroidSchedulers.mainThread())
+				.flatMap(payments -> paymentManager.pay(payments.get(0), product))
 				.subscribe(success -> finish(RESULT_OK, null), throwable -> finish(RESULT_CANCELED, throwable));
 	}
 

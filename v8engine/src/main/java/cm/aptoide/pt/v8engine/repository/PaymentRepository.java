@@ -6,9 +6,6 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +25,6 @@ import io.realm.Realm;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -54,6 +50,7 @@ public class PaymentRepository {
 
 	public Observable<List<PaymentConfirmation>> getPaymentConfirmations() {
 		return Database.PaymentConfirmationQ.getAll(Database.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>asObservable()
+				.filter(paymentConfirmations -> paymentConfirmations.isLoaded())
 				.flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
 							.map(paymentConfirmation -> convertToPaymentConfirmation(paymentConfirmation))
 							.toList());
@@ -61,20 +58,35 @@ public class PaymentRepository {
 
 	public Observable<PaymentConfirmation> getPaymentConfirmation(Payment payment) {
 		return Database.PaymentConfirmationQ.get(payment.getProduct().getId(), Database.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>asObservable()
+				.filter(paymentConfirmation -> paymentConfirmation.isLoaded())
 				.flatMap(paymentConfirmation -> {
-					if (paymentConfirmation != null) {
+					if (paymentConfirmation != null && paymentConfirmation.isValid()) {
 						return Observable.just(convertToPaymentConfirmation(paymentConfirmation));
 					}
 					return Observable.error(new RepositoryItemNotFoundException("No payment found for product id: " + payment.getProduct().getId()));
 				});
 	}
 
+	public Observable<Void> syncPaymentConfirmations() {
+		return getPaymentConfirmations()
+				.flatMapIterable(paymentConfirmations -> paymentConfirmations)
+				.flatMap(paymentConfirmation -> sendPaymentConfirmation(paymentConfirmation)
+													.flatMap(success -> {
+														deletePersistedPaymentConfirmation(paymentConfirmation.getPaymentConfirmationId());
+														return null;
+													})
+				);
+	}
+
 	public Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+		return Observable.<Void>fromCallable(() -> {
+			persistPaymentConfirmation(paymentConfirmation);
+			return null;
+		}).subscribeOn(Schedulers.io());
+	}
+
+	private Observable<Void> sendPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		return Observable.fromCallable(() -> {
-
-			@Cleanup Realm realm = Database.get();
-			savePaymentConfirmation(paymentConfirmation, realm);
-
 			if (paymentConfirmation.getProduct() instanceof InAppBillingProduct) {
 				final InAppBillingProduct product = (InAppBillingProduct) paymentConfirmation.getProduct();
 				return CheckProductPaymentRequest.ofInAppBilling(paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(), product
@@ -95,20 +107,17 @@ public class PaymentRepository {
 				return Observable.just(null);
 			}
 			return Observable.error(new IOException("Server response: " + response.getStatus()));
-		}).cast(Void.class).doOnNext(success -> {
-			@Cleanup Realm realm = Database.get();
-			deletePaymentConfirmation(paymentConfirmation.getPaymentConfirmationId(), realm);
 		});
 	}
 
-	@NonNull
 	private PaymentConfirmation convertToPaymentConfirmation(cm.aptoide.pt.database.realm.PaymentConfirmation paymentConfirmation) {
 		return new PaymentConfirmation(paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(), productFactory
 				.create(paymentConfirmation), new Price(paymentConfirmation
 				.getPrice(), paymentConfirmation.getCurrency(), paymentConfirmation.getTaxRate()));
 	}
 
-	private void savePaymentConfirmation(PaymentConfirmation paymentConfirmation, Realm realm) {
+	private void persistPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+		@Cleanup Realm realm = Database.get();
 		cm.aptoide.pt.database.realm.PaymentConfirmation realmObject = new cm.aptoide.pt.database.realm.PaymentConfirmation(paymentConfirmation
 				.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(), paymentConfirmation.getPrice().getPrice(), paymentConfirmation.getPrice
 				().getCurrency(), paymentConfirmation.getPrice().getTaxRate(), paymentConfirmation.getProduct().getId(), paymentConfirmation.getProduct()
@@ -128,7 +137,8 @@ public class PaymentRepository {
 		Database.save(realmObject, realm);
 	}
 
-	private void deletePaymentConfirmation(String paymentConfirmationId, Realm realm) {
+	private void deletePersistedPaymentConfirmation(String paymentConfirmationId) {
+		@Cleanup Realm realm = Database.get();
 		Database.PaymentConfirmationQ.delete(paymentConfirmationId, realm);
 	}
 }
