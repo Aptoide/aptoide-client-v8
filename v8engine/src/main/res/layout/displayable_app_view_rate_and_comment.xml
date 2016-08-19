@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 04/08/2016.
+  ~ Modified by SithEngineer on 17/08/2016.
   -->
 
 <RelativeLayout
@@ -160,14 +160,28 @@
             android:layout_marginBottom="12dp"
             android:layout_marginTop="4dp">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/top_comments_pager"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/top_comments_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 />
         </RelativeLayout>
 
     </RelativeLayout>
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/top_comments_progress"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/rating_layout"
+        android:layout_toRightOf="@id/rating_layout"
+        android:indeterminate="true"
+        android:padding="8dp"
+        android:visibility="visible"
+        />
 
     <RelativeLayout
         android:id="@+id/empty_reviews_layout"

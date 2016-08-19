@@ -1,27 +1,20 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.DialogPermissions;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -34,8 +27,8 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 
 	private static final String TAG = AppViewDeveloperWidget.class.getSimpleName();
 
-	private TextView additionalInfo;
-	private View additionalInfoLayout;
+//	private TextView additionalInfo;
+//	private View additionalInfoLayout;
 
 	private TextView websiteLabel;
 	private TextView emailLabel;
@@ -48,8 +41,8 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 
 	@Override
 	protected void assignViews(View itemView) {
-		additionalInfo = (TextView) itemView.findViewById(R.id.additional_info);
-		additionalInfoLayout = itemView.findViewById(R.id.additional_info_layout);
+//		additionalInfo = (TextView) itemView.findViewById(R.id.additional_info);
+//		additionalInfoLayout = itemView.findViewById(R.id.additional_info_layout);
 		websiteLabel = (TextView) itemView.findViewById(R.id.website_label);
 		emailLabel = (TextView) itemView.findViewById(R.id.email_label);
 		privacyPolicyLabel = (TextView) itemView.findViewById(R.id.privacy_policy_label);
@@ -60,10 +53,11 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 	public void bindView(AppViewDeveloperDisplayable displayable) {
 		final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
 		final Context ctx = getContext();
+
+		/*
 		final FragmentShower fragmentShower = (FragmentShower) ctx;
 		final Resources.Theme theme = ctx.getTheme();
 		final Resources res = ctx.getResources();
-
 		additionalInfo.setOnClickListener(v -> {
 
 			if (additionalInfoLayout.getVisibility() == View.GONE) {
@@ -96,6 +90,7 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 				scrollable.scroll(Scrollable.Position.LAST);
 			}
 		});
+		*/
 
 		if(!TextUtils.isEmpty(app.getDeveloper().getWebsite())) {
 			websiteLabel.setText(String.format(ctx.getString(R.string.developer_website), app.getDeveloper()

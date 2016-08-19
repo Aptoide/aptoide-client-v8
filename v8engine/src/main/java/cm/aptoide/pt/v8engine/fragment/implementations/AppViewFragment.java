@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/08/2016.
+ * Modified by SithEngineer on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -29,6 +29,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -39,6 +41,7 @@ import com.trello.rxlifecycle.FragmentEvent;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,7 +58,9 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.PaymentPayload;
+import cm.aptoide.pt.model.v3.PaymentServices;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
@@ -115,6 +120,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private static final String CONFIG_CLIENT_ID = //BuildConfig.DEBUG ? "ARhHzhAH_B_6_9ggd97pIHNduraLFU9jf7Wzw06QMyEj2pRotOf8vw3PM0Ls" :
 			"AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
+	private static final String BOUGHT_APP = "boughtApp";
 
 	private static PayPalConfiguration config = new PayPalConfiguration()
 			// Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
@@ -249,13 +255,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		LinkedList<Displayable> displayables = new LinkedList<>();
 
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+		GetAppMeta.Media media = app.getMedia();
 
 		installDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
 		displayables.add(installDisplayable);
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
-		displayables.add(new AppViewScreenshotsDisplayable(app));
+
+		// only show screen shots / video if the app has them
+		if (isMediaAvailable(media)) {
+			displayables.add(new AppViewScreenshotsDisplayable(app));
+		}
 		displayables.add(new AppViewDescriptionDisplayable(getApp));
+
 		displayables.add(new AppViewFlagThisDisplayable(getApp));
 		if (suggestedAds != null) {
 			displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds));
@@ -263,6 +275,21 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		displayables.add(new AppViewDeveloperDisplayable(getApp));
 
 		setDisplayables(displayables);
+	}
+
+	private boolean hasDescription(GetAppMeta.Media media) {
+		return !TextUtils.isEmpty(media.getDescription());
+	}
+
+	private boolean isMediaAvailable(GetAppMeta.Media media) {
+		if (media != null) {
+			List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();
+			List<GetAppMeta.Media.Video> videos = media.getVideos();
+			boolean hasScreenShots = screenshots != null && screenshots.size() > 0;
+			boolean hasVideos = videos != null && videos.size() > 0;
+			return hasScreenShots || hasVideos;
+		}
+		return false;
 	}
 
 
@@ -276,7 +303,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
 		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
 		boughtApp = app;
-		startActivityForResult(intent, PAY_APP_REQUEST_CODE);
+
+		//startActivityForResult(intent, PAY_APP_REQUEST_CODE);
+		// FIXME: 16/08/16 sithengineer remove this method
+		mockScheduleSendPaymentConfirmation();
 	}
 
 	@Override
@@ -285,33 +315,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			if (resultCode == Activity.RESULT_OK) {
 				PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
 				if (confirm != null) {
-					try {
-						Logger.i(TAG, confirm.toJSONObject().toString(4));
-
-						// send 'confirm' to the server
-						ProofOfPayment proof = confirm.getProofOfPayment();
-
-						PaymentPayload paymentPayload = new PaymentPayload();
-						paymentPayload.setPayKey(proof.getPaymentId());
-						paymentPayload.setAptoidePaymentId(boughtApp.getPayment().metadata.id);
-						paymentPayload.setStore(boughtApp.getStore().getName());
-						paymentPayload.setPrice(boughtApp.getPay().getPrice());
-						paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
-						paymentPayload.setTaxRate(boughtApp.getPayment().payment_services.get(0).getTaxRate());
-
-						getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
-
-						// download app and install app
-						FragmentActivity fragmentActivity = getActivity();
-						Intent installApp = new Intent(fragmentActivity, AppBoughtReceiver.class);
-						installApp.setAction(AppBoughtReceiver.APP_BOUGHT);
-						installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
-						fragmentActivity.sendBroadcast(installApp);
-						boughtApp = null;
-
-					} catch (JSONException e) {
-						Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
-					}
+					scheduleSendPaymentConfirmation(confirm);
 				}
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Logger.i(TAG, "The user canceled.");
@@ -348,8 +352,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			return true;
 		} else if (i == R.id.menu_schedule) {
-			@Cleanup
-			Realm realm = Database.get();
+			@Cleanup Realm realm = Database.get();
 			realm.beginTransaction();
 			realm.copyToRealmOrUpdate(scheduled);
 			realm.commitTransaction();
@@ -363,6 +366,82 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void mockScheduleSendPaymentConfirmation() {
+		PaymentPayload paymentPayload = new PaymentPayload();
+		paymentPayload.setPayKey("PAY-2fb892f98748685999ea");
+
+		GetApkInfoJson.Payment.Metadata metadata = boughtApp.getPayment().metadata;
+		paymentPayload.setAptoidePaymentId(metadata != null ? metadata.id : 0);
+
+		paymentPayload.setStore(boughtApp.getStore().getName());
+		paymentPayload.setPrice(boughtApp.getPay().getPrice());
+		paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
+
+		List<PaymentServices> paymentServices = boughtApp.getPayment().payment_services;
+		if (paymentServices != null && !paymentServices.isEmpty()) {
+			paymentPayload.setTaxRate(paymentServices.get(0).getTaxRate());
+		} else {
+			paymentPayload.setTaxRate(0.0);
+		}
+
+		getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
+
+		// reset bought app variable
+		boughtApp = null;
+
+		// download app and install app
+		FragmentActivity fragmentActivity = getActivity();
+		Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
+		installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+		fragmentActivity.sendBroadcast(installApp);
+	}
+
+	private void scheduleSendPaymentConfirmation(PaymentConfirmation confirm) {
+		try {
+			Logger.i(TAG, confirm.toJSONObject().toString(4));
+
+			// send 'confirm' to the server
+			PaymentPayload paymentPayload = buildPaymentPayload(confirm);
+
+			getActivity().startService(ValidatePaymentsService.getIntent(getActivity(), paymentPayload));
+
+			// reset bought app variable
+			boughtApp = null;
+
+			// download app and install app
+			FragmentActivity fragmentActivity = getActivity();
+			Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
+			installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+			fragmentActivity.sendBroadcast(installApp);
+		} catch (JSONException e) {
+			Logger.e(TAG, "an extremely unlikely failure occurred: ", e);
+		}
+	}
+
+	@NonNull
+	private PaymentPayload buildPaymentPayload(PaymentConfirmation confirm) {
+		ProofOfPayment proof = confirm.getProofOfPayment();
+
+		PaymentPayload paymentPayload = new PaymentPayload();
+		paymentPayload.setPayKey(proof.getPaymentId());
+
+		GetApkInfoJson.Payment.Metadata metadata = boughtApp.getPayment().metadata;
+		paymentPayload.setAptoidePaymentId(metadata != null ? metadata.id : 0);
+
+		paymentPayload.setStore(boughtApp.getStore().getName());
+		paymentPayload.setPrice(boughtApp.getPay().getPrice());
+		paymentPayload.setCurrency(boughtApp.getPay().getCurrency());
+
+		List<PaymentServices> paymentServices = boughtApp.getPayment().payment_services;
+		if (paymentServices != null && !paymentServices.isEmpty()) {
+			paymentPayload.setTaxRate(paymentServices.get(0).getTaxRate());
+		} else {
+			paymentPayload.setTaxRate(0.0);
+		}
+
+		return paymentPayload;
 	}
 
 	@Override
@@ -479,6 +558,32 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		// save download bar status
 		// TODO: 04/08/16 sithengineer save download bar status
+	}
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (savedInstanceState != null && savedInstanceState.containsKey(BOUGHT_APP)) {
+			// TODO: 16/08/16 sithengineer use parcel deserializer -> object
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				boughtApp = mapper.readValue(savedInstanceState.getString(BOUGHT_APP), GetAppMeta.App.class);
+			} catch (IOException e) {
+				Logger.e(TAG, e);
+			}
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		// TODO: 16/08/16 sithengineer use object -> parcel serializer
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			outState.putString(BOUGHT_APP, mapper.writeValueAsString(boughtApp));
+		} catch (JsonProcessingException e) {
+			Logger.e(TAG, e);
+		}
 	}
 
 	private Observable<GetApp> manageOrganicAds(GetApp getApp) {
@@ -618,11 +723,19 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			String headerImageUrl = app.getGraphic();
 			List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
 
+//			final Drawable colorDrawable = new ColorDrawable(Color.argb(255, 0, 0, 0));
+
 			if (!TextUtils.isEmpty(headerImageUrl)) {
-				ImageLoader.load(app.getGraphic(), featuredGraphic);
+				ImageLoader.load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//					((FrameLayout)featuredGraphic.getParent()).setForeground(colorDrawable);
+//				}
 			}
 			else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(screenshots.get(0).getUrl())) {
-				ImageLoader.load(screenshots.get(0).getUrl(), featuredGraphic);
+				ImageLoader.load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient, featuredGraphic);
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//					((FrameLayout) featuredGraphic.getParent()).setForeground(colorDrawable);
+//				}
 			}
 
 			if (app.getIcon() != null) {

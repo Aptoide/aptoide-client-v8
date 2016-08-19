@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -25,8 +25,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 @Displayables({AppViewDescriptionDisplayable.class})
 public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayable> {
 
-	private static final String TAG = AppViewDescriptionWidget.class.getSimpleName();
-
 	private TextView descriptionTextView;
 	private Button readMoreBtn;
 
@@ -47,9 +45,12 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 
 		if(!TextUtils.isEmpty(media.getDescription())) {
 			descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
+			readMoreBtn.setOnClickListener(seeMoreHandler(app.getId()));
+		} else {
+			// only show "default" description if the app doesn't have one
+			descriptionTextView.setText(R.string.description_not_available);
+			readMoreBtn.setVisibility(View.GONE);
 		}
-
-		handleSeeMore(app);
 	}
 
 	@Override
@@ -60,10 +61,6 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 	@Override
 	public void onViewDetached() {
 
-	}
-
-	private void handleSeeMore(GetAppMeta.App app) {
-		readMoreBtn.setOnClickListener(seeMoreHandler(app.getId()));
 	}
 
 	private View.OnClickListener seeMoreHandler(final long appId) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 21/06/2016.
+ * Modified by SithEngineer on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.listeners;
@@ -51,19 +51,21 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	@Override
 	public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 		super.onScrolled(recyclerView, dx, dy);
-
-		LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-		int totalItemCount = mLinearLayoutManager.getItemCount();
-		int lastVisibleItemPosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-
-		if (!loading && (((totalItemCount - 1) == lastVisibleItemPosition)
-						|| ((totalItemCount - 1) == (lastVisibleItemPosition + visibleThreshold)))) {
+		if (shouldLoadMore((LinearLayoutManager) recyclerView.getLayoutManager())) {
 			// End has been reached, load more items
-			if (offset == 0 || offset < total) {
-				onLoadMore(bypassCache);
-			}
+			onLoadMore(bypassCache);
 		}
+	}
+
+	private boolean shouldLoadMore(LinearLayoutManager linearLayoutManager) {
+		int totalItemCount = linearLayoutManager.getItemCount();
+		int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+		boolean hasMoreElements = offset <= total;
+		boolean isOverLastPosition = (lastVisibleItemPosition >= (totalItemCount - 1));
+		boolean isOverVisibleThreshold = ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
+
+		return !loading && (hasMoreElements || offset == 0) && (isOverLastPosition || isOverVisibleThreshold);
 	}
 
 	// Protected against in the constructor, hopefully..
@@ -77,11 +79,14 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 				adapter.popDisplayable();
 			}
 
-			if (response.getDatalist() != null) {
-				total = response.getDatalist().getTotal();
-				offset = response.getDatalist().getNext();
+			if (response.hasData()) {
+				total += response.getCurrentSize();
+				offset += response.getNextSize();
 				v7request.getBody().setOffset(offset);
 			}
+
+			// FIXME: 17/08/16 sithengineer use response.getList() instead
+
 			successRequestListener.call(response);
 
 			loading = false;

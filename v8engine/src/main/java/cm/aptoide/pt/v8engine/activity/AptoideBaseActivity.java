@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -40,11 +40,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
 	private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
 	@Getter private boolean _resumed = false;
-	@Nullable
-	private Action0 toRunWhenAccessToFileSystemIsGranted;
+	@Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
 	@Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
-	@Nullable
-	private Action0 toRunWhenAccessToAccountsIsGranted;
+	@Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
 	@Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
 
 	@Override

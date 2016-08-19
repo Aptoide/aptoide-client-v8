@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -9,8 +9,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 
+import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
@@ -36,6 +36,7 @@ public class GenericDialogs {
 																		@Nullable String title,
 																		@Nullable String message) {
 		return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+			/*
 			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
 					.setMessage(message)
 					.setPositiveButton(android.R.string.yes, (dialog, which) -> {
@@ -54,6 +55,24 @@ public class GenericDialogs {
 			// cleaning up
 			subscriber.add(Subscriptions.create(ad::dismiss));
 			ad.show();
+			*/
+
+			final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
+			dialog.setTitle(title).setMessage(message).setPositiveButton(android.R.string.ok, v -> {
+				dialog.dismiss();
+				subscriber.onNext(EResponse.YES);
+				subscriber.onCompleted();
+			}).setNegativeButton(android.R.string.no, v -> {
+				dialog.dismiss();
+				subscriber.onNext(EResponse.NO);
+				subscriber.onCompleted();
+			}).setOnCancelListener(() -> {
+				subscriber.onNext(EResponse.CANCEL);
+				subscriber.onCompleted();
+			});
+			// cleaning up
+			subscriber.add(Subscriptions.create(dialog::dismiss));
+			dialog.show();
 		});
 	}
 
@@ -70,6 +89,7 @@ public class GenericDialogs {
 	public static Observable<EResponse> createGenericOkCancelMessage(Context context, String
 			title, String message) {
 		return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+			/*
 			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
 					.setMessage(message)
 					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
@@ -84,6 +104,23 @@ public class GenericDialogs {
 			// cleaning up
 			subscriber.add(Subscriptions.create(ad::dismiss));
 			ad.show();
+			*/
+
+			final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
+			dialog.setTitle(title)
+					.setMessage(message)
+					.setPositiveButton(android.R.string.ok, v -> {
+						subscriber.onNext(EResponse.YES);
+						subscriber.onCompleted();
+				dialog.dismiss();
+			}).setNegativeButton(android.R.string.cancel, v -> {
+				dialog.dismiss();
+				subscriber.onNext(EResponse.CANCEL);
+				subscriber.onCompleted();
+			});
+			// cleaning up
+			subscriber.add(Subscriptions.create(dialog::dismiss));
+			dialog.show();
 		});
 	}
 

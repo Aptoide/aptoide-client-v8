@@ -1,19 +1,22 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by SithEngineer on 18/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * Created by neuro on 20-04-2016.
  */
-@Data
+//@Data
 @EqualsAndHashCode(callSuper = true)
-public class BaseV7EndlessResponse<T> extends BaseV7Response {
+public abstract class BaseV7EndlessResponse extends BaseV7Response {
 
-	private Datalist<T> datalist;
+	protected static final int NEXT_STEP = 10;
+
+	public abstract int getCurrentSize();
+	public abstract int getNextSize();
+	public abstract boolean hasData();
 }

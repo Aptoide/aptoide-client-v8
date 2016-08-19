@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 05/08/2016.
+  ~ Modified by SithEngineer on 18/08/2016.
   -->
 
 <resources>
@@ -140,9 +140,10 @@
     <color name="separators_grey">#1f000000</color>
 
     <color name="timeline_separator">#edf0f4</color>
-
-    <color name="black_gradient_start">#dd000000</color>
-    <color name="black_gradient_end">#2f000000</color>
+    <color name="black_alfa_gradient_start">#dd000000</color>
+    <color name="black_alfa_gradient_end">#2f000000</color>
+    <color name="black_gradient_start">#000000</color>
+    <color name="black_gradient_end">#525252</color>
     <color name="app_view_follow_orange">#b64735</color>
     <color name="almost_black">#403f3d</color>
     <color name="green_tint_default">#45d316</color>

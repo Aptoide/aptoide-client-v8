@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/08/2016.
+ * Modified by SithEngineer on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -77,6 +77,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
 	private transient SuccessRequestListener<ListReviews> listFullReviewsSuccessRequestListener = listFullReviews -> {
+		// TODO: 17/08/16 sithengineer paralelize this using Rx
 		AptoideUtils.ThreadU.runOnIoThread(() -> {
 			List<Review> reviews = listFullReviews.getDatalist().getList();
 			List<Displayable> displayables = new LinkedList<>();

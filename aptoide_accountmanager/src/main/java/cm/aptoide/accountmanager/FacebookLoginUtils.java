@@ -1,10 +1,13 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 16/08/2016.
+ */
+
 package cm.aptoide.accountmanager;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.facebook.AccessToken;
@@ -29,6 +32,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 
@@ -186,9 +190,23 @@ class FacebookLoginUtils {
 		}
 
 		private void askForMailAgain() {
-			Activity activity = mActivityWeakReference.get();
+			final Activity activity = mActivityWeakReference.get();
 			if (activity != null) {
 
+				final AndroidBasicDialog dialog = AndroidBasicDialog.build(activity);
+				dialog
+						.setMessage(R.string.facebook_email_permission_regected_message)
+						.setPositiveButton(R.string.facebook_garant_permission_button, v ->{
+							LoginManager.getInstance().logInWithReadPermissions(activity, Collections.singletonList(EMAIL));
+							dialog.dismiss();
+						})
+						.setNegativeButton("exit", v-> {
+							dialog.dismiss();
+						});
+
+				dialog.show();
+
+				/*
 				AlertDialog dialog = new AlertDialog.Builder(activity).setMessage(R.string
 						.facebook_email_permission_regected_message)
 						.setPositiveButton(R.string.facebook_garant_permission_button, new
@@ -212,6 +230,7 @@ class FacebookLoginUtils {
 						})
 						.create();
 				dialog.show();
+				*/
 			}
 		}
 	}

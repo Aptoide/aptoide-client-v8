@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified by SithEngineer on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -19,23 +19,23 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.v8engine.repository.PackageRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Datalist;
-import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.repository.PackageRepository;
+import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -96,14 +96,6 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		if (packages != null) {
-			outState.putStringArray(PACKAGE_LIST_KEY, packages.toArray(new String[packages.size()]));
-		}
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		super.load(refresh, savedInstanceState);
 
@@ -140,6 +132,14 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.<Datalist<Displayable>> compose(bindUntilEvent(FragmentEvent.PAUSE))
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(items -> addItems(items), throwable -> finishLoading((Throwable) throwable));
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (packages != null) {
+			outState.putStringArray(PACKAGE_LIST_KEY, packages.toArray(new String[packages.size()]));
+		}
+		super.onSaveInstanceState(outState);
 	}
 
 	@NonNull
@@ -187,11 +187,11 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		Datalist<Displayable> displayableDataList = new Datalist<>();
 		displayableDataList.setNext(datalist.getNext());
 		displayableDataList.setCount(datalist.getCount());
-		displayableDataList.setLoaded(datalist.isLoaded());
 		displayableDataList.setHidden(datalist.getHidden());
 		displayableDataList.setTotal(datalist.getTotal());
 		displayableDataList.setLimit(datalist.getLimit());
 		displayableDataList.setOffset(datalist.getOffset());
+		displayableDataList.setLoaded(datalist.isLoaded());
 		displayableDataList.setList(list);
 		return displayableDataList;
 	}
@@ -210,9 +210,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return offset >= total;
 	}
 
-	private void setOffset(Datalist<Displayable> dataList) {
-		if (dataList != null && dataList.getNext() != 0) {
-			offset = dataList.getNext();
+	public void setTotal(Datalist<Displayable> dataList) {
+		if (dataList != null && dataList.getTotal() != 0) {
+			total = dataList.getTotal();
 		}
 	}
 
@@ -220,9 +220,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return offset;
 	}
 
-	public void setTotal(Datalist<Displayable> dataList) {
-		if (dataList != null && dataList.getTotal() != 0) {
-			total = dataList.getTotal();
+	private void setOffset(Datalist<Displayable> dataList) {
+		if (dataList != null && dataList.getNext() != 0) {
+			offset = dataList.getNext();
 		}
 	}
 
