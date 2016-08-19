@@ -94,7 +94,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
 				.getMarginWidth
-						(getContext(), getContext().getResources().getConfiguration().orientation),40);
+						(getContext(), getContext().getResources().getConfiguration().orientation),30);
 		cardView.setLayoutParams(layoutParams);
 	}
 

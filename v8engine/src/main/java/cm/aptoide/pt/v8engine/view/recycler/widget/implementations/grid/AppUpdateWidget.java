@@ -89,7 +89,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
 				.getMarginWidth
-						(getContext(), getContext().getResources().getConfiguration().orientation),0);
+						(getContext(), getContext().getResources().getConfiguration().orientation),30);
 		cardView.setLayoutParams(layoutParams);
 	}
 
@@ -112,14 +112,20 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
 			subscriptions.add(RxView.clicks(updateButton).flatMap(click -> displayable.downloadStatus().first().flatMap(status -> {
 				if (status == Download.COMPLETED) {
-					Logger.d(this.getClass().getName(), "download complete - success");
 					return displayable.install(getContext()).map(success -> Download.COMPLETED);
 				}
-				return displayable.download((PermissionRequest) getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(completedToPause());
+				return displayable.download((PermissionRequest) getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(downloadStatus -> {
+					if (downloadStatus == Download.COMPLETED) {
+						updateDownloadStatus(displayable, downloadStatus);
+						return displayable.install(getContext()).map(success -> Download.COMPLETED);
+					}
+					return Observable.just(downloadStatus);
+				});
 			})).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
 				showDownloadError(displayable, error);
+				Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
 				return Observable.just(null);
-			})).subscribe(status -> updateDownloadStatus(displayable, status)));
+			})).distinctUntilChanged().subscribe(status -> updateDownloadStatus(displayable, status)));
 		}
 	}
 
