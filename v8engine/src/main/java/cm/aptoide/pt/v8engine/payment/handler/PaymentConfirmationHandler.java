@@ -13,6 +13,7 @@ import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 8/12/16.
@@ -33,6 +34,7 @@ public class PaymentConfirmationHandler {
 
 	public Observable<Void> handle(PaymentConfirmation paymentConfirmation) {
 		return paymentRepository.savePaymentConfirmation(paymentConfirmation)
+				.observeOn(AndroidSchedulers.mainThread())
 				.flatMap(saved -> syncPaymentConfirmation(paymentConfirmation));
 	}
 

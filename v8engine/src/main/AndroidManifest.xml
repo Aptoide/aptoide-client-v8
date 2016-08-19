@@ -38,7 +38,8 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <activity android:name=".payment.PaymentActivity"/>
+        <activity android:name=".activity.PaymentActivity"
+            android:theme="@style/AppBaseThemeTransparent"/>
         <activity android:name=".payment.paypal.PayPalPaymentActivity"/>
 
         <activity

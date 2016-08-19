@@ -10,7 +10,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
-import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.paypal.PayPalConverter;
 import cm.aptoide.pt.v8engine.payment.paypal.PayPalPayment;
 
@@ -21,11 +20,10 @@ public class PaymentFactory {
 
 	public static final String PAYPAL = "paypal";
 
-	public Payment create(Context context, String type, int id, double price, String currency, double taxRate, Product product) {
+	public Payment create(Context context, String type, int id, String name, String sign, double price, String currency, double taxRate, Product product) {
 		switch (type) {
 			case PAYPAL:
-				return new PayPalPayment(context, id, R.drawable.visa_btn_default_focused_holo_light, new Price(price, currency, taxRate),
-						getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter(), product);
+				return new PayPalPayment(context, id, name, sign, new Price(price, currency, taxRate), getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter(), product);
 			default:
 				throw new IllegalArgumentException("Payment not supported: " + type);
 		}
@@ -37,7 +35,7 @@ public class PaymentFactory {
 
 	private PayPalConfiguration getPayPalConfiguration() {
 		final PayPalConfiguration configuration = new PayPalConfiguration();
-		configuration.environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION);
+		configuration.environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK);
 		configuration.clientId("AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY");
 		return configuration;
 	}

@@ -18,7 +18,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.iab.InAppBillingPurchase;
 import cm.aptoide.pt.v8engine.iab.InAppBillingSerializer;
-import cm.aptoide.pt.v8engine.payment.PaymentActivity;
+import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import lombok.AllArgsConstructor;
 

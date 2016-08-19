@@ -96,8 +96,8 @@ public class InAppBillingRepository {
 	public Observable<List<Payment>> getPayments(Context context, InAppBillingProduct product) {
 		return InAppBillingSkuDetailsRequest.of(product.getApiVersion(), product.getPackageName(), product.getSku(), operatorManager).observe(false)
 				.flatMapIterable(response -> response.getPaymentServices())
-				.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getPrice(),
-						paymentService.getCurrency(), paymentService.getTaxRate(), product))
+				.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getName(),
+						paymentService.getSign(), paymentService.getPrice(), paymentService.getCurrency(), paymentService.getTaxRate(), product))
 				.toList();
 	}
 }

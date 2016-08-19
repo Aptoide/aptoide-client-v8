@@ -65,6 +65,29 @@ public class PaymentConfirmation implements Parcelable {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		final PaymentConfirmation that = (PaymentConfirmation) o;
+
+		if (!paymentConfirmationId.equals(that.paymentConfirmationId)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return paymentConfirmationId.hashCode();
+	}
+
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(paymentConfirmationId);
 		dest.writeInt(paymentId);

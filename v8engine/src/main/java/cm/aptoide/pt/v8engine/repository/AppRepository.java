@@ -49,8 +49,8 @@ public class AppRepository {
 	public Observable<List<Payment>> getPayments(Context context, PaidAppProduct product) {
 		return GetApkInfoRequest.of(product.getAppId(), operatorManager, false, product.getStoreName()).observe(true)
 				.flatMapIterable(response -> response.getPayment().payment_services)
-				.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getPrice(),
-						paymentService.getCurrency(), paymentService.getTaxRate(), product))
+				.map(paymentService -> paymentFactory.create(context, paymentService.getShortName(), paymentService.getId(), paymentService.getName(),
+						paymentService.getSign(), paymentService.getPrice(), paymentService.getCurrency(), paymentService.getTaxRate(), product))
 				.toList();
 	}
 

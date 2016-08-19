@@ -62,7 +62,7 @@ import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
-import cm.aptoide.pt.v8engine.payment.PaymentActivity;
+import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;

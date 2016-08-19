@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.payment.rx;
 
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
@@ -25,7 +24,7 @@ public class ProcessPaymentOnSubscribe implements Observable.OnSubscribe<Payment
 	@Override
 	public void call(Subscriber<? super PaymentConfirmation> subscriber) {
 
-		subscriber.add(Subscriptions.create(() -> payment.cancel()));
+		subscriber.add(Subscriptions.create(() -> payment.removeListener()));
 
 		payment.process(new Payment.PaymentConfirmationListener() {
 			@Override

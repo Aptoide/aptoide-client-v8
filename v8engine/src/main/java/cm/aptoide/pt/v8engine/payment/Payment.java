@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.payment;
 
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,13 +20,15 @@ public interface Payment {
 
 	int getId();
 
-	@DrawableRes int getIcon();
-
 	Product getProduct();
 
 	Price getPrice();
 
-	void cancel();
+	String getName();
+
+	String getSign();
+
+	void removeListener();
 
 	boolean isProcessing();
 

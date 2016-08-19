@@ -28,7 +28,8 @@ public class PayPalPayment implements Payment {
 
 	private final Context context;
 	private final int id;
-	private final int icon;
+	private final String name;
+	private final String sign;
 	private final Price price;
 	private final LocalBroadcastManager broadcastManager;
 	private final PayPalConfiguration configuration;
@@ -39,10 +40,11 @@ public class PayPalPayment implements Payment {
 	private boolean processing;
 	private final Product product;
 
-	public PayPalPayment(Context context, int id, int icon, Price price, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PayPalConverter converter, Product product) {
+	public PayPalPayment(Context context, int id, String name, String sign, Price price, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PayPalConverter converter, Product product) {
 		this.context = context;
 		this.id = id;
-		this.icon = icon;
+		this.name = name;
+		this.sign = sign;
 		this.price = price;
 		this.broadcastManager = broadcastManager;
 		this.configuration = configuration;
@@ -56,11 +58,6 @@ public class PayPalPayment implements Payment {
 	}
 
 	@Override
-	public int getIcon() {
-		return icon;
-	}
-
-	@Override
 	public Price getPrice() {
 		return price;
 	}
@@ -71,7 +68,17 @@ public class PayPalPayment implements Payment {
 	}
 
 	@Override
-	public void cancel() {
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getSign() {
+		return sign;
+	}
+
+	@Override
+	public void removeListener() {
 		broadcastManager.unregisterReceiver(receiver);
 		receiver = null;
 		listener = null;
@@ -123,17 +130,17 @@ public class PayPalPayment implements Payment {
 							payPalConfirmation = intent.getParcelableExtra(PAYMENT_CONFIRMATION_EXTRA);
 							if (payPalConfirmation != null) {
 								listener.onSuccess(converter.convertFromPayPal(payPalConfirmation, id, product, price));
-								cancel();
+								removeListener();
 							}
 							break;
 						case PAYMENT_STATUS_CANCELLED:
 							listener.onError(new PaymentCancellationException("PayPal payment cancelled by user"));
-							cancel();
+							removeListener();
 							break;
 						case PAYMENT_STATUS_FAILED:
 						default:
 							listener.onError(new PaymentFailureException("PayPal payment failed"));
-							cancel();
+							removeListener();
 							break;
 					}
 				}
