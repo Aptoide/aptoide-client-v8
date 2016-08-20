@@ -82,9 +82,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		url.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
-				WebView webView = new WebView(getContext());
-				webView.loadUrl(displayable.getUrl());
+				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
 			}
 		});
 	}
