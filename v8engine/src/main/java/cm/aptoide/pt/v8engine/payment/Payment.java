@@ -20,13 +20,13 @@ public interface Payment {
 
 	int getId();
 
+	String getType();
+
 	Product getProduct();
 
 	Price getPrice();
 
-	String getName();
-
-	String getSign();
+	String getDescription();
 
 	void removeListener();
 

@@ -38,7 +38,6 @@ import cm.aptoide.pt.v8engine.payment.handler.PaymentConfirmationHandler;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
-import cm.aptoide.pt.v8engine.view.AppCompatActivityView;
 import rx.Observable;
 
 public class PaymentActivity extends AppCompatActivityView implements PaymentView {
@@ -54,7 +53,6 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 	private Button cancelButton;
 	private View overlay;
 
-	private PaymentPresenter paymentPresenter;
 	private List<Observable<Payment>> paymentSelections;
 
 	public static Intent getIntent(Context context, Product product) {
@@ -88,8 +86,7 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory);
 		final PaymentManager paymentManager = new PaymentManager(new PaymentConfirmationHandler(this, paymentRepository));
 
-		paymentPresenter = new PaymentPresenter(this, paymentManager, paymentRepository, product);
-		paymentPresenter.present();
+		attachPresenter(new PaymentPresenter(this, paymentManager, paymentRepository, product));
 	}
 
 	@Override
@@ -124,6 +121,7 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 		Button paymentButton;
 		for (Payment payment: paymentList) {
 			paymentButton = (Button) getLayoutInflater().inflate(getButtonLayoutResource(payment), paymentContainer, false);
+			paymentButton.setText(payment.getDescription());
 			paymentContainer.addView(paymentButton);
 			paymentSelections.add(RxView.clicks(paymentButton).map(click -> payment));
 		}
@@ -131,11 +129,15 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 
 	@Override
 	public void showLoading() {
+		cancelButton.setVisibility(View.INVISIBLE);
+		paymentContainer.setVisibility(View.INVISIBLE);
 		progressBar.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void removeLoading() {
+		cancelButton.setVisibility(View.VISIBLE);
+		paymentContainer.setVisibility(View.VISIBLE);
 		progressBar.setVisibility(View.GONE);
 	}
 

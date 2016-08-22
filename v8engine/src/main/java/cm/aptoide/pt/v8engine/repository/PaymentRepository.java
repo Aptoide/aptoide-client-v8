@@ -48,6 +48,10 @@ public class PaymentRepository {
 		});
 	}
 
+	public Observable<Payment> getPayment(Context context, String type, Product product) {
+		return getPayments(context, product).flatMapIterable(payments -> payments).first(payment -> payment.getType().equals(type));
+	}
+
 	public Observable<List<PaymentConfirmation>> getPaymentConfirmations() {
 		return Database.PaymentConfirmationQ.getAll(Database.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>asObservable()
 				.filter(paymentConfirmations -> paymentConfirmations.isLoaded())

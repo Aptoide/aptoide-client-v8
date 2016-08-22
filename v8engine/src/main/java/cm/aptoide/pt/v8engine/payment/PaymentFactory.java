@@ -6,10 +6,12 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
+import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.v8engine.payment.paypal.PayPalConverter;
 import cm.aptoide.pt.v8engine.payment.paypal.PayPalPayment;
 
@@ -20,13 +22,23 @@ public class PaymentFactory {
 
 	public static final String PAYPAL = "paypal";
 
-	public Payment create(Context context, String type, int id, String name, String sign, double price, String currency, double taxRate, Product product) {
-		switch (type) {
+	public Payment create(Context context, PaymentService paymentService, Product product) {
+		switch (paymentService.getShortName()) {
 			case PAYPAL:
-				return new PayPalPayment(context, id, name, sign, new Price(price, currency, taxRate), getLocalBroadcastManager(context), getPayPalConfiguration(), getPaymentConverter(), product);
+				return new PayPalPayment(context, paymentService.getId(), paymentService.getShortName(), paymentService.getName(), paymentService.getSign(),
+						getPrice(paymentService.getPrice(), paymentService.getCurrency(), paymentService.getTaxRate()), getLocalBroadcastManager(context),
+						getPayPalConfiguration(), getPaymentConverter(), product, paymentService.getTypes().get(0).getLabel());
 			default:
-				throw new IllegalArgumentException("Payment not supported: " + type);
+				throw new IllegalArgumentException("Payment not supported: " + paymentService.getShortName());
 		}
+	}
+
+	@NonNull
+	private Price getPrice(double price, String currency, double taxRate) {
+		return new Price
+				(price,
+				currency,
+				taxRate);
 	}
 
 	private PayPalConverter getPaymentConverter() {

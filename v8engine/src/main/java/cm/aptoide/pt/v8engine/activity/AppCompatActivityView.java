@@ -1,23 +1,28 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 19/08/2016.
+ * Modified by Marcelo Benites on 22/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.view;
+package cm.aptoide.pt.v8engine.activity;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import cm.aptoide.pt.v8engine.payment.Presenter;
+import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/19/16.
  */
-public class AppCompatActivityView extends RxAppCompatActivity implements View {
+public abstract class AppCompatActivityView extends RxAppCompatActivity implements View {
+
+	private Presenter presenter;
 
 	@NonNull
 	@Override
@@ -35,6 +40,24 @@ public class AppCompatActivityView extends RxAppCompatActivity implements View {
 		return lifecycle().map(event -> {
 			return convertToEvent(event);
 		});
+	}
+
+	@Override
+	public void attachPresenter(Presenter presenter) {
+		this.presenter = presenter;
+		this.presenter.present();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		presenter.saveState(outState);
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		presenter.restoreState(savedInstanceState);
 	}
 
 	@NonNull

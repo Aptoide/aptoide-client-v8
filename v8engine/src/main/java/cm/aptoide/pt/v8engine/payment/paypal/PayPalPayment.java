@@ -15,6 +15,8 @@ import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import java.util.Locale;
+
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
@@ -28,6 +30,7 @@ public class PayPalPayment implements Payment {
 
 	private final Context context;
 	private final int id;
+	private final String type;
 	private final String name;
 	private final String sign;
 	private final Price price;
@@ -39,10 +42,12 @@ public class PayPalPayment implements Payment {
 	private PaymentConfirmationListener listener;
 	private boolean processing;
 	private final Product product;
+	private String methodLabel;
 
-	public PayPalPayment(Context context, int id, String name, String sign, Price price, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PayPalConverter converter, Product product) {
+	public PayPalPayment(Context context, int id, String type, String name, String sign, Price price, LocalBroadcastManager broadcastManager, PayPalConfiguration configuration, PayPalConverter converter, Product product, String methodLabel) {
 		this.context = context;
 		this.id = id;
+		this.type = type;
 		this.name = name;
 		this.sign = sign;
 		this.price = price;
@@ -50,11 +55,17 @@ public class PayPalPayment implements Payment {
 		this.configuration = configuration;
 		this.converter = converter;
 		this.product = product;
+		this.methodLabel = methodLabel;
 	}
 
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public String getType() {
+		return type;
 	}
 
 	@Override
@@ -68,13 +79,8 @@ public class PayPalPayment implements Payment {
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String getSign() {
-		return sign;
+	public String getDescription() {
+		return String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getPrice(), sign);
 	}
 
 	@Override

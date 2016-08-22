@@ -14,6 +14,7 @@ import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.v8engine.payment.Presenter;
 import rx.Observable;
 
 /**
@@ -29,6 +30,9 @@ public interface View {
 
 	Context getContext();
 
+	void attachPresenter(Presenter presenter);
+
+	// TODO: Make it simple. We need to abstract implementation details (e.g. Activity and Fragment life cycle events).
 	enum Event {
 		ATTACH,
 		CREATE,
