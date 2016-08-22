@@ -96,8 +96,7 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Spannable getAppTitle(Context context) {
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_name,
-				appName), ContextCompat.getColor(context, R.color.black), appName);
+		return spannableFactory.createColorSpan(appName, ContextCompat.getColor(context, R.color.black), appName);
 	}
 
 	public String getTimeSinceLastUpdate(Context context) {

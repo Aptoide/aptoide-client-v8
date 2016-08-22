@@ -71,6 +71,9 @@
 
 
         <RelativeLayout
+            android:id="@+id/displayable_social_timeline_recommendation_card_content"
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -81,6 +84,7 @@
                 android:layout_height="96dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="9.3dp"
+                android:layout_marginBottom="12dp"
                 android:scaleType="fitCenter"
                 tools:ignore="contentDescription"
                 tools:src="@mipmap/ic_launcher"/>
@@ -110,20 +114,24 @@
                     android:layout_marginTop="2dp"
                     android:id="@+id/displayable_social_timeline_recommendation_similar_apps"
                     style="@style/Widget.Aptoide.Card.Body"
+                    android:background="@android:color/transparent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
+                    android:clickable="false"
                     android:layout_marginRight="12dp"
                     android:ellipsize="end"
                     android:maxLines="2"
                     tools:text="Similar to Empire of Kings, Clash of Clans and Boom Beach"/>
 
-                <Button
+                <TextView
                     android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
                     style="@style/Widget.Aptoide.Card.Button"
+                    android:background="@android:color/transparent"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="12dp"
                     android:layout_marginBottom="16dp"
+                    android:clickable="false"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:gravity="center_vertical"
