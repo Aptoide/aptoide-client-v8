@@ -32,13 +32,13 @@ public class ProductFactory {
 		final Product product;
 
 		if (paymentConfirmation.getAppId() != 0 && paymentConfirmation.getStoreName() != null) {
-			product = new InAppBillingProduct(paymentConfirmation.getProductId(), paymentConfirmation.getIcon(), paymentConfirmation.getTitle(),
-					paymentConfirmation.getDescription(), paymentConfirmation.getPriceDescription(), paymentConfirmation.getApiVersion(), paymentConfirmation
-					.getSku(), paymentConfirmation.getPackageName(), paymentConfirmation.getDeveloperPayload(), paymentConfirmation.getType());
-		} else {
 			product = new PaidAppProduct(paymentConfirmation.getProductId(), paymentConfirmation.getIcon(), paymentConfirmation.getTitle(),
 					paymentConfirmation.getDescription(), paymentConfirmation.getPriceDescription(), paymentConfirmation.getAppId(), paymentConfirmation
 					.getStoreName());
+		} else {
+			product = new InAppBillingProduct(paymentConfirmation.getProductId(), paymentConfirmation.getIcon(), paymentConfirmation.getTitle(),
+					paymentConfirmation.getDescription(), paymentConfirmation.getPriceDescription(), paymentConfirmation.getApiVersion(), paymentConfirmation
+					.getSku(), paymentConfirmation.getPackageName(), paymentConfirmation.getDeveloperPayload(), paymentConfirmation.getType());
 		}
 		return product;
 	}
