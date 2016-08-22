@@ -21,8 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Collections;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -195,25 +193,42 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		downloadServiceHelper.getAllDownloads().firstOrDefault(Collections.emptyList()).subscribe(downloads -> {
-			for (Download download : downloads) {
-				int downloadStatus = download.getOverallDownloadStatus();
-				if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING || downloadStatus ==
-						Download.PAUSED) && download
-						.getAppId() == app.getId()) {
-					setDownloadBarVisible(true);
-					setupDownloadControls(app, download, displayable);
-					downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
-						manageDownload(onGoingDownload, displayable, app);
-					}, err -> {
-						Logger.e(TAG, err);
-					});
-					return;
-				}
+		downloadServiceHelper.getDownload(app.getId()).firstOrDefault(null).subscribe(download -> {
+			int downloadStatus = download.getOverallDownloadStatus();
+			if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING ||
+					downloadStatus == Download.PAUSED)) {
+				setDownloadBarVisible(true);
+				setupDownloadControls(app, download, displayable);
+				downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
+					manageDownload(onGoingDownload, displayable, app);
+				}, err -> {
+					Logger.e(TAG, err);
+				});
 			}
 		}, err -> {
 			Logger.e(TAG, err);
 		});
+		// FIXME: 22/08/16 sithengineer clean the following commented out code
+		//		downloadServiceHelper.getAllDownloads().firstOrDefault(Collections.emptyList()).subscribe(downloads -> {
+		//			for (Download download : downloads) {
+		//				int downloadStatus = download.getOverallDownloadStatus();
+		//				if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING ||
+		// downloadStatus ==
+		//						Download.PAUSED) && download
+		//						.getAppId() == app.getId()) {
+		//					setDownloadBarVisible(true);
+		//					setupDownloadControls(app, download, displayable);
+		//					downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
+		//						manageDownload(onGoingDownload, displayable, app);
+		//					}, err -> {
+		//						Logger.e(TAG, err);
+		//					});
+		//					return;
+		//				}
+		//			}
+		//		}, err -> {
+		//			Logger.e(TAG, err);
+		//		});
 	}
 
 	private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
