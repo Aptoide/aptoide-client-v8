@@ -5,8 +5,14 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.v8engine.payment.handler.PaymentConfirmationHandler;
+import android.content.Context;
+
+import java.util.List;
+
+import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.rx.RxPayment;
+import cm.aptoide.pt.v8engine.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 
@@ -16,17 +22,39 @@ import rx.Observable;
 @AllArgsConstructor
 public class PaymentManager {
 
-	private final PaymentConfirmationHandler paymentConfirmationHandler;
+	private final PaymentRepository paymentRepository;
 
-	public Observable<Void> pay(Payment payment, Product product) {
-		return paymentConfirmationHandler.isHandled(payment).flatMap(handled -> {
+	public Observable<List<Payment>> getProductPayments(Context context, Product product) {
+		return paymentRepository.getPayments(context, product)
+				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)));
+	}
 
-			if (handled) {
+	public Observable<Payment> getProductPayment(Context context, String paymentType, Product product) {
+		return paymentRepository.getPayment(context, paymentType, product)
+				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)));
+	}
+
+	public Observable<Void> pay(Payment payment) {
+		return isPaymentConfirmed(payment).flatMap(confirmed -> {
+
+			if (confirmed) {
 				return Observable.just(null);
 			}
 
 			return RxPayment.process(payment)
-					.flatMap(paymentConfirmation -> paymentConfirmationHandler.handle(paymentConfirmation));
+					.flatMap(paymentConfirmation -> savePaymentConfirmation(paymentConfirmation));
 		});
+	}
+
+	private Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+		return paymentRepository.savePaymentConfirmation(paymentConfirmation)
+				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)));
+	}
+
+	private Observable<Boolean> isPaymentConfirmed(Payment payment) {
+		return paymentRepository.getPaymentConfirmation(payment)
+				.map(paymentConfirmation -> true)
+				.onErrorResumeNext(throwable -> (throwable instanceof RepositoryItemNotFoundException)? Observable.just(false) : Observable.error
+						(new PaymentFailureException(throwable)));
 	}
 }

@@ -172,11 +172,6 @@ public class Database {
 			return realm.where(PaymentConfirmation.class).findAllAsync();
 		}
 
-		public static void delete(String paymentConfirmationId, Realm realm) {
-			realm.beginTransaction();
-			realm.where(PaymentConfirmation.class).equalTo(PaymentConfirmation.PAYMENT_CONFIRMATION_ID, paymentConfirmationId).findFirst().deleteFromRealm();
-			realm.commitTransaction();
-		}
 	}
 
 	public static class UpdatesQ {

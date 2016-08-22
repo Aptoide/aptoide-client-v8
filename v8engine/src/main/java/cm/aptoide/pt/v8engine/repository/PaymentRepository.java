@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +26,6 @@ import io.realm.Realm;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 8/18/16.
@@ -52,44 +52,22 @@ public class PaymentRepository {
 		return getPayments(context, product).flatMapIterable(payments -> payments).first(payment -> payment.getType().equals(type));
 	}
 
-	public Observable<List<PaymentConfirmation>> getPaymentConfirmations() {
-		return Database.PaymentConfirmationQ.getAll(Database.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>asObservable()
-				.filter(paymentConfirmations -> paymentConfirmations.isLoaded())
-				.flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
-							.map(paymentConfirmation -> convertToPaymentConfirmation(paymentConfirmation))
-							.toList());
-	}
-
 	public Observable<PaymentConfirmation> getPaymentConfirmation(Payment payment) {
-		return Database.PaymentConfirmationQ.get(payment.getProduct().getId(), Database.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>asObservable()
-				.filter(paymentConfirmation -> paymentConfirmation.isLoaded())
-				.flatMap(paymentConfirmation -> {
-					if (paymentConfirmation != null && paymentConfirmation.isValid()) {
-						return Observable.just(convertToPaymentConfirmation(paymentConfirmation));
-					}
-					return Observable.error(new RepositoryItemNotFoundException("No payment found for product id: " + payment.getProduct().getId()));
+		return getStoredPaymentConfirmation(payment)
+				.first()
+				.flatMap(storedConfirmation -> {
+					// Always verify with server for security reasons. We can not rely on our local stored information.
+					final PaymentConfirmation paymentConfirmation = convertToPaymentConfirmation(storedConfirmation);
+					return verifyPaymentConfirmation(paymentConfirmation).map(verified -> paymentConfirmation);
 				});
 	}
 
-	public Observable<Void> syncPaymentConfirmations() {
-		return getPaymentConfirmations()
-				.flatMapIterable(paymentConfirmations -> paymentConfirmations)
-				.flatMap(paymentConfirmation -> sendPaymentConfirmation(paymentConfirmation)
-													.flatMap(success -> {
-														deletePersistedPaymentConfirmation(paymentConfirmation.getPaymentConfirmationId());
-														return null;
-													})
-				);
-	}
-
 	public Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
-		return Observable.<Void>fromCallable(() -> {
-			persistPaymentConfirmation(paymentConfirmation);
-			return null;
-		}).subscribeOn(Schedulers.io());
+		return storePaymentConfirmation(paymentConfirmation)
+				.flatMap(processing -> verifyPaymentConfirmation(paymentConfirmation));
 	}
 
-	private Observable<Void> sendPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+	private Observable<Void> verifyPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		return Observable.fromCallable(() -> {
 			if (paymentConfirmation.getProduct() instanceof InAppBillingProduct) {
 				final InAppBillingProduct product = (InAppBillingProduct) paymentConfirmation.getProduct();
@@ -114,14 +92,34 @@ public class PaymentRepository {
 		});
 	}
 
+	private Observable<Void> storePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+		return Observable.fromCallable(() -> {
+			@Cleanup Realm realm = Database.get();
+			Database.save(convertToStoredPaymentConfirmation(paymentConfirmation), realm);
+			return null;
+		});
+	}
+
+	private Observable<cm.aptoide.pt.database.realm.PaymentConfirmation> getStoredPaymentConfirmation(Payment payment) {
+		return Database.PaymentConfirmationQ.get(payment.getProduct().getId(), Database.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>asObservable()
+				.filter(paymentConfirmation -> paymentConfirmation.isLoaded())
+				.flatMap(paymentConfirmation -> {
+					if (paymentConfirmation != null && paymentConfirmation.isValid()) {
+						return Observable.just(paymentConfirmation);
+					}
+					return Observable.error(new RepositoryItemNotFoundException("No payment confirmation found for product id: "
+							+ payment.getProduct().getId()));
+				});
+	}
+
 	private PaymentConfirmation convertToPaymentConfirmation(cm.aptoide.pt.database.realm.PaymentConfirmation paymentConfirmation) {
 		return new PaymentConfirmation(paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(), productFactory
 				.create(paymentConfirmation), new Price(paymentConfirmation
 				.getPrice(), paymentConfirmation.getCurrency(), paymentConfirmation.getTaxRate()));
 	}
 
-	private void persistPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
-		@Cleanup Realm realm = Database.get();
+	@NonNull
+	private cm.aptoide.pt.database.realm.PaymentConfirmation convertToStoredPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		cm.aptoide.pt.database.realm.PaymentConfirmation realmObject = new cm.aptoide.pt.database.realm.PaymentConfirmation(paymentConfirmation
 				.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(), paymentConfirmation.getPrice().getPrice(), paymentConfirmation.getPrice
 				().getCurrency(), paymentConfirmation.getPrice().getTaxRate(), paymentConfirmation.getProduct().getId(), paymentConfirmation.getProduct()
@@ -138,11 +136,6 @@ public class PaymentRepository {
 			realmObject.setAppId(((PaidAppProduct)paymentConfirmation.getProduct()).getAppId());
 			realmObject.setStoreName(((PaidAppProduct)paymentConfirmation.getProduct()).getStoreName());
 		}
-		Database.save(realmObject, realm);
-	}
-
-	private void deletePersistedPaymentConfirmation(String paymentConfirmationId) {
-		@Cleanup Realm realm = Database.get();
-		Database.PaymentConfirmationQ.delete(paymentConfirmationId, realm);
+		return realmObject;
 	}
 }

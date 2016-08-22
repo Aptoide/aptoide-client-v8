@@ -10,7 +10,13 @@ package cm.aptoide.pt.v8engine.payment.exception;
  */
 public class PaymentFailureException extends PaymentException {
 
+	public PaymentFailureException(Throwable throwable) {
+		super(throwable);
+	}
+
 	public PaymentFailureException(String message) {
 		super(message);
 	}
+
+
 }

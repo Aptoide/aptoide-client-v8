@@ -13,7 +13,6 @@ import java.util.List;
 
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
@@ -28,16 +27,14 @@ public class PaymentPresenter implements Presenter {
 	public static final String EXTRA_IS_PROCESSING_PAYMENT = "cm.aptoide.pt.v8engine.payment.extra.IS_PROCESSING_PAYMENT";
 	private final PaymentView view;
 	private final PaymentManager paymentManager;
-	private final PaymentRepository paymentRepository;
 	private final Product product;
 
 	private String currentPaymentType;
 	private boolean isProcessingPayment;
 
-	public PaymentPresenter(PaymentView view, PaymentManager paymentManager, PaymentRepository paymentRepository, Product product) {
+	public PaymentPresenter(PaymentView view, PaymentManager paymentManager, Product product) {
 		this.view = view;
 		this.paymentManager = paymentManager;
-		this.paymentRepository = paymentRepository;
 		this.product = product;
 	}
 
@@ -81,7 +78,7 @@ public class PaymentPresenter implements Presenter {
 
 	@NonNull
 	private Observable<List<Payment>> getPayments() {
-		return paymentRepository.getPayments(view.getContext(), product)
+		return paymentManager.getProductPayments(view.getContext(), product)
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnError(throwable -> view.dismissWithFailure())
 				.onErrorReturn(throwable -> Collections.emptyList());
@@ -89,27 +86,34 @@ public class PaymentPresenter implements Presenter {
 
 	@NonNull
 	private Observable<Void> paymentSelection() {
-		return Observable.merge(currentPaymentSelection(), view.paymentSelection())
+		return currentPaymentSelection()
+				.doOnError(throwable -> treatPaymentError(throwable))
+				.onErrorResumeNext(view.paymentSelection())
 				.doOnNext(payment -> view.showLoading())
 				.doOnNext(payment -> setPaymentProcessingState(payment))
-				.flatMap(payment -> paymentManager.pay(payment, product))
+				.flatMap(payment -> paymentManager.pay(payment))
 				.doOnNext(success -> view.dismissWithSuccess())
-				.retryWhen(errors -> errors.doOnNext(throwable -> {
-					if (throwable instanceof PaymentCancellationException) {
-						view.showPaymentCancellationError();
-					} else if (throwable instanceof PaymentFailureException) {
-						view.showPaymentFailureError();
-					}
-					view.removeLoading();
-				}));
+				.retryWhen(errors -> errors
+						.observeOn(AndroidSchedulers.mainThread())
+						.doOnNext(throwable -> treatPaymentError(throwable)));
+	}
+
+	private void treatPaymentError(Throwable throwable) {
+		if (throwable instanceof PaymentCancellationException) {
+			view.showPaymentCancellationError();
+		} else if (throwable instanceof PaymentFailureException) {
+			view.showPaymentFailureError();
+		}
+		throwable.printStackTrace();
+		view.removeLoading();
 	}
 
 	private Observable<Payment> currentPaymentSelection() {
 		return Observable.just(isProcessingPayment).flatMap(isProcessingPayment -> {
 			if (isProcessingPayment) {
-				return paymentRepository.getPayment(view.getContext(), currentPaymentType, product);
+				return paymentManager.getProductPayment(view.getContext(), currentPaymentType, product);
 			}
-			return Observable.empty();
+			return Observable.error(new IllegalStateException("Not payment currently being processed."));
 		});
 	}
 
