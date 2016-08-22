@@ -66,6 +66,10 @@ android {
             res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
         }
     }
+
+    dexOptions {
+        incremental true
+    }
 }
 
 void configureFabric(androidDelegate, key) {
