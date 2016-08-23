@@ -126,7 +126,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		private View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
 			return v -> {
 				StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
-					ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_subscribed, storeName));
+					ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 				}, Throwable::printStackTrace);
 			};
 		}

@@ -111,7 +111,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 				@Override
 				public void onClick(View v) {
 					subscribedBool = false;
-					ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.unsubscribing_store_message, getStoreMeta
+					ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta
 							.getData()
 							.getName()));
 					ArrayList<Long> sotoreIds = new ArrayList<>();

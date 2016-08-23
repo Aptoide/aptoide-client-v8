@@ -96,7 +96,8 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 								break;
 						}
-					});
+					})
+			;
 		});
 	}
 
