@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 18/08/2016.
+  ~ Modified by SithEngineer on 22/08/2016.
   -->
 
 <!--
@@ -43,7 +43,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/app_view_header_gradient"
+                android:foreground="@drawable/app_view_header_alfa_gradient"
                 app:layout_collapseMode="parallax"
                 >
 
