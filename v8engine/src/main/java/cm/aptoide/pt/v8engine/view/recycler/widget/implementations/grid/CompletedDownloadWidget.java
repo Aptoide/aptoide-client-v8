@@ -71,22 +71,22 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 			subscription = new CompositeSubscription();
 
 			subscription.add(RxView.clicks(itemView)
-					.flatMap(click -> displayable.downloadStatus(download)
+					.flatMap(click -> displayable.downloadStatus()
 							.filter(status -> status == Download.COMPLETED)
-							.flatMap(status -> displayable.installOrOpenDownload(getContext(), download)))
+							.flatMap(status -> displayable.installOrOpenDownload(getContext())))
 					.retry()
 					.subscribe(success -> {}, throwable -> throwable.printStackTrace()));
 
 			subscription.add(RxView.clicks(resumeDownloadButton)
-					.flatMap(click -> displayable.downloadStatus(download)
+					.flatMap(click -> displayable.downloadStatus()
 							.filter(status -> status == Download.PAUSED)
-							.flatMap(status -> displayable.resumeDownload((PermissionRequest) getContext(), download)))
+							.flatMap(status -> displayable.resumeDownload((PermissionRequest) getContext())))
 					.retry()
 					.subscribe(success -> {}, throwable -> throwable.printStackTrace()));
 
-			subscription.add(RxView.clicks(cancelDownloadButton).subscribe(click -> displayable.removeDownload(download)));
+			subscription.add(RxView.clicks(cancelDownloadButton).subscribe(click -> displayable.removeDownload()));
 
-			subscription.add(displayable.downloadStatus(download).observeOn(AndroidSchedulers.mainThread())
+			subscription.add(displayable.downloadStatus().observeOn(AndroidSchedulers.mainThread())
 					.subscribe(status -> {
 						if (status == Download.PAUSED) {
 							resumeDownloadButton.setVisibility(View.VISIBLE);

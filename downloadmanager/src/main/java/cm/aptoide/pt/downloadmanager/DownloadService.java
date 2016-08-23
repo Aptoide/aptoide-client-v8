@@ -32,6 +32,7 @@ public class DownloadService extends Service {
 	private Intent openAppsManagerIntent;
 	private Subscription notificationUpdateSubscription;
 	private Notification notification;
+	private Subscription stopMechanismSubscription;
 
 	private void pauseDownloads(Intent intent) {
 		// TODO: 7/4/16 trinkes pause with specific id
@@ -103,16 +104,19 @@ public class DownloadService extends Service {
 	}
 
 	private void setupStopSelfMechanism() {
-		subscriptions.add(downloadManager.getCurrentDownloads().filter(downloads -> downloads.size() <= 0).subscribe(downloads1 -> {
-			stopSelf();
-		}));
+		if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
+			stopMechanismSubscription = downloadManager.getCurrentDownloads().filter(downloads -> downloads.size() <= 0).subscribe(downloads -> {
+				stopSelf();
+			});
+			subscriptions.add(stopMechanismSubscription);
+		}
 	}
 
 	private void setupNotifications() {
 		if (notificationUpdateSubscription == null || notificationUpdateSubscription.isUnsubscribed()) {
 			openAppsManagerIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null);
 
-			notificationUpdateSubscription = downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
+			downloadManager.getCurrentDownload().subscribe(download -> {
 				Bundle bundle = new Bundle();
 				bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
 				notificationClickIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION, bundle);
@@ -141,6 +145,9 @@ public class DownloadService extends Service {
 				}
 				startForeground(NOTIFICATION_ID, notification);
 				setupStopSelfMechanism();
+			});
+
+			notificationUpdateSubscription = downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
 			}, Throwable::printStackTrace);
 			subscriptions.add(notificationUpdateSubscription);
 		}

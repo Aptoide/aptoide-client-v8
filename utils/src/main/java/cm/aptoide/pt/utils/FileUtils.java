@@ -37,6 +37,13 @@ public class FileUtils {
 	 * @return true if the the file was copied successfully, false otherwise
 	 */
 	public static void copyFile(String inputPath, String outputPath, String fileName) {
+		File file = new File(inputPath + fileName);
+		if (!file.renameTo(new File(outputPath + fileName))) {
+			altCopyFile(inputPath, outputPath, fileName);
+		}
+	}
+
+	public static void altCopyFile(String inputPath, String outputPath, String fileName) {
 		InputStream in = null;
 		OutputStream out = null;
 		try {

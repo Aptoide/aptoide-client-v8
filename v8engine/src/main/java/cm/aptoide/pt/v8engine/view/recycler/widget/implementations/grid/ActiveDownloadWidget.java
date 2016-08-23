@@ -10,12 +10,13 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/18/16.
@@ -29,8 +30,7 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	private TextView downloadProgressTv;
 	private ImageView pauseCancelButton;
 	private ImageView appIcon;
-	private Subscription subscribe;
-	private Download download;
+	private CompositeSubscription subscriptions;
 	private ActiveDownloadDisplayable displayable;
 
 	public ActiveDownloadWidget(View itemView) {
@@ -50,7 +50,25 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	@Override
 	public void bindView(ActiveDownloadDisplayable displayable) {
 		this.displayable = displayable;
-		download = displayable.getPojo();
+		if (subscriptions == null || subscriptions.isUnsubscribed()) {
+			subscriptions = new CompositeSubscription();
+		}
+		subscriptions.add(displayable.getDownload().distinctUntilChanged().map(download -> download).subscribe(this::updateUi));
+		subscriptions.add(RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
+	}
+
+	@Override
+	public void onViewAttached() {
+		subscriptions.add(RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
+	}
+
+	@Override
+	public void onViewDetached() {
+		subscriptions.unsubscribe();
+	}
+
+	private void updateUi(Download download) {
+		Logger.d(this.getClass().getSimpleName(), "updateUi() called with: " + "download = [" + download.getAppName() + "]");
 		appName.setText(download.getAppName());
 		if (!TextUtils.isEmpty(download.getIcon())) {
 			ImageLoader.load(download.getIcon(), appIcon);
@@ -63,25 +81,5 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 		}
 		downloadProgressTv.setText(download.getOverallProgress() + "%");
 		downloadSpeedTv.setText(String.valueOf(AptoideUtils.StringU.formatBits((long) download.getDownloadSpeed())));
-
-		if (subscribe != null && subscribe.isUnsubscribed()) {
-			subscribe.unsubscribe();
-		}
-		subscribe = RxView.clicks(pauseCancelButton).subscribe(aVoid -> {
-			displayable.pauseInstall(download);
-		});
-	}
-
-	@Override
-	public void onViewAttached() {
-		if (subscribe == null) {
-			subscribe = RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall(download));
-		}
-
-	}
-
-	@Override
-	public void onViewDetached() {
-
 	}
 }

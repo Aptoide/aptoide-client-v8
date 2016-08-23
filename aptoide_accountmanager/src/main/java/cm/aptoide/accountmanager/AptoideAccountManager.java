@@ -185,6 +185,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				activity.finish();
 			}
 		}
+		cm.aptoide.pt.preferences.Application.getContext().sendBroadcast(new Intent().setAction(LOGOUT));
 	}
 
 	private static

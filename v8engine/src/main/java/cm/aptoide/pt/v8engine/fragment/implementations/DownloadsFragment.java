@@ -6,10 +6,12 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Act
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
+import io.realm.RealmResults;
 import rx.Subscription;
 
 /**
@@ -40,6 +43,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 	private Subscription subscription;
 	private InstallManager installManager;
 	private DownloadServiceHelper downloadManager;
+	private List<Download> oldDownloadsList;
 
 	public static DownloadsFragment newInstance() {
 		return new DownloadsFragment();
@@ -51,36 +55,82 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+		oldDownloadsList = new ArrayList<>();
 	}
 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		super.load(refresh, savedInstanceState);
 		if (subscription == null || subscription.isUnsubscribed()) {
-
-			subscription = downloadManager.getAllDownloads().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(downloads -> {
-				activeDisplayablesList.clear();
-				completedDisplayablesList.clear();
-				for (final Download download : downloads) {
-					if (download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE || download
-							.getOverallDownloadStatus() == Download.PENDING) {
-						activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadManager));
-					} else {
-						completedDisplayablesList.add(new CompletedDownloadDisplayable(download, installManager, downloadManager));
-					}
-				}
-				if (completedDisplayablesList.size() > 0) {
-					completedDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R
-							.string.completed))));
-				}
-				if (activeDisplayablesList.size() > 0) {
-					activeDisplayablesList.add(0, new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active), new
-							DownloadServiceHelper(AptoideDownloadManager
-							.getInstance(), new PermissionManager())));
-				}
-				setDisplayables();
-			});
+			subscription = realm.where(Download.class)
+					.findAllSortedAsync("timeStamp")
+					.asObservable()
+					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+					.filter(downloads -> shouldUpdateList(downloads, oldDownloadsList))
+					.map(downloads -> updateOldDownloadsList(downloads))
+					.subscribe(downloads -> {
+						activeDisplayablesList.clear();
+						completedDisplayablesList.clear();
+						for (final Download download : downloads) {
+							if (download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE ||
+									download.getOverallDownloadStatus() == Download.PENDING) {
+								activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadManager));
+							} else {
+								completedDisplayablesList.add(new CompletedDownloadDisplayable(download, installManager, downloadManager));
+							}
+						}
+						if (completedDisplayablesList.size() > 0) {
+							completedDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
+									.getResString(R.string.completed))));
+						}
+						if (activeDisplayablesList.size() > 0) {
+							activeDisplayablesList.add(0, new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active), new
+									DownloadServiceHelper(AptoideDownloadManager
+									.getInstance(), new PermissionManager())));
+						}
+						setDisplayables();
+					});
 		}
+	}
+
+	@NonNull
+	private RealmResults<Download> updateOldDownloadsList(RealmResults<Download> downloads) {
+		oldDownloadsList = new ArrayList<>();
+		for (final Download download : downloads) {
+			oldDownloadsList.add(download.clone());
+		}
+		return downloads;
+	}
+
+	/**
+	 * this method checks if the downloads from the 2 lists are equivalents (same {@link Download#getAppId()} and {@link Download#getOverallDownloadStatus()}
+	 *
+	 * @param downloads        list of the most recent downloads list
+	 * @param oldDownloadsList list of the old downloads list
+	 *
+	 * @return true if the lists have different downloads or the download state has change, false otherwise
+	 */
+	private Boolean shouldUpdateList(@NonNull RealmResults<Download> downloads, @NonNull List<Download> oldDownloadsList) {
+		if (downloads.size() != oldDownloadsList.size()) {
+			return true;
+		}
+		for (int i = 0 ; i < oldDownloadsList.size() ; i++) {
+			int oldIndex = getDownloadFromListById(downloads.get(i), oldDownloadsList);
+			int newIndex = getDownloadFromListById(oldDownloadsList.get(i), downloads);
+			if (oldIndex < 0 || newIndex < 0 || downloads.get(i).getOverallDownloadStatus() != oldDownloadsList.get(oldIndex).getOverallDownloadStatus()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private int getDownloadFromListById(Download download, List<Download> oldDownloadsList) {
+		for (int i = 0 ; i < oldDownloadsList.size() ; i++) {
+			if ((oldDownloadsList.get(i).getAppId() == download.getAppId())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public void setDisplayables() {

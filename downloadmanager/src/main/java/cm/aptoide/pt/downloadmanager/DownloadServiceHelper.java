@@ -16,6 +16,7 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import lombok.Cleanup;
 import rx.Observable;
 import rx.functions.Action1;
@@ -125,7 +126,7 @@ public class DownloadServiceHelper {
 	 *
 	 * @return an observable with all downloads in database
 	 */
-	public Observable<List<Download>> getAllDownloads() {
+	public Observable<RealmResults<Download>> getAllDownloads() {
 		return aptoideDownloadManager.getDownloads();
 	}
 
@@ -134,7 +135,7 @@ public class DownloadServiceHelper {
 	 *
 	 * @return an observable with a download list
 	 */
-	public Observable<List<Download>> getRunningDownloads() {
+	public Observable<RealmResults<Download>> getRunningDownloads() {
 		return aptoideDownloadManager.getCurrentDownloads();
 	}
 

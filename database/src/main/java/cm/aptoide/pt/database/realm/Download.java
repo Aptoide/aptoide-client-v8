@@ -145,8 +145,31 @@ public class Download extends RealmObject {
 		clone.setFilesToDownload(cloneDownloadFiles(this.getFilesToDownload()));
 		clone.setDownloadSpeed(this.getDownloadSpeed());
 		clone.setIcon(this.getIcon());
+		clone.timeStamp = this.timeStamp;
 
 		return clone;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AppId: ");
+		builder.append(appId);
+		builder.append(" App Name: ");
+		builder.append(appName);
+		builder.append(" Download Overall Status: ");
+		builder.append(getOverallDownloadStatus());
+		builder.append(" Download Overall Progress: ");
+		builder.append(getOverallProgress());
+		builder.append(" files to download: ");
+		for (final FileToDownload fileToDownload : filesToDownload) {
+			builder.append(fileToDownload.toString());
+		}
+		builder.append(" download speed: ");
+		builder.append(downloadSpeed);
+		builder.append(" timestamp: ");
+		builder.append(timeStamp);
+		return builder.toString();
 	}
 
 	private RealmList<FileToDownload> cloneDownloadFiles(RealmList<FileToDownload> filesToDownload) {
