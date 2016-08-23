@@ -44,13 +44,17 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 	private static final String PRODUCT_EXTRA = "product";
 	private static final int RESULT_FAILURE = 2;
 
+	private View overlay;
+	private View header;
+	private View body;
 	private ProgressBar progressBar;
 	private ViewGroup paymentContainer;
 	private ImageView productIcon;
 	private TextView productName;
 	private TextView productPriceDescription;
+	private TextView noPaymentsText;
+	private TextView payWithText;
 	private Button cancelButton;
-	private View overlay;
 
 	private List<Observable<Payment>> paymentSelections;
 
@@ -70,8 +74,12 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 		productIcon = (ImageView) findViewById(R.id.activity_payment_product_icon);
 		productName= (TextView) findViewById(R.id.activity_payment_product_name);
 		productPriceDescription= (TextView) findViewById(R.id.activity_payment_product_price_description);
+		header = findViewById(R.id.activity_payment_header);
+		body = findViewById(R.id.activity_payment_body);
 		cancelButton = (Button) findViewById(R.id.activity_payment_cancel_button);
 		overlay = findViewById(R.id.payment_activity_overlay);
+		noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
+		payWithText = (TextView) findViewById(R.id.activity_payment_pay_with_text);
 		paymentSelections = new ArrayList<>();
 
 		final Product product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
@@ -116,6 +124,9 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 
 	@Override
 	public void showPayments(List<Payment> paymentList) {
+		paymentContainer.removeAllViews();
+		payWithText.setVisibility(View.VISIBLE);
+		noPaymentsText.setVisibility(View.GONE);
 		Button paymentButton;
 		for (Payment payment: paymentList) {
 			paymentButton = (Button) getLayoutInflater().inflate(getButtonLayoutResource(payment), paymentContainer, false);
@@ -126,16 +137,25 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 	}
 
 	@Override
+	public void showPaymentsNotFoundMessage() {
+		paymentContainer.removeAllViews();
+		payWithText.setVisibility(View.INVISIBLE);
+		noPaymentsText.setVisibility(View.VISIBLE);
+	}
+
+	@Override
 	public void showLoading() {
+		header.setVisibility(View.INVISIBLE);
+		body.setVisibility(View.INVISIBLE);
 		cancelButton.setVisibility(View.INVISIBLE);
-		paymentContainer.setVisibility(View.INVISIBLE);
 		progressBar.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void removeLoading() {
+		header.setVisibility(View.VISIBLE);
+		body.setVisibility(View.VISIBLE);
 		cancelButton.setVisibility(View.VISIBLE);
-		paymentContainer.setVisibility(View.VISIBLE);
 		progressBar.setVisibility(View.GONE);
 	}
 

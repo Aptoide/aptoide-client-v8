@@ -38,4 +38,6 @@ public interface PaymentView extends View {
 	void showPaymentCancellationError();
 
 	void showPaymentFailureError();
+
+	void showPaymentsNotFoundMessage();
 }

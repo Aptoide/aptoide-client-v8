@@ -5,14 +5,17 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.List;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.receivers.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
@@ -47,6 +50,12 @@ public class PaymentPresenter implements Presenter {
 				.subscribe();
 
 		view.getLifecycle()
+				.compose(view.bindUntilEvent(View.Event.PAUSE))
+				.filter(event -> View.Event.RESUME.equals(event))
+				.flatMap(resumed -> login())
+				.subscribe();
+
+		view.getLifecycle()
 				.compose(view.bindUntilEvent(View.Event.DESTROY))
 				.filter(event -> View.Event.CREATE.equals(event))
 				.doOnNext(create -> view.showProduct(product))
@@ -54,9 +63,41 @@ public class PaymentPresenter implements Presenter {
 				.flatMap(event -> getPayments())
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnNext(payments -> view.removeLoading())
-				.doOnNext(payments -> view.showPayments(payments))
+				.doOnNext(payments -> showPayments(payments))
+				.filter(payments -> !payments.isEmpty())
 				.flatMap(payments -> paymentSelection())
 				.subscribe();
+	}
+
+	private void showPayments(List<Payment> payments) {
+		if (payments.isEmpty()) {
+			view.showPaymentsNotFoundMessage();
+		} else {
+			view.showPayments(payments);
+		}
+	}
+
+	private Observable<Void> login() {
+		return Observable.<Boolean>fromCallable(() -> AptoideAccountManager.isLoggedIn()).<Void>flatMap(loggedIn -> {
+			if (!loggedIn) {
+				// TODO this logic should be abstracted by Account Manager. It should expose a callback (Observable, Listener ..etc)
+				IntentFilter loginFilter = new IntentFilter(AptoideAccountManager.LOGIN);
+				loginFilter.addAction(AptoideAccountManager.LOGIN_CANCELLED);
+				return Observable.create(new BroadcastRegisterOnSubscribe(view.getContext(), loginFilter, null, null))
+						.doOnSubscribe(() -> AptoideAccountManager.openAccountManager(view.getContext(), false))
+						.flatMap(intent -> {
+							if (AptoideAccountManager.LOGIN.equals(intent.getAction())) {
+								return Observable.just(null);
+							} else if (AptoideAccountManager.LOGIN_CANCELLED.equals(intent.getAction())) {
+								return Observable.error(new IllegalStateException("User cancelled login. Can not perform payment."));
+							} else if (AptoideAccountManager.LOGOUT.equals(intent.getAction())) {
+								return Observable.error(new IllegalStateException("User logged out. Can not perform payment."));
+							}
+							return Observable.empty();
+						});
+			}
+			return Observable.just(null);
+		}).doOnError(throwable -> view.dismissWithFailure()).onErrorReturn(throwable -> null);
 	}
 
 	@Override
@@ -104,7 +145,6 @@ public class PaymentPresenter implements Presenter {
 		} else if (throwable instanceof PaymentFailureException) {
 			view.showPaymentFailureError();
 		}
-		throwable.printStackTrace();
 		view.removeLoading();
 	}
 

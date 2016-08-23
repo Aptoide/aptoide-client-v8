@@ -66,6 +66,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
 	public static final String LOGIN = cm.aptoide.pt.preferences.Application.getConfiguration()
 			.getAppId() + ".accountmanager.broadcast.login";
+	public static final String LOGIN_CANCELLED = cm.aptoide.pt.preferences.Application.getConfiguration()
+			.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
 	public static final String LOGOUT = cm.aptoide.pt.preferences.Application.getConfiguration()
 			.getAppId() + ".accountmanager.broadcast.logout";
 
@@ -610,6 +612,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
 	private static void sendLoginBroadcast() {
 		cm.aptoide.pt.preferences.Application.getContext().sendBroadcast(new Intent().setAction(LOGIN));
+	}
+
+	public static void sendLoginCancelledBroadcast() {
+		cm.aptoide.pt.preferences.Application.getContext().sendBroadcast(new Intent().setAction(LOGIN_CANCELLED));
 	}
 
 	public static Observable<List<Subscription>> getUserRepos() {
