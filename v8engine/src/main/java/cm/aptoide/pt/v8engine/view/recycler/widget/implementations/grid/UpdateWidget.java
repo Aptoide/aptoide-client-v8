@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
@@ -44,12 +45,15 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	private View updateRowRelativeLayout;
 	private TextView labelTextView;
 	private ImageView iconImageView;
+	private ImageView imgUpdateLayout;
 	private TextView installedVernameTextView;
 	private TextView updateVernameTextView;
+	private TextView textUpdateLayout;
 	private ViewGroup updateButtonLayout;
 	private Subscription subscription;
 	private UpdateDisplayable displayable;
 	private LinearLayout updateLayout;
+	private ProgressBar progressBar;
 
 	public UpdateWidget(View itemView) {
 		super(itemView);
@@ -64,6 +68,10 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		updateVernameTextView = (TextView) itemView.findViewById(R.id.app_update_version);
 		updateButtonLayout = (ViewGroup) itemView.findViewById(R.id.updateButtonLayout);
 		updateLayout = (LinearLayout) itemView.findViewById(R.id.update_layout);
+		imgUpdateLayout = (ImageView) itemView.findViewById(R.id.img_update_layout);
+		textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
+		progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+
 	}
 
 	@Override
@@ -98,12 +106,30 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 			return true;
 		});
-
-		updateLayout.setOnClickListener(v -> new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager()).startDownload(
-				(PermissionRequest) getContext(), new DownloadFactory()
-				.create(displayable))
+		DownloadServiceHelper downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+		// TODO: 8/23/16 trinkes try to change to worker thread
+		downloadManager.getAllDownloads()
+				.flatMapIterable(downloads -> downloads)
+				.filter(download -> download.getAppId() == displayable.getAppId())
+				.map(download -> download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE ||
+						download
+						.getOverallDownloadStatus() == Download.PENDING)
+				.subscribe(showProgress -> {
+					if (showProgress) {
+						textUpdateLayout.setVisibility(View.GONE);
+						imgUpdateLayout.setVisibility(View.GONE);
+						progressBar.setVisibility(View.VISIBLE);
+					} else {
+						textUpdateLayout.setVisibility(View.VISIBLE);
+						imgUpdateLayout.setVisibility(View.VISIBLE);
+						progressBar.setVisibility(View.GONE);
+					}
+				});
+		updateLayout.setOnClickListener(v -> downloadManager.startDownload((PermissionRequest) UpdateWidget.this.getContext(), new DownloadFactory().create
+				(displayable))
 				.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-				.flatMap(download -> displayable.getInstallManager().install(getContext(), (PermissionRequest) getContext(), download.getAppId()))
+				.flatMap(download -> displayable.getInstallManager()
+						.install(UpdateWidget.this.getContext(), (PermissionRequest) UpdateWidget.this.getContext(), download.getAppId()))
 				.onErrorReturn(throwable -> null)
 				.subscribe());
 	}

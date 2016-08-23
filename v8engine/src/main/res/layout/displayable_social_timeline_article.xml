@@ -18,16 +18,17 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/displayable_social_timeline_app_update_header"
+            android:id="@+id/displayable_social_timeline_article_header"
             android:layout_width="match_parent"
             android:layout_height="63.3dp"
             android:orientation="horizontal">
 
             <ImageView
             android:id="@+id/card_image"
-            android:layout_width="38.3dp"
-            android:layout_height="38.3dp"
-            android:layout_margin="12dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="12.7dp"
             tools:ignore="contentDescription"
             tools:src="@drawable/img_people_mockup"/>
 

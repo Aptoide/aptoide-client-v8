@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 17/08/2016.
+  ~ Modified by SithEngineer on 22/08/2016.
   -->
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="192dp"
+    android:layout_width="178dp"
     android:layout_height="88dp"
     >
 

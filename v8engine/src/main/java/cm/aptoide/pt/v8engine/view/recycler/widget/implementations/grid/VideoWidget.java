@@ -97,7 +97,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
 				.getMarginWidth
-						(getContext(), getContext().getResources().getConfiguration().orientation),0);
+						(getContext(), getContext().getResources().getConfiguration().orientation),30);
 		cardView.setLayoutParams(layoutParams);
 	}
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/08/2016.
+ * Modified by SithEngineer on 22/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -132,6 +132,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		LinearLayoutManagerWithSmootheScroller layoutManager = new LinearLayoutManagerWithSmootheScroller(getContext(), LinearLayoutManager.HORIZONTAL, false);
 		topReviewsList.setLayoutManager(layoutManager);
+		topReviewsList.setNestedScrollingEnabled(false); // because otherwise the AppBar won't be collapsed
 
 		loadReviews();
 	}

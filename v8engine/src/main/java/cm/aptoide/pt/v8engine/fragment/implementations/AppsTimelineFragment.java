@@ -144,7 +144,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
 	@NonNull
 	private Observable<List<String>> refreshPackages() {
-		return Observable.concat(packageRepository.getLatestInstalledPackages(5), packageRepository.getRandomInstalledPackages(5))
+		return Observable.concat(packageRepository.getLatestInstalledPackages(10), packageRepository.getRandomInstalledPackages(10))
 				.toList()
 				.doOnNext(packages -> setPackages(packages));
 	}

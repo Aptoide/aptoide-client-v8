@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -165,6 +166,21 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		}
 	}
 
+	//	@Override
+	//	public void onDestroyView() {
+	//		super.onDestroyView();
+	//
+	//		mDrawerLayout = null;
+	//		mNavigationView = null;
+	//	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		receiver = new ChangeTabReceiver();
+		getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -172,12 +188,10 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	}
 
 	@Override
-	public void onDestroy() {
-		if (receiver != null) {
-			getContext().unregisterReceiver(receiver);
-		}
+	public void onDetach() {
+		getContext().unregisterReceiver(receiver);
 		receiver = null;
-		super.onDestroy();
+		super.onDetach();
 	}
 
 	@Override
@@ -207,8 +221,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 				mViewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
 			}
 		}
-		receiver = new ChangeTabReceiver();
-		getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
 	}
 
 	@Override
@@ -274,7 +286,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Event.Name tabToChange = (Event.Name) intent.getSerializableExtra(SET_TAB_EVENT);
-			if (tabToChange != null && mViewPager != null) {
+			if (tabToChange != null) {
 				StorePagerAdapter storePagerAdapter = mViewPager.getAdapter() instanceof StorePagerAdapter ? ((StorePagerAdapter) mViewPager.getAdapter()) :
 						null;
 				if (storePagerAdapter != null) {

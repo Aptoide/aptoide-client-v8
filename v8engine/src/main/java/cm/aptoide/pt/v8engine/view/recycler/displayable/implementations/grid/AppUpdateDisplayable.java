@@ -80,13 +80,11 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public int getMarginWidth(Context context, int orientation){
-		Logger.d(this.getClass().getName(), "dpi : " + AptoideUtils.ScreenU.getDensityDpi());
 		if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
 			return 0;
 		}
 
 		int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-		Logger.d(this.getClass().getName(), "width: " + width);
 
 		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			return (int)(width * 0.2);
@@ -96,8 +94,7 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Spannable getAppTitle(Context context) {
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_name,
-				appName), ContextCompat.getColor(context, R.color.black), appName);
+		return spannableFactory.createColorSpan(appName, ContextCompat.getColor(context, R.color.black), appName);
 	}
 
 	public String getTimeSinceLastUpdate(Context context) {

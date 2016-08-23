@@ -7,8 +7,8 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -29,8 +29,9 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 	private ImageView appIcon;
 	private TextView appName;
 	private TextView similarApps;
-	private Button getAppButton;
+	private TextView getApp;
 	private CardView cardView;
+	private RelativeLayout cardContent;
 
 	public RecommendationWidget(View itemView) {
 		super(itemView);
@@ -44,9 +45,9 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 		appIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_icon);
 		appName = (TextView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_name);
 		similarApps = (TextView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
-		getAppButton = (Button) itemView.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
+		getApp = (TextView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_get_app_button);
 		cardView = (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
-
+		cardContent = (RelativeLayout) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card_content);
 	}
 
 	@Override
@@ -65,9 +66,9 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 
 		similarApps.setText(displayable.getSimilarAppsText(getContext()));
 
-		getAppButton.setVisibility(View.VISIBLE);
-		getAppButton.setText(displayable.getAppText(getContext()));
-		getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
+		getApp.setVisibility(View.VISIBLE);
+		getApp.setText(displayable.getAppText(getContext()));
+		cardContent.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
 	}
 
 	private void setCardviewMargin(RecommendationDisplayable displayable) {
@@ -75,7 +76,7 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
 				.getMarginWidth
-				(getContext(), getContext().getResources().getConfiguration().orientation),0);
+				(getContext(), getContext().getResources().getConfiguration().orientation),30);
 		cardView.setLayoutParams(layoutParams);
 	}
 

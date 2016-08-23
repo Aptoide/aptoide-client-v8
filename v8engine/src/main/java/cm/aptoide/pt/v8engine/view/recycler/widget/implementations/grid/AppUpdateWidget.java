@@ -17,6 +17,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
@@ -88,7 +89,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
 				.getMarginWidth
-						(getContext(), getContext().getResources().getConfiguration().orientation),0);
+						(getContext(), getContext().getResources().getConfiguration().orientation),30);
 		cardView.setLayoutParams(layoutParams);
 	}
 
@@ -113,11 +114,18 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				if (status == Download.COMPLETED) {
 					return displayable.install(getContext()).map(success -> Download.COMPLETED);
 				}
-				return displayable.download((PermissionRequest) getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(completedToPause());
+				return displayable.download((PermissionRequest) getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(downloadStatus -> {
+					if (downloadStatus == Download.COMPLETED) {
+						updateDownloadStatus(displayable, downloadStatus);
+						return displayable.install(getContext()).map(success -> Download.COMPLETED);
+					}
+					return Observable.just(downloadStatus);
+				});
 			})).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
 				showDownloadError(displayable, error);
+				Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
 				return Observable.just(null);
-			})).subscribe(status -> updateDownloadStatus(displayable, status)));
+			})).distinctUntilChanged().subscribe(status -> updateDownloadStatus(displayable, status)));
 		}
 	}
 

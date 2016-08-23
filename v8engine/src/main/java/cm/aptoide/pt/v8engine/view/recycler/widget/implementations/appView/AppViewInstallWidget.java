@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/08/2016.
+ * Modified by SithEngineer on 22/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -83,7 +83,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	// app info
 	private TextView versionName;
-	private TextView latestAvailableLabel;
+	private View latestAvailableLayout;
 	private TextView otherVersions;
 	private MinimalAd minimalAd;
 
@@ -108,7 +108,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton = (Button) itemView.findViewById(R.id.action_btn);
 		versionName = (TextView) itemView.findViewById(R.id.store_version_name);
 		otherVersions = (TextView) itemView.findViewById(R.id.other_versions);
-		latestAvailableLabel = (TextView) itemView.findViewById(R.id.latest_available_label);
+		latestAvailableLayout = itemView.findViewById(R.id.latest_available_layout);
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		checkOnGoingDownload(getApp, displayable);
 
 		if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
-			latestAvailableLabel.setVisibility(View.VISIBLE);
+			latestAvailableLayout.setVisibility(View.VISIBLE);
 		}
 
 		ContextWrapper ctx = (ContextWrapper) versionName.getContext();
@@ -428,7 +428,15 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	private boolean isThisTheLatestVersionAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
 		boolean canCompare = appVersions != null && appVersions.getList() != null && appVersions.getList() != null && !appVersions.getList().isEmpty();
-		return !canCompare || (app.getFile().getVercode() >= appVersions.getList().get(0).getFile().getVercode());
+		if (canCompare) {
+			final int currentVersionCode = app.getFile().getVercode();
+			for (final App otherAppVersion : appVersions.getList()) {
+				if (otherAppVersion.getFile().getVercode() > currentVersionCode) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
