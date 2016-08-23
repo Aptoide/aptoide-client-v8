@@ -181,7 +181,9 @@ dependencies {
     //compile "com.makeramen:roundedimageview:${ROUNDED_IMG_LIB}"
 
     // paypal SDK
-    compile "com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}"
+    compile ("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}"){
+        exclude group: 'io.card'
+    }
 
     // Localytics sdk
     compile "com.localytics.android:library:${LOCALYTICS_VERSION}"

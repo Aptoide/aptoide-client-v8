@@ -21,9 +21,10 @@
                 tools:ignore="contentDescription"
                 tools:src="@drawable/img_people_mockup"
                 android:id="@+id/card_image"
-                android:layout_margin="12dp"
-                android:layout_width="38.3dp"
-                android:layout_height="38.3dp"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginLeft="12.7dp"/>
 
             <TextView
                 android:layout_marginTop="14.7dp"
