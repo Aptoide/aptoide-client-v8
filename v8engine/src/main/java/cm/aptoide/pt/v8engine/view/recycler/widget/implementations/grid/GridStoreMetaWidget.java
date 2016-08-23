@@ -106,7 +106,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 		if (subscribedBool) {
 
 			ivSubscribe.setImageResource(R.drawable.ic_check_white);
-			subscribed.setText(itemView.getContext().getString(R.string.appview_subscribed_store_button_text));
+			subscribed.setText(itemView.getContext().getString(R.string.followed));
 			subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -122,7 +122,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 			});
 		} else {
 			ivSubscribe.setImageResource(R.drawable.ic_plus_white);
-			subscribed.setText(itemView.getContext().getString(R.string.appview_subscribe_store_button_text));
+			subscribed.setText(itemView.getContext().getString(R.string.appview_follow_store_button_text));
 			subscribed.setCompoundDrawables(null, null, null, null);
 	        /*Drawable drawableLeft = itemView.getContext().getResources().getDrawable(R.drawable.ic_action_cancel_small_dark);
             if (drawableLeft != null) {
@@ -135,7 +135,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 					if (!subscribedBool) {
 						subscribedBool = true;
 						AptoideAccountManager.subscribeStore(getStoreMeta.getData().getName());
-						ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.store_subscribed, getStoreMeta.getData()
+						ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.followed, getStoreMeta.getData()
 								.getName()));
 						handleSubscriptionLogic(getStoreMeta);
 					}
