@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 30/06/2016.
  */
 
-package cm.aptoide.pt.downloadmanager;
+package cm.aptoide.pt.database.exceptions;
 
 /**
  * Created by marcelobenites on 6/30/16.

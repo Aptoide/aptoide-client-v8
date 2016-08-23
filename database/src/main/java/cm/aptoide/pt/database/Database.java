@@ -6,8 +6,13 @@
 package cm.aptoide.pt.database;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import java.util.List;
+
+import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -23,6 +28,10 @@ import io.realm.RealmMigration;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import rx.Observable;
+import rx.Scheduler;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 16/05/16.
@@ -283,6 +292,168 @@ public class Database {
 
 		public static StoredMinimalAd get(String packageName, Realm realm) {
 			return realm.where(StoredMinimalAd.class).equalTo(StoredMinimalAd.PACKAGE_NAME, packageName).findFirst();
+		}
+	}
+
+	public static class DownloadQ {
+
+		public static Observable<List<Download>> getDownloads() {
+			return getDownloads(null);
+		}
+
+
+		public static Observable<List<Download>> getDownloads(@Nullable Action0 action) {
+
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			return realm.where(Download.class)
+					.findAllAsync()
+					.asObservable()
+					.filter(RealmResults::isLoaded)
+					.map(realm::copyFromRealm)
+					.unsubscribeOn(scheduler)
+					.doOnUnsubscribe(() -> {
+						realm.close();
+						if (action != null) {
+							action.call();
+						}
+					});
+		}
+
+		public static Observable<Download> getDownload(long appId) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			return realm.where(Download.class).equalTo("appId", appId).findFirstAsync().<Download> asObservable().filter(download -> download.isLoaded())
+					.flatMap(download -> {
+						if (download.isValid()) {
+							return Observable.just(download);
+						} else {
+							return Observable.error(new DownloadNotFoundException());
+						}
+					})
+					.map(realm::copyFromRealm)
+					.unsubscribeOn(scheduler)
+					.doOnUnsubscribe(realm::close);
+		}
+
+		public static Observable<List<Download>> getCurrentDownloads() {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			return realm.where(Download.class)
+					.equalTo("overallDownloadStatus", Download.PROGRESS)
+					.or()
+					.equalTo("overallDownloadStatus", Download.PENDING)
+					.or()
+					.equalTo("overallDownloadStatus", Download.IN_QUEUE)
+					.findAllAsync()
+					.asObservable()
+					.filter(RealmResults::isLoaded)
+					.map(realm::copyFromRealm)
+					.unsubscribeOn(scheduler)
+					.doOnUnsubscribe(realm::close);
+		}
+
+		public static Void saveDownloadAsync(Download download) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			Observable.fromCallable(() -> {
+				realm.executeTransactionAsync(transactionRealm -> transactionRealm.copyToRealmOrUpdate(download));
+				return null;
+			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
+			return null;
+		}
+
+		public static Void saveDownloadsAsync(List<Download> downloads) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			Observable.fromCallable(() -> {
+				realm.executeTransactionAsync(transactionRealm -> {
+					Download download;
+					for (int i = 0 ; i < downloads.size() ; i++) {
+						download = downloads.get(i);
+						transactionRealm.copyToRealmOrUpdate(download);
+					}
+				});
+				return null;
+			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
+			return null;
+		}
+
+		public static Void saveDownloads(List<Download> downloads) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			Observable.fromCallable(() -> {
+				realm.executeTransaction(transactionRealm -> {
+					Download download;
+					for (int i = 0 ; i < downloads.size() ; i++) {
+						download = downloads.get(i);
+						transactionRealm.copyToRealmOrUpdate(download);
+					}
+				});
+				return null;
+			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
+			return null;
+		}
+
+		public static Void deleteDownloadAsync(Download download) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			Observable.fromCallable(() -> realm.executeTransactionAsync(transactionRealm -> {
+				final Download downloadFromRealm = transactionRealm.where(Download.class).equalTo("appId", download.getAppId()).findFirst();
+				if (downloadFromRealm != null) {
+					downloadFromRealm.deleteFromRealm();
+				}
+			})).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
+			return null;
+		}
+
+		public static Void deleteDownloadsAsync(List<Download> downloads) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			Observable.fromCallable(() -> {
+				realm.executeTransactionAsync(transactionRealm -> {
+					for (int i = 0 ; i < downloads.size() ; i++) {
+						final Download download = downloads.get(i);
+						transactionRealm.where(Download.class).equalTo("appId", download.getAppId()).findFirst().deleteFromRealm();
+					}
+				});
+				return null;
+			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
+			return null;
+		}
+
+		/**
+		 * This method will save a download object on database using an {@link Realm#executeTransactionAsync(Realm.Transaction)}
+		 *
+		 * @param download object to be saved on database
+		 *
+		 * @return null
+		 */
+		public static Void saveAsync(Download download) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			Observable.fromCallable(() -> realm.executeTransactionAsync(transactionRealm -> transactionRealm.copyToRealmOrUpdate(download)))
+					.unsubscribeOn(scheduler)
+					.doOnUnsubscribe(realm::close)
+					.subscribe();
+			return null;
+		}
+
+		/**
+		 * This method will save a download object on database using an {@link Realm#executeTransactionAsync(Realm.Transaction)}
+		 *
+		 * @param download object to be saved on database
+		 *
+		 * @return null
+		 */
+		public static Void save(Download download) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			Observable.fromCallable(() -> {
+				realm.executeTransaction(transactionRealm -> transactionRealm.copyToRealmOrUpdate(download));
+				return null;
+			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
+			return null;
 		}
 	}
 }

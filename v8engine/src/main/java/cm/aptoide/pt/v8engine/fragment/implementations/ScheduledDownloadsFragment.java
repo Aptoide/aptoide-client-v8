@@ -101,7 +101,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 						emptyData.setVisibility(View.GONE);
 						ArrayList<ScheduledDownloadDisplayable> displayables = new ArrayList<>(scheduledDownloads.size());
 						for (final Scheduled scheduledDownload : scheduledDownloads) {
-							displayables.add(new ScheduledDownloadDisplayable(installManager, scheduledDownload));
+							displayables.add(new ScheduledDownloadDisplayable(installManager, scheduledDownload, realm));
 						}
 						setDisplayables(displayables);
 					}

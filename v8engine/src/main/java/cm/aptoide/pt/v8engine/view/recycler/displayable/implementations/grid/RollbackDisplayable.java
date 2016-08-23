@@ -15,6 +15,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import io.realm.Realm;
+import lombok.Getter;
 import rx.Observable;
 
 /**

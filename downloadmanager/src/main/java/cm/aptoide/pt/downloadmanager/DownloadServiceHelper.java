@@ -7,17 +7,17 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import lombok.Cleanup;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -54,6 +54,8 @@ public class DownloadServiceHelper {
 		startDownloadService(appId, AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE);
 	}
 
+	public static String TAG = DownloadServiceHelper.class.getSimpleName();
+
 	/**
 	 * Starts a download. If there is a download running it is added to queue
 	 *
@@ -64,42 +66,50 @@ public class DownloadServiceHelper {
 	 */
 	public Observable<Download> startDownload(PermissionRequest permissionRequest, Download download) {
 		return permissionManager.requestExternalStoragePermission(permissionRequest).flatMap(success -> Observable.fromCallable(() -> {
-			aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
+			getDownload(download.getAppId()).first().subscribe(storedDownload -> {
 				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 			}, throwable -> {
 				if (throwable instanceof DownloadNotFoundException) {
-					@Cleanup
-					Realm realm = Database.get();
+					final Realm realm = Database.get();
 					Database.save(download, realm);
+					realm.close();
 					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 				} else {
 					throwable.printStackTrace();
 				}
 			});
 			return download;
-		}).flatMap(aDownload -> aptoideDownloadManager.getDownload(download.getAppId())));
+		}).flatMap(aDownload -> getDownload(download.getAppId())));
 	}
 
 	public void startDownload(PermissionRequest permissionRequest, List<Download> downloads, Action1<Long> action) {
-		for (final Download download : downloads) {
-			permissionManager.requestExternalStoragePermission(permissionRequest).flatMap(success -> Observable.fromCallable(() -> {
-				aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
-					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-				}, throwable -> {
-					if (throwable instanceof DownloadNotFoundException) {
-						Realm realm = Database.get();
-						realm.executeTransactionAsync(realm1 -> realm1.copyToRealm(download), () -> {
-							startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-							action.call(download.getAppId());
-						});
-						realm.close();
-					} else {
-						throwable.printStackTrace();
+
+		permissionManager.requestExternalStoragePermission(permissionRequest)
+				.concatMap(success -> Database.DownloadQ.getDownloads())
+				.first()
+				.subscribe(downloadsFromRealm -> {
+					Realm realm = Database.get();
+					for (int i = 0 ; i < downloads.size() ; i++) {
+						final Download download = getDownloadFromList(downloadsFromRealm, downloads.get(i));
+						if (download != null) {
+							realm.executeTransactionAsync(realm1 -> realm1.copyToRealmOrUpdate(download), () -> {
+								startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+								if (action != null) {
+									action.call(download.getAppId());
+								}
+							});
+						}
 					}
-				});
-				return download;
-			})).subscribe();
+				}, Throwable::printStackTrace);
+	}
+
+	private Download getDownloadFromList(List<Download> downloadsFromRealm, @NonNull Download download) {
+		for (int i = 0 ; i < downloadsFromRealm.size() ; i++) {
+			if (downloadsFromRealm.get(i).getAppId() == download.getAppId()) {
+				return downloadsFromRealm.get(i);
+			}
 		}
+		return download;
 	}
 
 	private void startDownloadService(long appId, String action) {
@@ -109,7 +119,8 @@ public class DownloadServiceHelper {
 			intent.setAction(action);
 			Application.getContext().startService(intent);
 			return null;
-		}).subscribeOn(Schedulers.io()).subscribe();
+		}).subscribeOn(Schedulers.computation()).subscribe(o -> {
+		}, Throwable::printStackTrace);
 	}
 
 	/**
@@ -126,7 +137,7 @@ public class DownloadServiceHelper {
 	 *
 	 * @return an observable with all downloads in database
 	 */
-	public Observable<RealmResults<Download>> getAllDownloads() {
+	public Observable<List<Download>> getAllDownloads() {
 		return aptoideDownloadManager.getDownloads();
 	}
 
@@ -135,7 +146,7 @@ public class DownloadServiceHelper {
 	 *
 	 * @return an observable with a download list
 	 */
-	public Observable<RealmResults<Download>> getRunningDownloads() {
+	public Observable<List<Download>> getRunningDownloads() {
 		return aptoideDownloadManager.getCurrentDownloads();
 	}
 

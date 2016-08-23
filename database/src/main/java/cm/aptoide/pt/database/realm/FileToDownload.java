@@ -146,7 +146,7 @@ public class FileToDownload extends RealmObject {
 	}
 
 	public String getFilePath() {
-		return path + fileName;
+		return getPath() + getFileName();
 	}
 
 	@Override

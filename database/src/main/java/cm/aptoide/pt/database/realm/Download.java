@@ -11,6 +11,8 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
@@ -37,19 +39,30 @@ public class Download extends RealmObject {
 	public static final int NOT_DOWNLOADED = 12;
 	public static final int IN_QUEUE = 13;
 	RealmList<FileToDownload> filesToDownload;
-	@DownloadState
-	int overallDownloadStatus = 0;
+	@DownloadState int overallDownloadStatus = 0;
 	int overallProgress = 0;
-	@PrimaryKey
-	private long appId;
+	@PrimaryKey private long appId;
 	private String appName;
 	private String Icon;
-	@SuppressWarnings({"all"})
-	private long timeStamp;
+	@SuppressWarnings({"all"}) private long timeStamp;
 	private int downloadSpeed;
 
 	public Download() {
 		this.timeStamp = Calendar.getInstance().getTimeInMillis();
+	}
+
+
+	public static List<Download> sortDownloads(List<Download> downloads) {
+		Collections.sort(downloads, (lhs, rhs) -> {
+			if (lhs.timeStamp == rhs.timeStamp) {
+				return 0;
+			} else if (lhs.timeStamp >= rhs.timeStamp) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+		return downloads;
 	}
 
 	public String getStatusName(Context context) {
@@ -131,53 +144,6 @@ public class Download extends RealmObject {
 
 	public void setIcon(String icon) {
 		Icon = icon;
-	}
-
-	@Override
-	public Download clone() {
-		Download clone = new Download();
-		clone.setAppId(this.getAppId());
-		clone.setOverallDownloadStatus(this.getOverallDownloadStatus());
-		clone.setOverallProgress(this.getOverallProgress());
-		if (this.getAppName() != null) {
-			clone.setAppName(new String(this.getAppName()));
-		}
-		clone.setFilesToDownload(cloneDownloadFiles(this.getFilesToDownload()));
-		clone.setDownloadSpeed(this.getDownloadSpeed());
-		clone.setIcon(this.getIcon());
-		clone.timeStamp = this.timeStamp;
-
-		return clone;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AppId: ");
-		builder.append(appId);
-		builder.append(" App Name: ");
-		builder.append(appName);
-		builder.append(" Download Overall Status: ");
-		builder.append(getOverallDownloadStatus());
-		builder.append(" Download Overall Progress: ");
-		builder.append(getOverallProgress());
-		builder.append(" files to download: ");
-		for (final FileToDownload fileToDownload : filesToDownload) {
-			builder.append(fileToDownload.toString());
-		}
-		builder.append(" download speed: ");
-		builder.append(downloadSpeed);
-		builder.append(" timestamp: ");
-		builder.append(timeStamp);
-		return builder.toString();
-	}
-
-	private RealmList<FileToDownload> cloneDownloadFiles(RealmList<FileToDownload> filesToDownload) {
-		RealmList<FileToDownload> clone = new RealmList<>();
-		for (final FileToDownload fileToDownload : filesToDownload) {
-			clone.add(fileToDownload.clone());
-		}
-		return clone;
 	}
 
 	public int getDownloadSpeed() {

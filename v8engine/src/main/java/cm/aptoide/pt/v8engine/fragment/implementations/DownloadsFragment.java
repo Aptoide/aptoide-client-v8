@@ -8,12 +8,14 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.realm.Download;
@@ -30,76 +32,88 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Act
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
-import io.realm.RealmResults;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+
 
 /**
  * Created by trinkes on 7/15/16.
  */
 public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
+	public static final String TAG = "worker";
 	private List<Displayable> activeDisplayablesList = new LinkedList<>();
 	private List<Displayable> completedDisplayablesList = new LinkedList<>();
 	private Subscription subscription;
 	private InstallManager installManager;
 	private DownloadServiceHelper downloadManager;
 	private List<Download> oldDownloadsList;
+	private PermissionManager permissionManager;
 
 	public static DownloadsFragment newInstance() {
 		return new DownloadsFragment();
 	}
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		final PermissionManager permissionManager = new PermissionManager();
-		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
-		oldDownloadsList = new ArrayList<>();
 	}
 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		super.load(refresh, savedInstanceState);
 		if (subscription == null || subscription.isUnsubscribed()) {
-			subscription = realm.where(Download.class)
-					.findAllSortedAsync("timeStamp")
+			DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+			realm.where(Download.class)
+					.findAllAsync()
 					.asObservable()
+					.filter(downloads -> downloads.isLoaded() && downloads.isValid())
+					.first()
+					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads), Throwable::printStackTrace);
+
+			subscription = downloadServiceHelper.getAllDownloads()
+					.sample(50, TimeUnit.MILLISECONDS)
+					.filter(downloads -> (shouldUpdateList(downloads, oldDownloadsList)))
+					.map(downloads -> oldDownloadsList = downloads)
+					.map(Download::sortDownloads)
+					.observeOn(AndroidSchedulers.mainThread())
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-					.filter(downloads -> shouldUpdateList(downloads, oldDownloadsList))
-					.map(downloads -> updateOldDownloadsList(downloads))
-					.subscribe(downloads -> {
-						activeDisplayablesList.clear();
-						completedDisplayablesList.clear();
-						for (final Download download : downloads) {
-							if (download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE ||
-									download.getOverallDownloadStatus() == Download.PENDING) {
-								activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadManager));
-							} else {
-								completedDisplayablesList.add(new CompletedDownloadDisplayable(download, installManager, downloadManager));
-							}
-						}
-						if (completedDisplayablesList.size() > 0) {
-							completedDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
-									.getResString(R.string.completed))));
-						}
-						if (activeDisplayablesList.size() > 0) {
-							activeDisplayablesList.add(0, new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active), new
-									DownloadServiceHelper(AptoideDownloadManager
-									.getInstance(), new PermissionManager())));
-						}
-						setDisplayables();
-					});
+					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads));
 		}
 	}
 
-	@NonNull
-	private RealmResults<Download> updateOldDownloadsList(RealmResults<Download> downloads) {
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		permissionManager = new PermissionManager();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 		oldDownloadsList = new ArrayList<>();
+	}
+
+	private void updateUi(DownloadServiceHelper downloadServiceHelper, List<Download> downloads) {
+		fillDisplayableList(downloadServiceHelper, downloads);
+		setDisplayables();
+	}
+
+	private void fillDisplayableList(DownloadServiceHelper downloadServiceHelper, List<Download> downloads) {
+		activeDisplayablesList.clear();
+		completedDisplayablesList.clear();
 		for (final Download download : downloads) {
-			oldDownloadsList.add(download.clone());
+			if (download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE ||
+					download.getOverallDownloadStatus() == Download.PENDING) {
+				activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadManager));
+			} else {
+				completedDisplayablesList.add(new CompletedDownloadDisplayable(download, installManager, downloadManager));
+			}
 		}
-		return downloads;
+		if (completedDisplayablesList.size() > 0) {
+			completedDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R.string
+					.completed))));
+		}
+		if (activeDisplayablesList.size() > 0) {
+			activeDisplayablesList.add(0, new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active), downloadServiceHelper));
+		}
 	}
 
 	/**
@@ -110,7 +124,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 	 *
 	 * @return true if the lists have different downloads or the download state has change, false otherwise
 	 */
-	private Boolean shouldUpdateList(@NonNull RealmResults<Download> downloads, @NonNull List<Download> oldDownloadsList) {
+	private Boolean shouldUpdateList(@NonNull List<Download> downloads, @NonNull List<Download> oldDownloadsList) {
 		if (downloads.size() != oldDownloadsList.size()) {
 			return true;
 		}

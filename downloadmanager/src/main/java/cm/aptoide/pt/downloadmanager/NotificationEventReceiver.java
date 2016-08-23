@@ -45,7 +45,7 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 							@Cleanup Realm realm = Database.get();
 							Download download = downloadManager.getStoredDownload(appid, realm);
 							if (download != null) {
-								downloadManager.startDownload(download.clone());
+								downloadManager.startDownload(realm.copyFromRealm(download));
 							}
 						}
 					}

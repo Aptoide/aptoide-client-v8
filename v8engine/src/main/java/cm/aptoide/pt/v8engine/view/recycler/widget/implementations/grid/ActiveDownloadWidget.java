@@ -10,7 +10,6 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
@@ -68,7 +67,6 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	}
 
 	private void updateUi(Download download) {
-		Logger.d(this.getClass().getSimpleName(), "updateUi() called with: " + "download = [" + download.getAppName() + "]");
 		appName.setText(download.getAppName());
 		if (!TextUtils.isEmpty(download.getIcon())) {
 			ImageLoader.load(download.getIcon(), appIcon);

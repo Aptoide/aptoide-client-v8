@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.install.InstallationException;
 import cm.aptoide.pt.v8engine.install.InstallationProvider;
 import lombok.AllArgsConstructor;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 7/25/16.
@@ -23,7 +24,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
 
 	@Override
 	public Observable<Installation> getInstallation(long id) {
-		return downloadManager.getDownload(id).first().flatMap(download -> {
+		return downloadManager.getDownload(id).subscribeOn(AndroidSchedulers.mainThread()).first().flatMap(download -> {
 			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 				return Observable.just(new DownloadInstallation(download));
 			}

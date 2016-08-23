@@ -296,7 +296,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				setupDownloadControls(app, appDownload, displayable);
 
-				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> manageDownload(download, displayable, app), err -> {
+				downloadServiceHelper.startDownload(permissionRequest, appDownload)
+						.subscribe(download -> manageDownload(download, displayable, app), err -> {
 					Logger.e(TAG, err);
 				});
 

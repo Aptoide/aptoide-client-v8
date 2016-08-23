@@ -16,7 +16,6 @@ import java.util.Date;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -25,6 +24,7 @@ import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import io.realm.Realm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
@@ -54,8 +54,8 @@ public class AppUpdateDisplayable extends Displayable {
 	public AppUpdateDisplayable() {
 	}
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, DownloadServiceHelper
+			downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
 		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
 				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory
 				.create(appUpdate), downloadManager, installManager, dateCalculator, appUpdate.getId());

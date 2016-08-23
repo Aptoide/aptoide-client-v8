@@ -28,18 +28,19 @@ import rx.Observable;
 public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Scheduled> {
 
 	private static final String TAG = ScheduledDownloadDisplayable.class.getSimpleName();
-
 	private InstallManager installManager;
 	private Download appDownload;
 
 	public ScheduledDownloadDisplayable() {
+
 	}
 
-	public ScheduledDownloadDisplayable(InstallManager installManager, Scheduled pojo) {
-		this(installManager, pojo, false);
+	public ScheduledDownloadDisplayable(InstallManager installManager, Scheduled pojo,Realm realm) {
+		this(installManager, pojo, false, realm);
+
 	}
 
-	public ScheduledDownloadDisplayable(InstallManager installManager, Scheduled pojo, boolean fixedPerLineCount) {
+	public ScheduledDownloadDisplayable(InstallManager installManager, Scheduled pojo, boolean fixedPerLineCount, Realm realm) {
 		super(pojo, fixedPerLineCount);
 		this.installManager = installManager;
 		this.appDownload = new DownloadFactory().create(pojo);

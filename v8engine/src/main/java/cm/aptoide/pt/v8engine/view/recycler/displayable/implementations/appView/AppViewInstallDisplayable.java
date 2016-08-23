@@ -52,8 +52,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		this(installManager, getApp, minimalAd, false);
 	}
 
-	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean
-			shouldInstall) {
+	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean shouldInstall) {
 		super(getApp, false);
 		this.installManager = installManager;
 		this.appId = getApp.getNodes().getMeta().getData().getId();

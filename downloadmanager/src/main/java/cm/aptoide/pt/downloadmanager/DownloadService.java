@@ -14,8 +14,8 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
-import lombok.Cleanup;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -33,6 +33,7 @@ public class DownloadService extends Service {
 	private Subscription notificationUpdateSubscription;
 	private Notification notification;
 	private Subscription stopMechanismSubscription;
+	private Realm realm;
 
 	private void pauseDownloads(Intent intent) {
 		// TODO: 7/4/16 trinkes pause with specific id
@@ -46,14 +47,11 @@ public class DownloadService extends Service {
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			@Cleanup Realm realm = Database.get();
 			Download download = downloadManager.getStoredDownload(appId, realm);
 			if (download != null) {
-				downloadManager.startDownload(download.clone())
-						.first()
-						.subscribe(download1 -> Logger.d(TAG, "startDownload" +
-								"() " +
-								"called with: " + "appId = [" + appId + "]"), Throwable::printStackTrace);
+				downloadManager.startDownload(realm.copyFromRealm(download)).first().subscribe(download1 -> Logger.d(TAG, "startDownload" +
+						"() " +
+						"called with: " + "appId = [" + appId + "]"), Throwable::printStackTrace);
 				setupNotifications();
 			}
 		}
@@ -62,6 +60,7 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		realm = Database.get();
 		downloadManager = AptoideDownloadManager.getInstance();
 		downloadManager.initDownloadService(this);
 		subscriptions = new CompositeSubscription();
@@ -94,6 +93,7 @@ public class DownloadService extends Service {
 	@Override
 	public void onDestroy() {
 		subscriptions.unsubscribe();
+		realm.close();
 		super.onDestroy();
 	}
 
@@ -105,9 +105,12 @@ public class DownloadService extends Service {
 
 	private void setupStopSelfMechanism() {
 		if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
-			stopMechanismSubscription = downloadManager.getCurrentDownloads().filter(downloads -> downloads.size() <= 0).subscribe(downloads -> {
-				stopSelf();
-			});
+			stopMechanismSubscription = downloadManager.getCurrentDownloads()
+					.observeOn(Schedulers.computation())
+					.filter(downloads -> downloads.size() <= 0)
+					.subscribe(downloads -> {
+						stopSelf();
+					}, Throwable::printStackTrace);
 			subscriptions.add(stopMechanismSubscription);
 		}
 	}

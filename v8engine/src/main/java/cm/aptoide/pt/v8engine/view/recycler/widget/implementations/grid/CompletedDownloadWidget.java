@@ -86,6 +86,7 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 
 			subscription.add(RxView.clicks(cancelDownloadButton).subscribe(click -> displayable.removeDownload()));
 
+			// TODO: 8/26/16 trinkes check if main thread
 			subscription.add(displayable.downloadStatus().observeOn(AndroidSchedulers.mainThread())
 					.subscribe(status -> {
 						if (status == Download.PAUSED) {
