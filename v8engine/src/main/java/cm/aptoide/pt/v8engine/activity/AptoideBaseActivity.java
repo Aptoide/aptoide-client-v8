@@ -1,17 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,14 +25,14 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import lombok.Getter;
 import rx.functions.Action0;
 
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle, PermissionRequest {
+public abstract class AptoideBaseActivity extends AppCompatActivity implements UiComponentBasics, PermissionRequest {
 
 	private static final String TAG = AptoideBaseActivity.class.getName();
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -63,13 +61,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		setupViews();
 	}
 
-	private void setUpAnalytics() {
-		Analytics.Lifecycle.Activity.onCreate(this);
-		Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
-		Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
-		Analytics.Dimensions.setGmsPresent(DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable());
-	}
-
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -79,6 +70,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+
+	private void setUpAnalytics() {
+		Analytics.Lifecycle.Activity.onCreate(this);
+		Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
+		Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
+		Analytics.Dimensions.setGmsPresent(DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable());
 	}
 
 	/**

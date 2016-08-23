@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/08/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -83,7 +83,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	// app info
 	private TextView versionName;
-	private View latestAvailableLayout;
+	private View latestAvailableText;
+	private View latestAvailableTrustedSeal;
 	private TextView otherVersions;
 	private MinimalAd minimalAd;
 
@@ -108,7 +109,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton = (Button) itemView.findViewById(R.id.action_btn);
 		versionName = (TextView) itemView.findViewById(R.id.store_version_name);
 		otherVersions = (TextView) itemView.findViewById(R.id.other_versions);
-		latestAvailableLayout = itemView.findViewById(R.id.latest_available_layout);
+		latestAvailableText = itemView.findViewById(R.id.latest_available_text);
+		latestAvailableTrustedSeal = itemView.findViewById(R.id.latest_available_icon);
 	}
 
 	@Override
@@ -173,7 +175,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		checkOnGoingDownload(getApp, displayable);
 
 		if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
-			latestAvailableLayout.setVisibility(View.VISIBLE);
+			latestAvailableText.setVisibility(View.VISIBLE);
+		}
+
+		if (isThisTheLatestTrustedVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
+			latestAvailableTrustedSeal.setVisibility(View.VISIBLE);
 		}
 
 		ContextWrapper ctx = (ContextWrapper) versionName.getContext();
@@ -441,17 +447,43 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		downloadProgressLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
+	/**
+	 * Similar to {@link #isThisTheLatestVersionAvailable(GetAppMeta.App, ListAppVersions) isThisTheLatestVersionAvailable} altough this returns true only if
+	 * the latest version is the same app that we are viewing and the current app is trusted.
+	 *
+	 * @param app
+	 * @param appVersions
+	 *
+	 * @return
+	 */
+	private boolean isThisTheLatestTrustedVersionAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
+		boolean canCompare = appVersions != null && appVersions.getList() != null && appVersions.getList() != null && !appVersions.getList().isEmpty();
+		if (canCompare) {
+			boolean isLatestVersion = app.getFile().getMd5sum().equals(appVersions.getList().get(0).getFile().getMd5sum());
+			if (isLatestVersion) {
+				return app.getFile().getMalware().getRank()== Malware.Rank.TRUSTED;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if the current app that we are viewing is the latest version available.
+	 * <p>
+	 * This is done by comparing the current app md5sum with the first app md5sum in the list of other versions, since the other versions list is sorted using
+	 * several criterea (vercode, cpu, malware ranking, etc.).
+	 *
+	 * @param app
+	 * @param appVersions
+	 *
+	 * @return true if this is the latested version of this app, trusted or not.
+	 */
 	private boolean isThisTheLatestVersionAvailable(GetAppMeta.App app, @Nullable ListAppVersions appVersions) {
 		boolean canCompare = appVersions != null && appVersions.getList() != null && appVersions.getList() != null && !appVersions.getList().isEmpty();
 		if (canCompare) {
-			final int currentVersionCode = app.getFile().getVercode();
-			for (final App otherAppVersion : appVersions.getList()) {
-				if (otherAppVersion.getFile().getVercode() > currentVersionCode) {
-					return false;
-				}
-			}
+			return app.getFile().getMd5sum().equals(appVersions.getList().get(0).getFile().getMd5sum());
 		}
-		return true;
+		return false;
 	}
 
 	private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
