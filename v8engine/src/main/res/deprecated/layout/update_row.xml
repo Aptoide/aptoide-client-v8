@@ -129,12 +129,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/img_update_layout"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/update_darkgrey"/>
 
                 <TextView
+                    android:id="@+id/text_update_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -143,6 +145,19 @@
                     android:maxLines="3"
                     android:text="@string/update"
                     android:textSize="@dimen/text_size_small"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="?android:attr/progressBarStyle"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    />
             </LinearLayout>
 
         </LinearLayout>

@@ -133,7 +133,7 @@
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
                 android:padding="6dp"
-                android:text="Unsubscribe"
+                android:text="@string/unfollow"
                 android:textColor="?attr/storesTextColor"
                 android:textSize="12sp"/>
 

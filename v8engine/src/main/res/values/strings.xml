@@ -35,7 +35,6 @@
     <string name="downgrade">Downgrade</string>
     <string name="reinstall">Reinstall</string>
     <string name="get_app">get app</string>
-    <string name="appview_follow_store_button_text">following store</string>
     <string name="appview_followers_count_text">%1$s   Followers</string>
     <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 
@@ -87,10 +86,11 @@
     <string name="displayable_social_timeline_app_update_updating">Updating</string>
     <string name="displayable_social_timeline_app_update_error">Update Error</string>
 
-        <!-- Added on 4/08, need translation -->
+        <!-- need translation -->
     <string name="appview_good_app_guaranteed">Good App Guaranteed!</string>
     <string name="appview_good_app_description">This applications passed the security test for virus, malware and other malicious attacks and doesn\'t
         contain any threats!</string>
+        <!-- -->
 
     <!-- Preferences -->
     <string name="animations">Animations</string>
@@ -160,7 +160,15 @@
     <string name="you_need_to_be_logged_in">You need to be logged in</string>
     <string name="login">Login</string>
     <string name="follow">Follow</string>
-    <string name="followed">Followed</string>
+    <!--need translation-->
+    <string name="followed">Following</string>
+    <string name="unfollow_yes_no">Are you sure you want to unfollow?</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="appview_follow_store_button_text">Follow?</string>
+    <string name="unfollowing_store_message">Unfollowing %s</string>
+    <string name="store_followed">Store %s followed</string>
+
+    <!---->
     <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
     <string name="rate_this_app">Rate this app</string>
 

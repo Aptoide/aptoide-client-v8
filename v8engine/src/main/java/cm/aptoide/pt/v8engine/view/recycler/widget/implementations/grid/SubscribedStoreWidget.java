@@ -55,6 +55,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 		storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
 		storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
 		infoLayout = itemView.findViewById(R.id.store_layout_subscribers);
+		storeUnsubscribe.setText(R.string.unfollow);
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 		storeUnsubscribe.setOnClickListener(v->{
 			GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(), displayable.getPojo()
 					.getStoreName(), AptoideUtils.StringU.getFormattedString(R.string
-					.unsubscribe_yes_no))
+					.unfollow_yes_no))
 					.subscribe(eResponse->{
 						switch (eResponse) {
 							case YES:
@@ -94,7 +95,8 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 								break;
 						}
-					});
+					})
+			;
 		});
 	}
 

@@ -115,7 +115,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 				} else {
 					StoreUtilsProxy.subscribeStore(storeName);
 					setMainPagerPosition(Event.Name.myStores);
-					ShowMessage.asToast(this, AptoideUtils.StringU.getFormattedString(R.string.store_subscribed, storeName));
+					ShowMessage.asToast(this, AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 				}
 			}
 
