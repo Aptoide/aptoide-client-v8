@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -88,6 +88,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 	//
 	// code to support android M permission system
 	//
+	// android 6 permission system
+	// consider using https://github.com/hotchemi/PermissionsDispatcher
+	//
 
 	@Override
 	protected void onPause() {
@@ -111,8 +114,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 
 	@TargetApi(Build.VERSION_CODES.M)
 	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-			grantResults) {
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
 		switch (requestCode) {
 
@@ -158,11 +160,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 	 * @return o nome so monitor associado a esta activity, para efeitos de Analytics.
 	 */
 	protected abstract String getAnalyticsScreenName();
-
-	//
-	// android 6 permission system
-	// consider using https://github.com/hotchemi/PermissionsDispatcher
-	//
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -57,7 +57,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements UiComp
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		realm = Database.get(getActivity());
+		realm = Database.get();
 
 		return inflater.inflate(getContentViewId(), container, false);
 	}
