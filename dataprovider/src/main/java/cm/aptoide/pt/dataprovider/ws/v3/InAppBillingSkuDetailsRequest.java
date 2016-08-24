@@ -29,7 +29,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
 	}
 
 	public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName, List<String> skuList, NetworkOperatorManager operatorManager) {
-		HashMap<String, String> args = new HashMap<String, String>();
+		HashMap<String, String> args = new HashMap<>();
 		args.put("mode","json");
 		args.put("package", packageName);
 		args.put("apiversion", String.valueOf(apiVersion));

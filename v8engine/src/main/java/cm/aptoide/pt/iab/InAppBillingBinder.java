@@ -75,20 +75,6 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
         return RESULT_BILLING_UNAVAILABLE;
     }
 
-    private String getMccCode(String networkOperator) {
-        return networkOperator == null ? "" : networkOperator.substring(0, mncPortionLength(networkOperator));
-
-    }
-
-    private String getMncCode(String networkOperator) {
-        return networkOperator == null ? "" : networkOperator.substring(mncPortionLength(networkOperator));
-
-    }
-
-    private int mncPortionLength(String networkOperator) {
-        return Math.min(3, networkOperator.length());
-    }
-
     @Override
     public Bundle getSkuDetails(int apiVersion, String packageName, String type, Bundle skusBundle) throws RemoteException {
 
