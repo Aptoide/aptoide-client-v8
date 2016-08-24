@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -67,7 +67,6 @@ public enum Type {
 
 	// Progress
 	PROGRESS_DISPLAYABLE,
-	SCHEDULED_DOWNLOAD,
 
 	//Download tab
 	ACTIVE_DOWNLOAD,
