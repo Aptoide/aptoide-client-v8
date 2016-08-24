@@ -17,14 +17,17 @@ import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.imageloader.CircleTransform;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import io.realm.Realm;
 import lombok.Cleanup;
 
@@ -107,17 +110,26 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
 			ivSubscribe.setImageResource(R.drawable.ic_check_white);
 			subscribed.setText(itemView.getContext().getString(R.string.followed));
+
 			subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					subscribedBool = false;
-					ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta
+					@Cleanup Realm realm = Database.get(itemView.getContext());
+					if (AptoideAccountManager.isLoggedIn()) {
+						AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
+					}
+					Database.StoreQ.delete(getStoreMeta.getData().getId(), realm);
+					ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta.getData().getName()));
+					handleSubscriptionLogic(getStoreMeta);
+
+					/*ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta
 							.getData()
 							.getName()));
 					ArrayList<Long> sotoreIds = new ArrayList<>();
 					sotoreIds.add(getStoreMeta.getData().getId());
 					AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
-					handleSubscriptionLogic(getStoreMeta);
+					handleSubscriptionLogic(getStoreMeta);*/
 				}
 			});
 		} else {
@@ -129,7 +141,20 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
                 drawableLeft.setBounds(0, 0, drawableLeft.getIntrinsicWidth(), drawableLeft.getIntrinsicHeight());
                 subscribed.setCompoundDrawables(drawableLeft, null, null, null);
             }*/
+
 			subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (!subscribedBool) {
+						subscribedBool = true;
+						StoreUtilsProxy.subscribeStore(getStoreMeta.getData().getName(), getStoreMeta -> {
+							ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed, getStoreMeta.getData().getName()));
+						}, Throwable::printStackTrace);
+						handleSubscriptionLogic(getStoreMeta);
+					}
+				}
+			});
+			/*.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					if (!subscribedBool) {
@@ -140,7 +165,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 						handleSubscriptionLogic(getStoreMeta);
 					}
 				}
-			});
+			});*/
 		}
 	}
 }
