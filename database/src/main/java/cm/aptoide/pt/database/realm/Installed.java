@@ -5,14 +5,12 @@
 
 package cm.aptoide.pt.database.realm;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import java.util.Locale;
-
 import cm.aptoide.pt.utils.AptoideUtils;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -36,6 +34,7 @@ public class Installed extends RealmObject {
 	private int versionCode;
 	private String versionName;
 	private String signature;
+	private boolean systemApp;
 
 	public Installed() {
 	}
@@ -44,18 +43,10 @@ public class Installed extends RealmObject {
 		setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
 		setName(AptoideUtils.SystemU.getApkLabel(packageInfo));
 		setPackageName(packageInfo.packageName);
-		setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray())
-				.toUpperCase(Locale.ENGLISH));
+		setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
 		setVersionCode(packageInfo.versionCode);
 		setVersionName(packageInfo.versionName);
-	}
-
-	public void update(PackageInfo packageInfo, Realm realm) {
-		realm.beginTransaction();
-		setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
-		setVersionCode(packageInfo.versionCode);
-		setVersionName(packageInfo.versionName);
-		realm.commitTransaction();
+		setSystemApp((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
 	}
 
 //	public int getId() {
@@ -121,4 +112,12 @@ public class Installed extends RealmObject {
 //		}
 //		id = n;
 //	}
+
+	public boolean isSystemApp() {
+		return systemApp;
+	}
+
+	public void setSystemApp(boolean systemApp) {
+		this.systemApp = systemApp;
+	}
 }

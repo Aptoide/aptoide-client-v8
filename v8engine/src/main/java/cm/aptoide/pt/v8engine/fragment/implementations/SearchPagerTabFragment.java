@@ -1,22 +1,28 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
+import rx.Observable;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -24,16 +30,27 @@ import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollLis
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 	private String query;
-	private boolean subscribedStores;
+	private String storeName;
+	private boolean addSubscribedStores;
 
+	private Map<String,Void> mapPackages = new HashMap<>();
+	private transient EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 	private transient ListSearchAppsRequest listSearchAppsRequest;
-	private SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {
+	private transient SuccessRequestListener<ListSearchApps> listSearchAppsSuccessRequestListener = listSearchApps -> {
 
 		LinkedList<Displayable> displayables = new LinkedList<>();
 
-		for (ListSearchApps.SearchAppsApp searchAppsApp : listSearchApps.getDatalist().getList()) {
-			displayables.add(new SearchDisplayable(searchAppsApp));
+		List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+		Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
+
+		if (addSubscribedStores) {
+			from = from.filter(searchAppsApp -> !mapPackages.containsKey(searchAppsApp.getPackageName()));
 		}
+
+		from.forEach(searchAppsApp -> {
+			mapPackages.put(searchAppsApp.getPackageName(), null);
+			displayables.add(new SearchDisplayable(searchAppsApp));
+		});
 
 		addDisplayables(displayables);
 	};
@@ -42,7 +59,18 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		Bundle args = new Bundle();
 
 		args.putString(BundleCons.QUERY, query);
-		args.putBoolean(BundleCons.SUBSCRIBED_STORES, subscribedStores);
+		args.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, subscribedStores);
+
+		SearchPagerTabFragment fragment = new SearchPagerTabFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	public static SearchPagerTabFragment newInstance(String query, String storeName) {
+		Bundle args = new Bundle();
+
+		args.putString(BundleCons.QUERY, query);
+		args.putString(BundleCons.STORE_NAME, storeName);
 
 		SearchPagerTabFragment fragment = new SearchPagerTabFragment();
 		fragment.setArguments(args);
@@ -50,27 +78,29 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 	}
 
 	@Override
-	public void load(boolean refresh) {
-		recyclerView.clearOnScrollListeners();
-		recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(this, listSearchAppsRequest =
-				ListSearchAppsRequest
-				.of(query, subscribedStores, refresh), listSearchAppsSuccessRequestListener, errorRequestListener));
-	}
+	public void load(boolean refresh, Bundle savedInstanceState) {
+		super.load(refresh, savedInstanceState);
+		if (refresh) {
+			GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
+				if (getAdsResponse.getAds().size() > 0) {
+					addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));
+				}
+			});
 
-	@Override
-	public void loadExtras(Bundle args) {
-		super.loadExtras(args);
-
-		query = args.getString(BundleCons.QUERY);
-		subscribedStores = args.getBoolean(BundleCons.SUBSCRIBED_STORES);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		outState.putString(BundleCons.QUERY, query);
-		outState.putBoolean(BundleCons.SUBSCRIBED_STORES, subscribedStores);
+			recyclerView.clearOnScrollListeners();
+			ListSearchAppsRequest of;
+			if (storeName != null) {
+				of = ListSearchAppsRequest.of(query, storeName);
+			} else {
+				of = ListSearchAppsRequest.of(query, addSubscribedStores);
+			}
+			endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
+					listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
+			recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+			endlessRecyclerOnScrollListener.onLoadMore(refresh);
+		} else {
+			recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		}
 	}
 
 	@Override
@@ -78,9 +108,28 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 		return R.layout.recycler_fragment;
 	}
 
+	@Override
+	public void loadExtras(Bundle args) {
+		super.loadExtras(args);
+
+		query = args.getString(BundleCons.QUERY);
+		storeName = args.getString(BundleCons.STORE_NAME);
+		addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putString(BundleCons.QUERY, query);
+		outState.putString(BundleCons.STORE_NAME, storeName);
+		outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
+	}
+
 	protected static class BundleCons {
 
 		public static final String QUERY = "query";
-		public static final String SUBSCRIBED_STORES = "subscribedStores";
+		public static final String STORE_NAME = "storeName";
+		public static final String ADD_SUBSCRIBED_STORES = "addSubscribedStores";
 	}
 }

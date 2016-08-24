@@ -1,28 +1,31 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
-import cm.aptoide.pt.model.v7.GetApp;
+import java.util.List;
+
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewSuggestedAppsDisplayable extends AppViewDisplayable {
+public class AppViewSuggestedAppsDisplayable extends DisplayablePojo<List<GetAdsResponse.Ad>> {
 
 	public AppViewSuggestedAppsDisplayable() {
 	}
 
-	public AppViewSuggestedAppsDisplayable(GetApp getApp) {
-		super(getApp);
+	public AppViewSuggestedAppsDisplayable(List<GetAdsResponse.Ad> ads) {
+		super(ads);
 	}
 
-	public AppViewSuggestedAppsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-		super(getApp, fixedPerLineCount);
+	public AppViewSuggestedAppsDisplayable(List<GetAdsResponse.Ad> ads, boolean fixedPerLineCount) {
+		super(ads, fixedPerLineCount);
 	}
 
 	@Override

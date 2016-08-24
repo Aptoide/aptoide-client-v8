@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 27/06/2016.
  */
 
 package cm.aptoide.accountmanager;
@@ -41,12 +41,13 @@ import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
-import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import lombok.experimental.PackagePrivate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -96,7 +97,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		if (isLogin) {
 			context.startActivity(new Intent(context, MyAccountActivity.class));
 		} else {
-			final Intent intent = new Intent(context, LoginActivity.class);
+			final Intent intent = new Intent(context,  LoginActivity.class);
 			if (extras != null) {
 				intent.putExtras(extras);
 			}
@@ -110,18 +111,25 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param extras        Extras to add on created intent (to login or register activity)
 	 * @param openMyAccount true if is expeted to open myAccountActivity after login
 	 */
-	public static void openAccountManager(Context context, @Nullable Bundle extras, boolean
-			openMyAccount) {
-		if (isLogin) {
-			context.startActivity(new Intent(context, MyAccountActivity.class));
-		} else {
-			final Intent intent = new Intent(context, LoginActivity.class);
-			if (extras != null) {
-				intent.putExtras(extras);
-			}
-			intent.putExtra(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
-			context.startActivity(intent);
+	public static void openAccountManager(Context context, @Nullable Bundle extras, boolean openMyAccount) {
+		if (extras == null) {
+			extras = new Bundle();
 		}
+		extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
+		openAccountManager(context, extras);
+	}
+
+	/**
+	 * This method should be used to open login or account activity
+	 *
+	 * @param useSkip       true if skip button should be displayed and back arrow hided
+	 * @param openMyAccount true if is expeted to open myAccountActivity after login
+	 */
+	public static void openAccountManager(Context context, boolean useSkip, boolean openMyAccount) {
+		Bundle extras = new Bundle();
+		extras.putBoolean(LoginActivity.SKIP_BUTTON, useSkip);
+		extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
+		openAccountManager(context, extras);
 	}
 
 	/**
@@ -130,13 +138,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 * @param openMyAccount true if is expeted to open myAccountActivity after login
 	 */
 	public static void openAccountManager(Context context, boolean openMyAccount) {
-		if (isLogin) {
-			context.startActivity(new Intent(context, MyAccountActivity.class));
-		} else {
-			final Intent intent = new Intent(context, LoginActivity.class);
-			intent.putExtra(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
-			context.startActivity(intent);
-		}
+		Bundle extras = new Bundle();
+		extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
+		openAccountManager(context,extras);
 	}
 
 	/**
@@ -168,15 +172,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		});
 	}
 
-	private static void logout(WeakReference<FragmentActivity> activityRef) {
+	@PackagePrivate
+	static void logout(WeakReference<FragmentActivity> activityRef) {
 		FacebookLoginUtils.logout();
 		getInstance().removeLocalAccount();
 		isLogin = false;
-		Activity activity = activityRef.get();
-		if (activity != null) {
-			GoogleLoginUtils.logout((FragmentActivity) activity);
-			openAccountManager(activity);
-			activity.finish();
+		if (activityRef != null) {
+			Activity activity = activityRef.get();
+			if (activity != null) {
+				GoogleLoginUtils.logout((FragmentActivity) activity);
+				openAccountManager(activity);
+				activity.finish();
+			}
 		}
 	}
 
@@ -185,13 +192,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	String getRefreshToken() {
 		String refreshToken = AccountManagerPreferences.getRefreshToken();
 		if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
-			AccountManager manager = android.accounts.AccountManager.get(cm.aptoide.pt.preferences
-					.Application
-					.getContext());
-			Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
-			refreshToken = manager.getUserData(accountsByType[0], SecureKeys.REFRESH_TOKEN);
+			refreshToken = getUserStringFromAndroidAccountManager(SecureKeys.REFRESH_TOKEN);
+			AccountManagerPreferences.setRefreshToken(refreshToken);
 		}
-		AccountManagerPreferences.setRefreshToken(refreshToken);
 		return refreshToken;
 	}
 
@@ -200,10 +203,42 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 *
 	 * @return A string with the token
 	 */
-	public static
 	@Nullable
-	String getAccessToken() {
-		return AccountManagerPreferences.getAccessToken();
+	public static String getAccessToken() {
+		String accessToken = AccountManagerPreferences.getAccessToken();
+		if (accessToken == null || TextUtils.isEmpty(accessToken)) {
+			accessToken = getUserStringFromAndroidAccountManager(SecureKeys.ACCESS_TOKEN);
+			AccountManagerPreferences.setAccessToken(accessToken);
+		}
+		return accessToken;
+	}
+
+	public static void setAccessTokenOnLocalAccount(String accessToken, @Nullable Account userAccount, @NonNull String dataKey) {
+		AccountManager accountManager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+		if (userAccount == null) {
+			Account[] accounts = accountManager.getAccounts();
+			for (final Account account : accounts) {
+				if (TextUtils.equals(account.name, AptoideAccountManager.getUserName())) {
+					userAccount = account;
+					break;
+				}
+			}
+		}
+		if (userAccount != null) {
+			accountManager.setUserData(userAccount, dataKey, accessToken);
+		}
+	}
+
+	private static String getUserStringFromAndroidAccountManager(String key) {
+		AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+		Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+		return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
+	}
+
+	@Nullable
+	public static LoginMode getLoginMode() {
+		return AccountManagerPreferences.getLoginMode();
 	}
 
 	/**
@@ -266,6 +301,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 				if (getInstance().addLocalUserAccount(userName, passwordOrToken, null, oAuth
 						.getRefresh_token(), oAuth
 						.getAccessToken())) {
+					setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
+					AccountManagerPreferences.setLoginMode(mode);
 					getInstance().onLoginSuccess();
 					if (finalGenericPleaseWaitDialog != null) {
 						finalGenericPleaseWaitDialog.dismiss();
@@ -295,7 +332,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					}
 				}
 			}
-		});
+		}, true);
 	}
 
 	/**
@@ -362,6 +399,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	}
 
 	/**
+	 * Get state of the mature switch
+	 *
+	 * @return return true if the switch is on, false if off
+	 */
+	public static boolean isMatureSwitchOn(){
+		return AccountManagerPreferences.getMatureSwitch();
+	}
+
+	/**
 	 * Update the mature switch. If user is logged, it updates on aptoide's server too
 	 *
 	 * @param matureSwitch Switch state
@@ -374,6 +420,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			if (isLogin) {
 				ChangeUserSettingsRequest.of(matureSwitch1)
 						.observe()
+						.observeOn(AndroidSchedulers.mainThread())
 						.subscribeOn(Schedulers.io())
 						.doOnError(throwable -> {
 							Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
@@ -393,7 +440,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	public static Observable<String> invalidateAccessToken(@NonNull Context context) {
 		return Observable.fromCallable(() -> {
-			if (AptoideUtils.ThreadU.isOnUiThread()) {
+			if (AptoideUtils.ThreadU.isUiThread()) {
 				throw new IllegalThreadStateException("This method shouldn't be called on ui " +
 						"thread.");
 			}
@@ -429,9 +476,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 																				action1) {
 		return OAuth2AuthenticationRequest.of(refreshToken)
 				.observe()
+				.observeOn(AndroidSchedulers.mainThread())
 				.map(OAuth::getAccessToken)
-				.subscribeOn(Schedulers.io())
-				.doOnNext(AccountManagerPreferences::setAccessToken)
+				.subscribeOn(Schedulers.io()).doOnNext(accessToken -> {
+					setAccessTokenOnLocalAccount(accessToken, null, SecureKeys.ACCESS_TOKEN);
+					AccountManagerPreferences.setAccessToken(accessToken);
+				})
 				.doOnError(action1)
 				.observeOn(AndroidSchedulers.mainThread());
 	}
@@ -481,7 +531,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					callback.onRegisterSuccess(bundle);
 					genericPleaseWaitDialog.dismiss();
 				}
-			});
+			}, true);
 		}
 	}
 
@@ -550,21 +600,22 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
 	public static void unsubscribeStore(String storeName) {
 		ChangeUserRepoSubscriptionRequest.of(storeName, false)
-				.execute(genericResponseV3->Logger.d(TAG, "Successfully unsubscribed " + storeName));
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully unsubscribed " + storeName), true);
 	}
 
 	public static void subscribeStore(String storeName) {
 		ChangeUserRepoSubscriptionRequest.of(storeName, true)
-				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName));
+				.execute(genericResponseV3->Logger.d(TAG, "Successfully subscribed " + storeName), true);
 	}
 
 	private static void sendLoginBroadcast() {
 		cm.aptoide.pt.preferences.Application.getContext().sendBroadcast(new Intent().setAction(LOGIN));
 	}
 
-	public static Observable<List<GetUserRepoSubscription.Subscription>> getUserRepos() {
+	public static Observable<List<Subscription>> getUserRepos() {
 		return GetUserRepoSubscriptionRequest.of()
 				.observe()
+				.observeOn(AndroidSchedulers.mainThread())
 				.map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
 	}
 
@@ -638,11 +689,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			// Creating the account on the device and setting the auth token we got
 			// (Not setting the auth token will cause another call to the server to authenticate
 			// the user)
-			accountManager.addAccountExplicitly(account, userPassword, null);
+			try {
+				accountManager.addAccountExplicitly(account, userPassword, null);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 			accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
 			AccountManagerPreferences.setRefreshToken(refreshToken);
 			CheckUserCredentialsRequest.of(accessToken)
 					.observe()
+					.observeOn(AndroidSchedulers.mainThread())
 					.subscribeOn(Schedulers.io())
 					.subscribe(AptoideAccountManager::saveUserInfo);
 			toReturn = true;

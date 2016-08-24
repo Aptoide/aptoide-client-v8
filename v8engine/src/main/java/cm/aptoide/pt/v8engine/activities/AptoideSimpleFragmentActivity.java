@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.activities;
@@ -15,8 +15,7 @@ import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
 /**
  * Created by neuro on 06-05-2016.
  */
-public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity implements
-		Lifecycle {
+public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity implements Lifecycle {
 
 	@Override
 	public void bindViews(View view) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 11/05/2016.
+ * Modified by SithEngineer on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -9,11 +9,14 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Type;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -33,19 +36,25 @@ public class WSWidgetsUtils {
 			}
 			switch (wsWidget.getType()) {
 				case APPS_GROUP:
-					ioScheduler(ListAppsRequest.ofAction(url, refresh)
-							.observe()).subscribe(listApps -> setObjectView(wsWidget,
+					ioScheduler(ListAppsRequest.ofAction(url)
+							.observe(refresh)).subscribe(listApps -> setObjectView(wsWidget,
 							countDownLatch, listApps), action1);
 					break;
 				case STORES_GROUP:
-					ioScheduler(ListStoresRequest.ofAction(url, refresh)
-							.observe()).subscribe(listApps -> setObjectView(wsWidget,
-							countDownLatch, listApps), action1);
+					ioScheduler(ListStoresRequest.ofAction(url)
+							.observe(refresh)).subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores), action1);
 					break;
 				case DISPLAYS:
-					ioScheduler(GetStoreDisplaysRequest.ofAction(url, refresh)
-							.observe()).subscribe(listApps -> setObjectView(wsWidget,
-							countDownLatch, listApps), action1);
+					ioScheduler(GetStoreDisplaysRequest.ofAction(url)
+							.observe(refresh)).subscribe(getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays), action1);
+					break;
+				case ADS:
+					ioScheduler(GetAdsRequest.ofHomepage()
+							.observe()).subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse), action1);
+					break;
+				case STORE_META:
+					ioScheduler(GetStoreMetaRequest.ofAction(url)
+							.observe(refresh)).subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta), action1);
 					break;
 				default:
 					// In case a known enum is not implemented
@@ -58,7 +67,9 @@ public class WSWidgetsUtils {
 	}
 
 	private static <T> Observable<T> ioScheduler(@NonNull Observable<T> observable) {
-		return observable.subscribeOn(Schedulers.io());
+		return observable
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribeOn(Schedulers.io());
 	}
 
 	private static void setObjectView(GetStoreWidgets.WSWidget wsWidget, CountDownLatch

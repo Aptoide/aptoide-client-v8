@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/06/2016.
+ * Modified by SithEngineer on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -40,10 +40,13 @@ import java.text.DecimalFormat;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
 
@@ -136,6 +139,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				return true;
 			}
 		});
+
+		CheckBoxPreference matureChkBox = (CheckBoxPreference) findPreference("matureChkBox");
+		if(AptoideAccountManager.isMatureSwitchOn()){
+			matureChkBox.setChecked(true);
+		}
+		else {
+			matureChkBox.setChecked(false);
+		}
+
 		findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(new Preference
 				.OnPreferenceClickListener() {
 			@Override
@@ -155,8 +167,31 @@ public class SettingsFragment extends PreferenceFragmentCompat
 					}).show();
 				}
 				else {
+					Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : LOCK ADULT CONTENT");
+					Analytics.AdultContent.lock();
 					AptoideAccountManager.updateMatureSwitch(false);
 				}
+
+				return true;
+			}
+		});
+
+		findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(new Preference
+				.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				final CheckBoxPreference cb = (CheckBoxPreference) preference;
+				boolean filterApps = false;
+
+				if (cb.isChecked()) {
+					cb.setChecked(true);
+					filterApps = true;
+				}
+				else {
+					cb.setChecked(false);
+				}
+
+				SecurePreferencesImplementation.getInstance().edit().putBoolean("FILTER_APPS", filterApps).commit();
 
 				return true;
 			}
@@ -201,7 +236,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				.OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				ShowMessage.show(getView(), getString(R.string.restart_aptoide));
+				// FIXME ??
+				ShowMessage.asSnack(getView(), getString(R.string.restart_aptoide));
 				return true;
 			}
 		});
@@ -243,10 +279,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-
-				((EditTextPreference) preference).setText(android.preference.PreferenceManager
-						.getDefaultSharedPreferences(context)
-						.getString("maxFileCache", "200"));
+				((EditTextPreference) preference).setText(String.valueOf(ManagerPreferences.getCacheLimit()));
 				return false;
 			}
 		});
@@ -306,9 +339,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 					pd = new ProgressDialog(context);
 					pd.setMessage(getString(R.string.please_wait));
-					pd.show();
+					pd.asSnack();
 
-					ShowMessage.show(getView(), "TO DO");
+					ShowMessage.asSnack(getView(), "TO DO");
 					// TODO implement this call to the server
 
 //					ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
@@ -469,7 +502,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			pd.dismiss();
-			ShowMessage.show(getView(), getString(R.string.clear_cache_sucess));
+			ShowMessage.asSnack(getView(), getString(R.string.clear_cache_sucess));
 			new GetDirSize().execute(new File(aptoide_path), new File(icon_path));
 		}
 	}

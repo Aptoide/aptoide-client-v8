@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 25/05/2016.
+  ~ Modified by Neurophobic Animal on 08/07/2016.
   -->
 
 <FrameLayout style="@style/focusableRowBackground"
@@ -11,6 +11,7 @@
     >
 
     <RelativeLayout
+        android:id="@+id/updateRowRelativeLayout"
         style="?attr/backgroundCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -121,6 +122,7 @@
 
 
             <LinearLayout
+                android:id="@+id/update_layout"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

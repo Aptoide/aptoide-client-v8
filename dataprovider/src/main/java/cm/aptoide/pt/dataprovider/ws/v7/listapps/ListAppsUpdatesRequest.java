@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 15/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
+
+import android.content.pm.PackageInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,22 +13,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.ExcludedUpdate;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -39,24 +50,30 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 	private static final int SPLIT_SIZE = 100;
 
-	private ListAppsUpdatesRequest(boolean bypassCache) {
-		super(bypassCache, new Body());
+	private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
 	}
 
-	public static ListAppsUpdatesRequest of(boolean bypassCache) {
-		return new ListAppsUpdatesRequest(bypassCache);
+	public static ListAppsUpdatesRequest of() {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+
+		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body(getInstalledApks(),
+				StoreUtils
+				.getSubscribedStoresIds())), BASE_HOST);
 	}
 
-	// // TODO: 12-05-2016 neuro check deprecated
-	@Deprecated
-	private static List<Long> getSubscribedStoresIds() {
-		LinkedList<Long> storesIds = new LinkedList<>();
+	private static List<ApksData> getInstalledApks() {
+		// TODO: 01-08-2016 neuro benchmark this, looks heavy
+		List<PackageInfo> allInstalledApps = AptoideUtils.SystemU.getAllInstalledApps();
+		LinkedList<ApksData> apksDatas = new LinkedList<>();
 
-		for (Store store : StoreUtils.getSubscribedStores()) {
-			storesIds.add(store.getId());
+		for (PackageInfo packageInfo : allInstalledApps) {
+			apksDatas.add(new ApksData(packageInfo.packageName, packageInfo.versionCode, AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo
+					.signatures[0].toByteArray())));
 		}
 
-		return storesIds;
+		return apksDatas;
+
 	}
 
 	private static List<ApksData> getInstalledApksDataWithoutExcluded() {
@@ -64,10 +81,10 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 		@Cleanup Realm realm = Database.get();
 
-		RealmResults<ExcludedUpdate> excludedUpdates = Database.ExcludedUpdatesQ.getAll(realm);
+		//RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
 		RealmResults<Installed> installeds = Database.InstalledQ.getAll(realm);
 		for (Installed installed : installeds) {
-			if (!Database.ExcludedUpdatesQ.contains(installed.getPackageName(), realm)) {
+			if (!Database.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
 				apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed
 						.getSignature()));
 			}
@@ -77,7 +94,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	}
 
 	@Override
-	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		ListAppsUpdates resultListAppsUpdates = new ListAppsUpdates();
 
 		if (body.getApksData().size() > SPLIT_SIZE) {
@@ -117,53 +134,29 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		}
 	}
 
-	@Data
-	@Accessors(chain = true)
-	@NoArgsConstructor
 	@EqualsAndHashCode(callSuper = true)
 	public static class Body extends BaseBody {
 
-		private List<ApksData> apksData = getInstalledApksDataWithoutExcluded();
-		private String lang = Api.LANG;
-		private String q = Api.Q;
-		// TODO: 27-05-2016 neuro implement
-		private List<Long> storeIds = getSubscribedStoresIds();
-		private List<String> storeNames;
-		private List<StoreAuth> storesAuth;
+		@Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
+		@Getter private List<Long> storeIds;
+
+		public Body(List<ApksData> apksData,
+		            List<Long> storeIds) {
+			this.apksData = apksData;
+			this.storeIds = storeIds;
+		}
 
 		public Body(Body body) {
-			if (body.getApksData() != null) {
-				this.apksData = new LinkedList<>(body.getApksData());
-			}
-			this.lang = body.getLang();
-			this.q = body.getQ();
-
-			if (body.getStoreIds() != null) {
-				this.storeIds = new LinkedList<>(body.getStoreIds());
-			}
-			if (body.getStoreNames() != null) {
-				this.storeNames = new LinkedList<>(body.getStoreNames());
-			}
-			if (body.getStoresAuth() != null) {
-				this.storesAuth = new LinkedList<>(body.getStoresAuth());
-			}
+			this.apksData = body.getApksData();
+			this.storeIds = body.getStoreIds();
 		}
 	}
 
-	@Data
-	public static class StoreAuth {
-
-		private String storeName;
-		private String storeUser;
-		private String storePassSha1;
-	}
-
-	@Data
 	@AllArgsConstructor
 	public static class ApksData {
 
-		@JsonProperty("package") private String packageName;
-		private int vercode;
-		private String signature;
+		@Getter @JsonProperty("package") private String packageName;
+		@Getter private int vercode;
+		@Getter private String signature;
 	}
 }

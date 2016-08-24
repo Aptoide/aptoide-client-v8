@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -13,38 +14,61 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionGroupInfo;
+import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
 import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
 
@@ -52,17 +76,23 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.permissions.ApkPermission;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static android.net.ConnectivityManager.TYPE_ETHERNET;
+import static android.net.ConnectivityManager.TYPE_MOBILE;
+import static android.net.ConnectivityManager.TYPE_WIFI;
+
 /**
  * Created by neuro on 26-05-2016.
  */
 public class AptoideUtils {
 
+	private static final Random random = new Random();
 	@Getter @Setter private static Context context;
 
 	public static class Core {
@@ -111,6 +141,8 @@ public class AptoideUtils {
 
 	public static class AlgorithmU {
 
+		private static final String TAG = AlgorithmU.class.getName();
+
 		public static byte[] computeSha1(byte[] bytes) {
 			MessageDigest md;
 			try {
@@ -128,7 +160,7 @@ public class AptoideUtils {
 			try {
 				return convToHex(computeSha1(text.getBytes("iso-8859-1")));
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				Logger.e(TAG, "computeSha1(String)", e);
 			}
 			return "";
 		}
@@ -152,7 +184,7 @@ public class AptoideUtils {
 		}
 
 		public static String computeSha1WithColon(byte[] bytes) {
-			return convToHexWithColon(computeSha1(bytes));
+			return convToHexWithColon(computeSha1(bytes)).toUpperCase(Locale.ENGLISH);
 		}
 
 		private static String convToHexWithColon(byte[] data) {
@@ -218,6 +250,14 @@ public class AptoideUtils {
 			String sourceDir = packageInfo.applicationInfo.sourceDir;
 			File apkFile = new File(sourceDir);
 			return computeMd5(apkFile);
+		}
+
+		public static int randomBetween(int min, int max) {
+			int skewedMax = max - min;
+			if (skewedMax <= 0) {
+				throw new IllegalStateException("Minimum < maximum");
+			}
+			return random.nextInt(skewedMax + 1) + min;
 		}
 	}
 
@@ -396,6 +436,39 @@ public class AptoideUtils {
 
 		private static ScreenUtilsCache screenWidthInDipCache = new ScreenUtilsCache();
 
+		private static int displayWidthCacheLandscape = -1;
+		private static int displayWidthCachePortrait = -1;
+
+		public static int getCachedDisplayWidth(int orientation){
+			if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				if (displayWidthCacheLandscape == -1) {
+					WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+					Display display = windowManager.getDefaultDisplay();
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+						Point point = new Point();
+						display.getSize(point);
+						displayWidthCacheLandscape = point.x;
+					} else {
+						displayWidthCacheLandscape = display.getWidth();
+					}
+				}
+				return displayWidthCacheLandscape;
+			} else {
+				if (displayWidthCachePortrait == -1) {
+					WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+					Display display = windowManager.getDefaultDisplay();
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+						Point point = new Point();
+						display.getSize(point);
+						displayWidthCachePortrait = point.y;
+					} else {
+						displayWidthCachePortrait = display.getHeight();  // test this if you use it please
+					}
+				}
+				return displayWidthCachePortrait;
+			}
+		}
+
 		public static int getCurrentOrientation() {
 			return context.getResources().getConfiguration().orientation;
 		}
@@ -457,6 +530,37 @@ public class AptoideUtils {
 			return dpi;
 		}
 
+		public static File takeScreenshot(Activity a, String mPath, String fileName) {
+			Bitmap bitmap;
+			FileUtils.createDir(mPath);
+			View v1 = a.getWindow().getDecorView().getRootView();
+			v1.setDrawingCacheEnabled(true);
+			try {
+				bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+				v1.setDrawingCacheEnabled(false);
+			} catch (Exception e) {
+				Logger.e("FeedBackActivity-screenshot", "Exception: " + e.getMessage());
+				return null;
+			}
+
+			OutputStream fout = null;
+			File imageFile = new File(mPath, fileName);
+			try {
+				imageFile.createNewFile();
+				fout = new FileOutputStream(imageFile);
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
+				fout.flush();
+				fout.close();
+			} catch (FileNotFoundException e) {
+				Logger.e("FeedBackActivity-screenshot", "FileNotFoundException: " + e.getMessage());
+				return null;
+			} catch (IOException e) {
+				Logger.e("FeedBackActivity-screenshot", "IOException: " + e.getMessage());
+				return null;
+			}
+			return imageFile;
+		}
+
 		public enum Size {
 			notfound, small, normal, large, xlarge;
 
@@ -483,6 +587,73 @@ public class AptoideUtils {
 
 	public static final class StringU {
 
+		/**
+		 * <p>Joins the elements of the provided {@code Iterator} into a single String containing the provided elements.</p> <p> <p>No delimiter is added
+		 * before
+		 * or after the list. A {@code null} separator is the same as an empty String ("").</p>
+		 *
+		 * @param iterator  the {@code Iterator} of values to join together, may be null
+		 * @param separator the separator character to use, null treated as ""
+		 *
+		 * @return the joined String, {@code null} if null iterator input
+		 */
+		public static String join(final Iterator<?> iterator, final String separator) {
+
+			// handle null, zero and one elements before building a buffer
+			if (iterator == null) {
+				return null;
+			}
+			if (!iterator.hasNext()) {
+				return "";
+			}
+			final Object first = iterator.next();
+			if (!iterator.hasNext()) {
+				@SuppressWarnings("deprecation") // ObjectUtils.toString(Object) has been deprecated in 3.2
+				final String result = toString(first);
+				return result;
+			}
+
+			// two or more elements
+			final StringBuilder buf = new StringBuilder(256); // Java default is 16, probably too small
+			if (first != null) {
+				buf.append(first);
+			}
+
+			while (iterator.hasNext()) {
+				if (separator != null) {
+					buf.append(separator);
+				}
+				final Object obj = iterator.next();
+				if (obj != null) {
+					buf.append(obj);
+				}
+			}
+			return buf.toString();
+		}
+
+		/**
+		 * <p>Joins the elements of the provided {@code Iterable} into a single String containing the provided elements.</p> <p> <p>No delimiter is added
+		 * before
+		 * or after the list. A {@code null} separator is the same as an empty String ("").</p>
+		 *
+		 * @param iterable  the {@code Iterable} providing the values to join together, may be null
+		 * @param separator the separator character to use, null treated as ""
+		 *
+		 * @return the joined String, {@code null} if null iterator input
+		 *
+		 * @since 2.3
+		 */
+		public static String join(final Iterable<?> iterable, final String separator) {
+			if (iterable == null) {
+				return null;
+			}
+			return join(iterable.iterator(), separator);
+		}
+
+		public static String toString(Object obj) {
+			return obj == null ? "" : obj.toString();
+		}
+
 		public static String withSuffix(long count) {
 			if (count < 1000) {
 				return String.valueOf(count);
@@ -493,6 +664,16 @@ public class AptoideUtils {
 		}
 
 		public static String withBinarySuffix(long bytes) {
+			int unit = 1024;
+			if (bytes < unit) {
+				return bytes + " B";
+			}
+			int exp = (int) (Math.log(bytes) / Math.log(unit));
+			String pre = ("KMGTPE").charAt(exp - 1) + "";
+			return String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+		}
+
+		public static String formatBits(long bytes) {
 			int unit = 1024;
 			if (bytes < unit) {
 				return bytes + " B";
@@ -522,6 +703,31 @@ public class AptoideUtils {
 				result = resources.getString(resId);
 			}
 			return result;
+		}
+
+		public static String commaSeparatedValues(List<?> list) {
+			String s = new String();
+
+			if (list.size() > 0) {
+				s = list.get(0).toString();
+
+				for (int i = 1 ; i < list.size() ; i++) {
+					s += "," + list.get(i).toString();
+				}
+			}
+
+			return s;
+		}
+
+		public static Map<String,String> splitQuery(URI uri) throws UnsupportedEncodingException {
+			Map<String,String> query_pairs = new LinkedHashMap<>();
+			String query = uri.getQuery();
+			String[] pairs = query.split("&");
+			for (String pair : pairs) {
+				int idx = pair.indexOf("=");
+				query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+			}
+			return query_pairs;
 		}
 	}
 
@@ -599,10 +805,97 @@ public class AptoideUtils {
 			}
 		}
 
-		public static void uninstallApp(Context context, String packageName) {
-			Uri uri = Uri.fromParts("package", packageName, null);
-			Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-			context.startActivity(intent);
+		public static String getConnectionType() {
+			final ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			final NetworkInfo info = manager.getActiveNetworkInfo();
+
+			if (info.getTypeName() != null) {
+				switch (info.getType()) {
+					case TYPE_ETHERNET:
+						return "ethernet";
+					case TYPE_WIFI:
+						return "mobile";
+					case TYPE_MOBILE:
+						return "mobile";
+				}
+			}
+			return "unknown";
+		}
+
+		public static File readLogs(String mPath, String fileName) {
+
+			Process process = null;
+			try {
+				process = Runtime.getRuntime().exec("logcat -d");
+			} catch (IOException e) {
+				Logger.e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
+				return null;
+			}
+			FileOutputStream outputStream;
+			FileUtils.createDir(mPath);
+			File logsFile = new File(mPath, fileName);
+			StringBuilder log = new StringBuilder();
+			log.append("Android Build Version: " + Build.VERSION.SDK_INT + "\n");
+			log.append("Build Model: " + Build.MODEL + "\n");
+			log.append("Device: " + Build.DEVICE + "\n");
+			log.append("Brand: " + Build.BRAND + "\n");
+			log.append("CPU: " + Build.CPU_ABI + "\n");
+			log.append("\nLogs:\n");
+			try {
+				outputStream = new FileOutputStream(logsFile);
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+				String line = null;
+				int linecount = 0;
+				while (linecount < 100 && (line = bufferedReader.readLine()) != null) {
+
+					log.append(line + "\n");
+					linecount++;
+				}
+				outputStream.write(log.toString().getBytes());
+			} catch (IOException e) {
+				return logsFile;
+			}
+
+			return logsFile;
+		}
+
+		public static List<ApkPermission> parsePermissions(Context context, List<String> permissionArray) {
+			List<ApkPermission> list = new ArrayList<>();
+			CharSequence csPermissionGroupLabel;
+			CharSequence csPermissionLabel;
+			PackageManager pm = context.getPackageManager();
+
+			List<PermissionGroupInfo> lstGroups = pm.getAllPermissionGroups(PackageManager.PERMISSION_GRANTED);
+			for (String permission : permissionArray) {
+
+				for (PermissionGroupInfo pgi : lstGroups) {
+					try {
+						List<PermissionInfo> lstPermissions = pm.queryPermissionsByGroup(pgi.name, PackageManager.PERMISSION_GRANTED);
+						for (PermissionInfo pi : lstPermissions) {
+							if (pi.name.equals(permission)) {
+								csPermissionLabel = pi.loadLabel(pm);
+								csPermissionGroupLabel = pgi.loadLabel(pm);
+								list.add(new ApkPermission(csPermissionGroupLabel.toString(), csPermissionLabel.toString()));
+							}
+						}
+					} catch (Exception e) {
+						Logger.printException(e);
+					}
+				}
+			}
+
+			Collections.sort(list, (lhs, rhs) -> lhs.getName().compareTo(rhs.getName()));
+
+			return list;
+		}
+
+		public static void hideKeyboard(Activity activity) {
+			View view = activity.getCurrentFocus();
+			if (view != null) {
+				((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).
+						hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+			}
 		}
 	}
 
@@ -614,8 +907,9 @@ public class AptoideUtils {
 
 		public static void runOnUiThread(Runnable runnable) {
 			Observable.just(null)
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(o -> runnable.run(), Logger::printException);
+					.observeOn(AndroidSchedulers.mainThread()).subscribe(o -> runnable.run(), e -> {
+				e.printStackTrace();
+			});
 		}
 
 		public static void sleep(long l) {
@@ -626,14 +920,22 @@ public class AptoideUtils {
 			}
 		}
 
-		public static boolean isOnUiThread() {
+		public static boolean isUiThread() {
 			return Looper.getMainLooper().getThread() == Thread.currentThread();
 		}
 	}
 
 	public static class HtmlU {
 
+		/**
+		 * Find a work around for this. Could be a dangerous operation, converting text from HTML.
+		 *
+		 * @param text
+		 *
+		 * @return original text converted to HTML in a CharSequence
+		 */
 		public static CharSequence parse(String text) {
+			// Fix for AN-348: replace the & with &amp; (that's was causing the pushback buffer full) (from Aptoide V7)
 			return Html.fromHtml(text.replace("\n", "<br/>").replace("&", "&amp;"));
 		}
 	}
@@ -672,6 +974,9 @@ public class AptoideUtils {
 		private static DateTimeU instance;
 		private static String[] weekdays = new DateFormatSymbols().getWeekdays(); // get day names
 
+		public static DateTimeU getInstance() {
+			return getInstance(getContext());
+		}
 		/**
 		 * Singleton constructor, needed to get access to the application context & strings for i18n
 		 *
@@ -786,8 +1091,8 @@ public class AptoideUtils {
 							.WidgetProvider_timestamp_days_ago, diffDays);
 				} else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
 					int diffDays = Double.valueOf(Math.ceil(diffTime / WEEK_IN_MILLIS)).intValue();
-					return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(R.string
-							.WidgetProvider_timestamp_months_ago, diffDays);
+					return diffDays == 1 ? mTimestampLabelWeekAgo : AptoideUtils.StringU.getFormattedString(R.string
+							.WidgetProvider_timestamp_weeks_ago, diffDays);
 				} else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
 					int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4))).intValue();
 					return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(R.string
@@ -987,6 +1292,59 @@ public class AptoideUtils {
 				Logger.printException(e);
 			}
 			return iconUrl;
+		}
+	}
+
+	public static class Benchmarking {
+
+		private static final String TAG = Benchmarking.class.getSimpleName();
+
+		private String methodName;
+		private long startTime;
+
+		public static Benchmarking start(String methodName) {
+			Benchmarking benchmarking = new Benchmarking();
+			benchmarking.methodName = methodName;
+			benchmarking.startTime = System.currentTimeMillis();
+			return benchmarking;
+		}
+
+		public void end() {
+			long endTime = System.currentTimeMillis();
+			Logger.d(TAG, "Thread: " + Thread.currentThread()
+					.getId() + " Method:" + methodName + " - Total execution time: " + (endTime - startTime) +
+					"ms");
+		}
+	}
+
+	public static class ObservableU {
+
+		/**
+		 * code from <a href="http://blog.danlew.net/2015/03/02/dont-break-the-chain/">http://blog.danlew.net/2015/03/02/dont-break-the-chain/</a>
+		 *
+		 * @param <T> Observable of T
+		 *
+		 * @return original Observable subscribed in an io thread and observed in the main thread
+		 */
+		public static <T> Observable.Transformer<T,T> applySchedulers() {
+			return observable -> observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+		}
+
+		// consider moving the retry code from dataprovider module to here
+	}
+
+	public static class SocialLinksU {
+
+		public static
+		@Nullable
+		String getFacebookPageURL(int version, @NonNull String facebookUrl) {
+			String toReturn;
+			if (version >= 3002850) { //newer versions of fb app
+				toReturn = "fb://facewebmodal/f?href=" + facebookUrl;
+			} else {
+				toReturn = facebookUrl;
+			}
+			return toReturn;
 		}
 	}
 }

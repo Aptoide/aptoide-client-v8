@@ -2,13 +2,15 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 27/05/2016.
+  ~ Modified by SithEngineer on 22/08/2016.
   -->
+
 <LinearLayout
+    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="55.6dp"
     android:orientation="vertical"
     >
     <!-- progress bar while installing -->
@@ -19,10 +21,11 @@
         android:layout_gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="7dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="gone">
 
         <CheckBox
-            android:id="@+id/btinstallshare"
+            android:id="@+id/share_in_timeline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -30,24 +33,25 @@
             android:checked="true"
             android:text="@string/share_on_timeline"
             android:textColor="@color/separators_grey"
+            android:visibility="invisible"
             />
 
 
         <ProgressBar
-            android:id="@+id/downloading_progress"
+            android:id="@+id/download_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btinstallshare"
+            android:layout_below="@+id/share_in_timeline"
             android:layout_toLeftOf="@+id/actionContainer"
-            android:indeterminate="true"
+            android:indeterminate="false"
             />
 
         <TextView
             android:id="@+id/text_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/btinstallshare"
+            android:layout_alignBaseline="@id/share_in_timeline"
             android:layout_toLeftOf="@+id/actionContainer"
             android:ellipsize="end"
             android:maxLines="1"
@@ -61,31 +65,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             >
 
             <ImageView
-                android:id="@+id/ic_action_resume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/ic_action_cancel"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
                 android:layout_gravity="center"
                 android:layout_margin="4dp"
                 android:background="?attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:padding="5dp"
-                android:src="?attr/icPlayDrawable"
-                android:visibility="gone"
+                android:padding="4dp"
+                android:src="@drawable/close"
                 />
 
             <ImageView
-                android:id="@+id/ic_action_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/ic_action_pause"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_gravity="center"
                 android:layout_margin="4dp"
                 android:background="?attr/selectableItemBackground"
                 android:contentDescription="@null"
-                android:padding="5dp"
-                android:src="?attr/icCancelDrawable"
+                android:padding="15dp"
+                android:src="@drawable/pause"
+                />
+
+            <ImageView
+                android:id="@+id/ic_action_resume"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@null"
+                android:padding="15dp"
+                android:src="@drawable/play"
+                android:visibility="gone"
+                tools:visibility="visible"
                 />
 
         </LinearLayout>
@@ -93,174 +112,144 @@
     </RelativeLayout>
 
     <!-- install latest version buttons -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/install_and_latest_version_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:weightSum="2"
+        android:visibility="visible"
+        tools:visibility="visible"
         >
 
+        <Button
+            android:id="@+id/action_btn"
+            style="?attr/customButton"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/rounded_corners_primary2"
+            android:text="@string/install"
+            android:textAllCaps="true"
+            android:textSize="14.7sp"
+            />
+
         <LinearLayout
-            android:id="@+id/latestversion_layout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/action_btn"
+            android:layout_toStartOf="@id/action_btn"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             >
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_latest_version"
-                />
-
             <TextView
+                android:id="@+id/other_versions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:lines="2"
                 android:maxLines="2"
                 android:maxWidth="70dp"
-                android:text="@string/appview_latest_version_text"
+                android:text="@string/appview_other_versions"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_small"
-                android:textStyle="bold"
+                android:textSize="11sp"
                 />
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_get_latest"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_border_orange"
-            android:gravity="center"
-            android:text="@string/get_latest"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
-            android:textColor="@drawable/button_border_orange"
-            android:textSize="12sp"
-            android:visibility="gone"
-            />
-
-        <Button
-            android:id="@+id/btn_uninstall"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_border_orange"
-            android:gravity="center"
-            android:text="@string/uninstall"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
-            android:textColor="@drawable/button_border_orange"
-            android:textSize="12sp"
-            android:visibility="gone"
-            />
-
-        <Button
-            android:id="@+id/btn_install"
-            style="?attr/customButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/install"
-            />
-
-    </LinearLayout>
-
-    <include layout="@layout/separator_horizontal"/>
-
-    <!-- Store and subscription -->
-    <LinearLayout
-        android:id="@+id/store_layout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="8dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="26dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/store_avatar"
-                android:layout_width="@dimen/appview_store_icon_size"
-                android:layout_height="@dimen/appview_store_icon_size"
-                android:src="@drawable/ic_avatar_apps"/>
+            <include
+                layout="@layout/separator_vertical"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="13.7dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="13.7dp"
+                android:layout_marginStart="4dp"
+                />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical"
                 >
 
-                <TextView
-                    android:id="@+id/store_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:maxWidth="170dp"
-                    android:textSize="@dimen/text_size_medium"/>
-
-                <TextView
-                    android:id="@+id/store_number_users"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_user_icon_black"
-                    android:drawablePadding="2dp"
+                <LinearLayout
+                    android:id="@+id/latest_available_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="@dimen/text_size_small"/>
+                    android:orientation="horizontal"
+                    android:visibility="invisible"
+                    tools:visibility="visible"
+                    >
+
+                    <TextView
+                        android:id="@+id/latest_available_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|center_vertical"
+                        android:lines="1"
+                        android:paddingEnd="4dp"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:text="@string/appview_latest_version_text"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/text_size_small"
+                        android:textStyle="bold"
+                        />
+
+                    <ImageView
+                        android:id="@+id/latest_available_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_latest_version"
+                        android:tint="@color/green_tint_default"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="9dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_appview_version"
+                        android:tint="@color/green_tint_default"
+                        />
+
+                    <TextView
+                        android:id="@+id/store_version_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
+                        android:ellipsize="middle"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:maxWidth="70dp"
+                        android:textColor="@color/almost_black"
+                        android:textSize="11.6sp"
+                        android:textStyle="bold"
+                        tools:text="1.07.6"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
-
-            <Button
-                android:id="@+id/btn_subscribe"
-                android:layout_width="wrap_content"
-                android:layout_height="28dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/button_border_orange"
-                android:text="@string/appview_subscribe_store_button_text"
-                android:textAppearance="?android:attr/textAppearanceSmallInverse"
-                android:textColor="@drawable/button_border_orange"
-                android:textSize="12sp"
-                />
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <include layout="@layout/separator_horizontal"/>
+    </RelativeLayout>
 
 </LinearLayout>

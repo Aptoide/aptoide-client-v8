@@ -28,15 +28,15 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 @Displayables({GridAppDisplayable.class})
 public class GridAppWidget extends Widget<GridAppDisplayable> {
 
+	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
+
 	private TextView name;
 	private ImageView icon;
 	private TextView downloads;
 	private RatingBar ratingBar;
 	private TextView tvStoreName;
 	private TextView tvAddedTime;
-
-	//private static final SimpleDateFormat dateFormatter =
-	//		new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+	private String storeTheme;
 
 	public GridAppWidget(View itemView) {
 		super(itemView);
@@ -64,15 +64,30 @@ public class GridAppWidget extends Widget<GridAppDisplayable> {
 				.getDownloads()) + V8Engine.getContext().getString(R.string._downloads));
 		ratingBar.setRating(pojo.getStats().getRating().getAvg());
 		tvStoreName.setText(pojo.getStore().getName());
-		tvAddedTime.setText(pojo.getAdded());
+		tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(getContext(), pojo.getAdded().getTime()));
+		/*try {
+			storeTheme = pojo.getStore().getAppearance().getTheme();
+		} catch (NullPointerException e) {
+			storeTheme = "none";
+		}*/
 
 		itemView.setOnClickListener(
 				v -> {
 					// FIXME
 					((FragmentShower) v.getContext()).pushFragmentV4(
-							AppViewFragment.newInstance(appId)
+							AppViewFragment.newInstance(appId, pojo.getStore().getAppearance().getTheme())
 					);
 				}
 		);
+	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
 	}
 }

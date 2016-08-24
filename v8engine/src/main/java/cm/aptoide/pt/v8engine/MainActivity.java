@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 19/07/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -92,8 +92,9 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 	}
 
 	@Override
-	public void load(boolean refresh) {
-		GetStoreRequest.of("apps", StoreContext.home, refresh).execute(this::setupViewPager);
+	public void load(boolean refresh, Bundle savedInstanceState) {
+		GetStoreRequest.of("apps", StoreContext.home)
+				.execute(this::setupViewPager, refresh);
 	}
 
 	private void setupNavigationView() {
@@ -109,7 +110,7 @@ public class MainActivity extends AptoideBaseLoaderActivity {
 					Snackbar.make(mNavigationView, "MatureSwitch: " + AptoideAccountManager
 							.getUserInfo()
 							.isMatureSwitch(), Snackbar.LENGTH_SHORT).show();
-				} else if (itemId == R.id.navigation_item_setting_schdwntitle) {
+				} else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
 					Snackbar.make(mNavigationView, "Scheduled Downloads", Snackbar.LENGTH_SHORT)
 							.show();
 				} else if (itemId == R.id.navigation_item_excluded_updates) {

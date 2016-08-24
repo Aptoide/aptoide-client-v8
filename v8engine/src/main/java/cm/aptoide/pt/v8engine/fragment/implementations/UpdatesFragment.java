@@ -1,28 +1,38 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import io.realm.RealmResults;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,6 +46,9 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	private List<Displayable> installedDisplayablesList = new LinkedList<>();
 	private Subscription installedSubscription;
 	private Subscription updatesSubscription;
+	private InstallManager installManager;
+	private DownloadFactory downloadFactory;
+	private DownloadServiceHelper downloadManager;
 
 	public static UpdatesFragment newInstance() {
 		UpdatesFragment fragment = new UpdatesFragment();
@@ -43,7 +56,16 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		PermissionManager permissionManager = new PermissionManager();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+		downloadFactory = new DownloadFactory();
+	}
+
+	@Override
+	public void load(boolean refresh, Bundle savedInstanceState) {
 		fetchUpdates();
 		fetchInstalled();
 	}
@@ -54,17 +76,17 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 		DataproviderUtils.checkUpdates(listAppsUpdates -> {
 			if (listAppsUpdates.getList().size() == 0) {
 				finishLoading();
-				ShowMessage.show(getView(), R.string.no_updates_available_retoric);
+				ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
 			}
 			if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
-				ShowMessage.show(getView(), R.string.no_new_updates_available);
+				ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
 			}
 		});
 	}
 
 	private void fetchUpdates() {
 		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-			updatesSubscription = Database.UpdatesQ.getAll(realm)
+			updatesSubscription = Database.UpdatesQ.getAll(realm, false)
 					.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.observeOn(AndroidSchedulers.mainThread())
@@ -76,17 +98,16 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 							updatesDisplayablesList.clear();
 
 							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
-										.getResString(R.string.updates))));
+								updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager, AptoideUtils.StringU.getResString(R.string.updates)));
 
 								for (Update update : updates) {
-									updatesDisplayablesList.add(new UpdateDisplayable(update));
+									updatesDisplayablesList.add(UpdateDisplayable.create(update, installManager, downloadFactory, downloadManager));
 								}
 							}
 
 							setDisplayables();
 						}
-					});
+					}, Throwable::printStackTrace);
 		}
 	}
 
@@ -98,18 +119,20 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 					.subscribe(installeds -> {
 						installedDisplayablesList.clear();
 
-						installedDisplayablesList.add(new GridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
+						installedDisplayablesList.add(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
 								.getResString(R.string.installed_tab))));
 
 						RealmResults<Installed> all = realmResults;
 						for (int i = all.size() - 1; i >= 0; i--) {
-							if (!Database.UpdatesQ.contains(all.get(i).getPackageName(), realm)) {
-								installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
+							if (!Database.UpdatesQ.contains(all.get(i).getPackageName(), false, realm)) {
+								if (!all.get(i).isSystemApp()) {
+									installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
+								}
 							}
 						}
 
 						setDisplayables();
-					});
+					}, Throwable::printStackTrace);
 			if (realmResults.size() == 0) {
 				finishLoading();
 			}

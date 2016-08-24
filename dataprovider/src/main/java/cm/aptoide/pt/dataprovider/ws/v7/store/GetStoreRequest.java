@@ -1,132 +1,100 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Marcelo Benites on 07/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
-import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import lombok.Data;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 19-04-2016.
  */
-@Data
+
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreRequest extends BaseRequestWithStore<GetStore, GetStoreRequest.Body> {
 
-	private boolean recursive = false;
+	private final String url;
 
-	protected GetStoreRequest(V7Url v7Url, boolean bypassCache) {
-		super(v7Url.remove("getStore"), bypassCache, new Body());
+	private GetStoreRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, Body body) {
+		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
 	}
 
-	protected GetStoreRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
+	public static GetStoreRequest of(String storeName, StoreContext storeContext) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+
+		final StoreCredentials store = getStore(storeName);
+		final Body body = new Body(storeName, WidgetsArgs.createDefault());
+
+		body.setContext(storeContext);
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
+
+		return new GetStoreRequest("", OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
 	}
 
-	protected GetStoreRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
-	}
+	public static GetStoreRequest ofAction(String url) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-	public static GetStoreRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreRequest(storeName, bypassCache);
-	}
-
-	public static GetStoreRequest of(String storeName, StoreContext storeContext, boolean bypassCache) {
-		GetStoreRequest getStoreRequest = new GetStoreRequest(storeName, bypassCache);
-
-		getStoreRequest.body.setContext(storeContext);
-
-		return getStoreRequest;
-	}
-
-	public static GetStoreRequest ofAction(String url, boolean bypassCache) {
-		return new GetStoreRequest(new V7Url(url), bypassCache);
+		V7Url v7Url = new V7Url(url).remove("getStore");
+		Long storeId = v7Url.getStoreId();
+		final StoreCredentials store;
+		final Body body;
+		if (storeId != null) {
+			store = getStore(storeId);
+			body = new Body(storeId, WidgetsArgs
+					.createDefault());
+		} else {
+			String storeName = v7Url.getStoreName();
+			store = getStore(storeName);
+			body = new Body(storeName, WidgetsArgs
+					.createDefault());
+		}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
+		return new GetStoreRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
 	}
 
 	@Override
-	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getStore(url, body, bypassCache);
 	}
 
-	@Override
-	public Observable<GetStore> observe() {
-		// Todo: deprecated parece-me o recursive
-
-		if (recursive) {
-			return super.observe().observeOn(Schedulers.io()).doOnNext(getStore -> {
-
-				List<GetStoreWidgets.WSWidget> list = getStore.getNodes().getWidgets().getDatalist().getList();
-				CountDownLatch countDownLatch = new CountDownLatch(list.size());
-
-				Observable.from(list)
-						.forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, bypassCache,
-								Logger::printException));
-
-				try {
-					countDownLatch.await();
-				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}).observeOn(AndroidSchedulers.mainThread());
-		} else {
-			return super.observe();
-		}
-	}
-
-	public void execute(SuccessRequestListener<GetStore> successRequestListener, boolean recursive) {
-		this.recursive = recursive;
-		execute(successRequestListener);
-	}
-
-	public void execute(SuccessRequestListener<GetStore> successRequestListener, ErrorRequestListener
-			errorRequestListener, boolean recursive) {
-		this.recursive = recursive;
-		super.execute(successRequestListener, errorRequestListener);
-	}
-
-	public enum StoreNodes {
-		meta, tabs, widgets;
-
-		public static List<StoreNodes> list() {
-			return Arrays.asList(values());
-		}
-	}
-
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBodyWithStore implements OffsetInterface<Body> {
+	public static class Body extends BaseBodyWithStore {
 
-		private StoreContext context;
-		private String lang = Api.LANG;
-		private Integer limit;
-		private Boolean mature = Api.MATURE;
-		private List<StoreNodes> nodes;
-		private int offset;
-		private String q = Api.Q;
-		private String widget;
-		private WidgetsArgs widgetsArgs = WidgetsArgs.createDefault();
+		@Getter @Setter private StoreContext context;
+		@Getter private WidgetsArgs widgetsArgs;
+
+		public Body(Long storeId,
+		            WidgetsArgs widgetsArgs) {
+			super(storeId);
+			this.widgetsArgs = widgetsArgs;
+		}
+
+		public Body(String storeName,
+		            WidgetsArgs widgetsArgs) {
+			super(storeName);
+			this.widgetsArgs = widgetsArgs;
+		}
 	}
 }

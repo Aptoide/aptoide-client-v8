@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/06/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
 
+import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -29,6 +30,7 @@ public class Update extends RealmObject {
 	public static final String UPDATE_VERSION_NAME = "updateVersionName";
 	public static final String ALTERNATIVE_URL = "alternativeApkPath";
 	public static final String UPDATE_VERSION_CODE = "updateVersionCode";
+	public static final String EXCLUDED = "excluded";
 
 	@PrimaryKey private String packageName;
 	private long appId;
@@ -43,6 +45,16 @@ public class Update extends RealmObject {
 	private String updateVersionName;
 	private String alternativeApkPath;
 	private int updateVersionCode;
+	private boolean excluded;
+	private String trustedBadge;
+
+	// Obb
+	private String mainObbName;
+	private String mainObbPath;
+	private String mainObbMd5;
+	private String patchObbName;
+	private String patchObbPath;
+	private String patchObbMd5;
 
 	public Update() {
 	}
@@ -62,6 +74,24 @@ public class Update extends RealmObject {
 		updateVersionName = app.getFile().getVername();
 		alternativeApkPath = app.getFile().getPathAlt();
 		updateVersionCode = app.getFile().getVercode();
+		trustedBadge = app.getFile().getMalware().getRank().name();
+
+		Obb obb = app.getObb();
+		if (obb != null) {
+			Obb.ObbItem obbMain = obb.getMain();
+			if (obbMain != null) {
+				mainObbName = obbMain.getFilename();
+				mainObbPath = obbMain.getPath();
+				mainObbMd5 = obbMain.getMd5sum();
+			}
+
+			Obb.ObbItem patch = obb.getPatch();
+			if (patch != null) {
+				patchObbName = patch.getFilename();
+				patchObbPath = patch.getPath();
+				patchObbMd5 = patch.getMd5sum();
+			}
+		}
 	}
 
 	public long getAppId() {
@@ -166,5 +196,65 @@ public class Update extends RealmObject {
 
 	public void setUpdateVersionCode(int updateVersionCode) {
 		this.updateVersionCode = updateVersionCode;
+	}
+
+	public String getMainObbPath() {
+		return mainObbPath;
+	}
+
+	public void setMainObbPath(String mainObbPath) {
+		this.mainObbPath = mainObbPath;
+	}
+
+	public String getMainObbMd5() {
+		return mainObbMd5;
+	}
+
+	public void setMainObbMd5(String mainObbMd5) {
+		this.mainObbMd5 = mainObbMd5;
+	}
+
+	public String getPatchObbPath() {
+		return patchObbPath;
+	}
+
+	public void setPatchObbPath(String patchObbPath) {
+		this.patchObbPath = patchObbPath;
+	}
+
+	public String getPatchObbMd5() {
+		return patchObbMd5;
+	}
+
+	public void setPatchObbMd5(String patchObbMd5) {
+		this.patchObbMd5 = patchObbMd5;
+	}
+
+	public boolean isExcluded() {
+		return excluded;
+	}
+
+	public void setExcluded(boolean excluded) {
+		this.excluded = excluded;
+	}
+
+	public String getMainObbName() {
+		return mainObbName;
+	}
+
+	public void setMainObbName(String mainObbName) {
+		this.mainObbName = mainObbName;
+	}
+
+	public String getPatchObbName() {
+		return patchObbName;
+	}
+
+	public void setPatchObbName(String patchObbName) {
+		this.patchObbName = patchObbName;
+	}
+
+	public String getTrustedBadge() {
+		return trustedBadge;
 	}
 }

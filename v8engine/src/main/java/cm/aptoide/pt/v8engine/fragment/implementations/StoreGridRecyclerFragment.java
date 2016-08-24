@@ -1,21 +1,38 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 02/06/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 
 /**
  * Created by neuro on 10-05-2016.
  */
 public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
+
+	public static StoreGridRecyclerFragment newInstance(Event event, String
+			title, String theme) {
+		Bundle args = buildBundle(event, title, theme);
+
+		StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	public static StoreGridRecyclerFragment newInstance(Event event, String
 			title) {
@@ -40,6 +57,21 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_empty, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			getActivity().onBackPressed();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public int getContentViewId() {
 		return R.layout.recycler_swipe_fragment_with_toolbar;
 	}
@@ -48,10 +80,24 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 	public void setupViews() {
 		super.setupViews();
 		setupToolbar();
+		setHasOptionsMenu(true);
 	}
 
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
+			savedInstanceState) {
+		if(storeTheme != null) {
+			ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+		}
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+
 }

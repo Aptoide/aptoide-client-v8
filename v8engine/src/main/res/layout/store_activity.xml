@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 08/05/2016.
+  ~ Modified by SithEngineer on 22/06/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,12 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <include
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="?attr/toolbarTheme"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            layout="@layout/toolbar"
+            />
 
 
         <com.astuetz.PagerSlidingTabStrip
@@ -39,4 +36,5 @@
             android:theme="?attr/toolbarTheme"/>
 
     </android.support.design.widget.AppBarLayout>
+
 </android.support.design.widget.CoordinatorLayout>

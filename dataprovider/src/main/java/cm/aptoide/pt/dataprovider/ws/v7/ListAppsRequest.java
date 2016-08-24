@@ -1,15 +1,26 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -19,48 +30,54 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class ListAppsRequest extends BaseRequestWithStore<ListApps, ListAppsRequest.Body> {
 
-	protected ListAppsRequest(V7Url v7Url, boolean bypassCache) {
-		super(v7Url.remove("listApps"), bypassCache, new Body());
+	private String url;
+
+	private ListAppsRequest(String url, Body body, Converter.Factory converterFactory, OkHttpClient httpClient, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
 	}
 
-	protected ListAppsRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
-	}
+	public static ListAppsRequest ofAction(String url) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-	protected ListAppsRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
-	}
+		V7Url v7Url = new V7Url(url).remove("listApps");
+		Long storeId = v7Url.getStoreId();
+		final StoreCredentials store;
+		final Body body;
+		if (storeId != null) {
+			store = getStore(storeId);
+			body = new Body(storeId);
+		} else {
+			String storeName = v7Url.getStoreName();
+			store = getStore(storeName);
+			body = new Body(storeName);
+		}
 
-	public static ListAppsRequest ofAction(String url, boolean bypassCache) {
-		return new ListAppsRequest(new V7Url(url), bypassCache);
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
+
+		return new ListAppsRequest(v7Url.get(), (Body) decorator.decorate(body),
+				WebService.getDefaultConverter(), OkHttpClientFactory.getSingletonClient(), BASE_HOST);
 	}
 
 	@Override
-	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.listApps(url, body, bypassCache);
 	}
 
-	@Data
-	@Accessors(chain = true)
+
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBodyWithStore implements OffsetInterface<Body> {
+	public static class Body extends BaseBodyWithStore implements Endless {
 
-		private String lang = Api.LANG;
-		private Integer limit;
-		private boolean mature;
-		private int offset;
-		private Order order;
-		private String q = Api.Q;
-		private Sort sort;
-		private Subgroups subgroups;
+		@Getter private Integer limit;
+		@Getter @Setter private int offset;
 
-		public enum Sort {
-			latest, downloads, downloads7d, downloads30d, pdownloads, pdownloads7d, pdownloads30d,
-			trending7d, trending30d, rating, alpha,
+		public Body(Long storeId) {
+			super(storeId);
 		}
 
-		public enum Subgroups {
-			highlighted, normal,
+		public Body(String storeName) {
+			super(storeName);
 		}
 	}
 }

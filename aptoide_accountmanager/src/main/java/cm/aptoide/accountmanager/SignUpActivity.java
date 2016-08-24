@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 17/06/2016.
+ */
+
 package cm.aptoide.accountmanager;
 
 import android.content.Intent;
@@ -8,7 +13,6 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import cm.aptoide.pt.utils.ShowMessage;
 
@@ -81,14 +85,14 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 
 	@Override
 	public void onRegisterSuccess(Bundle data) {
-		ShowMessage.show(content, R.string.user_created);
+		ShowMessage.asSnack(content, R.string.user_created);
 		setResult(RESULT_OK, new Intent().putExtras(data));
 		finish();
 	}
 
 	@Override
 	public void onRegisterFail(@StringRes int reason) {
-		ShowMessage.show(content, reason);
+		ShowMessage.asSnack(content, reason);
 	}
 
 	@Override

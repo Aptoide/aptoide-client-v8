@@ -1,26 +1,32 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/06/2016.
+ * Modified by SithEngineer on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
 import lombok.Getter;
 import rx.functions.Action0;
@@ -28,20 +34,26 @@ import rx.functions.Action0;
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle {
+public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle, PermissionRequest {
 
 	private static final String TAG = AptoideBaseActivity.class.getName();
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
 	private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
 	@Getter private boolean _resumed = false;
-	private Action0 toRunWhenAccessToFileSystemIsGranted;
-	private Action0 toRunWhenAccessToAccountsIsGranted;
+	@Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
+	@Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
+	@Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
+	@Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		// https://fabric.io/downloads/gradle/ndk
 		// Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+
+		setUpAnalytics();
+
 		if (getIntent().getExtras() != null) {
 			loadExtras(getIntent().getExtras());
 		}
@@ -51,9 +63,17 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		setupViews();
 	}
 
+	private void setUpAnalytics() {
+		Analytics.Lifecycle.Activity.onCreate(this);
+		Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
+		Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
+		Analytics.Dimensions.setGmsPresent(DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable());
+	}
+
 	@Override
 	protected void onStop() {
 		super.onStop();
+		Analytics.Lifecycle.Activity.onStop(this);
 	}
 
 	@Override
@@ -75,17 +95,20 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	protected void onPause() {
 		super.onPause();
 		_resumed = false;
+		Analytics.Lifecycle.Activity.onPause(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		_resumed = true;
+		Analytics.Lifecycle.Activity.onResume(this);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
+		Analytics.Lifecycle.Activity.onStart(this);
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
@@ -103,8 +126,11 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 						toRunWhenAccessToFileSystemIsGranted.call();
 					}
 				} else {
-					// FIXME what should I do here?
-					ShowMessage.show(findViewById(android.R.id.content), "access to read and write to external storage" +
+					if (toRunWhenAccessToFileSystemIsDenied != null) {
+						toRunWhenAccessToFileSystemIsDenied.call();
+					}
+					ShowMessage.asSnack(findViewById(android.R.id.content), "access to read and write to external " +
+							"storage" +
 							" was denied");
 				}
 				break;
@@ -117,8 +143,10 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 						toRunWhenAccessToAccountsIsGranted.call();
 					}
 				} else {
-					// FIXME what should I do here?
-					ShowMessage.show(findViewById(android.R.id.content), "access to get accounts was denied");
+					if (toRunWhenAccessToAccountsIsDenied != null) {
+						toRunWhenAccessToAccountsIsDenied.call();
+					}
+					ShowMessage.asSnack(findViewById(android.R.id.content), "access to get accounts was denied");
 				}
 				break;
 
@@ -139,18 +167,34 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	//
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToExternalFileSystem(Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied) {
+		requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToExternalFileSystem(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0
+			toRunWhenAccessIsDennied) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 		if(hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
+			this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDennied;
 
-			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+					.WRITE_EXTERNAL_STORAGE)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access external storage");
-				// FIXME improve this rationale messages
-				showMessageOKCancel(getString(R.string.access_to_external_storage_rationale), new DialogInterface
-						.OnClickListener() {
+				
+				// TODO: 19/07/16 sithengineer improve this rationale messages 
+				showMessageOKCancel(getString(R.string.storage_access_permission_request_message), new SimpleSubscriber<GenericDialogs.EResponse>() {
+
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onNext(GenericDialogs.EResponse eResponse) {
+						super.onNext(eResponse);
+						if (eResponse != GenericDialogs.EResponse.YES) {
+							if (toRunWhenAccessToFileSystemIsDenied != null) {
+								toRunWhenAccessToFileSystemIsDenied.call();
+							}
+						}
+
 						ActivityCompat.requestPermissions(
 								AptoideBaseActivity.this,
 								new String[]{
@@ -176,22 +220,39 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 			return;
 		}
 		Logger.i(TAG, "already has permission to access external storage");
-		toRunWhenAccessIsGranted.call();
+		if (toRunWhenAccessIsGranted != null) {
+			toRunWhenAccessIsGranted.call();
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToAccounts(Action0 toRunWhenAccessIsGranted) {
+	public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+		requestAccessToAccounts(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+	}
+
+	@TargetApi(Build.VERSION_CODES.M)
+	public void requestAccessToAccounts(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
 		int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
 		if (hasPermission != PackageManager.PERMISSION_GRANTED) {
 			this.toRunWhenAccessToAccountsIsGranted = toRunWhenAccessIsGranted;
+			this.toRunWhenAccessToAccountsIsDenied = toRunWhenAccessIsDenied;
 
-			if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.GET_ACCOUNTS)) {
+			if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+					.GET_ACCOUNTS)) {
 				Logger.i(TAG, "showing rationale and requesting permission to access accounts");
-				// FIXME improve this rationale messages
-				showMessageOKCancel(getString(R.string.access_to_get_accounts_rationale), new DialogInterface
-						.OnClickListener() {
+				
+				// TODO: 19/07/16 sithengineer improve this rationale messages
+				showMessageOKCancel(getString(R.string.access_to_get_accounts_rationale), new SimpleSubscriber<GenericDialogs.EResponse>() {
+
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onNext(GenericDialogs.EResponse eResponse) {
+						super.onNext(eResponse);
+						if (eResponse != GenericDialogs.EResponse.YES) {
+							if (toRunWhenAccessToAccountsIsDenied != null) {
+								toRunWhenAccessToAccountsIsDenied.call();
+							}
+						}
+
 						ActivityCompat.requestPermissions(
 								AptoideBaseActivity.this,
 								new String[]{
@@ -210,15 +271,16 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 			return;
 		}
 		Logger.i(TAG, "already has permission to access accounts");
-		toRunWhenAccessIsGranted.call();
+		if (toRunWhenAccessIsGranted != null) {
+			toRunWhenAccessIsGranted.call();
+		}
 	}
 
-	private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-		new AlertDialog.Builder(this)
-				.setMessage(message)
-				.setPositiveButton("OK", okListener)
-				.setNegativeButton("Cancel", null)
-				.create()
-				.show();
+	private void showMessageOKCancel(
+			String message,
+			SimpleSubscriber<GenericDialogs.EResponse> subscriber
+	) {
+		GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
 	}
+
 }

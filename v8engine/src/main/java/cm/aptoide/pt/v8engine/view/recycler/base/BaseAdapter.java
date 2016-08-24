@@ -1,28 +1,29 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.List;
 
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
-import lombok.Getter;
 
 /**
  * Created by neuro on 16-04-2016.
  */
-public class BaseAdapter extends RecyclerView.Adapter<Widget> {
+public class BaseAdapter extends RecyclerView.Adapter<Widget> implements LifecycleSchim {
 
-	@Getter private final Displayables displayables = new Displayables();
+	private final Displayables displayables = new Displayables();
 
 	public BaseAdapter() { }
 
@@ -38,7 +39,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onBindViewHolder(Widget holder, int position) {
-		holder.bindView(displayables.get(position));
+		holder.internalBindView(displayables.get(position));
 	}
 
 	@Override
@@ -47,14 +48,40 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 	}
 
 	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	@Override
 	public int getItemCount() {
 		return displayables.size();
 	}
 
+	@Override
+	public void onViewAttachedToWindow(Widget holder) {
+		super.onViewAttachedToWindow(holder);
+		holder.onViewAttached();
+	}
+
+	@Override
+	public void onViewDetachedFromWindow(Widget holder) {
+		super.onViewDetachedFromWindow(holder);
+		holder.onViewDetached();
+	}
+
 	public Displayable popDisplayable() {
 		Displayable pop = displayables.pop();
-		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRangeRemoved(displayables.size(), 1));
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRemoved(displayables.size()));
 		return pop;
+	}
+
+	public Displayable getDisplayable(int position) {
+		return this.displayables.get(position);
+	}
+
+	public void addDisplayable(int position, Displayable displayable) {
+		this.displayables.add(position, displayable);
+		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 	}
 
 	public void addDisplayable(Displayable displayable) {
@@ -67,6 +94,21 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 	}
 
+	public void addDisplayables(int position, List<? extends Displayable> displayables) {
+		this.displayables.add(position, displayables);
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRangeInserted(position, displayables.size()));
+	}
+
+	public void removeDisplayables(int startPosition, int endPosition) {
+		int numberRemovedItems = this.displayables.remove(startPosition, endPosition);
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRangeRemoved(startPosition, numberRemovedItems));
+	}
+
+	public void removeDisplayable(int position) {
+		this.displayables.remove(position);
+		AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRemoved(position));
+	}
+
 	public void clearDisplayables() {
 		clearDisplayables(true);
 	}
@@ -76,5 +118,25 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> {
 		if (notifyDataSetChanged) {
 			AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
 		}
+	}
+
+	//
+	// LifecycleShim interface
+	//
+
+	public void onResume() {
+		displayables.onResume();
+	}
+
+	public void onPause() {
+		displayables.onPause();
+	}
+
+	public void onSaveInstanceState(Bundle outState) {
+		displayables.onSaveInstanceState(outState);
+	}
+
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		displayables.onViewStateRestored(savedInstanceState);
 	}
 }

@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.view.View;
 
+import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateResultsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -28,7 +29,17 @@ public class AppViewRateResultsWidget extends Widget<AppViewRateResultsDisplayab
 
 	@Override
 	public void bindView(AppViewRateResultsDisplayable displayable) {
-		final Object pojo = displayable.getPojo();
+		final GetApp pojo = displayable.getPojo();
 		// TODO
+	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
 	}
 }

@@ -1,19 +1,25 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -23,47 +29,58 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true)
 public class GetStoreWidgetsRequest extends BaseRequestWithStore<GetStoreWidgets, GetStoreWidgetsRequest.Body> {
 
-	protected GetStoreWidgetsRequest(V7Url v7Url, boolean bypassCache) {
-		super(v7Url.remove("getStoreWidgets"), bypassCache, new Body());
+	private final String url;
+
+	private GetStoreWidgetsRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost, Body body) {
+		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
 	}
 
-	protected GetStoreWidgetsRequest(String storeName, boolean bypassCache) {
-		super(storeName, bypassCache, new Body());
-	}
+	public static GetStoreWidgetsRequest ofAction(String url) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-	protected GetStoreWidgetsRequest(long storeId, boolean bypassCache) {
-		super(storeId, bypassCache, new Body());
-	}
+		V7Url v7Url = new V7Url(url).remove("getStoreWidgets");
+		Long storeId = v7Url.getStoreId();
+		final StoreCredentials store;
+		final Body body;
+		if (storeId != null) {
+			store = getStore(storeId);
+			body = new Body(storeId, WidgetsArgs
+					.createDefault());
+		} else {
+			String storeName = v7Url.getStoreName();
+			store = getStore(storeName);
+			body = new Body(storeName, WidgetsArgs
+					.createDefault());
+		}
 
-	public static GetStoreWidgetsRequest of(String storeName, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(storeName, bypassCache);
-	}
+		body.setStoreUser(store.getUsername());
+		body.setStorePassSha1(store.getPasswordSha1());
 
-	public static GetStoreWidgetsRequest of(int storeId, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(storeId, bypassCache);
-	}
-
-	public static GetStoreWidgetsRequest ofAction(String url, boolean bypassCache) {
-		return new GetStoreWidgetsRequest(new V7Url(url), bypassCache);
+		return new GetStoreWidgetsRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST, (Body) decorator
+				.decorate(body));
 	}
 
 	@Override
-	protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getStoreWidgets(url, body, bypassCache);
 	}
 
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBodyWithStore implements OffsetInterface<Body> {
+	public static class Body extends BaseBodyWithStore {
 
-		private StoreContext context;
-		private String lang = Api.LANG;
-		private Integer limit;
-		private Boolean mature = Api.MATURE;
-		private int offset;
-		private String q = Api.Q;
-		private String widget;
-		private WidgetsArgs widgetsArgs = WidgetsArgs.createDefault();
+		@Getter private WidgetsArgs widgetsArgs;
+
+		public Body(Long storeId,
+		            WidgetsArgs widgetsArgs) {
+			super(storeId);
+			this.widgetsArgs = widgetsArgs;
+		}
+
+		public Body(String storeName,
+		            WidgetsArgs widgetsArgs) {
+			super(storeName);
+			this.widgetsArgs = widgetsArgs;
+		}
 	}
 }

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 18/08/2016.
+  -->
+
 <resources>
     <color name="white">#fff</color>
     <color name="default_color">#e17117</color>
+    <color name="default_color2">#eb7319</color>
     <color name="default_color_700">#bf6113</color>
     <color name="aptoide_orange">@color/default_color</color>
     <color name="aptoide_orange_700">@color/default_color_700</color>
@@ -121,6 +127,8 @@
     <color name="dark_gray">#262626</color>
     <color name="background_window">#FFE8E8E8</color>
     <color name="overlay_black">#77000000</color>
+    <color name="app_view_gray">#999999</color>
+    <color name="displayable_rate_and_review_background">#f2f2f2</color>
 
 
     <color name="link">#2070DE</color>
@@ -129,6 +137,18 @@
     <color name="background_holo_light">#fff3f3f3</color>
     <color name="appview_rating_text">#FAB000</color>
 
-    <color name="separators_grey">#DDD</color>
+    <color name="separators_grey">#1f000000</color>
+
+    <color name="timeline_separator">#edf0f4</color>
+    <color name="black_alfa_gradient_start">#dd000000</color>
+    <color name="black_alfa_gradient_end">#2f000000</color>
+    <color name="black_gradient_start">#000000</color>
+    <color name="black_gradient_end">#525252</color>
+    <color name="app_view_follow_orange">#b64735</color>
+    <color name="almost_black">#403f3d</color>
+    <color name="green_tint_default">#45d316</color>
+    <color name="working_well_text_color">#98cf1c</color>
+    <color name="card_store_title">#ff6d00</color>
+
 
 </resources>

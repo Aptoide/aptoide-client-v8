@@ -8,10 +8,14 @@ package cm.aptoide.accountmanager.ws;
 import java.util.HashMap;
 
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -26,14 +30,18 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
 	private String email;
 	private String name;
 
+	public CreateUserRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
+		super(httpClient, converterFactory);
+	}
+
 	public static CreateUserRequest of(String email, String password) {
-		return new CreateUserRequest().setEmail(email).setName("").setPassword(password);
+		return new CreateUserRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter()).setEmail(email).setName("").setPassword(password);
 	}
 
 
 
 	@Override
-	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
 		HashMap<String, String> parameters = new HashMap<String, String>();
 
