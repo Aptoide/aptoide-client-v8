@@ -17,9 +17,9 @@ import io.realm.RealmMigration;
  *
  * This code is responsible to migrate Realm versions in between
  */
-class RealmDatabaseMigration implements RealmMigration {
+class RealmToRealmDatabaseMigration implements RealmMigration {
 
-	private static final String TAG = RealmDatabaseMigration.class.getName();
+	private static final String TAG = RealmToRealmDatabaseMigration.class.getName();
 
 	@Override
 	public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
