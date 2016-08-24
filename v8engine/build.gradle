@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -65,6 +65,10 @@ android {
         main {
             res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
         }
+    }
+
+    dexOptions {
+        incremental true
     }
 }
 
@@ -169,12 +173,6 @@ dependencies {
         transitive = true
     }
     */
-
-    //debugCompile "com.facebook.stetho:stetho:${STETHO_VERSION}"
-    //debugCompile "com.facebook.stetho:stetho-js-rhino:${STETHO_VERSION}"
-
-    // round image lib
-    //compile "com.makeramen:roundedimageview:${ROUNDED_IMG_LIB}"
 
     // paypal SDK
     compile ("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}"){

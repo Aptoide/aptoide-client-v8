@@ -209,7 +209,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 				final int count = i + 1;
 				topReviewsList.postDelayed(() -> {
 					topReviewsList.smoothScrollToPosition(count);
-				}, count * 1000);
+				}, count * 1700);
 			}
 		} else {
 			Logger.w(TAG, "Not enough top reviews to do paging animation.");

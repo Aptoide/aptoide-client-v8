@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -17,14 +17,14 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import io.realm.Realm;
 import rx.functions.Action0;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class SupportV4BaseFragment extends RxFragment implements Lifecycle, PermissionRequest {
+public abstract class SupportV4BaseFragment extends RxFragment implements UiComponentBasics, PermissionRequest {
 
 	private final String TAG = getClass().getSimpleName();
 	protected Realm realm;
@@ -57,7 +57,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements Lifecy
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		realm = Database.get(getActivity());
+		realm = Database.get();
 
 		return inflater.inflate(getContentViewId(), container, false);
 	}

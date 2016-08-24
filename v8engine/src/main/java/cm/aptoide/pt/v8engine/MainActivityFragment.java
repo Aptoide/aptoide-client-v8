@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -151,30 +151,25 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	@Override
-	public void pushFragment(Fragment fragment) {
-		FragmentUtils.replaceFragment(this, fragment);
-	}
-
-	@Override
 	public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
 		FragmentUtils.replaceFragmentV4(this, fragment);
-	}
-
-	@Override
-	public void popFragment() {
-		onBackPressed();
 	}
 
 	public android.support.v4.app.Fragment getCurrentV4() {
 		return FragmentUtils.getFirstFragmentV4(this);
 	}
 
-	public Fragment getCurrent() {
-		return FragmentUtils.getFirstFragment(this);
-	}
-
 	public android.support.v4.app.Fragment getLastV4() {
 		return FragmentUtils.getLastFragmentV4(this);
+	}
+
+	@Override
+	public void pushFragment(Fragment fragment) {
+		FragmentUtils.replaceFragment(this, fragment);
+	}
+
+	public Fragment getCurrent() {
+		return FragmentUtils.getFirstFragment(this);
 	}
 
 	public Fragment getLast() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 apply plugin: 'com.android.library'
@@ -39,6 +39,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dexOptions {
+        incremental true
     }
 }
 
@@ -79,6 +83,4 @@ dependencies {
     provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
     // Just for lombok not to complain
     provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
-
-    //compile "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
 }

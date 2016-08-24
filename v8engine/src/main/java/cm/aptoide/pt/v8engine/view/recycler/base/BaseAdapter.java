@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.base;
@@ -130,6 +130,16 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
 
 	public void onPause() {
 		displayables.onPause();
+	}
+
+	@Override
+	public void onViewCreated() {
+		displayables.onViewCreated();
+	}
+
+	@Override
+	public void onDestroyView() {
+		displayables.onDestroyView();
 	}
 
 	public void onSaveInstanceState(Bundle outState) {

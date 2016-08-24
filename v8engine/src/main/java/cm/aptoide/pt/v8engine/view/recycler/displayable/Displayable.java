@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -81,17 +81,51 @@ public abstract class Displayable implements LifecycleSchim {
 	// LifecycleSchim interface
 	// optional methods
 
+	/**
+	 * Sets visibility of this component to visible. Schimmed component lifecycle from the using adapter.
+	 */
 	public void onResume() {
 		isVisible = true;
 	}
 
+	/**
+	 * Sets visibility of this component to invisible. Schimmed component lifecycle from the using adapter.
+	 */
 	public void onPause() {
 		isVisible = false;
 	}
 
-	public void onSaveInstanceState(Bundle outState) {
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 */
+	@Override
+	public void onViewCreated() {
+
 	}
 
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 */
+	@Override
+	public void onDestroyView() {
+
+	}
+
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 *
+	 * @param outState
+	 */
+	public void onSaveInstanceState(Bundle outState) {
+
+	}
+
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 *
+	 * @param savedInstanceState
+	 */
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+
 	}
 }
