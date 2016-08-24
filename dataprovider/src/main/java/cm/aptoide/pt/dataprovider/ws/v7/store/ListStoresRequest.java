@@ -1,18 +1,28 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 06/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.OffsetInterface;
-import cm.aptoide.pt.dataprovider.ws.v7.Order;
+import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
-import lombok.Data;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -22,45 +32,32 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
 	private final String url;
 
-	private ListStoresRequest(boolean bypassCache) {
-		this("", bypassCache);
+	private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
+		this.url = url;
 	}
 
-	private ListStoresRequest(String url, boolean bypassCache) {
-		super(bypassCache, new Body());
-		this.url = url.replace("listStores", "");
-	}
+	public static ListStoresRequest ofAction(String url) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-	public static ListStoresRequest of(boolean bypassCache) {
-		return new ListStoresRequest(bypassCache);
-	}
-
-	public static ListStoresRequest ofAction(String url, boolean bypassCache) {
-		return new ListStoresRequest(url, bypassCache);
+		return new ListStoresRequest(url.replace("listStores", ""), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(new
+				Body
+				()),
+				BASE_HOST);
 	}
 
 	@Override
-	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.listStores(url, body, bypassCache);
 	}
 
-	@Data
-	@Accessors(chain = true)
 	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody implements OffsetInterface<Body> {
+	public static class Body extends BaseBody implements Endless {
 
-		private Group group;
-		private Integer limit;
-		private int offset;
-		private Order order;
-		private Sort sort;
+		@Getter private Integer limit;
+		@Getter @Setter private int offset;
 
-		public enum Group {
-			featured
-		}
-
-		public enum Sort {
-			latest, downloads, downloads7d, downloads30d, trending7d, trending30d,
+		public Body() {
 		}
 	}
 }

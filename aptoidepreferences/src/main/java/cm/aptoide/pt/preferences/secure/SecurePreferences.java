@@ -1,27 +1,16 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified by SithEngineer on 06/07/2016.
  */
 
 package cm.aptoide.pt.preferences.secure;
-
-import android.content.SharedPreferences;
-
-import java.util.UUID;
 
 /**
  * Created by neuro on 21-04-2016.
  */
 public class SecurePreferences {
 
-	public static String getAptoideClientUUID() {
-		SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance();
-		if (!sharedPreferences.contains(SecureKeys.APTOIDE_CLIENT_UUID)) {
-			sharedPreferences.edit().putString(SecureKeys.APTOIDE_CLIENT_UUID, UUID.randomUUID().toString()).apply();
-		}
-
-		return sharedPreferences.getString(SecureKeys.APTOIDE_CLIENT_UUID, null);
-	}
+	private static final String TAG = SecurePreferences.class.getSimpleName();
 
 	/**
 	 * DO NOT USE THIS METHOD
@@ -81,8 +70,8 @@ public class SecurePreferences {
 		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.FIRST_RUN, true);
 	}
 
-	public static void setFirstRun() {
-		SecurePreferencesImplementation.getInstance().edit().putBoolean(SecureKeys.FIRST_RUN, true).apply();
+	public static void setFirstRun(boolean b) {
+		SecurePreferencesImplementation.getInstance().edit().putBoolean(SecureKeys.FIRST_RUN, b).apply();
 	}
 
 	public static int getAdultContentPin() {
@@ -97,14 +86,16 @@ public class SecurePreferences {
 		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.IS_TIMELINE_ACTIVE, false);
 	}
 
-	public static void setAdultContentCheckBox(boolean active) {
-		SecurePreferencesImplementation.getInstance()
-				.edit()
-				.putBoolean(SecureKeys.ADULT_CONTENT_CHECK_BOX, active)
+	public static int getMatureSwitch() {
+		return isAdultSwitchActive() ? 1 : 0;
+	}
+
+	public static void setAdultSwitch(boolean active) {
+		SecurePreferencesImplementation.getInstance().edit().putBoolean(SecureKeys.ADULT_CONTENT_SWITCH, active)
 				.apply();
 	}
 
-	public static boolean isAdultContentCheckBoxActive() {
-		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.ADULT_CONTENT_CHECK_BOX, false);
+	public static boolean isAdultSwitchActive() {
+		return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by SithEngineer on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ViewPagerAdapterScreenshots;
-import cm.aptoide.pt.v8engine.fragment.BaseFragment;
+import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 
 /**
  * Created by sithengineer on 11/05/16.
  * <p>
  * code migrated from v7
  */
-public class ScreenshotsViewerFragment extends BaseFragment {
+public class ScreenshotsViewerFragment extends SupportV4BaseFragment {
 
 	// vars
 	private ArrayList<String> uris;

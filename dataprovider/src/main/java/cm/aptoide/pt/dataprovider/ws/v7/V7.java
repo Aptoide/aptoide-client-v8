@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -17,31 +17,38 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreTabsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.model.v7.ListFullComments;
+import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
-import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 import rx.Observable;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -54,56 +61,49 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 	private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
 	private boolean accessTokenRetry = false;
 
-	protected V7(boolean bypassCache, B body) {
-		super(Interfaces.class, bypassCache);
+	protected V7(B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
+		super(Interfaces.class, httpClient, converterFactory, baseHost);
 		this.body = body;
 	}
 
 	@Override
-	protected String getBaseHost() {
-		return BASE_HOST;
-	}
-
-	@Override
-	public Observable<U> observe() {
-		return handleToken(retryOnTicket(super.observe()));
+	public Observable<U> observe(boolean bypassCache) {
+		return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
 	}
 
 	private Observable<U> retryOnTicket(Observable<U> observable) {
 		return observable.subscribeOn(Schedulers.io()).flatMap(t -> {
-			if (((BaseV7Response) t).getInfo().getStatus().equals(BaseV7Response.Info.Status.QUEUED)) {
+			// FIXME: 01-08-2016 damn jackson parsing black magic error :/
+			if (((BaseV7Response) t).getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(((BaseV7Response) t).getInfo().getStatus())) {
 				return Observable.error(new ToRetryThrowable());
 			} else {
 				return Observable.just(t);
 			}
-		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (n, i) -> {
-			if ((n instanceof ToRetryThrowable) && i < 3) {
-				return i;
+		}).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (throwable, i) -> {
+			// Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
+			// Retry three times if request is queued by server.
+			if ((throwable instanceof ToRetryThrowable) && i < 3) {
+				return null;
 			} else {
-				// Todo: quando nao é erro de net, isto induz em erro lol
-				if (isNoNetworkException(n)) {
-					// Don't retry
-					throw new NoNetworkConnectionException(n);
+				if (isNoNetworkException(throwable)) {
+					throw new NoNetworkConnectionException(throwable);
 				} else {
-					try {
-						if (n instanceof HttpException) {
-							BaseV7Response baseV7Response = objectMapper.readValue(((HttpException) n).response()
-									.errorBody()
-									.string(), BaseV7Response.class);
-
-							throw new AptoideWsV7Exception(n).setBaseResponse(baseV7Response);
+					if (throwable instanceof HttpException) {
+						try {
+							throw new AptoideWsV7Exception(throwable).setBaseResponse((BaseV7Response) converterFactory.responseBodyConverter(BaseV7Response
+									.class, null, null)
+									.convert(((HttpException) throwable).response().errorBody()));
+						} catch (IOException exception) {
+							throw new RuntimeException(exception);
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
-
-					return Observable.error(n);
+					throw new RuntimeException(throwable);
 				}
 			}
 		}).delay(500, TimeUnit.MILLISECONDS));
 	}
 
-	private Observable<U> handleToken(Observable<U> observable) {
+	private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
 		return observable.onErrorResumeNext(throwable -> {
 			if (throwable instanceof AptoideWsV7Exception) {
 				if (INVALID_ACCESS_TOKEN_CODE.equals(((AptoideWsV7Exception) throwable).getBaseResponse()
@@ -112,9 +112,12 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 					if (!accessTokenRetry) {
 						accessTokenRetry = true;
-						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(s -> {
-							this.body.setAccess_token(s);
-							return V7.this.observe();
+						return AptoideAccountManager.invalidateAccessToken(Application.getContext()).flatMap(new Func1<String,Observable<? extends U>>() {
+							@Override
+							public Observable<? extends U> call(String s) {
+								V7.this.body.setAccessToken(s);
+								return V7.this.observe(bypassCache);
+							}
 						});
 					}
 				} else {
@@ -128,51 +131,71 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 	public interface Interfaces {
 
 		@POST("getApp")
-		Observable<GetApp> getApp(@Body GetAppRequest.Body body, @Header(RequestCache
-				.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<GetApp> getApp(@Body GetAppRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
+				bypassCache);
 
 		@POST("listApps{url}")
-		Observable<ListApps> listApps(@Path(value = "url", encoded = true) String path, @Body
-		ListAppsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<ListApps> listApps(@Path(value = "url", encoded = true) String path, @Body ListAppsRequest.Body
+				body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("listAppsUpdates")
-		Observable<ListAppsUpdates> listAppsUpdates(@Body ListAppsUpdatesRequest.Body body,
-													@Header(RequestCache.BYPASS_HEADER_KEY)
-													boolean bypassCache);
-
-		@POST("listAppVersions")
-		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body,
-													@Header(RequestCache.BYPASS_HEADER_KEY)
-													boolean bypassCache);
+		Observable<ListAppsUpdates> listAppsUpdates(@Body ListAppsUpdatesRequest.Body body, @Header(RequestCache
+				.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("getStore{url}")
-		Observable<GetStore> getStore(@Path(value = "url", encoded = true) String path, @Body
-		GetStoreRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
-
-		@POST("getStoreMeta")
-		Observable<GetStoreMeta> getStoreMeta(@Body GetStoreMetaRequest.Body body, @Header
-				(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<GetStore> getStore(@Path(value = "url", encoded = true) String path, @Body GetStoreRequest.Body
+				body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("getStoreDisplays{url}")
-		Observable<GetStoreDisplays> getStoreDisplays(@Path(value = "url", encoded = true) String
-															  path, @Body GetStoreDisplaysRequest
-				.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
-
-		@POST("getStoreTabs")
-		Observable<GetStoreTabs> getStoreTabs(@Body GetStoreTabsRequest.Body body, @Header
-				(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<GetStoreDisplays> getStoreDisplays(@Path(value = "url", encoded = true) String path, @Body
+		GetStoreDisplaysRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("getStoreWidgets{url}")
-		Observable<GetStoreWidgets> getStoreWidgets(@Path(value = "url", encoded = true) String
-															path, @Body GetStoreWidgetsRequest
-				.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<GetStoreWidgets> getStoreWidgets(@Path(value = "url", encoded = true) String path, @Body
+		GetStoreWidgetsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("listStores{url}")
-		Observable<ListStores> listStores(@Path(value = "url", encoded = true) String path, @Body
-		ListStoresRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<ListStores> listStores(@Path(value = "url", encoded = true) String path, @Body ListStoresRequest
+				.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("getStoreMeta{url}")
+		Observable<GetStoreMeta> getStoreMeta(@Path(value = "url", encoded = true) String path, @Body GetStoreMetaRequest.Body body, @Header(RequestCache
+				.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("listSearchApps")
-		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body, @Header
-				(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<ListSearchApps> listSearchApps(@Body ListSearchAppsRequest.Body body, @Header(RequestCache
+				.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST
+		Observable<GetUserTimeline> getUserTimeline(@Url String url, @Body GetUserTimelineRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
+				bypassCache);
+
+		@POST("listAppVersions")
+		Observable<ListAppVersions> listAppVersions(@Body ListAppVersionsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listReviews")
+		Observable<ListReviews> listReviews(@Body ListReviewsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listFullReviews")
+		Observable<ListFullReviews> listFullReviews(@Body ListFullReviewsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listComments")
+		Observable<ListComments> listComments(@Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listFullComments")
+		Observable<ListFullComments> listFullComments(@Body ListFullCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST
+		Observable<ListComments> listComments(@Url String url, @Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
+				bypassCache);
+
+		@POST("setReview")
+		Observable<BaseV7Response> postReview(@Body PostReviewRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("setComment")
+		Observable<BaseV7Response> postComment(@Body PostCommentRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("setReviewVote")
+		Observable<BaseV7Response> setReviewVote(@Body SetReviewRatingRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 	}
 }

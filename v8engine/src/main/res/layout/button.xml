@@ -7,6 +7,8 @@
 <Button android:id="@+id/button"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:text="@string/more_editors_choice"
+        android:textColor="@color/white"
         android:layout_height="48dp">
 
 </Button>

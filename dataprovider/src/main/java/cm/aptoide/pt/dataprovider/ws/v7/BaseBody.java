@@ -1,25 +1,31 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by Neurophobic Animal on 04/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.utils.AptoideUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import cm.aptoide.pt.dataprovider.ws.Api;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 /**
- * Created by neuro on 20-04-2016.
+ * Base body that every request should use. If more information should be provided this class should be extended.
  */
-@Getter
-@Setter
-@Accessors(chain = true)
+@Data
+@EqualsAndHashCode
 public class BaseBody {
 
-	private String access_token = AptoideAccountManager.getAccessToken();
-	private int aptoide_vercode = AptoideUtils.Core.getVerCode();
-	private String cdn = "pool";
+	@JsonProperty("aptoide_uid") private String aptoideId;
+	private String accessToken;
+	private int aptoideVercode;
+	private String cdn;
+	private String lang;
+	private boolean mature;
+	private String q;
 }

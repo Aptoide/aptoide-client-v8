@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 22/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -18,7 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
+import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -41,11 +42,11 @@ public class RequestCache {
 	private static final int DATA_BUCKET_INDEX = 0;
 	private static final int TIMESTAMP_BUCKET_INDEX = 1;
 	private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
-	private static final String DISK_CACHE_SUBDIR = "request_cache";
 
 	private final KeyAlgorithm keyAlgorithm;
 
 	private final Object diskCacheLock = new Object();
+	private boolean initialized;
 	private DiskLruCache diskLruCache;
 
 	//
@@ -53,20 +54,39 @@ public class RequestCache {
 	//
 
 	public RequestCache(KeyAlgorithm keyAlgorithm) {
+
+		this.keyAlgorithm = keyAlgorithm;
+
 		try {
 			// FIXME move the cache directory to the app folder
 			// TODO check if module update renders a new and fresh cache
-			File cachePath = new File(Environment.getExternalStorageDirectory(), DISK_CACHE_SUBDIR);
 
-			if( BuildConfig.DEBUG && cachePath.exists() ) {
+			File cachePath = AptoideUtils.getContext().getCacheDir();
+
+			boolean canRead = cachePath.canRead();
+			boolean canWrite = cachePath.canWrite();
+
+			if (!canRead || !canWrite) {
+				throw new IllegalStateException(String.format("unable to read / write in the temporary cache directory" +
+						" '%s' in the directory '%s'", cachePath
+						.getName(), cachePath.getParentFile().getAbsolutePath()));
+			} else {
+				Logger.v(TAG, String.format("using temporary cache directory '%s' in the directory '%s'", cachePath
+						.getName(), cachePath
+						.getParentFile()
+						.getAbsolutePath()));
+			}
+
+			if (BuildConfig.DEBUG && cachePath.exists() && cachePath.isDirectory()) {
 				int deletedFiles = 0;
-				for(File f : cachePath.listFiles()) {
-					deletedFiles += f.delete() ? 1 : 0;
+				File[] childFiles = cachePath.listFiles();
+				if (childFiles != null && childFiles.length > 0) {
+					for (File f : childFiles) {
+						deletedFiles += f.delete() ? 1 : 0;
+					}
+					deletedFiles += cachePath.delete() ? 1 : 0;
 				}
-				deletedFiles += cachePath.delete() ? 1 : 0;
-				Log.w(TAG, String.format("cache running in debug mode : cleaned %d disk cache " +
-						"files",
-						deletedFiles));
+				Log.w(TAG, String.format("cache running in debug mode : cleaned %d disk cache files", deletedFiles));
 			}
 
 			diskLruCache = DiskLruCache.open(
@@ -75,11 +95,11 @@ public class RequestCache {
 					BUCKET_COUNT,
 					DISK_CACHE_SIZE
 			);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		this.keyAlgorithm = keyAlgorithm;
+			this.initialized = true;
+		} catch (Exception e) {
+			Logger.e(TAG, "", e);
+		}
 	}
 
 	public RequestCache() {
@@ -110,6 +130,9 @@ public class RequestCache {
 	@Nullable
 	public Response put(@NonNull Request request, @NonNull Response response) {
 
+		if (!initialized) {
+			return response;
+		}
 		if ((response.code() / 100) != 2) return response;
 //		String header = request.headers().get(BYPASS_HEADER_KEY);
 //		if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
@@ -148,6 +171,10 @@ public class RequestCache {
 	 */
 	@Nullable
 	public Response get(@NonNull Request request) {
+
+		if (!initialized) {
+			return null;
+		}
 
 		DiskLruCache.Snapshot snapshot = null;
 		try {

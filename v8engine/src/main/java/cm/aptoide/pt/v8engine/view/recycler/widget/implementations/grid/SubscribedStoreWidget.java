@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -55,6 +55,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 		storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
 		storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
 		infoLayout = itemView.findViewById(R.id.store_layout_subscribers);
+		storeUnsubscribe.setText(R.string.unfollow);
 	}
 
 	@Override
@@ -68,9 +69,8 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 		@ColorInt int color = context.getResources().getColor(StoreThemeEnum.get(store.getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
-				StoreFragment
-				.newInstance(displayable.getPojo().getStoreName())));
+		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(), StoreFragment.newInstance(displayable.getPojo()
+				.getStoreName(), displayable.getPojo().getTheme())));
 
 		if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
 			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
@@ -81,11 +81,11 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 		storeUnsubscribe.setOnClickListener(v->{
 			GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(), displayable.getPojo()
 					.getStoreName(), AptoideUtils.StringU.getFormattedString(R.string
-					.unsubscribe_yes_no))
+					.unfollow_yes_no))
 					.subscribe(eResponse->{
 						switch (eResponse) {
 							case YES:
-								@Cleanup Realm realm = Database.get(itemView.getContext());
+								@Cleanup Realm realm = Database.get();
 
 								if (AptoideAccountManager.isLoggedIn()) {
 									AptoideAccountManager.unsubscribeStore(store.getStoreName());
@@ -95,7 +95,18 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 								break;
 						}
-					});
+					})
+			;
 		});
+	}
+
+	@Override
+	public void onViewAttached() {
+
+	}
+
+	@Override
+	public void onViewDetached() {
+
 	}
 }

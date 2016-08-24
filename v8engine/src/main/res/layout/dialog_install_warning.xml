@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 12/08/2016.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/dialog_bg"
+              android:orientation="vertical"
+              android:padding="24dp">
+
+    <TextView
+        android:id="@+id/dialog_install_warning_rank_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:drawablePadding="4dp"
+        android:gravity="center_vertical"
+        android:text="@string/warning"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_medium_large"
+        tools:drawableLeft="@drawable/ic_badge_warning"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_install_warning_careful_text"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/dialog_install_warning_credibility_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        tools:text="@string/dialog_install_warning_credibility_text"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--
+            style="@style/TextAppearance.AppCompat.Widget.Button"
+        -->
+
+        <Button
+            android:id="@+id/dialog_install_warning_trusted_app_button"
+            style="@style/WidgetButtonCustomAptoideTwoLines"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:minHeight="44dp"
+            tools:text="Search\nStores"
+            />
+
+        <Button
+            android:id="@+id/dialog_install_warning_proceed_button"
+            style="@style/TextAppearance.AppCompat.Widget.Button"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:minHeight="44dp"
+            android:text="@string/dialog_install_warning_proceed_button"
+            android:textColor="?colorPrimary"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

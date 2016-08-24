@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 22/05/2016.
+ * Modified by SithEngineer on 04/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -28,6 +28,10 @@ public class BaseV7Response {
 		}
 	}
 
+	public boolean isOk() {
+		return info != null && info.getStatus() == Info.Status.OK;
+	}
+
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
@@ -41,7 +45,7 @@ public class BaseV7Response {
 		}
 
 		@Data
-		private static class Time {
+		public static class Time {
 
 			private double seconds;
 			private String human;
@@ -53,5 +57,6 @@ public class BaseV7Response {
 
 		private String code;
 		private String description;
+
 	}
 }

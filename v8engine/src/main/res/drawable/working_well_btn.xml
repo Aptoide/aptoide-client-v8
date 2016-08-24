@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 05/08/2016.
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/layer_11_copy_3" android:state_pressed="true"/>
+    <item android:drawable="@drawable/layer_11_copy_3" android:state_selected="true"/>
+    <item android:drawable="@drawable/layer_11"/>
+</selector>

@@ -27,4 +27,6 @@ public class Constants {
 	static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
 	static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
 
+	public static final String IS_LOCALYTICS_ENABLE_KEY = "IS_LOCALYTICS_ENABLE_KEY";
+	public static final String IS_LOCALYTICS_FIRST_SESSION = "IS_LOCALYTICS_FIRST_SESSION";
 }

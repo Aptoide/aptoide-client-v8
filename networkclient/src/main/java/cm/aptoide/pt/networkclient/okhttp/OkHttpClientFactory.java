@@ -1,18 +1,18 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified by SithEngineer on 02/08/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp;
 
-import android.util.Log;
-
 import java.io.File;
 import java.io.IOException;
 
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.Cache;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,25 +27,30 @@ import okhttp3.Response;
 public class OkHttpClientFactory {
 
 	private static final String TAG = OkHttpClientFactory.class.getName();
+	private static OkHttpClient httpClientInstance;
+
+	public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize, Interceptor interceptor) {
+		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+		//		if (BuildConfig.DEBUG) {
+		//			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
+		//		}
+
+		return clientBuilder
+				.cache(new Cache(cacheDirectory, cacheMaxSize)) // 10 MiB
+				.addInterceptor(interceptor)
+				.build();
+	}
 
 	public static OkHttpClient newClient() {
-		return newClient(new File("/"));
+		return new OkHttpClient.Builder().build();
 	}
 
-	public static OkHttpClient newClient(File cacheDirectory) {
-		final long cacheSize = 10 * 1024 * 1024; // 10 MiB
-
-		return newClient(cacheDirectory, cacheSize);
-	}
-
-	public static OkHttpClient newClient(File cacheDirectory, long cacheSize) {
-
-		return new OkHttpClient.Builder()
-									.cache(new Cache(cacheDirectory, cacheSize))
-									.addInterceptor(new AptoideCacheInterceptor())
-									.build();
-
-		//return new OkHttpClient.Builder().build();
+	public static OkHttpClient getSingletonClient() {
+		if (httpClientInstance == null) {
+			httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor());
+		}
+		return httpClientInstance;
 	}
 
 	private static final class AptoideCacheInterceptor implements Interceptor {
@@ -60,21 +65,21 @@ public class OkHttpClientFactory {
 			Request request = chain.request();
 			Response response = customCache.get(request);
 
+			HttpUrl httpUrl = request.url();
 			if (response != null) {
 
 				if(BuildConfig.DEBUG) {
-					Log.v(TAG, "cache hit: " + request.url());
+					Logger.v(TAG, String.format("cache hit '%s'", request.url()));
 				}
 
 				return response;
 			}
 
 			if(BuildConfig.DEBUG) {
-				Log.v(TAG, "cache miss: " + request.url());
+				Logger.v(TAG, String.format("cache miss '%s'", request.url()));
 			}
 
-			Response cachedResponse = customCache.put(request, chain.proceed(request));
-			return cachedResponse;
+			return customCache.put(request, chain.proceed(request));
 		}
 	}
 }

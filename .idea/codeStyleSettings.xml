@@ -45,6 +45,7 @@
             <emptyLine />
           </value>
         </option>
+        <option name="RIGHT_MARGIN" value="160" />
         <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
         <option name="JD_ADD_BLANK_AFTER_PARM_COMMENTS" value="true" />
         <option name="JD_ADD_BLANK_AFTER_RETURN" value="true" />
@@ -54,6 +55,7 @@
         </AndroidXmlCodeStyleSettings>
         <JavaCodeStyleSettings>
           <option name="SPACE_AFTER_CLOSING_ANGLE_BRACKET_IN_TYPE_ARGUMENT" value="true" />
+          <option name="DO_NOT_WRAP_AFTER_SINGLE_ANNOTATION" value="true" />
         </JavaCodeStyleSettings>
         <Objective-C-extensions>
           <option name="GENERATE_INSTANCE_VARIABLES_FOR_PROPERTIES" value="ASK" />
@@ -88,11 +90,16 @@
         </XML>
         <codeStyleSettings language="JAVA">
           <option name="KEEP_LINE_BREAKS" value="false" />
+          <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+          <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
           <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
           <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
           <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="0" />
           <option name="BLANK_LINES_AFTER_CLASS_HEADER" value="1" />
+          <option name="SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS" value="false" />
+          <option name="SPACE_BEFORE_SEMICOLON" value="true" />
           <option name="SPACE_WITHIN_BRACES" value="true" />
+          <option name="THROWS_LIST_WRAP" value="1" />
           <option name="EXTENDS_KEYWORD_WRAP" value="1" />
           <option name="METHOD_CALL_CHAIN_WRAP" value="5" />
           <option name="IF_BRACE_FORCE" value="3" />
@@ -100,6 +107,8 @@
           <option name="WHILE_BRACE_FORCE" value="3" />
           <option name="WRAP_LONG_LINES" value="true" />
           <option name="FIELD_ANNOTATION_WRAP" value="1" />
+          <option name="VARIABLE_ANNOTATION_WRAP" value="1" />
+          <option name="ENUM_CONSTANTS_WRAP" value="5" />
           <indentOptions>
             <option name="USE_TAB_CHARACTER" value="true" />
             <option name="SMART_TABS" value="true" />
@@ -278,5 +287,6 @@
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+    <option name="PREFERRED_PROJECT_CODE_STYLE" value="aptoide_code_style" />
   </component>
 </project>

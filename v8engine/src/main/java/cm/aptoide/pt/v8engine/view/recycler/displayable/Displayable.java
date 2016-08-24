@@ -1,28 +1,35 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neuro on 14-04-2016.
  */
 @Ignore
 @Accessors(chain = true)
-public abstract class Displayable {
+public abstract class Displayable implements LifecycleSchim {
 
+	@Getter CompositeSubscription subscriptions;
 	private Boolean fixedPerLineCount;
 	@Setter private Integer defaultPerLineCount;
+	@Setter @Getter private boolean isVisible = false;
 
 	/**
 	 * Needed for reflective {@link Class#newInstance()}.
@@ -68,5 +75,57 @@ public abstract class Displayable {
 
 	public int getSpanSize() {
 		return WidgetFactory.getColumnSize() / getPerLineCount();
+	}
+
+	//
+	// LifecycleSchim interface
+	// optional methods
+
+	/**
+	 * Sets visibility of this component to visible. Schimmed component lifecycle from the using adapter.
+	 */
+	public void onResume() {
+		isVisible = true;
+	}
+
+	/**
+	 * Sets visibility of this component to invisible. Schimmed component lifecycle from the using adapter.
+	 */
+	public void onPause() {
+		isVisible = false;
+	}
+
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 */
+	@Override
+	public void onViewCreated() {
+
+	}
+
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 */
+	@Override
+	public void onDestroyView() {
+
+	}
+
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 *
+	 * @param outState
+	 */
+	public void onSaveInstanceState(Bundle outState) {
+
+	}
+
+	/**
+	 * Optional method. Schimmed component lifecycle from the using adapter.
+	 *
+	 * @param savedInstanceState
+	 */
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+
 	}
 }

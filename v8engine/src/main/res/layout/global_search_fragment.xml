@@ -23,29 +23,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
+        android:paddingTop="15dp"
         android:visibility="gone"
         >
 
         <LinearLayout
             android:id="@+id/buttons_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="262dp"
+            android:layout_height="29dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/search_buttons_background"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             >
 
             <Button
                 android:id="@+id/subscribed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/subscribed"
+                android:layout_width="128dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/search_button_background"
+                android:text="@string/followed_stores"
+                android:textColor="@color/white"
+                android:textSize="12sp"
                 android:visibility="gone"/>
 
             <Button
                 android:id="@+id/everywhere"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/everywhere"
+                android:layout_width="128dp"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:text="@string/all_stores"
+                android:textColor="@color/app_view_gray"
+                android:textSize="12sp"
                 android:visibility="gone"/>
 
         </LinearLayout>
@@ -55,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/buttons_layout"
+            android:layout_marginTop="10dp"
             />
 
     </RelativeLayout>

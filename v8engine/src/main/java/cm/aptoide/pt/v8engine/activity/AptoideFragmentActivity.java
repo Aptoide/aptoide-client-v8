@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -18,7 +18,7 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 	/*
 	private WeakReference<Fragment> weakFragment;
 
-	protected abstract Fragment createFragment();
+	protected abstract Fragment create();
 
 	@Override
 	protected void onStop() {
@@ -43,7 +43,7 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 		}
 
 		if (fragment == null) {
-			fragment = createFragment();
+			fragment = create();
 			weakFragment = new WeakReference<>(fragment);
 		}
 
@@ -64,5 +64,13 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 					.commit();
 		}
 
+	}
+
+	protected Fragment getCurrentFragment() {
+		if (getSupportFragmentManager().getFragments() != null && getSupportFragmentManager().getFragments().size() > 0) {
+			return getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getFragments().size() - 1);
+		} else {
+			return null;
+		}
 	}
 }

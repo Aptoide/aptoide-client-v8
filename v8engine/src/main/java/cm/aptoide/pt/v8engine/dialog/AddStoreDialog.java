@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 08/06/2016.
+ * Modified by SithEngineer on 17/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.dialog;
@@ -27,6 +27,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 
 /**
  * Created with IntelliJ IDEA. User: rmateus Date: 18-10-2013 Time: 17:27 To change this template use File | Settings |
@@ -92,8 +93,8 @@ public class AddStoreDialog extends DialogFragment {
 	}
 
 	private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
-		StoreUtils.subscribeStore(getStoreMetaRequest, getStoreMeta1->{
-			ShowMessage.show(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_subscribed,
+		StoreUtilsProxy.subscribeStore(getStoreMetaRequest, getStoreMeta1->{
+			ShowMessage.asSnack(getView(), AptoideUtils.StringU.getFormattedString(R.string.store_followed,
 					storeName));
 
 			dismissLoadingDialog();
@@ -108,25 +109,18 @@ public class AddStoreDialog extends DialogFragment {
 							.this, PRIVATE_STORE_REQUEST_CODE, storeName);
 					dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
 				} else {
-					ShowMessage.show(getView(), error.getDescription());
+					ShowMessage.asSnack(getView(), error.getDescription());
 				}
 				dismissLoadingDialog();
 			} else {
 				dismissLoadingDialog();
 				Toast.makeText(V8Engine.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
 			}
-		});
+		}, storeName);
 	}
 
 	private GetStoreMetaRequest buildRequest(String storeName) {
-		return GetStoreMetaRequest.of(storeName, true);
-	}
-
-	private GetStoreMetaRequest buildRequest(String storeName, String storeUser, String storePassSha1) {
-		GetStoreMetaRequest getStoreMetaRequest = buildRequest(storeName);
-		// TODO: 20-05-2016 neuro request default faxavor!
-		getStoreMetaRequest.getBody().setStoreUser(storeUser).setStorePassSha1(storePassSha1);
-		return getStoreMetaRequest;
+		return GetStoreMetaRequest.of(storeName);
 	}
 
 	private void showLoadingDialog() {

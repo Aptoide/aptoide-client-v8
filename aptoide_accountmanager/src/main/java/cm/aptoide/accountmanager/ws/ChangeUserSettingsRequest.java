@@ -7,8 +7,12 @@ import java.util.HashMap;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.ChangeUserSettingsResponse;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,12 +28,13 @@ public class ChangeUserSettingsRequest extends v3accountManager<ChangeUserSettin
 	private ArrayList<String> list;
 	private boolean matureSwitch;
 
-	public ChangeUserSettingsRequest() {
+	public ChangeUserSettingsRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
+		super(httpClient, converterFactory);
 		list = new ArrayList<>();
 	}
 
 	public static ChangeUserSettingsRequest of(boolean matureSwitchStatus) {
-		ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+		ChangeUserSettingsRequest request = new ChangeUserSettingsRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter());
 		request.setMatureSwitch(matureSwitchStatus);
 		return request;
 	}
@@ -39,7 +44,7 @@ public class ChangeUserSettingsRequest extends v3accountManager<ChangeUserSettin
 	}
 
 	@Override
-	protected Observable<ChangeUserSettingsResponse> loadDataFromNetwork(Interfaces interfaces) {
+	protected Observable<ChangeUserSettingsResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("mode", "json");
 		ArrayList<String> parametersList = setupParameters();

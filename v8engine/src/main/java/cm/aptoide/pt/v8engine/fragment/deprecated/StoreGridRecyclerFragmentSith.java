@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.fragment.deprecated;
 
+import android.os.Bundle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class StoreGridRecyclerFragmentSith extends GridRecyclerFragmentWithDecor
 	}
 
 	@Override
-	public void load(boolean refresh) {
+	public void load(boolean refresh, Bundle savedInstanceState) {
 
 	}
 

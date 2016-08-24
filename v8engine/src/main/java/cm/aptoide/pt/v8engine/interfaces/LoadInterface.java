@@ -5,10 +5,12 @@
 
 package cm.aptoide.pt.v8engine.interfaces;
 
+import android.os.Bundle;
+
 /**
  * Created by neuro on 04-05-2016.
  */
 public interface LoadInterface {
 
-	void load(boolean refresh);
+	void load(boolean refresh, Bundle savedInstanceState);
 }

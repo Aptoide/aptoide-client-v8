@@ -1,10 +1,19 @@
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 07/06/2016.
+  ~ Modified by SithEngineer on 08/08/2016.
   -->
 
 <manifest package="cm.aptoide.pt.v8engine"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        tools:overrideLibrary="com.paypal.android.sdk.payments"
+        />
 
     <application
         android:allowBackup="true"
@@ -27,7 +36,95 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <activity android:name=".activities.StoreActivity"/>
+        <activity
+            android:name=".receivers.DeepLinkIntentReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:mimeType="application/vnd.cm.aptoide.pt"
+                    android:scheme="file"/>
+                <data
+                    android:mimeType="application/vnd.cm.aptoide.pt"
+                    android:scheme="http"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="aptoiderepo"/>
+                <data android:scheme="aptoidexml"/>
+                <data android:scheme="aptoideinstall"/>
+                <data android:scheme="aptoidesearch"/>
+                <data android:scheme="aptword"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="market"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="market.android.com"
+                    android:scheme="https"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="webservices.aptoide.com"
+                    android:pathPrefix="/apkinstall"
+                    android:scheme="http"/>
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="play.google.com"
+                    android:scheme="https"/>
+                <data
+                    android:host="play.google.com"
+                    android:scheme="http"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="imgs.aptoide.com"
+                    android:pathPattern="*//.myapp"
+                    android:scheme="http"/>
+            </intent-filter>
+        </activity>
 
         <receiver android:name=".receivers.LoginBroadcastReceiver">
             <intent-filter>
@@ -35,7 +132,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receivers.InstalledBroadcastReceiver">
+        <receiver android:name=".install.InstalledBroadcastReceiver">
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.PACKAGE_ADDED"/>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
@@ -45,19 +142,30 @@
             </intent-filter>
         </receiver>
 
-        <!--
-        <activity android:name="cm.aptoide.pt.v8engine.MainActivityStoreList">
+        <service android:name=".services.PullingContentService"/>
+        <service android:name=".services.ValidatePaymentsService"/>
+        <receiver android:name=".receivers.PullingContentReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
-        </activity>
-        -->
+        </receiver>
 
         <provider
             android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
             android:authorities="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
             android:exported="false"/>
+
+        <meta-data android:name="LOCALYTICS_APP_KEY" android:value="${LOCALYTICS_APP_KEY}"/>
+
+        <receiver
+            android:name="com.localytics.android.ReferralReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
 
     </application>
 

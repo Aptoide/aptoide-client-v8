@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 26/05/2016.
+ * Modified by SithEngineer on 04/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -13,7 +13,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  * Created by sithengineer on 04/05/16.
  */
 @Ignore
-public abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
+abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
 
 	public AppViewDisplayable() {
 	}

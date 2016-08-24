@@ -4,7 +4,7 @@
   ~ Modified by SithEngineer on 09/05/2016.
   -->
 
-<android.support.v4.view.ViewPager
+<cm.aptoide.pt.v8engine.view.custom.AptoideViewPager
     android:id="@+id/pager"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

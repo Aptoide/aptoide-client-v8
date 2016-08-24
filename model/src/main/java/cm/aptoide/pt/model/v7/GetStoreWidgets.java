@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 18/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class GetStoreWidgets extends BaseV7EndlessResponse<GetStoreWidgets.WSWidget> {
+public class GetStoreWidgets extends BaseV7EndlessDatalistResponse<GetStoreWidgets.WSWidget> {
 
 	@Data
 	public static class WSWidget {

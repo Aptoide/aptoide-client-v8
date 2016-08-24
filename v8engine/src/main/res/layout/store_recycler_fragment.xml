@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonLayout">
+        <Button
+            android:id="@+id/add_more_stores"
+            style="?attr/customButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Add more stores"/>
+
+            <include layout="@layout/recycler_fragment"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                android:layout_above="@id/add_more_stores"/>
+    </RelativeLayout>
+
+</LinearLayout>

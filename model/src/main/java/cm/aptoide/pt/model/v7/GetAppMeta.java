@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
+ * Modified by SithEngineer on 12/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
 import lombok.Data;
@@ -41,6 +42,7 @@ public class GetAppMeta extends BaseV7Response {
 		private Urls urls;
 		private Stats stats;
 		private Obb obb;
+		private GetApkInfoJson.Payment payment;
 		private Pay pay;
 	}
 
@@ -63,6 +65,10 @@ public class GetAppMeta extends BaseV7Response {
 		private GetAppMetaFile.Flags flags;
 		private List<String> usedFeatures;
 		private List<String> usedPermissions;
+
+		public boolean isGoodApp() {
+			return this.flags != null && flags.review != null && flags.review.equalsIgnoreCase(Flags.GOOD);
+		}
 
 		@Data
 		public static class Signature {
@@ -164,6 +170,7 @@ public class GetAppMeta extends BaseV7Response {
 		public static class Rating {
 
 			private float avg;
+			private int total;
 			private List<Stats.Rating.Vote> votes;
 
 			@Data
