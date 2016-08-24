@@ -19,6 +19,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
@@ -83,6 +84,9 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 			@Override
 			public void onClick(View v) {
 				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
+				Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
+						.AppsTimeline
+						.OPEN_ARTICLE);
 			}
 		});
 	}

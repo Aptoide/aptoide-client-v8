@@ -34,9 +34,10 @@ public class StoreLatestAppsDisplayable extends Displayable {
 	public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps, DateCalculator dateCalculator) {
 		final List<LatestApp> latestApps = new ArrayList<>();
 		for (App app : storeLatestApps.getApps()) {
-			latestApps.add(new LatestApp(app.getId(), app.getIcon()));
+			latestApps.add(new LatestApp(app.getId(), app.getIcon(), app.getPackageName()));
 		}
-		return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(), storeLatestApps.getStore().getAvatar(), latestApps, dateCalculator,
+		return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(), storeLatestApps.getStore().getAvatar(), latestApps,
+				dateCalculator,
 				storeLatestApps.getLatestUpdate());
 	}
 
@@ -77,5 +78,6 @@ public class StoreLatestAppsDisplayable extends Displayable {
 
 		@Getter private final long appId;
 		@Getter private final String iconUrl;
+		@Getter private final String packageName;
 	}
 }
