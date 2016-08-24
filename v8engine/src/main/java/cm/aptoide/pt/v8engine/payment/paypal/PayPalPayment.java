@@ -136,17 +136,14 @@ public class PayPalPayment implements Payment {
 							payPalConfirmation = intent.getParcelableExtra(PAYMENT_CONFIRMATION_EXTRA);
 							if (payPalConfirmation != null) {
 								listener.onSuccess(converter.convertFromPayPal(payPalConfirmation, id, product, price));
-								removeListener();
 							}
 							break;
 						case PAYMENT_STATUS_CANCELLED:
 							listener.onError(new PaymentCancellationException("PayPal payment cancelled by user"));
-							removeListener();
 							break;
 						case PAYMENT_STATUS_FAILED:
 						default:
 							listener.onError(new PaymentFailureException("PayPal payment failed"));
-							removeListener();
 							break;
 					}
 				}
