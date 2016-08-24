@@ -52,8 +52,16 @@ public abstract class Displayable implements LifecycleSchim {
 	 * @return
 	 */
 	public int getPerLineCount() {
-		return isFixedPerLineCount() ? getDefaultPerLineCount() : (int) (AptoideUtils.ScreenU.getScreenWidthInDip() /
-				AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+
+		int tmp;
+
+		if (isFixedPerLineCount()) {
+			tmp = getDefaultPerLineCount();
+		} else {
+			tmp = (int) (AptoideUtils.ScreenU.getScreenWidthInDip() / AptoideUtils.ScreenU.REFERENCE_WIDTH_DPI * getDefaultPerLineCount());
+		}
+
+		return tmp != 0 ? tmp : 1;
 	}
 
 	public boolean isFixedPerLineCount() {
