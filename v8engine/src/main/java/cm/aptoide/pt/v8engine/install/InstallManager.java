@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
-import cm.aptoide.pt.v8engine.receivers.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;

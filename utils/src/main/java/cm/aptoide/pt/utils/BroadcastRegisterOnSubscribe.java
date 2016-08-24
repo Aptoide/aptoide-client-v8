@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 11/08/2016.
+ * Modified by Marcelo Benites on 23/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.receivers;
+package cm.aptoide.pt.utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
