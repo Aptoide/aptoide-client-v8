@@ -63,7 +63,7 @@ public class InAppBillingRepository {
 					return Observable.error(new IOException("Server response: " + response.getStatus()));
 				})
 				.flatMapIterable(response -> response.getPublisherResponse().getDetailList())
-				.map(responseProduct -> new InAppBillingSKU(responseProduct.getSku(), responseProduct.getPrice(),
+				.map(responseProduct -> new InAppBillingSKU(responseProduct.getProductId(), responseProduct.getPrice(),
 						responseProduct.getTitle(), responseProduct.getDescription()))
 				.toList();
 	}

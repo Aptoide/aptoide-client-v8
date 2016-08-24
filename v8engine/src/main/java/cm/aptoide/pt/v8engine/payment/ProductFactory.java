@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.database.realm.*;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -25,7 +24,7 @@ public class ProductFactory {
 	public Product create(InAppBillingSkuDetailsResponse.Metadata metadata, int apiVersion, String developerPayload, String packageName,
 	                      InAppBillingSkuDetailsResponse.PurchaseDataObject purchaseDataObject) {
 		return new InAppBillingProduct(metadata.getId(), metadata.getIcon(), purchaseDataObject.getTitle(), purchaseDataObject.getDescription(),
-				purchaseDataObject.getPrice(), apiVersion, purchaseDataObject.getSku(), packageName, developerPayload, purchaseDataObject.getType());
+				purchaseDataObject.getPrice(), apiVersion, purchaseDataObject.getProductId(), packageName, developerPayload, purchaseDataObject.getType());
 	}
 
 	public Product create(cm.aptoide.pt.database.realm.PaymentConfirmation paymentConfirmation) {

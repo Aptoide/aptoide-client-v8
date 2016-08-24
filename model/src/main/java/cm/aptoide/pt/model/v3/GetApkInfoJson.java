@@ -93,16 +93,6 @@ public class GetApkInfoJson extends BaseV3Response {
 			return amount;
 		}
 
-		public boolean alreadyPaid() {
-			return status != null && status.equalsIgnoreCase("OK");
-		}
-
-		public boolean isPaidApp() {
-			//			symbol = "$";
-			//			amount = 0.10;
-			return ((amount != null) && (amount > 0.0));
-		}
-
 		public static class Metadata {
 			public int id;
 		}

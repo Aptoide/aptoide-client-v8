@@ -37,7 +37,8 @@ public class InAppBillingSkuDetailsResponse extends BaseV3Response {
 	@Data
 	public static class PurchaseDataObject {
 
-		private String sku;
+		@JsonProperty("productId")
+		private String productId;
 		private String price;
 		private String title;
 		private String description;
