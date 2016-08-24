@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,16 +161,6 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 	@Override
 	public Observable<Payment> paymentSelection() {
 		return Observable.merge(paymentSelections);
-	}
-
-	@Override
-	public void showPaymentCancellationError() {
-		Snackbar.make(paymentContainer, "Payment cancelled by user.", Snackbar.LENGTH_SHORT).show();
-	}
-
-	@Override
-	public void showPaymentFailureError() {
-		Snackbar.make(paymentContainer, "Payment failed.", Snackbar.LENGTH_SHORT).show();
 	}
 
 	@LayoutRes

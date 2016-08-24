@@ -140,10 +140,8 @@ public class PaymentPresenter implements Presenter {
 	}
 
 	private void treatPaymentError(Throwable throwable) {
-		if (throwable instanceof PaymentCancellationException) {
-			view.showPaymentCancellationError();
-		} else if (throwable instanceof PaymentFailureException) {
-			view.showPaymentFailureError();
+		if (throwable instanceof PaymentFailureException) {
+			view.dismissWithFailure();
 		}
 		view.removeLoading();
 	}
