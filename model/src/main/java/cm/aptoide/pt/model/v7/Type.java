@@ -58,6 +58,7 @@ public enum Type {
 	UPDATE(1),
 	EXCLUDED_UPDATE(1),
 	ROLLBACK(1),
+	SCHEDULED_DOWNLOAD(1),
 
 	SOCIAL_TIMELINE(1, true),
 
