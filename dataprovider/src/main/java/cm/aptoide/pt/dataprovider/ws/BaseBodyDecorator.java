@@ -1,11 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.AllArgsConstructor;
 
@@ -26,7 +26,7 @@ public class BaseBodyDecorator {
 		baseBody.setCdn("pool");
 		baseBody.setLang(Api.LANG);
 		baseBody.setMature(Api.isMature());
-		if(preferences.getBoolean("FILTER_APPS",true)) {
+		if (ManagerPreferences.getHWSpecsFilter()) {
 			baseBody.setQ(Api.Q);
 		}
 

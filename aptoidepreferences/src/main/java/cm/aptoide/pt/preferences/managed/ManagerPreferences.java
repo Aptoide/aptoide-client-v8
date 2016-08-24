@@ -18,6 +18,10 @@ public class ManagerPreferences {
 		return Preferences.get().getBoolean(ManagedKeys.HWSPECS_FILTER, true);
 	}
 
+	public static void setHWSpecsFilter(boolean flag) {
+		Preferences.get().edit().putBoolean(ManagedKeys.HWSPECS_FILTER, flag).apply();
+	}
+
 	public static int getLastPushNotificationId() {
 		return Preferences.get().getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
 	}

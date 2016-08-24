@@ -659,7 +659,7 @@ public class AptoideUtils {
 				return String.valueOf(count);
 			}
 			int exp = (int) (Math.log(count) / Math.log(1000));
-			return String.format(Locale.ENGLISH, "%d %c", (int) (count / Math.pow(1000, exp)), "kMGTPE".charAt(exp -
+			return String.format(Locale.ENGLISH, "%d %c", (int) (count / Math.pow(1000, exp)), "kMBTPE".charAt(exp -
 					1));
 		}
 

@@ -13,10 +13,9 @@ import java.util.Map;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import rx.Observable;
 
@@ -75,7 +74,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
 		map.put("success", success);
 		map.put("adid", Long.toString(adId));
 		map.put("appid", Long.toString(appId));
-		map.put("q", AptoideUtils.Core.filters(ManagerPreferences.getHWSpecsFilter()));
+		map.put("q", Api.Q);
 		map.put("androidversion", Build.VERSION.RELEASE);
 		map.put("tracker", tracker);
 
