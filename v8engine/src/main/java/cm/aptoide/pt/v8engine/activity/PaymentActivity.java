@@ -92,7 +92,7 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 				new InAppBillingRepository(operatorManager, productFactory, paymentFactory),
 				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory));
 
-		attachPresenter(new PaymentPresenter(this, paymentManager, product));
+		attachPresenter(new PaymentPresenter(this, paymentManager, product), savedInstanceState);
 	}
 
 	@Override

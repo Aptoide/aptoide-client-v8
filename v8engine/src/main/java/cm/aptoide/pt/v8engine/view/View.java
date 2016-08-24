@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
@@ -30,7 +31,7 @@ public interface View {
 
 	Context getContext();
 
-	void attachPresenter(Presenter presenter);
+	void attachPresenter(Presenter presenter, Bundle savedInstanceState);
 
 	// TODO: Make it simple. We need to abstract implementation details (e.g. Activity and Fragment life cycle events).
 	enum Event {

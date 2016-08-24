@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
+import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import cm.aptoide.pt.v8engine.payment.Presenter;
@@ -27,7 +28,7 @@ public abstract class AppCompatActivityView extends RxAppCompatActivity implemen
 	@NonNull
 	@Override
 	public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull Event event) {
-		return bindUntilEvent(convertFromEvent(event));
+		return RxLifecycle.bindUntilEvent(getLifecycle(), event);
 	}
 
 	@Override
@@ -43,7 +44,10 @@ public abstract class AppCompatActivityView extends RxAppCompatActivity implemen
 	}
 
 	@Override
-	public void attachPresenter(Presenter presenter) {
+	public void attachPresenter(Presenter presenter, Bundle savedInstanceState) {
+		if (savedInstanceState != null) {
+			presenter.restoreState(savedInstanceState);
+		}
 		this.presenter = presenter;
 		this.presenter.present();
 	}
@@ -52,12 +56,6 @@ public abstract class AppCompatActivityView extends RxAppCompatActivity implemen
 	protected void onSaveInstanceState(Bundle outState) {
 		presenter.saveState(outState);
 		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		presenter.restoreState(savedInstanceState);
 	}
 
 	@NonNull
@@ -75,25 +73,6 @@ public abstract class AppCompatActivityView extends RxAppCompatActivity implemen
 				return Event.STOP;
 			case DESTROY:
 				return Event.DESTROY;
-			default:
-				throw new IllegalStateException("Unrecognized event: " + event.name());
-		}
-	}
-
-	private ActivityEvent convertFromEvent(Event event) {
-		switch (event) {
-			case CREATE:
-				return ActivityEvent.CREATE;
-			case START:
-				return ActivityEvent.START;
-			case RESUME:
-				return ActivityEvent.RESUME;
-			case PAUSE:
-				return ActivityEvent.PAUSE;
-			case STOP:
-				return ActivityEvent.STOP;
-			case DESTROY:
-				return ActivityEvent.DESTROY;
 			default:
 				throw new IllegalStateException("Unrecognized event: " + event.name());
 		}
