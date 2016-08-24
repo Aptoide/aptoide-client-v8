@@ -122,14 +122,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 					Database.StoreQ.delete(getStoreMeta.getData().getId(), realm);
 					ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta.getData().getName()));
 					handleSubscriptionLogic(getStoreMeta);
-
-					/*ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta
-							.getData()
-							.getName()));
-					ArrayList<Long> sotoreIds = new ArrayList<>();
-					sotoreIds.add(getStoreMeta.getData().getId());
-					AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
-					handleSubscriptionLogic(getStoreMeta);*/
 				}
 			});
 		} else {
@@ -154,18 +146,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 					}
 				}
 			});
-			/*.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (!subscribedBool) {
-						subscribedBool = true;
-						AptoideAccountManager.subscribeStore(getStoreMeta.getData().getName());
-						ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.followed, getStoreMeta.getData()
-								.getName()));
-						handleSubscriptionLogic(getStoreMeta);
-					}
-				}
-			});*/
 		}
 	}
 }
