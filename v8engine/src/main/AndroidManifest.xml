@@ -7,7 +7,7 @@
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
-    <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
+    <permission android:label="Make internal payments" android:name="cm.aptoide.pt.permission.BILLING" android:protectionLevel="normal"/>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
@@ -172,12 +172,12 @@
         </receiver>
 
         <service
-            android:name="org.onepf.oms.BillingService"
+            android:name="cm.aptoide.pt.iab.InAppBillingService"
             android:exported="true"
-            android:permission="org.onepf.openiab.permission.BILLING">
+            android:permission="cm.aptoide.pt.permission.BILLING">
 
             <intent-filter>
-                <action android:name="org.onepf.oms.billing.BIND" />
+                <action android:name="cm.aptoide.pt.iab.action.BIND" />
             </intent-filter>
         </service>
 

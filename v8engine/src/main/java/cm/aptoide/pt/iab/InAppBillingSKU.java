@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 11/08/2016.
+ * Modified by Marcelo Benites on 24/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.iab;
+package cm.aptoide.pt.iab;
 
 import android.os.Parcel;
 import android.os.Parcelable;

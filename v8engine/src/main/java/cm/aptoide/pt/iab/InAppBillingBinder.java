@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package org.onepf.oms;
+package cm.aptoide.pt.iab;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,14 +16,12 @@ import java.util.List;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.v8engine.iab.InAppBillingPurchase;
-import cm.aptoide.pt.v8engine.iab.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class InAppBillingBinder extends IOpenInAppBillingService.Stub {
+public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
     // Response result codes
     public static final int RESULT_OK = 0;

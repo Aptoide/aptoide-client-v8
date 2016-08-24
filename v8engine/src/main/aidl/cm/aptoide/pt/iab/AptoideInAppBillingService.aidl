@@ -14,10 +14,10 @@
  *       limitations under the License.
  ******************************************************************************/
 
-package org.onepf.oms;
+package cm.aptoide.pt.iab;
 
 /**
- * IOpenInAppBillingService is the service that provides in-app billing.
+ * AptoideInAppBillingService is the service that provides in-app billing.
  * It's based on com.android.vending.billing.IInAppBillingService provided by Google Play In-App API v3
  * This service provides the following features:
  * 1. Provides a new API to get details of in-app items published for the app including
@@ -41,7 +41,7 @@ package org.onepf.oms;
  * RESULT_ITEM_ALREADY_OWNED = 7 - Failure to purchase since item is already owned
  * RESULT_ITEM_NOT_OWNED = 8 - Failure to consume since item is not owned
  */
-interface IOpenInAppBillingService {
+interface AptoideInAppBillingService {
     int isBillingSupported(int apiVersion, String packageName, String type);
     Bundle getSkuDetails(int apiVersion, String packageName, String type, in Bundle skusBundle);
     Bundle getBuyIntent(int apiVersion, String packageName, String sku, String type, String developerPayload);
