@@ -29,9 +29,10 @@ public class PaymentManager {
 				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)));
 	}
 
-	public Observable<Payment> getProductPayment(Context context, String paymentType, Product product) {
+	public Observable<Boolean> isProductPaymentProcessed(Context context, String paymentType, Product product) {
 		return paymentRepository.getPayment(context, paymentType, product)
-				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)));
+				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)))
+				.flatMap(payment -> isPaymentConfirmed(payment));
 	}
 
 	public Observable<Void> pay(Payment payment) {

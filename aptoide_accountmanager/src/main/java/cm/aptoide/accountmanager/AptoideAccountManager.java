@@ -12,6 +12,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -46,6 +47,7 @@ import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.GenericDialogs;
 import lombok.experimental.PackagePrivate;
 import rx.Observable;
@@ -89,6 +91,36 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 	 */
 	private ILoginInterface mCallback;
 	private WeakReference<Context> mContextWeakReference;
+
+
+	public static Observable<Void> login(Context context) {
+		return Observable.fromCallable(() -> {
+			if (AptoideAccountManager.isLoggedIn()) {
+				return null;
+			}
+			IntentFilter loginFilter = new IntentFilter(AptoideAccountManager.LOGIN);
+			loginFilter.addAction(AptoideAccountManager.LOGIN_CANCELLED);
+			loginFilter.addAction(AptoideAccountManager.LOGOUT);
+			return loginFilter;
+		}).flatMap(intentFilter -> {
+			if (intentFilter == null) {
+				return Observable.just(null);
+			}
+			return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
+					.doOnSubscribe(() -> AptoideAccountManager.openAccountManager(context, false))
+					.flatMap(intent -> {
+						// TODO: create account manager specific exceptions
+						if (AptoideAccountManager.LOGIN.equals(intent.getAction())) {
+							return Observable.just(null);
+						} else if (AptoideAccountManager.LOGIN_CANCELLED.equals(intent.getAction())) {
+							return Observable.error(new IllegalStateException("User cancelled login."));
+						} else if (AptoideAccountManager.LOGOUT.equals(intent.getAction())) {
+							return Observable.error(new IllegalStateException("User logged out."));
+						}
+						return Observable.empty();
+					});
+		});
+	}
 
 	/**
 	 * This method should be used to open login or account activity
