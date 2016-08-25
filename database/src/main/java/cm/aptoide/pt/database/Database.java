@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -34,7 +34,7 @@ public class Database {
 	private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
 	private static final String DB_NAME = "aptoide.realm.db";
 	private static final AllClassesModule MODULE = new AllClassesModule();
-	private static final RealmMigration MIGRATION = new RealmDatabaseMigration();
+	private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
 	private static boolean isInitialized = false;
 
