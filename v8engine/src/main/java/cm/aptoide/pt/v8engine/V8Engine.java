@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -38,6 +38,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -169,7 +170,7 @@ public abstract class V8Engine extends DataProvider {
 
 		// this will trigger the migration if needed
 		// FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
-		//SQLiteDatabaseHelper.getInstance(this);
+		SQLiteDatabaseHelper.getInstance(this);
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
 	}

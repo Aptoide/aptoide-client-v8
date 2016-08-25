@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated;
@@ -9,10 +9,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.crashlytics.android.Crashlytics;
+
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
+import cm.aptoide.pt.v8engine.deprecated.tables.ExcludedAd;
 import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
@@ -74,15 +77,58 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 			return;
 		}
 		Logger.w(TAG, "Migrating database started....");
+
 		Realm realm = Database.get();
-		new Installed().migrate(db, realm);
-		new Repo().migrate(db, realm);
-		new Rollback().migrate(db, realm);
-		new Excluded().migrate(db, realm);
-		new Scheduled().migrate(db, realm);
-		new Updates().migrate(db, realm); // re-created upon app startup
-		// tables "ExcludedAds" and "AmazonABTesting" were deliberedly left out due to their irrelevance in the DB upgrade
+		try {
+			new Installed().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Repo().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Rollback().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Excluded().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Scheduled().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Updates().migrate(db, realm); // despite the migration, this data should be recreated upon app startup
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		// table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
+
+		try {
+			new ExcludedAd().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
 		ManagerPreferences.setNeedsDbMigration(false);
 		Logger.w(TAG, "Migrating database finished with success.");
+	}
+
+	private void logException(Exception ex) {
+		Logger.e(TAG, ex);
+		Crashlytics.logException(ex);
 	}
 }

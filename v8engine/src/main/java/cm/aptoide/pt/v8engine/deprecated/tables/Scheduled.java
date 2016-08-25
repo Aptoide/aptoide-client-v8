@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
 import android.database.Cursor;
 
+import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmObject;
 
 /**
@@ -33,7 +34,8 @@ public class Scheduled extends BaseTable {
 	public final static String COLUMN_ICON = "icon";
 
 	private static final String NAME = "scheduled";
-	
+	private static final IdUtils ID_UTILS = new IdUtils(0);
+
 	@Override
 	public String getTableName() {
 		return NAME;
@@ -42,14 +44,16 @@ public class Scheduled extends BaseTable {
 	@Override
 	public RealmObject convert(Cursor cursor) {
 		cm.aptoide.pt.database.realm.Scheduled realmObject = new cm.aptoide.pt.database.realm.Scheduled();
-
-		// TODO: 24/08/16 sithengineer
-
+		realmObject.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
+		realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERSION_NAME)));
+		// creating a new scheduled download
+		realmObject.setAppId(ID_UTILS.nextLong());
 		return realmObject;
 	}
 
 	@Override
 	public String[] getColumns() {
-		return new String[]{COLUMN_ICON, COLUMN_MD5, COLUMN_NAME, COLUMN_PACKAGE_NAME, COLUMN_REPO, COLUMN_VERSION_NAME};
+		return new String[]{COLUMN_NAME, COLUMN_ICON, COLUMN_VERSION_NAME};
 	}
 }

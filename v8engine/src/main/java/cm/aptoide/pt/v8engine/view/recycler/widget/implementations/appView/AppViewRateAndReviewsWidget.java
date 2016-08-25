@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -59,7 +59,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 	private TextView usersVoted;
 	private TextView ratingValue;
-	private AppCompatRatingBar ratingBar;
+	private RatingBar ratingBar;
 
 	private Button rateThisButton;
 	private Button rateThisButtonLarge;
@@ -84,7 +84,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
 		usersVoted = (TextView) itemView.findViewById(R.id.users_voted);
 		ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
-		ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
+		ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
 		rateThisButtonLarge = (Button) itemView.findViewById(R.id.rate_this_button2);
 		readAllButton = (Button) itemView.findViewById(R.id.read_all_button);

@@ -2,16 +2,15 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 24/08/2016.
+  ~ Modified by SithEngineer on 25/08/2016.
   -->
 
-<LinearLayout
+<FrameLayout
     style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:orientation="vertical"
     >
     <!-- progress bar while installing -->
     <RelativeLayout
@@ -116,8 +115,6 @@
         android:id="@+id/install_and_latest_version_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
         android:visibility="visible"
         tools:visibility="visible"
         >
@@ -252,4 +249,4 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>

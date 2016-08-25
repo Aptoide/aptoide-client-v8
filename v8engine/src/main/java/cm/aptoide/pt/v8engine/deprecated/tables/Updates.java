@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -62,8 +62,23 @@ public class Updates extends BaseTable {
 		cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();
 
 		// TODO: 24/08/16 sithengineer
-
-		//		realmObject.setAppId(cursor.getLong(cursor.getColumnIndex( ?? )));
+		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
+		realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
+		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE)));
+		//realmObject.setAppId(cursor.getInt(cursor.getColumnIndex(COLUMN_VERCODE)));
+		//realmObject.setAlternativeUrl(cursor.getString(cursor.getColumnIndex(COLUMN_ALT_URL)));
+		realmObject.setFileSize(cursor.getDouble(cursor.getColumnIndex(COLUMN_FILESIZE)));
+		//realmObject.setSignature(cursor.getString(cursor.getColumnIndex(COLUMN_SIGNATURE)));
+		realmObject.setTimestamp(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
+		realmObject.setUpdateVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_UPDATE_VERNAME)));
+		//realmObject.setUrl(cursor.getString(cursor.getColumnIndex(COLUMN_URL)));
+		realmObject.setVersionCode(cursor.getInt(cursor.getColumnIndex(COLUMN_VERCODE)));
+		try {
+			int vercode = Integer.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_UPDATE_VERCODE)), 10);
+			realmObject.setUpdateVersionCode(vercode);
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		}
 
 		return realmObject;
 	}

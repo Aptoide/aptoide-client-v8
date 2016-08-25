@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 16/08/2016.
+  ~ Modified by SithEngineer on 25/08/2016.
   -->
 
 <resources>
@@ -10,7 +10,7 @@
         <item name="android:buttonStyle">?attr/customButton</item>
 
         <item name="android:windowBackground">@color/background_window</item>
-        <item name="android:ratingBarStyle">@style/RatingBarSmallAptoide</item>
+        <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
         <item name="colorPrimary">@color/aptoide_orange</item>
         <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
@@ -58,8 +58,8 @@
         <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
         <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="gridItemRatingBar">@style/RatingBarGridItem</item>
-        <item name="android:ratingBarStyleSmall">@style/RatingBarGridItem</item>
+        <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
         <item name="titleLabelStyle">@style/titleLabel</item>
         <item name="separatorColor">@color/lighter_custom_gray</item>
 
@@ -121,7 +121,7 @@
 
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="android:ratingBarStyle">@style/RatingBarSmallAptoide</item>
+        <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
         <item name="colorPrimary">@color/aptoide_orange</item>
         <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
@@ -168,8 +168,8 @@
         <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
         <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="gridItemRatingBar">@style/RatingBarGridItem</item>
-        <item name="android:ratingBarStyleSmall">@style/RatingBarGridItem</item>
+        <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
         <item name="titleLabelStyle">@style/titleLabel</item>
         <item name="separatorColor">@color/light_custom_gray</item>
 
