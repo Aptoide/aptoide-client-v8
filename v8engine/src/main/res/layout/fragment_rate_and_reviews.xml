@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 25/08/2016.
   -->
 
 <LinearLayout
@@ -128,15 +128,15 @@
                 tools:text="4.2"
                 />
 
-            <android.support.v7.widget.AppCompatRatingBar
+            <RatingBar
                 android:id="@+id/rating_bar"
-                style="@style/Widget.AppCompat.RatingBar.Small"
+                style="@style/RatingBarSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rating_value"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="4dp"
                 android:numStars="5"
-                android:progressDrawable="@drawable/rating_bar_extra_small"
                 android:stepSize="0.5"
                 tools:rating="3.0"
                 />

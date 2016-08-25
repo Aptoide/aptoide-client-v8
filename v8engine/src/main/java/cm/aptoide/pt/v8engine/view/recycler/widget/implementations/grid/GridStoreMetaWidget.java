@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 25/08/2016.
+ */
+
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
@@ -12,12 +17,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.imageloader.CircleTransform;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -27,7 +30,6 @@ import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import io.realm.Realm;
 import lombok.Cleanup;
 
@@ -115,7 +117,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 				@Override
 				public void onClick(View v) {
 					subscribedBool = false;
-					@Cleanup Realm realm = Database.get(itemView.getContext());
+					@Cleanup Realm realm = Database.get();
 					if (AptoideAccountManager.isLoggedIn()) {
 						AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
 					}
