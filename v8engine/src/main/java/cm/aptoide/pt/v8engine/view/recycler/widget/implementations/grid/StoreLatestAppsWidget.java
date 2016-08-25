@@ -15,6 +15,7 @@ import java.util.Map;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -36,6 +37,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 	private View store;
 	private StoreLatestAppsDisplayable displayable;
 	private Map<View, Long> apps;
+	private Map<Long, String> appsPackages;
 	private CompositeSubscription subscriptions;
 	private CardView cardView;
 
@@ -43,6 +45,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 		super(itemView);
 		inflater = LayoutInflater.from(itemView.getContext());
 		apps = new HashMap<>();
+		appsPackages = new HashMap<>();
 	}
 
 	@Override
@@ -73,6 +76,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 			ImageLoader.load(latestApp.getIconUrl(), latestAppIcon);
 			appsContaner.addView(latestAppView);
 			apps.put(latestAppView, latestApp.getAppId());
+			appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
 		}
 	}
 
@@ -92,11 +96,21 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 
 			for (View app : apps.keySet()) {
 				subscriptions.add(RxView.clicks(app)
-						.subscribe(click -> ((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(apps.get(app)))));
+						.subscribe(click -> {
+							Analytics.AppsTimeline.clickOnCard("Latest Apps", appsPackages.get(apps.get(app)), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+									Analytics
+									.AppsTimeline.OPEN_APP_VIEW);
+							((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(apps.get(app)));
+						}));
 			}
 
 			subscriptions.add(RxView.clicks(store)
-					.subscribe(click -> ((FragmentShower) getContext()).pushFragmentV4(StoreFragment.newInstance(displayable.getStoreName()))));
+					.subscribe(click -> {
+						Analytics.AppsTimeline.clickOnCard("Latest Apps", Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+								Analytics
+								.AppsTimeline.OPEN_STORE);
+						((FragmentShower) getContext()).pushFragmentV4(StoreFragment.newInstance(displayable.getStoreName()));
+					}));
 		}
 	}
 

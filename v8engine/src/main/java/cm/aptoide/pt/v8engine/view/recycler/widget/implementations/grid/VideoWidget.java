@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
@@ -86,6 +87,8 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 		}
 
 		media_layout.setOnClickListener(v ->{
+			Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(), Analytics
+					.AppsTimeline.OPEN_VIDEO);
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl()));
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			getContext().startActivity(intent);

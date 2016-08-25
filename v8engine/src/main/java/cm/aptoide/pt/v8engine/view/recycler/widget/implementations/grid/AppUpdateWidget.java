@@ -19,6 +19,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -99,7 +100,11 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 			subscriptions = new CompositeSubscription();
 
 			subscriptions.add(RxView.clicks(store)
-					.subscribe(click -> ((FragmentShower) getContext()).pushFragmentV4(StoreFragment.newInstance(displayable.getStoreName()))));
+					.subscribe(click -> {
+						Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName
+								(), Analytics.AppsTimeline.OPEN_STORE);
+						((FragmentShower) getContext()).pushFragmentV4(StoreFragment.newInstance(displayable.getStoreName()));
+					}));
 
 			subscriptions.add(displayable.downloadStatus()
 					.flatMap(completedToPause())
@@ -110,18 +115,24 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId()));
 			}));
 
-			subscriptions.add(RxView.clicks(updateButton).flatMap(click -> displayable.downloadStatus().first().flatMap(status -> {
-				if (status == Download.COMPLETED) {
-					return displayable.install(getContext()).map(success -> Download.COMPLETED);
-				}
-				return displayable.download((PermissionRequest) getContext()).map(download -> download.getOverallDownloadStatus()).flatMap(downloadStatus -> {
-					if (downloadStatus == Download.COMPLETED) {
-						updateDownloadStatus(displayable, downloadStatus);
+			subscriptions.add(RxView.clicks(updateButton).flatMap(click -> {
+				Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+						Analytics.AppsTimeline.UPDATE_APP);
+				return displayable.downloadStatus().first().flatMap(status -> {
+					if (status == Download.COMPLETED) {
 						return displayable.install(getContext()).map(success -> Download.COMPLETED);
 					}
-					return Observable.just(downloadStatus);
+					return displayable.download((PermissionRequest) getContext())
+							.map(download -> download.getOverallDownloadStatus())
+							.flatMap(downloadStatus -> {
+								if (downloadStatus == Download.COMPLETED) {
+									updateDownloadStatus(displayable, downloadStatus);
+									return displayable.install(getContext()).map(success -> Download.COMPLETED);
+								}
+								return Observable.just(downloadStatus);
+							});
 				});
-			})).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
+			}).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
 				showDownloadError(displayable, error);
 				Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
 				return Observable.just(null);
