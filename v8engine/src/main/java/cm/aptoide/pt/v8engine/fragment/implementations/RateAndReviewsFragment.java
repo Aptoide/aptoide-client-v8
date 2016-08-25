@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -40,6 +41,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -74,6 +76,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	private RatingBarsLayout ratingBarsLayout;
 	private ProgressBar progressBar;
 	private MenuItem installMenuItem;
+	private FloatingActionButton floatingActionButton;
 	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
 	private transient SuccessRequestListener<ListReviews> listFullReviewsSuccessRequestListener = listFullReviews -> {
@@ -191,12 +194,17 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
+		floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		setHasOptionsMenu(true);
 
 		ratingTotalsLayout = new RatingTotalsLayout(view);
 		ratingBarsLayout = new RatingBarsLayout(view);
 		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+
+		floatingActionButton.setOnClickListener(v -> {
+			DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName, this::fetchReviews);
+		});
 	}
 
 	@Override

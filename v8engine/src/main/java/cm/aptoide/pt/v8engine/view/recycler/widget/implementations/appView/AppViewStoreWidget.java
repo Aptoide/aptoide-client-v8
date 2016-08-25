@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Locale;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -89,8 +87,12 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
 		storeNameView.setText(store.getName());
 		storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeNumberUsersView.setText(String.format(Locale.getDefault(), V8Engine.getContext()
-				.getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers())));
+
+		storeNumberUsersView.setText(String.format(V8Engine.getContext().getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix
+				(store
+				.getStats()
+				.getSubscribers())));
+
 		followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			followButton.setElevation(0);
