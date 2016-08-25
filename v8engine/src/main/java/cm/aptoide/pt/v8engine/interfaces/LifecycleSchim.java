@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.interfaces;
@@ -11,7 +11,8 @@ import android.support.annotation.Nullable;
 /**
  * created by SithEngineer
  * <p>
- * mock to activity / fragment components lifecycle
+ * Used to mock common components lifecycle
+ * </p>
  */
 public interface LifecycleSchim {
 
@@ -19,7 +20,9 @@ public interface LifecycleSchim {
 
 	void onPause();
 
-	// TODO void onDestroyView();
+	void onViewCreated();
+
+	void onDestroyView();
 
 	void onSaveInstanceState(Bundle outState);
 

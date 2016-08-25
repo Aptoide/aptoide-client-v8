@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 buildscript {
@@ -24,7 +24,7 @@ buildscript {
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
 
         classpath 'io.fabric.tools:gradle:1.21.6'
-        classpath "io.realm:realm-gradle-plugin:1.1.0"
+        classpath 'io.realm:realm-gradle-plugin:1.2.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -26,8 +26,4 @@ abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
 		super(getApp, fixedPerLineCount);
 	}
 
-	@Override
-	public int getDefaultPerLineCount() {
-		return 1;
-	}
 }

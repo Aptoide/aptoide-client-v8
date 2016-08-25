@@ -43,7 +43,7 @@
                 android:layout_height="30dp"
                 android:gravity="center"
                 android:padding="@dimen/row_store_vertical_half_delimiter"
-                android:text="@string/appview_subscribed_store_button_text"
+                android:text="@string/appview_follow_store_button_text"
                 android:textAlignment="center"
                 android:textColor="?attr/inverseTextColor"
                 android:textSize="12sp"/>
