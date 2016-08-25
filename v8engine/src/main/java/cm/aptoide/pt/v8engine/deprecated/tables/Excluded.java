@@ -40,8 +40,12 @@ public class Excluded extends BaseTable {
 	public RealmObject convert(Cursor cursor) {
 		cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();
 
-		// TODO: 24/08/16 sithengineer
-
+		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
+		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICONPATH)));
+		realmObject.setVersionCode(cursor.getInt(cursor.getColumnIndex(COLUMN_VERCODE)));
+		realmObject.setUpdateVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERNAME)));
+		// are this columns to remove?
+		// COLUMN_NAME
 		return realmObject;
 	}
 

@@ -72,7 +72,7 @@ public class ManagerPreferences {
 	}
 
 	public static boolean needsDbMigration() {
-		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, false);
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, true);
 	}
 
 	public static void setNeedsDbMigration(boolean migrationNeeded) {

@@ -42,9 +42,12 @@ public final class Installed extends BaseTable {
 	@Override
 	public RealmObject convert(Cursor cursor) {
 		cm.aptoide.pt.database.realm.Installed realmObject = new cm.aptoide.pt.database.realm.Installed();
-
-		// TODO: 24/08/16 sithengineer
-
+		//realmObject.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)));
+		realmObject.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+		realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERNAME)));
+		realmObject.setVersionCode(Integer.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_VERCODE)), 10));
+		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_APKID)));
+		realmObject.setSignature(cursor.getString(cursor.getColumnIndex(COLUMN_SIGNATURE)));
 		return realmObject;
 	}
 

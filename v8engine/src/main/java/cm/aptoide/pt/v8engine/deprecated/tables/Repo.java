@@ -84,14 +84,13 @@ public class Repo extends BaseTable {
 	@Override
 	public RealmObject convert(Cursor cursor) {
 		cm.aptoide.pt.database.realm.Store realmObject = new cm.aptoide.pt.database.realm.Store();
-
-		realmObject.setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICONS_PATH)));
-		realmObject.setTheme(cursor.getString(cursor.getColumnIndex(COLUMN_THEME)));
-		realmObject.setDownloads(cursor.getInt(cursor.getColumnIndex(COLUMN_DOWNLOADS)));
+		realmObject.setStoreId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
+		realmObject.setDownloads(cursor.getLong(cursor.getColumnIndex(COLUMN_DOWNLOADS)));
 		realmObject.setStoreName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-		realmObject.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)));
+		realmObject.setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICONS_PATH)));
 		realmObject.setPasswordSha1(cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)));
-
+		realmObject.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)));
+		realmObject.setTheme(cursor.getString(cursor.getColumnIndex(COLUMN_THEME)));
 		return realmObject;
 	}
 
