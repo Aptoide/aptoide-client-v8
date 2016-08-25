@@ -756,6 +756,10 @@ public class Analytics {
             map.put(CARD_TYPE, cardType);
             track(EVENT_NAME, map, LOCALYTICS);
         }
+
+        public static void openTimeline() {
+            track("Open Apps Timeline", FLURRY);
+        }
     }
 
     public static class ViewedApplication {
