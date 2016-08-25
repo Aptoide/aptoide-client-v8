@@ -33,7 +33,5 @@ public interface PaymentView extends View {
 
 	void dismissWithCancellation();
 
-	void dismissWithFailure();
-
 	void showPaymentsNotFoundMessage();
 }

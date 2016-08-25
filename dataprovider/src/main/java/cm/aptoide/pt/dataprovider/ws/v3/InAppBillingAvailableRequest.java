@@ -9,21 +9,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/11/16.
  */
-public class InAppBillingAvailableRequest extends V3<BaseV3Response> {
+public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
 	private Map<String,String> args;
 
-	public static InAppBillingAvailableRequest of(int apiVersion, String packageName) {
+	public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
 		final Map<String,String> args = new HashMap<>();
 		args.put("mode", "json");
 		args.put("apiversion", String.valueOf(apiVersion));
 		args.put("reqtype", "iabavailable");
 		args.put("package", packageName);
+		args.put("purchasetype",type);
 		return new InAppBillingAvailableRequest(BASE_HOST, args);
 	}
 
@@ -33,7 +35,7 @@ public class InAppBillingAvailableRequest extends V3<BaseV3Response> {
 	}
 
 	@Override
-	protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+	protected Observable<InAppBillingAvailableResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getInAppBillingAvailable(args);
 	}
 }

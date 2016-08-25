@@ -16,6 +16,7 @@ import java.util.List;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import lombok.AllArgsConstructor;
@@ -62,17 +63,17 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
     @Override
     public int isBillingSupported(int apiVersion, String packageName, String type) throws RemoteException {
+        try {
+            return inAppBillingRepository.isBillingSupported(apiVersion, packageName, type).toBlocking().first()? RESULT_OK: RESULT_BILLING_UNAVAILABLE;
+        } catch (RuntimeException exception) {
+            Logger.e("InAppBillingBinder", exception.getMessage());
+            exception.printStackTrace();
 
-        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.FROYO){
-            return RESULT_BILLING_UNAVAILABLE;
+            if (exception.getCause() instanceof InAppBillingException) {
+                return RESULT_DEVELOPER_ERROR;
+            }
+            return RESULT_ERROR;
         }
-
-        if (apiVersion >= 3 && apiVersion < 5
-                && (type.equals(InAppBillingBinder.ITEM_TYPE_INAPP) || type.equals(InAppBillingBinder.ITEM_TYPE_SUBS))
-                && inAppBillingRepository.isBillingSupported(apiVersion, packageName).onErrorReturn(throwable -> false).toBlocking().first()) {
-            return RESULT_OK;
-        }
-        return RESULT_BILLING_UNAVAILABLE;
     }
 
     @Override

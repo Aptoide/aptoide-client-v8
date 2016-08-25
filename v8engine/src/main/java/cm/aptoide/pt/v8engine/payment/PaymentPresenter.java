@@ -90,7 +90,7 @@ public class PaymentPresenter implements Presenter {
 						.doOnNext(payments -> removeLoadingAndShowPayments(payments))
 						.filter(payments -> !payments.isEmpty())
 						.flatMap(payments -> paymentSelection()))
-				.doOnError(throwable -> view.dismissWithFailure())
+				.doOnError(throwable -> dismissWithFailure())
 				.doOnNext(paid -> view.dismissWithSuccess())
 				.onErrorReturn(throwable -> null);
 	}
@@ -140,7 +140,12 @@ public class PaymentPresenter implements Presenter {
 
 	private void dismissWithFailureAndClearLoginState() {
 		clearLoginState();
-		view.dismissWithFailure();
+		dismissWithFailure();
+	}
+
+	private void dismissWithFailure() {
+		// TODO populate bundle depending on product type
+		view.dismissWithCancellation();
 	}
 
 	private boolean clearLoginState() {

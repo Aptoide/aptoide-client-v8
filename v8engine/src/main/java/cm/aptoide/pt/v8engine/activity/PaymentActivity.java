@@ -41,7 +41,6 @@ import rx.Observable;
 public class PaymentActivity extends AppCompatActivityView implements PaymentView {
 
 	private static final String PRODUCT_EXTRA = "product";
-	private static final int RESULT_FAILURE = 2;
 
 	private View overlay;
 	private View header;
@@ -83,7 +82,7 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 
 		final Product product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
 
-		// TODO Repository Factory
+		// TODO Repository Factory, Presenter Factory
 		final NetworkOperatorManager operatorManager = new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
 		final ProductFactory productFactory = new ProductFactory();
 		final PaymentFactory paymentFactory = new PaymentFactory();
@@ -102,11 +101,6 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 	@Override
 	public void dismissWithCancellation() {
 		finish(RESULT_CANCELED);
-	}
-
-	@Override
-	public void dismissWithFailure() {
-		finish(RESULT_FAILURE);
 	}
 
 	@Override

@@ -15,8 +15,11 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
+import cm.aptoide.pt.iab.InAppBillingBinder;
+import cm.aptoide.pt.iab.InAppBillingException;
 import cm.aptoide.pt.iab.InAppBillingPurchase;
 import cm.aptoide.pt.iab.InAppBillingSKU;
+import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
@@ -37,14 +40,26 @@ public class InAppBillingRepository {
 	private final ProductFactory productFactory;
 	private final PaymentFactory paymentFactory;
 
-	public Observable<Boolean> isBillingSupported(int apiVersion, String packageName) {
-		return InAppBillingAvailableRequest.of(apiVersion, packageName).observe().map(paymentResponse -> {
-			if (paymentResponse != null && paymentResponse.isOk()) {
-				return true;
+	public Observable<Boolean> isBillingSupported(int apiVersion, String packageName, String type) {
+		return InAppBillingAvailableRequest.of(apiVersion, packageName, type).observe().flatMap(response -> {
+			if (response != null && response.isOk()) {
+				return Observable.just(response.getInAppBillingAvailable().isAvailable());
 			} else {
-				return false;
+				return Observable.error(new InAppBillingException(getErrorMessage(response.getErrors())));
 			}
 		});
+	}
+
+	private String getErrorMessage(List<ErrorResponse> errors) {
+		final StringBuilder builder = new StringBuilder();
+		for (ErrorResponse error : errors) {
+			builder.append(error.msg);
+			builder.append(". ");
+		}
+		if (builder.length() == 0) {
+			builder.append("Server failed with empty error list.");
+		}
+		return builder.toString();
 	}
 
 	public Observable<Product> getInAppBillingProduct(Context context, int apiVersion, String packageName, String sku, String developerPayload) {
