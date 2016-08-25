@@ -83,7 +83,7 @@ public enum Type {
 	APP_VIEW_RATE_RESULT(1, true),
 	APP_VIEW_RATE_THIS(1, true),
 	APP_VIEW_SUBSCRIPTION(1, true),
-	RATE_AND_REVIEW,;
+	RATE_AND_REVIEW(1, true);
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 

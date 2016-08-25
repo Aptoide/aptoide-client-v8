@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 05/08/2016.
+  ~ Modified by SithEngineer on 25/08/2016.
   -->
 
 <LinearLayout
@@ -14,8 +14,6 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/displayable_app_view_flag_trusted"/>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +25,7 @@
         android:textSize="18sp"
         />
 
+    <include layout="@layout/displayable_app_view_flag_trusted"/>
 
     <LinearLayout
         android:id="@+id/rating_flags_layout"
