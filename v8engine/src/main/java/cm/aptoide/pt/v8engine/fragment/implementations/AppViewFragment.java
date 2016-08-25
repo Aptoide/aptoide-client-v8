@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -258,7 +258,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		GetAppMeta.Media media = app.getMedia();
 
-		installDisplayable = new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
+		installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall);
 		displayables.add(installDisplayable);
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
