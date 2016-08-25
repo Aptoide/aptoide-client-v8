@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -33,6 +34,14 @@ public class ShowMessage {
 		Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
 	}
 
+	public static void asSnack(Activity activity, String msg) {
+		asSnack(activity.getCurrentFocus(), msg);
+	}
+
+	public static void asSnack(Activity activity, int msg) {
+		asSnack(activity.getCurrentFocus(), msg);
+	}
+
 	public static void asSnack(Fragment fragment, String msg) {
 		asSnack(fragment.getView(), msg);
 	}
@@ -45,4 +54,7 @@ public class ShowMessage {
 		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 	}
 
+	public static void asSnack(Activity activity, int msg, int actionMsg, View.OnClickListener action) {
+		Snackbar.make(activity.getCurrentFocus(), msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, action).show();
+	}
 }
