@@ -44,7 +44,7 @@ public class AppUpdateDisplayable extends Displayable {
 	private SpannableFactory spannableFactory;
 	private String appName;
 	private int versionCode;
-	private String packageName;
+	@Getter private String packageName;
 	private Download download;
 	private DownloadServiceHelper downloadManager;
 	private InstallManager installManager;
