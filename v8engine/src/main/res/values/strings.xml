@@ -184,4 +184,5 @@
     <string name="helpful">Helpful</string>
     <string name="not_helpful">Not Helpful</string>
     <string name="description_not_available">No available description for this app</string>
+    <string name="top_stores_fragment_title">Top Stores</string>
 </resources>
