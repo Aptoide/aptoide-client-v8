@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 21/07/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.preferences.managed;
@@ -19,4 +19,5 @@ class ManagedKeys {
 	public static final String LAST_UPDATES_KEY = "last_updates_key";
 	public static final String MAX_FILE_CACHE = "maxFileCache";
 	public static final String FORCE_SERVER_REFRESH_FLAG = "forceServerRefreshFlag";
+	public static final String PREF_NEEDS_DB_MIGRATION = "needsDbMigration";
 }

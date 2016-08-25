@@ -80,8 +80,6 @@ public class Analytics {
     private static void track(String event, HashMap map, int flags) {
         try {
             if (!ACTIVATE){
-                Logger.d(TAG, "Localytics ACTIVATE value: " + ACTIVATE);
-
                 return;
             }
             if(checkAcceptability(flags, LOCALYTICS)){
@@ -136,12 +134,25 @@ public class Analytics {
 
                 // Integrate Localytics
                 Localytics.autoIntegrate(application);
-                checkForUTMFileInMetaINF();
+                setupDimensions();
+
                 Logger.d(TAG, "Localytics session configured");
 
             }
 
-            private static void checkForUTMFileInMetaINF() {
+            private static void setupDimensions() {
+                if(!checkForUTMFileInMetaINF()){
+                    Dimensions.setUTMDimensionsToUnknown();
+                }
+
+                if(isFirstSession && !ACTIVATE){
+                    Dimensions.setSamplingTypeDimension("90% sampling");
+                }else{
+                    Dimensions.setSamplingTypeDimension("Full-tracking");
+                }
+            }
+
+            private static boolean checkForUTMFileInMetaINF() {
                 ZipFile myZipFile = null;
                 try {
                     final String sourceDir = V8Engine.getContext().getPackageManager().getPackageInfo(V8Engine.getContext().getPackageName(), 0).applicationInfo
@@ -176,18 +187,23 @@ public class Analytics {
                     utmInputStream.close();
                 } catch (IOException e) {
                     Logger.d(TAG, "problem parsing utm/no utm file");
+                    return false;
                 } catch (PackageManager.NameNotFoundException e) {
                     Logger.d(TAG, "No package name utm file.");
+                    return false;
                 } catch (NullPointerException e){
                     if(myZipFile != null) {
                         try {
                             myZipFile.close();
                         } catch (IOException e1) {
                             e1.printStackTrace();
+                            return false;
                         }
+                        return false;
                     }
                     Logger.d(TAG, "No utm file.");
                 }
+                return true;
             }
         }
 
@@ -214,10 +230,12 @@ public class Analytics {
 
                 Localytics.onActivityResume(activity);
 
-                if (!AptoideAccountManager.isLoggedIn()) {
-                    Localytics.setCustomDimension(0, "Not Logged In");
-                } else {
-                    Localytics.setCustomDimension(0, "Logged In");
+                if(isFirstSession) {
+                    if (!AptoideAccountManager.isLoggedIn()) {
+                        Localytics.setCustomDimension(0, "Not Logged In");
+                    } else {
+                        Localytics.setCustomDimension(0, "Logged In");
+                    }
                 }
 
 	            IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
@@ -623,6 +641,9 @@ public class Analytics {
         }
 
         public static void website(String uri) {
+            Logger.d(TAG, "website: " + uri);
+
+
             try {
                 HashMap<String, String> map = new HashMap<>();
                 map.put(SOURCE, WEBSITE);
@@ -697,66 +718,47 @@ public class Analytics {
         }
     }
 
-    public static class SocialTimeline {
+    public static class AppsTimeline {
 
-        public static final String EVENT_NAME = "Social Timeline";
+        public static final String EVENT_NAME = "Apps Timeline";
+        public static final String ACTION = "Action";
+        public static final String PACKAGE_NAME = "Package Name";
+        public static final String TITLE = "Title";
+        public static final String PUBLISHER = "Publisher";
+        public static final String CARD_TYPE = "Card Type";
 
-        public static final String eventName = "Social Timeline";
-        public static final String APPLICATION_NAME = "Application Name";
-        public static final String action = "Action";
-        public static final String like = "Like";
-        public static final String DISLIKE = "Dislike";
-        public static final String comment = "Comment";
-        public static final String login = "Login";
-        public static final String share = "Share";
+        public static final String BLANK = "(blank)";
+        public static final String OPEN_ARTICLE = "Open Article";
+        public static final String OPEN_VIDEO = "Open Video";
+        public static final String OPEN_STORE = "Open Store";
+        public static final String OPEN_APP_VIEW = "Open App View";
+        public static final String UPDATE_APP = "Update Application";
+    
+        public static void clickOnCard(String cardType, String packageName, String title, String publisher, String action) {
+            HashMap<String,String> map = new HashMap<>();
 
-        public static void like(String appName) {
-            try {
-                HashMap<String, String> map = new HashMap<>();
-                map.put(action, like);
-                map.put(APPLICATION_NAME, appName);
+            map.put(ACTION, action);
+            map.put(PACKAGE_NAME, packageName);
+            map.put(TITLE, title);
+            map.put(PUBLISHER, publisher);
 
-                track(eventName, map, ALL);
+            localyticsTrack(map, cardType);
+            flurryTrack(map, cardType);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
-        public static void dislike(String appName) {
-            try {
-                HashMap<String, String> map = new HashMap<>();
-                map.put(action, DISLIKE);
-                map.put(APPLICATION_NAME, appName);
-
-                track(eventName, map, ALL);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        private static void flurryTrack(HashMap<String,String> map, String cardType) {
+            String eventName = cardType + "_" + EVENT_NAME;
+            track(eventName, map, FLURRY);
         }
 
-        public static void comment(String appName) {
-            try {
-                HashMap<String, String> map = new HashMap<>();
-                map.put(action, comment);
-                map.put(APPLICATION_NAME, appName);
-
-                track(eventName, map, ALL);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        private static void localyticsTrack(HashMap<String,String> map, String cardType) {
+            map.put(CARD_TYPE, cardType);
+            track(EVENT_NAME, map, LOCALYTICS);
         }
 
-        public static void login() {
-            // Declarado mas não utilizado, apenas para localização
-            try {
-//                track(eventName, action, login, ALL);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        public static void openTimeline() {
+            track("Open Apps Timeline", FLURRY);
         }
     }
 
@@ -789,6 +791,10 @@ public class Analytics {
     public static class Dimensions {
 	    public static final String VERTICAL = "smartphone";
 	    public static final String PARTNER = "vanilla";
+        public static final String UNKNOWN = "unknown";
+        public static final String APKFY = "Apkfy";
+        public static final String WEBSITE = "Website";
+        public static final String INSTALLER = "Installer";
 
         private static void setDimension(int i, String s) {
 	        if (!ACTIVATE && !isFirstSession) {
@@ -822,7 +828,6 @@ public class Analytics {
 
 	    public static void setUTMMedium(String utmMedium) {
             setDimension(5, utmMedium);
-
 	    }
 
 	    public static void setUTMCampaign(String utmCampaign) {
@@ -831,6 +836,21 @@ public class Analytics {
 
 	    public static void setUTMContent(String utmContent) {
             setDimension(7, utmContent);
+        }
+
+        public static void setUTMDimensionsToUnknown() {
+            setDimension(4, UNKNOWN);
+            setDimension(5, UNKNOWN);
+            setDimension(6, UNKNOWN);
+            setDimension(7, UNKNOWN);
+        }
+
+        public static void setSamplingTypeDimension(String samplingType) {
+            setDimension(8, samplingType);
+        }
+
+        public static void setEntryPointDimension(String entryPoint) {
+            setDimension(9, entryPoint);
         }
     }
 
@@ -949,7 +969,7 @@ public class Analytics {
 				edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, true);
 				edit.putBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, i == 0);
 			}
-			edit.commit();
+			edit.apply();
 			Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: "+ sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION,false));
 			Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: "+ sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY,false));
 		}

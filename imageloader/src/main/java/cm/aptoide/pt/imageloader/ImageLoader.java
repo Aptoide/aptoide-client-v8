@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/07/2016.
+ * Modified by SithEngineer on 22/08/2016.
  */
 
 package cm.aptoide.pt.imageloader;
@@ -9,6 +9,8 @@ import android.support.annotation.DrawableRes;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.target.NotificationTarget;
 
 import cm.aptoide.pt.preferences.Application;
@@ -18,7 +20,10 @@ import cm.aptoide.pt.preferences.Application;
  */
 public class ImageLoader {
 
-	// TODO: 18/07/16 sithengineer add placeholders in image loading
+	static {
+		GlideBuilder builder = new GlideBuilder(Application.getContext());
+		builder.setDecodeFormat(DecodeFormat.PREFER_RGB_565);
+	}
 
 	public static void load(String url, @DrawableRes int loadingPlaceHolder, ImageView imageView) {
 		Glide.with(Application.getContext()).load(url).placeholder(loadingPlaceHolder).into(imageView);

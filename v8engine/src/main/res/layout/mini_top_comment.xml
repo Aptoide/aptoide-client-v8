@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 22/08/2016.
+  ~ Modified by SithEngineer on 25/08/2016.
   -->
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="178dp"
+    android:layout_width="match_parent"
     android:layout_height="88dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginStart="4dp"
     >
 
     <ImageView
@@ -19,16 +23,15 @@
         android:src="@drawable/icon_user"
         />
 
-    <android.support.v7.widget.AppCompatRatingBar
+    <RatingBar
         android:id="@+id/rating_bar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
+        style="@style/RatingBarSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_toRightOf="@id/user_icon"
         android:numStars="5"
-        android:progressDrawable="@drawable/rating_bar_extra_small"
         android:stepSize="1.0"
         tools:rating="3.0"
         />

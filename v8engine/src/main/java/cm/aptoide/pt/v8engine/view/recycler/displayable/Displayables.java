@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -129,6 +129,20 @@ public class Displayables implements LifecycleSchim {
 	public void onPause() {
 		for (final Displayable displayable : displayables) {
 			displayable.onPause();
+		}
+	}
+
+	@Override
+	public void onViewCreated() {
+		for (final Displayable displayable : displayables) {
+			displayable.onViewCreated();
+		}
+	}
+
+	@Override
+	public void onDestroyView() {
+		for (final Displayable displayable : displayables) {
+			displayable.onDestroyView();
 		}
 	}
 

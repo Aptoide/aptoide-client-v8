@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -46,21 +46,26 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	private String packageName;
 
 	public AppViewInstallDisplayable() {
+		super();
 	}
 
-	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd) {
-		this(installManager, getApp, minimalAd, false);
+	public AppViewInstallDisplayable(GetApp getApp) {
+		super(getApp);
 	}
 
-	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean
-			shouldInstall) {
-		super(getApp, false);
-		this.installManager = installManager;
-		this.appId = getApp.getNodes().getMeta().getData().getId();
-		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
-		this.payment = getApp.getNodes().getMeta().getData().getPayment();
-		this.minimalAd = minimalAd;
-		this.shouldInstall = shouldInstall;
+	public AppViewInstallDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+		super(getApp, fixedPerLineCount);
+	}
+
+	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager, MinimalAd minimalAd, boolean shouldInstall) {
+		AppViewInstallDisplayable displayable = new AppViewInstallDisplayable(getApp);
+		displayable.installManager = installManager;
+		displayable.appId = getApp.getNodes().getMeta().getData().getId();
+		displayable.packageName = getApp.getNodes().getMeta().getData().getPackageName();
+		displayable.payment = getApp.getNodes().getMeta().getData().getPayment();
+		displayable.minimalAd = minimalAd;
+		displayable.shouldInstall = shouldInstall;
+		return displayable;
 	}
 
 	public Observable<Void> buyApp(Context context, GetAppMeta.App app) {

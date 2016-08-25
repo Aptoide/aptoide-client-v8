@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 27/05/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -36,7 +36,7 @@ import lombok.Cleanup;
 @Displayables({SubscribedStoreDisplayable.class})
 public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
-	private static final String TAG = GridStoreWidget.class.getSimpleName();
+	private static final String TAG = SubscribedStoreWidget.class.getSimpleName();
 
 	private ImageView storeAvatar;
 	private TextView storeName;
@@ -69,9 +69,8 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 		@ColorInt int color = context.getResources().getColor(StoreThemeEnum.get(store.getTheme()).getStoreHeader());
 		storeLayout.setBackgroundColor(color);
-		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
-				StoreFragment
-				.newInstance(displayable.getPojo().getStoreName(), displayable.getPojo().getTheme())));
+		storeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(), StoreFragment.newInstance(displayable.getPojo()
+				.getStoreName(), displayable.getPojo().getTheme())));
 
 		if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
 			ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
@@ -86,7 +85,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 					.subscribe(eResponse->{
 						switch (eResponse) {
 							case YES:
-								@Cleanup Realm realm = Database.get(itemView.getContext());
+								@Cleanup Realm realm = Database.get();
 
 								if (AptoideAccountManager.isLoggedIn()) {
 									AptoideAccountManager.unsubscribeStore(store.getStoreName());

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.activities;
@@ -10,12 +10,12 @@ import android.view.View;
 
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.activity.AptoideFragmentActivity;
-import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 
 /**
  * Created by neuro on 06-05-2016.
  */
-public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity implements Lifecycle {
+public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity implements UiComponentBasics {
 
 	@Override
 	public void bindViews(View view) {

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 25/08/2016.
+ */
+
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.Comment;

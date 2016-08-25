@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -98,7 +98,7 @@ public class Update extends RealmObject {
 		return appId;
 	}
 
-	public void setAppId(int appId) {
+	public void setAppId(long appId) {
 		this.appId = appId;
 	}
 

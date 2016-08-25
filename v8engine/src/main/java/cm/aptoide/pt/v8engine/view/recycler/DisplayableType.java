@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -31,7 +31,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateResultsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppDisplayable;
@@ -81,7 +80,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppVi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewOtherVersionsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateResultsWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewRateThisWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewScreenshotsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewSuggestedAppWidget;
@@ -194,7 +192,7 @@ public enum DisplayableType {
 
 	APP_VIEW_RATE_RESULTS(AppViewRateResultsWidget.class, AppViewRateResultsDisplayable.class),
 
-	APP_VIEW_RATING(AppViewRateThisWidget.class, AppViewRateThisDisplayable.class),
+	//APP_VIEW_RATING(AppViewRateThisWidget.class, AppViewRateThisDisplayable.class),
 
 	APP_VIEW_SUBSCRIPTION(AppViewStoreWidget.class, AppViewStoreDisplayable.class),
 
@@ -315,7 +313,8 @@ public enum DisplayableType {
 	public enum Group {
 		APP_VIEW(APP_VIEW_INSTALL,
 				//				APP_VIEW_SUBSCRIPTION,
-				APP_VIEW_DESCRIPTION, APP_VIEW_SCREENSHOTS, APP_VIEW_RATING,
+				APP_VIEW_DESCRIPTION, APP_VIEW_SCREENSHOTS,
+				//              APP_VIEW_RATING,
 				//				APP_VIEW_RATE_RESULTS,
 				APP_VIEW_COMMENTS,
 				//				APP_VIEW_OTHER_VERSIONS,

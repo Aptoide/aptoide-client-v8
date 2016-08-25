@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 17/08/2016.
+  ~ Modified by SithEngineer on 25/08/2016.
   -->
 
 <RelativeLayout
@@ -95,15 +95,14 @@
                 android:textSize="42sp"
                 />
 
-            <android.support.v7.widget.AppCompatRatingBar
+            <RatingBar
                 android:id="@+id/rating_bar"
-                style="@style/Widget.AppCompat.RatingBar.Small"
+                style="@style/RatingBarSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rating_value"
                 android:layout_centerInParent="true"
                 android:numStars="5"
-                android:progressDrawable="@drawable/rating_bar_extra_small"
                 android:rating="0"
                 android:stepSize="0.5"
                 />
@@ -121,7 +120,7 @@
         android:layout_toEndOf="@id/rating_layout"
         android:layout_toRightOf="@id/rating_layout"
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
         >
 
         <Button

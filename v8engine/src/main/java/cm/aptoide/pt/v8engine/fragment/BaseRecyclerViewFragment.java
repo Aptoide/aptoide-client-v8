@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -36,6 +36,10 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends Ba
 		adapter = createAdapter();
 
 		super.onViewCreated(view, savedInstanceState);
+
+		if (adapter != null) {
+			adapter.onViewCreated();
+		}
 	}
 
 	@Override
@@ -62,9 +66,15 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends Ba
 
 	@Override
 	public void onDestroyView() {
-		super.onDestroyView();
+		// Lifecycle interface
+		if (adapter != null) {
+			adapter.onDestroyView();
+		}
+
 		recyclerView = null;
 		adapter = null;
+
+		super.onDestroyView();
 	}
 
 	@Override
@@ -129,6 +139,13 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends Ba
 		super.onPause();
 		if (adapter != null) {
 			adapter.onPause();
+		}
+	}
+
+	@Override
+	public void onViewCreated() {
+		if (adapter != null) {
+			adapter.onViewCreated();
 		}
 	}
 

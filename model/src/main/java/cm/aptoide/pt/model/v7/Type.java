@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -58,6 +58,7 @@ public enum Type {
 	UPDATE(1),
 	EXCLUDED_UPDATE(1),
 	ROLLBACK(1),
+	SCHEDULED_DOWNLOAD(1),
 
 	SOCIAL_TIMELINE(1, true),
 
@@ -66,7 +67,6 @@ public enum Type {
 
 	// Progress
 	PROGRESS_DISPLAYABLE,
-	SCHEDULED_DOWNLOAD,
 
 	//Download tab
 	ACTIVE_DOWNLOAD,
@@ -83,7 +83,7 @@ public enum Type {
 	APP_VIEW_RATE_RESULT(1, true),
 	APP_VIEW_RATE_THIS(1, true),
 	APP_VIEW_SUBSCRIPTION(1, true),
-	RATE_AND_REVIEW,;
+	RATE_AND_REVIEW(1, true);
 
 	private static final int DEFAULT_PER_LINE_COUNT = 1;
 

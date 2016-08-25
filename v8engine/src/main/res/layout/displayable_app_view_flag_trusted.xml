@@ -2,12 +2,12 @@
 
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 05/08/2016.
+  ~ Modified by SithEngineer on 25/08/2016.
   -->
 
 <LinearLayout
-    style="@style/AppViewWidget"
     android:id="@+id/good_app_layout"
+    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,6 +16,7 @@
 
     >
 
+    <!--
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
         android:textColor="@color/aptoide_orange"
         android:textSize="18sp"
         />
+    -->
 
     <LinearLayout
         android:layout_width="match_parent"

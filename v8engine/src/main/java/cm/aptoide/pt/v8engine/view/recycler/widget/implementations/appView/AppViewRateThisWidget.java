@@ -279,13 +279,13 @@ public class AppViewRateThisWidget extends Widget<AppViewRateThisDisplayable> {
 			int starDrawableResource = 0;
 			switch (starState) {
 				case 0:
-					starDrawableResource = R.drawable.star_empty_small;
+					starDrawableResource = R.drawable.grid_item_star_empty_small;
 					break;
 				case 1:
-					starDrawableResource = R.drawable.star_half_small;
+					starDrawableResource = R.drawable.grid_item_star_half_small;
 					break;
 				case 2:
-					starDrawableResource = R.drawable.star_full_small;
+					starDrawableResource = R.drawable.grid_item_star_full_small;
 					break;
 			}
 
