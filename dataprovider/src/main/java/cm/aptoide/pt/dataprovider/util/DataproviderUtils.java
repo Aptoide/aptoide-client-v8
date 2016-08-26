@@ -48,7 +48,7 @@ public class DataproviderUtils {
 		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
 			@Cleanup Realm realm = Database.get();
 			for (App app : listAppsUpdates.getList()) {
-				if(!Database.UpdatesQ.get(app.getPackageName(),realm).isExcluded())
+				if(Database.UpdatesQ.get(app.getPackageName(),realm)== null || !Database.UpdatesQ.get(app.getPackageName(),realm).isExcluded())
 					Database.save(new Update(app), realm);
 			}
 
