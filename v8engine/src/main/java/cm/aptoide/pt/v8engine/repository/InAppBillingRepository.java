@@ -15,7 +15,6 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
-import cm.aptoide.pt.iab.InAppBillingBinder;
 import cm.aptoide.pt.iab.InAppBillingException;
 import cm.aptoide.pt.iab.InAppBillingPurchase;
 import cm.aptoide.pt.iab.InAppBillingSKU;
@@ -25,7 +24,10 @@ import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.Purchase;
+import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.functions.Func3;
@@ -39,6 +41,7 @@ public class InAppBillingRepository {
 	private final NetworkOperatorManager operatorManager;
 	private final ProductFactory productFactory;
 	private final PaymentFactory paymentFactory;
+	private final PurchaseFactory purchaseFactory;
 
 	public Observable<Boolean> isBillingSupported(int apiVersion, String packageName, String type) {
 		return InAppBillingAvailableRequest.of(apiVersion, packageName, type).observe().flatMap(response -> {
@@ -62,38 +65,50 @@ public class InAppBillingRepository {
 		return builder.toString();
 	}
 
-	public Observable<Product> getInAppBillingProduct(Context context, int apiVersion, String packageName, String sku, String developerPayload) {
-		return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, sku, operatorManager).observe()
-				.map(response -> productFactory.create(response.getMetadata(), apiVersion, developerPayload, packageName,
-						response.getPublisherResponse().getDetailList().get(0)));
-	}
-
-	public Observable<List<InAppBillingSKU>> getSKUs(int apiVersion, String packageName, List<String> skuList) {
-		return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager)
-				.observe()
+	public Observable<Product> getInAppBillingProduct(Context context, int apiVersion, String type, String packageName, String sku, String developerPayload) {
+		return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, sku, operatorManager, type).observe()
 				.flatMap(response -> {
 					if (response != null && response.isOk()) {
-						return Observable.just(response);
+						return Observable.just(productFactory.create(response.getMetadata(), apiVersion, developerPayload, packageName,
+								response.getPublisherResponse().getDetailList().get(0)));
+					} else {
+						return Observable.error(new InAppBillingException(getErrorMessage(response.getErrors())));
 					}
-					return Observable.error(new IOException("Server response: " + response.getStatus()));
-				})
-				.flatMapIterable(response -> response.getPublisherResponse().getDetailList())
-				.map(responseProduct -> new InAppBillingSKU(responseProduct.getProductId(), responseProduct.getPrice(),
-						responseProduct.getTitle(), responseProduct.getDescription()))
-				.toList();
+				});
+	}
+
+	public Observable<List<InAppBillingSKU>> getSKUs(int apiVersion, String packageName, List<String> skuList, String type) {
+		return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type).observe()
+				.flatMap(response -> {
+					if (response != null && response.isOk()) {
+						return Observable.from(response.getPublisherResponse().getDetailList())
+								.map(responseProduct -> new InAppBillingSKU(responseProduct.getProductId(), responseProduct.getPrice(),
+										responseProduct.getTitle(), responseProduct.getDescription())).toList();
+					} else {
+						return Observable.error(new InAppBillingException(getErrorMessage(response.getErrors())));
+					}
+				});
+	}
+
+	public Observable<Purchase> getInAppPurchase(int id, int apiVersion, String packageName, String type) {
+		return getPurchases(apiVersion, packageName, type).flatMapIterable(purchases -> purchases)
+				.filter(purchase -> purchase.getOrderId() == id)
+				.switchIfEmpty(Observable.error(new RepositoryItemNotFoundException("No purchase found for id: " + id)))
+				.map(inAppBillingPurchase -> purchaseFactory.create(inAppBillingPurchase));
 	}
 
 	public Observable<List<InAppBillingPurchase>> getPurchases(int apiVersion, String packageName, String type) {
 		return InAppBillingPurchasesRequest.of(apiVersion, packageName, type).observe().flatMap(response -> {
 			if (response != null && response.isOk()) {
 				return Observable.zip(Observable.from(response.getPublisherResponse().getItemList()), Observable.from(response.getPublisherResponse()
-						.getSignatureList()), Observable.from(response.getPublisherResponse().getPurchaseDataList()), new Func3<String,String,InAppBillingPurchasesResponse.PurchaseDataObject,InAppBillingPurchase>() {
-					@Override
-					public InAppBillingPurchase call(String item, String signature, InAppBillingPurchasesResponse.PurchaseDataObject data) {
-						return new InAppBillingPurchase(data.getOrderId(), data.getPurchaseTime(), data.getPurchaseState(), data.getProductId(), data.getPackageName(), data
-								.getToken(), data.getPurchaseToken(), data.getDeveloperPayload(), signature, item);
-					}
-				}).toList();
+						.getSignatureList()), Observable.from(response.getPublisherResponse().getPurchaseDataList()),
+						new Func3<String,String,InAppBillingPurchasesResponse.PurchaseDataObject,InAppBillingPurchase>() {
+							@Override
+							public InAppBillingPurchase call(String item, String signature, InAppBillingPurchasesResponse.PurchaseDataObject data) {
+								return new InAppBillingPurchase(data.getOrderId(), data.getPurchaseTime(), data.getPurchaseState(), data.getProductId(),
+										data.getPackageName(), data.getToken(), data.getPurchaseToken(), data.getDeveloperPayload(), signature, item);
+							}
+						}).toList();
 			}
 			return Observable.error(new IOException("Server response: " + response.getStatus()));
 		});
@@ -109,7 +124,7 @@ public class InAppBillingRepository {
 	}
 
 	public Observable<List<Payment>> getPayments(Context context, InAppBillingProduct product) {
-		return InAppBillingSkuDetailsRequest.of(product.getApiVersion(), product.getPackageName(), product.getSku(), operatorManager).observe(false)
+		return InAppBillingSkuDetailsRequest.of(product.getApiVersion(), product.getPackageName(), product.getSku(), operatorManager, product.getType()).observe(false)
 				.flatMapIterable(response -> response.getPaymentServices())
 				.map(paymentService -> paymentFactory.create(context, paymentService, product))
 				.toList();

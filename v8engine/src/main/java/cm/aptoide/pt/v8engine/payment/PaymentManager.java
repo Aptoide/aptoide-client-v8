@@ -25,37 +25,32 @@ public class PaymentManager {
 	private final PaymentRepository paymentRepository;
 
 	public Observable<List<Payment>> getProductPayments(Context context, Product product) {
-		return paymentRepository.getPayments(context, product)
-				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)));
+		return paymentRepository.getPayments(context, product);
 	}
 
-	public Observable<Boolean> isProductPaymentProcessed(Context context, String paymentType, Product product) {
-		return paymentRepository.getPayment(context, paymentType, product)
-				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)))
-				.flatMap(payment -> isPaymentConfirmed(payment));
+	public Observable<Purchase> getPurchase(Context context, String paymentType, Product product) {
+		return paymentRepository.getPayment(context, paymentType, product).flatMap(payment -> getPurchase(payment));
 	}
 
-	public Observable<Void> pay(Payment payment) {
-		return isPaymentConfirmed(payment).flatMap(confirmed -> {
+	public Observable<Purchase> pay(Payment payment) {
+		return getPurchase(payment)
+				.onErrorResumeNext(throwable -> {
+					if (throwable instanceof RepositoryItemNotFoundException) {
+						return RxPayment.process(payment)
+								.flatMap(paymentConfirmation -> savePaymentConfirmation(paymentConfirmation)
+								.flatMap(saved -> paymentRepository.getPurchase(paymentConfirmation)));
+					}
+					return Observable.error(throwable);
+				});
+	}
 
-			if (confirmed) {
-				return Observable.just(null);
-			}
-
-			return RxPayment.process(payment)
-					.flatMap(paymentConfirmation -> savePaymentConfirmation(paymentConfirmation));
-		});
+	private Observable<Purchase> getPurchase(Payment payment) {
+		// TODO payment confirmation is stored locally. The user may clean local data and a purchased product may be paid again. We must first check if the
+		// purchase exists and fallback to payment confirmation afterwards.
+		return paymentRepository.getPaymentConfirmation(payment).flatMap(paymentConfirmation -> paymentRepository.getPurchase(paymentConfirmation));
 	}
 
 	private Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
-		return paymentRepository.savePaymentConfirmation(paymentConfirmation)
-				.onErrorResumeNext(throwable -> Observable.error(new PaymentFailureException(throwable)));
-	}
-
-	private Observable<Boolean> isPaymentConfirmed(Payment payment) {
-		return paymentRepository.getPaymentConfirmation(payment)
-				.map(paymentConfirmation -> true)
-				.onErrorResumeNext(throwable -> (throwable instanceof RepositoryItemNotFoundException)? Observable.just(false) : Observable.error
-						(new PaymentFailureException(throwable)));
+		return paymentRepository.savePaymentConfirmation(paymentConfirmation);
 	}
 }

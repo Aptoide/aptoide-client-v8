@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Map;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.model.v3.PaymentResponse;
 import rx.Observable;
 
 /**
@@ -24,16 +22,18 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
 
 	private final Map<String,String> args;
 
-	public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName, String sku, NetworkOperatorManager operatorManager) {
-		return of(apiVersion, packageName, Collections.singletonList(sku), operatorManager);
+	public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName, String sku, NetworkOperatorManager operatorManager, String type) {
+		return of(apiVersion, packageName, Collections.singletonList(sku), operatorManager, type);
 	}
 
-	public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName, List<String> skuList, NetworkOperatorManager operatorManager) {
+	public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName, List<String> skuList, NetworkOperatorManager operatorManager,
+	                                               String type) {
 		HashMap<String, String> args = new HashMap<>();
 		args.put("mode","json");
 		args.put("package", packageName);
 		args.put("apiversion", String.valueOf(apiVersion));
 		args.put("reqtype", "iabskudetails");
+		args.put("purchasetype", type);
 		args.put("access_token", AptoideAccountManager.getAccessToken());
 
 		if (!skuList.isEmpty()) {

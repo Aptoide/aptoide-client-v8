@@ -7,7 +7,6 @@ package cm.aptoide.pt.iab;
 
 import android.app.PendingIntent;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 
@@ -81,7 +80,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
         final Bundle result = new Bundle();
 
-        if (!skusBundle.containsKey(ITEM_ID_LIST) || apiVersion < 3 || apiVersion > 4) {
+        if (!skusBundle.containsKey(ITEM_ID_LIST)) {
             result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
             return result;
         }
@@ -93,24 +92,29 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
             return result;
         }
 
-        final List<String> serializedProducts = inAppBillingRepository.getSKUs(apiVersion, packageName, itemIdList)
-                .map(products -> inAppBillingSerializer.serializeProducts(products))
-                .onErrorReturn(throwable -> null)
-                .toBlocking()
-                .first();
+        try {
+            final List<String> serializedProducts = inAppBillingRepository.getSKUs(apiVersion, packageName, itemIdList, type)
+                    .map(products -> inAppBillingSerializer.serializeProducts(products)).toBlocking().first();
 
-        if (serializedProducts == null) {
+            if (serializedProducts.isEmpty()) {
+                result.putInt(RESPONSE_CODE, RESULT_ITEM_UNAVAILABLE);
+            } else {
+                result.putInt(RESPONSE_CODE, RESULT_OK);
+                result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
+            }
+
+            return result;
+        } catch (RuntimeException exception) {
+            Logger.e("InAppBillingBinder", exception.getMessage());
+            exception.printStackTrace();
+
+            if (exception.getCause() instanceof InAppBillingException) {
+                result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
+                return result;
+            }
             result.putInt(RESPONSE_CODE, RESULT_ERROR);
             return result;
         }
-
-        if (serializedProducts.isEmpty()) {
-            result.putInt(RESPONSE_CODE, RESULT_ITEM_UNAVAILABLE);
-        } else {
-            result.putInt(RESPONSE_CODE, RESULT_OK);
-            result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
-        }
-        return result;
     }
 
     @Override
@@ -122,7 +126,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
         } else {
             result.putInt(RESPONSE_CODE, RESULT_OK);
 
-            final PendingIntent pendingIntent = inAppBillingRepository.getInAppBillingProduct(context, apiVersion, packageName, sku, developerPayload)
+            final PendingIntent pendingIntent = inAppBillingRepository.getInAppBillingProduct(context, apiVersion, type, packageName, sku, developerPayload)
                     .map(product -> PendingIntent.getActivity(context, 0, PaymentActivity.getIntent(context, product), PendingIntent.FLAG_UPDATE_CURRENT))
                     .onErrorReturn(throwable -> null)
                     .toBlocking()

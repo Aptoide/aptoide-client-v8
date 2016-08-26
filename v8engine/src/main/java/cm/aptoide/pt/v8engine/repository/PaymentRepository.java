@@ -19,6 +19,8 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.Purchase;
+import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
@@ -37,6 +39,19 @@ public class PaymentRepository {
 	private final InAppBillingRepository inAppBillingRepository;
 	private final NetworkOperatorManager operatorManager;
 	private final ProductFactory productFactory;
+	private final PurchaseFactory purchaseFactory;
+
+	public Observable<Purchase> getPurchase(PaymentConfirmation paymentConfirmation) {
+		return Observable.just(paymentConfirmation.getProduct() instanceof InAppBillingProduct).flatMap(iab -> {
+			if (iab) {
+				final InAppBillingProduct product = (InAppBillingProduct) paymentConfirmation.getProduct();
+				return inAppBillingRepository.getInAppPurchase(product.getId(), product.getApiVersion(), product.getPackageName(), product.getType());
+			} else {
+				final PaidAppProduct product = (PaidAppProduct) paymentConfirmation.getProduct();
+				return appRepository.getPaidAppPurchase(product.getId(), product.getStoreName());
+			}
+		});
+	}
 
 	public Observable<List<Payment>> getPayments(Context context, Product product) {
 		return Observable.just(product instanceof InAppBillingProduct).flatMap(iab -> {
@@ -88,7 +103,7 @@ public class PaymentRepository {
 			if (response != null && response.isOk()) {
 				return Observable.just(null);
 			}
-			return Observable.error(new IOException("Server response: " + response.getStatus()));
+			return Observable.error(new SecurityException("Could not verify payment confirmation. Server response: " + response.getStatus()));
 		});
 	}
 

@@ -13,6 +13,7 @@ import android.telephony.TelephonyManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 
 public class InAppBillingService extends Service {
@@ -23,8 +24,9 @@ public class InAppBillingService extends Service {
     public void onCreate() {
         super.onCreate();
         final NetworkOperatorManager operatorManager = new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
-        billingBinder = new InAppBillingBinder(this, new InAppBillingRepository(operatorManager, new ProductFactory(), new PaymentFactory()),
-                new InAppBillingSerializer(), operatorManager);
+        final InAppBillingSerializer serializer = new InAppBillingSerializer();
+        billingBinder = new InAppBillingBinder(this, new InAppBillingRepository(operatorManager, new ProductFactory(), new PaymentFactory(),
+                new PurchaseFactory(serializer)), serializer, operatorManager);
     }
 
     @Override

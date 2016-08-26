@@ -71,36 +71,41 @@ public class PaymentPresenter implements Presenter {
 	}
 
 	private Observable<Void> login() {
-		return currentLoginState()
+		return getProcessingLoginResult()
 				.onErrorResumeNext(AptoideAccountManager.login(view.getContext())
 						.doOnSubscribe(() -> saveLoginState())
 						.map(success -> true))
 				.<Void>flatMap(loggedIn -> (loggedIn)? Observable.just(null): Observable.error(new IllegalStateException("Not logged In. Payment can not be " +
 						"processed!")))
 				.doOnNext(loggedIn -> clearLoginState())
-				.doOnError(throwable -> dismissWithFailureAndClearLoginState())
+				.doOnError(throwable -> clearLoginStateAndDismiss(throwable))
 				.onErrorReturn(throwable -> null);
 	}
 
-	private Observable<Void> pay() {
-		return currentPaymentState()
+	private Observable<Purchase> pay() {
+		return getProcessingPaymentPurchase()
 				.doOnSubscribe(() -> showProductAndShowLoading(product))
-				.onErrorResumeNext(throwable -> paymentManager.getProductPayments(view.getContext(), product)
-						.observeOn(AndroidSchedulers.mainThread())
-						.doOnNext(payments -> removeLoadingAndShowPayments(payments))
-						.filter(payments -> !payments.isEmpty())
-						.flatMap(payments -> paymentSelection()))
-				.doOnError(throwable -> dismissWithFailure())
-				.doOnNext(paid -> view.dismissWithSuccess())
+				.flatMap(purchase -> {
+					if (purchase == null) {
+						return paymentManager.getProductPayments(view.getContext(), product)
+								.observeOn(AndroidSchedulers.mainThread())
+								.doOnNext(payments -> removeLoadingAndShowPayments(payments))
+								.filter(payments -> !payments.isEmpty())
+								.flatMap(payments -> paymentSelection());
+					}
+					return Observable.just(purchase);
+				})
+				.doOnError(throwable -> removeLoadingAndDismiss(throwable))
+				.doOnNext(purchase -> removeLoadingAndDismiss(purchase))
 				.onErrorReturn(throwable -> null);
 	}
 
 	@NonNull
-	private Observable<Void> paymentSelection() {
+	private Observable<Purchase> paymentSelection() {
 		return view.paymentSelection()
 				.doOnNext(payment -> showLoadingAndSavePaymentState(payment))
 				.flatMap(payment -> paymentManager.pay(payment))
-				.doOnNext(success -> removeLoadingAndClearPaymentState())
+				.doOnNext(purchase -> removeLoadingAndClearPaymentState())
 				.retryWhen(errors -> errors
 						.observeOn(AndroidSchedulers.mainThread())
 						.doOnNext(throwable -> removeLoadingAndClearPaymentState())
@@ -128,24 +133,45 @@ public class PaymentPresenter implements Presenter {
 
 	private void showLoadingAndSavePaymentState(Payment payment) {
 		view.showLoading();
-		this.currentPaymentType = payment.getType();
-		this.isProcessingPayment = true;
+		savePaymentState(payment);
 	}
 
 	private void removeLoadingAndClearPaymentState() {
 		view.removeLoading();
+		clearPaymentState();
+	}
+
+	private void savePaymentState(Payment payment) {
+		this.currentPaymentType = payment.getType();
+		this.isProcessingPayment = true;
+	}
+
+	private void clearPaymentState() {
 		this.currentPaymentType = null;
 		this.isProcessingPayment = false;
 	}
 
-	private void dismissWithFailureAndClearLoginState() {
+	private void clearLoginStateAndDismiss(Throwable throwable) {
 		clearLoginState();
-		dismissWithFailure();
+		dismiss(throwable);
 	}
 
-	private void dismissWithFailure() {
-		// TODO populate bundle depending on product type
-		view.dismissWithCancellation();
+	private void removeLoadingAndDismiss(Throwable throwable) {
+		view.removeLoading();
+		dismiss(throwable);
+	}
+
+	private void dismiss(Throwable throwable) {
+		if (throwable instanceof PaymentCancellationException) {
+			view.dismissWithCancellation();
+		} else {
+			view.dismissWithFailure(throwable);
+		}
+	}
+
+	private void removeLoadingAndDismiss(Purchase purchase) {
+		view.removeLoading();
+		view.dismissWithSuccess(purchase);
 	}
 
 	private boolean clearLoginState() {
@@ -156,7 +182,7 @@ public class PaymentPresenter implements Presenter {
 		return isProcessingLogin = true;
 	}
 
-	private Observable<Boolean> currentLoginState() {
+	private Observable<Boolean> getProcessingLoginResult() {
 		return Observable.just(isProcessingLogin).flatMap(isProcessingLogin -> {
 			if (isProcessingLogin) {
 				return Observable.just(AptoideAccountManager.isLoggedIn());
@@ -165,14 +191,14 @@ public class PaymentPresenter implements Presenter {
 		});
 	}
 
-	private Observable<Void> currentPaymentState() {
+	private Observable<Purchase> getProcessingPaymentPurchase() {
 		return Observable.just(isProcessingPayment)
 				.flatMap(isProcessingPayment -> {
 					if (isProcessingPayment) {
-						return paymentManager.isProductPaymentProcessed(view.getContext(), currentPaymentType, product)
-								.flatMap(paid -> paid? Observable.just(null): Observable.error(new IllegalStateException("Processed payment failed.")));
+						return paymentManager.getPurchase(view.getContext(), currentPaymentType, product)
+								.doOnSubscribe(() -> clearPaymentState());
 					}
-					return Observable.error(new IllegalStateException("Not payment currently being processed."));
+					return Observable.just(null);
 				});
 	}
 

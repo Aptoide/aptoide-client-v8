@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.iab.InAppBillingBinder;
+import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.Payment;
@@ -32,6 +34,9 @@ import cm.aptoide.pt.v8engine.payment.PaymentManager;
 import cm.aptoide.pt.v8engine.payment.PaymentPresenter;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.Purchase;
+import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
+import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
@@ -55,6 +60,7 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 	private Button cancelButton;
 
 	private List<Observable<Payment>> paymentSelections;
+	private PurchaseIntentFactory intentFactory;
 
 	public static Intent getIntent(Context context, Product product) {
 		final Intent intent = new Intent(context, PaymentActivity.class);
@@ -79,6 +85,8 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 		noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
 		payWithText = (TextView) findViewById(R.id.activity_payment_pay_with_text);
 		paymentSelections = new ArrayList<>();
+		intentFactory = new PurchaseIntentFactory(InAppBillingBinder.RESPONSE_CODE, InAppBillingBinder.INAPP_PURCHASE_DATA, InAppBillingBinder
+				.INAPP_DATA_SIGNATURE, InAppBillingBinder.RESULT_OK, InAppBillingBinder.RESULT_ERROR, InAppBillingBinder.RESULT_USER_CANCELED);
 
 		final Product product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
 
@@ -86,21 +94,27 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 		final NetworkOperatorManager operatorManager = new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
 		final ProductFactory productFactory = new ProductFactory();
 		final PaymentFactory paymentFactory = new PaymentFactory();
-		final PaymentManager paymentManager = new PaymentManager(new PaymentRepository(new AppRepository(operatorManager, productFactory, paymentFactory),
-				new InAppBillingRepository(operatorManager, productFactory, paymentFactory),
-				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory));
+		final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
+		final PaymentManager paymentManager = new PaymentManager(new PaymentRepository(new AppRepository(operatorManager, productFactory, paymentFactory,
+				purchaseFactory), new InAppBillingRepository(operatorManager, productFactory, paymentFactory, purchaseFactory),
+				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory, purchaseFactory));
 
 		attachPresenter(new PaymentPresenter(this, paymentManager, product), savedInstanceState);
 	}
 
 	@Override
-	public void dismissWithSuccess() {
-		finish(RESULT_OK);
+	public void dismissWithSuccess(Purchase purchase) {
+		finish(RESULT_OK, intentFactory.create(purchase));
+	}
+
+	@Override
+	public void dismissWithFailure(Throwable throwable) {
+		finish(RESULT_CANCELED, intentFactory.create(throwable));
 	}
 
 	@Override
 	public void dismissWithCancellation() {
-		finish(RESULT_CANCELED);
+		finish(RESULT_CANCELED, intentFactory.createFromCancellation());
 	}
 
 	@Override
@@ -160,6 +174,11 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 	@LayoutRes
 	private int getButtonLayoutResource(Payment payment) {
 		return R.layout.button_visa;
+	}
+
+	private void finish(int code, Intent intent) {
+		setResult(code, intent);
+		finish();
 	}
 
 	private void finish(int code) {

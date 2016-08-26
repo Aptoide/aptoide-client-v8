@@ -25,7 +25,7 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
 		args.put("apiversion", String.valueOf(apiVersion));
 		args.put("reqtype", "iabavailable");
 		args.put("package", packageName);
-		args.put("purchasetype",type);
+		args.put("purchasetype", type);
 		return new InAppBillingAvailableRequest(BASE_HOST, args);
 	}
 

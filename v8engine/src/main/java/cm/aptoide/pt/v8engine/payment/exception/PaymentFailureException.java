@@ -17,6 +17,4 @@ public class PaymentFailureException extends PaymentException {
 	public PaymentFailureException(String message) {
 		super(message);
 	}
-
-
 }
