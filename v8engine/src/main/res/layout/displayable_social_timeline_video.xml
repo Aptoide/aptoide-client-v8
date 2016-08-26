@@ -29,7 +29,7 @@
             <TextView
                 android:layout_marginTop="14.7dp"
                 android:id="@+id/card_title"
-                style="@style/Widget.Aptoide.Card.Title.Feature"
+                style="@style/Widget.Aptoide.Card.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="72dp"
