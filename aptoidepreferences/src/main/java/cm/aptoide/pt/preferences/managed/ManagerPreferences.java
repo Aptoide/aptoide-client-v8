@@ -72,10 +72,11 @@ public class ManagerPreferences {
 	}
 
 	public static boolean needsDbMigration() {
-		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, true);
+		return true;
+//		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, true);
 	}
 
 	public static void setNeedsDbMigration(boolean migrationNeeded) {
-		Preferences.get().edit().putBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, migrationNeeded).apply();
+//		Preferences.get().edit().putBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, migrationNeeded).apply();
 	}
 }

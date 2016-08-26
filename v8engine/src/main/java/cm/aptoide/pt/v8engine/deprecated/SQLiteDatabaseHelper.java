@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.deprecated;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -29,31 +30,18 @@ import io.realm.Realm;
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-	private static final int DATABASE_VERSION = 666;
-	private static SQLiteDatabaseHelper sInstance;
+	private static final int DATABASE_VERSION = 37;
 
-	/**
-	 * Constructor should be private to prevent direct instantiation. make call to static factory method "getInstance()" instead.
-	 */
-	private SQLiteDatabaseHelper(Context context) {
+	private Throwable agregateExceptions;
+
+	public SQLiteDatabaseHelper(Context context) {
 		super(context, "aptoide.db", null, DATABASE_VERSION);
-	}
-
-	public static SQLiteDatabaseHelper getInstance(Context context) {
-
-		synchronized (SQLiteDatabaseHelper.class) {
-			if (sInstance == null) {
-
-				sInstance = new SQLiteDatabaseHelper(context.getApplicationContext());
-			}
-		}
-		return sInstance;
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Logger.w(TAG, "onCreate() called");
-		migrate(db);
+		// do nothing here.
 	}
 
 	@Override
@@ -79,11 +67,9 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		Logger.w(TAG, "Migrating database started....");
 
 		Realm realm = Database.get();
-		try {
-			new Installed().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
-		}
+		realm.beginTransaction();
+		realm.deleteAll();
+		realm.commitTransaction();
 
 		try {
 			new Repo().migrate(db, realm);
@@ -92,13 +78,19 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		try {
-			new Rollback().migrate(db, realm);
+			new Excluded().migrate(db, realm);
 		} catch (Exception ex) {
 			logException(ex);
 		}
 
 		try {
-			new Excluded().migrate(db, realm);
+			new Installed().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Rollback().migrate(db, realm);
 		} catch (Exception ex) {
 			logException(ex);
 		}
@@ -123,12 +115,21 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 			logException(ex);
 		}
 
+		if(agregateExceptions!=null) {
+			Crashlytics.logException(agregateExceptions);
+		}
+
 		ManagerPreferences.setNeedsDbMigration(false);
 		Logger.w(TAG, "Migrating database finished with success.");
 	}
 
 	private void logException(Exception ex) {
 		Logger.e(TAG, ex);
-		Crashlytics.logException(ex);
+
+		if(agregateExceptions==null) {
+			agregateExceptions = ex;
+		}else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			agregateExceptions.addSuppressed(ex);
+		}
 	}
 }

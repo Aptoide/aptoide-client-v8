@@ -48,11 +48,4 @@ public class Excluded extends BaseTable {
 		// COLUMN_NAME
 		return realmObject;
 	}
-
-	@Override
-	public String[] getColumns() {
-		return new String[]{
-
-		};
-	}
 }

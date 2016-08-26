@@ -62,6 +62,9 @@ public class Repo extends BaseTable {
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_NAME = "name";
 
+	// from migration script
+	public final static String COLUMN_REPO_NAME = "reponame";
+
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_USERNAME = "username";
 
@@ -92,10 +95,5 @@ public class Repo extends BaseTable {
 		realmObject.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)));
 		realmObject.setTheme(cursor.getString(cursor.getColumnIndex(COLUMN_THEME)));
 		return realmObject;
-	}
-
-	@Override
-	public String[] getColumns() {
-		return new String[]{COLUMN_URL, COLUMN_ICONS_PATH, COLUMN_THEME, COLUMN_DOWNLOADS, COLUMN_NAME, COLUMN_USERNAME, COLUMN_PASSWORD};
 	}
 }

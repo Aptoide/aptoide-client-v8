@@ -15,8 +15,7 @@ import io.realm.RealmObject;
  */
 public class Scheduled extends BaseTable {
 
-	// @ColumnDefinition(type = SQLType.TEXT)
-	public final static String COLUMN_PACKAGE_NAME = "package_name";
+	public final static String COLUMN_ID = "_id";
 
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_NAME = "name";
@@ -28,13 +27,15 @@ public class Scheduled extends BaseTable {
 	public final static String COLUMN_MD5 = "md5";
 
 	// @ColumnDefinition(type = SQLType.TEXT)
-	public final static String COLUMN_REPO = "repo_name";
-
-	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_ICON = "icon";
 
 	private static final String NAME = "scheduled";
-	private static final IdUtils ID_UTILS = new IdUtils(0);
+
+	// @ColumnDefinition(type = SQLType.TEXT)
+	public final static String COLUMN_PACKAGE_NAME = "package_name";
+
+	// @ColumnDefinition(type = SQLType.TEXT)
+	public final static String COLUMN_REPO = "repo_name";
 
 	@Override
 	public String getTableName() {
@@ -44,16 +45,13 @@ public class Scheduled extends BaseTable {
 	@Override
 	public RealmObject convert(Cursor cursor) {
 		cm.aptoide.pt.database.realm.Scheduled realmObject = new cm.aptoide.pt.database.realm.Scheduled();
+		realmObject.setAppId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
+		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
+		realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
 		realmObject.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
 		realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERSION_NAME)));
-		// creating a new scheduled download
-		realmObject.setAppId(ID_UTILS.nextLong());
+		realmObject.setStoreName(cursor.getString(cursor.getColumnIndex(COLUMN_REPO)));
+		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
 		return realmObject;
-	}
-
-	@Override
-	public String[] getColumns() {
-		return new String[]{COLUMN_NAME, COLUMN_ICON, COLUMN_VERSION_NAME};
 	}
 }

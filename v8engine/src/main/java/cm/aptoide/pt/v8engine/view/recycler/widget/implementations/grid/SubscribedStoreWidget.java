@@ -14,10 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -95,7 +98,10 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
 								break;
 						}
-					})
+					}, e->{
+						Logger.e(TAG, e);
+						Crashlytics.logException(e);
+					});
 			;
 		});
 	}

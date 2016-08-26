@@ -28,9 +28,4 @@ public class ExcludedAd extends BaseTable {
 		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE)));
 		return realmObject;
 	}
-
-	@Override
-	public String[] getColumns() {
-		return new String[]{COLUMN_PACKAGE};
-	}
 }

@@ -39,7 +39,9 @@ public class AndroidBasicDialog {
 	}
 
 	public static AndroidBasicDialog build(Context context) {
-		return new AndroidBasicDialog(context);
+		AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context);
+		androidBasicDialog.getCreatedDialog();
+		return androidBasicDialog;
 	}
 
 	private void bindView(View view) {
