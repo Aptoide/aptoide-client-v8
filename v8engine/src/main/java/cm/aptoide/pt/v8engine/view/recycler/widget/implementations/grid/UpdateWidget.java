@@ -7,7 +7,9 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,6 +27,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -94,10 +97,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 					.setNegativeButton(R.string.no, null)
 					.setPositiveButton(R.string.yes, (dialog, which) -> {
 						if (which == DialogInterface.BUTTON_POSITIVE) {
-							@Cleanup
-							Realm realm1 = Database.get();
-							Database.UpdatesQ.setExcluded(packageName, true, realm1);
-							updateRowRelativeLayout.setVisibility(View.GONE);
+							Database.UpdatesQ.setExcluded(packageName, true, realm);
+							//updateRowRelativeLayout.setVisibility(View.GONE);
 						}
 						dialog.dismiss();
 					});
@@ -113,7 +114,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 				.filter(download -> download.getAppId() == displayable.getAppId())
 				.map(download -> download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE ||
 						download
-						.getOverallDownloadStatus() == Download.PENDING)
+								.getOverallDownloadStatus() == Download.PENDING)
 				.subscribe(showProgress -> {
 					if (showProgress) {
 						textUpdateLayout.setVisibility(View.GONE);
