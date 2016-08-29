@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@color/aptoide_orange"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/aptoide_logo"
+        android:src="@drawable/wizard_aptoide_logo"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wizard_title_viewpager_two"
+        android:textSize="20sp"
+        android:layout_marginBottom="7dp" />
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:padding="10dp" android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/centerHorizontalShim"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:src="@drawable/wizard_apps_feed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/centerHorizontalShim"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:text="@string/wizard_sub_title_viewpager_two"
+            android:textSize="14sp"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@+id/centerHorizontalShim"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

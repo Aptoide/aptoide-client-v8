@@ -66,24 +66,28 @@
             android:id="@+id/btn_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="User Name"/>
 
         <Button
             android:id="@+id/btn_access_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Access Token"/>
 
         <Button
             android:id="@+id/btn_refresh_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Refresh Token"/>
 
         <Button
             android:id="@+id/btn_invalidate_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Invalidate Token"/>
 
 
