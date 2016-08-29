@@ -14,14 +14,14 @@ import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
-import cm.aptoide.pt.v8engine.payment.Presenter;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/19/16.
  */
-public abstract class AppCompatActivityView extends RxAppCompatActivity implements View {
+public abstract class ActivityView extends RxAppCompatActivity implements View {
 
 	private Presenter presenter;
 

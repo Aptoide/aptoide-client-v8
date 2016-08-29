@@ -10,12 +10,9 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
-import com.trello.rxlifecycle.RxLifecycle;
 
-import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.v8engine.payment.Presenter;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
 import rx.Observable;
 
 /**

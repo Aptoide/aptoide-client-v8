@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 19/08/2016.
+ * Modified by Marcelo Benites on 29/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +14,12 @@ import java.util.List;
 import javax.security.auth.login.LoginException;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.PaymentManager;
+import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;

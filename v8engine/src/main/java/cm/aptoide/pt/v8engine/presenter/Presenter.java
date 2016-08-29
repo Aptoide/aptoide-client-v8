@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 22/08/2016.
+ * Modified by Marcelo Benites on 29/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 

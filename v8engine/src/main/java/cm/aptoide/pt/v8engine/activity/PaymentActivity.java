@@ -32,7 +32,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.PaymentManager;
-import cm.aptoide.pt.v8engine.payment.PaymentPresenter;
+import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.Purchase;
@@ -44,7 +44,7 @@ import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import rx.Observable;
 
-public class PaymentActivity extends AppCompatActivityView implements PaymentView {
+public class PaymentActivity extends ActivityView implements PaymentView {
 
 	private static final String PRODUCT_EXTRA = "product";
 
