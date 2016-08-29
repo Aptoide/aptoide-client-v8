@@ -80,7 +80,7 @@ public class DisplayablesFactory {
 						break;
 					case REVIEWS_GROUP:
 						ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
-						if (reviewsList.getDatalist() != null && reviewsList.getDatalist().getList().size() > 0) {
+						if (reviewsList != null && reviewsList.getDatalist() != null && reviewsList.getDatalist().getList().size() > 0) {
 							displayables.add(new StoreGridHeaderDisplayable(wsWidget));
 							displayables.add(createReviewsDisplayables(reviewsList));
 						}

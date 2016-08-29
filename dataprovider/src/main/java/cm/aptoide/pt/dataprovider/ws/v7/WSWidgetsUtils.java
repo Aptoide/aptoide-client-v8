@@ -57,7 +57,7 @@ public class WSWidgetsUtils {
 							.observe(refresh)).subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta), action1);
 					break;
 				case REVIEWS_GROUP:
-					ioScheduler(ListFullReviewsRequest.ofAction(url)
+					ioScheduler(ListFullReviewsRequest.ofAction(url, refresh)
 							.observe(refresh)).subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
 					break;
 				default:

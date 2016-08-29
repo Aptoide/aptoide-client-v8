@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
@@ -24,9 +26,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -35,8 +39,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import rx.Observable;
 import rx.Subscription;
@@ -119,6 +125,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 					//case getApkComments:
 				case getAds:
 				case listStores:
+				case listReviews:
 					return true;
 			}
 		}
@@ -303,8 +310,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				case getStoreWidgets:
 					caseGetStoreWidgets(url, refresh);
 					break;
-				case getReviews:
-					//todo
+				case listReviews:
+					caseListReviews(url, refresh);
+					break;
 					//		break;
 					//	case getApkComments:
 					//todo
@@ -323,6 +331,28 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			}
 			//setDisplayables(displayables);
 		}
+	}
+
+	private void caseListReviews(String url, boolean refresh) {
+		ListFullReviewsRequest listFullReviewsRequest = ListFullReviewsRequest.ofAction(url, refresh);
+		Action1<ListFullReviews> listFullReviewsAction = (listFullReviews -> {
+			if (listFullReviews != null && listFullReviews.getDatalist() != null && listFullReviews.getDatalist().getList() != null) {
+				List<FullReview> reviews = listFullReviews.getDatalist().getList();
+				LinkedList<Displayable> displayables = new LinkedList<>();
+				for (int i = 0 ; i < reviews.size() ; i++) {
+					FullReview review = reviews.get(i);
+					displayables.add(new RowReviewDisplayable(review));
+				}
+				this.displayables = new ArrayList<>(reviews.size());
+				this.displayables.add(new DisplayableGroup(displayables));
+				setDisplayables(this.displayables);
+			}
+		});
+		recyclerView.clearOnScrollListeners();
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest, listFullReviewsAction,
+				errorRequestListener, refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
 	}
 
 	private static class BundleCons {

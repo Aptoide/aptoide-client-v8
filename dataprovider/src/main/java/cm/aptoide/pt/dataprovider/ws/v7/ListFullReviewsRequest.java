@@ -56,11 +56,11 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		return new ListFullReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
 
-	public static ListFullReviewsRequest ofAction(String url) {
+	public static ListFullReviewsRequest ofAction(String url, boolean refresh) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
 				SecurePreferencesImplementation
 				.getInstance());
-		return new ListFullReviewsRequest(url.replace("listFullReviews", ""), (Body) decorator.decorate(new Body()), BASE_HOST);
+		return new ListFullReviewsRequest(url.replace("listFullReviews", ""), (Body) decorator.decorate(new Body(refresh)), BASE_HOST);
 	}
 
 
@@ -133,7 +133,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		private String storeName;
 		private Integer subLimit;
 
-		public Body() {
+		public Body(boolean refresh) {
+			this.refresh = refresh;
 		}
 
 		public Body(long storeId, int limit, int subLimit, boolean refresh) {
