@@ -29,7 +29,7 @@ public class Rollback extends RealmObject {
 	public static final String ACTION = "action";
 	public static final String MD5 = "md5";
 	public static final String CONFIRMED = "confirmed";
-	public static final String REFERRER = "referrer";
+//	public static final String REFERRER = "referrer";
 
 	//	@PrimaryKey private int id = -1;
 	private String appName;

@@ -32,12 +32,14 @@ public class Scheduled extends RealmObject {
 	private String path;
 	private String md5;
 	private int verCode;
+	private String packageName;
+	private String storeName;
 
 	public Scheduled() { }
 
 	public static Scheduled from(GetAppMeta.App app) {
 		return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon(), app.getFile().getPath(), app.getFile()
-				.getMd5sum(), app.getFile().getVercode());
+				.getMd5sum(), app.getFile().getVercode(), app.getPackageName(), app.getStore().getName());
 	}
 
 	public long getAppId() {
@@ -94,5 +96,21 @@ public class Scheduled extends RealmObject {
 
 	public void setVerCode(int verCode) {
 		this.verCode = verCode;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	public String getStoreName() {
+		return storeName;
 	}
 }

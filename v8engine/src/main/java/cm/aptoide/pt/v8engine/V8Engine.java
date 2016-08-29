@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -170,7 +171,8 @@ public abstract class V8Engine extends DataProvider {
 
 		// this will trigger the migration if needed
 		// FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
-		SQLiteDatabaseHelper.getInstance(this);
+		SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
+		db.close();
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
 	}
