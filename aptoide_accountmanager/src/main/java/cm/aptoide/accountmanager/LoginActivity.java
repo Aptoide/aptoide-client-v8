@@ -41,7 +41,6 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	private EditText password_box;
 	private EditText emailBox;
 	private Button hidePassButton;
-	private CheckBox registerDevice;
 	private Toolbar mToolbar;
 	private TextView forgotPassword;
 	private boolean openMyAccountOnLoginSuccess;
@@ -142,7 +141,6 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 		password_box = (EditText) findViewById(R.id.password);
 		emailBox = (EditText) findViewById(R.id.username);
 		hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
-		registerDevice = (CheckBox) findViewById(R.id.link_my_device);
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		forgotPassword = (TextView) findViewById(R.id.forgot_password);
 	}
