@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -50,17 +50,20 @@ public abstract class BaseTable {
 				throw new IllegalStateException("Cursor for table " + tableName + " is not available");
 			}
 
-			ArrayList<RealmObject> objs = new ArrayList<>(cursor.getCount());
+			ArrayList<RealmObject> objs = new ArrayList<>();
 			RealmObject converted;
 			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				converted = convert(cursor);
 				if(converted!=null) objs.add(converted);
 			}
-			realm.beginTransaction();
-			realm.copyToRealmOrUpdate(objs);
-			realm.commitTransaction();
+			if (objs.size() > 0) {
+				realm.beginTransaction();
+				realm.copyToRealmOrUpdate(objs);
+				realm.commitTransaction();
+			}
 
 			// delete migrated table
+			// FIXME: 29/08/16 sithengineer uncomment the following lines when migration script is stable
 //			db.beginTransaction();
 //			db.execSQL(DROP_TABLE_SQL + tableName);
 //			db.endTransaction();

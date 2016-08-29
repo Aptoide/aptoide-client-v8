@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 01/06/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -40,13 +40,19 @@ public class Installed extends RealmObject {
 	}
 
 	public Installed(PackageInfo packageInfo, @NonNull PackageManager packageManager) {
+		this(packageInfo);
+	}
+
+	public Installed(PackageInfo packageInfo) {
 		setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
 		setName(AptoideUtils.SystemU.getApkLabel(packageInfo));
 		setPackageName(packageInfo.packageName);
-		setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
 		setVersionCode(packageInfo.versionCode);
 		setVersionName(packageInfo.versionName);
 		setSystemApp((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+		if (packageInfo.signatures != null && packageInfo.signatures.length > 0) {
+			setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
+		}
 	}
 
 //	public int getId() {
