@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.provider.Browser;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -90,8 +92,12 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 			Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(), Analytics
 					.AppsTimeline.OPEN_VIDEO);
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl()));
+			Bundle bundle = new Bundle();
+			bundle.putString("Referer", "http://m.aptoide.com");
+			intent.putExtra(Browser.EXTRA_HEADERS, bundle);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			getContext().startActivity(intent);
+
 		});
 	}
 

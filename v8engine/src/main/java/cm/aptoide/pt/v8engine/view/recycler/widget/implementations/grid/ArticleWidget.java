@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.provider.Browser;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.webkit.WebView;
@@ -15,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -83,7 +88,11 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		url.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl()));
+				Bundle bundle = new Bundle();
+				bundle.putString("Referer", "http://m.aptoide.com");
+				intent.putExtra(Browser.EXTRA_HEADERS, bundle);
+				getContext().startActivity(intent);
 				Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
 						.AppsTimeline
 						.OPEN_ARTICLE);
