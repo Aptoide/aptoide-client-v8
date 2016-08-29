@@ -320,10 +320,26 @@ public class Database {
 					});
 		}
 
-		public static Observable<Download> getDownload(long appId) {
+		public static Observable<Download> getDownloadAsync(long appId) {
 			final Scheduler scheduler = Schedulers.immediate();
 			final Realm realm = Database.get();
 			return realm.where(Download.class).equalTo("appId", appId).findFirstAsync().<Download> asObservable().filter(download -> download.isLoaded())
+					.flatMap(download -> {
+						if (download.isValid()) {
+							return Observable.just(download);
+						} else {
+							return Observable.error(new DownloadNotFoundException());
+						}
+					})
+					.map(realm::copyFromRealm)
+					.unsubscribeOn(scheduler)
+					.doOnUnsubscribe(realm::close);
+		}
+
+		public static Observable<Download> getDownload(long appId) {
+			final Scheduler scheduler = Schedulers.immediate();
+			final Realm realm = Database.get();
+			return realm.where(Download.class).equalTo("appId", appId).findFirst().<Download> asObservable().filter(download -> download.isLoaded())
 					.flatMap(download -> {
 						if (download.isValid()) {
 							return Observable.just(download);

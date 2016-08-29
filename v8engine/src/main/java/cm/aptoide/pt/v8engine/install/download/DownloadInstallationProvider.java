@@ -24,7 +24,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
 
 	@Override
 	public Observable<Installation> getInstallation(long id) {
-		return downloadManager.getDownload(id).subscribeOn(AndroidSchedulers.mainThread()).first().flatMap(download -> {
+		return downloadManager.getDownloadAsync(id).subscribeOn(AndroidSchedulers.mainThread()).first().flatMap(download -> {
 			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 				return Observable.just(new DownloadInstallation(download));
 			}

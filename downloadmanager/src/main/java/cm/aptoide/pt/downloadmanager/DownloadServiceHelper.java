@@ -66,7 +66,7 @@ public class DownloadServiceHelper {
 	 */
 	public Observable<Download> startDownload(PermissionRequest permissionRequest, Download download) {
 		return permissionManager.requestExternalStoragePermission(permissionRequest).flatMap(success -> Observable.fromCallable(() -> {
-			getDownload(download.getAppId()).first().subscribe(storedDownload -> {
+			getDownloadAsync(download.getAppId()).first().subscribe(storedDownload -> {
 				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 			}, throwable -> {
 				if (throwable instanceof DownloadNotFoundException) {
@@ -79,7 +79,7 @@ public class DownloadServiceHelper {
 				}
 			});
 			return download;
-		}).flatMap(aDownload -> getDownload(download.getAppId())));
+		}).flatMap(aDownload -> getDownloadAsync(download.getAppId())));
 	}
 
 	public void startDownload(PermissionRequest permissionRequest, List<Download> downloads, Action1<Long> action) {
@@ -157,6 +157,11 @@ public class DownloadServiceHelper {
 	 *
 	 * @return an observable with the download
 	 */
+	public Observable<Download> getDownloadAsync(long appId) {
+		return aptoideDownloadManager.getDownloadAsync(appId);
+	}
+
+
 	public Observable<Download> getDownload(long appId) {
 		return aptoideDownloadManager.getDownload(appId);
 	}

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import java.util.ArrayList;
 
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -39,11 +38,6 @@ import cm.aptoide.pt.v8engine.services.PullingContentService;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
-import io.realm.Realm;
-import lombok.Cleanup;
-import rx.Observable;
-import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 06-05-2016.

@@ -24,7 +24,6 @@ import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import io.realm.Realm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
@@ -74,7 +73,7 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Observable<Integer> downloadStatus() {
-		return downloadManager.getDownload(download.getAppId())
+		return downloadManager.getDownloadAsync(download.getAppId())
 				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
 				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
 	}

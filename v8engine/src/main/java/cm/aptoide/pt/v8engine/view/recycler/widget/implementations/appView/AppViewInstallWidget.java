@@ -193,7 +193,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
 		//		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		//		downloadServiceHelper.getDownload(app.getId())
+		//		downloadServiceHelper.getDownloadAsync(app.getId())
 		//		downloadServiceHelper.getAllDownloads().firstOrDefault(Collections.emptyList()).subscribe(downloads -> {
 		//			for (Download download : downloads) {
 		//				int downloadStatus = download.getOverallDownloadStatus();
@@ -203,7 +203,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//						.getAppId() == app.getId()) {
 		//					setDownloadBarVisible(true);
 		//					setupDownloadControls(app, download, displayable);
-		//					downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
+		//					downloadServiceHelper.getDownloadAsync(app.getId()).subscribe(onGoingDownload -> {
 		//						manageDownload(onGoingDownload, displayable, app);
 		//					}, err -> {
 		//						Logger.e(TAG, err);

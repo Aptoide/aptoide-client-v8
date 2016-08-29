@@ -15,6 +15,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -52,7 +54,12 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 		if (subscriptions == null || subscriptions.isUnsubscribed()) {
 			subscriptions = new CompositeSubscription();
 		}
-		subscriptions.add(displayable.getDownload().distinctUntilChanged().map(download -> download).subscribe(this::updateUi));
+		subscriptions.add(displayable.getDownload()
+				.observeOn(Schedulers.computation())
+				.distinctUntilChanged()
+				.map(download -> download)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(this::updateUi));
 		subscriptions.add(RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
 	}
 

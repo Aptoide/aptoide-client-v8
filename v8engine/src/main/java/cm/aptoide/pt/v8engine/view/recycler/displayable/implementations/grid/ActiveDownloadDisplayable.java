@@ -42,6 +42,6 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
 	}
 
 	public Observable<Download> getDownload() {
-		return downloadManager.getDownload(getPojo().getAppId());
+		return downloadManager.getDownloadAsync(getPojo().getAppId());
 	}
 }

@@ -36,7 +36,6 @@ public class DownloadService extends Service {
 	private Realm realm;
 
 	private void pauseDownloads(Intent intent) {
-		// TODO: 7/4/16 trinkes pause with specific id
 		long appId = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0);
 		if (appId > 0) {
 			downloadManager.pauseDownload(appId);
