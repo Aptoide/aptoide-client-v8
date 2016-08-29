@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.support.annotation.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +22,18 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
 	private Map<String,String> args;
 
 	public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type) {
+		Map<String,String> args = getBaseArgs(apiVersion, packageName, type);
+		return new InAppBillingPurchasesRequest(BASE_HOST, args);
+	}
+
+	public static InAppBillingPurchasesRequest of(int orderId, int apiVersion, String packageName, String type) {
+		Map<String,String> baseArgs = getBaseArgs(apiVersion, packageName, type);
+		baseArgs.put("orderid", String.valueOf(orderId));
+		return new InAppBillingPurchasesRequest(BASE_HOST, baseArgs);
+	}
+
+	@NonNull
+	private static Map<String,String> getBaseArgs(int apiVersion, String packageName, String type) {
 		Map<String, String> args = new HashMap<String, String>();
 		args.put("mode","json");
 		args.put("package", packageName);
@@ -27,7 +41,7 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
 		args.put("reqtype", "iabpurchases");
 		args.put("access_token", AptoideAccountManager.getAccessToken());
 		args.put("purchasetype",type);
-		return new InAppBillingPurchasesRequest(BASE_HOST, args);
+		return args;
 	}
 
 	private InAppBillingPurchasesRequest(String baseHost, Map<String,String> args) {
@@ -39,4 +53,5 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
 	protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getInAppBillingPurchases(args);
 	}
+
 }

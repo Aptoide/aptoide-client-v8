@@ -18,6 +18,7 @@ package cm.aptoide.pt.iab;
  * All calls will give a response code with the following possible values
  * RESULT_OK = 0 - success
  * RESULT_USER_CANCELED = 1 - user pressed back or canceled a dialog
+ * RESULT_SERVICE_UNAVAILABLE = 2 - The network connection is down
  * RESULT_BILLING_UNAVAILABLE = 3 - this billing API version is not supported for the type requested
  * RESULT_ITEM_UNAVAILABLE = 4 - requested SKU is not available for purchase
  * RESULT_DEVELOPER_ERROR = 5 - invalid arguments provided to the API
@@ -90,7 +91,6 @@ interface AptoideInAppBillingService {
         *                                   "developerPayload":"example developer payload" }'
         *         "INAPP_DATA_SIGNATURE" - String containing the signature of the purchase data that
         *                                  was signed with the private key of the developer
-        *                                  TODO: change this to app-specific keys.
         */
        Bundle getBuyIntent(int apiVersion, String packageName, String sku, String type, String developerPayload);
 

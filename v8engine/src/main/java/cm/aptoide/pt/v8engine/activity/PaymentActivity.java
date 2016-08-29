@@ -20,11 +20,12 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.iab.InAppBillingBinder;
+import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -85,35 +86,33 @@ public class PaymentActivity extends AppCompatActivityView implements PaymentVie
 		noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
 		payWithText = (TextView) findViewById(R.id.activity_payment_pay_with_text);
 		paymentSelections = new ArrayList<>();
-		intentFactory = new PurchaseIntentFactory(InAppBillingBinder.RESPONSE_CODE, InAppBillingBinder.INAPP_PURCHASE_DATA, InAppBillingBinder
-				.INAPP_DATA_SIGNATURE, InAppBillingBinder.RESULT_OK, InAppBillingBinder.RESULT_ERROR, InAppBillingBinder.RESULT_USER_CANCELED);
+		intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
 
 		final Product product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
 
 		// TODO Repository Factory, Presenter Factory
 		final NetworkOperatorManager operatorManager = new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
 		final ProductFactory productFactory = new ProductFactory();
-		final PaymentFactory paymentFactory = new PaymentFactory();
-		final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
-		final PaymentManager paymentManager = new PaymentManager(new PaymentRepository(new AppRepository(operatorManager, productFactory, paymentFactory,
-				purchaseFactory), new InAppBillingRepository(operatorManager, productFactory, paymentFactory, purchaseFactory),
-				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory, purchaseFactory));
+		final PaymentManager paymentManager = new PaymentManager(new PaymentRepository(new AppRepository(operatorManager, productFactory),
+				new InAppBillingRepository(operatorManager, productFactory),
+				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory,
+				new PurchaseFactory(new InAppBillingSerializer()), new PaymentFactory()));
 
 		attachPresenter(new PaymentPresenter(this, paymentManager, product), savedInstanceState);
 	}
 
 	@Override
-	public void dismissWithSuccess(Purchase purchase) {
+	public void dismiss(Purchase purchase) throws IOException {
 		finish(RESULT_OK, intentFactory.create(purchase));
 	}
 
 	@Override
-	public void dismissWithFailure(Throwable throwable) {
+	public void dismiss(Throwable throwable) {
 		finish(RESULT_CANCELED, intentFactory.create(throwable));
 	}
 
 	@Override
-	public void dismissWithCancellation() {
+	public void dismiss() {
 		finish(RESULT_CANCELED, intentFactory.createFromCancellation());
 	}
 

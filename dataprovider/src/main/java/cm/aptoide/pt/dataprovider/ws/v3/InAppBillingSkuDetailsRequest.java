@@ -22,10 +22,6 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
 
 	private final Map<String,String> args;
 
-	public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName, String sku, NetworkOperatorManager operatorManager, String type) {
-		return of(apiVersion, packageName, Collections.singletonList(sku), operatorManager, type);
-	}
-
 	public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName, List<String> skuList, NetworkOperatorManager operatorManager,
 	                                               String type) {
 		HashMap<String, String> args = new HashMap<>();

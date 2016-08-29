@@ -129,6 +129,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private MenuItem uninstallMenuItem;
 	private DownloadServiceHelper downloadManager;
 	private AppRepository appRepository;
+	private ProductFactory productFactory;
 	private Subscription subscription;
 	private AdRepository adRepository;
 	private boolean sponsored;
@@ -192,9 +193,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(),
 				new DownloadInstallationProvider(downloadManager));
+		productFactory = new ProductFactory();
 		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
-				new ProductFactory(), new PaymentFactory(), new PurchaseFactory(new InAppBillingSerializer()));
+				productFactory);
 		adRepository = new AdRepository();
+
 	}
 
 	@Override
@@ -266,7 +269,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	public void buyApp(GetAppMeta.App app) {
-		appRepository.getPaidAppProduct(app, sponsored, storeName)
+		appRepository.getAppPayment(app.getId(), sponsored, storeName)
+				.map(payment -> productFactory.create(app, payment))
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(product -> startActivityForResult(PaymentActivity.getIntent(getActivity(), product), PAY_APP_REQUEST_CODE),

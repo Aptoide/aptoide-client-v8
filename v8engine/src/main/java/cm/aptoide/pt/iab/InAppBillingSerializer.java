@@ -12,33 +12,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+
 public class InAppBillingSerializer {
 
-	public List<String> serializeProducts(List<InAppBillingSKU> products) {
+	public List<String> serializeProducts(List<SKU> products) throws IOException {
 		final List<String> serializedProducts = new ArrayList<String>();
-		try {
-			for (InAppBillingSKU product : products) {
-				serializedProducts.add(new ObjectMapper().writeValueAsString(product));
-			}
-		} catch (JsonProcessingException exception) {
-			throw new RuntimeException(exception);
+		for (SKU product : products) {
+			serializedProducts.add(new ObjectMapper().writeValueAsString(product));
 		}
 		return serializedProducts;
 	}
 
-	public List<String> serializePurchases(List<InAppBillingPurchase> purchases) {
+	public List<String> serializePurchases(List<InAppBillingPurchasesResponse.InAppBillingPurchase> purchases) throws IOException {
 		final List<String> serializedProducts = new ArrayList<String>();
-		for (InAppBillingPurchase purchase : purchases) {
+		for (InAppBillingPurchasesResponse.InAppBillingPurchase purchase : purchases) {
 			serializedProducts.add(serializePurchase(purchase));
 		}
 		return serializedProducts;
 	}
 
-	public String serializePurchase(InAppBillingPurchase purchase) {
-		try {
-			return new ObjectMapper().writeValueAsString(purchase);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
+	public String serializePurchase(InAppBillingPurchasesResponse.InAppBillingPurchase purchase) throws JsonProcessingException {
+		return new ObjectMapper().writeValueAsString(purchase);
 	}
 }

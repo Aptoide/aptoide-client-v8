@@ -8,31 +8,39 @@ package cm.aptoide.pt.iab;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import cm.aptoide.pt.v8engine.payment.Product;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * Created by marcelobenites on 8/11/16.
  */
-public class InAppBillingSKU {
+@AllArgsConstructor
+public class SKU {
 
 	@Getter
-	private String sku;
+	private String productId;
 
 	@Getter
-	private String priceDescription;
+	private String type;
+
+	@Getter
+	private String price;
+
+	@Getter
+	@JsonProperty("price_currency")
+	private String currency;
+
+	@Getter
+	@JsonProperty("price_amount_micros")
+	private long amount;
 
 	@Getter
 	private String title;
 
 	@Getter
 	private String description;
-
-	public InAppBillingSKU(String sku, String priceDescription, String title, String description) {
-		this.sku = sku;
-		this.priceDescription = priceDescription;
-		this.title = title;
-		this.description = description;
-	}
 
 }

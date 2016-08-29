@@ -30,6 +30,8 @@ import com.facebook.login.widget.LoginButton;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 import cm.aptoide.accountmanager.util.UserInfo;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.ChangeUserRepoSubscriptionRequest;
@@ -109,13 +111,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 			return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
 					.doOnSubscribe(() -> AptoideAccountManager.openAccountManager(context, false))
 					.flatMap(intent -> {
-						// TODO: create account manager specific exceptions
 						if (AptoideAccountManager.LOGIN.equals(intent.getAction())) {
 							return Observable.just(null);
 						} else if (AptoideAccountManager.LOGIN_CANCELLED.equals(intent.getAction())) {
-							return Observable.error(new IllegalStateException("User cancelled login."));
+							return Observable.error(new LoginException("User cancelled login."));
 						} else if (AptoideAccountManager.LOGOUT.equals(intent.getAction())) {
-							return Observable.error(new IllegalStateException("User logged out."));
+							return Observable.error(new LoginException("User logged out."));
 						}
 						return Observable.empty();
 					});

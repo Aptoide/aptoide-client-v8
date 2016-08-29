@@ -5,10 +5,11 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.iab.InAppBillingBinder;
-import cm.aptoide.pt.iab.InAppBillingPurchase;
+import java.io.IOException;
+
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import lombok.AllArgsConstructor;
 
 /**
@@ -19,17 +20,17 @@ public class PurchaseFactory {
 
 	private final InAppBillingSerializer serializer;
 
-	public Purchase create(InAppBillingPurchase inAppBillingPurchase) {
+	public Purchase create(InAppBillingPurchasesResponse.InAppBillingPurchase purchase, String purchaseSignature) {
 		return new Purchase() {
 
 			@Override
-			public String getData() {
-				return serializer.serializePurchase(inAppBillingPurchase);
+			public String getData() throws IOException {
+				return serializer.serializePurchase(purchase);
 			}
 
 			@Override
 			public String getSignature() {
-				return inAppBillingPurchase.getSignature();
+				return purchaseSignature;
 			}
 		};
 	}

@@ -7,9 +7,10 @@ package cm.aptoide.pt.v8engine.payment;
 
 import android.content.Intent;
 
-import cm.aptoide.pt.iab.InAppBillingBinder;
-import cm.aptoide.pt.iab.InAppBillingSerializer;
-import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
+import java.io.IOException;
+
+import cm.aptoide.pt.iab.BillingBinder;
+import cm.aptoide.pt.iab.ErrorCodeFactory;
 import lombok.AllArgsConstructor;
 
 /**
@@ -18,35 +19,28 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PurchaseIntentFactory {
 
-	private final String statusKey;
-	private final String dataKey;
-	private final String signatureKey;
+	private final ErrorCodeFactory codeFactory;
 
-	private final int statusOk;
-	private final int statusError;
-	private final int statusCancelled;
-
-	public Intent create(Purchase purchase) {
+	public Intent create(Purchase purchase) throws IOException {
 		final Intent intent = new Intent();
-		intent.putExtra(statusKey, statusOk);
+		intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_OK);
 		if (purchase.getData() != null) {
-			intent.putExtra(dataKey, purchase.getData());
+			intent.putExtra(BillingBinder.INAPP_PURCHASE_DATA, purchase.getData());
 		}
 
 		if (purchase.getSignature() !=  null) {
-			intent.putExtra(signatureKey, purchase.getSignature());
+			intent.putExtra(BillingBinder.INAPP_DATA_SIGNATURE, purchase.getSignature());
 		}
 
 		return intent;
 	}
 
 	public Intent create(Throwable throwable) {
-		// TODO treat errors according to throwable
-		return new Intent().putExtra(statusKey, statusError);
+		return new Intent().putExtra(BillingBinder.RESPONSE_CODE, codeFactory.create(throwable));
 	}
 
 	public Intent createFromCancellation() {
-		return new Intent().putExtra(statusKey, statusCancelled);
+		return new Intent().putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_USER_CANCELED);
 	}
 	
 }

@@ -8,7 +8,10 @@ package cm.aptoide.pt.v8engine.payment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.security.auth.login.LoginException;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
@@ -75,7 +78,7 @@ public class PaymentPresenter implements Presenter {
 				.onErrorResumeNext(AptoideAccountManager.login(view.getContext())
 						.doOnSubscribe(() -> saveLoginState())
 						.map(success -> true))
-				.<Void>flatMap(loggedIn -> (loggedIn)? Observable.just(null): Observable.error(new IllegalStateException("Not logged In. Payment can not be " +
+				.<Void>flatMap(loggedIn -> (loggedIn)? Observable.just(null): Observable.error(new LoginException("Not logged In. Payment can not be " +
 						"processed!")))
 				.doOnNext(loggedIn -> clearLoginState())
 				.doOnError(throwable -> clearLoginStateAndDismiss(throwable))
@@ -162,16 +165,16 @@ public class PaymentPresenter implements Presenter {
 	}
 
 	private void dismiss(Throwable throwable) {
-		if (throwable instanceof PaymentCancellationException) {
-			view.dismissWithCancellation();
-		} else {
-			view.dismissWithFailure(throwable);
-		}
+		view.dismiss(throwable);
 	}
 
 	private void removeLoadingAndDismiss(Purchase purchase) {
 		view.removeLoading();
-		view.dismissWithSuccess(purchase);
+		try {
+			view.dismiss(purchase);
+		} catch (IOException e) {
+			dismiss(e);
+		}
 	}
 
 	private boolean clearLoginState() {
@@ -195,7 +198,7 @@ public class PaymentPresenter implements Presenter {
 		return Observable.just(isProcessingPayment)
 				.flatMap(isProcessingPayment -> {
 					if (isProcessingPayment) {
-						return paymentManager.getPurchase(view.getContext(), currentPaymentType, product)
+						return paymentManager.getPurchase(product)
 								.doOnSubscribe(() -> clearPaymentState());
 					}
 					return Observable.just(null);
@@ -204,6 +207,6 @@ public class PaymentPresenter implements Presenter {
 
 	@NonNull
 	private Observable<Void> cancellationSelection() {
-		return view.cancellationSelection().doOnNext(cancellation -> view.dismissWithCancellation()).compose(view.bindUntilEvent(View.Event.PAUSE));
+		return view.cancellationSelection().doOnNext(cancellation -> view.dismiss()).compose(view.bindUntilEvent(View.Event.PAUSE));
 	}
 }

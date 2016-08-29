@@ -20,31 +20,29 @@ import lombok.EqualsAndHashCode;
 public class InAppBillingPurchasesResponse extends BaseV3Response {
 
 	@JsonProperty("publisher_response")
-	private PublisherResponse publisherResponse;
+	private PurchaseInformation purchaseInformation;
 
 	@Data
-	public static class PublisherResponse {
+	public static class PurchaseInformation {
 
 		@JsonProperty("INAPP_PURCHASE_ITEM_LIST")
-		private List<String> itemList;
+		private List<String> skuList;
 
 		@JsonProperty("INAPP_PURCHASE_DATA_LIST")
-		private List<PurchaseDataObject> purchaseDataList;
+		private List<InAppBillingPurchase> purchaseList;
 
 		@JsonProperty("INAAP_DATA_SIGNATURE_LIST")
 		private List<String> signatureList;
 	}
 
 	@Data
-	public static class PurchaseDataObject {
+	public static class InAppBillingPurchase {
 		private int orderId;
-		private String productId;
 		private String packageName;
+		private String productId;
 		private long purchaseTime;
-		private String purchaseState;
-		private String developerPayload;
-		private String token;
 		private String purchaseToken;
+		private String developerPayload;
 	}
-	
+
 }

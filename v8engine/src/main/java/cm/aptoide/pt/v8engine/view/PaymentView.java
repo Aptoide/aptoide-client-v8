@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view;
 
+import java.io.IOException;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.payment.Payment;
@@ -30,11 +31,12 @@ public interface PaymentView extends View {
 
 	void removeLoading();
 
-	void dismissWithSuccess(Purchase purchase);
+	void dismiss(Purchase purchase) throws IOException;
 
-	void dismissWithCancellation();
+	void dismiss(Throwable throwable);
 
-	void dismissWithFailure(Throwable throwable);
+	void dismiss();
 
 	void showPaymentsNotFoundMessage();
+
 }
