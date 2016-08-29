@@ -13,11 +13,9 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -25,12 +23,10 @@ import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -81,6 +77,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
 	private void setupNavigationView() {
 		if (mNavigationView != null) {
+			mNavigationView.setItemIconTintList(null);
 			mNavigationView.setNavigationItemSelectedListener(menuItem -> {
 
 				int itemId = menuItem.getItemId();
