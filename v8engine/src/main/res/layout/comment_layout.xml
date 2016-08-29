@@ -9,14 +9,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="50dp"
-    android:layout_marginRight="20dp"
     android:layout_marginTop="10dp">
 
     <LinearLayout
         android:id="@+id/user_laout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_vertical">
 
         <ImageView
@@ -58,10 +58,18 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/user_laout"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="9dp"
         android:ellipsize="end"
         android:textSize="11.3sp"
-        tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
-        />
+        tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/comment"
+        android:layout_marginTop="10dp"
+        android:background="@color/comments_footer"/>
 
 </RelativeLayout>

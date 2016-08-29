@@ -149,6 +149,7 @@
     <color name="green_tint_default">#45d316</color>
     <color name="working_well_text_color">#98cf1c</color>
     <color name="card_store_title">#ff6d00</color>
+    <color name="comments_footer">#f2f2f2</color>
 
 
 </resources>

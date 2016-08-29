@@ -290,7 +290,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 			String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
 			if (!validateAcceptedName(name)) {
-				throw new RuntimeException("Invalid name for event on " + getClass().getSimpleName() + "!");
+				throw new RuntimeException("Invalid name(" + name + ") for event on " + getClass().getSimpleName() + "!");
 			}
 
 			switch (name) {
