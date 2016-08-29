@@ -345,7 +345,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 				}
 				this.displayables = new ArrayList<>(reviews.size());
 				this.displayables.add(new DisplayableGroup(displayables));
-				setDisplayables(this.displayables);
+				addDisplayables(this.displayables);
 			}
 		});
 		recyclerView.clearOnScrollListeners();
