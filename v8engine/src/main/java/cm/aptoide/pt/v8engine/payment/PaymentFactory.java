@@ -47,7 +47,7 @@ public class PaymentFactory {
 
 	private PayPalConfiguration getPayPalConfiguration() {
 		final PayPalConfiguration configuration = new PayPalConfiguration();
-		configuration.environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK);
+		configuration.environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION);
 		configuration.clientId("AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY");
 		return configuration;
 	}
