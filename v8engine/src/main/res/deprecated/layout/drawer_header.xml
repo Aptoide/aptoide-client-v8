@@ -35,26 +35,12 @@
             android:src="@drawable/img_people_mockup"
             app:maskDrawable="@drawable/circle_mask"/>
 
-        <ImageView
-            android:id="@+id/expand_account_box_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="16dp"
-            android:paddingBottom="16dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_drawer_accounts_expand"
-            android:visibility="visible"/>
-
         <TextView
             android:id="@+id/profile_email_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/profile_image"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/expand_account_box_indicator"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingBottom="16dp"
@@ -69,7 +55,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/profile_email_text"
             android:layout_alignLeft="@id/profile_image"
-            android:layout_toLeftOf="@id/expand_account_box_indicator"
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
