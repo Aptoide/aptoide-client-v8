@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -18,7 +18,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Locale;
 
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -49,7 +48,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private View ratingLayout;
 	private View commentsLayout;
 
-	private TextView usersVoted;
+	private TextView usersVotedTextView;
 	private TextView ratingValue;
 	private RatingBar ratingBar;
 
@@ -63,6 +62,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 	private String appName;
 	private String packageName;
 	private String storeName;
+	private int usersToVote;
+	private TextView emptyReviewTextView;
 
 	public AppViewRateAndReviewsWidget(View itemView) {
 		super(itemView);
@@ -74,7 +75,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		ratingLayout = itemView.findViewById(R.id.rating_layout);
 		commentsLayout = itemView.findViewById(R.id.comments_layout);
 
-		usersVoted = (TextView) itemView.findViewById(R.id.users_voted);
+		usersVotedTextView = (TextView) itemView.findViewById(R.id.users_voted);
+		emptyReviewTextView = (TextView) itemView.findViewById(R.id.empty_review_text);
 		ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
 		ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
 		rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
@@ -95,7 +97,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		packageName = app.getPackageName();
 		storeName = app.getStore().getName();
 
-		usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating().getTotal()));
+		usersToVote = stats.getRating().getTotal();
+		usersVotedTextView.setText(AptoideUtils.StringU.withSuffix(usersToVote));
 
 		float ratingAvg = stats.getRating().getAvg();
 		ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
@@ -173,11 +176,11 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		);
 	}
 
-	private void loadedData(boolean hasData) {
+	private void loadedData(boolean hasReviews) {
 
 		topReviewsProgress.setVisibility(View.GONE);
 
-		if (hasData) {
+		if (hasReviews) {
 			ratingLayout.setVisibility(View.VISIBLE);
 			emptyReviewsLayout.setVisibility(View.GONE);
 			commentsLayout.setVisibility(View.VISIBLE);
@@ -189,6 +192,10 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 			commentsLayout.setVisibility(View.GONE);
 			rateThisButtonLarge.setVisibility(View.VISIBLE);
 			rateThisButton.setVisibility(View.INVISIBLE);
+
+			if (usersToVote == 0) {
+				emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
+			}
 		}
 	}
 
