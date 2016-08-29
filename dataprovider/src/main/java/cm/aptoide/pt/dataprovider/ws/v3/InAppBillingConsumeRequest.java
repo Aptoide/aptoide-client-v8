@@ -17,6 +17,7 @@ import rx.Observable;
  */
 public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
 
+	private Map<String,String> args;
 
 	public static InAppBillingConsumeRequest of(int apiVersion, String packageName, String purchaseToken) {
 		Map<String, String> args = new HashMap<String, String>();
@@ -31,10 +32,11 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
 
 	private InAppBillingConsumeRequest(String baseHost, Map<String,String> args) {
 		super(baseHost);
+		this.args = args;
 	}
 
 	@Override
 	protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return null;
+		return interfaces.deleteInAppBillingPurchase(args);
 	}
 }

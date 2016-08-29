@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import java.util.Map;
 
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
+import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
@@ -60,6 +61,10 @@ public abstract class V3<U> extends WebService<V3.Interfaces,U> {
 		@POST("processInAppBilling")
 		@FormUrlEncoded
 		Observable<InAppBillingPurchasesResponse> getInAppBillingPurchases(@FieldMap Map<String,String> args);
+
+		@POST("processInAppBilling")
+		@FormUrlEncoded
+		Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap Map<String,String> args);
 
 		@POST("checkProductPayment")
 		@FormUrlEncoded
