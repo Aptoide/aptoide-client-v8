@@ -48,8 +48,10 @@ public class DataproviderUtils {
 		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
 			@Cleanup Realm realm = Database.get();
 			for (App app : listAppsUpdates.getList()) {
-				if(!Database.UpdatesQ.get(app.getPackageName(),realm).isExcluded())
+				Update update = Database.UpdatesQ.get(app.getPackageName(), realm);
+				if (update == null || !update.isExcluded()) {
 					Database.save(new Update(app), realm);
+				}
 			}
 
 			if (successRequestListener != null) {
