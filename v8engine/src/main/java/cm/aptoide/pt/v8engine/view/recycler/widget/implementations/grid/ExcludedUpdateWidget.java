@@ -51,7 +51,7 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 
 		ImageLoader.load(excludedUpdate.getIcon(), icon);
 		name.setText(excludedUpdate.getLabel());
-		versionCode.setText(String.format(excludedUpdate.getUpdateVersionName()));
+		versionCode.setText(excludedUpdate.getUpdateVersionName());
 		packageName.setText(excludedUpdate.getPackageName());
 
 		isExcluded.setOnCheckedChangeListener((buttonView, isChecked) -> {

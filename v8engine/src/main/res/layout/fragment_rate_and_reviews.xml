@@ -144,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rating_value"
                     android:layout_centerInParent="true"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="6dp"
                     android:numStars="5"
                     android:stepSize="0.5"
                     tools:rating="3.0"

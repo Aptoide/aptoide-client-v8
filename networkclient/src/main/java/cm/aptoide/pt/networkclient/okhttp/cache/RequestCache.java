@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
@@ -86,7 +87,7 @@ public class RequestCache {
 					}
 					deletedFiles += cachePath.delete() ? 1 : 0;
 				}
-				Log.w(TAG, String.format("cache running in debug mode : cleaned %d disk cache files", deletedFiles));
+				Logger.w(TAG, String.format(Locale.ROOT, "cache running in debug mode : cleaned %d disk cache files", deletedFiles));
 			}
 
 			diskLruCache = DiskLruCache.open(

@@ -97,7 +97,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
-		Logger.d(TAG, String.format("refresh rollbacks? %s", refresh ? "yes" : "no"));
+		Logger.d(TAG, "refresh rollbacks? " + (refresh ? "yes" : "no"));
 		AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
 	}
 

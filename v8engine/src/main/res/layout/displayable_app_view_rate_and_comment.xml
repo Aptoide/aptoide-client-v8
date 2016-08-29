@@ -102,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rating_value"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="6dp"
                 android:numStars="5"
                 android:rating="0"
                 android:stepSize="0.5"

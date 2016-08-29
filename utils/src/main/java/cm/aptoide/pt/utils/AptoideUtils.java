@@ -1349,7 +1349,7 @@ public class AptoideUtils {
 		// consider moving the retry code from dataprovider module to here
 	}
 
-	public static class SocialLinksU {
+	public static final class SocialLinksU {
 
 		public static
 		@Nullable
@@ -1362,5 +1362,10 @@ public class AptoideUtils {
 			}
 			return toReturn;
 		}
+	}
+
+	public static final class LocaleU {
+
+		public static final Locale DEFAULT = Locale.getDefault();
 	}
 }
