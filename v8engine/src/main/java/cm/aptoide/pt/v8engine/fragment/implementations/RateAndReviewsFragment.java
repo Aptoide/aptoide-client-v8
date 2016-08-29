@@ -107,7 +107,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 							List<Displayable> displayableList = new ArrayList<>();
 							createDisplayableComments(comments, displayableList);
 							int reviewPosition = getAdapter().getReviewPosition(reviewIndex);
-							displayableList.add(createReadMoreDisplayable(reviewPosition, review));
+							if (comments.size() > 2) {
+								displayableList.add(createReadMoreDisplayable(reviewPosition, review));
+							}
 							getAdapter().addDisplayables(reviewPosition + 1, displayableList);
 						}
 
@@ -131,11 +133,14 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 							.getDatalist()
 							.getLimit() != null) {
 						createDisplayableComments(review.getCommentList().getDatalist().getList(), displayables);
-						displayables.add(createReadMoreDisplayable(count, review));
+						if (review.getCommentList().getDatalist().getList().size() > 2) {
+							displayables.add(createReadMoreDisplayable(count, review));
+						}
 					}
 					count++;
 				}
 				addDisplayables(displayables);
+				getLayoutManager().scrollToPosition(getAdapter().getReviewPosition(index));
 			});
 		});
 	};

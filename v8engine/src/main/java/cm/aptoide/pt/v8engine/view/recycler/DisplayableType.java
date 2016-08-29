@@ -205,7 +205,7 @@ public enum DisplayableType {
 	COMPLETED_DOWNLOAD(CompletedDownloadWidget.class, CompletedDownloadDisplayable.class),
 	ACTIVE_DOWNLOAD(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class),
 	ACTIVE_DOWNLOAD_HEADER(ActiveDownloadsHeaderWidget.class, ActiveDownloadsHeaderDisplayable.class),
-	ROW_REVIEW(RowReviewWidget.class, RowReviewDisplayable.class),
+	REVIEWS_GROUP(RowReviewWidget.class, RowReviewDisplayable.class),
 	APP_COMMENT_TO_REVIEW(CommentWidget.class, CommentDisplayable.class),
 	READ_MORE_COMMENTS(CommentsReadMoreWidget.class, CommentsReadMoreDisplayable.class);
 
