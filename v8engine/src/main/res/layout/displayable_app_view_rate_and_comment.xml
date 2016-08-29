@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/08/2016.
+  ~ Modified by SithEngineer on 29/08/2016.
   -->
 
 <RelativeLayout
@@ -217,7 +217,7 @@
                 android:gravity="top|center_horizontal"
                 android:lines="2"
                 android:paddingTop="10dp"
-                android:text="@string/be_the_first_to_rate_this_app"
+                android:text="@string/rate_this_app"
                 android:textColor="@color/app_view_gray"
                 android:textSize="@dimen/text_size_medium_large"
                 />
