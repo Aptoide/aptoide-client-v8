@@ -267,6 +267,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 			addLoading();
 			return true;
 		}
+		else if(isTotal()){
+			//TODO - When you reach the end of the endless?
+			// Snackbar.make(getView(), "No more cards!", Snackbar.LENGTH_SHORT).show();
+		}
 		return false;
 	}
 
@@ -286,7 +290,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		} else if (card instanceof Recommendation) {
 			return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory);
 		}
-		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
+		throw new IllegalArgumentException("Only articles, features, store latest apps, app updates and videos supported.");
 	}
 
 }
