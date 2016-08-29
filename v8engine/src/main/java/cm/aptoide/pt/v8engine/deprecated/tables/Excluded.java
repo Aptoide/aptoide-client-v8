@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -41,18 +41,13 @@ public class Excluded extends BaseTable {
 		cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();
 
 		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
+		realmObject.setLabel(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
 		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICONPATH)));
 		realmObject.setVersionCode(cursor.getInt(cursor.getColumnIndex(COLUMN_VERCODE)));
 		realmObject.setUpdateVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERNAME)));
+		realmObject.setExcluded(true);
 		// are this columns to remove?
 		// COLUMN_NAME
 		return realmObject;
-	}
-
-	@Override
-	public String[] getColumns() {
-		return new String[]{
-
-		};
 	}
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
 import android.database.Cursor;
 
-import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmObject;
 
 /**
@@ -16,25 +15,18 @@ import io.realm.RealmObject;
 public class Scheduled extends BaseTable {
 
 	// @ColumnDefinition(type = SQLType.TEXT)
-	public final static String COLUMN_PACKAGE_NAME = "package_name";
-
-	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_NAME = "name";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_VERSION_NAME = "version_name";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_MD5 = "md5";
-
-	// @ColumnDefinition(type = SQLType.TEXT)
-	public final static String COLUMN_REPO = "repo_name";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public final static String COLUMN_ICON = "icon";
-
+	// @ColumnDefinition(type = SQLType.TEXT)
+	public final static String COLUMN_PACKAGE_NAME = "package_name";
+	// @ColumnDefinition(type = SQLType.TEXT)
+	public final static String COLUMN_REPO = "repo_name";
 	private static final String NAME = "scheduled";
-	private static final IdUtils ID_UTILS = new IdUtils(0);
 
 	@Override
 	public String getTableName() {
@@ -44,16 +36,12 @@ public class Scheduled extends BaseTable {
 	@Override
 	public RealmObject convert(Cursor cursor) {
 		cm.aptoide.pt.database.realm.Scheduled realmObject = new cm.aptoide.pt.database.realm.Scheduled();
+		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
+		realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
 		realmObject.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
 		realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERSION_NAME)));
-		// creating a new scheduled download
-		realmObject.setAppId(ID_UTILS.nextLong());
+		realmObject.setStoreName(cursor.getString(cursor.getColumnIndex(COLUMN_REPO)));
+		realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
 		return realmObject;
-	}
-
-	@Override
-	public String[] getColumns() {
-		return new String[]{COLUMN_NAME, COLUMN_ICON, COLUMN_VERSION_NAME};
 	}
 }

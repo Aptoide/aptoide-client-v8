@@ -21,7 +21,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -391,7 +390,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		public void setup(GetAppMeta.App data) {
 			GetAppMeta.Stats stats = data.getStats();
 			usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating().getTotal()));
-			ratingValue.setText(String.format(Locale.getDefault(), "%.1f", stats.getRating().getAvg()));
+			ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", stats.getRating().getAvg()));
 			ratingBar.setRating(stats.getRating().getAvg());
 		}
 	}

@@ -43,7 +43,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDisplayable> {
 
 	private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
-	private static final Locale LOCALE = Locale.getDefault();
 	private static final int MAX_COMMENTS = 3;
 
 	private View emptyReviewsLayout;
@@ -99,7 +98,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating().getTotal()));
 
 		float ratingAvg = stats.getRating().getAvg();
-		ratingValue.setText(String.format(LOCALE, "%.1f", ratingAvg));
+		ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
 		ratingBar.setRating(ratingAvg);
 
 		View.OnClickListener rateOnClickListener = v -> {

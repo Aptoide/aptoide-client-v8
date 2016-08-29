@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -88,10 +90,13 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		storeNameView.setText(store.getName());
 		storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
 
-		storeNumberUsersView.setText(String.format(V8Engine.getContext().getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix
-				(store
-				.getStats()
-				.getSubscribers())));
+		storeNumberUsersView.setText(
+				String.format(
+						Locale.ENGLISH,
+						V8Engine.getContext().getString(R.string.appview_followers_count_text),
+						AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers())
+				)
+		);
 
 		followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/08/2016.
+  ~ Modified by SithEngineer on 29/08/2016.
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -137,10 +137,10 @@
     </style>
 
     <style name="RatingBarMedium">
-        <item name="android:progressDrawable">@drawable/rating_bar_small</item>
+        <item name="android:progressDrawable">@drawable/rating_bar_medium</item>
         <item name="android:isIndicator">true</item>
-        <item name="android:minHeight">16dp</item>
-        <item name="android:maxHeight">16dp</item>
+        <item name="android:minHeight">22dp</item>
+        <item name="android:maxHeight">22dp</item>
         <item name="android:focusableInTouchMode">false</item>
         <item name="android:clickable">false</item>
         <item name="android:focusable">false</item>
@@ -148,9 +148,9 @@
 
     <style name="RatingBarLargeSelectable">
         <!--<item name="android:progressDrawable">@drawable/rating_bar_big</item>-->
-        <item name="android:progressDrawable">@drawable/rating_bar_small</item>
-        <item name="android:minHeight">22dp</item>
-        <item name="android:maxHeight">22dp</item>
+        <item name="android:progressDrawable">@drawable/rating_bar_medium</item>
+        <item name="android:minHeight">26dp</item>
+        <item name="android:maxHeight">26dp</item>
     </style>
 
     <style name="backgroundCardStyleLight">

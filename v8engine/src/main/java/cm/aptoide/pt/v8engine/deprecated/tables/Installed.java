@@ -1,19 +1,31 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.text.TextUtils;
 
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
 
 /**
  * Created by sithengineer on 24/08/16.
+ *
+ * see method "getStartupInstalled()" in class "AptoideDatabase.java" from v7 code to understand the reason why of this code
+ *
  */
 public final class Installed extends BaseTable {
 
+	private static final String TAG = Installed.class.getSimpleName();
+	private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
+	/*
 	public static final String NAME = "installed";
 
 	// @ColumnDefinition(type = SQLType.INTEGER, primaryKey = true, autoIncrement = true)
@@ -33,27 +45,33 @@ public final class Installed extends BaseTable {
 
 	// @ColumnDefinition(type = SQLType.TEXT, defaultValue = "")
 	public final static String COLUMN_SIGNATURE = "signature";
+	*/
+	private Updates updatesTable = new Updates();
 
 	@Override
 	public String getTableName() {
-		return NAME;
+		return updatesTable.getTableName();
 	}
 
 	@Override
 	public RealmObject convert(Cursor cursor) {
-		cm.aptoide.pt.database.realm.Installed realmObject = new cm.aptoide.pt.database.realm.Installed();
-		//realmObject.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)));
-		realmObject.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-		realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERNAME)));
-		realmObject.setVersionCode(Integer.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_VERCODE)), 10));
-		realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_APKID)));
-		realmObject.setSignature(cursor.getString(cursor.getColumnIndex(COLUMN_SIGNATURE)));
-		return realmObject;
-	}
 
-	@Override
-	public String[] getColumns() {
-		return new String[]{Installed.COLUMN_APKID, Installed.COLUMN_ID, Installed.COLUMN_NAME, Installed.COLUMN_SIGNATURE, Installed.COLUMN_VERCODE,
-				Installed.COLUMN_VERNAME};
+		String path = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_URL));
+		String packageName = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_PACKAGE));
+		if (TextUtils.isEmpty(path)) {
+			try {
+				PackageInfo packageInfo = pm.getPackageInfo(packageName, 0);
+				ApplicationInfo appInfo = packageInfo.applicationInfo;
+
+				if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+					return new cm.aptoide.pt.database.realm.Installed(packageInfo
+					);
+				}
+
+			} catch(PackageManager.NameNotFoundException ex) {
+				Logger.e(TAG, ex);
+			}
+		}
+		return null;
 	}
 }

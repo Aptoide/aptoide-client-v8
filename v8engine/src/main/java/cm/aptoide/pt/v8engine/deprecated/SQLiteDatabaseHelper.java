@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated;
@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.deprecated;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -15,7 +16,6 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
-import cm.aptoide.pt.v8engine.deprecated.tables.ExcludedAd;
 import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
@@ -29,31 +29,18 @@ import io.realm.Realm;
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-	private static final int DATABASE_VERSION = 666;
-	private static SQLiteDatabaseHelper sInstance;
+	private static final int DATABASE_VERSION = 43;
 
-	/**
-	 * Constructor should be private to prevent direct instantiation. make call to static factory method "getInstance()" instead.
-	 */
-	private SQLiteDatabaseHelper(Context context) {
+	private Throwable agregateExceptions;
+
+	public SQLiteDatabaseHelper(Context context) {
 		super(context, "aptoide.db", null, DATABASE_VERSION);
-	}
-
-	public static SQLiteDatabaseHelper getInstance(Context context) {
-
-		synchronized (SQLiteDatabaseHelper.class) {
-			if (sInstance == null) {
-
-				sInstance = new SQLiteDatabaseHelper(context.getApplicationContext());
-			}
-		}
-		return sInstance;
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Logger.w(TAG, "onCreate() called");
-		migrate(db);
+		// do nothing here.
 	}
 
 	@Override
@@ -79,20 +66,12 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		Logger.w(TAG, "Migrating database started....");
 
 		Realm realm = Database.get();
-		try {
-			new Installed().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
-		}
+		realm.beginTransaction();
+		realm.deleteAll();
+		realm.commitTransaction();
 
 		try {
 			new Repo().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
-		}
-
-		try {
-			new Rollback().migrate(db, realm);
 		} catch (Exception ex) {
 			logException(ex);
 		}
@@ -104,7 +83,19 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		try {
-			new Scheduled().migrate(db, realm);
+			new Installed().migrate(db, realm); // X
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Rollback().migrate(db, realm);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+		try {
+			new Scheduled().migrate(db, realm); // X
 		} catch (Exception ex) {
 			logException(ex);
 		}
@@ -116,11 +107,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		// table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
+		// table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
 
-		try {
-			new ExcludedAd().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
+		if(agregateExceptions!=null) {
+			Crashlytics.logException(agregateExceptions);
 		}
 
 		ManagerPreferences.setNeedsDbMigration(false);
@@ -129,6 +119,11 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
 	private void logException(Exception ex) {
 		Logger.e(TAG, ex);
-		Crashlytics.logException(ex);
+
+		if(agregateExceptions==null) {
+			agregateExceptions = ex;
+		}else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			agregateExceptions.addSuppressed(ex);
+		}
 	}
 }

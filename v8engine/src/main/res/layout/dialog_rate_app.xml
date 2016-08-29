@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/08/2016.
+  ~ Modified by SithEngineer on 29/08/2016.
   -->
 
 <LinearLayout
@@ -30,7 +30,7 @@
 
     <RatingBar
         android:id="@+id/rating_bar"
-        style="@style/Widget.AppCompat.RatingBar"
+        style="@style/RatingBarLargeSelectable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
