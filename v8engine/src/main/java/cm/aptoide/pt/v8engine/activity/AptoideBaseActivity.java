@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
@@ -85,13 +85,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 	@LayoutRes
 	public abstract int getContentViewId();
 
-	//
-	// code to support android M permission system
-	//
-	// android 6 permission system
-	// consider using https://github.com/hotchemi/PermissionsDispatcher
-	//
-
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -111,6 +104,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 		super.onStart();
 		Analytics.Lifecycle.Activity.onStart(this);
 	}
+
+	//
+	// code to support android M permission system
+	//
+	// android 6 permission system
+	// consider using https://github.com/hotchemi/PermissionsDispatcher
+	//
 
 	@TargetApi(Build.VERSION_CODES.M)
 	@Override
@@ -188,6 +188,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 							if (toRunWhenAccessToFileSystemIsDenied != null) {
 								toRunWhenAccessToFileSystemIsDenied.call();
 							}
+							return;
 						}
 
 						ActivityCompat.requestPermissions(
@@ -246,6 +247,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 							if (toRunWhenAccessToAccountsIsDenied != null) {
 								toRunWhenAccessToAccountsIsDenied.call();
 							}
+							return;
 						}
 
 						ActivityCompat.requestPermissions(
