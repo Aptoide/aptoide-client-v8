@@ -57,14 +57,6 @@
 
             <include layout="@layout/credentials_edit_texts" />
 
-            <CheckBox
-                android:id="@+id/link_my_device"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/link_device_webinstall"
-                android:textColor="?android:attr/textColorSecondary"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
