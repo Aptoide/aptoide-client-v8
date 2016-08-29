@@ -13,7 +13,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  * Created by neuro on 07-06-2016.
  */
 public class ProgressBarDisplayable extends Displayable {
-	
+
+	public ProgressBarDisplayable() {
+	}
+
+	public ProgressBarDisplayable(boolean fixedPerLineCount) {
+		super(fixedPerLineCount);
+	}
+
 	@Override
 	public Type getType() {
 		return Type.PROGRESS_DISPLAYABLE;
