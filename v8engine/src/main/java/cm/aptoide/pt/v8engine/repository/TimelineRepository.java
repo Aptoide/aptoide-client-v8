@@ -46,7 +46,7 @@ public class TimelineRepository {
 						.filter(timelineItem -> timelineItem != null)
 						.<TimelineCard>map(timelineItem -> timelineItem.getData())
 						.filter(duplicateFilter)
-						.filter(timelineItem -> !(timelineItem instanceof StoreLatestApps) || !(((StoreLatestApps) timelineItem).getApps().size() < 5))
+						.filter(timelineItem -> !(timelineItem instanceof StoreLatestApps) || ((StoreLatestApps) timelineItem).getApps().size() >= 5)
 						.toList()
 						.<Datalist<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
 	}
