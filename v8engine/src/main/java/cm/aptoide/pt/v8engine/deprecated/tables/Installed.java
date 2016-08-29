@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -24,8 +24,7 @@ import io.realm.RealmObject;
 public final class Installed extends BaseTable {
 
 	private static final String TAG = Installed.class.getSimpleName();
-
-	private Updates updatesTable = new Updates();
+	private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
 	/*
 	public static final String NAME = "installed";
 
@@ -47,8 +46,7 @@ public final class Installed extends BaseTable {
 	// @ColumnDefinition(type = SQLType.TEXT, defaultValue = "")
 	public final static String COLUMN_SIGNATURE = "signature";
 	*/
-
-	private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
+	private Updates updatesTable = new Updates();
 
 	@Override
 	public String getTableName() {
@@ -66,8 +64,7 @@ public final class Installed extends BaseTable {
 				ApplicationInfo appInfo = packageInfo.applicationInfo;
 
 				if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-					return new cm.aptoide.pt.database.realm.Installed(
-							packageInfo, pm
+					return new cm.aptoide.pt.database.realm.Installed(packageInfo
 					);
 				}
 

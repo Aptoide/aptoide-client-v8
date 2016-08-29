@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated;
@@ -16,7 +16,6 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
-import cm.aptoide.pt.v8engine.deprecated.tables.ExcludedAd;
 import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
@@ -30,7 +29,7 @@ import io.realm.Realm;
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-	private static final int DATABASE_VERSION = 37;
+	private static final int DATABASE_VERSION = 43;
 
 	private Throwable agregateExceptions;
 
@@ -84,7 +83,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		try {
-			new Installed().migrate(db, realm);
+			new Installed().migrate(db, realm); // X
 		} catch (Exception ex) {
 			logException(ex);
 		}
@@ -96,7 +95,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		try {
-			new Scheduled().migrate(db, realm);
+			new Scheduled().migrate(db, realm); // X
 		} catch (Exception ex) {
 			logException(ex);
 		}
@@ -108,12 +107,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		// table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
-
-		try {
-			new ExcludedAd().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
-		}
+		// table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
 
 		if(agregateExceptions!=null) {
 			Crashlytics.logException(agregateExceptions);

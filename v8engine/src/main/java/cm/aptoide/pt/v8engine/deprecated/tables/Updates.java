@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
@@ -21,48 +22,34 @@ import io.realm.RealmObject;
  */
 public class Updates extends BaseTable {
 
-	private static final String TAG = Updates.class.getSimpleName();
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_PACKAGE = "package_name";
-
 	// @ColumnDefinition(type = SQLType.INTEGER)
 	public static final String COLUMN_VERCODE = "version_code";
-
 	// @ColumnDefinition(type = SQLType.DATE)
 	public static final String COLUMN_TIMESTAMP = "timestamp";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_MD5 = "md5";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_URL = "url";
-
 	// @ColumnDefinition(type = SQLType.REAL)
 	public static final String COLUMN_FILESIZE = "filesize";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_UPDATE_VERNAME = "update_vername";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_ALT_URL = "alt_url";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_ICON = "icon";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_UPDATE_VERCODE = "update_vercode";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_REPO = "repo";
-
 	// @ColumnDefinition(type = SQLType.TEXT)
 	public static final String COLUMN_SIGNATURE = "signature";
-
+	private static final String TAG = Updates.class.getSimpleName();
 	private static final String NAME = "updates";
-
-	private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
 	private static final Realm realm = Realm.getDefaultInstance();
+	private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
 
 	@Override
 	public String getTableName() {
@@ -74,7 +61,7 @@ public class Updates extends BaseTable {
 
 		String path = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_URL));
 		String packageName = cursor.getString(cursor.getColumnIndex(Updates.COLUMN_PACKAGE));
-		if (TextUtils.isEmpty(path)) {
+		if (!TextUtils.isEmpty(path) && !isExcluded(packageName)) {
 			try {
 				PackageInfo packageInfo = pm.getPackageInfo(packageName, 0);
 				cm.aptoide.pt.database.realm.Update realmObject = new cm.aptoide.pt.database.realm.Update();
@@ -110,5 +97,9 @@ public class Updates extends BaseTable {
 		}
 
 		return null;
+	}
+
+	private boolean isExcluded(String packageName) {
+		return Database.get().where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).equalTo(Update.EXCLUDED, true).findFirst()!=null;
 	}
 }

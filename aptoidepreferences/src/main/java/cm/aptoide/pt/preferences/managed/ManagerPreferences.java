@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.preferences.managed;
@@ -72,11 +72,10 @@ public class ManagerPreferences {
 	}
 
 	public static boolean needsDbMigration() {
-		return true;
-//		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, true);
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, true);
 	}
 
 	public static void setNeedsDbMigration(boolean migrationNeeded) {
-//		Preferences.get().edit().putBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, migrationNeeded).apply();
+		Preferences.get().edit().putBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, migrationNeeded).apply();
 	}
 }

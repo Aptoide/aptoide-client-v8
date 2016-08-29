@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/08/2016.
+  ~ Modified by SithEngineer on 29/08/2016.
   -->
 
 <android.support.design.widget.CoordinatorLayout
@@ -428,7 +428,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add"/>
+        android:src="@drawable/forma_1"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
