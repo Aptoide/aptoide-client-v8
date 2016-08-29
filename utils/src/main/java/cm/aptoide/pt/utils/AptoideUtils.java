@@ -384,6 +384,13 @@ public class AptoideUtils {
 
 	public static final class MathU {
 
+		/**
+		 * Uses Euclid's algorithm:
+		 * <p>gcd(a,0) = 0</p>
+		 * <p>gcd(a,b) = gcd(b, a mod b)</p>
+		 *
+		 * @return The greatest common divisor between a and b.
+		 */
 		public static int greatestCommonDivisor(int a, int b) {
 			while (b > 0) {
 				int temp = b;
@@ -393,8 +400,17 @@ public class AptoideUtils {
 			return a;
 		}
 
+		/**
+		 * Uses formulae: lcm(a,b)= ( ( |a| / gcm(a,b) ) * |b| )
+		 *
+		 * <p>Where gcd(a,b) is the function {@link #greatestCommonDivisor(int, int)}</p>
+		 *
+		 * @return The least commong multiple between a and b.
+		 */
 		public static int leastCommonMultiple(int a, int b) {
-			return a * (b / greatestCommonDivisor(a, b));
+			//return a * (b / greatestCommonDivisor(a, b));
+			if(a==0&&b==0) return 0;
+			return ( Math.abs(a) / greatestCommonDivisor(a, b) ) * Math.abs(b);
 		}
 
 		public static int leastCommonMultiple(int[] input) {
