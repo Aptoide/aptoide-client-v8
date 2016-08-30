@@ -6,14 +6,11 @@
 package cm.aptoide.pt.v8engine.payment.product;
 
 import android.os.Parcel;
-import android.os.Parcelable;
-
-import cm.aptoide.pt.v8engine.payment.Product;
 
 /**
  * Created by marcelobenites on 8/16/16.
  */
-public class InAppBillingProduct implements Product {
+public class InAppBillingProduct extends AptoideProduct {
 
 	public static final Creator<InAppBillingProduct> CREATOR = new Creator<InAppBillingProduct>() {
 		@Override
@@ -27,24 +24,15 @@ public class InAppBillingProduct implements Product {
 		}
 	};
 
-	private final int id;
-	private final String icon;
-	private final String title;
-	private final String description;
-	private final String price;
-
 	private final int apiVersion;
 	private final String sku;
 	private final String packageName;
 	private final String developerPayload;
 	private final String type;
 
-	public InAppBillingProduct(int id, String icon, String title, String description, String price, int apiVersion, String sku, String packageName, String developerPayload, String type) {
-		this.id = id;
-		this.icon = icon;
-		this.title = title;
-		this.description = description;
-		this.price = price;
+	public InAppBillingProduct(int id, String icon, String title, String description, String price, int apiVersion, String sku, String packageName,
+	                           String developerPayload, String type) {
+		super(id, icon, title, description, price);
 		this.apiVersion = apiVersion;
 		this.sku = sku;
 		this.packageName = packageName;
@@ -53,41 +41,12 @@ public class InAppBillingProduct implements Product {
 	}
 
 	protected InAppBillingProduct(Parcel in) {
-		id = in.readInt();
-		icon = in.readString();
-		title = in.readString();
-		description = in.readString();
-		price = in.readString();
+		super(in);
 		apiVersion = in.readInt();
 		sku = in.readString();
 		packageName = in.readString();
 		developerPayload = in.readString();
 		type = in.readString();
-	}
-
-	@Override
-	public int getId() {
-		return id;
-	}
-
-	@Override
-	public String getIcon() {
-		return icon;
-	}
-
-	@Override
-	public String getTitle() {
-		return title;
-	}
-
-	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	@Override
-	public String getPriceDescription() {
-		return price;
 	}
 
 	public int getApiVersion() {
@@ -117,12 +76,7 @@ public class InAppBillingProduct implements Product {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-
-		dest.writeInt(id);
-		dest.writeString(icon);
-		dest.writeString(title);
-		dest.writeString(description);
-		dest.writeString(price);
+		super.writeToParcel(dest,flags);
 		dest.writeInt(apiVersion);
 		dest.writeString(sku);
 		dest.writeString(packageName);

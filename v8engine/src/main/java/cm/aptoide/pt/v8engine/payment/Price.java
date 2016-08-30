@@ -5,44 +5,23 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by marcelobenites on 8/18/16.
  */
-public class Price implements Parcelable {
+public class Price {
 
-	public static final Creator<Price> CREATOR = new Creator<Price>() {
-		@Override
-		public Price createFromParcel(Parcel in) {
-			return new Price(in);
-		}
-
-		@Override
-		public Price[] newArray(int size) {
-			return new Price[size];
-		}
-	};
-
-	private final double price;
+	private final double amount;
 	private final String currency;
 	private final double taxRate;
 
-	public Price(double price, String currency, double taxRate) {
-		this.price = price;
+	public Price(double amount, String currency, double taxRate) {
+		this.amount = amount;
 		this.currency = currency;
 		this.taxRate = taxRate;
 	}
 
-	protected Price(Parcel in) {
-		price = in.readDouble();
-		currency = in.readString();
-		taxRate = in.readDouble();
-	}
-
-	public double getPrice() {
-		return price;
+	public double getAmount() {
+		return amount;
 	}
 
 	public String getCurrency() {
@@ -54,15 +33,38 @@ public class Price implements Parcelable {
 	}
 
 	@Override
-	public int describeContents() {
-		return 0;
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		final Price price1 = (Price) o;
+
+		if (Double.compare(price1.amount, amount) != 0) {
+			return false;
+		}
+		if (Double.compare(price1.taxRate, taxRate) != 0) {
+			return false;
+		}
+		if (!currency.equals(price1.currency)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-
-		dest.writeDouble(price);
-		dest.writeString(currency);
-		dest.writeDouble(taxRate);
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(amount);
+		result = (int) (temp ^ (temp >>> 32));
+		result = 31 * result + currency.hashCode();
+		temp = Double.doubleToLongBits(taxRate);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 }

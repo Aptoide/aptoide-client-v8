@@ -32,12 +32,12 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.PaymentManager;
-import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
-import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
+import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
@@ -63,7 +63,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 	private List<Observable<Payment>> paymentSelections;
 	private PurchaseIntentFactory intentFactory;
 
-	public static Intent getIntent(Context context, Product product) {
+	public static Intent getIntent(Context context, AptoideProduct product) {
 		final Intent intent = new Intent(context, PaymentActivity.class);
 		intent.putExtra(PRODUCT_EXTRA, product);
 		return intent;
@@ -88,7 +88,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 		paymentSelections = new ArrayList<>();
 		intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
 
-		final Product product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
+		final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
 
 		// TODO Repository Factory, Presenter Factory
 		final NetworkOperatorManager operatorManager = new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
@@ -117,7 +117,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 	}
 
 	@Override
-	public void showProduct(Product product) {
+	public void showProduct(AptoideProduct product) {
 		ImageLoader.load(product.getIcon(), productIcon);
 		productName.setText(product.getTitle());
 		productPriceDescription.setText(product.getPriceDescription());

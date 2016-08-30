@@ -16,10 +16,9 @@ import javax.security.auth.login.LoginException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentManager;
-import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
@@ -36,13 +35,13 @@ public class PaymentPresenter implements Presenter {
 
 	private final PaymentView view;
 	private final PaymentManager paymentManager;
-	private final Product product;
+	private final AptoideProduct product;
 
 	private String currentPaymentType;
 	private boolean isProcessingPayment;
 	private boolean isProcessingLogin;
 
-	public PaymentPresenter(PaymentView view, PaymentManager paymentManager, Product product) {
+	public PaymentPresenter(PaymentView view, PaymentManager paymentManager, AptoideProduct product) {
 		this.view = view;
 		this.paymentManager = paymentManager;
 		this.product = product;
@@ -125,7 +124,7 @@ public class PaymentPresenter implements Presenter {
 						}));
 	}
 
-	private void showProductAndShowLoading(Product product) {
+	private void showProductAndShowLoading(AptoideProduct product) {
 		view.showLoading();
 		view.showProduct(product);
 	}

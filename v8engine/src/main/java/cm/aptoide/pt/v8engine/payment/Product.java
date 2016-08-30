@@ -10,7 +10,7 @@ import android.os.Parcelable;
 /**
  * Created by marcelobenites on 8/16/16.
  */
-public interface Product extends Parcelable {
+public interface Product {
 
 	int getId();
 

@@ -80,7 +80,7 @@ public class PayPalPayment implements Payment {
 
 	@Override
 	public String getDescription() {
-		return String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getPrice(), sign);
+		return String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getAmount(), sign);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class PayPalPayment implements Payment {
 			paymentResultFilter.addAction(PaymentConfirmationReceiver.PAYMENT_RESULT_ACTION);
 			receiver = new PaymentConfirmationReceiver();
 			broadcastManager.registerReceiver(receiver, paymentResultFilter);
-			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(price.getPrice(), price.getCurrency(),
+			context.startActivity(PayPalPaymentActivity.getIntent(context, converter.convertToPayPal(price.getAmount(), price.getCurrency(),
 					product.getTitle()), configuration));
 		}
 	}
