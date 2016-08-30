@@ -57,7 +57,7 @@
     <dimen name="separatorMargin">10dp</dimen>
     <dimen name="updateButtonLayoutPadding">15dp</dimen>
     <dimen name="reviewButtonLayoutPadding">3dp</dimen>
-    <dimen name="trusted_badge_size">40dp</dimen>
+    <dimen name="trusted_badge_size">30dp</dimen>
 
     <dimen name="other_stores_store_avatar_dimen">86dp</dimen>
     <dimen name="other_stores_store_avatar_inner_dimen">82dp</dimen>

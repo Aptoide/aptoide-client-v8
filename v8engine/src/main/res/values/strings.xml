@@ -269,4 +269,7 @@
     <string name="summer_apps">Summer Apps</string>
     <string name="play_it">Play-It!</string>
 
+    <!--Search new string-->
+    <string name="sponsored_app">Sponsored App</string>
+
 </resources>

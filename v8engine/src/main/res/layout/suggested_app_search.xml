@@ -71,43 +71,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:drawableLeft="@drawable/ic_appview_download_icon"
                 android:drawablePadding="2dp"
-                android:drawableStart="@drawable/ic_appview_download_icon"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textSize="@dimen/text_size_small"
-                tools:text="11.6 Mb"/>
+                tools:text=""/>
 
-            <TextView
-                android:id="@+id/versionName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:drawableLeft="@drawable/ic_appview_version"
-                android:drawablePadding="2dp"
-                android:drawableStart="@drawable/ic_appview_version"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textSize="@dimen/text_size_small"
-                tools:text="16.0.1"/>
-
-            <TextView
-                android:id="@+id/sponsored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="4dp"
-                android:gravity="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@string/sponsored"
-                android:textSize="@dimen/text_size_small"/>
         </LinearLayout>
 
         <TextView

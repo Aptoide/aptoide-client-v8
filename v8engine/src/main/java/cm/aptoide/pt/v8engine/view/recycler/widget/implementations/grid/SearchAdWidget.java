@@ -5,6 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,8 +31,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 	private ImageView icon;
 	private TextView description;
 	private TextView store;
-	private TextView downloads;
-	private TextView versionName;
+	private View bottomView;
 
 	public SearchAdWidget(View itemView) {
 		super(itemView);
@@ -39,10 +41,9 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 	protected void assignViews(View itemView) {
 		name = (TextView) itemView.findViewById(R.id.name);
 		icon = (ImageView) itemView.findViewById(R.id.icon);
-		downloads = (TextView) itemView.findViewById(R.id.downloads_number);
-		versionName = (TextView) itemView.findViewById(R.id.versionName);
 		description = (TextView) itemView.findViewById(R.id.description);
 		store = (TextView) itemView.findViewById(R.id.search_store);
+		bottomView = itemView.findViewById(R.id.bottom_view);
 	}
 
 	@Override
@@ -50,16 +51,38 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 		GetAdsResponse.Ad ad = displayable.getPojo();
 
 		name.setText(ad.getData().getName());
-		versionName.setText(ad.getData().getVername());
-		downloads.setText(AptoideUtils.StringU.withSuffix(ad.getData().getDownloads()));
 		description.setText(Html.fromHtml(ad.getData().getDescription()));
-		store.setText(ad.getData().getRepo());
+		store.setText((getContext().getResources().getText(R.string.sponsored_app) + "").toUpperCase());
 		ImageLoader.load(AptoideUtils.IconSizeU.parseIcon(ad.getData().getIcon()), icon);
+
+		setBottomFrameColor(R.color.grey);
 
 		itemView.setOnClickListener(view -> {
 			//	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
 			((FragmentShower) view.getContext()).pushFragmentV4(AppViewFragment.newInstance(ad));
 		});
+	}
+
+	private void setBottomFrameColor(int grey) {
+		Drawable background = bottomView.getBackground();
+		if (background instanceof ShapeDrawable) {
+			((ShapeDrawable) background).getPaint()
+					.setColor(itemView.getContext().getResources().getColor(grey));
+		} else if (background instanceof GradientDrawable) {
+			((GradientDrawable) background).setColor(itemView.getContext()
+					.getResources()
+					.getColor(grey));
+		}
+
+		background = store.getBackground();
+		if (background instanceof ShapeDrawable) {
+			((ShapeDrawable) background).getPaint()
+					.setColor(itemView.getContext().getResources().getColor(grey));
+		} else if (background instanceof GradientDrawable) {
+			((GradientDrawable) background).setColor(itemView.getContext()
+					.getResources()
+					.getColor(grey));
+		}
 	}
 
 	@Override
