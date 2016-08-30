@@ -8,16 +8,11 @@ package cm.aptoide.pt.v8engine.repository;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.Datalist;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.File;
-import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
@@ -29,6 +24,7 @@ import rx.functions.Func1;
  */
 public class TimelineRepository {
 
+	public static final int STORE_LATEST_MINIMUM_NUMBER_OF_APPS = 3;
 	private final TimelineCardDuplicateFilter duplicateFilter;
 	private String action;
 
@@ -46,7 +42,7 @@ public class TimelineRepository {
 						.filter(timelineItem -> timelineItem != null)
 						.<TimelineCard>map(timelineItem -> timelineItem.getData())
 						.filter(duplicateFilter)
-						.filter(timelineItem -> !(timelineItem instanceof StoreLatestApps) || ((StoreLatestApps) timelineItem).getApps().size() >= 5)
+						.filter(timelineItem -> !(timelineItem instanceof StoreLatestApps) || ((StoreLatestApps) timelineItem).getApps().size() >= STORE_LATEST_MINIMUM_NUMBER_OF_APPS)
 						.toList()
 						.<Datalist<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
 	}
