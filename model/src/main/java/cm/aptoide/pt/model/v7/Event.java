@@ -35,6 +35,7 @@ public class Event {
 		//getReviews,
 		//getApkComments,
 		getUserTimeline,
+		listReviews,
 
 		// Client
 		myStores,

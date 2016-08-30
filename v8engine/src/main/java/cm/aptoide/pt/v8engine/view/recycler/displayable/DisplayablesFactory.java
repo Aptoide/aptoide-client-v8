@@ -11,9 +11,11 @@ import java.util.List;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
@@ -28,6 +30,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Foo
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 
 /**
@@ -75,11 +78,29 @@ public class DisplayablesFactory {
 					case STORE_META:
 						displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
 						break;
+					case REVIEWS_GROUP:
+						ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
+						if (reviewsList != null && reviewsList.getDatalist() != null && reviewsList.getDatalist().getList().size() > 0) {
+							displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+							displayables.add(createReviewsDisplayables(reviewsList));
+						}
+						break;
 				}
 			}
 		}
 
 		return displayables;
+	}
+
+	private static DisplayableGroup createReviewsDisplayables(ListFullReviews listFullReviews) {
+		List<FullReview> reviews = listFullReviews.getDatalist().getList();
+		final List<Displayable> displayables = new ArrayList<>(reviews.size());
+		for (int i = 0 ; i < reviews.size() ; i++) {
+			FullReview review = reviews.get(i);
+			displayables.add(new RowReviewDisplayable(review, false));
+		}
+
+		return new DisplayableGroup(displayables);
 	}
 
 	private static Displayable getAds(Object viewObject) {

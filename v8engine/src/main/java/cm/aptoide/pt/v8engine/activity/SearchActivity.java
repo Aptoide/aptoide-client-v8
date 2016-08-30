@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/05/2016.
+ * Modified by Marcelo Benites on 19/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.activities;
+package cm.aptoide.pt.v8engine.activity;
 
 import android.os.Bundle;
 import android.view.View;

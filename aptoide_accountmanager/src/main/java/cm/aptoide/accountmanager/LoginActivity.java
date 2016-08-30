@@ -157,6 +157,23 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int i = item.getItemId();
+		if (i == android.R.id.home || i == R.id.home || i == 0) {
+			AptoideAccountManager.sendLoginCancelledBroadcast();
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+		AptoideAccountManager.sendLoginCancelledBroadcast();
+		super.onBackPressed();
+	}
+
+	@Override
 	public void onLoginFail(String reason) {
 		ShowMessage.asSnack(content, reason);
 	}

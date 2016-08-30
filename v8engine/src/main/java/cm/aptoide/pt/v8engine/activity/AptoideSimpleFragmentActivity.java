@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 23/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.activities;
+package cm.aptoide.pt.v8engine.activity;
 
 import android.os.Bundle;
 import android.view.View;

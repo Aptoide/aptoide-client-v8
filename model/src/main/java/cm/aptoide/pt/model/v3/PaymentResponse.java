@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -20,19 +21,11 @@ import lombok.Data;
  *
  */
 @Data
-public class PaymentResponse {
+@EqualsAndHashCode(callSuper = true)
+public class PaymentResponse extends BaseV3Response {
 
-	private String status;
-	@JsonProperty("publisher_response") private PublisherResponse publisherResponse;
-	private List<ErrorResponse> errors;
-
-	public boolean isOk() {
-		return status!=null && status.equalsIgnoreCase("ok");
-	}
-
-	public boolean hasErrors() {
-		return errors!=null && !errors.isEmpty();
-	}
+	@JsonProperty("publisher_response")
+	private PublisherResponse publisherResponse;
 
 	@Data
 	public static class PublisherResponse {

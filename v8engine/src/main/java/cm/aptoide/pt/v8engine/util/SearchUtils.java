@@ -18,7 +18,7 @@ import android.view.MenuItem;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activities.SearchActivity;
+import cm.aptoide.pt.v8engine.activity.SearchActivity;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 

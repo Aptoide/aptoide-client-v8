@@ -7,6 +7,8 @@
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
+    <permission android:label="Make internal payments" android:name="cm.aptoide.pt.permission.BILLING" android:protectionLevel="normal"/>
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
 
@@ -27,7 +29,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.SearchActivity">
+        <activity android:name=".activity.SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
@@ -35,6 +37,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
         </activity>
+
+        <activity android:name=".activity.PaymentActivity"
+            android:theme="@style/AppBaseThemeTransparent"/>
+        <activity android:name=".payment.paypal.PayPalPaymentActivity"/>
 
         <activity
             android:name=".receivers.DeepLinkIntentReceiver"
@@ -143,7 +149,6 @@
         </receiver>
 
         <service android:name=".services.PullingContentService"/>
-        <service android:name=".services.ValidatePaymentsService"/>
         <receiver android:name=".receivers.PullingContentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -166,6 +171,15 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name="cm.aptoide.pt.iab.InAppBillingService"
+            android:exported="true"
+            android:permission="cm.aptoide.pt.permission.BILLING">
+
+            <intent-filter>
+                <action android:name="cm.aptoide.pt.iab.action.BIND" />
+            </intent-filter>
+        </service>
 
     </application>
 

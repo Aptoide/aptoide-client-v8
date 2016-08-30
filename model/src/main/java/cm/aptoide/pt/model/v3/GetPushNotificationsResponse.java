@@ -1,82 +1,45 @@
 package cm.aptoide.pt.model.v3;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by trinkes on 7/13/16.
  */
 @Data
-public class GetPushNotificationsResponse {
+@EqualsAndHashCode(callSuper = true)
+public class GetPushNotificationsResponse extends BaseV3Response {
 
-	String status;
+	private List<Notification> results;
 
-	List<ErrorResponse> errors;
-	List<Notification> results;
-
-	public String getStatus() {
-		return status;
-	}
-
-	public List<ErrorResponse> getErrors() {
-		return errors;
-	}
-
-	public List<Notification> getResults() {
-		return results;
-	}
-
+	@Data
 	public static class Notification {
 
-		Number id;
+		private Number id;
 
-		String title;
+		private String title;
 
-		String message;
+		private String message;
 
-		String target_url;
+		@JsonProperty("target_url")
+		private String targetUrl;
 
-		String track_url;
+		@JsonProperty("track_url")
+		private String trackUrl;
 
-		Images images;
+		private Images images;
 
-		public String getMessage() {
-			return message;
-		}
-
-		public Images getImages() {
-			return images;
-		}
-
-		public Number getId() {
-			return id;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-		public String getTarget_url() {
-			return target_url;
-		}
-
-		public String getTrack_url() {
-			return track_url;
-		}
-
+		@Data
 		public static class Images {
 
-			String banner_url;
-			String icon_url;
-
-			public String getBanner_url() {
-				return banner_url;
-			}
-
-			public String getIcon_url() {
-				return icon_url;
-			}
+			@JsonProperty("banner_url")
+			private String bannerUrl;
+			@JsonProperty("icon_url")
+			private String iconUrl;
 		}
 	}
 }

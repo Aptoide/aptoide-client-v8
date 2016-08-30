@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 25/07/2016.
  */
 
-package cm.aptoide.pt.v8engine.install.download;
+package cm.aptoide.pt.v8engine.install.provider;
 
 import java.io.File;
 
@@ -13,11 +13,11 @@ import cm.aptoide.pt.v8engine.install.Installation;
 /**
  * Created by marcelobenites on 7/22/16.
  */
-public class DownloadInstallation implements Installation {
+public class DownloadInstallationAdapter implements Installation {
 
 	private final Download download;
 
-	public DownloadInstallation(Download download) {
+	public DownloadInstallationAdapter(Download download) {
 		this.download = download;
 	}
 

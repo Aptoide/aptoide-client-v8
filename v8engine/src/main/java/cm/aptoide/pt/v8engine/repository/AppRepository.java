@@ -5,11 +5,18 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import java.util.List;
+
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 
@@ -20,35 +27,29 @@ import rx.Observable;
 public class AppRepository {
 
 	private final NetworkOperatorManager operatorManager;
+	private final ProductFactory productFactory;
 
 	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(appId).observe(refresh).flatMap(app -> {
-			if (app.getNodes().getMeta().getData().getPay() != null) {
-				return getPayment(appId, sponsored, app.getNodes().getMeta().getData().getStore().getName()).map(payment -> addPayment(app, payment));
-			}
-			return Observable.just(app);
-		});
+		return GetAppRequest.of(appId).observe(refresh);
 	}
 
 	public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(packageName).observe(refresh).flatMap(app -> {
-			if (app.getNodes().getMeta().getData().getPay() != null) {
-				return getPayment(app.getNodes().getMeta().getData().getId(), sponsored, app.getNodes()
-						.getMeta()
-						.getData()
-						.getStore()
-						.getName()).map(payment -> addPayment(app, payment));
-			}
-			return Observable.just(app);
-		});
+		return GetAppRequest.of(packageName).observe(refresh);
 	}
 
-	private Observable<GetApkInfoJson.Payment> getPayment(long appId, boolean fromSponsored, String storeName) {
-		return GetApkInfoRequest.of(appId, operatorManager, fromSponsored, storeName).observe(true).map(app -> app.getPayment());
+	public Observable<List<PaymentService>> getPaymentServices(long appId, boolean fromSponsored, String storeName) {
+		return getAppPayment(appId, fromSponsored, storeName).map(payment -> payment.payment_services);
 	}
 
-	private GetApp addPayment(GetApp app, GetApkInfoJson.Payment payment) {
-		app.getNodes().getMeta().getData().setPayment(payment);
-		return app;
+	public Observable<GetApkInfoJson.Payment> getAppPayment(long appId, boolean fromSponsored, String storeName) {
+		return GetApkInfoRequest.of(appId, operatorManager, fromSponsored, storeName).observe(true)
+				.flatMap(response -> {
+					if (response != null && response.isOk() && response.getPayment() != null) {
+						return Observable.just(response.getPayment());
+					} else {
+						return Observable.error(new RepositoryItemNotFoundException("No payment information found for app id " + appId + " in store " +
+								storeName));
+					}
+				});
 	}
 }

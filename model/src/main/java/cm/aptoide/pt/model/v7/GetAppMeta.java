@@ -42,7 +42,6 @@ public class GetAppMeta extends BaseV7Response {
 		private Urls urls;
 		private Stats stats;
 		private Obb obb;
-		private GetApkInfoJson.Payment payment;
 		private Pay pay;
 	}
 
@@ -188,5 +187,13 @@ public class GetAppMeta extends BaseV7Response {
 		private float price;
 		private String currency;
 		private String symbol;
+
+		public boolean isPaidApp() {
+			return price > 0.0f;
+		}
+
+		public String getPrice() {
+			return symbol + " " + String.valueOf(price);
+		}
 	}
 }

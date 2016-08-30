@@ -5,13 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.model.v3.PaymentPayload;
+import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.PaymentResponse;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -22,41 +22,46 @@ import rx.Observable;
  */
 public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
+	private Map<String,String> args;
+
 	private CheckProductPaymentRequest(String baseHost, Map<String,String> args) {
-		super(baseHost, args);
+		super(baseHost);
+		this.args = args;
 	}
 
-	//
-	// sample WS payload
-	//
-//	paytype 1
-//	reqtype apkpurchasestatus
-//	price 0.87
-//	access_token 6920a21f32ab3aba7029a32b85e1527159237864
-//	payreqtype rest
-//	mode json
-//	apiversion null
-//	currency EUR
-//	taxrate 0.0
-//	productid 827
-//	paykey PAY-80505244U6383235AK6W3NVQ
-
-	public static CheckProductPaymentRequest ofPayPal(PaymentPayload paymentPayload) {
-
-		final HashMapNotNull<String,String> args = new HashMapNotNull<>();
-		args.put("paytype", String.valueOf(1));
-		args.put("reqtype", "apkpurchasestatus");
-		args.put("price", String.format(Locale.ROOT, "%.2f", paymentPayload.getPrice()));
-		args.put("access_token", AptoideAccountManager.getAccessToken());
-		args.put("payreqtype", "rest");
-		args.put("mode", "json");
-		//args.put("apiversion", null);
-		args.put("currency", paymentPayload.getCurrency());
-		args.put("taxrate", String.format(Locale.ROOT, "%.2f", paymentPayload.getTaxRate()));
-		args.put("productid", String.valueOf(paymentPayload.getAptoidePaymentId()));
-		args.put("paykey", paymentPayload.getPayKey());
-
+	public static CheckProductPaymentRequest ofInAppBilling(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency, NetworkOperatorManager operatorManager, int apiVersion, String developerPayload) {
+		final Map<String,String> args = new HashMap<>();
+		addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency, operatorManager, args);
+		args.put("reqtype", "iabpurchasestatus");
+		args.put("apiversion", String.valueOf(apiVersion));
+		args.put("developerPayload", developerPayload);
 		return new CheckProductPaymentRequest(BASE_HOST, args);
+	}
+
+	public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String
+			currency, NetworkOperatorManager operatorManager, String storeName) {
+		final Map<String,String> args = new HashMap<>();
+		addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency, operatorManager, args);
+		args.put("reqtype", "apkpurchasestatus");
+		args.put("repo", storeName);
+		return new CheckProductPaymentRequest(BASE_HOST, args);
+	}
+
+	private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency, NetworkOperatorManager operatorManager, Map<String,String> args) {
+
+		args.put("mode", "json");
+		args.put("payreqtype", "rest");
+		args.put("paytype", String.valueOf(paymentId));
+		args.put("paykey", paymentConfirmationId);
+		args.put("taxrate", String.format(Locale.ROOT, "%.2f", taxRate));
+		args.put("productid", String.valueOf(productId));
+		args.put("price", String.format(Locale.ROOT, "%.2f", price));
+		args.put("currency", currency);
+		args.put("access_token", AptoideAccountManager.getAccessToken());
+
+		if (operatorManager.isSimStateReady()) {
+			args.put("simcc", operatorManager.getSimCountryISO());
+		}
 	}
 
 	@Override

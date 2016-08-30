@@ -27,7 +27,7 @@ public class RowReviewDisplayable extends DisplayablePojo<FullReview> {
 
 	@Override
 	public Type getType() {
-		return Type.ROW_REVIEW;
+		return Type.REVIEWS_GROUP;
 	}
 
 	@Override
