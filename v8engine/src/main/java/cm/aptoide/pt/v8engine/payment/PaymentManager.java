@@ -31,7 +31,7 @@ public class PaymentManager {
 
 	public Observable<Purchase> pay(Payment payment) {
 		return getPurchase((AptoideProduct) payment.getProduct())
-				.flatMap(purchase -> Observable.<Purchase>error(new PaymentAlreadyProcessedException("Product " + payment.getProduct().getId() + "already " +
+				.flatMap(purchase -> Observable.<Purchase>error(new PaymentAlreadyProcessedException("Product " + payment.getProduct().getId() + " already " +
 						"purchased.")))
 				.onErrorResumeNext(throwable -> {
 					if (throwable instanceof RepositoryItemNotFoundException) {
