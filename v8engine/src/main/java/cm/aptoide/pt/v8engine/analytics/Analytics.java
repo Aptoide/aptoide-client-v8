@@ -167,6 +167,7 @@ public class Analytics {
 	                String utmMedium = utmFileParser.valueExtracter(UTMFileParser.UTM_MEDIUM);
 	                String utmCampaign = utmFileParser.valueExtracter(UTMFileParser.UTM_CAMPAIGN);
 	                String utmContent = utmFileParser.valueExtracter(UTMFileParser.UTM_CONTENT);
+	                String entryPoint = utmFileParser.valueExtracter(UTMFileParser.ENTRY_POINT);
 
 	                if (!utmSource.isEmpty()) {
 	                    Analytics.Dimensions.setUTMSource(utmSource);
@@ -182,6 +183,10 @@ public class Analytics {
 
 	                if (!utmContent.isEmpty()) {
 		                Analytics.Dimensions.setUTMContent(utmContent);
+	                }
+
+	                if (!entryPoint.isEmpty()) {
+		                Analytics.Dimensions.setEntryPointDimension(entryPoint);
 	                }
 
                     utmInputStream.close();
