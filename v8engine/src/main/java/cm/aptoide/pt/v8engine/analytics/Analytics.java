@@ -729,11 +729,13 @@ public class Analytics {
 
         public static final String BLANK = "(blank)";
         public static final String OPEN_ARTICLE = "Open Article";
+        public static final String OPEN_ARTICLE_HEADER = "Open Article Header";
         public static final String OPEN_VIDEO = "Open Video";
+        public static final String OPEN_VIDEO_HEADER = "Open Video Header";
         public static final String OPEN_STORE = "Open Store";
         public static final String OPEN_APP_VIEW = "Open App View";
         public static final String UPDATE_APP = "Update Application";
-    
+
         public static void clickOnCard(String cardType, String packageName, String title, String publisher, String action) {
             HashMap<String,String> map = new HashMap<>();
 

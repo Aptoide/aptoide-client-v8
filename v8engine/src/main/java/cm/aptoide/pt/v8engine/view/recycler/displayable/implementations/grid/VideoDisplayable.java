@@ -25,6 +25,7 @@ public class VideoDisplayable extends Displayable {
 
 	@Getter private String videoTitle;
 	@Getter private String url;
+	@Getter private String baseUrl;
 	@Getter private String title;
 	@Getter private String thumbnailUrl;
 	@Getter private String avatarUrl;
@@ -43,7 +44,7 @@ public class VideoDisplayable extends Displayable {
 			appName = video.getApps().get(0).getName();
 			appId = video.getApps().get(0).getId();
 		}
-		return new VideoDisplayable(video.getTitle(), video.getUrl(), video
+		return new VideoDisplayable(video.getTitle(), video.getUrl(), video.getPublisher().getBaseUrl(),video
 				.getPublisher().getName(), video.getThumbnailUrl(), video.getPublisher()
 				.getLogoUrl(), appId, appName, video.getDate(), dateCalculator, spannableFactory);
 	}

@@ -15,9 +15,11 @@ public class Publisher {
 
 	@Getter private final String name;
 	@Getter private final String logoUrl;
+	@Getter private final String baseUrl;
 
-	@JsonCreator public Publisher(@JsonProperty("name") String name, @JsonProperty("logo") String logoUrl) {
+	@JsonCreator public Publisher(@JsonProperty("name") String name, @JsonProperty("logo") String logoUrl, @JsonProperty("url") String baseUrl) {
 		this.name = name;
 		this.logoUrl = logoUrl;
+		this.baseUrl = baseUrl;
 	}
 }

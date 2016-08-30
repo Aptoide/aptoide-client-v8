@@ -13,6 +13,8 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/displayable_social_timeline_video_header"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="63.3dp"
             android:orientation="horizontal">
