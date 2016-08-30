@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -45,6 +47,8 @@ import lombok.Cleanup;
  * Created by neuro on 20-06-2016.
  */
 public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
+
+	private static final String TAG = ReferrerUtils.class.getSimpleName();
 
 	public static void extractReferrer(MinimalAd minimalAd, final int retries, boolean broadcastReferrer) {
 
@@ -188,15 +192,24 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 		}
 	}
 
-	private static String getReferrer(String uri) {
-		List<NameValuePair> params = URLEncodedUtils.parse(URI.create(uri), "UTF-8");
+	private static String getReferrer(String uriAsString) {
 
-		String referrer = null;
-		for (NameValuePair param : params) {
+//		URI uri = URI.create(uriAsString);
+//		List<NameValuePair> params = URLEncodedUtils.parse(uri, "UTF-8");
+//
+//		String referrer = null;
+//		for (NameValuePair param : params) {
+//
+//			if (param.getName().equals("referrer")) {
+//				referrer = param.getValue();
+//			}
+//		}
+//		return referrer;
 
-			if (param.getName().equals("referrer")) {
-				referrer = param.getValue();
-			}
+		Uri uri = Uri.parse(uriAsString);
+		String referrer = uri.getQueryParameter("referrer");
+		if(!TextUtils.isEmpty(referrer)) {
+			Logger.v(TAG, "Found referrer: " + referrer);
 		}
 		return referrer;
 	}

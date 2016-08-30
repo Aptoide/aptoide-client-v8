@@ -35,9 +35,9 @@
         android:layout_marginStart="9.7dp"
         android:layout_toRightOf="@id/user_icon"
         android:numStars="5"
-        android:progressDrawable="@drawable/rating_bar_extra_small"
+        android:progressDrawable="@drawable/rating_bar_small"
         android:stepSize="1.0"
-        tools:rating="3.0"
+        tools:rating="5.0"
         />
 
     <TextView

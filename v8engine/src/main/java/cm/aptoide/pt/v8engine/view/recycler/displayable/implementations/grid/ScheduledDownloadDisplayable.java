@@ -14,6 +14,7 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -74,5 +75,27 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
 				});
 			}
 		});
+
+		/*
+		permissionRequest.requestAccessToExternalFileSystem(() -> {
+
+			ShowMessage.asSnack(v, R.string.installing_msg);
+
+			DownloadFactory factory = new DownloadFactory();
+			Download appDownload = factory.create(getPojo());
+
+			downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> manageDownload(download), err -> {
+				Logger.e(TAG, err);
+			});
+		}, () -> {
+			ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+		});
+		*/
+	}
+
+	private void manageDownload(Download download) {
+		if(download.getOverallDownloadStatus() == Download.COMPLETED) {
+			
+		}
 	}
 }

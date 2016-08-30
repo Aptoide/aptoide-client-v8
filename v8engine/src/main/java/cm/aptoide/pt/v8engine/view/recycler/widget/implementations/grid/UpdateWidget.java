@@ -89,24 +89,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 
-		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
-		updateRowRelativeLayout.setOnLongClickListener(v -> {
-			AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());
-			builder.setTitle(R.string.ignore_update)
-					.setCancelable(true)
-					.setNegativeButton(R.string.no, null)
-					.setPositiveButton(R.string.yes, (dialog, which) -> {
-						if (which == DialogInterface.BUTTON_POSITIVE) {
-							Database.UpdatesQ.setExcluded(packageName, true, realm);
-							//updateRowRelativeLayout.setVisibility(View.GONE);
-						}
-						dialog.dismiss();
-					});
 
-			builder.create().show();
-
-			return true;
-		});
 		DownloadServiceHelper downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 		// TODO: 8/23/16 trinkes try to change to worker thread
 		downloadManager.getAllDownloads()
@@ -126,6 +109,30 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 						progressBar.setVisibility(View.GONE);
 					}
 				});
+
+		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId())));
+		updateRowRelativeLayout.setOnLongClickListener(v -> {
+			AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());
+			builder.setTitle(R.string.ignore_update)
+					.setCancelable(true)
+					.setNegativeButton(R.string.no, null)
+					.setPositiveButton(R.string.yes, (dialog, which) -> {
+						if (which == DialogInterface.BUTTON_POSITIVE) {
+							downloadManager.removeDownload(displayable.getAppId());
+							textUpdateLayout.setVisibility(View.VISIBLE);
+							imgUpdateLayout.setVisibility(View.VISIBLE);
+							progressBar.setVisibility(View.GONE);
+							//updateRowRelativeLayout.setVisibility(View.GONE);
+							Database.UpdatesQ.setExcluded(packageName, true, realm);
+						}
+						dialog.dismiss();
+					});
+
+			builder.create().show();
+
+			return true;
+		});
+
 		updateLayout.setOnClickListener(v -> downloadManager.startDownload((PermissionRequest) UpdateWidget.this.getContext(), new DownloadFactory().create
 				(displayable))
 				.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
