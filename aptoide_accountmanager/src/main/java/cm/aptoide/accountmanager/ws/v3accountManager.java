@@ -44,7 +44,7 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 	}
 
 	@Override
-	protected Observable<U> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+	public Observable<U> observe(boolean bypassCache) {
 		return super.observe(bypassCache)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribeOn(Schedulers.io()).onErrorResumeNext(throwable->{

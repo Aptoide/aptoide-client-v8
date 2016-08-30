@@ -253,7 +253,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 		if (userAccount == null) {
 			Account[] accounts = accountManager.getAccounts();
 			for (final Account account : accounts) {
-				if (TextUtils.equals(account.name, AptoideAccountManager.getUserName())) {
+				if (TextUtils.equals(account.name, AptoideAccountManager.getUserName()) && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
 					userAccount = account;
 					break;
 				}
@@ -360,6 +360,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 						GenericResponseV3 oAuth = ((AptoideWsV3Exception) e).getBaseResponse();
 						getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext()
 								.getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError())));
+					} else {
+						getInstance().onLoginFail(cm.aptoide.pt.preferences.Application.getContext().getString(R.string.unknown_error));
 					}
 				} finally {
 					if (finalGenericPleaseWaitDialog != null) {
