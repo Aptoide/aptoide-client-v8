@@ -153,6 +153,12 @@
         <item name="android:maxHeight">26dp</item>
     </style>
 
+    <style name="RatingBarReviewDialog">
+        <item name="android:progressDrawable">@drawable/rating_bar_review</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:maxHeight">36dp</item>
+    </style>
+
     <style name="backgroundCardStyleLight">
         <item name="android:background">@drawable/white_card</item>
     </style>

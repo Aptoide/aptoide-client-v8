@@ -30,7 +30,7 @@
 
     <RatingBar
         android:id="@+id/rating_bar"
-        style="@style/RatingBarLargeSelectable"
+        style="@style/RatingBarReviewDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
