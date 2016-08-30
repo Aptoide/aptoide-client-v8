@@ -46,6 +46,7 @@ android {
             shrinkResources false
             configureFlurry delegate, localProperties.FLURRY_KEY
             configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
+            configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
         }
 
         debug {
@@ -53,6 +54,7 @@ android {
             shrinkResources false
             configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
             configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
+            configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
         }
     }
 
@@ -86,6 +88,15 @@ void configureLocalytics(androidDelegate, key) {
     boolean keyExists = key != null
     androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
     androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists? key : ""]
+}
+
+void configurePayPal(androidDelegate, key, environment) {
+    boolean configurationExists = (key != null && environment != null)
+    if (!configurationExists || !(environment.equals("sandbox") || environment.equals("live") || environment.equals("mock"))) {
+        throw new InvalidUserDataException("Invalid PayPal configuration provided. Provide a valid key and environment (live, mock, sandbox)")
+    }
+    androidDelegate.buildConfigField "String", "PAYPAL_KEY", "\"" + key.toString() + "\""
+    androidDelegate.buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + environment.toString() + "\""
 }
 
 dependencies {
