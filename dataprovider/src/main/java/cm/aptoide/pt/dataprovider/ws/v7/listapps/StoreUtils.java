@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 24/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -16,7 +16,6 @@ import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -103,7 +102,7 @@ public class StoreUtils {
 
 			if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
 
-				@Cleanup Realm realm = Database.get(DataProvider.getContext());
+				@Cleanup Realm realm = Database.get();
 
 				cm.aptoide.pt.database.realm.Store store = new cm.aptoide.pt.database.realm.Store();
 
@@ -151,7 +150,7 @@ public class StoreUtils {
 
 	public static boolean isSubscribedStore(String storeName) {
 		@Cleanup
-		Realm realm = Database.get(DataProvider.getContext());
+		Realm realm = Database.get();
 		return Database.StoreQ.get(storeName, realm) != null;
 	}
 

@@ -17,7 +17,7 @@ public class NetworkOperatorManager {
 
 	private final TelephonyManager telephonyManager;
 
-	public String getMccCode() {
+	public String getMobileCountryCode() {
 		final String networkOperator = telephonyManager.getNetworkOperator();
 		return networkOperator == null ? "" : networkOperator.substring(0, mncPortionLength(networkOperator));
 
@@ -27,12 +27,16 @@ public class NetworkOperatorManager {
 		return telephonyManager.getSimState() == TelephonyManager.SIM_STATE_READY;
 	}
 
-	public String getMncCode() {
+	public String getMobileNetworkCode() {
 		final String networkOperator = telephonyManager.getNetworkOperator();
 		return networkOperator == null ? "" : networkOperator.substring(mncPortionLength(networkOperator));
 	}
 
 	private int mncPortionLength(String networkOperator) {
 		return Math.min(3, networkOperator.length());
+	}
+
+	public String getSimCountryISO() {
+		return telephonyManager.getSimCountryIso();
 	}
 }

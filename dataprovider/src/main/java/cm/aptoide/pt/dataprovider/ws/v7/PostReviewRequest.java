@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -71,8 +71,7 @@ public class PostReviewRequest extends V7<BaseV7Response,PostReviewRequest.Body>
 		private String body;
 		private Integer rating;
 
-		public Body(String
-				packageName, String title, String body, Integer rating) {
+		public Body(String packageName, String title, String body, Integer rating) {
 			this.packageName = packageName;
 			this.title = title;
 			this.body = body;

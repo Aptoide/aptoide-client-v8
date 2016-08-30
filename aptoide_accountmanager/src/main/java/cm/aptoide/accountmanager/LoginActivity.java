@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -41,7 +40,6 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	private EditText password_box;
 	private EditText emailBox;
 	private Button hidePassButton;
-	private CheckBox registerDevice;
 	private Toolbar mToolbar;
 	private TextView forgotPassword;
 	private boolean openMyAccountOnLoginSuccess;
@@ -81,6 +79,17 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 	@Override
 	int getLayoutId() {
 		return R.layout.login_activity_layout;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int i = item.getItemId();
+		if (i == android.R.id.home || i == R.id.home || i == 0) {
+			AptoideAccountManager.sendLoginCancelledBroadcast();
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -134,6 +143,12 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 		AptoideAccountManager.onActivityResult(this, requestCode, resultCode, data);
 	}
 
+	@Override
+	public void onBackPressed() {
+		AptoideAccountManager.sendLoginCancelledBroadcast();
+		super.onBackPressed();
+	}
+
 	private void bindViews() {
 		content = findViewById(android.R.id.content);
 		mLoginButton = (Button) findViewById(R.id.button_login);
@@ -142,19 +157,15 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 		password_box = (EditText) findViewById(R.id.password);
 		emailBox = (EditText) findViewById(R.id.username);
 		hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
-		registerDevice = (CheckBox) findViewById(R.id.link_my_device);
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		forgotPassword = (TextView) findViewById(R.id.forgot_password);
 	}
 
 	@Override
 	public void onLoginSuccess() {
-		ShowMessage.asSnack(content, R.string.login_successful);
 		finish();
 		if (openMyAccountOnLoginSuccess) {
 			AptoideAccountManager.openAccountManager(this);
-		} else {
-			finish();
 		}
 	}
 

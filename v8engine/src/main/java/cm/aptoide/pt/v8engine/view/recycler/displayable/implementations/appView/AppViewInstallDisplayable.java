@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 10/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
@@ -37,7 +37,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	private static final String TAG = AppViewInstallDisplayable.class.getName();
 
 	@Getter private boolean shouldInstall;
-	@Getter private GetApkInfoJson.Payment payment;
 	@Getter private MinimalAd minimalAd;
 
 	private InstallManager installManager;
@@ -45,11 +44,12 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	private long appId;
 	private String packageName;
 
-	public AppViewInstallDisplayable() {
+	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager, MinimalAd minimalAd, boolean shouldInstall) {
+		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
 	}
 
-	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd) {
-		this(installManager, getApp, minimalAd, false);
+	public AppViewInstallDisplayable() {
+		super();
 	}
 
 	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean shouldInstall) {
@@ -57,7 +57,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		this.installManager = installManager;
 		this.appId = getApp.getNodes().getMeta().getData().getId();
 		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
-		this.payment = getApp.getNodes().getMeta().getData().getPayment();
 		this.minimalAd = minimalAd;
 		this.shouldInstall = shouldInstall;
 	}
@@ -143,4 +142,5 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		super.onViewStateRestored(savedInstanceState);
 		Logger.i(TAG, "onViewStateRestored");
 	}
+
 }

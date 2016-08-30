@@ -33,7 +33,7 @@ import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -229,7 +229,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private void addLoading() {
 		if (!loading) {
 			this.loading = true;
-			adapter.addDisplayable(new ProgressBarDisplayable());
+			adapter.addDisplayable(new ProgressBarDisplayable(true));
 		}
 	}
 
@@ -267,6 +267,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 			addLoading();
 			return true;
 		}
+		else if(isTotal()){
+			//TODO - When you reach the end of the endless?
+			// Snackbar.make(getView(), "No more cards!", Snackbar.LENGTH_SHORT).show();
+		}
 		return false;
 	}
 
@@ -286,7 +290,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		} else if (card instanceof Recommendation) {
 			return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory);
 		}
-		throw new IllegalArgumentException("Only articles, features, store latest apps and app updates supported.");
+		throw new IllegalArgumentException("Only articles, features, store latest apps, app updates and videos supported.");
 	}
 
 }

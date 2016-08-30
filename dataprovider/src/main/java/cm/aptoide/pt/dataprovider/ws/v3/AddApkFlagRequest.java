@@ -17,8 +17,11 @@ import rx.Observable;
  */
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
+	private Map<String,String> args;
+
 	protected AddApkFlagRequest(Map<String,String> args) {
-		super(BASE_HOST, args);
+		super(BASE_HOST);
+		this.args = args;
 	}
 
 	public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag) {

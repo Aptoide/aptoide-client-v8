@@ -4,14 +4,19 @@
   ~ Modified by SithEngineer on 02/08/2016.
   -->
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    >
+    android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp">
     <ImageView
         android:id="@+id/user_icon"
         android:layout_width="34dp"
@@ -30,9 +35,9 @@
         android:layout_marginStart="9.7dp"
         android:layout_toRightOf="@id/user_icon"
         android:numStars="5"
-        android:progressDrawable="@drawable/rating_bar_extra_small"
+        android:progressDrawable="@drawable/rating_bar_small"
         android:stepSize="1.0"
-        tools:rating="3.0"
+        tools:rating="5.0"
         />
 
     <TextView
@@ -166,5 +171,11 @@
         android:textAllCaps="true"
         android:textSize="8sp"
         />
+    </RelativeLayout>
 
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"/>
+</LinearLayout>

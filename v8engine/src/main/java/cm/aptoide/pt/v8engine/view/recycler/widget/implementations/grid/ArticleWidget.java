@@ -7,9 +7,10 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.provider.Browser;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,8 +18,8 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
@@ -79,11 +80,11 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		//			getAppButton.setVisibility(View.GONE);
 		//		}
 
-		url.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
-			}
+		url.setOnClickListener(v -> {
+			openInBrowser(displayable.getUrl());
+			Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
+					.AppsTimeline
+					.OPEN_ARTICLE);
 		});
 	}
 
@@ -96,23 +97,36 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		cardView.setLayoutParams(layoutParams);
 	}
 
+	private void openInBrowser(String url) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		Bundle bundle = new Bundle();
+		bundle.putString("Referer", "http://m.aptoide.com");
+		intent.putExtra(Browser.EXTRA_HEADERS, bundle);
+		getContext().startActivity(intent);
+	}
+
 	@Override
 	public void onViewAttached() {
+		if (subscriptions == null) {
+			subscriptions = new CompositeSubscription();
 
-		// TODO: 18/08/16 click on article header. do not forget to unsubscribe
-//		if (subscriptions == null) {
-//			subscriptions = new CompositeSubscription();
-//
-//			subscriptions.add(RxView.clicks(articleHeader)
-//					.subscribe(click -> {
-//						getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
-//					}));
-//		}
+			subscriptions.add(RxView.clicks(articleHeader)
+					.subscribe(click -> {
+						openInBrowser(displayable.getBaseUrl());
+						Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
+								.AppsTimeline
+								.OPEN_ARTICLE_HEADER);
+					}));
+		}
 	}
 
 	@Override
 	public void onViewDetached() {
 		url.setOnClickListener(null);
 		getAppButton.setOnClickListener(null);
+		if (subscriptions != null) {
+			subscriptions.unsubscribe();
+			subscriptions = null;
+		}
 	}
 }

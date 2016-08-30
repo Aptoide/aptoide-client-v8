@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@color/aptoide_orange">
+
+    <ImageView
+        android:id="@+id/aptoide_logo"
+        android:src="@drawable/wizard_aptoide_logo"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="20dp" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wizard_welcome_message"
+        android:textSize="40sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="7dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/wizard_sub_title_viewpager_one"
+        android:textSize="28sp" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <View
+            android:id="@+id/centerVerticalShim"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/centerHorizontalShim"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/centerVerticalShim"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/centerHorizontalShim"
+            android:gravity="center"
+            android:src="@drawable/wizard_magnify"
+            android:textColor="@color/white"
+            android:padding="50dp">
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/centerVerticalShim"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/centerHorizontalShim"
+            android:text="@string/wizard_description_part_one_viewpager_one"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+        </TextView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/centerVerticalShim"
+            android:layout_toLeftOf="@+id/centerHorizontalShim"
+            android:gravity="center"
+            android:src="@drawable/wizard_apps"
+            android:textColor="@color/white"
+            android:padding="50dp">
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/centerVerticalShim"
+            android:layout_toRightOf="@+id/centerHorizontalShim"
+            android:gravity="center_vertical"
+            android:text="@string/wizard_description_part_two_viewpager_one"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:padding="5dp">
+        </TextView></RelativeLayout>
+</LinearLayout>

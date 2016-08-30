@@ -70,7 +70,7 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 		reviewer.setText(AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, review.getUser().getName()));
 
 		//rating.setText(AptoideUtils.StringUtils.getRoundedValueFromDouble(appItem.rating));
-		rating.setText(String.format(Locale.getDefault(), "%d", review.getStats().getPoints()));
+		rating.setText(String.format(Locale.getDefault(), "%d", (long)review.getStats().getRating()));
 		ImageLoader.load(review.getUser().getAvatar(), avatar);
 
 		//        ReviewViewHolder holder = (ReviewViewHolder) viewHolder;

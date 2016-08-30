@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@color/aptoide_orange">
+
+    <ImageView
+        android:id="@+id/aptoide_logo"
+        android:src="@drawable/wizard_aptoide_logo"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wizard_welcome_message"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/white"
+        android:text="@string/wizard_sub_title_viewpager_one"
+        android:textSize="12sp" />
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/centerVerticalShim"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/centerHorizontalShim"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/centerVerticalShim"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/centerHorizontalShim"
+            android:gravity="center"
+            android:src="@drawable/wizard_magnify"
+            android:textColor="@color/white"
+            android:padding="5dp">
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/centerVerticalShim"
+            android:layout_toLeftOf="@+id/centerHorizontalShim"
+            android:text="@string/wizard_description_part_one_viewpager_one"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:padding="5dp">
+        </TextView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/centerVerticalShim"
+            android:layout_toRightOf="@+id/centerHorizontalShim"
+            android:gravity="center"
+            android:src="@drawable/wizard_apps"
+            android:textColor="@color/white"
+            android:padding="5dp">
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/centerVerticalShim"
+            android:layout_toRightOf="@+id/centerHorizontalShim"
+            android:gravity="center"
+            android:text="@string/wizard_description_part_two_viewpager_one"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:padding="5dp">
+        </TextView></RelativeLayout>
+</LinearLayout>

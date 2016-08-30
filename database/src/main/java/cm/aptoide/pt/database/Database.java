@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 08/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -15,13 +15,13 @@ import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -35,6 +35,8 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 16/05/16.
+ *
+ * This is the main class responsible to offer {@link Realm} database instances
  */
 public class Database {
 
@@ -42,57 +44,50 @@ public class Database {
 	private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
 	private static final String DB_NAME = "aptoide.realm.db";
 	private static final AllClassesModule MODULE = new AllClassesModule();
-	private static final RealmMigration MIGRATION = new RealmDatabaseMigration();
-	private static final Object BARRIER = new Object();
-	// FIXME remove the synchronized used here to improve performance
-	private static volatile boolean isInitialized = false;
+	private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
+
+	private static boolean isInitialized = false;
 
 	private static String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
 	}
 
-	public static Realm get() {
-		return get(Application.getContext());
+	public static void initialize(Context context) {
+		StringBuilder strBuilder = new StringBuilder(KEY);
+		strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
+		strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
+		strBuilder.append(extract(BuildConfig.APPLICATION_ID));
+		strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
+
+		// Beware this is the app context
+		// So always use a unique name
+		// Always use explicit modules in library projects
+		RealmConfiguration realmConfig;
+		if (BuildConfig.DEBUG) {
+			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+					// Must be bumped when the schema changes
+					.schemaVersion(BuildConfig.VERSION_CODE).deleteRealmIfMigrationNeeded().build();
+		} else {
+			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE).encryptionKey(strBuilder.toString().substring(0, 64)
+					.getBytes())
+					// Must be bumped when the schema changes
+					.schemaVersion(BuildConfig.VERSION_CODE)
+					// Migration to run instead of throwing an exception
+					.migration(MIGRATION).build();
+		}
+
+		if (BuildConfig.DELETE_DB) {
+			Realm.deleteRealm(realmConfig);
+		}
+		Realm.setDefaultConfiguration(realmConfig);
+		isInitialized = true;
 	}
 
-	public static Realm get(Context context) {
-		if(isInitialized) return Realm.getDefaultInstance();
-
-		synchronized (BARRIER) {
-			StringBuilder strBuilder = new StringBuilder(KEY);
-			strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
-			strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
-			strBuilder.append(extract(BuildConfig.APPLICATION_ID));
-			strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
-
-			// Beware this is the app context
-			// So always use a unique name
-			// Always use explicit modules in library projects
-			RealmConfiguration realmConfig;
-			if (BuildConfig.DEBUG) {
-				realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
-						// Must be bumped when the schema changes
-						.schemaVersion(BuildConfig.VERSION_CODE)
-						// Migration to run instead of throwing an exception
-						.migration(MIGRATION).build();
-			} else {
-				realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-						.modules(MODULE)
-						.encryptionKey(strBuilder.toString().substring(0, 64).getBytes())
-						// Must be bumped when the schema changes
-						.schemaVersion(BuildConfig.VERSION_CODE)
-						// Migration to run instead of throwing an exception
-						.migration(MIGRATION)
-						.build();
-			}
-
-			if (BuildConfig.DELETE_DB) {
-				Realm.deleteRealm(realmConfig);
-			}
-			Realm.setDefaultConfiguration(realmConfig);
-			isInitialized = true;
+	public static Realm get() {
+		if(isInitialized){
 			return Realm.getDefaultInstance();
 		}
+		throw new IllegalStateException("You need to call Database.initialize(Context) first");
 	}
 
 	public static void save(RealmObject realmObject, Realm realm) {
@@ -174,6 +169,24 @@ public class Database {
 			realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst().deleteFromRealm();
 			realm.commitTransaction();
 		}
+	}
+
+	public static class PaymentConfirmationQ {
+
+		public static PaymentConfirmation get(int productId, Realm realm) {
+			return realm.where(PaymentConfirmation.class).equalTo(PaymentConfirmation.PRODUCT_ID, productId).findFirstAsync();
+		}
+
+		public static RealmResults<PaymentConfirmation> getAll(Realm realm) {
+			return realm.where(PaymentConfirmation.class).findAllAsync();
+		}
+
+		public static void delete(int productId, Realm realm) {
+			realm.beginTransaction();
+			realm.where(PaymentConfirmation.class).equalTo(PaymentConfirmation.PRODUCT_ID, productId).findFirst().deleteFromRealm();
+			realm.commitTransaction();
+		}
+
 	}
 
 	public static class UpdatesQ {

@@ -14,6 +14,7 @@ public class UTMFileParser {
 	public static final String UTM_MEDIUM = "utm_medium";
 	public static final String UTM_CAMPAIGN = "utm_campaign";
 	public static final String UTM_CONTENT = "utm_content";
+	public static final String ENTRY_POINT = "entry_point";
 
 	private BufferedReader bufferedReader;
 	private String utm_line;

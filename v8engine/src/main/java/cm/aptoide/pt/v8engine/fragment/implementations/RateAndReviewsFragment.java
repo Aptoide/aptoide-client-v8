@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -40,6 +40,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -74,6 +75,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	private RatingBarsLayout ratingBarsLayout;
 	private ProgressBar progressBar;
 	private MenuItem installMenuItem;
+	private FloatingActionButton floatingActionButton;
 	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
 	private transient SuccessRequestListener<ListReviews> listFullReviewsSuccessRequestListener = listFullReviews -> {
@@ -105,7 +107,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 							List<Displayable> displayableList = new ArrayList<>();
 							createDisplayableComments(comments, displayableList);
 							int reviewPosition = getAdapter().getReviewPosition(reviewIndex);
-							displayableList.add(createReadMoreDisplayable(reviewPosition, review));
+							if (comments.size() > 2) {
+								displayableList.add(createReadMoreDisplayable(reviewPosition, review));
+							}
 							getAdapter().addDisplayables(reviewPosition + 1, displayableList);
 						}
 
@@ -129,11 +133,14 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 							.getDatalist()
 							.getLimit() != null) {
 						createDisplayableComments(review.getCommentList().getDatalist().getList(), displayables);
-						displayables.add(createReadMoreDisplayable(count, review));
+						if (review.getCommentList().getDatalist().getList().size() > 2) {
+							displayables.add(createReadMoreDisplayable(count, review));
+						}
 					}
 					count++;
 				}
 				addDisplayables(displayables);
+				getLayoutManager().scrollToPosition(getAdapter().getReviewPosition(index));
 			});
 		});
 	};
@@ -191,12 +198,17 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
+		floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		setHasOptionsMenu(true);
 
 		ratingTotalsLayout = new RatingTotalsLayout(view);
 		ratingBarsLayout = new RatingBarsLayout(view);
 		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+
+		floatingActionButton.setOnClickListener(v -> {
+			DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName, this::fetchReviews);
+		});
 	}
 
 	@Override
@@ -383,7 +395,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		public void setup(GetAppMeta.App data) {
 			GetAppMeta.Stats stats = data.getStats();
 			usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating().getTotal()));
-			ratingValue.setText(String.format(Locale.getDefault(), "%.1f", stats.getRating().getAvg()));
+			ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", stats.getRating().getAvg()));
 			ratingBar.setRating(stats.getRating().getAvg());
 		}
 	}

@@ -51,7 +51,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
-		Logger.d(TAG, String.format("refresh excluded updates? %s", refresh ? "yes" : "no"));
+		Logger.d(TAG, "refresh excluded updates? " + (refresh ? "yes" : "no"));
 		fetchExcludedUpdates();
 	}
 

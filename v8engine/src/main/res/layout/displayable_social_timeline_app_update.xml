@@ -29,7 +29,7 @@
 
             <TextView
                 android:id="@+id/displayable_social_timeline_app_update_card_title"
-                style="@style/Widget.Aptoide.Card.Title.LatestApps"
+                style="@style/Widget.Aptoide.Card.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="48dp"

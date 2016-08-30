@@ -14,7 +14,7 @@ import cm.aptoide.pt.model.v2.Comment;
 /**
  * Created by marcelobenites on 7/27/16.
  */
-public class GetApkInfoJson {
+public class GetApkInfoJson extends BaseV3Response {
 	public Apk apk;
 	public String latest;
 	public Malware malware;
@@ -22,16 +22,10 @@ public class GetApkInfoJson {
 	public Meta meta;
 	public Payment payment;
 	public Signature signature;
-	public String status;
 	public ObbObject obb;
-	public List<ErrorResponse> errors;
 
 	public Apk getApk() {
 		return apk;
-	}
-
-	public String getStatus() {
-		return status;
 	}
 
 	public Signature getSignature() {
@@ -58,12 +52,7 @@ public class GetApkInfoJson {
 		return obb;
 	}
 
-	public List<ErrorResponse> getErrors() {
-		return errors;
-	}
-
 	public Meta getMeta() {
-
 		return meta;
 	}
 
@@ -93,7 +82,7 @@ public class GetApkInfoJson {
 
 		public String apkpath;
 		public Metadata metadata;
-		public List<PaymentServices> payment_services;
+		public List<PaymentService> payment_services;
 		public String status;
 
 		public String getStatus() {
@@ -102,16 +91,6 @@ public class GetApkInfoJson {
 
 		public Number getAmount() {
 			return amount;
-		}
-
-		public boolean alreadyPaid() {
-			return status != null && status.equalsIgnoreCase("OK");
-		}
-
-		public boolean isPaidApp() {
-			//			symbol = "$";
-			//			amount = 0.10;
-			return ((amount != null) && (amount > 0.0));
 		}
 
 		public static class Metadata {

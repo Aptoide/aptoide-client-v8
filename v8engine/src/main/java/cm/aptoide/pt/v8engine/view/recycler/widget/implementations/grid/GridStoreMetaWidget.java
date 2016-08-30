@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 25/08/2016.
+ */
+
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
@@ -12,7 +17,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -23,6 +27,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
@@ -107,16 +112,17 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
 			ivSubscribe.setImageResource(R.drawable.ic_check_white);
 			subscribed.setText(itemView.getContext().getString(R.string.followed));
+
 			subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					subscribedBool = false;
-					ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta
-							.getData()
-							.getName()));
-					ArrayList<Long> sotoreIds = new ArrayList<>();
-					sotoreIds.add(getStoreMeta.getData().getId());
-					AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
+					@Cleanup Realm realm = Database.get();
+					if (AptoideAccountManager.isLoggedIn()) {
+						AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
+					}
+					Database.StoreQ.delete(getStoreMeta.getData().getId(), realm);
+					ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta.getData().getName()));
 					handleSubscriptionLogic(getStoreMeta);
 				}
 			});
@@ -129,14 +135,15 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
                 drawableLeft.setBounds(0, 0, drawableLeft.getIntrinsicWidth(), drawableLeft.getIntrinsicHeight());
                 subscribed.setCompoundDrawables(drawableLeft, null, null, null);
             }*/
+
 			subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View view) {
+				public void onClick(View v) {
 					if (!subscribedBool) {
 						subscribedBool = true;
-						AptoideAccountManager.subscribeStore(getStoreMeta.getData().getName());
-						ShowMessage.asToast(itemView.getContext(), AptoideUtils.StringU.getFormattedString(R.string.followed, getStoreMeta.getData()
-								.getName()));
+						StoreUtilsProxy.subscribeStore(getStoreMeta.getData().getName(), getStoreMeta -> {
+							ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.store_followed, getStoreMeta.getData().getName()));
+						}, Throwable::printStackTrace);
 						handleSubscriptionLogic(getStoreMeta);
 					}
 				}

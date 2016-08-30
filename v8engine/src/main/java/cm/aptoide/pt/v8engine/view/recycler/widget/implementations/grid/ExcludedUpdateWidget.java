@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -50,7 +51,7 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
 
 		ImageLoader.load(excludedUpdate.getIcon(), icon);
 		name.setText(excludedUpdate.getLabel());
-		versionCode.setText(String.format(Locale.getDefault(), "%d", excludedUpdate.getVersionCode()));
+		versionCode.setText(excludedUpdate.getUpdateVersionName());
 		packageName.setText(excludedUpdate.getPackageName());
 
 		isExcluded.setOnCheckedChangeListener((buttonView, isChecked) -> {

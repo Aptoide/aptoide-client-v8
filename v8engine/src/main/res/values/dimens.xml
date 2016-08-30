@@ -57,7 +57,7 @@
     <dimen name="separatorMargin">10dp</dimen>
     <dimen name="updateButtonLayoutPadding">15dp</dimen>
     <dimen name="reviewButtonLayoutPadding">3dp</dimen>
-    <dimen name="trusted_badge_size">40dp</dimen>
+    <dimen name="trusted_badge_size">30dp</dimen>
 
     <dimen name="other_stores_store_avatar_dimen">86dp</dimen>
     <dimen name="other_stores_store_avatar_inner_dimen">82dp</dimen>
@@ -86,4 +86,5 @@
     <dimen name="other_versions_title_right_margin">60dp</dimen>
     <dimen name="other_versions_title_bottom_margin">50dp</dimen>
     <dimen name="appview_side_margin">8dp</dimen>
+    <dimen name="fab_margin">20dp</dimen>
 </resources>

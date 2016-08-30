@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import java.util.Locale;
+
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
@@ -158,7 +160,7 @@ public class DownloadService extends Service {
 	private NotificationCompat.Builder buildStandardNotification(Download download, PendingIntent pOpenAppsManager, PendingIntent pNotificationClick,
 	                                                             NotificationCompat.Builder builder) {
 		builder.setSmallIcon(AptoideDownloadManager.getInstance().getSettingsInterface().getMainIcon())
-				.setContentTitle(String.format(AptoideDownloadManager.getContext()
+				.setContentTitle(String.format(Locale.ENGLISH, AptoideDownloadManager.getContext()
 						.getResources()
 						.getString(R.string.aptoide_downloading), Application.getConfiguration().getMarketName()))
 				.setContentText(new StringBuilder().append(download.getAppName())

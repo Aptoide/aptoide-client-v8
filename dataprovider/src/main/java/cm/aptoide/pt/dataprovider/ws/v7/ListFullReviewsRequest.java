@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.text.TextUtils;
+
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -36,9 +38,15 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 
 	private static final int MAX_REVIEWS = 10;
 	private static final int MAX_COMMENTS = 10;
+	private String url;
 
 	protected ListFullReviewsRequest(Body body, String baseHost) {
 		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
+	}
+
+	public ListFullReviewsRequest(String url, Body body, String baseHost) {
+		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
+		this.url = url;
 	}
 
 	public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
@@ -47,6 +55,14 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListFullReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
+
+	public static ListFullReviewsRequest ofAction(String url, boolean refresh) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+				SecurePreferencesImplementation
+				.getInstance());
+		return new ListFullReviewsRequest(url.replace("listFullReviews", ""), (Body) decorator.decorate(new Body(refresh)), BASE_HOST);
+	}
+
 
 	public static ListFullReviewsRequest of(String storeName, String packageName) {
 		return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
@@ -89,7 +105,11 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 
 	@Override
 	protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listFullReviews(body, bypassCache);
+		if (TextUtils.isEmpty(url)) {
+			return interfaces.listFullReviews(body, bypassCache);
+		} else {
+			return interfaces.listFullReviews(url, body, bypassCache);
+		}
 	}
 
 	@Data
@@ -112,6 +132,10 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		private String packageName;
 		private String storeName;
 		private Integer subLimit;
+
+		public Body(boolean refresh) {
+			this.refresh = refresh;
+		}
 
 		public Body(long storeId, int limit, int subLimit, boolean refresh) {
 

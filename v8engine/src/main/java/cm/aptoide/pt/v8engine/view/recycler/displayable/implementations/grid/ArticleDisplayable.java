@@ -25,6 +25,7 @@ public class ArticleDisplayable extends Displayable {
 
 	@Getter private String articleTitle;
 	@Getter private String url;
+	@Getter private String baseUrl;
 	@Getter private String title;
 	@Getter private String thumbnailUrl;
 	@Getter private String avatarUrl;
@@ -43,7 +44,7 @@ public class ArticleDisplayable extends Displayable {
 			appName = article.getApps().get(0).getName();
 			appId = article.getApps().get(0).getId();
 		}
-		return new ArticleDisplayable(article.getTitle(), article.getUrl(), article
+		return new ArticleDisplayable(article.getTitle(), article.getUrl(), article.getPublisher().getBaseUrl() ,article
 				.getPublisher().getName(), article.getThumbnailUrl(), article.getPublisher()
 				.getLogoUrl(), appId, appName, article.getDate(), dateCalculator, spannableFactory);
 	}

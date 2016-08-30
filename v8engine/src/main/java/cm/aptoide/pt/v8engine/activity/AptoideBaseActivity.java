@@ -1,17 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified by SithEngineer on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,14 +25,14 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.Lifecycle;
+import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import lombok.Getter;
 import rx.functions.Action0;
 
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class AptoideBaseActivity extends AppCompatActivity implements Lifecycle, PermissionRequest {
+public abstract class AptoideBaseActivity extends AppCompatActivity implements UiComponentBasics, PermissionRequest {
 
 	private static final String TAG = AptoideBaseActivity.class.getName();
 	private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -63,13 +61,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		setupViews();
 	}
 
-	private void setUpAnalytics() {
-		Analytics.Lifecycle.Activity.onCreate(this);
-		Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
-		Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
-		Analytics.Dimensions.setGmsPresent(DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable());
-	}
-
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -81,15 +72,18 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		super.onDestroy();
 	}
 
+	private void setUpAnalytics() {
+		Analytics.Lifecycle.Activity.onCreate(this);
+		Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
+		Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
+		Analytics.Dimensions.setGmsPresent(DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable());
+	}
+
 	/**
 	 * @return the LayoutRes to be set on {@link #setContentView(int)}.
 	 */
 	@LayoutRes
 	public abstract int getContentViewId();
-
-	//
-	// code to support android M permission system
-	//
 
 	@Override
 	protected void onPause() {
@@ -111,10 +105,16 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 		Analytics.Lifecycle.Activity.onStart(this);
 	}
 
+	//
+	// code to support android M permission system
+	//
+	// android 6 permission system
+	// consider using https://github.com/hotchemi/PermissionsDispatcher
+	//
+
 	@TargetApi(Build.VERSION_CODES.M)
 	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-			grantResults) {
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
 		switch (requestCode) {
 
@@ -161,11 +161,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 	 */
 	protected abstract String getAnalyticsScreenName();
 
-	//
-	// android 6 permission system
-	// consider using https://github.com/hotchemi/PermissionsDispatcher
-	//
-
 	@TargetApi(Build.VERSION_CODES.M)
 	public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied) {
 		requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
@@ -193,6 +188,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 							if (toRunWhenAccessToFileSystemIsDenied != null) {
 								toRunWhenAccessToFileSystemIsDenied.call();
 							}
+							return;
 						}
 
 						ActivityCompat.requestPermissions(
@@ -251,6 +247,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements L
 							if (toRunWhenAccessToAccountsIsDenied != null) {
 								toRunWhenAccessToAccountsIsDenied.call();
 							}
+							return;
 						}
 
 						ActivityCompat.requestPermissions(

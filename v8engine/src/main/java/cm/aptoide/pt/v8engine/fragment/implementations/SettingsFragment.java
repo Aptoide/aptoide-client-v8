@@ -42,7 +42,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -191,7 +190,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 					cb.setChecked(false);
 				}
 
-				SecurePreferencesImplementation.getInstance().edit().putBoolean("FILTER_APPS", filterApps).commit();
+				ManagerPreferences.setHWSpecsFilter(filterApps);
 
 				return true;
 			}

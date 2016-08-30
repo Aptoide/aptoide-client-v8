@@ -1,414 +1,434 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/07/2016.
+  ~ Modified by SithEngineer on 29/08/2016.
   -->
 
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     >
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!--
-            android:theme="?attr/toolbarTheme"
-            -->
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            app:layout_collapseMode="pin"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:indeterminate="true"
-        android:visibility="visible"
-        />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
         >
 
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <!--
+            <!--
+                android:theme="?attr/toolbarTheme"
+                -->
 
-        error views
-
-        -->
-
-
-        <include
-            layout="@layout/partial_view_incl_no_network"
-            tools:visibility="gone"
-            />
-
-        <include
-            layout="@layout/partial_view_error"
-            tools:visibility="gone"
-            />
-
-        <!--
-
-        overall rating circle
-
-        -->
-
-        <RelativeLayout
-            android:id="@+id/rating_layout"
-            android:layout_width="113dp"
-            android:layout_height="113dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/layer_2"
-            >
-
-            <LinearLayout
-                android:id="@+id/users_icon_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                >
-
-                <ImageView
-                    android:id="@+id/users_icon"
-                    android:layout_width="7.3dp"
-                    android:layout_height="8.7dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_user_icon"
-                    />
-
-                <TextView
-                    android:id="@+id/users_voted"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center_vertical|left|start"
-                    android:textColor="@color/white"
-                    android:textSize="10.6sp"
-                    tools:text="2425"
-                    />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/rating_value"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/users_icon_layout"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:lineSpacingMultiplier="0.9"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="42sp"
-                tools:text="4.2"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 />
 
-            <android.support.v7.widget.AppCompatRatingBar
-                android:id="@+id/rating_bar"
-                style="@style/Widget.AppCompat.RatingBar.Small"
-                android:layout_width="wrap_content"
+        </android.support.design.widget.AppBarLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:indeterminate="true"
+            android:visibility="visible"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            >
+
+
+            <!--
+
+            error views
+
+            -->
+
+
+            <include
+                layout="@layout/partial_view_incl_no_network"
+                tools:visibility="gone"
+                />
+
+            <include
+                layout="@layout/partial_view_error"
+                tools:visibility="gone"
+                />
+
+            <!--
+
+            overall rating circle
+
+            -->
+
+            <RelativeLayout
+                android:id="@+id/rating_layout"
+                android:layout_width="113dp"
+                android:layout_height="113dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/layer_2"
+                >
+
+                <LinearLayout
+                    android:id="@+id/users_icon_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:id="@+id/users_icon"
+                        android:layout_width="7.3dp"
+                        android:layout_height="8.7dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_user_icon"
+                        />
+
+                    <TextView
+                        android:id="@+id/users_voted"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical|left|start"
+                        android:textColor="@color/white"
+                        android:textSize="10.6sp"
+                        tools:text="2425"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/rating_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/users_icon_layout"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:lineSpacingMultiplier="0.9"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="42sp"
+                    tools:text="4.2"
+                    />
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="@style/RatingBarSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rating_value"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="6dp"
+                    android:numStars="5"
+                    android:stepSize="0.5"
+                    tools:rating="3.0"
+                    />
+
+            </RelativeLayout>
+
+            <!--
+
+            individual rating bars
+
+            -->
+
+            <LinearLayout
+                android:id="@+id/counts_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rating_value"
-                android:layout_centerInParent="true"
-                android:numStars="5"
-                android:progressDrawable="@drawable/rating_bar_extra_small"
-                android:stepSize="0.5"
-                tools:rating="3.0"
+                android:layout_marginEnd="11.7dp"
+                android:layout_marginRight="11.7dp"
+                android:layout_toRightOf="@id/rating_layout"
+                android:orientation="vertical"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/five_rate_star_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/five_rate_star_label"
+                        style="@style/FragmentRateAndReviewsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/five_numeric"
+                        />
+
+                    <TextView
+                        android:id="@+id/five_rate_star_count"
+                        style="@style/FragmentRateAndReviewsCount"
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        tools:text="7914"
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/five_rate_star_progress"
+                        style="@style/FragmentRateAndReviewsProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_toLeftOf="@id/five_rate_star_count"
+                        android:layout_toRightOf="@id/five_rate_star_label"
+                        tools:progress="80"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/four_rate_star_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/four_rate_star_label"
+                        style="@style/FragmentRateAndReviewsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/four_numeric"
+                        />
+
+                    <TextView
+                        android:id="@+id/four_rate_star_count"
+                        style="@style/FragmentRateAndReviewsCount"
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        tools:text="301"
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/four_rate_star_progress"
+                        style="@style/FragmentRateAndReviewsProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_toLeftOf="@id/four_rate_star_count"
+                        android:layout_toRightOf="@id/four_rate_star_label"
+                        tools:progress="30"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/three_rate_star_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/three_rate_star_label"
+                        style="@style/FragmentRateAndReviewsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/three_numeric"
+                        />
+
+                    <TextView
+                        android:id="@+id/three_rate_star_count"
+                        style="@style/FragmentRateAndReviewsCount"
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        tools:text="4087"
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/three_rate_star_progress"
+                        style="@style/FragmentRateAndReviewsProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_toLeftOf="@id/three_rate_star_count"
+                        android:layout_toRightOf="@id/three_rate_star_label"
+                        tools:progress="50"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/two_rate_star_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/two_rate_star_label"
+                        style="@style/FragmentRateAndReviewsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/two_numeric"
+                        />
+
+                    <TextView
+                        android:id="@+id/two_rate_star_count"
+                        style="@style/FragmentRateAndReviewsCount"
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        tools:text="5"
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/two_rate_star_progress"
+                        style="@style/FragmentRateAndReviewsProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_toLeftOf="@id/two_rate_star_count"
+                        android:layout_toRightOf="@id/two_rate_star_label"
+                        tools:progress="1"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/one_rate_star_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/one_rate_star_label"
+                        style="@style/FragmentRateAndReviewsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/one_numeric"
+                        />
+
+                    <TextView
+                        android:id="@+id/one_rate_star_count"
+                        style="@style/FragmentRateAndReviewsCount"
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        tools:text="12"
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/one_rate_star_progress"
+                        style="@style/FragmentRateAndReviewsProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_toLeftOf="@id/one_rate_star_count"
+                        android:layout_toRightOf="@id/one_rate_star_label"
+                        tools:progress="12"
+                        />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/horizontal_bar_1"
+                layout="@layout/separator_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/rating_layout"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                />
+
+            <!--
+
+            ordering buttons
+
+            -->
+
+            <LinearLayout
+                android:id="@+id/ordering_buttons_layout"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_below="@id/horizontal_bar_1"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="gone"
+                >
+
+                <Button
+                    android:id="@+id/change_ordering"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/rounded_corners_dark_gray"
+                    android:drawableEnd="@drawable/ic_up_arrow"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@drawable/ic_up_arrow"
+                    android:drawableTint="@color/dark_gray"
+                    android:text="Highest ranking"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="@dimen/text_size_medium"
+                    />
+
+                <Button
+                    android:id="@+id/just_reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/rounded_corners_dark_gray"
+                    android:text="@string/just_reviews"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="@dimen/text_size_medium"
+                    />
+
+
+            </LinearLayout>
+
+            <!--
+
+            reviews and comments
+
+            -->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/ordering_buttons_layout"
                 />
 
         </RelativeLayout>
 
-        <!--
+    </LinearLayout>
 
-        individual rating bars
-
-        -->
-
-        <LinearLayout
-            android:id="@+id/counts_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="11.7dp"
-            android:layout_marginRight="11.7dp"
-            android:layout_toRightOf="@id/rating_layout"
-            android:orientation="vertical"
-            >
-
-            <RelativeLayout
-                android:id="@+id/five_rate_star_layout"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/five_rate_star_label"
-                    style="@style/FragmentRateAndReviewsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/five_numeric"
-                    />
-
-                <TextView
-                    android:id="@+id/five_rate_star_count"
-                    style="@style/FragmentRateAndReviewsCount"
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    tools:text="7914"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/five_rate_star_progress"
-                    style="@style/FragmentRateAndReviewsProgressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_toLeftOf="@id/five_rate_star_count"
-                    android:layout_toRightOf="@id/five_rate_star_label"
-                    tools:progress="80"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/four_rate_star_layout"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/four_rate_star_label"
-                    style="@style/FragmentRateAndReviewsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/four_numeric"
-                    />
-
-                <TextView
-                    android:id="@+id/four_rate_star_count"
-                    style="@style/FragmentRateAndReviewsCount"
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    tools:text="301"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/four_rate_star_progress"
-                    style="@style/FragmentRateAndReviewsProgressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_toLeftOf="@id/four_rate_star_count"
-                    android:layout_toRightOf="@id/four_rate_star_label"
-                    tools:progress="30"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/three_rate_star_layout"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/three_rate_star_label"
-                    style="@style/FragmentRateAndReviewsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/three_numeric"
-                    />
-
-                <TextView
-                    android:id="@+id/three_rate_star_count"
-                    style="@style/FragmentRateAndReviewsCount"
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    tools:text="4087"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/three_rate_star_progress"
-                    style="@style/FragmentRateAndReviewsProgressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_toLeftOf="@id/three_rate_star_count"
-                    android:layout_toRightOf="@id/three_rate_star_label"
-                    tools:progress="50"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/two_rate_star_layout"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/two_rate_star_label"
-                    style="@style/FragmentRateAndReviewsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/two_numeric"
-                    />
-
-                <TextView
-                    android:id="@+id/two_rate_star_count"
-                    style="@style/FragmentRateAndReviewsCount"
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    tools:text="5"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/two_rate_star_progress"
-                    style="@style/FragmentRateAndReviewsProgressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_toLeftOf="@id/two_rate_star_count"
-                    android:layout_toRightOf="@id/two_rate_star_label"
-                    tools:progress="1"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/one_rate_star_layout"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/one_rate_star_label"
-                    style="@style/FragmentRateAndReviewsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/one_numeric"
-                    />
-
-                <TextView
-                    android:id="@+id/one_rate_star_count"
-                    style="@style/FragmentRateAndReviewsCount"
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    tools:text="12"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/one_rate_star_progress"
-                    style="@style/FragmentRateAndReviewsProgressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_toLeftOf="@id/one_rate_star_count"
-                    android:layout_toRightOf="@id/one_rate_star_label"
-                    tools:progress="12"
-                    />
-
-            </RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/forma_1"/>
 
 
-        </LinearLayout>
-
-        <include
-            android:id="@+id/horizontal_bar_1"
-            layout="@layout/separator_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/rating_layout"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            />
-
-        <!--
-
-        ordering buttons
-
-        -->
-
-        <LinearLayout
-            android:id="@+id/ordering_buttons_layout"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_below="@id/horizontal_bar_1"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="gone"
-            >
-
-            <Button
-                android:id="@+id/change_ordering"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/rounded_corners_dark_gray"
-                android:drawableEnd="@drawable/ic_up_arrow"
-                android:drawablePadding="10dp"
-                android:drawableRight="@drawable/ic_up_arrow"
-                android:drawableTint="@color/dark_gray"
-                android:text="Highest ranking"
-                android:textColor="@color/dark_gray"
-                android:textSize="@dimen/text_size_medium"
-                />
-
-            <Button
-                android:id="@+id/just_reviews"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/rounded_corners_dark_gray"
-                android:text="@string/just_reviews"
-                android:textColor="@color/dark_gray"
-                android:textSize="@dimen/text_size_medium"
-                />
-
-
-        </LinearLayout>
-
-        <!--
-
-        reviews and comments
-
-        -->
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/ordering_buttons_layout"
-            />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

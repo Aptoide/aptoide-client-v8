@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import android.text.TextUtils;
+
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -17,7 +17,6 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,17 +29,33 @@ import rx.Observable;
  */
 public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
-	private final String url;
+	public static final String STORT_BY_DOWNLOADS = "downloads7d";
+	private String url;
 
 	private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
 		super(body, httpClient, converterFactory, baseHost);
 		this.url = url;
 	}
 
+	public ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
+		super(body, httpClient, converterFactory, baseHost);
+	}
+
+	public static ListStoresRequest ofTopStores(int offset, int limit) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+
+		final Body baseBody = new Body();
+		baseBody.setOffset(offset);
+		baseBody.limit = limit;
+		return new ListStoresRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(baseBody),
+				BASE_HOST);
+	}
+
 	public static ListStoresRequest ofAction(String url) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
-		return new ListStoresRequest(url.replace("listStores", ""), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(new
+		return new ListStoresRequest(url.replace("listStores", ""), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body)
+				decorator.decorate(new
 				Body
 				()),
 				BASE_HOST);
@@ -48,7 +63,11 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
 	@Override
 	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listStores(url, body, bypassCache);
+		if (TextUtils.isEmpty(url)) {
+			return interfaces.listTopStores(STORT_BY_DOWNLOADS, 10, body, bypassCache);
+		} else {
+			return interfaces.listStores(url, body, bypassCache);
+		}
 	}
 
 	@EqualsAndHashCode(callSuper = true)

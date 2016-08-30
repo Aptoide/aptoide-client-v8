@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -23,14 +23,14 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.v8engine.activities.AptoideSimpleFragmentActivity;
+import cm.aptoide.pt.v8engine.activity.AptoideSimpleFragmentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
@@ -154,30 +154,25 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	}
 
 	@Override
-	public void pushFragment(Fragment fragment) {
-		FragmentUtils.replaceFragment(this, fragment);
-	}
-
-	@Override
 	public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
 		FragmentUtils.replaceFragmentV4(this, fragment);
-	}
-
-	@Override
-	public void popFragment() {
-		onBackPressed();
 	}
 
 	public android.support.v4.app.Fragment getCurrentV4() {
 		return FragmentUtils.getFirstFragmentV4(this);
 	}
 
-	public Fragment getCurrent() {
-		return FragmentUtils.getFirstFragment(this);
-	}
-
 	public android.support.v4.app.Fragment getLastV4() {
 		return FragmentUtils.getLastFragmentV4(this);
+	}
+
+	@Override
+	public void pushFragment(Fragment fragment) {
+		FragmentUtils.replaceFragment(this, fragment);
+	}
+
+	public Fragment getCurrent() {
+		return FragmentUtils.getFirstFragment(this);
 	}
 
 	public Fragment getLast() {

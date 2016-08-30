@@ -154,6 +154,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 		Observable<GetStoreWidgets> getStoreWidgets(@Path(value = "url", encoded = true) String path, @Body
 		GetStoreWidgetsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
+		@POST("listStores/sort/{sort}/limit/{limit}")
+		Observable<ListStores> listTopStores(@Path(value = "sort", encoded = true) String sort, @Path(value = "limit", encoded = true) int limit, @Body
+		ListStoresRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
 		@POST("listStores{url}")
 		Observable<ListStores> listStores(@Path(value = "url", encoded = true) String path, @Body ListStoresRequest
 				.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -178,6 +182,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
 		@POST("listFullReviews")
 		Observable<ListFullReviews> listFullReviews(@Body ListFullReviewsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+
+		@POST("listFullReviews{url}")
+		Observable<ListFullReviews> listFullReviews(@Path(value = "url", encoded = true) String path, @Body ListFullReviewsRequest.Body body, @Header
+				(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("listComments")
 		Observable<ListComments> listComments(@Body ListCommentsRequest.Body body, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);

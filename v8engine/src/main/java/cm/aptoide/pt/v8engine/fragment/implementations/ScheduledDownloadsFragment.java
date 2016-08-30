@@ -29,7 +29,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import rx.Subscription;
@@ -55,7 +55,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
-		Logger.d(TAG, String.format("refresh excluded updates? %s", refresh ? "yes" : "no"));
+		Logger.d(TAG, "refresh excluded updates? "+ (refresh ? "yes" : "no"));
 
 		fetchScheduledDownloads();
 	}

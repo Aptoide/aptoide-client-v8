@@ -34,7 +34,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.download.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
@@ -97,7 +97,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
-		Logger.d(TAG, String.format("refresh rollbacks? %s", refresh ? "yes" : "no"));
+		Logger.d(TAG, "refresh rollbacks? " + (refresh ? "yes" : "no"));
 		AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
 	}
 

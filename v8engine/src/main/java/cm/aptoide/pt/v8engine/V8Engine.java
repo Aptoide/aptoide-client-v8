@@ -1,12 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -15,6 +17,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +39,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -51,12 +55,12 @@ public abstract class V8Engine extends DataProvider {
 	private static final String TAG = V8Engine.class.getName();
 
 	@Getter static DownloadService downloadService;
+	private RefWatcher refWatcher;
 
 	public static void loadStores() {
 
 		AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
-			@Cleanup
-			Realm realm = Database.get(getContext());
+			@Cleanup Realm realm = Database.get();
 			for (Subscription subscription : subscriptions) {
 				Store store = new Store();
 
@@ -84,7 +88,7 @@ public abstract class V8Engine extends DataProvider {
 	}
 
 	private static void clearStores() {
-		@Cleanup Realm realm = Database.get(V8Engine.getContext());
+		@Cleanup Realm realm = Database.get();
 		realm.beginTransaction();
 		realm.delete(Store.class);
 		realm.commitTransaction();
@@ -92,12 +96,23 @@ public abstract class V8Engine extends DataProvider {
 		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
 	}
 
+	public static RefWatcher getRefWatcher(Context context) {
+		V8Engine app = (V8Engine) context.getApplicationContext();
+		return app.refWatcher;
+	}
+
 	@Override
 	public void onCreate() {
 		long l = System.currentTimeMillis();
 		AptoideUtils.setContext(this);
 
+		//
+		// super
+		//
 		super.onCreate();
+
+		Database.initialize(this);
+
 		generateAptoideUUID().subscribe();
 
 		SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -109,8 +124,11 @@ public abstract class V8Engine extends DataProvider {
 				.build(this, BuildConfig.FLURRY_KEY);
 
 		if (BuildConfig.DEBUG) {
-			LeakCanary.install(this);
+			refWatcher = LeakCanary.install(this);
+			//registerActivityLifecycleCallbacks(new LeakCAnaryActivityWatcher(refWatcher));
 			Log.w(TAG, "LeakCanary installed");
+		} else {
+			refWatcher = RefWatcher.DISABLED;
 		}
 
 		if (SecurePreferences.isFirstRun()) {
@@ -140,10 +158,6 @@ public abstract class V8Engine extends DataProvider {
 			Logger.w(TAG, "application has debug flag active");
 		}
 
-		//		if (BuildConfig.DEBUG) {
-		//			Stetho.initializeWithDefaults(this);
-		//		}
-
 		setupCrashlytics();
 
 		AptoideDownloadManager.getInstance().init(this, new DownloadNotificationActionsActionsInterface(), new DownloadManagerSettingsI());
@@ -154,6 +168,11 @@ public abstract class V8Engine extends DataProvider {
 			setupStrictMode();
 			Log.w(TAG, "StrictMode setup");
 		}
+
+		// this will trigger the migration if needed
+		// FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
+		SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
+		db.close();
 
 		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
 	}
@@ -168,13 +187,21 @@ public abstract class V8Engine extends DataProvider {
 		Fabric.with(this, crashlyticsKit);
 	}
 
+	//
+	// Strict Mode
+	//
+
 	private void addDefaultStore() {
 		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> DataproviderUtils.checkUpdates(), null);
 	}
 
+	//
+	// Leak Canary
+	//
+
 	private Observable<?> loadInstalledApps() {
 		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = Database.get(this);
+			@Cleanup Realm realm = Database.get();
 			Database.dropTable(Installed.class, realm);
 			// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
@@ -207,62 +234,47 @@ public abstract class V8Engine extends DataProvider {
 				.build());
 	}
 
-	/*
-	private static final ActivityLifecycleMonitor lifecycleMonitor = new ActivityLifecycleMonitor();
-
-	private FragmentActivity currentActivityV4;
-	private Activity currentActivity;
-
-	private void setupCurrentActivityListener() {
-		registerActivityLifecycleCallbacks(lifecycleMonitor);
-	}
-
-	public static Activity getCurrentActivity() {
-		return lifecycleMonitor.getCurrentActivity();
-	}
-
-	private static class ActivityLifecycleMonitor implements ActivityLifecycleCallbacks {
-
-		private Activity currentActivity = null;
-
-		@Override
-		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-		}
-
-		@Override
-		public void onActivityStarted(Activity activity) {
-
-		}
-
-		@Override
-		public void onActivityResumed(Activity activity) {
-			currentActivity = activity;
-		}
-
-		@Override
-		public void onActivityPaused(Activity activity) {
-
-		}
-
-		@Override
-		public void onActivityStopped(Activity activity) {
-
-		}
-
-		@Override
-		public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-		}
-
-		@Override
-		public void onActivityDestroyed(Activity activity) {
-
-		}
-
-		public Activity getCurrentActivity() {
-			return currentActivity;
-		}
-	}
-	*/
+	//	private static class LeakCAnaryActivityWatcher implements ActivityLifecycleCallbacks {
+	//
+	//		private final RefWatcher refWatcher;
+	//
+	//		private LeakCAnaryActivityWatcher(RefWatcher refWatcher) {
+	//			this.refWatcher = refWatcher;
+	//		}
+	//
+	//		@Override
+	//		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+	//
+	//		}
+	//
+	//		@Override
+	//		public void onActivityStarted(Activity activity) {
+	//
+	//		}
+	//
+	//		@Override
+	//		public void onActivityResumed(Activity activity) {
+	//
+	//		}
+	//
+	//		@Override
+	//		public void onActivityPaused(Activity activity) {
+	//
+	//		}
+	//
+	//		@Override
+	//		public void onActivityStopped(Activity activity) {
+	//
+	//		}
+	//
+	//		@Override
+	//		public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+	//
+	//		}
+	//
+	//		@Override
+	//		public void onActivityDestroyed(Activity activity) {
+	//			refWatcher.watch(activity);
+	//		}
+	//	}
 }

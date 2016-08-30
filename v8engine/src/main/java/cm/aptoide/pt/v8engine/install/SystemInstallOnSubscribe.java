@@ -6,22 +6,18 @@
 package cm.aptoide.pt.v8engine.install;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageInstallObserver;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.RemoteException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.Subscriber;
-import rx.subscriptions.Subscriptions;
 
 /**
  * Created by marcelobenites on 7/19/16.

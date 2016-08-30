@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
+ * Modified by SithEngineer on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -89,14 +89,21 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
 		storeNameView.setText(store.getName());
 		storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeNumberUsersView.setText(String.format(Locale.getDefault(), V8Engine.getContext()
-				.getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers())));
+
+		storeNumberUsersView.setText(
+				String.format(
+						Locale.ENGLISH,
+						V8Engine.getContext().getString(R.string.appview_followers_count_text),
+						AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers())
+				)
+		);
+
 		followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			followButton.setElevation(0);
 		}
 		followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
-		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName()));
+		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),store.getAppearance().getTheme()));
 
 		@Cleanup
 		Realm realm = Database.get();
@@ -106,7 +113,7 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 			//int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
 			//followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
 			followButton.setText(R.string.followed);
-			followButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName()));
+			followButton.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),store.getAppearance().getTheme()));
 		} else {
 			//int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
 			//followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
@@ -117,9 +124,9 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 
 	private static class Listeners {
 
-		private View.OnClickListener newOpenStoreListener(View itemView, String storeName) {
+		private View.OnClickListener newOpenStoreListener(View itemView, String storeName, String storeTheme) {
 			return v -> {
-				FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreFragment.newInstance(storeName));
+				FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreFragment.newInstance(storeName,storeTheme));
 			};
 		}
 

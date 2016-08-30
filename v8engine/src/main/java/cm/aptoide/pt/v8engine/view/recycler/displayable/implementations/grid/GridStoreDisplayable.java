@@ -15,6 +15,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridStoreDisplayable extends DisplayablePojo<Store> {
 
+	public GridStoreDisplayable(Store pojo) {
+		super(pojo);
+	}
+
 	public GridStoreDisplayable() {
 	}
 

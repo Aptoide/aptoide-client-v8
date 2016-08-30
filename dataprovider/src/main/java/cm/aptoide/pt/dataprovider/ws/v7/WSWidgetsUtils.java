@@ -56,6 +56,10 @@ public class WSWidgetsUtils {
 					ioScheduler(GetStoreMetaRequest.ofAction(url)
 							.observe(refresh)).subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta), action1);
 					break;
+				case REVIEWS_GROUP:
+					ioScheduler(ListFullReviewsRequest.ofAction(url, refresh)
+							.observe(refresh)).subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
+					break;
 				default:
 					// In case a known enum is not implemented
 					countDownLatch.countDown();

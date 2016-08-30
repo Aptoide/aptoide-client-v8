@@ -16,6 +16,7 @@ import java.util.Date;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -39,11 +40,10 @@ public class AppUpdateDisplayable extends Displayable {
 	@Getter private String storeName;
 
 	private Date dateUpdated;
-	private String appVersioName;
+	private String appVersionName;
 	private SpannableFactory spannableFactory;
 	private String appName;
-	private int versionCode;
-	private String packageName;
+	@Getter private String packageName;
 	private Download download;
 	private DownloadServiceHelper downloadManager;
 	private InstallManager installManager;
@@ -53,10 +53,10 @@ public class AppUpdateDisplayable extends Displayable {
 	public AppUpdateDisplayable() {
 	}
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory, DownloadServiceHelper
-			downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
-				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getFile().getVercode(), appUpdate.getPackageName(), downloadFactory
+	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
+	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
+				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getPackageName(), downloadFactory
 				.create(appUpdate), downloadManager, installManager, dateCalculator, appUpdate.getId());
 	}
 
@@ -73,7 +73,7 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Observable<Integer> downloadStatus() {
-		return downloadManager.getDownloadAsync(download.getAppId())
+		return downloadManager.getDownload(download.getAppId())
 				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
 				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
 	}
@@ -107,8 +107,8 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Spannable getVersionText(Context context) {
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_version,
-				appVersioName), ContextCompat.getColor(context, R.color.black), appVersioName);
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName),
+				ContextCompat.getColor(context, R.color.black), appVersionName);
 	}
 
 	public Spannable getUpdateAppText(Context context) {

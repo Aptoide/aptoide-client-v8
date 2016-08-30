@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit
+
 /*
  * Copyright (c) 2016.
  * Modified by SithEngineer on 29/07/2016.
@@ -30,6 +32,13 @@ if (fabricConfigured) {
     preBuild.dependsOn(fabricGenerateProperties)
     apply plugin: 'io.fabric'
 }
+
+//configurations.all {
+//    resolutionStrategy {
+//        // cache dynamic versions for 2 hours
+//        cacheDynamicVersionsFor 2, TimeUnit.HOURS
+//    }
+//}
 
 android {
 
@@ -115,6 +124,7 @@ android {
             zipAlignEnabled false
             minifyEnabled false
             shrinkResources false
+            signingConfig signingConfigs.release
         }
     }
 
@@ -156,6 +166,11 @@ android {
                 variant.assemble.dependsOn versionUpdate
             }
         }
+    }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
     }
 }
 

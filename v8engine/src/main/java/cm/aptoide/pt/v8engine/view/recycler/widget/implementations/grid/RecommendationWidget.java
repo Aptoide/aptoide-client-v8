@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
@@ -68,7 +69,11 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 
 		getApp.setVisibility(View.VISIBLE);
 		getApp.setText(displayable.getAppText(getContext()));
-		cardContent.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
+		cardContent.setOnClickListener(view -> {
+			Analytics.AppsTimeline.clickOnCard("Recommendation", displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(getContext
+					()), Analytics.AppsTimeline.OPEN_APP_VIEW);
+			((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId()));
+		});
 	}
 
 	private void setCardviewMargin(RecommendationDisplayable displayable) {
