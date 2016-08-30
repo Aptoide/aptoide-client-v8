@@ -76,6 +76,7 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
 			}
 		});
 
+		/*
 		permissionRequest.requestAccessToExternalFileSystem(() -> {
 
 			ShowMessage.asSnack(v, R.string.installing_msg);
@@ -89,6 +90,7 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
 		}, () -> {
 			ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
 		});
+		*/
 	}
 
 	private void manageDownload(Download download) {
