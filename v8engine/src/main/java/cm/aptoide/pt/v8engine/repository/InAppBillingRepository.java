@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.iab.SKU;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
@@ -41,10 +42,10 @@ public class InAppBillingRepository {
 				if (response.getInAppBillingAvailable().isAvailable()) {
 					return Observable.just(null);
 				} else {
-					return Observable.error(new RepositoryItemNotFoundException(getErrorMessage(response.getErrors())));
+					return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
 				}
 			} else {
-				return Observable.error(new RepositoryIllegalArgumentException(getErrorMessage(response.getErrors())));
+				return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
 			}
 		});
 	}
@@ -65,7 +66,7 @@ public class InAppBillingRepository {
 			if (response != null && response.isOk()) {
 				return Observable.just(response.getPurchaseInformation());
 			}
-			return Observable.error(new RepositoryIllegalArgumentException(getErrorMessage(response.getErrors())));
+			return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
 		});
 	}
 
@@ -75,9 +76,9 @@ public class InAppBillingRepository {
 				return Observable.just(null);
 			}
 			if (isDeletionItemNotFound(response.getErrors())) {
-				return Observable.error(new RepositoryItemNotFoundException(getErrorMessage(response.getErrors())));
+				return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
 			}
-			return Observable.error(new RepositoryIllegalArgumentException(getErrorMessage(response.getErrors())));
+			return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
 		});
 	}
 
@@ -96,9 +97,9 @@ public class InAppBillingRepository {
 			} else {
 				final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList = response.getPublisherResponse().getDetailList();
 				if (detailList.isEmpty()) {
-					return Observable.error(new RepositoryItemNotFoundException(getErrorMessage(response.getErrors())));
+					return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
 				}
-				return Observable.error(new RepositoryIllegalArgumentException(getErrorMessage(response.getErrors())));
+				return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
 			}
 		});
 	}
@@ -112,18 +113,4 @@ public class InAppBillingRepository {
 		}
 		return false;
 	}
-
-	@NonNull
-	private String getErrorMessage(List<ErrorResponse> errors) {
-		final StringBuilder builder = new StringBuilder();
-		for (ErrorResponse error : errors) {
-			builder.append(error.msg);
-			builder.append(". ");
-		}
-		if (builder.length() == 0) {
-			builder.append("Server failed with empty error list.");
-		}
-		return builder.toString();
-	}
-
 }

@@ -8,11 +8,12 @@ package cm.aptoide.pt.v8engine.repository;
 import android.content.Context;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
@@ -51,8 +52,13 @@ public class PaymentRepository {
 						inAppBillingProduct.getType()).flatMap(purchaseInformation -> getPurchase(purchaseInformation, inAppBillingProduct.getSku()));
 			} else {
 				final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
-				return appRepository.getAppPayment(paidAppProduct.getId(), false, paidAppProduct.getStoreName())
-						.flatMap(payment -> getPurchase(payment, paidAppProduct.getAppId()));
+				return appRepository.getAppPayment(paidAppProduct.getAppId(), false, paidAppProduct.getStoreName())
+						.flatMap(payment -> {
+							if (payment.isPaid()) {
+								return Observable.just(purchaseFactory.create());
+							}
+							return Observable.error(new RepositoryItemNotFoundException("Purchase not found for product " + paidAppProduct.getId()));
+						});
 			}
 		});
 	}
@@ -86,7 +92,9 @@ public class PaymentRepository {
 
 	public Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		return storePaymentConfirmation(paymentConfirmation)
-				.flatMap(processing -> verifyPaymentConfirmation(paymentConfirmation));
+				.delay(2, TimeUnit.SECONDS)
+				.flatMap(processing -> verifyPaymentConfirmation(paymentConfirmation))
+				.retry(2);
 	}
 
 	public Observable<Void> deletePaymentConfirmation(AptoideProduct product) {
@@ -110,7 +118,7 @@ public class PaymentRepository {
 			if (response != null && response.isOk()) {
 				return Observable.just(null);
 			}
-			return Observable.error(new SecurityException("Could not verify payment confirmation. Server response: " + response.getStatus()));
+			return Observable.error(new SecurityException("Could not verify payment confirmation. Server response: " + V3.getErrorMessage(response)));
 		});
 	}
 
@@ -165,16 +173,6 @@ public class PaymentRepository {
 			realmObject.setStoreName(((PaidAppProduct)paymentConfirmation.getProduct()).getStoreName());
 		}
 		return realmObject;
-	}
-
-	private Observable<Purchase> getPurchase(GetApkInfoJson.Payment paymentInformation, long appId) {
-		return Observable.just(paymentInformation).flatMap(payment -> {
-			if (payment.apkpath != null && !payment.apkpath.isEmpty()) {
-				return Observable.just(payment);
-			} else {
-				return Observable.error(new RepositoryItemNotFoundException("No purchase found for App " + appId));
-			}
-		}).map(payment -> purchaseFactory.create(payment));
 	}
 
 	private Observable<Purchase> getPurchase(InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, String sku) {

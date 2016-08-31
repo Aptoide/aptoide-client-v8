@@ -28,19 +28,19 @@ public class AppRepository {
 	private final ProductFactory productFactory;
 
 	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(appId).observe(refresh);
+		return GetAppRequest.of(appId).observe(refresh).flatMap(app -> getPaymentApp(app, sponsored));
 	}
 
 	public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(packageName).observe(refresh);
+		return GetAppRequest.of(packageName).observe(refresh).flatMap(app -> getPaymentApp(app, sponsored));
 	}
 
-	public Observable<List<PaymentService>> getPaymentServices(long appId, boolean fromSponsored, String storeName) {
-		return getAppPayment(appId, fromSponsored, storeName).map(payment -> payment.payment_services);
+	public Observable<List<PaymentService>> getPaymentServices(long appId, boolean sponsored, String storeName) {
+		return getAppPayment(appId, sponsored, storeName).map(payment -> payment.getPaymentServices());
 	}
 
-	public Observable<GetApkInfoJson.Payment> getAppPayment(long appId, boolean fromSponsored, String storeName) {
-		return GetApkInfoRequest.of(appId, operatorManager, fromSponsored, storeName).observe(true)
+	public Observable<GetApkInfoJson.Payment> getAppPayment(long appId, boolean sponsored, String storeName) {
+		return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName).observe(true)
 				.flatMap(response -> {
 					if (response != null && response.isOk() && response.getPayment() != null) {
 						return Observable.just(response.getPayment());
@@ -49,5 +49,13 @@ public class AppRepository {
 								storeName));
 					}
 				});
+	}
+
+	private Observable<GetApp> getPaymentApp(GetApp app, boolean sponsored) {
+		return getAppPayment(app.getNodes().getMeta().getData().getId(), sponsored, app.getNodes()
+				.getMeta().getData().getStore().getName()).map(payment -> {
+			app.getNodes().getMeta().getData().setPayment(payment);
+			return app;
+		});
 	}
 }

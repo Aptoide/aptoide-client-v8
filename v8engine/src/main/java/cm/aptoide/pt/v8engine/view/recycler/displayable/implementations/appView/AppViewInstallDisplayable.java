@@ -61,14 +61,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
 	}
 
-	public Observable<Void> buyApp(Context context, GetAppMeta.App app) {
-		return Observable.create(aVoid -> {
-			// process payment, save info offline, send info to server and when server confirms the app purchase delete offline data
-			Fragment fragment = ((FragmentShower) context).getLastV4();
-			if (Payments.class.isAssignableFrom(fragment.getClass())) {
-				((Payments) fragment).buyApp(app);
-			}
-		});
+	public void buyApp(Context context, GetAppMeta.App app) {
+		Fragment fragment = ((FragmentShower) context).getLastV4();
+		if (Payments.class.isAssignableFrom(fragment.getClass())) {
+			((Payments) fragment).buyApp(app);
+		}
 	}
 
 	public Observable<Void> update(Context context, GetAppMeta.App app) {

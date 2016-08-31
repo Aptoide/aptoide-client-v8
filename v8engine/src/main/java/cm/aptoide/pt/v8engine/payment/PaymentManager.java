@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 8/12/16.
@@ -37,6 +38,7 @@ public class PaymentManager {
 					if (throwable instanceof RepositoryItemNotFoundException) {
 						return RxPayment.process(payment)
 								.flatMap(paymentConfirmation -> paymentRepository.savePaymentConfirmation(paymentConfirmation)
+								.observeOn(AndroidSchedulers.mainThread())
 								.flatMap(saved -> getPurchase((AptoideProduct) payment.getProduct())));
 					}
 					return Observable.error(throwable);
@@ -48,6 +50,7 @@ public class PaymentManager {
 		// a purchase exists in server even if its payment confirmation is not stored locally.
 		return paymentRepository.getPaymentConfirmation(product)
 				.flatMap(paymentConfirmation -> paymentRepository.getPurchase(product)
+						.observeOn(AndroidSchedulers.mainThread())
 						.doOnNext(purchase -> paymentRepository.deletePaymentConfirmation(product)))
 				.onErrorResumeNext(throwable -> {
 					if (throwable instanceof RepositoryItemNotFoundException) {
