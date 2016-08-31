@@ -7,6 +7,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.FileDownloader;
@@ -124,6 +125,7 @@ public class AptoideDownloadManager {
 	 *
 	 * @return observable for download state changes.
 	 */
+	@UiThread
 	public Observable<Download> getDownload(long appId) {
 		Realm realm = Database.get();
 		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();

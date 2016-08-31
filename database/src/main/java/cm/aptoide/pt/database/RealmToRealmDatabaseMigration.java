@@ -23,7 +23,9 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
 	@Override
 	public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+
 		Logger.w(TAG, String.format(Locale.ROOT, "realm database migration from version %d to %d",
 				oldVersion, newVersion));
+
 	}
 }

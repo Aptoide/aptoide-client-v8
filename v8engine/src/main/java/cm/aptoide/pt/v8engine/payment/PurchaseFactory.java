@@ -35,7 +35,7 @@ public class PurchaseFactory {
 		};
 	}
 
-	public Purchase create(GetApkInfoJson.Payment payment) {
+	public Purchase create() {
 		return new Purchase() {
 
 			@Override

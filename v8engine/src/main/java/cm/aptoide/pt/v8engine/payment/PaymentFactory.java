@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
 import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.payment.paypal.PayPalConverter;
 import cm.aptoide.pt.v8engine.payment.paypal.PayPalPayment;
 
@@ -47,8 +48,8 @@ public class PaymentFactory {
 
 	private PayPalConfiguration getPayPalConfiguration() {
 		final PayPalConfiguration configuration = new PayPalConfiguration();
-		configuration.environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION);
-		configuration.clientId("AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY");
+		configuration.environment(BuildConfig.PAYPAL_ENVIRONMENT);
+		configuration.clientId(BuildConfig.PAYPAL_KEY);
 		return configuration;
 	}
 

@@ -23,13 +23,30 @@
         tools:src="@color/red"
         />
 
-    <CheckBox
-        android:id="@+id/is_selected"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/loading_selected_layout"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        />
+        android:layout_alignParentRight="true">
+
+        <CheckBox
+            android:id="@+id/is_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            tools:visibility="gone"
+            />
+        <ProgressBar
+            android:id="@+id/progress_bar_is_installing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="false"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/app_name"
@@ -37,9 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/app_icon"
         android:layout_toEndOf="@id/app_icon"
-        android:layout_toLeftOf="@id/is_selected"
+        android:layout_toLeftOf="@id/loading_selected_layout"
         android:layout_toRightOf="@id/app_icon"
-        android:layout_toStartOf="@id/is_selected"
+        android:layout_toStartOf="@id/loading_selected_layout"
         android:gravity="center_vertical|left|start"
         android:lines="1"
         android:maxLines="1"
@@ -55,9 +72,9 @@
         android:layout_below="@id/app_name"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@id/app_icon"
-        android:layout_toLeftOf="@id/is_selected"
+        android:layout_toLeftOf="@id/loading_selected_layout"
         android:layout_toRightOf="@id/app_icon"
-        android:layout_toStartOf="@id/is_selected"
+        android:layout_toStartOf="@id/loading_selected_layout"
         android:gravity="center_vertical|left|start"
         android:lines="1"
         android:maxLines="1"

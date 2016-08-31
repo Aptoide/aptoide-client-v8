@@ -76,7 +76,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	protected void onPackageAdded(String packageName) {
 		Log.d(TAG, "Package added: " + packageName);
 
-		Rollback rollback = Database.RollbackQ.get(packageName,Rollback.Action.INSTALL,realm);
+		Rollback rollback = Database.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
 		if(rollback != null) {
 			String packageNameFromRollbackQ = rollback.getPackageName();
 			String trustedBadge = rollback.getTrustedBadge();
@@ -120,7 +120,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 		Database.save(new Installed(packageInfo, V8Engine.getContext().getPackageManager()), realm);
 
-		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
+		Rollback rollback = Database.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
 		if (rollback != null) {
 			confirmAction(packageName, Rollback.Action.INSTALL);
 		}
@@ -149,12 +149,12 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		Database.InstalledQ.delete(packageName, realm);
 		Database.UpdatesQ.delete(packageName, realm);
 
-		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.DOWNGRADE, realm);
+		Rollback rollback = Database.RollbackQ.get(realm, packageName, Rollback.Action.DOWNGRADE);
 		if (rollback != null) {
 			confirmAction(packageName, Rollback.Action.DOWNGRADE);
 			Analytics.ApplicationInstall.downgraded(packageName, rollback.getTrustedBadge());
 		} else {
-			rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
+			rollback = Database.RollbackQ.get(realm, packageName, Rollback.Action.UNINSTALL);
 			if (rollback != null) {
 				confirmAction(packageName, Rollback.Action.UNINSTALL);
 			}
@@ -162,7 +162,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void confirmAction(String packageName, Rollback.Action action) {
-		Rollback rollback = Database.RollbackQ.get(packageName, action, realm);
+		Rollback rollback = Database.RollbackQ.get(realm, packageName, action);
 		if (rollback != null) {
 			rollback.confirm(realm);
 		}

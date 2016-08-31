@@ -43,7 +43,6 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -64,9 +63,7 @@ import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
-import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
-import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
@@ -269,12 +266,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	public void buyApp(GetAppMeta.App app) {
-		appRepository.getAppPayment(app.getId(), sponsored, storeName)
-				.map(payment -> productFactory.create(app, payment))
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(product -> startActivityForResult(PaymentActivity.getIntent(getActivity(), product), PAY_APP_REQUEST_CODE),
-						throwable -> ShowMessage.asSnack(header.badge, R.string.unknown_error));
+		startActivityForResult(PaymentActivity.getIntent(getActivity(), productFactory.create(app, app.getPayment())), PAY_APP_REQUEST_CODE);
 	}
 
 	@Override
