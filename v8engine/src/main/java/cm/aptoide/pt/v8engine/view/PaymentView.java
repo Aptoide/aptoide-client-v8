@@ -9,9 +9,8 @@ import java.io.IOException;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.view.View;
+import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import rx.Observable;
 
 /**
@@ -27,7 +26,7 @@ public interface PaymentView extends View {
 
 	void showPayments(List<Payment> paymentList);
 
-	void showProduct(Product product);
+	void showProduct(AptoideProduct product);
 
 	void removeLoading();
 

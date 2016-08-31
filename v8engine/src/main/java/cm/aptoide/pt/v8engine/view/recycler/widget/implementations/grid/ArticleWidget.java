@@ -42,6 +42,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 	private CompositeSubscription subscriptions;
 	private View articleHeader;
 	private ArticleDisplayable displayable;
+	private TextView relatedTo;
 
 	public ArticleWidget(View itemView) {
 		super(itemView);
@@ -58,6 +59,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
 		cardView = (CardView) itemView.findViewById(R.id.card);
 		articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
+		relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
 	}
 
 	@Override
@@ -69,6 +71,8 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		setCardviewMargin(displayable);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+
+		relatedTo.setText(displayable.getAppRelatedToText(getContext()));
 
 		if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
 			getAppButton.setVisibility(View.VISIBLE);

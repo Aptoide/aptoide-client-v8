@@ -42,7 +42,7 @@ public class GetAppMeta extends BaseV7Response {
 		private Urls urls;
 		private Stats stats;
 		private Obb obb;
-		private Pay pay;
+		private GetApkInfoJson.Payment payment;
 	}
 
 	@Data
@@ -178,22 +178,6 @@ public class GetAppMeta extends BaseV7Response {
 				private int value;
 				private int count;
 			}
-		}
-	}
-
-	@Data
-	public static class Pay {
-
-		private float price;
-		private String currency;
-		private String symbol;
-
-		public boolean isPaidApp() {
-			return price > 0.0f;
-		}
-
-		public String getPrice() {
-			return symbol + " " + String.valueOf(price);
 		}
 	}
 }

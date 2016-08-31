@@ -7,6 +7,7 @@ package cm.aptoide.pt.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -39,11 +40,13 @@ public class ShowMessage {
 	}
 
 	public static void asSnack(Activity activity, String msg) {
-		asSnack(activity.getCurrentFocus(), msg);
+		View viewFromActivity = getViewFromActivity(activity);
+		asSnack(viewFromActivity, msg);
 	}
 
 	public static void asSnack(Activity activity, int msg) {
-		asSnack(activity.getCurrentFocus(), msg);
+		View viewFromActivity = getViewFromActivity(activity);
+		asSnack(viewFromActivity, msg);
 	}
 
 	public static void asSnack(Fragment fragment, String msg) {
@@ -59,14 +62,23 @@ public class ShowMessage {
 	}
 
 	public static void asSnack(Activity activity, int msg, int actionMsg, View.OnClickListener action) {
+		View view = getViewFromActivity(activity);
+		if (view == null) {
+			return;
+		}
+		Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, action).show();
+	}
+
+	@Nullable
+	private static View getViewFromActivity(Activity activity) {
 		View view = activity.getCurrentFocus();
 		if(view==null) {
 			view = activity.findViewById(android.R.id.content);
 		}
 		if(view==null) {
 			Logger.e(TAG, new IllegalStateException("Unable to find a view to bind this snack too"));
-			return;
+			return null;
 		}
-		Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, action).show();
+		return view;
 	}
 }

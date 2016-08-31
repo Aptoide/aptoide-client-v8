@@ -30,6 +30,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.GetApkInfoJson;
@@ -212,8 +213,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				});
 			}
 		}, err -> {
-			Logger.e(TAG, err);
+			if(!(err instanceof DownloadNotFoundException)) {
+				Logger.e(TAG, err);
+			}
+			// ignore because download does not exist
 		});
+
 		// FIXME: 22/08/16 sithengineer clean the following commented out code
 		//		downloadServiceHelper.getAllDownloads().firstOrDefault(Collections.emptyList()).subscribe(downloads -> {
 		//			for (Download download : downloads) {
@@ -239,14 +244,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		GetAppMeta.Pay payment = app.getPay();
+
 		//check if the app is paid
-		if (payment != null && payment.isPaidApp()) {
+		if (!app.getPayment().isPaid()) {
 			// TODO: 05/08/16 sithengineer replace that for placeholders in resources as soon as we are able to add new strings for translation
-			actionButton.setText(getContext().getString(R.string.buy) + " (" + payment.getPrice()+ ")");
-			actionButton.setOnClickListener(v -> {
-				displayable.buyApp(getContext(), app).subscribe();
-			});
+			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPayment().getPrice()+ ")");
+			actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
 			AppBoughtReceiver receiver = new AppBoughtReceiver() {
 				@Override
 				public void appBought(long appId) {

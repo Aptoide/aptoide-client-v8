@@ -22,7 +22,7 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -68,14 +68,18 @@ public class Database {
 		if (BuildConfig.DEBUG) {
 			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
 					// Must be bumped when the schema changes
-					.schemaVersion(BuildConfig.VERSION_CODE).deleteRealmIfMigrationNeeded().build();
+					.schemaVersion(BuildConfig.VERSION_CODE)
+					.deleteRealmIfMigrationNeeded()
+					.build();
 		} else {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE).encryptionKey(strBuilder.toString().substring(0, 64)
-					.getBytes())
+			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+					//.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer use DB encryption for a safer ride
 					// Must be bumped when the schema changes
 					.schemaVersion(BuildConfig.VERSION_CODE)
 					// Migration to run instead of throwing an exception
-					.migration(MIGRATION).build();
+					//.migration(MIGRATION)
+					.deleteRealmIfMigrationNeeded() // FIXME: 30/08/16 sithengineer use migration script when new DB migrations are needed
+					.build();
 		}
 
 		if (BuildConfig.DELETE_DB) {
@@ -86,6 +90,17 @@ public class Database {
 	}
 
 	public static Realm get() {
+
+		// a simple check
+//		if(Looper.myLooper()==null) {
+//			throw new IllegalStateException("Current thread doesn't have a Looper");
+//		}
+
+		// a more agressive check...
+//		if(RealmSchedulers.isRealmSchedulerThread(Thread.currentThread())) {
+//			throw new IllegalThreadStateException(String.format("Use %s class to get a scheduler to interact with Realm", RealmSchedulers.class.getName()));
+//		}
+
 		if(isInitialized){
 			return Realm.getDefaultInstance();
 		}
@@ -245,11 +260,11 @@ public class Database {
 			return realm.where(Rollback.class).findAll();
 		}
 
-		public static Rollback get(String packageName, Rollback.Action action, Realm realm) {
+		public static Rollback get(Realm realm, String packageName, Rollback.Action action) {
 			RealmResults<Rollback> allSorted = realm.where(Rollback.class)
 					.equalTo(Rollback.PACKAGE_NAME, packageName)
 					.equalTo(Rollback.ACTION, action.name())
-					.findAllSorted(Rollback.TIMESTAMP);
+					.findAllSortedAsync(Rollback.TIMESTAMP);
 
 			if (allSorted.size() > 0) {
 				return allSorted.get(allSorted.size() - 1);
@@ -258,28 +273,20 @@ public class Database {
 			}
 		}
 
+		public static void delete(Realm realm, String packageName, Rollback.Action action) {
+			Rollback rollback = realm.where(Rollback.class)
+					.equalTo(Rollback.PACKAGE_NAME, packageName)
+					.equalTo(Rollback.ACTION, action.name()).findFirstAsync();
+			if (rollback != null) {
+				realm.beginTransaction();
+				rollback.deleteFromRealm();
+				realm.commitTransaction();
+			}
+		}
+
 		public static void deleteAll(Realm realm) {
 			realm.beginTransaction();
 			realm.delete(Rollback.class);
-			realm.commitTransaction();
-		}
-
-		public static void upadteRollbackWithAction(Realm realm, Rollback rollback, Rollback.Action action) {
-			realm.beginTransaction();
-			rollback.setAction(action.name());
-			realm.copyToRealmOrUpdate(rollback);
-			realm.commitTransaction();
-		}
-
-		public static void upadteRollbackWithAction(Realm realm, String md5, Rollback.Action action) {
-			Rollback rollback = realm.where(Rollback.class).equalTo(Rollback.MD5, md5).findFirst();
-			upadteRollbackWithAction(realm, rollback, action);
-		}
-
-		public static void addRollbackWithAction(Realm realm, GetAppMeta.App app, Rollback.Action action) {
-			Rollback rollback = new Rollback(app, action);
-			realm.beginTransaction();
-			realm.copyToRealmOrUpdate(rollback);
 			realm.commitTransaction();
 		}
 	}
@@ -292,14 +299,21 @@ public class Database {
 
 	public static class ScheduledQ {
 
-		public static RealmResults<Scheduled> getAll(Realm realm) {
-			return realm.where(Scheduled.class).findAll();
+		public static Scheduled get(Realm realm, long appId) {
+			return realm.where(Scheduled.class).equalTo(Scheduled.APP_ID, appId).findFirstAsync();
 		}
 
-		public static void delete(Realm realm, Scheduled scheduled) {
-			realm.beginTransaction();
-			scheduled.deleteFromRealm();
-			realm.commitTransaction();
+		public static RealmResults<Scheduled> getAll(Realm realm) {
+			return realm.where(Scheduled.class).findAllAsync();
+		}
+
+		public static void delete(Realm realm, long appId) {
+			Scheduled scheduled = realm.where(Scheduled.class).equalTo(Scheduled.APP_ID, appId).findFirst();
+			if(scheduled!=null) {
+				realm.beginTransaction();
+				scheduled.deleteFromRealm();
+				realm.commitTransaction();
+			}
 		}
 	}
 

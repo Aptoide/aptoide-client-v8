@@ -26,12 +26,6 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
 		return new InAppBillingPurchasesRequest(BASE_HOST, args);
 	}
 
-	public static InAppBillingPurchasesRequest of(int orderId, int apiVersion, String packageName, String type) {
-		Map<String,String> baseArgs = getBaseArgs(apiVersion, packageName, type);
-		baseArgs.put("orderid", String.valueOf(orderId));
-		return new InAppBillingPurchasesRequest(BASE_HOST, baseArgs);
-	}
-
 	@NonNull
 	private static Map<String,String> getBaseArgs(int apiVersion, String packageName, String type) {
 		Map<String, String> args = new HashMap<String, String>();

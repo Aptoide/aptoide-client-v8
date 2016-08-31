@@ -65,6 +65,10 @@ public class VideoDisplayable extends Displayable {
 				.getString(R.string.displayable_social_timeline_article_get_app_button, appName), Typeface.BOLD, appName);
 	}
 
+	public Spannable getAppRelatedText(Context context) {
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_article_related_to, appName), Typeface.BOLD, appName);
+	}
+
 	@Override
 	public Type getType() {
 		return Type.SOCIAL_TIMELINE;

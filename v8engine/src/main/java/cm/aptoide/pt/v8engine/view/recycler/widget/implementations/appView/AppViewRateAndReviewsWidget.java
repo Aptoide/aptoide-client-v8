@@ -105,7 +105,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		ratingBar.setRating(ratingAvg);
 
 		View.OnClickListener rateOnClickListener = v -> {
-			DialogUtils.showRateDialog(getContext(), appName, storeName, packageName, this::loadReviews);
+			DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, this::loadReviews);
 		};
 
 		rateThisButton.setOnClickListener(rateOnClickListener);

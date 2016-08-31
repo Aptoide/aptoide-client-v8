@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.model.v3;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -35,14 +36,15 @@ public class InAppBillingPurchasesResponse extends BaseV3Response {
 		private List<String> signatureList;
 	}
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@Data
 	public static class InAppBillingPurchase {
-		private int orderId;
-		private String packageName;
-		private String productId;
-		private long purchaseTime;
-		private String purchaseToken;
-		private String developerPayload;
+		@JsonProperty("orderId") private int orderId;
+		@JsonProperty("packageName") private String packageName;
+		@JsonProperty("productId") private String productId;
+		@JsonProperty("purchaseTime") private long purchaseTime;
+		@JsonProperty("purchaseToken") private String purchaseToken;
+		@JsonProperty("developerPayload") private String developerPayload;
 	}
 
 }

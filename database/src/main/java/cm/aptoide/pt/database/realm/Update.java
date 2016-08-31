@@ -43,10 +43,10 @@ public class Update extends RealmObject {
 	private String apkPath;
 	private double fileSize;
 	private String updateVersionName;
-	private String alternativeApkPath;
 	private int updateVersionCode;
 	private boolean excluded;
 	private String trustedBadge;
+	private String alternativeApkPath;
 
 	// Obb
 	private String mainObbName;
