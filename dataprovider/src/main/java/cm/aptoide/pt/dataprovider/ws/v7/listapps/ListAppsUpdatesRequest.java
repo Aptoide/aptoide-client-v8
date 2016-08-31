@@ -146,12 +146,18 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 		}
 
 		public Body(Body body) {
-			this.apksData = body.getApksData();
-			this.storeIds = body.getStoreIds();
-			this.setQ(body.getQ());
-			this.setAptoideVercode(body.getAptoideVercode());
+			// Base Body
+			this.aptoideId = body.getAptoideId();
+			this.accessToken = body.getAccessToken();
+			this.aptoideVercode = body.getAptoideVercode();
+			this.cdn = body.getCdn();
+			this.lang = body.getLang();
+			this.mature = body.isMature();
+			this.q = body.getQ();
+
+			this.apksData = new LinkedList<>(body.getApksData());
+			this.storeIds = new LinkedList<>(body.getStoreIds());
 			this.aaid = body.getAaid();
-			this.setAptoideId(body.getAptoideId());
 		}
 	}
 

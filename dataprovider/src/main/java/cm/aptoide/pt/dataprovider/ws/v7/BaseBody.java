@@ -7,12 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import cm.aptoide.pt.dataprovider.ws.Api;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Base body that every request should use. If more information should be provided this class should be extended.
@@ -21,11 +17,11 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class BaseBody {
 
-	@JsonProperty("aptoide_uid") private String aptoideId;
-	private String accessToken;
-	private int aptoideVercode;
-	private String cdn;
-	private String lang;
-	private boolean mature;
-	private String q;
+	@JsonProperty("aptoide_uid") protected String aptoideId;
+	protected String accessToken;
+	protected int aptoideVercode;
+	protected String cdn;
+	protected String lang;
+	protected boolean mature;
+	protected String q;
 }
