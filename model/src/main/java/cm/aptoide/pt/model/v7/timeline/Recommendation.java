@@ -25,9 +25,11 @@ public class Recommendation implements TimelineCard {
 	@Getter private final String cardId;
 	@Getter private final App recommendedApp;
 	@Getter private final List<App> similarApps;
+	@Getter private final Ab ab;
 
 	@JsonCreator public Recommendation(@JsonProperty("uid") String cardId, @JsonProperty("app") App recommendedApp, @JsonProperty("apps") List<App>
-			similarApps) {
+			similarApps, @JsonProperty("ab") Ab ab) {
+		this.ab = ab;
 		this.cardId = cardId;
 		this.recommendedApp = recommendedApp;
 		this.similarApps = similarApps;

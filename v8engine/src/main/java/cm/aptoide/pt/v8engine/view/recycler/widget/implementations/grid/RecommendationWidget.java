@@ -11,13 +11,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by marcelobenites on 7/8/16.
@@ -70,9 +80,41 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 		getApp.setVisibility(View.VISIBLE);
 		getApp.setText(displayable.getAppText(getContext()));
 		cardContent.setOnClickListener(view -> {
+			knockWithSixpackCredentials(displayable.getAbUrl());
+
 			Analytics.AppsTimeline.clickOnCard("Recommendation", displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(getContext
 					()), Analytics.AppsTimeline.OPEN_APP_VIEW);
 			((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId()));
+		});
+	}
+
+	//// TODO: 31/08/16 refactor this out of here
+	private void knockWithSixpackCredentials(String url) {
+		if (url == null) {
+			return;
+		}
+
+		String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
+
+		OkHttpClient client = new OkHttpClient();
+
+		Request click = new Request
+				.Builder()
+				.url(url)
+				.addHeader("authorization", credential)
+				.build();
+
+		client.newCall(click).enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
+				Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
+			}
+
+			@Override
+			public void onResponse(Call call, Response response) throws IOException {
+				Logger.d(this.getClass().getSimpleName(), "knock success");
+				response.body().close();
+			}
 		});
 	}
 

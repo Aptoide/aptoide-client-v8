@@ -46,6 +46,7 @@ android {
             shrinkResources false
             configureFlurry delegate, localProperties.FLURRY_KEY
             configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
+            configureSixpackCredentials delegate, localProperties.SIXPACK_USER, localProperties.SIXPACK_PASSWORD
         }
 
         debug {
@@ -53,6 +54,7 @@ android {
             shrinkResources false
             configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
             configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
+            configureSixpackCredentials delegate, localProperties.SIXPACK_USER, localProperties.SIXPACK_PASSWORD
         }
     }
 
@@ -69,6 +71,16 @@ android {
 
     dexOptions {
         incremental true
+    }
+}
+
+void configureSixpackCredentials(androidDelegate, user, password) {
+    boolean userExists = user != null
+    boolean passwordExists = password != null
+
+    if (userExists && passwordExists) {
+        androidDelegate.buildConfigField "String", "SIXPACK_USER", "\"" + user.toString() + "\""
+        androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + password.toString() + "\""
     }
 }
 

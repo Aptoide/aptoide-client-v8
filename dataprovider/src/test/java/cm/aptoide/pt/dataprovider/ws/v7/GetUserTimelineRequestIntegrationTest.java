@@ -630,7 +630,7 @@ public class GetUserTimelineRequestIntegrationTest {
 	}
 
 	private Publisher getPublisher(String publisher, String avatarUrl) {
-		return new Publisher(publisher, avatarUrl);
+		return new Publisher(publisher, avatarUrl, "");
 	}
 
 }

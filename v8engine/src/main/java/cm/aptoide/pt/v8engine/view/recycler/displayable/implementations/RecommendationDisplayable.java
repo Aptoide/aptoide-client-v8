@@ -37,6 +37,7 @@ public class RecommendationDisplayable extends Displayable {
 	@Getter private String packageName;
 	@Getter private String appName;
 	@Getter private String appIcon;
+	@Getter private String abUrl;
 
 	private List<String> similarAppsNames;
 	private Date date;
@@ -50,7 +51,8 @@ public class RecommendationDisplayable extends Displayable {
 		}
 		return new RecommendationDisplayable(R.mipmap.ic_launcher, R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, recommendation.getRecommendedApp().getId(), recommendation
 				.getRecommendedApp().getPackageName(),
-				recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(), similarAppsNames,
+				recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(),recommendation.getAb().getConversion().getUrl(),
+				similarAppsNames,
 				recommendation.getRecommendedApp().getUpdated(), dateCalculator, spannableFactory);
 	}
 
