@@ -15,7 +15,6 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Type;
@@ -44,22 +43,22 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 	private long appId;
 	private String packageName;
 
-	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager, MinimalAd minimalAd, boolean shouldInstall) {
-		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
-	}
-
 	public AppViewInstallDisplayable() {
 		super();
 	}
 
 	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean
 			shouldInstall) {
-		super(getApp, false);
+		super(getApp);
 		this.installManager = installManager;
 		this.appId = getApp.getNodes().getMeta().getData().getId();
 		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
 		this.minimalAd = minimalAd;
 		this.shouldInstall = shouldInstall;
+	}
+
+	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager, MinimalAd minimalAd, boolean shouldInstall) {
+		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
 	}
 
 	public Observable<Void> buyApp(Context context, GetAppMeta.App app) {

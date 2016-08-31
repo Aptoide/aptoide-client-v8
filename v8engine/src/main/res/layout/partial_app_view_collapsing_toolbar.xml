@@ -87,26 +87,20 @@
                 tools:src="@color/blue_700"
                 />
 
-            <RelativeLayout
-                android:id="@+id/title_and_badges_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/appview_header_bottom_margin"
-                android:layout_marginLeft="12.3dp"
-                android:layout_marginStart="12.3dp"
-                android:layout_toEndOf="@id/app_icon"
-                android:layout_toRightOf="@id/app_icon"
-                >
+
 
                 <LinearLayout
                     android:id="@+id/badges_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="1.3dp"
+                    android:layout_marginBottom="@dimen/appview_header_bottom_margin"
+                    android:layout_marginLeft="12.3dp"
+                    android:layout_marginStart="12.3dp"
+                    android:layout_toLeftOf="@+id/trusted_header_layout"
+                    android:layout_toRightOf="@+id/app_icon"
                     android:gravity="bottom"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -169,16 +163,15 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/trusted_header_layout"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/appview_header_bottom_margin"
                     android:layout_marginEnd="@dimen/appview_header_side_margin"
                     android:layout_marginRight="@dimen/appview_header_side_margin"
-                    android:layout_toEndOf="@id/badges_layout"
-                    android:layout_toRightOf="@id/badges_layout"
-                    android:gravity="bottom"
-                    android:orientation="vertical"
-                    >
+                    android:gravity="bottom|center_horizontal"
+                    android:orientation="vertical">
 
                     <!--
                     @drawable/ic_badge_trusted
@@ -187,10 +180,9 @@
                     -->
                     <ImageView
                         android:id="@+id/badge_img"
-                        android:layout_width="match_parent"
+                        android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:scaleType="centerInside"
-                        android:layout_marginEnd="-21dp"
                         tools:src="@color/red"
                         />
 
@@ -201,21 +193,16 @@
                     -->
                     <TextView
                         android:id="@+id/badge_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginEnd="-21dp"
                         android:gravity="center"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_small"
-                        tools:text="@string/unknown"
                         tools:background="@color/blue"
-                        />
+                        tools:text="@string/unknown"/>
 
                 </LinearLayout>
-
-            </RelativeLayout>
 
         </RelativeLayout>
 
