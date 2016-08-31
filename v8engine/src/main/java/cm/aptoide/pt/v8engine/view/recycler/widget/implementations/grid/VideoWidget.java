@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import org.w3c.dom.Text;
+
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
@@ -48,6 +50,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 	private CardView cardView;
 	private VideoDisplayable displayable;
 	private View videoHeader;
+	private TextView relatedTo;
 
 	public VideoWidget(View itemView) {
 		super(itemView);
@@ -66,6 +69,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
 		cardView = (CardView) itemView.findViewById(R.id.card);
 		videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
+		relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
 
 	}
 
@@ -79,6 +83,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 		play_button.setVisibility(View.VISIBLE);
+		relatedTo.setText(displayable.getAppRelatedText(getContext()));
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			media_layout.setForeground(
