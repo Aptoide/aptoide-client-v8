@@ -175,10 +175,12 @@ public class DownloadFactory {
 	public Download create(Scheduled scheduled) {
 		Download download = new Download();
 		int appId = 1;
-		download.setAppName(Application.getConfiguration().getMarketName());
-		download.setAppId(appId);
-		download.setFilesToDownload(createFileList(appId, scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(), null, null, scheduled.getVerCode
-				()));
+		download.setAppName(scheduled.getName());
+		download.setAppId(scheduled.getAppId());
+		download.setFilesToDownload(
+				createFileList(appId, scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(), scheduled.getObb(), scheduled.getAlternativeApkPath(),
+						scheduled.getVerCode())
+		);
 		return download;
 	}
 }

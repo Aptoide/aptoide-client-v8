@@ -240,7 +240,7 @@ Integer getNextVersionCode(String versionPropertiesFilePath, String versionPrope
 
 String getDate() {
     def date = new Date()
-    def formattedDate = date.format('ddMMyyyy')
+    def formattedDate = date.format('yyyyMMdd')
     return formattedDate
 }
 

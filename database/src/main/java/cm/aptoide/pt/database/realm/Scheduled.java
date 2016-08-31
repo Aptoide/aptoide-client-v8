@@ -6,6 +6,7 @@
 package cm.aptoide.pt.database.realm;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.model.v7.Obb;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.AllArgsConstructor;
@@ -34,12 +35,54 @@ public class Scheduled extends RealmObject {
 	private int verCode;
 	private String packageName;
 	private String storeName;
+	private String alternativeApkPath;
+
+	// Obb
+	private String mainObbName;
+	private String mainObbPath;
+	private String mainObbMd5;
+	private String patchObbName;
+	private String patchObbPath;
+	private String patchObbMd5;
 
 	public Scheduled() { }
 
 	public static Scheduled from(GetAppMeta.App app) {
-		return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon(), app.getFile().getPath(), app.getFile()
-				.getMd5sum(), app.getFile().getVercode(), app.getPackageName(), app.getStore().getName());
+
+		String mainObbName = null;
+		String mainObbPath = null;
+		String mainObbMd5 = null;
+
+		String patchObbName = null;
+		String patchObbPath = null;
+		String patchObbMd5 = null;
+
+		Obb obb = app.getObb();
+		if(obb!=null) {
+			Obb.ObbItem obbMain = obb.getMain();
+			Obb.ObbItem obbPatch = obb.getPatch();
+
+			if(obbMain != null) {
+				mainObbName = obbMain.getFilename();
+				mainObbPath = obbMain.getPath();
+				mainObbMd5 = obbMain.getMd5sum();
+			}
+
+			if (obbPatch != null) {
+				patchObbName = obbPatch.getFilename();
+				patchObbPath = obbPatch.getPath();
+				patchObbMd5 = obbPatch.getMd5sum();
+			}
+
+		}
+
+		return new Scheduled(
+				app.getId(), app.getName(), app.getFile().getVername(),
+				app.getIcon(), app.getFile().getPath(), app.getFile().getMd5sum(),
+				app.getFile().getVercode(), app.getPackageName(), app.getStore().getName(),
+				app.getFile().getPathAlt(),
+				mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5
+		);
 	}
 
 	public long getAppId() {
@@ -112,5 +155,29 @@ public class Scheduled extends RealmObject {
 
 	public String getStoreName() {
 		return storeName;
+	}
+
+	public String getAlternativeApkPath() {
+		return alternativeApkPath;
+	}
+
+	public void setAlternativeApkPath(String alternativeApkPath) {
+		this.alternativeApkPath = alternativeApkPath;
+	}
+
+	public Obb getObb() {
+		Obb obb = new Obb();
+		Obb.ObbItem mainItem = new Obb.ObbItem();
+		mainItem.setFilename(this.mainObbName);
+		mainItem.setPath(this.mainObbPath);
+		mainItem.setMd5sum(this.mainObbMd5);
+		obb.setMain(mainItem);
+
+		Obb.ObbItem patchItem = new Obb.ObbItem();
+		patchItem.setFilename(this.patchObbName);
+		patchItem.setPath(this.patchObbPath);
+		patchItem.setMd5sum(this.patchObbMd5);
+		obb.setPatch(patchItem);
+		return null;
 	}
 }
