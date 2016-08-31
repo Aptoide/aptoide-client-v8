@@ -81,6 +81,10 @@ public class Download extends RealmObject {
 			case IN_QUEUE:
 				toReturn = context.getString(R.string.download_queue);
 				break;
+			case INVALID_STATUS:
+				toReturn = ""; //this state only appears while download manager doesn't get the download(before the AptoideDownloadManager#startDownload
+				// method runs)
+				break;
 			case WARN:
 			case BLOCK_COMPLETE:
 			case CONNECTED:
@@ -89,7 +93,6 @@ public class Download extends RealmObject {
 			case NOT_DOWNLOADED:
 			case ERROR:
 			case FILE_MISSING:
-			case INVALID_STATUS:
 			default:
 				toReturn = context.getString(R.string.simple_error_occured);
 		}

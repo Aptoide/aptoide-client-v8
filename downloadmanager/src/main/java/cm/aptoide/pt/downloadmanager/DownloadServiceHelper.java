@@ -82,22 +82,20 @@ public class DownloadServiceHelper {
 		}).flatMap(aDownload -> getDownloadAsync(download.getAppId())));
 	}
 
-	public void startDownload(PermissionRequest permissionRequest, List<Download> downloads, Action1<Long> action) {
+	public void startDownload(@NonNull PermissionRequest permissionRequest, @NonNull List<Download> downloads, Action1<Long> action) {
 
 		permissionManager.requestExternalStoragePermission(permissionRequest)
 				.concatMap(success -> Database.DownloadQ.getDownloads())
 				.first()
 				.subscribe(downloadsFromRealm -> {
-					Realm realm = Database.get();
 					for (int i = 0 ; i < downloads.size() ; i++) {
 						final Download download = getDownloadFromList(downloadsFromRealm, downloads.get(i));
 						if (download != null) {
-							realm.executeTransactionAsync(realm1 -> realm1.copyToRealmOrUpdate(download), () -> {
-								startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-								if (action != null) {
-									action.call(download.getAppId());
-								}
-							});
+							Database.DownloadQ.save(download);
+							startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+							if (action != null) {
+								action.call(download.getAppId());
+							}
 						}
 					}
 				}, Throwable::printStackTrace);

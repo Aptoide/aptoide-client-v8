@@ -11,11 +11,9 @@ import android.support.v4.app.NotificationCompat;
 
 import java.util.Locale;
 
-import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import io.realm.Realm;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -35,7 +33,6 @@ public class DownloadService extends Service {
 	private Subscription notificationUpdateSubscription;
 	private Notification notification;
 	private Subscription stopMechanismSubscription;
-	private Realm realm;
 
 	private void pauseDownloads(Intent intent) {
 		long appId = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0);
@@ -48,9 +45,9 @@ public class DownloadService extends Service {
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			Download download = downloadManager.getStoredDownload(appId, realm);
+			Download download = downloadManager.getDownloadPojo(appId);
 			if (download != null) {
-				downloadManager.startDownload(realm.copyFromRealm(download)).first().subscribe(download1 -> Logger.d(TAG, "startDownload" +
+				downloadManager.startDownload(download).first().subscribe(downloadFromRealm -> Logger.d(TAG, "startDownload" +
 						"() " +
 						"called with: " + "appId = [" + appId + "]"), Throwable::printStackTrace);
 				setupNotifications();
@@ -61,7 +58,6 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		realm = Database.get();
 		downloadManager = AptoideDownloadManager.getInstance();
 		downloadManager.initDownloadService(this);
 		subscriptions = new CompositeSubscription();
@@ -94,7 +90,6 @@ public class DownloadService extends Service {
 	@Override
 	public void onDestroy() {
 		subscriptions.unsubscribe();
-		realm.close();
 		super.onDestroy();
 	}
 

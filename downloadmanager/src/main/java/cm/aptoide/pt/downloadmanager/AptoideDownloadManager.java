@@ -95,7 +95,7 @@ public class AptoideDownloadManager {
 			return null;
 		}).subscribeOn(Schedulers.computation()).subscribe(o -> {
 		}, Throwable::printStackTrace);
-		return getDownloadAsync(download.getAppId());
+		return getDownload(download.getAppId());
 	}
 
 	private void startNewDownload(Download download) {
@@ -181,8 +181,7 @@ public class AptoideDownloadManager {
 	}
 
 	private int getDownloadStatus(long appId) {
-		@Cleanup Realm realm = Database.get();
-		Download download = getStoredDownload(appId, realm);
+		Download download = Database.DownloadQ.getDownloadPojo(appId);
 		if (download != null) {
 			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 				return getStateIfFileExists(download);
@@ -293,11 +292,7 @@ public class AptoideDownloadManager {
 		}
 	}
 
-	public Download getStoredDownload(long appId, Realm realm) {
-		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
-		if (download != null) {
-			return download;
-		}
-		return null;
+	public Download getDownloadPojo(long appId) {
+		return Database.DownloadQ.getDownloadPojo(appId);
 	}
 }
