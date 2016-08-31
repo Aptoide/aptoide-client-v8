@@ -13,12 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -55,11 +53,11 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	}
 
 	public static ListAppsUpdatesRequest of() {
-		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+		BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository, SecurePreferencesImplementation.getInstance());
 
 		return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate( new Body(getInstalledApks(),
-				StoreUtils
-				.getSubscribedStoresIds())), BASE_HOST);
+				StoreUtils.getSubscribedStoresIds(), idsRepository.getAdvertisingId())), BASE_HOST);
 	}
 
 	private static List<ApksData> getInstalledApks() {
@@ -139,16 +137,21 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
 		@Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
 		@Getter private List<Long> storeIds;
+		@Setter @Getter private String aaid;
 
-		public Body(List<ApksData> apksData,
-		            List<Long> storeIds) {
+		public Body(List<ApksData> apksData, List<Long> storeIds, String aaid) {
 			this.apksData = apksData;
 			this.storeIds = storeIds;
+			this.aaid = aaid;
 		}
 
 		public Body(Body body) {
 			this.apksData = body.getApksData();
 			this.storeIds = body.getStoreIds();
+			this.setQ(body.getQ());
+			this.setAptoideVercode(body.getAptoideVercode());
+			this.aaid = body.getAaid();
+			this.setAptoideId(body.getAptoideId());
 		}
 	}
 
