@@ -11,6 +11,7 @@ import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import io.realm.Realm;
@@ -23,6 +24,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by sithengineer on 30/08/16.
  */
 public class ScheduledDownloadRepository {
+
+	private static final String TAG = ScheduledDownloadRepository.class.getSimpleName();
 
 	public Observable<Scheduled> getScheduledUpdate(long appId){
 		final Realm realm = Database.get();
@@ -56,8 +59,9 @@ public class ScheduledDownloadRepository {
 				});
 	}
 
-	public Observable<Void> deleteScheduledUpdate(long appId) {
+	public Observable<Void> deleteScheduledDownload(long appId) {
 		return Observable.fromCallable(()-> {
+			Logger.v(TAG, "Deleting schedule download for app id " + appId);
 			@Cleanup Realm realm = Database.get();
 			Database.ScheduledQ.delete(realm, appId);
 			return null;

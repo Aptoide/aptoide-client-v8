@@ -6,11 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
@@ -35,7 +30,6 @@ import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
@@ -102,6 +96,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	private void fetchScheduledDownloads() {
 		subscription = scheduledDownloadRepository.getAllScheduledUpdates()
 				.observeOn(AndroidSchedulers.mainThread())
+				.subscribeOn(AndroidSchedulers.mainThread())
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(scheduledDownloads -> {
 
@@ -238,7 +233,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	private Observable<Void> installAndRemoveFromList(InstallManager installManager, Context context, long appId) {
 		Logger.v(TAG, "installing app with id " + appId);
 		return installManager.install(context, (PermissionRequest) context, appId)
-				.concatWith(scheduledDownloadRepository.deleteScheduledUpdate(appId));
+				.concatWith(scheduledDownloadRepository.deleteScheduledDownload(appId));
 	}
 
 	/*
