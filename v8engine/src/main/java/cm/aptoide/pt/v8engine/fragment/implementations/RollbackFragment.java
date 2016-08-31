@@ -55,8 +55,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 	private DownloadServiceHelper downloadManager;
 	private InstallManager installManager;
 
-	public RollbackFragment() {
-	}
+	public RollbackFragment() { }
 
 	public static Fragment newInstance() {
 		return new RollbackFragment();
