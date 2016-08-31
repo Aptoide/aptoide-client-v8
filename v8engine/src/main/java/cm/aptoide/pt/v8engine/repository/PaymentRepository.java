@@ -92,9 +92,7 @@ public class PaymentRepository {
 
 	public Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		return storePaymentConfirmation(paymentConfirmation)
-				.delay(2, TimeUnit.SECONDS)
-				.flatMap(processing -> verifyPaymentConfirmation(paymentConfirmation))
-				.retry(2);
+				.flatMap(processing -> verifyPaymentConfirmation(paymentConfirmation));
 	}
 
 	public Observable<Void> deletePaymentConfirmation(AptoideProduct product) {
