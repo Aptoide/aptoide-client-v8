@@ -28,11 +28,25 @@ public class AppRepository {
 	private final ProductFactory productFactory;
 
 	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(appId).observe(refresh).flatMap(app -> getPaymentApp(app, sponsored));
+		return GetAppRequest.of(appId).observe(refresh)
+				.flatMap(response -> {
+					if (response != null && response.isOk()) {
+						return getPaymentApp(response, sponsored);
+					} else {
+						return Observable.error(new RepositoryItemNotFoundException("No app found for app id " + appId));
+					}
+				})
+				.flatMap(app -> getPaymentApp(app, sponsored));
 	}
 
 	public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(packageName).observe(refresh).flatMap(app -> getPaymentApp(app, sponsored));
+		return GetAppRequest.of(packageName).observe(refresh).flatMap(response -> {
+			if (response != null && response.isOk()) {
+				return getPaymentApp(response, sponsored);
+			} else {
+				return Observable.error(new RepositoryItemNotFoundException("No app found for package " + packageName));
+			}
+		}).flatMap(app -> getPaymentApp(app, sponsored));
 	}
 
 	public Observable<List<PaymentService>> getPaymentServices(long appId, boolean sponsored, String storeName) {
