@@ -15,11 +15,14 @@ import com.liulishuo.filedownloader.FileDownloader;
 import java.util.List;
 
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.NewDatabase;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -55,6 +58,7 @@ public class AptoideDownloadManager {
 	private boolean isPausing = false;
 	@Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface downloadNotificationActionsInterface;
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
+	private DownloadAccessor downloadAccessor;
 
 	public static Context getContext() {
 		return context;
@@ -101,24 +105,24 @@ public class AptoideDownloadManager {
 	private void startNewDownload(Download download) {
 		download.setOverallDownloadStatus(Download.IN_QUEUE);
 		download.setOverallProgress(0);
-		Database.DownloadQ.save(download);
+		downloadAccessor.save(download);
 
 		startNextDownload();
 	}
 
 	public void pauseDownload(long appId) {
-		Database.DownloadQ.getDownload(appId).first().map(download -> {
+		downloadAccessor.get(appId).first().map(download -> {
 			download.setOverallDownloadStatus(Download.PAUSED);
-			Database.DownloadQ.save(download);
+			downloadAccessor.save(download);
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 			}
 			return download;
 		}).subscribe(download -> {
-			Log.d(TAG, "Download paused");
+			Logger.d(TAG, "Download paused");
 		}, throwable -> {
 			if (throwable instanceof DownloadNotFoundException) {
-				Log.d(TAG, "there are no download to pause with the id: " + appId);
+				Logger.d(TAG, "there are no download to pause with the id: " + appId);
 			} else {
 				throwable.printStackTrace();
 			}
@@ -133,8 +137,9 @@ public class AptoideDownloadManager {
 	 * @return observable for download state changes.
 	 */
 	public Observable<Download> getDownload(long appId) {
-		return Database.DownloadQ.getDownload(appId).flatMap(download -> {
-			if (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING) {
+		return downloadAccessor.get(appId).flatMap(download -> {
+			if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download
+					.FILE_MISSING)) {
 				return Observable.error(new DownloadNotFoundException());
 			} else {
 				return Observable.just(download);
@@ -147,11 +152,12 @@ public class AptoideDownloadManager {
 	}
 
 	public Observable<List<Download>> getCurrentDownloads() {
-		return Database.DownloadQ.getCurrentDownloads();
+		downloadAccessor = new DownloadAccessor(new NewDatabase());
+		return downloadAccessor.getRunningDownloads2();
 	}
 
 	public Observable<List<Download>> getDownloads() {
-		return Database.DownloadQ.getDownloads();
+		return downloadAccessor.getAll();
 	}
 
 	/**
@@ -160,11 +166,12 @@ public class AptoideDownloadManager {
 	public void pauseAllDownloads() {
 		FileDownloader.getImpl().pauseAll();
 		isPausing = true;
-		Database.DownloadQ.getCurrentDownloads().first().map(downloads -> {
+
+		downloadAccessor.getRunningDownloads().first().map(downloads -> {
 			for (int i = 0 ; i < downloads.size() ; i++) {
 				downloads.get(i).setOverallDownloadStatus(Download.PAUSED);
 			}
-			return Database.DownloadQ.saveDownloads(downloads);
+			return downloadAccessor.save(downloads);
 		}).doOnUnsubscribe(() -> isPausing = false).subscribe(success -> {
 			Log.d(TAG, "Downloads paused");
 		}, Throwable::printStackTrace);
@@ -182,7 +189,9 @@ public class AptoideDownloadManager {
 		}
 	}
 
-	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface) {
+	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface,
+	                 DownloadAccessor downloadAccessor) {
+
 		FileDownloader.init(context);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
 		this.settingsInterface = settingsInterface;
@@ -194,6 +203,7 @@ public class AptoideDownloadManager {
 		if (TextUtils.isEmpty(OBB_PATH)) {
 			OBB_PATH = GENERIC_PATH;
 		}
+		this.downloadAccessor = downloadAccessor;
 	}
 
 	@NonNull
@@ -254,9 +264,9 @@ public class AptoideDownloadManager {
 	}
 
 	public void removeDownload(long appId) {
-		Database.DownloadQ.getDownload(appId).map(download -> {
+		downloadAccessor.get(appId).map(download -> {
 			deleteDownloadFiles(download);
-			deleteDownloadFromDb(download);
+			deleteDownloadFromDb(download.getAppId());
 			return download;
 		}).subscribe(aVoid -> {
 		}, throwable -> {
@@ -268,8 +278,8 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	private void deleteDownloadFromDb(Download download) {
-		Database.DownloadQ.deleteDownload(download);
+	private void deleteDownloadFromDb(long downloadId) {
+		downloadAccessor.delete(downloadId);
 	}
 
 	private void deleteDownloadFiles(Download download) {

@@ -26,6 +26,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.NewDatabase;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -162,7 +163,8 @@ public abstract class V8Engine extends DataProvider {
 
 		setupCrashlytics();
 
-		AptoideDownloadManager.getInstance().init(this, new DownloadNotificationActionsActionsInterface(), new DownloadManagerSettingsI());
+		AptoideDownloadManager.getInstance()
+				.init(this, new DownloadNotificationActionsActionsInterface(), new DownloadManagerSettingsI(), new DownloadAccessor(new NewDatabase()));
 
 		// setupCurrentActivityListener();
 

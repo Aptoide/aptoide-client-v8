@@ -15,7 +15,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -45,13 +44,12 @@ public class DownloadService extends Service {
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			Download download = downloadManager.getDownloadPojo(appId);
-			if (download != null) {
-				downloadManager.startDownload(download).first().subscribe(downloadFromRealm -> Logger.d(TAG, "startDownload" +
-						"() " +
-						"called with: " + "appId = [" + appId + "]"), Throwable::printStackTrace);
+			subscriptions.add(downloadManager.getDownload(appId).first().subscribe(download -> {
+				downloadManager.startDownload(download)
+						.first()
+						.subscribe(downloadFromRealm -> Logger.d(TAG, "startDownload called with: appId = [" + appId + "]"), Throwable::printStackTrace);
 				setupNotifications();
-			}
+			}));
 		}
 	}
 
@@ -102,9 +100,8 @@ public class DownloadService extends Service {
 	private void setupStopSelfMechanism() {
 		if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
 			stopMechanismSubscription = downloadManager.getCurrentDownloads()
-					.observeOn(Schedulers.computation())
-					.filter(downloads -> downloads.size() <= 0)
-					.subscribe(downloads -> {
+					//					.observeOn(Schedulers.computation())
+					.filter(downloads -> downloads == null || downloads.size() <= 0).subscribe(downloads -> {
 						stopSelf();
 					}, Throwable::printStackTrace);
 			subscriptions.add(stopMechanismSubscription);

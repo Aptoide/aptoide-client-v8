@@ -6,13 +6,10 @@
 package cm.aptoide.pt.database;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.List;
 
-import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
@@ -22,7 +19,6 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -32,7 +28,6 @@ import io.realm.RealmResults;
 import lombok.Cleanup;
 import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
 /**
@@ -329,92 +324,15 @@ public class Database {
 
 		public static Observable<List<Download>> getDownloads() {
 			final Scheduler scheduler = Schedulers.immediate();
-			return Observable.just(Database.get())
-					.flatMap(realm -> realm.where(Download.class)
-							.findAllAsync()
-							.asObservable()
-							.filter(RealmResults::isLoaded)
-							.map(realm::copyFromRealm)
-							.unsubscribeOn(scheduler)
-							.doOnUnsubscribe(realm::close));
-		}
-
-		public static Observable<Download> getDownload(long appId) {
-
-			return Observable.just(appId).observeOn(RealmSchedulers.getScheduler()).map(downloadId -> Database.get()).flatMap(realm -> {
-				final Download downloadFromRealm = realm.where(Download.class).equalTo("appId", appId).findFirst();
-				if (downloadFromRealm == null) {
-					return Observable.error(new DownloadNotFoundException());
-				} else {
-					return downloadFromRealm.<Download> asObservable().filter(download -> download.isLoaded()).flatMap(download -> {
-						if (download.isValid()) {
-							return Observable.just(download);
-						} else {
-							return Observable.error(new DownloadNotFoundException());
-						}
-					}).map(realm::copyFromRealm).unsubscribeOn(RealmSchedulers.getScheduler()).doOnUnsubscribe(realm::close);
-				}
-			});
-		}
-
-		public static Observable<List<Download>> getCurrentDownloads() {
-			final Scheduler scheduler = Schedulers.immediate();
 			final Realm realm = Database.get();
 			return realm.where(Download.class)
-					.equalTo("overallDownloadStatus", Download.PROGRESS)
-					.or()
-					.equalTo("overallDownloadStatus", Download.PENDING)
-					.or()
-					.equalTo("overallDownloadStatus", Download.IN_QUEUE)
 					.findAllAsync()
 					.asObservable()
 					.filter(RealmResults::isLoaded)
 					.map(realm::copyFromRealm)
-					.unsubscribeOn(scheduler)
-					.doOnUnsubscribe(realm::close);
-		}
-
-		public static Void saveDownloads(List<Download> downloads) {
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			Observable.fromCallable(() -> {
-				realm.executeTransaction(transactionRealm -> {
-					Download download;
-					for (int i = 0 ; i < downloads.size() ; i++) {
-						download = downloads.get(i);
-						transactionRealm.insertOrUpdate(download);
-					}
-				});
-				return null;
-			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
-			return null;
-		}
-
-		public static Void deleteDownload(Download download) {
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			Observable.fromCallable(() -> realm.executeTransactionAsync(transactionRealm -> {
-				final Download downloadFromRealm = transactionRealm.where(Download.class).equalTo("appId", download.getAppId()).findFirst();
-				if (downloadFromRealm != null) {
-					downloadFromRealm.deleteFromRealm();
-				}
-			})).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
-			return null;
-		}
-
-		public static Void deleteDownloads(List<Download> downloads) {
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			Observable.fromCallable(() -> {
-				realm.executeTransactionAsync(transactionRealm -> {
-					for (int i = 0 ; i < downloads.size() ; i++) {
-						final Download download = downloads.get(i);
-						transactionRealm.where(Download.class).equalTo("appId", download.getAppId()).findFirst().deleteFromRealm();
-					}
-				});
-				return null;
-			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
-			return null;
+					.unsubscribeOn(scheduler).doOnUnsubscribe(() -> {
+						realm.close();
+					});
 		}
 
 

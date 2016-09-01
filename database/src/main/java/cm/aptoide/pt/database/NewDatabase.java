@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import java.util.List;
 
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import cm.aptoide.pt.logger.Logger;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -38,6 +39,7 @@ public class NewDatabase {
 	//
 	// Static methods
 	//
+	private static Realm INSTANCE;
 
 	private static String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
@@ -95,6 +97,13 @@ public class NewDatabase {
 		realm.commitTransaction();
 	}
 
+	public static <E extends RealmObject> void save(List<E> realmObject) {
+		@Cleanup Realm realm = Realm.getDefaultInstance();
+		realm.beginTransaction();
+		realm.insertOrUpdate(realmObject);
+		realm.commitTransaction();
+	}
+
 	public static Realm get() {
 		if (!isInitialized) {
 			throw new IllegalStateException("You need to call Database.initialize(Context) first");
@@ -102,8 +111,6 @@ public class NewDatabase {
 
 		return Realm.getDefaultInstance();
 	}
-
-	private static Realm INSTANCE;
 
 	/**
 	 * this code is expected to run on only a single thread, so no synchronizing primitives were used
@@ -114,7 +121,7 @@ public class NewDatabase {
 		if (!isInitialized) {
 			throw new IllegalStateException("You need to call Database.initialize(Context) first");
 		}
-
+		Logger.d(TAG, "getInternal: " + Thread.currentThread().getName());
 		if(INSTANCE==null) {
 			INSTANCE = Realm.getDefaultInstance();
 		}
@@ -126,13 +133,13 @@ public class NewDatabase {
 	// Instance methods
 	//
 
-	private Observable<Realm> getRealm() {
+	public Observable<Realm> getRealm() {
 		return Observable.just(null)
 				.observeOn(RealmSchedulers.getScheduler())
 				.map(something -> NewDatabase.getInternal());
 	}
 
-	private <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
+	public <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
 		return Observable.just(results)
 				.filter(data -> data.isLoaded())
 				.map(realmObjects -> NewDatabase.getInternal().copyFromRealm(realmObjects));
@@ -169,6 +176,10 @@ public class NewDatabase {
 				.flatMap(query -> findFirst(query));
 	}
 
+	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Long value) {
+		return getRealm().map(realm -> realm.where(clazz).equalTo(key, value)).flatMap(query -> findFirst(query));
+	}
+
 	public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
 		@Cleanup Realm realm = get();
 		E first = realm.where(clazz).equalTo(key, value).findFirst();
@@ -180,6 +191,16 @@ public class NewDatabase {
 	}
 
 	public <E extends RealmObject> void delete(Class<E> clazz, String key, Integer value) {
+		@Cleanup Realm realm = get();
+		E first = realm.where(clazz).equalTo(key, value).findFirst();
+		if (first != null) {
+			realm.beginTransaction();
+			first.deleteFromRealm();
+			realm.commitTransaction();
+		}
+	}
+
+	public <E extends RealmObject> void delete(Class<E> clazz, String key, Long value) {
 		@Cleanup Realm realm = get();
 		E first = realm.where(clazz).equalTo(key, value).findFirst();
 		if (first != null) {

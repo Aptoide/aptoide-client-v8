@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.DialogInterface;
+import android.support.annotation.UiThread;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,6 +152,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 				download.getOverallDownloadStatus() == Download.PENDING;
 	}
 
+	@UiThread
 	private void showProgress(Boolean showProgress) {
 		if (showProgress) {
 			textUpdateLayout.setVisibility(View.GONE);

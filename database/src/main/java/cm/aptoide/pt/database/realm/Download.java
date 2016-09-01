@@ -24,6 +24,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Download extends RealmObject {
 
+	public static final String DOWNLOAD_ID = "appId";
 	public static final int INVALID_STATUS = 0;
 	public static final int COMPLETED = 1;
 	public static final int BLOCK_COMPLETE = 2;
