@@ -327,63 +327,33 @@ public class Database {
 	public static class DownloadQ {
 
 		public static Observable<List<Download>> getDownloads() {
-			return getDownloads(null);
+			final Scheduler scheduler = Schedulers.immediate();
+			return Observable.just(Database.get())
+					.flatMap(realm -> realm.where(Download.class)
+							.findAllAsync()
+							.asObservable()
+							.filter(RealmResults::isLoaded)
+							.map(realm::copyFromRealm)
+							.unsubscribeOn(scheduler)
+							.doOnUnsubscribe(realm::close));
 		}
 
+		public static Observable<Download> getDownload(long appId) {
 
-		public static Observable<List<Download>> getDownloads(@Nullable Action0 action) {
-
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			return realm.where(Download.class)
-					.findAllAsync()
-					.asObservable()
-					.filter(RealmResults::isLoaded)
-					.map(realm::copyFromRealm)
-					.unsubscribeOn(scheduler)
-					.doOnUnsubscribe(() -> {
-						realm.close();
-						if (action != null) {
-							action.call();
-						}
-					});
-		}
-
-		public static Observable<Download> getDownloadAsync(long appId) {
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			return realm.where(Download.class).equalTo("appId", appId).findFirstAsync().<Download> asObservable().filter(download -> download.isLoaded())
-					.flatMap(download -> {
+			return Observable.just(appId).observeOn(RealmSchedulers.getScheduler()).map(downloadId -> Database.get()).flatMap(realm -> {
+				final Download downloadFromRealm = realm.where(Download.class).equalTo("appId", appId).findFirst();
+				if (downloadFromRealm == null) {
+					return Observable.error(new DownloadNotFoundException());
+				} else {
+					return downloadFromRealm.<Download> asObservable().filter(download -> download.isLoaded()).flatMap(download -> {
 						if (download.isValid()) {
 							return Observable.just(download);
 						} else {
 							return Observable.error(new DownloadNotFoundException());
 						}
-					})
-					.map(realm::copyFromRealm)
-					.unsubscribeOn(scheduler)
-					.doOnUnsubscribe(realm::close);
-		}
-
-		public static Observable<Download> getDownload(long appId) {
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			final Download downloadFromRealm = realm.where(Download.class).equalTo("appId", appId).findFirst();
-			if (downloadFromRealm == null) {
-				return Observable.error(new DownloadNotFoundException());
-			} else {
-				return downloadFromRealm.<Download> asObservable().filter(download -> download.isLoaded())
-						.flatMap(download -> {
-							if (download.isValid()) {
-								return Observable.just(download);
-							} else {
-								return Observable.error(new DownloadNotFoundException());
-							}
-						})
-						.map(realm::copyFromRealm)
-						.unsubscribeOn(scheduler)
-						.doOnUnsubscribe(realm::close);
-			}
+					}).map(realm::copyFromRealm).unsubscribeOn(RealmSchedulers.getScheduler()).doOnUnsubscribe(realm::close);
+				}
+			});
 		}
 
 		public static Observable<List<Download>> getCurrentDownloads() {
@@ -403,32 +373,6 @@ public class Database {
 					.doOnUnsubscribe(realm::close);
 		}
 
-		public static Void saveDownloadAsync(Download download) {
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			Observable.fromCallable(() -> {
-				realm.executeTransactionAsync(transactionRealm -> transactionRealm.insertOrUpdate(download));
-				return null;
-			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
-			return null;
-		}
-
-		public static Void saveDownloadsAsync(List<Download> downloads) {
-			final Scheduler scheduler = Schedulers.immediate();
-			final Realm realm = Database.get();
-			Observable.fromCallable(() -> {
-				realm.executeTransactionAsync(transactionRealm -> {
-					Download download;
-					for (int i = 0 ; i < downloads.size() ; i++) {
-						download = downloads.get(i);
-						transactionRealm.insertOrUpdate(download);
-					}
-				});
-				return null;
-			}).unsubscribeOn(scheduler).doOnUnsubscribe(realm::close).subscribe();
-			return null;
-		}
-
 		public static Void saveDownloads(List<Download> downloads) {
 			final Scheduler scheduler = Schedulers.immediate();
 			final Realm realm = Database.get();
@@ -445,7 +389,7 @@ public class Database {
 			return null;
 		}
 
-		public static Void deleteDownloadAsync(Download download) {
+		public static Void deleteDownload(Download download) {
 			final Scheduler scheduler = Schedulers.immediate();
 			final Realm realm = Database.get();
 			Observable.fromCallable(() -> realm.executeTransactionAsync(transactionRealm -> {
@@ -457,7 +401,7 @@ public class Database {
 			return null;
 		}
 
-		public static Void deleteDownloadsAsync(List<Download> downloads) {
+		public static Void deleteDownloads(List<Download> downloads) {
 			final Scheduler scheduler = Schedulers.immediate();
 			final Realm realm = Database.get();
 			Observable.fromCallable(() -> {
@@ -472,39 +416,9 @@ public class Database {
 			return null;
 		}
 
-		/**
-		 * This method will save a download object on database using an {@link Realm#executeTransactionAsync(Realm.Transaction)}
-		 *
-		 * @param download object to be saved on database
-		 *
-		 * @return null
-		 */
-		public static Void saveAsync(Download download) {
-			final Realm realm = Database.get();
-			realm.executeTransactionAsync(transactionRealm -> transactionRealm.insertOrUpdate(download), realm::close, error -> {
-				error.printStackTrace();
-				realm.close();
-			});
-			return null;
-		}
-
-		public static Void saveAsync(Download download, @NonNull Action0 action) {
-			final Realm realm = Database.get();
-			realm.executeTransactionAsync(transactionRealm -> transactionRealm.insertOrUpdate(download), () -> {
-				action.call();
-				realm.close();
-			}, error -> {
-				error.printStackTrace();
-				realm.close();
-			});
-			return null;
-		}
-
-
 
 		/**
-		 * This method will save a download object on database using an {@link Realm#executeTransaction(Realm.Transaction)}, but it used a separated thread
-		 * to execute the insertion and notifies on the same thread that the query was made
+		 * This method will save a download object on database using an {@link Realm#executeTransaction(Realm.Transaction)}
 		 *
 		 * @param download object to be saved on database
 		 * @return null

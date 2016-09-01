@@ -88,7 +88,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 		displayable.getDownloadManager()
-				.getDownloadAsync(displayable.getAppId())
+				.getDownload(displayable.getAppId())
 				.first()
 				.map(this::shouldDisplayProgress)
 				.subscribe(this::showProgress, noDownloadFound -> Logger.d(TAG, "not updating yet"));

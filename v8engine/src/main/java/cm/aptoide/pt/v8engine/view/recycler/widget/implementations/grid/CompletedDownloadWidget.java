@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;

@@ -54,7 +54,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 	}
 
 	public Observable<Integer> downloadStatus() {
-		return downloadManager.getDownloadAsync(getPojo().getAppId())
+		return downloadManager.getDownload(getPojo().getAppId())
 				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
 				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
 	}

@@ -73,7 +73,7 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 		subscriptions.unsubscribe();
 	}
 
-	private void updateUi(Download download) {
+	private Void updateUi(Download download) {
 		appName.setText(download.getAppName());
 		if (!TextUtils.isEmpty(download.getIcon())) {
 			ImageLoader.load(download.getIcon(), appIcon);
@@ -86,5 +86,6 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 		}
 		downloadProgressTv.setText(download.getOverallProgress() + "%");
 		downloadSpeedTv.setText(String.valueOf(AptoideUtils.StringU.formatBits((long) download.getDownloadSpeed())));
+		return null;
 	}
 }

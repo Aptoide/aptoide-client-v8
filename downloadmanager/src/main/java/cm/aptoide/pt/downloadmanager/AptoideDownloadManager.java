@@ -107,9 +107,9 @@ public class AptoideDownloadManager {
 	}
 
 	public void pauseDownload(long appId) {
-		Database.DownloadQ.getDownloadAsync(appId).first().map(download -> {
+		Database.DownloadQ.getDownload(appId).first().map(download -> {
 			download.setOverallDownloadStatus(Download.PAUSED);
-			Database.DownloadQ.saveAsync(download);
+			Database.DownloadQ.save(download);
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
 			}
@@ -132,16 +132,6 @@ public class AptoideDownloadManager {
 	 *
 	 * @return observable for download state changes.
 	 */
-	public Observable<Download> getDownloadAsync(long appId) {
-		return Database.DownloadQ.getDownloadAsync(appId).flatMap(download -> {
-			if (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING) {
-				return Observable.error(new DownloadNotFoundException());
-			} else {
-				return Observable.just(download);
-			}
-		}).takeUntil(storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
-	}
-
 	public Observable<Download> getDownload(long appId) {
 		return Database.DownloadQ.getDownload(appId).flatMap(download -> {
 			if (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING) {
@@ -264,7 +254,7 @@ public class AptoideDownloadManager {
 	}
 
 	public void removeDownload(long appId) {
-		Database.DownloadQ.getDownloadAsync(appId).map(download -> {
+		Database.DownloadQ.getDownload(appId).map(download -> {
 			deleteDownloadFiles(download);
 			deleteDownloadFromDb(download);
 			return download;
@@ -279,7 +269,7 @@ public class AptoideDownloadManager {
 	}
 
 	private void deleteDownloadFromDb(Download download) {
-		Database.DownloadQ.deleteDownloadAsync(download);
+		Database.DownloadQ.deleteDownload(download);
 	}
 
 	private void deleteDownloadFiles(Download download) {
