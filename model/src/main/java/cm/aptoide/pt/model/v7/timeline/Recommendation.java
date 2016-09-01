@@ -23,14 +23,18 @@ import lombok.Getter;
 public class Recommendation implements TimelineCard {
 
 	@Getter private final String cardId;
+	@Getter @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date timestamp;
 	@Getter private final App recommendedApp;
 	@Getter private final List<App> similarApps;
 	@Getter private final Ab ab;
 
-	@JsonCreator public Recommendation(@JsonProperty("uid") String cardId, @JsonProperty("app") App recommendedApp, @JsonProperty("apps") List<App>
-			similarApps, @JsonProperty("ab") Ab ab) {
+	@JsonCreator public Recommendation(@JsonProperty("uid") String cardId,
+	                                   @JsonProperty("timestamp") Date timestamp,
+	                                   @JsonProperty("app") App recommendedApp,
+	                                   @JsonProperty("apps")List<App>similarApps, @JsonProperty("ab") Ab ab) {
 		this.ab = ab;
 		this.cardId = cardId;
+		this.timestamp=timestamp;
 		this.recommendedApp = recommendedApp;
 		this.similarApps = similarApps;
 	}
