@@ -40,7 +40,6 @@
         >
 
         <LinearLayout
-            android:id="@+id/working_well_layout"
             android:layout_width="77dp"
             android:layout_height="77dp"
             android:layout_margin="4dp"
@@ -72,7 +71,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/virus_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"

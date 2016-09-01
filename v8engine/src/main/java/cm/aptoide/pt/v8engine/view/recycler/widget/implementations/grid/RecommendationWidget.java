@@ -65,7 +65,7 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 	public void bindView(RecommendationDisplayable displayable) {
 
 		title.setText(displayable.getTitle(getContext()));
-		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+		subtitle.setText(displayable.getTimeSinceTimestamp(getContext()));
 
 		setCardviewMargin(displayable);
 

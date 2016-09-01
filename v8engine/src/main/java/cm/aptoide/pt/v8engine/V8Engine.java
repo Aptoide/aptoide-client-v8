@@ -25,6 +25,7 @@ import java.util.List;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.NewDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -112,6 +113,7 @@ public abstract class V8Engine extends DataProvider {
 		super.onCreate();
 
 		Database.initialize(this);
+		NewDatabase.initialize(this);
 
 		generateAptoideUUID().subscribe();
 

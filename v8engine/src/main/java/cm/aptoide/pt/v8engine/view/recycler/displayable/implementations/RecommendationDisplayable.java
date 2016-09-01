@@ -41,6 +41,7 @@ public class RecommendationDisplayable extends Displayable {
 
 	private List<String> similarAppsNames;
 	private Date date;
+	private Date timestamp;
 	private DateCalculator dateCalculator;
 	private SpannableFactory spannableFactory;
 
@@ -53,7 +54,7 @@ public class RecommendationDisplayable extends Displayable {
 				.getRecommendedApp().getPackageName(),
 				recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(),recommendation.getAb().getConversion().getUrl(),
 				similarAppsNames,
-				recommendation.getRecommendedApp().getUpdated(), dateCalculator, spannableFactory);
+				recommendation.getRecommendedApp().getUpdated(), recommendation.getTimestamp(),dateCalculator, spannableFactory);
 	}
 
 	public RecommendationDisplayable() {
@@ -99,6 +100,10 @@ public class RecommendationDisplayable extends Displayable {
 
 	public String getTimeSinceLastUpdate(Context context) {
 		return dateCalculator.getTimeSinceDate(context, date);
+	}
+
+	public String getTimeSinceTimestamp(Context context) {
+		return dateCalculator.getTimeSinceDate(context,timestamp);
 	}
 
 	@Override

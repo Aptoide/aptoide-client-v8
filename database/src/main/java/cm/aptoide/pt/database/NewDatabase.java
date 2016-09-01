@@ -11,12 +11,12 @@ import android.text.TextUtils;
 import java.util.List;
 
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
-import cm.aptoide.pt.logger.Logger;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
-import io.realm.RealmModel;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import lombok.Cleanup;
 import rx.Observable;
 
@@ -44,6 +44,7 @@ public class NewDatabase {
 	}
 
 	public static void initialize(Context context) {
+		isInitialized = true;
 		if(isInitialized) return;
 
 		StringBuilder strBuilder = new StringBuilder(KEY);
@@ -125,35 +126,47 @@ public class NewDatabase {
 	// Instance methods
 	//
 
-	public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
-		//			if (RealmSchedulers.isRealmSchedulerThread(Thread.currentThread())) {
-		//				throw new IllegalThreadStateException(String.format("Use %s class to get a scheduler to interact with Realm", RealmSchedulers.class
-		// .getName()));
-		//			}
+	private Observable<Realm> getRealm() {
 		return Observable.just(null)
 				.observeOn(RealmSchedulers.getScheduler())
-				.map(something -> NewDatabase.getInternal())
-				.flatMap(realm -> realm.where(clazz).findAll().<List<E>> asObservable())
+				.map(something -> NewDatabase.getInternal());
+	}
+
+	private <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
+		return Observable.just(results)
 				.filter(data -> data.isLoaded())
-				.map(NewDatabase.getInternal()::copyFromRealm);
+				.map(realmObjects -> NewDatabase.getInternal().copyFromRealm(realmObjects));
+	}
+
+	private <E extends RealmObject> Observable<E> copyFromRealm(E object) {
+		return Observable.just(object)
+				.filter(data -> data.isLoaded())
+				.map(realmObject -> NewDatabase.getInternal().copyFromRealm(realmObject));
+	}
+
+	private <E extends RealmObject> Observable<E> findFirst(RealmQuery<E> query) {
+		return Observable.just(query.findFirst())
+				.filter(realmObject -> realmObject != null)
+				.flatMap(realmObject -> realmObject.<E>asObservable())
+				.flatMap(realmObject -> copyFromRealm(realmObject))
+				.defaultIfEmpty(null);
+	}
+
+	public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
+		return getRealm()
+				.flatMap(realm -> realm.where(clazz).findAll().<List<E>> asObservable())
+				.flatMap(results -> copyFromRealm(results));
 	}
 
 	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, String value) {
-		return Observable.just(null)
-				.observeOn(RealmSchedulers.getScheduler())
-				.map(something -> NewDatabase.getInternal())
-				.flatMap(realm -> realm.where(clazz).equalTo(key, value).findFirst().<E> asObservable())
-				.filter(data -> data.isLoaded())
-				.map(NewDatabase.getInternal()::copyFromRealm);
+		return getRealm()
+				.map(realm -> realm.where(clazz).equalTo(key, value))
+				.flatMap(query -> findFirst(query));
 	}
 
 	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Integer value) {
-		return Observable.just(null)
-				.observeOn(RealmSchedulers.getScheduler())
-				.map(something -> NewDatabase.getInternal())
-				.flatMap(realm -> realm.where(clazz).equalTo(key, value).findFirst().<E> asObservable())
-				.filter(data -> data.isLoaded())
-				.map(NewDatabase.getInternal()::copyFromRealm);
+		return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+				.flatMap(query -> findFirst(query));
 	}
 
 	public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
