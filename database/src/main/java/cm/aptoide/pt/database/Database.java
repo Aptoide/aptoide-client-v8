@@ -12,11 +12,9 @@ import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -284,26 +282,6 @@ public class Database {
 	public static class ExcludedAdsQ {
 		public static RealmResults<ExcludedAd> getAll(Realm realm) {
 			return realm.where(ExcludedAd.class).findAll();
-		}
-	}
-
-	public static class ScheduledQ {
-
-		public static Scheduled get(Realm realm, long appId) {
-			return realm.where(Scheduled.class).equalTo(Scheduled.APP_ID, appId).findFirstAsync();
-		}
-
-		public static RealmResults<Scheduled> getAll(Realm realm) {
-			return realm.where(Scheduled.class).findAllAsync();
-		}
-
-		public static void delete(Realm realm, long appId) {
-			Scheduled scheduled = realm.where(Scheduled.class).equalTo(Scheduled.APP_ID, appId).findFirst();
-			if(scheduled!=null) {
-				realm.beginTransaction();
-				scheduled.deleteFromRealm();
-				realm.commitTransaction();
-			}
 		}
 	}
 

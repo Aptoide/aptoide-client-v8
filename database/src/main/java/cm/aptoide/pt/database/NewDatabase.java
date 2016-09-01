@@ -11,11 +11,9 @@ import android.text.TextUtils;
 import java.util.List;
 
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
-import cm.aptoide.pt.logger.Logger;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 import lombok.Cleanup;
 import rx.Observable;
@@ -44,6 +42,7 @@ public class NewDatabase {
 	}
 
 	public static void initialize(Context context) {
+		isInitialized = true;
 		if(isInitialized) return;
 
 		StringBuilder strBuilder = new StringBuilder(KEY);
@@ -135,7 +134,7 @@ public class NewDatabase {
 				.map(something -> NewDatabase.getInternal())
 				.flatMap(realm -> realm.where(clazz).findAll().<List<E>> asObservable())
 				.filter(data -> data.isLoaded())
-				.map(NewDatabase.getInternal()::copyFromRealm);
+				.map((realmObjects) -> NewDatabase.getInternal().copyFromRealm(realmObjects));
 	}
 
 	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, String value) {
@@ -144,7 +143,7 @@ public class NewDatabase {
 				.map(something -> NewDatabase.getInternal())
 				.flatMap(realm -> realm.where(clazz).equalTo(key, value).findFirst().<E> asObservable())
 				.filter(data -> data.isLoaded())
-				.map(NewDatabase.getInternal()::copyFromRealm);
+				.map((realmObject) -> NewDatabase.getInternal().copyFromRealm(realmObject));
 	}
 
 	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Integer value) {
@@ -153,7 +152,19 @@ public class NewDatabase {
 				.map(something -> NewDatabase.getInternal())
 				.flatMap(realm -> realm.where(clazz).equalTo(key, value).findFirst().<E> asObservable())
 				.filter(data -> data.isLoaded())
-				.map(NewDatabase.getInternal()::copyFromRealm);
+				.map((realmObject) -> NewDatabase.getInternal().copyFromRealm(realmObject));
+	}
+
+	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Long value) {
+		return Observable.just(null)
+				.observeOn(RealmSchedulers.getScheduler())
+				.map(something -> NewDatabase.getInternal())
+				.flatMap(
+						realm -> realm.where(clazz).equalTo(key, value)
+										.findFirst()
+										.<E> asObservable())
+				.filter(data -> data.isLoaded())
+				.map((realmObject) -> NewDatabase.getInternal().copyFromRealm(realmObject));
 	}
 
 	public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
@@ -167,6 +178,16 @@ public class NewDatabase {
 	}
 
 	public <E extends RealmObject> void delete(Class<E> clazz, String key, Integer value) {
+		@Cleanup Realm realm = get();
+		E first = realm.where(clazz).equalTo(key, value).findFirst();
+		if (first != null) {
+			realm.beginTransaction();
+			first.deleteFromRealm();
+			realm.commitTransaction();
+		}
+	}
+
+	public <E extends RealmObject> void delete(Class<E> clazz, String key, Long value) {
 		@Cleanup Realm realm = get();
 		E first = realm.where(clazz).equalTo(key, value).findFirst();
 		if (first != null) {

@@ -20,14 +20,12 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
@@ -41,7 +39,6 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -53,7 +50,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
 	private TextView emptyData;
 	private ScheduledDownloadRepository scheduledDownloadRepository;
-	private LinkedList<Download> downloadList;
+	private List<Download> downloadList;
 
 	public ScheduledDownloadsFragment() {
 	}
@@ -65,7 +62,6 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		Logger.d(TAG, "refresh excluded updates? " + (refresh ? "yes" : "no"));
-
 		fetchScheduledDownloads();
 	}
 
@@ -80,7 +76,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		scheduledDownloadRepository = new ScheduledDownloadRepository();
 		setHasOptionsMenu(true);
-		downloadList = new LinkedList<>();
+		downloadList = new ArrayList<>();
 	}
 
 	@Override
@@ -94,21 +90,18 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchScheduledDownloads() {
-		scheduledDownloadRepository
-				.getAllScheduledUpdates()
-				//.subscribeOn(RealmSchedulers.getScheduler())
-				.subscribeOn(AndroidSchedulers.mainThread())
+		scheduledDownloadRepository.getAllScheduledDownloads()
 				.observeOn(AndroidSchedulers.mainThread())
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(scheduledDownloads -> {
 					updateUi(scheduledDownloads);
-		}, t -> {
-			Logger.e(TAG, t);
-			emptyData.setText(R.string.no_sch_downloads);
-			emptyData.setVisibility(View.VISIBLE);
-			clearDisplayables();
-			finishLoading();
-		});
+				}, t -> {
+					Logger.e(TAG, t);
+					emptyData.setText(R.string.no_sch_downloads);
+					emptyData.setVisibility(View.VISIBLE);
+					clearDisplayables();
+					finishLoading();
+				});
 	}
 
 	@UiThread
@@ -137,7 +130,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	@Override
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		// TODO: 31/08/16 sithengineer  
+		// TODO: 31/08/16 sithengineer
 	}
 
 	@Override
@@ -169,11 +162,9 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 			}
 
 			if (downloadList.size() > 0) {
-				downloadAndInstall(downloadList)
-						.compose(bindUntilEvent(FragmentEvent.STOP))
-						.subscribe(aVoid -> {
-							Logger.i(TAG, "finished installing scheduled downloads");
-						});
+				downloadAndInstall(downloadList).compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(aVoid -> {
+					Logger.i(TAG, "finished installing scheduled downloads");
+				});
 
 				ShowMessage.asSnack(this.emptyData, R.string.installing_msg);
 			} else {
@@ -224,28 +215,20 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 		Logger.v(TAG, "downloading app with id " + download.getAppId());
 		return downloadServiceHelper.startDownload(permissionRequest, download)
 				.map(downloadItem -> { // for logging purposes only
-					Logger.d(
-							TAG,
-							String.format("scheduled download progress = %d and status = %d for app id %d",
-							downloadItem.getOverallProgress(),
-							downloadItem.getOverallDownloadStatus(),
-							downloadItem.getAppId())
-					);
+					Logger.d(TAG, String.format("scheduled download progress = %d and status = %d for app id %d", downloadItem.getOverallProgress(),
+							downloadItem
+							.getOverallDownloadStatus(), downloadItem.getAppId()));
 					return downloadItem;
 				})
-				.filter(downloadItem -> downloadItem.getOverallDownloadStatus()==Download.COMPLETED)
-				.flatMap(downloadItem ->
-					installAndRemoveFromList(installManager, context, downloadItem.getAppId()).map(aVoid -> downloadItem)
-			);
+				.filter(downloadItem -> downloadItem.getOverallDownloadStatus() == Download.COMPLETED)
+				.flatMap(downloadItem -> installAndRemoveFromList(installManager, context, downloadItem.getAppId()).map(aVoid -> downloadItem));
 	}
 
 	private Observable<Void> installAndRemoveFromList(InstallManager installManager, Context context, long appId) {
 		Logger.v(TAG, "installing app with id " + appId);
 		return installManager.install(context, (PermissionRequest) context, appId)
-				.doOnCompleted(()-> Logger.d(TAG, "Scheduled Downloads do on completed called for install manager"))
-				.doOnError(err -> Logger.e(TAG, err))
-				.doOnUnsubscribe(()-> Logger.d(TAG, "Scheduled Downloads do on unsubscribed called for install manager"))
+				.doOnUnsubscribe(() -> Logger.d(TAG, "Scheduled Downloads do on unsubscribed called for install manager"))
 				//.concatWith(scheduledDownloadRepository.deleteScheduledDownload(appId)); // not working
-				.flatMap(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId));
+				.doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId));
 	}
 }
