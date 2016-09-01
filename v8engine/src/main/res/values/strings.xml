@@ -270,7 +270,6 @@
     <string name="play_it">Play-It!</string>
 
     <!--Search new string-->
-    <string name="sponsored_app">Sponsored App</string>
     <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
 
 </resources>

@@ -64,7 +64,7 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
 		}
 
 		if (progressBarIsInstalling != null) {
-			progressBarIsInstalling.setVisibility(isDownloading ? View.GONE : View.VISIBLE);
+			progressBarIsInstalling.setVisibility(isDownloading ? View.VISIBLE : View.GONE);
 		}
 	}
 }

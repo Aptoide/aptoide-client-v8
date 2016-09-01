@@ -43,13 +43,13 @@ public class ScheduledDownloadRepository {
 				});
 	}
 
-	public Observable<RealmResults<Scheduled>> getAllScheduledUpdates() {
+	public Observable<List<Scheduled>> getAllScheduledUpdates() {
 		final Realm realm = Database.get();
 		return Database.ScheduledQ.getAll(realm).<List<Scheduled>>asObservable().asObservable()
 				.filter(scheduledDownloads -> scheduledDownloads.isLoaded())
 				.flatMap(scheduledDownloads -> {
 					if (scheduledDownloads != null && scheduledDownloads.isValid()) {
-						return Observable.just(scheduledDownloads).doOnCompleted(() -> {
+						return Observable.just(realm.copyFromRealm(scheduledDownloads)).doOnCompleted(() -> {
 							if (realm != null && !realm.isClosed()) {
 								realm.close();
 							}

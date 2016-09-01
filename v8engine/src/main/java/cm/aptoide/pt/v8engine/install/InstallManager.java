@@ -21,8 +21,8 @@ import java.io.InputStreamReader;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -44,18 +44,30 @@ public class InstallManager {
 	}
 
 	public Observable<Void> install(Context context, PermissionRequest permissionRequest, long installationId) {
-		return permissionManager.requestExternalStoragePermission(permissionRequest)
+		return permissionManager
+				.requestExternalStoragePermission(permissionRequest)
 				.ignoreElements()
-				.concatWith(installationProvider.getInstallation(installationId).observeOn(Schedulers.computation()).flatMap(installation -> {
-					if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
-						return Observable.just(null);
-					} else {
-						return systemInstall(context, installation.getFile()).onErrorResumeNext(Observable.fromCallable(() -> rootInstall(installation.getFile
-								(), installation
-								.getPackageName(), installation.getVersionCode())))
-								.onErrorResumeNext(defaultInstall(context, installation.getFile(), installation.getPackageName()));
-					}
-				}));
+				.concatWith(
+					installationProvider.getInstallation(installationId)
+						.observeOn(Schedulers.computation())
+						.flatMap(
+								installation -> {
+									if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
+										return Observable.just(null);
+									} else {
+										return systemInstall(context, installation.getFile())
+											.onErrorResumeNext(
+												Observable.fromCallable(
+													() -> rootInstall(installation.getFile(), installation.getPackageName(), installation.getVersionCode())
+												)
+											)
+											.onErrorResumeNext(
+													defaultInstall(context, installation.getFile(), installation.getPackageName())
+											);
+									}
+								}
+						)
+				);
 	}
 
 	public Observable<Void> uninstall(Context context, String packageName) {
@@ -186,7 +198,7 @@ public class InstallManager {
 	@NonNull
 	private Observable<Void> packageIntent(Context context, IntentFilter intentFilter, String packageName) {
 		return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-				.filter(intent -> intent.getData().toString().contains(packageName)).<Void> map(intent -> null).first();
+				.first(intent -> intent.getData().toString().contains(packageName)).<Void> map(intent -> null);
 	}
 
 	private boolean isInstalled(String packageName, int versionCode) {

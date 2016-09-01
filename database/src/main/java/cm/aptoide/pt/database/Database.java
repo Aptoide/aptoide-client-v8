@@ -40,6 +40,7 @@ import rx.schedulers.Schedulers;
  *
  * This is the main class responsible to offer {@link Realm} database instances
  */
+@Deprecated
 public class Database {
 
 	private static final String TAG = Database.class.getSimpleName();

@@ -151,5 +151,7 @@
     <color name="card_store_title">#ff6d00</color>
     <color name="comments_footer">#f2f2f2</color>
 
+    <color name="search_sponspored_label_background">#99d400</color>
+
 
 </resources>
