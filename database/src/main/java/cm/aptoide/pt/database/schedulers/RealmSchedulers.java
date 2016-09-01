@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import cm.aptoide.pt.database.Database;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 

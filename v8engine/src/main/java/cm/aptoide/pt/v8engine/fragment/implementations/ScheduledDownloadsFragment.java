@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -51,7 +52,6 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
 
 	private TextView emptyData;
-	private Subscription subscription;
 	private ScheduledDownloadRepository scheduledDownloadRepository;
 	private LinkedList<Download> downloadList;
 
@@ -94,25 +94,14 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchScheduledDownloads() {
-		subscription = scheduledDownloadRepository.getAllScheduledUpdates()
-				.observeOn(AndroidSchedulers.mainThread())
+		scheduledDownloadRepository
+				.getAllScheduledUpdates()
+				//.subscribeOn(RealmSchedulers.getScheduler())
 				.subscribeOn(AndroidSchedulers.mainThread())
+				.observeOn(AndroidSchedulers.mainThread())
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(scheduledDownloads -> {
-
-			if (scheduledDownloads == null || scheduledDownloads.isEmpty()) {
-				emptyData.setText(R.string.no_sch_downloads);
-				emptyData.setVisibility(View.VISIBLE);
-				clearDisplayables();
-				finishLoading();
-			} else {
-				emptyData.setVisibility(View.GONE);
-				ArrayList<ScheduledDownloadDisplayable> displayables = new ArrayList<>(scheduledDownloads.size());
-				for (final Scheduled scheduledDownload : scheduledDownloads) {
-					displayables.add(new ScheduledDownloadDisplayable(scheduledDownload));
-				}
-				setDisplayables(displayables);
-			}
+					updateUi(scheduledDownloads);
 		}, t -> {
 			Logger.e(TAG, t);
 			emptyData.setText(R.string.no_sch_downloads);
@@ -122,19 +111,27 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 		});
 	}
 
+	@UiThread
+	private void updateUi(List<Scheduled> scheduledDownloadList) {
+		if (scheduledDownloadList == null || scheduledDownloadList.isEmpty()) {
+			emptyData.setText(R.string.no_sch_downloads);
+			emptyData.setVisibility(View.VISIBLE);
+			clearDisplayables();
+			finishLoading();
+		} else {
+			emptyData.setVisibility(View.GONE);
+			ArrayList<ScheduledDownloadDisplayable> displayables = new ArrayList<>(scheduledDownloadList.size());
+			for (final Scheduled scheduledDownload : scheduledDownloadList) {
+				displayables.add(new ScheduledDownloadDisplayable(scheduledDownload));
+			}
+			setDisplayables(displayables);
+		}
+	}
+
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_scheduled_downloads_fragment, menu);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
-		if (subscription != null && !subscription.isUnsubscribed()) {
-			subscription.unsubscribe();
-		}
 	}
 
 	@Override
@@ -172,9 +169,12 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 			}
 
 			if (downloadList.size() > 0) {
-				subscription = downloadAndInstall(downloadList).subscribe(aVoid -> {
-					Logger.i(TAG, "finished installing scheduled downloads");
-				});
+				downloadAndInstall(downloadList)
+						.compose(bindUntilEvent(FragmentEvent.STOP))
+						.subscribe(aVoid -> {
+							Logger.i(TAG, "finished installing scheduled downloads");
+						});
+
 				ShowMessage.asSnack(this.emptyData, R.string.installing_msg);
 			} else {
 				ShowMessage.asSnack(this.emptyData, R.string.schDown_nodownloadselect);
@@ -214,7 +214,6 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 		Context ctx = getContext();
 
 		return Observable.from(downloadList)
-				.observeOn(RealmSchedulers.getScheduler())
 				.flatMap(downloadItem -> downloadAndInstall(downloadItem, permissionRequest, downloadServiceHelper, installManager, ctx))
 				.buffer(downloadList.size()) // buffer all downloads in one event
 				.first(); // return the whole list in one (first) event
@@ -224,6 +223,16 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	                                                InstallManager installManager, Context context) {
 		Logger.v(TAG, "downloading app with id " + download.getAppId());
 		return downloadServiceHelper.startDownload(permissionRequest, download)
+				.map(downloadItem -> { // for logging purposes only
+					Logger.d(
+							TAG,
+							String.format("scheduled download progress = %d and status = %d for app id %d",
+							downloadItem.getOverallProgress(),
+							downloadItem.getOverallDownloadStatus(),
+							downloadItem.getAppId())
+					);
+					return downloadItem;
+				})
 				.filter(downloadItem -> downloadItem.getOverallDownloadStatus()==Download.COMPLETED)
 				.flatMap(downloadItem ->
 					installAndRemoveFromList(installManager, context, downloadItem.getAppId()).map(aVoid -> downloadItem)
@@ -233,30 +242,10 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	private Observable<Void> installAndRemoveFromList(InstallManager installManager, Context context, long appId) {
 		Logger.v(TAG, "installing app with id " + appId);
 		return installManager.install(context, (PermissionRequest) context, appId)
-				.concatWith(scheduledDownloadRepository.deleteScheduledDownload(appId));
+				.doOnCompleted(()-> Logger.d(TAG, "Scheduled Downloads do on completed called for install manager"))
+				.doOnError(err -> Logger.e(TAG, err))
+				.doOnUnsubscribe(()-> Logger.d(TAG, "Scheduled Downloads do on unsubscribed called for install manager"))
+				//.concatWith(scheduledDownloadRepository.deleteScheduledDownload(appId)); // not working
+				.flatMap(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId));
 	}
-
-	/*
-
-	public Observable<Void> install(Context context, PermissionRequest permissionRequest, long appId) {
-		return installManager.install(context, permissionRequest, appId);
-	}
-
-	public void downloadAndInstall(Context context, View v, PermissionRequest permissionRequest, DownloadServiceHelper downloadServiceHelper) {
-		permissionRequest.requestAccessToExternalFileSystem(() -> {
-
-			ShowMessage.asSnack(v, R.string.installing_msg);
-
-			DownloadFactory factory = new DownloadFactory();
-			Download appDownload = factory.create(getPojo());
-
-			downloadServiceHelper.startDownload(permissionRequest, appDownload)
-				.subscribe(download -> installAndRemoveFromList(context, download), err -> {
-					Logger.e(TAG, err);
-				});
-		}, () -> {
-			ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
-		});
-	}
-	*/
 }
