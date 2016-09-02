@@ -162,14 +162,16 @@ public class AptoideDownloadManager {
 		FileDownloader.getImpl().pauseAll();
 		isPausing = true;
 
-		downloadAccessor.getRunningDownloads().first().map(downloads -> {
-			for (int i = 0 ; i < downloads.size() ; i++) {
-				downloads.get(i).setOverallDownloadStatus(Download.PAUSED);
-			}
-			return downloadAccessor.save(downloads);
-		}).doOnUnsubscribe(() -> isPausing = false).subscribe(success -> {
-			Log.d(TAG, "Downloads paused");
-		}, Throwable::printStackTrace);
+		downloadAccessor.getRunningDownloads()
+				.first()
+				.doOnUnsubscribe(() -> isDownloading = false)
+				.subscribe(downloads -> {
+					for (int i = 0; i < downloads.size(); i++) {
+						downloads.get(i).setOverallDownloadStatus(Download.PAUSED);
+					}
+					downloadAccessor.save(downloads);
+					Log.d(TAG, "Downloads paused");
+				}, Throwable::printStackTrace);
 	}
 
 	private int getDownloadStatus(long appId) {
@@ -219,7 +221,7 @@ public class AptoideDownloadManager {
 	}
 
 	void startNextDownload() {
-		if (!isDownloading) {
+		if (!isDownloading && !isPausing) {
 			Download nextDownload = getNextDownload();
 			if (nextDownload != null) {
 				isDownloading = true;
@@ -245,7 +247,6 @@ public class AptoideDownloadManager {
 	}
 
 	public Download getNextDownload() {
-		if (!isPausing) {
 			@Cleanup Realm realm = Database.get();
 			RealmResults<Download> sortedDownloads = realm.where(Download.class)
 					.equalTo("overallDownloadStatus", Download.IN_QUEUE)
@@ -255,8 +256,6 @@ public class AptoideDownloadManager {
 			} else {
 				return null;
 			}
-		}
-		return null;
 	}
 
 	public void removeDownload(long appId) {

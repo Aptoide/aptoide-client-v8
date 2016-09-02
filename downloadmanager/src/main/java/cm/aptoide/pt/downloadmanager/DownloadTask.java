@@ -227,7 +227,6 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 			Logger.d(TAG, "Error on download: " + download.getAppId());
 			e.printStackTrace();
 		}
-		AptoideDownloadManager.getInstance().pauseDownload(download.getAppId());
 		if (e instanceof FileDownloadHttpException
 				&& ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
 			Logger.d(TAG, "File not found on link: " + task.getUrl());
