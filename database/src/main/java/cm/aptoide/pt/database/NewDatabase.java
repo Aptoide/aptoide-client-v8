@@ -96,7 +96,7 @@ public class NewDatabase {
 		realm.commitTransaction();
 	}
 
-	public static Realm get() {
+	private static Realm get() {
 		if (!isInitialized) {
 			throw new IllegalStateException("You need to call Database.initialize(Context) first");
 		}
@@ -146,14 +146,14 @@ public class NewDatabase {
 	private <E extends RealmObject> Observable<E> findFirst(RealmQuery<E> query) {
 		return Observable.just(query.findFirst())
 				.filter(realmObject -> realmObject != null)
-				.flatMap(realmObject -> realmObject.<E>asObservable())
+				.flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(RealmSchedulers.getScheduler()))
 				.flatMap(realmObject -> copyFromRealm(realmObject))
 				.defaultIfEmpty(null);
 	}
 
 	public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
 		return getRealm()
-				.flatMap(realm -> realm.where(clazz).findAll().<List<E>> asObservable())
+				.flatMap(realm -> realm.where(clazz).findAll().<List<E>> asObservable().unsubscribeOn(RealmSchedulers.getScheduler()))
 				.flatMap(results -> copyFromRealm(results));
 	}
 
