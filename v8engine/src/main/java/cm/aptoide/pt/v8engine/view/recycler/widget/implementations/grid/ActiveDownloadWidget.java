@@ -5,9 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.jakewharton.rxbinding.view.RxView;
-
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -15,6 +12,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -70,7 +68,9 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 
 	@Override
 	public void onViewDetached() {
-		subscriptions.unsubscribe();
+		if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+			subscriptions.unsubscribe();
+		}
 	}
 
 	private Void updateUi(Download download) {

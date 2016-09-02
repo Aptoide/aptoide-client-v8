@@ -9,19 +9,17 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
+import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.FileUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
-
-import java.util.concurrent.TimeUnit;
-
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
+import java.util.concurrent.TimeUnit;
 import lombok.Cleanup;
 import lombok.Setter;
 import rx.Observable;
@@ -35,8 +33,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	public static final int INTERVAL = 1000;    //interval between progress updates
 	public static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
+	public static final int FILE_NOTFOUND_HTTP_ERROR = 404;
 	private static final String TAG = DownloadTask.class.getSimpleName();
-
 	final Download download;
 	private final long appId;
 	/**
@@ -109,6 +107,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 		}
 		download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload().size()));
 		saveDownloadInDb(download);
+		Logger.d(TAG,
+				"Download: " + download.getAppId() + " Progress: " + download.getOverallProgress());
 		return download;
 	}
 
@@ -222,16 +222,24 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	@Override
 	protected void error(BaseDownloadTask task, Throwable e) {
+		if (!(e instanceof FileDownloadHttpException
+				&& ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR)) {
+			Logger.d(TAG, "Error on download: " + download.getAppId());
+			e.printStackTrace();
+		}
 		AptoideDownloadManager.getInstance().pauseDownload(download.getAppId());
-		if (e instanceof FileDownloadHttpException && ((FileDownloadHttpException) e).getCode() == 404) {
+		if (e instanceof FileDownloadHttpException
+				&& ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
+			Logger.d(TAG, "File not found on link: " + task.getUrl());
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-				if (!TextUtils.isEmpty(fileToDownload.getAltLink())) {
+				if (TextUtils.equals(fileToDownload.getLink(), task.getUrl()) && !TextUtils.isEmpty(
+						fileToDownload.getAltLink())) {
 					fileToDownload.setLink(fileToDownload.getAltLink());
 					fileToDownload.setAltLink(null);
-					@Cleanup
-					Realm realm = Database.get();
+					@Cleanup Realm realm = Database.get();
 					Database.save(download, realm);
-					Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+					Intent intent =
+							new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
 					intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 					intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
 					AptoideDownloadManager.getContext().sendBroadcast(intent);
@@ -240,6 +248,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 			}
 		}
 		setDownloadStatus(Download.ERROR, download, task);
+		AptoideDownloadManager.getInstance().currentDownloadFinished(download.getAppId());
 	}
 
 	@Override

@@ -9,14 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -32,6 +24,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Act
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -60,8 +57,14 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
 	}
 
-	@Override
-	public void load(boolean refresh, Bundle savedInstanceState) {
+	@Override public void onDestroyView() {
+		if (subscription != null && !subscription.isUnsubscribed()) {
+			subscription.unsubscribe();
+		}
+		super.onDestroyView();
+	}
+
+	@Override public void load(boolean refresh, Bundle savedInstanceState) {
 		super.load(refresh, savedInstanceState);
 		if (subscription == null || subscription.isUnsubscribed()) {
 			DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
@@ -72,8 +75,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 					.first()
 					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads), Throwable::printStackTrace);
 
-			subscription = downloadServiceHelper.getAllDownloads()
-					.sample(50, TimeUnit.MILLISECONDS)
+			subscription = downloadServiceHelper.getAllDownloads().sample(250, TimeUnit.MILLISECONDS)
 					.filter(downloads -> (shouldUpdateList(downloads, oldDownloadsList)))
 					.map(downloads -> oldDownloadsList = downloads)
 					.map(Download::sortDownloads)

@@ -9,13 +9,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.liulishuo.filedownloader.FileDownloader;
-
-import java.util.List;
-
 import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.NewDatabase;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -24,9 +18,11 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInter
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
+import com.liulishuo.filedownloader.FileDownloader;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -119,7 +115,7 @@ public class AptoideDownloadManager {
 			}
 			return download;
 		}).subscribe(download -> {
-			Logger.d(TAG, "Download paused");
+			Logger.d(TAG, "Download with " + appId + " paused");
 		}, throwable -> {
 			if (throwable instanceof DownloadNotFoundException) {
 				Logger.d(TAG, "there are no download to pause with the id: " + appId);
@@ -152,8 +148,7 @@ public class AptoideDownloadManager {
 	}
 
 	public Observable<List<Download>> getCurrentDownloads() {
-		downloadAccessor = new DownloadAccessor(new NewDatabase());
-		return downloadAccessor.getRunningDownloads2();
+		return downloadAccessor.getRunningDownloads();
 	}
 
 	public Observable<List<Download>> getDownloads() {
@@ -229,6 +224,7 @@ public class AptoideDownloadManager {
 			if (nextDownload != null) {
 				isDownloading = true;
 				new DownloadTask(nextDownload).startDownload();
+				Logger.d(TAG, "Download with id " + nextDownload.getAppId() + " started");
 			} else {
 				CacheHelper.cleanCache(settingsInterface, DOWNLOADS_STORAGE_PATH);
 			}
@@ -272,6 +268,8 @@ public class AptoideDownloadManager {
 		}, throwable -> {
 			if (throwable instanceof DownloadNotFoundException) {
 				Log.d(TAG, "Download not found, are you pressing on remove button too fast?");
+			} else if (throwable instanceof NullPointerException) {
+				Log.d(TAG, "Download item was null, are you pressing on remove button too fast?");
 			} else {
 				throwable.printStackTrace();
 			}

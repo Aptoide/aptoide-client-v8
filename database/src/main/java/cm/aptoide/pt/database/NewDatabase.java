@@ -7,17 +7,14 @@ package cm.aptoide.pt.database;
 
 import android.content.Context;
 import android.text.TextUtils;
-
-import java.util.List;
-
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
-import cm.aptoide.pt.logger.Logger;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import java.util.List;
 import lombok.Cleanup;
 import rx.Observable;
 
@@ -104,7 +101,7 @@ public class NewDatabase {
 		realm.commitTransaction();
 	}
 
-	public static Realm get() {
+	private static Realm get() {
 		if (!isInitialized) {
 			throw new IllegalStateException("You need to call Database.initialize(Context) first");
 		}
@@ -117,11 +114,11 @@ public class NewDatabase {
 	 *
 	 * @return singleton Realm instance
 	 */
-	private static Realm getInternal() {
+	public static Realm getInternal() {
 		if (!isInitialized) {
 			throw new IllegalStateException("You need to call Database.initialize(Context) first");
 		}
-		Logger.d(TAG, "getInternal: " + Thread.currentThread().getName());
+
 		if(INSTANCE==null) {
 			INSTANCE = Realm.getDefaultInstance();
 		}

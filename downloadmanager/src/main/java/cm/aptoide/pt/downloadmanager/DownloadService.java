@@ -8,13 +8,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-
-import java.util.Locale;
-
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import java.util.Locale;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -56,6 +55,7 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Logger.d(TAG, "Download service is starting");
 		downloadManager = AptoideDownloadManager.getInstance();
 		downloadManager.initDownloadService(this);
 		subscriptions = new CompositeSubscription();
@@ -100,8 +100,9 @@ public class DownloadService extends Service {
 	private void setupStopSelfMechanism() {
 		if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
 			stopMechanismSubscription = downloadManager.getCurrentDownloads()
-					//					.observeOn(Schedulers.computation())
+					.observeOn(Schedulers.computation())
 					.filter(downloads -> downloads == null || downloads.size() <= 0).subscribe(downloads -> {
+						Logger.d(TAG, "Download service is stopping");
 						stopSelf();
 					}, Throwable::printStackTrace);
 			subscriptions.add(stopMechanismSubscription);

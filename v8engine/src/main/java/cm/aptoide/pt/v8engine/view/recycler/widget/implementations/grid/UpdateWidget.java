@@ -14,11 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.jakewharton.rxbinding.view.RxView;
-
-import java.util.concurrent.TimeUnit;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
@@ -33,7 +28,9 @@ import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import io.realm.Realm;
+import java.util.concurrent.TimeUnit;
 import lombok.Cleanup;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
