@@ -14,13 +14,13 @@ import io.realm.RealmObject;
  */
 public final class RepositoryFactory {
 
-	public static <T extends RealmObject, A extends Repository> A getRepositoryFor(Class<T> clazz) {
-		if (clazz.equals(Scheduled.class)) {
-			return (A) new ScheduledDownloadRepository(AccessorFactory.getAccessorFor(Scheduled.class));
-		}
+  public static <T extends RealmObject, A extends Repository> A getRepositoryFor(Class<T> clazz) {
+    if (clazz.equals(Scheduled.class)) {
+      return (A) new ScheduledDownloadRepository(AccessorFactory.getAccessorFor(Scheduled.class));
+    }
 
-		// TODO: 02/09/16 add missing cases
+    // TODO: 02/09/16 add missing cases
 
-		return null;
-	}
+    return null;
+  }
 }

@@ -13,13 +13,13 @@ import io.realm.RealmObject;
  */
 public final class AccessorFactory {
 
-	public static <T extends RealmObject, A extends Accessor> A getAccessorFor(Class<T> clazz) {
-		if (clazz.equals(Scheduled.class)) {
-			return (A) new ScheduledAccessor(new Database());
-		}
+  public static <T extends RealmObject, A extends Accessor> A getAccessorFor(Class<T> clazz) {
+    if (clazz.equals(Scheduled.class)) {
+      return (A) new ScheduledAccessor(new Database());
+    }
 
-		// TODO: 02/09/16 add missing cases
+    // TODO: 02/09/16 add missing cases
 
-		return null;
-	}
+    return null;
+  }
 }
