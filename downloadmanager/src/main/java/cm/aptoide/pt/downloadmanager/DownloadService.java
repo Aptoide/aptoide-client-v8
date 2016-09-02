@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 
 import java.util.Locale;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
@@ -52,7 +52,7 @@ public class DownloadService extends Service {
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			@Cleanup Realm realm = Database.get();
+			@Cleanup Realm realm = DeprecatedDatabase.get();
 			Download download = downloadManager.getStoredDownload(appId, realm);
 			if (download != null) {
 				downloadManager.startDownload(download.clone())

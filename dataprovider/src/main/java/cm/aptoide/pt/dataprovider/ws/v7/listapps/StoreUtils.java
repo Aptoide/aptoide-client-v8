@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -39,9 +39,8 @@ public class StoreUtils {
 	public static List<Long> getSubscribedStoresIds() {
 
 		List<Long> storesNames = new LinkedList<>();
-		@Cleanup
-		Realm realm = Database.get();
-		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = DeprecatedDatabase.StoreQ.getAll(realm);
 		for (cm.aptoide.pt.database.realm.Store store : stores) {
 			storesNames.add(store.getStoreId());
 		}
@@ -52,9 +51,8 @@ public class StoreUtils {
 	public static List<String> getSubscribedStoresNames() {
 
 		List<String> storesNames = new LinkedList<>();
-		@Cleanup
-		Realm realm = Database.get();
-		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = DeprecatedDatabase.StoreQ.getAll(realm);
 		for (cm.aptoide.pt.database.realm.Store store : stores) {
 			storesNames.add(store.getStoreName());
 		}
@@ -63,10 +61,9 @@ public class StoreUtils {
 	}
 
 	public static Map<String,List<String>> getSubscribedStoresAuthMap() {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		Map<String,List<String>> storesAuthMap = new HashMap<>();
-		RealmResults<cm.aptoide.pt.database.realm.Store> stores = Database.StoreQ.getAll(realm);
+		RealmResults<cm.aptoide.pt.database.realm.Store> stores = DeprecatedDatabase.StoreQ.getAll(realm);
 		for (cm.aptoide.pt.database.realm.Store store : stores) {
 			if (store.getPasswordSha1() != null) {
 				storesAuthMap.put(store.getStoreName(), new LinkedList<>(Arrays.asList(store.getUsername(), store.getPasswordSha1())));
@@ -102,7 +99,7 @@ public class StoreUtils {
 
 			if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
 
-				@Cleanup Realm realm = Database.get();
+				@Cleanup Realm realm = DeprecatedDatabase.get();
 
 				cm.aptoide.pt.database.realm.Store store = new cm.aptoide.pt.database.realm.Store();
 
@@ -130,7 +127,7 @@ public class StoreUtils {
 					AptoideAccountManager.subscribeStore(storeData.getName());
 				}
 
-				Database.save(store, realm);
+				DeprecatedDatabase.save(store, realm);
 
 				if (successRequestListener != null) {
 					successRequestListener.call(getStoreMeta);
@@ -149,9 +146,8 @@ public class StoreUtils {
 	}
 
 	public static boolean isSubscribedStore(String storeName) {
-		@Cleanup
-		Realm realm = Database.get();
-		return Database.StoreQ.get(storeName, realm) != null;
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		return DeprecatedDatabase.StoreQ.get(storeName, realm) != null;
 	}
 
 	public static String split(String repoUrl) {

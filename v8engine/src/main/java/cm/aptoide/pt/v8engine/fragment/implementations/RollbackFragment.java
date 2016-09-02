@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -85,7 +85,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 			getActivity().onBackPressed();
 			return true;
 		} else if (itemId == R.id.menu_clear) {
-			Database.RollbackQ.deleteAll(realm);
+			DeprecatedDatabase.RollbackQ.deleteAll(realm);
 			clearDisplayables();
 			finishLoading();
 			return true;
@@ -118,7 +118,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 
 	@UiThread
 	private void fetchRollbacks() {
-		subscription = Database.RollbackQ.getAll(realm).sort(Rollback.TIMESTAMP, Sort.ASCENDING)
+		subscription = DeprecatedDatabase.RollbackQ.getAll(realm).sort(Rollback.TIMESTAMP, Sort.ASCENDING)
 				.asObservable()
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.observeOn(AndroidSchedulers.mainThread())

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -51,8 +51,8 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 		more.setText(R.string.update_all);
 		more.setVisibility(View.VISIBLE);
 		more.setOnClickListener((view) -> {
-			Realm realm = Database.get();
-			RealmResults<Update> all = Database.UpdatesQ.getAll(realm);
+			Realm realm = DeprecatedDatabase.get();
+			RealmResults<Update> all = DeprecatedDatabase.UpdatesQ.getAll(realm);
 			for (Update update : all) {
 				new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager()).startDownload((PermissionRequest) getContext(), new
 						DownloadFactory()

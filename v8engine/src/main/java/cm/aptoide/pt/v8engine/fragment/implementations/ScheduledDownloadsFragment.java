@@ -33,6 +33,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -86,7 +87,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	public void bindViews(View view) {
 		super.bindViews(view);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
-		scheduledDownloadRepository = new ScheduledDownloadRepository();
+		scheduledDownloadRepository = RepositoryFactory.getRepositoryFor(Scheduled.class);
 		//		compositeSubscription = new CompositeSubscription();
 		setHasOptionsMenu(true);
 	}

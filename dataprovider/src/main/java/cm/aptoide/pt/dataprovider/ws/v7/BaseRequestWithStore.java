@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Store;
 import io.realm.Realm;
 import lombok.AllArgsConstructor;
@@ -24,10 +24,10 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 	}
 
 	protected static StoreCredentials getStore(Long storeId) {
-		@Cleanup Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 
 		if (storeId != null) {
-			Store store = Database.StoreQ.get(storeId, realm);
+			Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
 			if (store != null) {
 				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
 			}
@@ -36,9 +36,9 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 	}
 
 	protected static StoreCredentials getStore(String storeName) {
-		@Cleanup Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		if (storeName != null) {
-			Store store = Database.StoreQ.get(storeName, realm);
+			Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
 			if (store != null) {
 				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
 			}

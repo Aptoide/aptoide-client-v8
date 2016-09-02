@@ -16,11 +16,11 @@ import rx.Observable;
 /**
  * Created by sithengineer on 01/09/16.
  */
-public class ScheduledAccessor {
+public class ScheduledAccessor implements Accessor {
 
-	private final NewDatabase database;
+	private final Database database;
 
-	public ScheduledAccessor(NewDatabase db) {
+	protected ScheduledAccessor(Database db) {
 		this.database = db;
 	}
 
@@ -47,7 +47,7 @@ public class ScheduledAccessor {
 				ids[i] = s.getAppId();
 			}
 
-			@Cleanup Realm realm = NewDatabase.get();
+			@Cleanup Realm realm = Database.get();
 			realm.beginTransaction();
 			realm.insertOrUpdate(scheduledList);
 			RealmResults<Scheduled> results = realm.where(Scheduled.class).in(Scheduled.APP_ID, ids).findAll();
@@ -63,7 +63,7 @@ public class ScheduledAccessor {
 		return Observable.fromCallable(() -> {
 			scheduled.setDownloading(true);
 
-			@Cleanup Realm realm = NewDatabase.get();
+			@Cleanup Realm realm = Database.get();
 			realm.beginTransaction();
 			Scheduled dbScheduled = realm.where(Scheduled.class).equalTo(Scheduled.APP_ID, scheduled.getAppId()).findFirst();
 			dbScheduled.setDownloading(true);

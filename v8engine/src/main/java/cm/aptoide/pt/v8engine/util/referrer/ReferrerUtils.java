@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -106,9 +106,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 						if (broadcastReferrer) {
 							broadcastReferrer(packageName, referrer);
 						} else {
-							@Cleanup
-							Realm realm = Database.get();
-							Database.save(new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(), minimalAd.getAdId()), realm);
+							@Cleanup Realm realm = DeprecatedDatabase.get();
+							DeprecatedDatabase.save(new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(), minimalAd.getAdId()), realm);
 						}
 
 						future.cancel(false);

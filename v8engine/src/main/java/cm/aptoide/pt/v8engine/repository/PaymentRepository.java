@@ -9,7 +9,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
@@ -121,22 +121,23 @@ public class PaymentRepository {
 
 	private Observable<Void> storePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = Database.get();
-			Database.save(convertToStoredPaymentConfirmation(paymentConfirmation), realm);
+			@Cleanup Realm realm = DeprecatedDatabase.get();
+			DeprecatedDatabase.save(convertToStoredPaymentConfirmation(paymentConfirmation), realm);
 			return null;
 		});
 	}
 
 	private Observable<Void> deleteStoredPaymentConfirmation(int productId) {
 		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = Database.get();
-			Database.PaymentConfirmationQ.delete(productId, realm);
+			@Cleanup Realm realm = DeprecatedDatabase.get();
+			DeprecatedDatabase.PaymentConfirmationQ.delete(productId, realm);
 			return null;
 		});
 	}
 
 	private Observable<cm.aptoide.pt.database.realm.PaymentConfirmation> getStoredPaymentConfirmation(AptoideProduct product) {
-		return Database.PaymentConfirmationQ.get(product.getId(), Database.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>asObservable()
+		return DeprecatedDatabase.PaymentConfirmationQ.get(product.getId(), DeprecatedDatabase.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>
+				asObservable()
 				.filter(paymentConfirmation -> paymentConfirmation.isLoaded())
 				.flatMap(paymentConfirmation -> {
 					if (paymentConfirmation != null && paymentConfirmation.isValid()) {

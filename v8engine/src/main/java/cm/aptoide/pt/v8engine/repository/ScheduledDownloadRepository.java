@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.repository;
 
 import java.util.List;
 
-import cm.aptoide.pt.database.NewDatabase;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
 import rx.Observable;
@@ -15,14 +14,12 @@ import rx.Observable;
 /**
  * Created by sithengineer on 30/08/16.
  */
-public class ScheduledDownloadRepository {
+public class ScheduledDownloadRepository implements Repository {
 
-	private static final String TAG = ScheduledDownloadRepository.class.getSimpleName();
+	private final ScheduledAccessor scheduledAccessor;
 
-	private ScheduledAccessor scheduledAccessor;
-
-	public ScheduledDownloadRepository() {
-		scheduledAccessor = new ScheduledAccessor(new NewDatabase());
+	protected ScheduledDownloadRepository(ScheduledAccessor scheduledAccessor) {
+		this.scheduledAccessor = scheduledAccessor;
 	}
 
 	public Observable<Scheduled> getScheduledUpdate(long appId){

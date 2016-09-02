@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
@@ -60,9 +60,8 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
 			} else {
 				switch (name) {
 					case facebook:
-						@Cleanup
-						Realm realm = Database.get();
-						Installed installedFacebook = Database.InstalledQ.get(HomeFragment.FACEBOOK_PACKAGE_NAME, realm);
+						@Cleanup Realm realm = DeprecatedDatabase.get();
+						Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(HomeFragment.FACEBOOK_PACKAGE_NAME, realm);
 						sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(installedFacebook == null ? 0 : installedFacebook.getVersionCode(), event
 								.getAction()));
 						break;

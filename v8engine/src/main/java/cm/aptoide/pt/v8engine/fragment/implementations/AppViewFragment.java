@@ -35,7 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -210,14 +210,14 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private void setupObservables(GetApp getApp) {
 		// For stores subscription
-		Database.StoreQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
-			if (Database.StoreQ.get(getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
+		DeprecatedDatabase.StoreQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
+			if (DeprecatedDatabase.StoreQ.get(getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
 				adapter.notifyDataSetChanged();
 			}
 		});
 
 		// For install actions
-		Database.RollbackQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(rollbacks -> {
+		DeprecatedDatabase.RollbackQ.getAll(realm).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(rollbacks -> {
 			adapter.notifyDataSetChanged();
 		});
 
@@ -314,7 +314,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 			return true;
 		} else if (i == R.id.menu_schedule) {
-			@Cleanup Realm realm = Database.get();
+			@Cleanup Realm realm = DeprecatedDatabase.get();
 			realm.beginTransaction();
 			realm.copyToRealmOrUpdate(scheduled);
 			realm.commitTransaction();

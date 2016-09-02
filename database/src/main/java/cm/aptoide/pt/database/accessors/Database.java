@@ -8,42 +8,46 @@ package cm.aptoide.pt.database.accessors;
 import android.content.Context;
 import android.text.TextUtils;
 
+import java.util.List;
+
 import cm.aptoide.pt.database.BuildConfig;
-import cm.aptoide.pt.database.realm.ExcludedAd;
-import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.PaymentConfirmation;
-import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
-import io.realm.RealmModel;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import lombok.Cleanup;
+import rx.Observable;
 
 /**
  * Created by sithengineer on 16/05/16.
  *
  * This is the main class responsible to offer {@link Realm} database instances
  */
-@Deprecated
-public class Database {
+class Database {
 
 	private static final String TAG = Database.class.getSimpleName();
 	private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
 	private static final String DB_NAME = "aptoide.realm.db";
-	private static final AllClassesModule MODULE = new AllClassesModule();
 	private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
 	private static boolean isInitialized = false;
+
+	//
+	// Static methods
+	//
+	private static Realm INSTANCE;
 
 	private static String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
 	}
 
 	public static void initialize(Context context) {
+		isInitialized = true;
+		if(isInitialized) return;
+
 		StringBuilder strBuilder = new StringBuilder(KEY);
 		strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
 		strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
@@ -55,13 +59,13 @@ public class Database {
 		// Always use explicit modules in library projects
 		RealmConfiguration realmConfig;
 		if (BuildConfig.DEBUG) {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
 					// Must be bumped when the schema changes
 					.schemaVersion(BuildConfig.VERSION_CODE)
 					.deleteRealmIfMigrationNeeded()
 					.build();
 		} else {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
 					//.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer use DB encryption for a safer ride
 					// Must be bumped when the schema changes
 					.schemaVersion(BuildConfig.VERSION_CODE)
@@ -78,218 +82,127 @@ public class Database {
 		isInitialized = true;
 	}
 
-	public static Realm get() {
-
-		// a simple check
-//		if(Looper.myLooper()==null) {
-//			throw new IllegalStateException("Current thread doesn't have a Looper");
-//		}
-
-		// a more agressive check...
-//		if(RealmSchedulers.isRealmSchedulerThread(Thread.currentThread())) {
-//			throw new IllegalThreadStateException(String.format("Use %s class to get a scheduler to interact with Realm", RealmSchedulers.class.getName()));
-//		}
-
-		if(isInitialized){
-			return Realm.getDefaultInstance();
-		}
-		throw new IllegalStateException("You need to call Database.initialize(Context) first");
-	}
-
-	public static void save(RealmObject realmObject, Realm realm) {
+	public static <E extends RealmObject> void save(E realmObject) {
+		@Cleanup Realm realm = Realm.getDefaultInstance();
 		realm.beginTransaction();
-		realm.copyToRealmOrUpdate(realmObject);
+		realm.insertOrUpdate(realmObject);
 		realm.commitTransaction();
 	}
 
-	public static void save(Installed installed, Realm realm) {
+	public static <E extends RealmObject> void save(List<E> realmObject) {
+		@Cleanup Realm realm = Realm.getDefaultInstance();
 		realm.beginTransaction();
-//		installed.computeId();
-		realm.copyToRealmOrUpdate(installed);
+		realm.insertOrUpdate(realmObject);
 		realm.commitTransaction();
 	}
 
-	public static void save(Rollback rollback, Realm realm) {
-		realm.beginTransaction();
-//		rollback.computeId();
-		realm.copyToRealmOrUpdate(rollback);
-		realm.commitTransaction();
-	}
-
-	public static void delete(RealmObject realmObject, Realm realm) {
+	public static void delete(RealmObject realmObject) {
+		@Cleanup Realm realm = Realm.getDefaultInstance();
 		realm.beginTransaction();
 		realmObject.deleteFromRealm();
 		realm.commitTransaction();
 	}
 
-	public static void dropTable(Class<? extends RealmModel> aClass, Realm realm) {
-		realm.beginTransaction();
-		realm.delete(aClass);
-		realm.commitTransaction();
+	protected static Realm get() {
+		if (!isInitialized) {
+			throw new IllegalStateException("You need to call Database.initialize(Context) first");
+		}
+
+		return Realm.getDefaultInstance();
 	}
 
-	public static class InstalledQ {
-
-		public static RealmResults<Installed> getAll(Realm realm) {
-			return realm.where(Installed.class).findAll();
+	/**
+	 * this code is expected to run on only a single thread, so no synchronizing primitives were used
+	 *
+	 * @return singleton Realm instance
+	 */
+	private static Realm getInternal() {
+		if (!isInitialized) {
+			throw new IllegalStateException("You need to call Database.initialize(Context) first");
 		}
 
-		public static Installed get(String packageName, Realm realm) {
-			return realm.where(Installed.class).equalTo(Installed.PACKAGE_NAME, packageName).findFirst();
+		if(INSTANCE==null) {
+			INSTANCE = Realm.getDefaultInstance();
 		}
 
-		public static void delete(String packageName, Realm realm) {
-			Installed first = realm.where(Installed.class).equalTo(Installed.PACKAGE_NAME, packageName).findFirst();
-			if (first != null) {
-				realm.beginTransaction();
-				first.deleteFromRealm();
-				realm.commitTransaction();
-			}
-		}
-
-		public static boolean isInstalled(String packageName, Realm realm) {
-			return get(packageName, realm) != null;
-		}
+		return INSTANCE;
 	}
 
-	public static class StoreQ {
+	//
+	// Instance methods
+	//
 
-		public static Store get(long storeId, Realm realm) {
-			return realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst();
-		}
+	private Observable<Realm> getRealm() {
+		return Observable.just(null)
+				.observeOn(RealmSchedulers.getScheduler()).map(something -> Database.getInternal());
+	}
 
-		public static Store get(String storeName, Realm realm) {
-			return realm.where(Store.class).equalTo(Store.STORE_NAME, storeName).findFirst();
-		}
+	private <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
+		return Observable.just(results)
+				.filter(data -> data.isLoaded()).map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects));
+	}
 
-		public static boolean contains(String storeName, Realm realm) {
-			return realm.where(Store.class).equalTo(Store.STORE_NAME, storeName).count()>0;
-		}
+	private <E extends RealmObject> Observable<E> copyFromRealm(E object) {
+		return Observable.just(object)
+				.filter(data -> data.isLoaded()).map(realmObject -> Database.getInternal().copyFromRealm(realmObject));
+	}
 
-		public static RealmResults<Store> getAll(Realm realm) {
-			return realm.where(Store.class).findAll();
-		}
+	private <E extends RealmObject> Observable<E> findFirst(RealmQuery<E> query) {
+		return Observable.just(query.findFirst())
+				.filter(realmObject -> realmObject != null)
+				.flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(RealmSchedulers.getScheduler()))
+				.flatMap(realmObject -> copyFromRealm(realmObject))
+				.defaultIfEmpty(null);
+	}
 
-		public static void delete(long storeId, Realm realm) {
+	public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
+		return getRealm()
+				.flatMap(realm -> realm.where(clazz).findAll().<List<E>> asObservable().unsubscribeOn(RealmSchedulers.getScheduler()))
+				.flatMap(results -> copyFromRealm(results));
+	}
+
+	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, String value) {
+		return getRealm()
+				.map(realm -> realm.where(clazz).equalTo(key, value))
+				.flatMap(query -> findFirst(query));
+	}
+
+	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Integer value) {
+		return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+				.flatMap(query -> findFirst(query));
+	}
+
+	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Long value) {
+		return getRealm().map(realm -> realm.where(clazz).equalTo(key, value)).flatMap(query -> findFirst(query));
+	}
+
+	public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
+		@Cleanup Realm realm = get();
+		E first = realm.where(clazz).equalTo(key, value).findFirst();
+		if (first != null) {
 			realm.beginTransaction();
-			realm.where(Store.class).equalTo(Store.STORE_ID, storeId).findFirst().deleteFromRealm();
+			first.deleteFromRealm();
 			realm.commitTransaction();
 		}
 	}
 
-	public static class PaymentConfirmationQ {
-
-		public static PaymentConfirmation get(int productId, Realm realm) {
-			return realm.where(PaymentConfirmation.class).equalTo(PaymentConfirmation.PRODUCT_ID, productId).findFirstAsync();
-		}
-
-		public static RealmResults<PaymentConfirmation> getAll(Realm realm) {
-			return realm.where(PaymentConfirmation.class).findAllAsync();
-		}
-
-		public static void delete(int productId, Realm realm) {
+	public <E extends RealmObject> void delete(Class<E> clazz, String key, Integer value) {
+		@Cleanup Realm realm = get();
+		E first = realm.where(clazz).equalTo(key, value).findFirst();
+		if (first != null) {
 			realm.beginTransaction();
-			realm.where(PaymentConfirmation.class).equalTo(PaymentConfirmation.PRODUCT_ID, productId).findFirst().deleteFromRealm();
-			realm.commitTransaction();
-		}
-
-	}
-
-	public static class UpdatesQ {
-
-		public static RealmResults<Update> getAll(Realm realm) {
-			// to cope with previously API calls
-			return getAll(realm, false);
-		}
-
-		public static RealmResults<Update> getAll(Realm realm, boolean excluded) {
-			return realm.where(Update.class).equalTo(Update.EXCLUDED, excluded).findAll();
-		}
-
-//		public static boolean contains(String packageName, Realm realm) {
-//			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst() != null;
-//		}
-
-		public static boolean contains(String packageName, boolean excluded, Realm realm) {
-			return realm
-					.where(Update.class)
-					.equalTo(Update.PACKAGE_NAME, packageName)
-					.equalTo(Update.EXCLUDED, excluded)
-					.findFirst() != null;
-		}
-
-		public static void delete(String packageName, Realm realm) {
-			Update first = realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
-			if (first != null) {
-				realm.beginTransaction();
-				first.deleteFromRealm();
-				realm.commitTransaction();
-			}
-		}
-
-		public static Update get(String packageName, Realm realm) {
-			return realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
-		}
-
-		public static void setExcluded(String packageName, boolean excluded, Realm realm) {
-			Update update = realm.where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).findFirst();
-			if(update!=null) {
-				realm.beginTransaction();
-				update.setExcluded(excluded);
-				realm.commitTransaction();
-			} else {
-				throw new RuntimeException("Update with package name '"+ packageName +"' not found");
-			}
-		}
-	}
-
-	public static class RollbackQ {
-
-		public static RealmResults<Rollback> getAll(Realm realm) {
-			return realm.where(Rollback.class).findAll();
-		}
-
-		public static Rollback get(Realm realm, String packageName, Rollback.Action action) {
-			RealmResults<Rollback> allSorted = realm.where(Rollback.class)
-					.equalTo(Rollback.PACKAGE_NAME, packageName)
-					.equalTo(Rollback.ACTION, action.name())
-					.findAllSortedAsync(Rollback.TIMESTAMP);
-
-			if (allSorted.size() > 0) {
-				return allSorted.get(allSorted.size() - 1);
-			} else {
-				return null;
-			}
-		}
-
-		public static void delete(Realm realm, String packageName, Rollback.Action action) {
-			Rollback rollback = realm.where(Rollback.class)
-					.equalTo(Rollback.PACKAGE_NAME, packageName)
-					.equalTo(Rollback.ACTION, action.name()).findFirstAsync();
-			if (rollback != null) {
-				realm.beginTransaction();
-				rollback.deleteFromRealm();
-				realm.commitTransaction();
-			}
-		}
-
-		public static void deleteAll(Realm realm) {
-			realm.beginTransaction();
-			realm.delete(Rollback.class);
+			first.deleteFromRealm();
 			realm.commitTransaction();
 		}
 	}
 
-	public static class ExcludedAdsQ {
-		public static RealmResults<ExcludedAd> getAll(Realm realm) {
-			return realm.where(ExcludedAd.class).findAll();
-		}
-	}
-
-	public static class ReferrerQ {
-
-		public static StoredMinimalAd get(String packageName, Realm realm) {
-			return realm.where(StoredMinimalAd.class).equalTo(StoredMinimalAd.PACKAGE_NAME, packageName).findFirst();
+	public <E extends RealmObject> void delete(Class<E> clazz, String key, Long value) {
+		@Cleanup Realm realm = get();
+		E first = realm.where(clazz).equalTo(key, value).findFirst();
+		if (first != null) {
+			realm.beginTransaction();
+			first.deleteFromRealm();
+			realm.commitTransaction();
 		}
 	}
 }

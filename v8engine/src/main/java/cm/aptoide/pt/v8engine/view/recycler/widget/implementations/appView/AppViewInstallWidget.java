@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
@@ -130,10 +130,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		String packageName = currentApp.getPackageName();
 
-		@Cleanup
-		Realm realm = Database.get();
-		Installed installed = Database.InstalledQ.get(packageName, realm);
-		Update update = Database.UpdatesQ.get(packageName, realm);
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+		Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
 
 		//check if the app is installed or has an update
 		if (update != null) {

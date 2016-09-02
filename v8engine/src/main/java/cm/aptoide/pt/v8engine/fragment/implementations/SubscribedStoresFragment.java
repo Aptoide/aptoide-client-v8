@@ -14,7 +14,7 @@ import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
@@ -57,7 +57,7 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 
-		Observable<RealmResults<Store>> realmResultsObservable = Database.StoreQ.getAll(realm).asObservable();
+		Observable<RealmResults<Store>> realmResultsObservable = DeprecatedDatabase.StoreQ.getAll(realm).asObservable();
 
 		realmResultsObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(stores -> {

@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -109,7 +109,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	}
 
 	private void openBackupApps() {
-		Installed installedBackupApps = Database.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
+		Installed installedBackupApps = DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
 		if(installedBackupApps == null){
 			AppViewFragment.newInstance(BACKUP_APPS_PACKAGE_NAME,false);
 			FragmentUtils.replaceFragmentV4(this.getActivity(),AppViewFragment.newInstance(BACKUP_APPS_PACKAGE_NAME, false));
@@ -134,14 +134,14 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 	}
 
 	private void openFacebook() {
-		Installed installedFacebook = Database.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
+		Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
 		openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK, getContext().getString(R.string.social_facebook_screen_title), Uri.parse(AptoideUtils
 				.SocialLinksU
 				.getFacebookPageURL(installedFacebook == null ? 0 : installedFacebook.getVersionCode(), APTOIDE_FACEBOOK_LINK)));
 	}
 
 	private void openSocialLink(String packageName, String socialUrl, String pageTitle, Uri uriToOpenApp) {
-		Installed installedFacebook = Database.InstalledQ.get(packageName, realm);
+		Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
 		if (installedFacebook == null) {
 			((FragmentShower) getActivity()).pushFragmentV4(SocialFragment.newInstance(socialUrl, pageTitle));
 		} else {
@@ -227,7 +227,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 			}
 		}
 
-		Database.UpdatesQ.getAll(realm, false).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(updates -> {
+		DeprecatedDatabase.UpdatesQ.getAll(realm, false).asObservable().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(updates -> {
 			refreshUpdatesBadge(updates.size());
 		});
 

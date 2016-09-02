@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -109,8 +109,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
 			}
 
 			// restore updates and remove them from excluded
-			@Cleanup
-			Realm realm = Database.get();
+			@Cleanup Realm realm = DeprecatedDatabase.get();
 			realm.beginTransaction();
 			for (Update e : excludedUpdatesToRestore) {
 				e.setExcluded(false);
@@ -143,7 +142,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchExcludedUpdates() {
-		subscription = Database.UpdatesQ.getAll(realm, true)
+		subscription = DeprecatedDatabase.UpdatesQ.getAll(realm, true)
 				.asObservable()
 				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.observeOn(AndroidSchedulers.mainThread())

@@ -25,7 +25,7 @@ import java.util.List;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.NewDatabase;
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -61,7 +61,7 @@ public abstract class V8Engine extends DataProvider {
 	public static void loadStores() {
 
 		AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
-			@Cleanup Realm realm = Database.get();
+			@Cleanup Realm realm = DeprecatedDatabase.get();
 			for (Subscription subscription : subscriptions) {
 				Store store = new Store();
 
@@ -89,7 +89,7 @@ public abstract class V8Engine extends DataProvider {
 	}
 
 	private static void clearStores() {
-		@Cleanup Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		realm.beginTransaction();
 		realm.delete(Store.class);
 		realm.commitTransaction();
@@ -112,7 +112,7 @@ public abstract class V8Engine extends DataProvider {
 		//
 		super.onCreate();
 
-		Database.initialize(this);
+		DeprecatedDatabase.initialize(this);
 		NewDatabase.initialize(this);
 
 		generateAptoideUUID().subscribe();
@@ -203,8 +203,8 @@ public abstract class V8Engine extends DataProvider {
 
 	private Observable<?> loadInstalledApps() {
 		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = Database.get();
-			Database.dropTable(Installed.class, realm);
+			@Cleanup Realm realm = DeprecatedDatabase.get();
+			DeprecatedDatabase.dropTable(Installed.class, realm);
 			// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
 			List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
@@ -215,7 +215,7 @@ public abstract class V8Engine extends DataProvider {
 
 			for (PackageInfo packageInfo : installedApps) {
 				Installed installed = new Installed(packageInfo, getPackageManager());
-				Database.save(installed, realm);
+				DeprecatedDatabase.save(installed, realm);
 			}
 			return null;
 		}).subscribeOn(Schedulers.io());

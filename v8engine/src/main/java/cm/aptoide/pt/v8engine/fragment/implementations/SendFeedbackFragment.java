@@ -24,7 +24,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import java.util.ArrayList;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -92,7 +92,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
 			String versionName = "";
 
-			Installed installed = Database.InstalledQ.get(getContext().getPackageName(), realm);
+			Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
 			if (installed != null) {
 				versionName = installed.getVersionName();
 			}

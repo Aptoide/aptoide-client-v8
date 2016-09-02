@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -231,9 +231,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		inflater.inflate(R.menu.menu_install, menu);
 		installMenuItem = menu.findItem(R.id.menu_install);
 
-		@Cleanup
-		Realm realm = Database.get();
-		Installed installed = Database.InstalledQ.get(packageName, realm);
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
 
 		//check if the app is installed
 		if (installed != null) {

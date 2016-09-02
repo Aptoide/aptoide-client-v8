@@ -14,7 +14,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import java.io.IOException;
 import java.util.Date;
 
-import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -46,11 +46,11 @@ public class DataproviderUtils {
 
 	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
 		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
-			@Cleanup Realm realm = Database.get();
+			@Cleanup Realm realm = DeprecatedDatabase.get();
 			for (App app : listAppsUpdates.getList()) {
-				Update update = Database.UpdatesQ.get(app.getPackageName(), realm);
+				Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);
 				if (update == null || !update.isExcluded()) {
-					Database.save(new Update(app), realm);
+					DeprecatedDatabase.save(new Update(app), realm);
 				}
 			}
 
