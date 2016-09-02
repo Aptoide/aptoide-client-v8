@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundExcepti
 import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 8/12/16.
@@ -38,20 +39,18 @@ public class PaymentManager {
 					if (throwable instanceof RepositoryItemNotFoundException) {
 						return RxPayment.process(payment)
 								.flatMap(paymentConfirmation -> paymentRepository.savePaymentConfirmation(paymentConfirmation)
-								.observeOn(AndroidSchedulers.mainThread())
 								.flatMap(saved -> getPurchase((AptoideProduct) payment.getProduct())));
 					}
 					return Observable.error(throwable);
-				});
+				}).subscribeOn(Schedulers.computation());
 	}
 
 	public Observable<Purchase> getPurchase(AptoideProduct product) {
 		// Payment confirmation is stored locally. The user may clean local data and attempt to purchase a product again. We should always check if
 		// a purchase exists in server even if its payment confirmation is not stored locally.
 		return paymentRepository.getPaymentConfirmation(product)
-				.flatMap(paymentConfirmation -> paymentRepository.getPurchase(product)
-						.observeOn(AndroidSchedulers.mainThread())
-						.doOnNext(purchase -> paymentRepository.deletePaymentConfirmation(product)))
+				.flatMap(paymentConfirmation -> paymentRepository.getPurchase(product))
+				.doOnNext(purchase -> paymentRepository.deletePaymentConfirmation(product))
 				.onErrorResumeNext(throwable -> {
 					if (throwable instanceof RepositoryItemNotFoundException) {
 						return paymentRepository.getPurchase(product);

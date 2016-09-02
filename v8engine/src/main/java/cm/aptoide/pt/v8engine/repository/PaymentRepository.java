@@ -6,10 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
-
-import java.util.List;
-
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.PaymentAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
@@ -25,10 +22,10 @@ import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import io.realm.Realm;
+import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 8/18/16.
@@ -42,6 +39,7 @@ public class PaymentRepository {
 	private final ProductFactory productFactory;
 	private final PurchaseFactory purchaseFactory;
 	private final PaymentFactory paymentFactory;
+	private final PaymentAccessor paymentDatabase;
 
 	public Observable<Purchase> getPurchase(AptoideProduct product) {
 		return Observable.just(product instanceof InAppBillingProduct).flatMap(iab -> {
@@ -59,7 +57,7 @@ public class PaymentRepository {
 							return Observable.error(new RepositoryItemNotFoundException("Purchase not found for product " + paidAppProduct.getId()));
 						});
 			}
-		});
+		}).subscribeOn(Schedulers.io());
 	}
 
 	public Observable<List<Payment>> getPayments(Context context, AptoideProduct product) {
@@ -76,7 +74,7 @@ public class PaymentRepository {
 						.map(paymentService -> paymentFactory.create(context, paymentService, product))
 						.toList();
 			}
-		});
+		}).subscribeOn(Schedulers.io());
 	}
 
 	public Observable<PaymentConfirmation> getPaymentConfirmation(AptoideProduct product) {
@@ -91,11 +89,12 @@ public class PaymentRepository {
 
 	public Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		return storePaymentConfirmation(paymentConfirmation)
-				.flatMap(processing -> verifyPaymentConfirmation(paymentConfirmation));
+				.flatMap(processing -> verifyPaymentConfirmation(paymentConfirmation))
+				.subscribeOn(Schedulers.io());
 	}
 
 	public Observable<Void> deletePaymentConfirmation(AptoideProduct product) {
-		return deleteStoredPaymentConfirmation(product.getId());
+		return deleteStoredPaymentConfirmation(product.getId()).subscribeOn(Schedulers.io());
 	}
 
 	private Observable<Void> verifyPaymentConfirmation(PaymentConfirmation paymentConfirmation) {
@@ -121,26 +120,22 @@ public class PaymentRepository {
 
 	private Observable<Void> storePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
 		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = DeprecatedDatabase.get();
-			DeprecatedDatabase.save(convertToStoredPaymentConfirmation(paymentConfirmation), realm);
+			paymentDatabase.save(convertToStoredPaymentConfirmation(paymentConfirmation));
 			return null;
 		});
 	}
 
 	private Observable<Void> deleteStoredPaymentConfirmation(int productId) {
 		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = DeprecatedDatabase.get();
-			DeprecatedDatabase.PaymentConfirmationQ.delete(productId, realm);
+			paymentDatabase.delete(productId);
 			return null;
 		});
 	}
 
 	private Observable<cm.aptoide.pt.database.realm.PaymentConfirmation> getStoredPaymentConfirmation(AptoideProduct product) {
-		return DeprecatedDatabase.PaymentConfirmationQ.get(product.getId(), DeprecatedDatabase.get()).<cm.aptoide.pt.database.realm.PaymentConfirmation>
-				asObservable()
-				.filter(paymentConfirmation -> paymentConfirmation.isLoaded())
+		return paymentDatabase.getPaymentConfirmation(product.getId())
 				.flatMap(paymentConfirmation -> {
-					if (paymentConfirmation != null && paymentConfirmation.isValid()) {
+					if (paymentConfirmation != null) {
 						return Observable.just(paymentConfirmation);
 					}
 					return Observable.error(new RepositoryItemNotFoundException("No payment confirmation found for product id: " + product.getId()));
