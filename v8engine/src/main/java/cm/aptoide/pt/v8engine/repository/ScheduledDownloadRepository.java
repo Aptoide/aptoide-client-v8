@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 30/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.repository;
@@ -35,5 +35,13 @@ public class ScheduledDownloadRepository {
 
 	public void deleteScheduledDownload(long appId) {
 		scheduledAccessor.delete(appId);
+	}
+
+	public Observable<List<Scheduled>> setInstalling(List<Scheduled> scheduledList) {
+		return scheduledAccessor.setInstalling(scheduledList);
+	}
+
+	public Observable<Scheduled> setInstalling(Scheduled scheduled) {
+		return scheduledAccessor.setInstalling(scheduled);
 	}
 }

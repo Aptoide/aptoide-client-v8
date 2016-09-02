@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/09/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.database;
@@ -38,6 +38,7 @@ public class NewDatabase {
 	//
 	// Static methods
 	//
+	private static Realm INSTANCE;
 
 	private static String extract(String str) {
 		return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
@@ -103,8 +104,6 @@ public class NewDatabase {
 		return Realm.getDefaultInstance();
 	}
 
-	private static Realm INSTANCE;
-
 	/**
 	 * this code is expected to run on only a single thread, so no synchronizing primitives were used
 	 *
@@ -167,6 +166,10 @@ public class NewDatabase {
 	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Integer value) {
 		return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
 				.flatMap(query -> findFirst(query));
+	}
+
+	public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Long value) {
+		return getRealm().map(realm -> realm.where(clazz).equalTo(key, value)).flatMap(query -> findFirst(query));
 	}
 
 	public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {

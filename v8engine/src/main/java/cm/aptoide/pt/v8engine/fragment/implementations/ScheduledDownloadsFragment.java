@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.trello.rxlifecycle.FragmentEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +23,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
@@ -39,7 +37,9 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 19/07/16.
@@ -50,7 +50,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
 	private TextView emptyData;
 	private ScheduledDownloadRepository scheduledDownloadRepository;
-	private List<Download> downloadList;
+
+	private CompositeSubscription compositeSubscription;
 
 	public ScheduledDownloadsFragment() {
 	}
@@ -71,12 +72,23 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	}
 
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Observable.empty().observeOn(RealmSchedulers.getScheduler()).concatWith(Observable.fromCallable(() -> {
+			if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
+				compositeSubscription.unsubscribe();
+			}
+			return null;
+		})).subscribe();
+	}
+
+	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		scheduledDownloadRepository = new ScheduledDownloadRepository();
+		compositeSubscription = new CompositeSubscription();
 		setHasOptionsMenu(true);
-		downloadList = new ArrayList<>();
 	}
 
 	@Override
@@ -90,9 +102,11 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	}
 
 	private void fetchScheduledDownloads() {
-		scheduledDownloadRepository.getAllScheduledDownloads()
+		Subscription subscription = scheduledDownloadRepository.getAllScheduledDownloads()
+				// .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)) // only way to unsubscribe successfully from realm without have thread issues
 				.observeOn(AndroidSchedulers.mainThread())
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+				// .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)) // we can't do this because the unbind will occur in the main thread and realm
+				// instance was created in another scheduler thread
 				.subscribe(scheduledDownloads -> {
 					updateUi(scheduledDownloads);
 				}, t -> {
@@ -102,6 +116,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 					clearDisplayables();
 					finishLoading();
 				});
+
+		compositeSubscription.add(subscription);
 	}
 
 	@UiThread
@@ -128,18 +144,6 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	}
 
 	@Override
-	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-		super.onViewStateRestored(savedInstanceState);
-		// TODO: 31/08/16 sithengineer
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		// TODO: 31/08/16 sithengineer
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
 
@@ -152,19 +156,26 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
 			DownloadFactory factory = new DownloadFactory();
 			BaseAdapter adapter = getAdapter();
-			downloadList.clear();
+			ArrayList<Scheduled> scheduledList = new ArrayList<>();
 			for (int i = 0 ; i < adapter.getItemCount() ; ++i) {
 				ScheduledDownloadDisplayable displayable = ((ScheduledDownloadDisplayable) adapter.getDisplayable(i));
 				if (displayable.isSelected()) {
-					downloadList.add(factory.create(displayable.getPojo()));
+					scheduledList.add(displayable.getPojo());
 					displayable.updateUi(true);
 				}
 			}
 
-			if (downloadList.size() > 0) {
-				downloadAndInstall(downloadList).compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(aVoid -> {
-					Logger.i(TAG, "finished installing scheduled downloads");
-				});
+			if (scheduledList.size() > 0) {
+				Subscription subscription = scheduledDownloadRepository.setInstalling(scheduledList)
+						.flatMapIterable(scheduleds -> scheduleds)
+						.map(scheduled -> factory.create(scheduled))
+						.toList()
+						.flatMap(downloads -> downloadAndInstall(downloads))
+						.subscribe(aVoid -> {
+							Logger.i(TAG, "finished installing scheduled downloads");
+						});
+
+				compositeSubscription.add(subscription);
 
 				ShowMessage.asSnack(this.emptyData, R.string.installing_msg);
 			} else {
@@ -227,8 +238,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	private Observable<Void> installAndRemoveFromList(InstallManager installManager, Context context, long appId) {
 		Logger.v(TAG, "installing app with id " + appId);
 		return installManager.install(context, (PermissionRequest) context, appId)
-				.doOnUnsubscribe(() -> Logger.d(TAG, "Scheduled Downloads do on unsubscribed called for install manager"))
-				//.concatWith(scheduledDownloadRepository.deleteScheduledDownload(appId)); // not working
-				.doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId));
+				.doOnError(err -> Logger.e(TAG, err))
+				.doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId))
+				.doOnUnsubscribe(() -> Logger.d(TAG, "Scheduled Downloads do on unsubscribed called for install manager"));
 	}
 }
