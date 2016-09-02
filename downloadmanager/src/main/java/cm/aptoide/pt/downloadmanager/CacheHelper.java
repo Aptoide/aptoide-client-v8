@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 02/09/2016.
+ */
+
 package cm.aptoide.pt.downloadmanager;
 
 import java.io.File;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;

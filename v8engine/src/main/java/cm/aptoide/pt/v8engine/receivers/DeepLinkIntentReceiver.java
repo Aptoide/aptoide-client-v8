@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 02/09/2016.
+ */
+
 package cm.aptoide.pt.v8engine.receivers;
 
 import android.app.ProgressDialog;
@@ -35,7 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;

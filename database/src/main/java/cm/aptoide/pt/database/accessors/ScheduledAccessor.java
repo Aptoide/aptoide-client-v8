@@ -7,7 +7,6 @@ package cm.aptoide.pt.database.accessors;
 
 import java.util.List;
 
-import cm.aptoide.pt.database.NewDatabase;
 import cm.aptoide.pt.database.realm.Scheduled;
 import io.realm.Realm;
 import io.realm.RealmResults;

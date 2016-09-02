@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
-package cm.aptoide.pt.database;
+package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
 import android.text.TextUtils;
 
+import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.realm.ExcludedAd;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;

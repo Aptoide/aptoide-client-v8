@@ -3,13 +3,14 @@
  * Modified by SithEngineer on 02/09/2016.
  */
 
-package cm.aptoide.pt.database;
+package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
 import android.text.TextUtils;
 
 import java.util.List;
 
+import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -25,12 +26,11 @@ import rx.Observable;
  *
  * This is the main class responsible to offer {@link Realm} database instances
  */
-public class NewDatabase {
+class NewDatabase {
 
 	private static final String TAG = NewDatabase.class.getSimpleName();
 	private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
 	private static final String DB_NAME = "aptoide.realm.db";
-	private static final AllClassesModule MODULE = new AllClassesModule();
 	private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
 	private static boolean isInitialized = false;
@@ -59,13 +59,13 @@ public class NewDatabase {
 		// Always use explicit modules in library projects
 		RealmConfiguration realmConfig;
 		if (BuildConfig.DEBUG) {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
 					// Must be bumped when the schema changes
 					.schemaVersion(BuildConfig.VERSION_CODE)
 					.deleteRealmIfMigrationNeeded()
 					.build();
 		} else {
-			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME).modules(MODULE)
+			realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
 					//.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer use DB encryption for a safer ride
 					// Must be bumped when the schema changes
 					.schemaVersion(BuildConfig.VERSION_CODE)
@@ -82,7 +82,14 @@ public class NewDatabase {
 		isInitialized = true;
 	}
 
-	public static void save(RealmObject realmObject) {
+	public static <E extends RealmObject> void save(E realmObject) {
+		@Cleanup Realm realm = Realm.getDefaultInstance();
+		realm.beginTransaction();
+		realm.insertOrUpdate(realmObject);
+		realm.commitTransaction();
+	}
+
+	public static <E extends RealmObject> void save(List<E> realmObject) {
 		@Cleanup Realm realm = Realm.getDefaultInstance();
 		realm.beginTransaction();
 		realm.insertOrUpdate(realmObject);
@@ -96,7 +103,7 @@ public class NewDatabase {
 		realm.commitTransaction();
 	}
 
-	private static Realm get() {
+	protected static Realm get() {
 		if (!isInitialized) {
 			throw new IllegalStateException("You need to call Database.initialize(Context) first");
 		}

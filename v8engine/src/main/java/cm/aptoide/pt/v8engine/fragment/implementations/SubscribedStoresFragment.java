@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 25/05/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -10,12 +10,11 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.LinkedList;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
@@ -56,12 +55,6 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 	}
 
 	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		addStoreButton = (Button) view.findViewById(R.id.add_more_stores);
-	}
-
-	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 
 		Observable<RealmResults<Store>> realmResultsObservable = Database.StoreQ.getAll(realm).asObservable();
@@ -85,5 +78,11 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 	@Override
 	public int getContentViewId() {
 		return R.layout.store_recycler_fragment;
+	}
+
+	@Override
+	public void bindViews(View view) {
+		super.bindViews(view);
+		addStoreButton = (Button) view.findViewById(R.id.add_more_stores);
 	}
 }

@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle.FragmentEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
@@ -39,7 +40,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sch
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 19/07/16.
@@ -51,7 +51,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 	private TextView emptyData;
 	private ScheduledDownloadRepository scheduledDownloadRepository;
 
-	private CompositeSubscription compositeSubscription;
+	//	private CompositeSubscription compositeSubscription;
 
 	public ScheduledDownloadsFragment() {
 	}
@@ -71,23 +71,23 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 		return R.layout.fragment_with_toolbar;
 	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		Observable.empty().observeOn(RealmSchedulers.getScheduler()).concatWith(Observable.fromCallable(() -> {
-			if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
-				compositeSubscription.unsubscribe();
-			}
-			return null;
-		})).subscribe();
-	}
+	//	@Override
+	//	public void onDestroyView() {
+	//		super.onDestroyView();
+	//		Observable.empty().observeOn(RealmSchedulers.getScheduler()).concatWith(Observable.fromCallable(() -> {
+	//			if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
+	//				compositeSubscription.unsubscribe();
+	//			}
+	//			return null;
+	//		})).subscribe();
+	//	}
 
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 		emptyData = (TextView) view.findViewById(R.id.empty_data);
 		scheduledDownloadRepository = new ScheduledDownloadRepository();
-		compositeSubscription = new CompositeSubscription();
+		//		compositeSubscription = new CompositeSubscription();
 		setHasOptionsMenu(true);
 	}
 
@@ -103,10 +103,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
 	private void fetchScheduledDownloads() {
 		Subscription subscription = scheduledDownloadRepository.getAllScheduledDownloads()
-				// .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)) // only way to unsubscribe successfully from realm without have thread issues
-				.observeOn(AndroidSchedulers.mainThread())
-				// .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)) // we can't do this because the unbind will occur in the main thread and realm
-				// instance was created in another scheduler thread
+				.observeOn(AndroidSchedulers.mainThread()).compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(scheduledDownloads -> {
 					updateUi(scheduledDownloads);
 				}, t -> {
@@ -117,7 +114,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 					finishLoading();
 				});
 
-		compositeSubscription.add(subscription);
+		//compositeSubscription.add(subscription);
 	}
 
 	@UiThread
@@ -170,12 +167,12 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 						.flatMapIterable(scheduleds -> scheduleds)
 						.map(scheduled -> factory.create(scheduled))
 						.toList()
-						.flatMap(downloads -> downloadAndInstall(downloads))
+						.flatMap(downloads -> downloadAndInstall(downloads)).compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 						.subscribe(aVoid -> {
 							Logger.i(TAG, "finished installing scheduled downloads");
 						});
 
-				compositeSubscription.add(subscription);
+				//				compositeSubscription.add(subscription);
 
 				ShowMessage.asSnack(this.emptyData, R.string.installing_msg);
 			} else {

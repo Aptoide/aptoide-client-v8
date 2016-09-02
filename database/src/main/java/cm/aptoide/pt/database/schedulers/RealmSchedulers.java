@@ -1,17 +1,15 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 31/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.schedulers;
 
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.text.TextUtils;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import cm.aptoide.pt.database.Database;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -30,6 +28,12 @@ public final class RealmSchedulers {
 	private final HandlerThread handlerThread;
 	private final Scheduler threadScheduler;
 
+	private RealmSchedulers() {
+		handlerThread = new HandlerThread(THREAD_NAME);
+		handlerThread.start();
+		threadScheduler = AndroidSchedulers.from(handlerThread.getLooper());
+	}
+
 	/**
 	 * Spin-Lock to create a single instance of {@link RealmSchedulers}
 	 */
@@ -44,12 +48,6 @@ public final class RealmSchedulers {
 				return current;
 			}
 		}
-	}
-
-	private RealmSchedulers() {
-		handlerThread = new HandlerThread(THREAD_NAME);
-		handlerThread.start();
-		threadScheduler = AndroidSchedulers.from(handlerThread.getLooper());
 	}
 
 	public static Scheduler getScheduler() {

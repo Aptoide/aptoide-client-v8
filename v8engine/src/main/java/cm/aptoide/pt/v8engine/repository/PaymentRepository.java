@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 18/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.repository;
@@ -8,9 +8,8 @@ package cm.aptoide.pt.v8engine.repository;
 import android.content.Context;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;

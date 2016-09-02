@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -20,7 +20,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.imageloader.CircleTransform;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;

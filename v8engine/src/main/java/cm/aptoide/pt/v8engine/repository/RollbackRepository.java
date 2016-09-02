@@ -1,22 +1,20 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 30/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.repository;
 
 import java.util.List;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import lombok.Cleanup;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 30/08/16.

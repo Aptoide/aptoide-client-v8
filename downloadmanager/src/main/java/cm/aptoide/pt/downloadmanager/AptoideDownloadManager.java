@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.downloadmanager;
@@ -15,7 +15,7 @@ import com.liulishuo.filedownloader.FileDownloader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;

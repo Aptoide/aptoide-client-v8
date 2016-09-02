@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -141,7 +141,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 	private String prettyTimestamp(long timestamp) {
 		return DATE_TIME_U.getTimeDiffString(getActivity(), timestamp);
 	}
-	
+
 	// FIXME: 21/07/2016 slow method. could this be improved ??
 	@UiThread
 	private void sortRollbacksAndAdd(RealmResults<Rollback> rollbacks) {
