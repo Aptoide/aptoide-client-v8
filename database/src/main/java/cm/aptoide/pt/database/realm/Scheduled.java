@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -24,6 +24,7 @@ public class Scheduled extends RealmObject {
 	public static final String PATH = "path";
 	public static final String MD5 = "md5";
 	public static final String VER_CODE = "verCode";
+	public static final String IS_DOWNLOADING = "isDownloading";
 
 
 	@PrimaryKey private long appId;
@@ -44,6 +45,9 @@ public class Scheduled extends RealmObject {
 	private String patchObbName;
 	private String patchObbPath;
 	private String patchObbMd5;
+
+	// Meta fields
+	private boolean isDownloading;
 
 	public Scheduled() { }
 
@@ -80,8 +84,7 @@ public class Scheduled extends RealmObject {
 				app.getId(), app.getName(), app.getFile().getVername(),
 				app.getIcon(), app.getFile().getPath(), app.getFile().getMd5sum(),
 				app.getFile().getVercode(), app.getPackageName(), app.getStore().getName(),
-				app.getFile().getPathAlt(),
-				mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5
+				app.getFile().getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false
 		);
 	}
 
@@ -141,20 +144,20 @@ public class Scheduled extends RealmObject {
 		this.verCode = verCode;
 	}
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
 	public String getPackageName() {
 		return packageName;
 	}
 
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
 	public String getStoreName() {
 		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 
 	public String getAlternativeApkPath() {
@@ -179,5 +182,13 @@ public class Scheduled extends RealmObject {
 		patchItem.setMd5sum(this.patchObbMd5);
 		obb.setPatch(patchItem);
 		return null;
+	}
+
+	public boolean isDownloading() {
+		return isDownloading;
+	}
+
+	public void setDownloading(boolean isDownloading) {
+		this.isDownloading = isDownloading;
 	}
 }

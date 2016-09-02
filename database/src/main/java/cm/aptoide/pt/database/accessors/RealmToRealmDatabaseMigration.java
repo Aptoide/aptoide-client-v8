@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
-package cm.aptoide.pt.database;
+package cm.aptoide.pt.database.accessors;
 
 import java.util.Locale;
 

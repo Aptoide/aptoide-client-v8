@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.downloadmanager;
@@ -17,7 +17,7 @@ import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
 
 import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.utils.FileUtils;
@@ -144,8 +144,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	private synchronized void saveDownloadInDb(Download download) {
 		Observable.fromCallable(() -> {
-			Realm realm = Database.get();
-			Database.save(download, realm);
+			Realm realm = DeprecatedDatabase.get();
+			DeprecatedDatabase.save(download, realm);
 			realm.close();
 			return null;
 		}).subscribeOn(Schedulers.io()).subscribe();
@@ -228,9 +228,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				if (!TextUtils.isEmpty(fileToDownload.getAltLink())) {
 					fileToDownload.setLink(fileToDownload.getAltLink());
 					fileToDownload.setAltLink(null);
-					@Cleanup
-					Realm realm = Database.get();
-					Database.save(download, realm);
+					@Cleanup Realm realm = DeprecatedDatabase.get();
+					DeprecatedDatabase.save(download, realm);
 					Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
 					intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 					intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());

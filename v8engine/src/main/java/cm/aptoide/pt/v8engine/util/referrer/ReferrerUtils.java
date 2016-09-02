@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.util.referrer;
@@ -20,17 +20,12 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-
-import java.net.URI;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -111,9 +106,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 						if (broadcastReferrer) {
 							broadcastReferrer(packageName, referrer);
 						} else {
-							@Cleanup
-							Realm realm = Database.get();
-							Database.save(new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(), minimalAd.getAdId()), realm);
+							@Cleanup Realm realm = DeprecatedDatabase.get();
+							DeprecatedDatabase.save(new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(), minimalAd.getAdId()), realm);
 						}
 
 						future.cancel(false);

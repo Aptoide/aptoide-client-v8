@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -88,13 +88,13 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 					.subscribe(eResponse->{
 						switch (eResponse) {
 							case YES:
-								@Cleanup Realm realm = Database.get();
+								@Cleanup Realm realm = DeprecatedDatabase.get();
 
 								if (AptoideAccountManager.isLoggedIn()) {
 									AptoideAccountManager.unsubscribeStore(store.getStoreName());
 								}
 
-								Database.StoreQ.delete(store.getStoreId(), realm);
+								DeprecatedDatabase.StoreQ.delete(store.getStoreId(), realm);
 
 								break;
 						}
@@ -102,7 +102,6 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 						Logger.e(TAG, e);
 						Crashlytics.logException(e);
 					});
-			;
 		});
 	}
 

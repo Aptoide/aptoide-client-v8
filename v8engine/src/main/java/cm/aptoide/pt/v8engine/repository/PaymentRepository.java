@@ -1,14 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 18/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
-
-import java.util.List;
-
 import cm.aptoide.pt.database.accessors.PaymentAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
@@ -25,9 +22,8 @@ import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import io.realm.Realm;
+import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
