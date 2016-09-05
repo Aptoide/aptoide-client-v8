@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
@@ -96,7 +98,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 		final PaymentManager paymentManager = new PaymentManager(new PaymentRepository(new AppRepository(operatorManager, productFactory),
 				new InAppBillingRepository(operatorManager, productFactory),
 				new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)), productFactory,
-				new PurchaseFactory(new InAppBillingSerializer()), new PaymentFactory()));
+				new PurchaseFactory(new InAppBillingSerializer()), new PaymentFactory(), AccessorFactory.getAccessorFor(PaymentConfirmation.class)));
 
 		attachPresenter(new PaymentPresenter(this, paymentManager, product), savedInstanceState);
 	}

@@ -23,6 +23,7 @@ import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 8/19/16.
@@ -86,7 +87,8 @@ public class PaymentPresenter implements Presenter {
 						"processed!")))
 				.doOnNext(loggedIn -> clearLoginState())
 				.doOnError(throwable -> clearLoginStateAndDismiss(throwable))
-				.onErrorReturn(throwable -> null);
+				.onErrorReturn(throwable -> null)
+				.subscribeOn(Schedulers.computation());
 	}
 
 	private Observable<Purchase> pay() {
@@ -104,7 +106,8 @@ public class PaymentPresenter implements Presenter {
 				})
 				.doOnError(throwable -> removeLoadingAndDismiss(throwable))
 				.doOnNext(purchase -> removeLoadingAndDismiss(purchase))
-				.onErrorReturn(throwable -> null);
+				.onErrorReturn(throwable -> null)
+				.subscribeOn(AndroidSchedulers.mainThread());
 	}
 
 	@NonNull
@@ -112,6 +115,7 @@ public class PaymentPresenter implements Presenter {
 		return view.paymentSelection()
 				.doOnNext(payment -> showLoadingAndSavePaymentState(payment))
 				.flatMap(payment -> paymentManager.pay(payment))
+				.observeOn(AndroidSchedulers.mainThread())
 				.doOnNext(purchase -> removeLoadingAndClearPaymentState())
 				.retryWhen(errors -> errors
 						.observeOn(AndroidSchedulers.mainThread())

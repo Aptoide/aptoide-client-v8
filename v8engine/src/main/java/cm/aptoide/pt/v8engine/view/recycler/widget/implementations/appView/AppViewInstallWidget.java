@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -23,17 +23,16 @@ import android.widget.TextView;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
@@ -131,10 +130,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		String packageName = currentApp.getPackageName();
 
-		@Cleanup
-		Realm realm = Database.get();
-		Installed installed = Database.InstalledQ.get(packageName, realm);
-		Update update = Database.UpdatesQ.get(packageName, realm);
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+		Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
 
 		//check if the app is installed or has an update
 		if (update != null) {
@@ -320,8 +318,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				setupDownloadControls(app, appDownload, displayable);
 
-				downloadServiceHelper.startDownload(permissionRequest, appDownload)
-						.subscribe(download -> manageDownload(download, displayable, app), err -> {
+				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> manageDownload(download, displayable, app), err -> {
 					Logger.e(TAG, err);
 				});
 

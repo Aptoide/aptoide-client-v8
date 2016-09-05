@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -86,7 +86,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 	private void fetchUpdates() {
 		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-			updatesSubscription = Database.UpdatesQ.getAll(realm, false)
+			updatesSubscription = DeprecatedDatabase.UpdatesQ.getAll(realm, false)
 					.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.observeOn(AndroidSchedulers.mainThread())
@@ -114,7 +114,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 	private void fetchInstalled() {
 		if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
-			RealmResults<Installed> realmResults = Database.InstalledQ.getAll(realm);
+			RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAll(realm);
 			installedSubscription = realmResults.asObservable()
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.subscribe(installeds -> {
@@ -125,7 +125,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
 						RealmResults<Installed> all = realmResults;
 						for (int i = all.size() - 1; i >= 0; i--) {
-							if (!Database.UpdatesQ.contains(all.get(i).getPackageName(), false, realm)) {
+							if (!DeprecatedDatabase.UpdatesQ.contains(all.get(i).getPackageName(), false, realm)) {
 								if (!all.get(i).isSystemApp()) {
 									installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
 								}

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -10,7 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -100,6 +100,6 @@ public class Updates extends BaseTable {
 	}
 
 	private boolean isExcluded(String packageName) {
-		return Database.get().where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).equalTo(Update.EXCLUDED, true).findFirst()!=null;
+		return DeprecatedDatabase.get().where(Update.class).equalTo(Update.PACKAGE_NAME, packageName).equalTo(Update.EXCLUDED, true).findFirst() != null;
 	}
 }

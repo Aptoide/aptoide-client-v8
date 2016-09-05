@@ -1,29 +1,20 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 
-import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePojo;
-import io.realm.Realm;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
-import rx.Observable;
 
 /**
  * created by SithEngineer

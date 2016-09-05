@@ -1,24 +1,23 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/09/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.accessors;
 
 import java.util.List;
 
-import cm.aptoide.pt.database.NewDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import rx.Observable;
 
 /**
  * Created by sithengineer on 01/09/16.
  */
-public class InstalledAccessor {
+public class InstalledAccessor implements Accessor {
 
-	private final NewDatabase database;
+	private final Database database;
 
-	public InstalledAccessor(NewDatabase db) {
+	protected InstalledAccessor(Database db) {
 		this.database = db;
 	}
 

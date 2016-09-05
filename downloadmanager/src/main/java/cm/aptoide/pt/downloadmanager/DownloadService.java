@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 02/09/2016.
+ */
+
 package cm.aptoide.pt.downloadmanager;
 
 import android.app.Notification;
@@ -8,6 +13,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+
+import java.util.Locale;
+
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
@@ -20,7 +20,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.imageloader.CircleTransform;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -71,11 +71,10 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 	@Override
 	public void bindView(GridStoreMetaDisplayable displayable) {
 
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		GetStoreMeta getStoreMeta = displayable.getPojo();
 		this.theme = StoreThemeEnum.get(getStoreMeta.getData().getAppearance().getTheme());
-		subscribedBool = Database.StoreQ.get(getStoreMeta.getData().getId(), realm) != null;
+		subscribedBool = DeprecatedDatabase.StoreQ.get(getStoreMeta.getData().getId(), realm) != null;
 
 		final Context context = itemView.getContext();
 		if (TextUtils.isEmpty(getStoreMeta.getData().getAvatar())) {
@@ -117,11 +116,11 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 				@Override
 				public void onClick(View v) {
 					subscribedBool = false;
-					@Cleanup Realm realm = Database.get();
+					@Cleanup Realm realm = DeprecatedDatabase.get();
 					if (AptoideAccountManager.isLoggedIn()) {
 						AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
 					}
-					Database.StoreQ.delete(getStoreMeta.getData().getId(), realm);
+					DeprecatedDatabase.StoreQ.delete(getStoreMeta.getData().getId(), realm);
 					ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message, getStoreMeta.getData().getName()));
 					handleSubscriptionLogic(getStoreMeta);
 				}
