@@ -65,7 +65,7 @@ public class DownloadServiceHelper {
 				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 			}, throwable -> {
 				if (throwable instanceof DownloadNotFoundException) {
-					final Realm realm = Database.get();
+					final Realm realm = DeprecatedDatabase.get();
 					DeprecatedDatabase.save(download, realm);
 					realm.close();
 					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);

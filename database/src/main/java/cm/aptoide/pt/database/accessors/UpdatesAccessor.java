@@ -1,6 +1,5 @@
 package cm.aptoide.pt.database.accessors;
 
-import cm.aptoide.pt.database.NewDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
@@ -10,11 +9,11 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 9/2/16.
  */
-public class UpdatesAccessor {
+public class UpdatesAccessor implements Accessor {
 
-  private final NewDatabase database;
+  private final Database database;
 
-  public UpdatesAccessor(NewDatabase db) {
+  public UpdatesAccessor(Database db) {
     this.database = db;
   }
 
@@ -23,7 +22,7 @@ public class UpdatesAccessor {
   }
 
   public Observable<List<Update>> getUpdates() {
-    return database.getRealm()
+    return Observable.fromCallable(() -> Database.get())
         .flatMap(realm -> realm.where(Update.class)
             .equalTo(Update.EXCLUDED, false)
             .findAll()
@@ -33,5 +32,4 @@ public class UpdatesAccessor {
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
   }
-
 }

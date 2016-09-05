@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdatesAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
@@ -55,7 +55,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setOnClickListener((view) -> {
       DownloadServiceHelper downloadManager =
           new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-      UpdatesAccessor updatesAccessor = new UpdatesAccessor(new NewDatabase());
+      UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
       updatesAccessor.getUpdates()
           .first()
           .observeOn(Schedulers.io())

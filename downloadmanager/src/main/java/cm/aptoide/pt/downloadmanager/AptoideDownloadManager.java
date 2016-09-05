@@ -8,7 +8,7 @@ package cm.aptoide.pt.downloadmanager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -90,15 +90,21 @@ public class AptoideDownloadManager {
 	 * message.
 	 */
 	public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-		if (getDownloadStatus(download.getAppId()) == Download.COMPLETED) {
-			return Observable.just(download);
-		}
-		Observable.fromCallable(() -> {
-			startNewDownload(download);
-			return null;
-		}).subscribeOn(Schedulers.computation()).subscribe(o -> {
-		}, Throwable::printStackTrace);
-		return getDownload(download.getAppId());
+		//if (getDownloadStatus(download.getAppId()) == Download.COMPLETED) {
+		//	return Observable.just(download);
+		//}
+		return getDownloadStatus(download.getAppId()).flatMap(status -> {
+			if (status == Download.COMPLETED) {
+				return Observable.just(download);
+			} else {
+				Observable.fromCallable(() -> {
+					startNewDownload(download);
+					return null;
+				}).subscribeOn(Schedulers.computation()).subscribe(o -> {
+				}, Throwable::printStackTrace);
+				return getDownload(download.getAppId());
+			}
+		});
 	}
 
 	private void startNewDownload(Download download) {
@@ -175,16 +181,20 @@ public class AptoideDownloadManager {
 				}, Throwable::printStackTrace);
 	}
 
-	private int getDownloadStatus(long appId) {
-		Download download = Database.DownloadQ.getDownloadPojo(appId);
-		if (download != null) {
-			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-				return getStateIfFileExists(download);
+	private Observable<Integer> getDownloadStatus(long appId) {
+		//Download download = DeprecatedDatabase.DownloadQ.getDownloadPojo(appId);
+		//getDownload(appId).subscribe(download1 -> );
+
+		return getDownload(appId).map(download -> {
+			if (download != null) {
+				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+					return getStateIfFileExists(download);
+				}
+				return download.getOverallDownloadStatus();
+			} else {
+				return Download.NOT_DOWNLOADED;
 			}
-			return download.getOverallDownloadStatus();
-		} else {
-			return Download.NOT_DOWNLOADED;
-		}
+		});
 	}
 
 	public void init(Context context,
@@ -249,7 +259,7 @@ public class AptoideDownloadManager {
 	}
 
 	public Download getNextDownload() {
-			@Cleanup Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 			RealmResults<Download> sortedDownloads = realm.where(Download.class)
 					.equalTo("overallDownloadStatus", Download.IN_QUEUE)
 					.findAllSorted("timeStamp", Sort.ASCENDING);
@@ -289,9 +299,5 @@ public class AptoideDownloadManager {
 				FileUtils.removeFile(DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName() + ".temp");
 			}
 		}
-	}
-
-	public Download getDownloadPojo(long appId) {
-		return Database.DownloadQ.getDownloadPojo(appId);
 	}
 }
