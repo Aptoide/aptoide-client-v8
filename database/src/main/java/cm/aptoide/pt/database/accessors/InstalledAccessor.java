@@ -13,11 +13,11 @@ import rx.Observable;
 /**
  * Created by sithengineer on 01/09/16.
  */
-public class InstalledAccessor {
+public class InstalledAccessor implements Accessor {
 
 	private final Database database;
 
-	public InstalledAccessor(Database db) {
+	protected InstalledAccessor(Database db) {
 		this.database = db;
 	}
 

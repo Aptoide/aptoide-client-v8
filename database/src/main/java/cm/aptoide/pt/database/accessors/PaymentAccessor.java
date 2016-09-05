@@ -5,19 +5,17 @@
 
 package cm.aptoide.pt.database.accessors;
 
-import cm.aptoide.pt.database.NewDatabase;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 9/1/16.
  */
-public class PaymentAccessor {
+public class PaymentAccessor implements Accessor {
 
-	private final NewDatabase database;
+	private final Database database;
 
-	public PaymentAccessor(NewDatabase database) {
+	protected PaymentAccessor(Database database) {
 		this.database = database;
 	}
 
