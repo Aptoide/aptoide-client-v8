@@ -143,14 +143,6 @@
         android:id="@+id/errorLayout"
         android:visibility="gone">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/errorImage"
-            android:src="@drawable/ic_cable"
-            android:visibility="gone" />
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
