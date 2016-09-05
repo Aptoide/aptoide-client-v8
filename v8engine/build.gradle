@@ -184,4 +184,9 @@ dependencies {
 
     // Flurry Android sdk
     compile "com.flurry.android:analytics:${FLURRY_VERSION}"
+
+    // Remote install
+    compile 'org.slf4j:slf4j-simple:1.7.21'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'org.jmdns:jmdns:3.5.1'
 }

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:background="@drawable/rounded_corners_bg">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/remote_install_title"
+            android:id="@+id/descriptionText"
+            android:textSize="15.3sp"
+            android:layout_marginStart="8sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="17dp"
+            android:textIsSelectable="false"
+            android:layout_alignParentLeft="true"
+            android:textColor="#ff6600"
+            android:paddingLeft="7dp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:id="@+id/progressBar"
+            android:layout_marginRight="16dp"
+            android:indeterminate="true"
+            android:visibility="visible"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentRight="true" />
+
+        <ImageButton
+            android:id="@+id/refreshButton"
+            android:src="@drawable/img_refresh"
+            android:layout_marginRight="16.5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/remote_install_retry"
+            android:visibility="visible"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.3dp"
+        android:background="#000000"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:alpha="0.15" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listLayout">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:id="@+id/listView"
+            android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.23"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/emptyListLayout"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/emptyText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/remote_install_empty_list"
+                android:gravity="center"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="25dp"
+                android:visibility="visible"
+                android:layout_marginTop="25dp"
+                android:textSize="16.8sp"
+                android:textColor="#999999" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tipLayout"
+                android:visibility="visible">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.3dp"
+                    android:background="#000000"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:alpha="0.15" />
+
+                <TextView
+                    android:id="@+id/tipText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remote_install_tip"
+                    android:gravity="center"
+                    android:layout_marginLeft="26dp"
+                    android:layout_marginRight="26dp"
+                    android:visibility="visible"
+                    android:layout_marginTop="12dp"
+                    android:textSize="12.7sp"
+                    android:textColor="#999999"
+                    android:layout_marginBottom="16.7dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/errorLayout"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/errorImage"
+            android:src="@drawable/ic_cable"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="17dp"
+            android:layout_marginBottom="17dp"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/no_connection_text"
+                style="?android:textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/remote_install_nowifi"
+                android:layout_marginRight="50.7dp"
+                android:visibility="visible"
+                android:textColor="#999999"
+                android:textSize="14.1sp" />
+
+            <Button
+                android:id="@+id/help_btn"
+                android:layout_width="53.7dp"
+                android:layout_height="25.7dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/rounded_corners_primary3"
+                android:text="@string/remote_install_help"
+                android:textColor="@color/white"
+                android:textSize="12.5sp"
+                android:ellipsize="none" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
+            android:background="#000000"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:alpha="0.15" />
+
+        <TextView
+            android:id="@+id/aptoidetv_installed_text"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:autoLink="web"
+            android:textColor="#999999"
+            android:visibility="visible"
+            android:text="@string/remote_install_notinstallated"
+            android:textSize="12.7sp"
+            android:layout_marginBottom="16.2dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

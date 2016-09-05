@@ -57,6 +57,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
+import cm.aptoide.pt.v8engine.dialog.RemoteInstallDialog;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
@@ -333,6 +334,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		} else if (i == R.id.menu_uninstall && unInstallAction != null) {
 			unInstallAction.call();
 			return true;
+		} else if (i == R.id.menu_remote_install){
+			android.support.v4.app.DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+			newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
 		}
 
 		return super.onOptionsItemSelected(item);
