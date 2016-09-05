@@ -14,14 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -30,10 +26,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import io.realm.Realm;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 import lombok.Cleanup;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -50,11 +47,10 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	private TextView updateVernameTextView;
 	private TextView textUpdateLayout;
 	private ViewGroup updateButtonLayout;
-	private Subscription subscription;
 	private UpdateDisplayable displayable;
 	private LinearLayout updateLayout;
 	private ProgressBar progressBar;
-	private Subscription showSpinnerSubscription;
+	private CompositeSubscription subscriptions;
 
 	public UpdateWidget(View itemView) {
 		super(itemView);
@@ -85,13 +81,10 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		installedVernameTextView.setText(installed.getVersionName());
 		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
-		displayable.getDownloadManager()
-				.getDownload(displayable.getAppId())
-				.first()
-				.map(this::shouldDisplayProgress)
-				.subscribe(this::showProgress, noDownloadFound -> Logger.d(TAG, "not updating yet"));
-		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance(updateDisplayable.getAppId()
-		)));
+
+		updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
+				AppViewFragment.newInstance(updateDisplayable.getAppId())));
+
 		updateRowRelativeLayout.setOnLongClickListener(v -> {
 			AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());
 			builder.setTitle(R.string.ignore_update)
@@ -114,39 +107,47 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	@Override
 	public void onViewAttached() {
-		if (subscription == null || subscription.isUnsubscribed()) {
-			subscription = RxView.clicks(updateButtonLayout).flatMap(click -> {
-				displayable.downloadAndInstall(getContext()).subscribe();
-				return null;
-			}).retry().subscribe();
+
+		if (subscriptions == null || subscriptions.isUnsubscribed()) {
+			subscriptions = new CompositeSubscription();
 		}
-		if (showSpinnerSubscription == null || showSpinnerSubscription.isUnsubscribed()) {
-			DownloadServiceHelper downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-			showSpinnerSubscription = downloadManager.getAllDownloads()
-					.sample(1, TimeUnit.SECONDS)
-					.flatMapIterable(downloads -> downloads)
-					.filter(download -> download.getAppId() == displayable.getAppId())
-					.map(this::shouldDisplayProgress)
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(this::showProgress, Throwable::printStackTrace);
+
+		subscriptions.add(RxView.clicks(updateButtonLayout).flatMap(click -> {
+			displayable.downloadAndInstall(getContext()).subscribe();
+			return null;
+		}).retry().subscribe());
+
+		subscriptions.add(displayable.getDownloadManager()
+				.getAllDownloads()
+				.observeOn(Schedulers.io())
+				.map(downloads -> getDownloadFromList(downloads, displayable.getAppId()))
+				.map(download -> shouldDisplayProgress(download))
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(shouldShow -> showProgress(shouldShow),
+						throwable -> throwable.printStackTrace()));
+	}
+
+	private Download getDownloadFromList(List<Download> downloads, long appId) {
+		for (int i = 0; i < downloads.size(); i++) {
+			Download download = downloads.get(i);
+			if (download.getAppId() == appId) {
+				return download;
+			}
 		}
+		return null;
 	}
 
 	@Override
 	public void onViewDetached() {
-		if (subscription != null) {
-			subscription.unsubscribe();
-			subscription = null;
-		}
-		if (showSpinnerSubscription != null && !showSpinnerSubscription.isUnsubscribed()) {
-			showSpinnerSubscription.unsubscribe();
-			showSpinnerSubscription = null;
+		if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+			subscriptions.unsubscribe();
 		}
 	}
 
 	private boolean shouldDisplayProgress(Download download) {
-		return download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.IN_QUEUE ||
-				download.getOverallDownloadStatus() == Download.PENDING;
+		return download != null && (download.getOverallDownloadStatus() == Download.PROGRESS
+				|| download.getOverallDownloadStatus() == Download.IN_QUEUE
+				|| download.getOverallDownloadStatus() == Download.PENDING);
 	}
 
 	@UiThread

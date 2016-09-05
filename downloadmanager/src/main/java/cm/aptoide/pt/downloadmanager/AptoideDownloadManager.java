@@ -8,7 +8,6 @@ package cm.aptoide.pt.downloadmanager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import cm.aptoide.pt.database.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
@@ -35,10 +34,13 @@ import rx.schedulers.Schedulers;
 public class AptoideDownloadManager {
 
 	public static final String APP_ID_EXTRA = "APTOIDE_APPID_EXTRA";
-	public static final String DOWNLOADMANAGER_ACTION_PAUSE = "cm.aptoide.downloadmanager.action.pause";
+	public static final String DOWNLOADMANAGER_ACTION_PAUSE =
+			"cm.aptoide.downloadmanager.action.pause";
 	public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
-	public static final String DOWNLOADMANAGER_ACTION_START_DOWNLOAD = "cm.aptoide.downloadmanager.action.start.download";
-	public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION = "cm.aptoide.downloadmanager.action.notification";
+	public static final String DOWNLOADMANAGER_ACTION_START_DOWNLOAD =
+			"cm.aptoide.downloadmanager.action.start.download";
+	public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION =
+			"cm.aptoide.downloadmanager.action.notification";
 	static public final int PROGRESS_MAX_VALUE = 100;
 	private static final String TAG = AptoideDownloadManager.class.getSimpleName();
 	/***********
@@ -52,7 +54,8 @@ public class AptoideDownloadManager {
 	private static Context context;
 	private boolean isDownloading = false;
 	private boolean isPausing = false;
-	@Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface downloadNotificationActionsInterface;
+	@Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface
+			downloadNotificationActionsInterface;
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
 	private DownloadAccessor downloadAccessor;
 
@@ -80,11 +83,11 @@ public class AptoideDownloadManager {
 
 	/**
 	 * @param download info about the download to be made.
-	 *
-	 * @return Observable to be subscribed if download updates needed or null if download is done already
-	 *
-	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this exception will be thrown with the cause in the detail
-	 *                                  message.
+	 * @return Observable to be subscribed if download updates needed or null if download is done
+	 * already
+	 * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this
+	 * exception will be thrown with the cause in the detail
+	 * message.
 	 */
 	public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
 		if (getDownloadStatus(download.getAppId()) == Download.COMPLETED) {
@@ -126,16 +129,15 @@ public class AptoideDownloadManager {
 	}
 
 	/**
-	 * Observe changes to a download. This observable never completes it will emmit items whenever the download state changes.
-	 *
-	 * @param appId
+	 * Observe changes to a download. This observable never completes it will emmit items whenever the
+	 * download state changes.
 	 *
 	 * @return observable for download state changes.
 	 */
 	public Observable<Download> getDownload(long appId) {
 		return downloadAccessor.get(appId).flatMap(download -> {
-			if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download
-					.FILE_MISSING)) {
+			if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED
+					&& getInstance().getStateIfFileExists(download) == Download.FILE_MISSING)) {
 				return Observable.error(new DownloadNotFoundException());
 			} else {
 				return Observable.just(download);
@@ -144,7 +146,8 @@ public class AptoideDownloadManager {
 	}
 
 	public Observable<Download> getCurrentDownload() {
-		return getDownloads().flatMapIterable(downloads -> downloads).filter(downloads -> downloads.getOverallDownloadStatus() == Download.PROGRESS);
+		return getDownloads().flatMapIterable(downloads -> downloads)
+				.filter(downloads -> downloads.getOverallDownloadStatus() == Download.PROGRESS);
 	}
 
 	public Observable<List<Download>> getCurrentDownloads() {
@@ -162,15 +165,13 @@ public class AptoideDownloadManager {
 		FileDownloader.getImpl().pauseAll();
 		isPausing = true;
 
-		downloadAccessor.getRunningDownloads()
-				.first()
-				.doOnUnsubscribe(() -> isDownloading = false)
+		downloadAccessor.getRunningDownloads().first().doOnUnsubscribe(() -> isPausing = false)
 				.subscribe(downloads -> {
 					for (int i = 0; i < downloads.size(); i++) {
 						downloads.get(i).setOverallDownloadStatus(Download.PAUSED);
 					}
 					downloadAccessor.save(downloads);
-					Log.d(TAG, "Downloads paused");
+					Logger.d(TAG, "Downloads paused");
 				}, Throwable::printStackTrace);
 	}
 
@@ -186,8 +187,9 @@ public class AptoideDownloadManager {
 		}
 	}
 
-	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface,
-	                 DownloadAccessor downloadAccessor) {
+	public void init(Context context,
+			DownloadNotificationActionsInterface downloadNotificationActionsInterface,
+			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor) {
 
 		FileDownloader.init(context);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
@@ -266,9 +268,9 @@ public class AptoideDownloadManager {
 		}).subscribe(aVoid -> {
 		}, throwable -> {
 			if (throwable instanceof DownloadNotFoundException) {
-				Log.d(TAG, "Download not found, are you pressing on remove button too fast?");
+				Logger.d(TAG, "Download not found, are you pressing on remove button too fast?");
 			} else if (throwable instanceof NullPointerException) {
-				Log.d(TAG, "Download item was null, are you pressing on remove button too fast?");
+				Logger.d(TAG, "Download item was null, are you pressing on remove button too fast?");
 			} else {
 				throwable.printStackTrace();
 			}

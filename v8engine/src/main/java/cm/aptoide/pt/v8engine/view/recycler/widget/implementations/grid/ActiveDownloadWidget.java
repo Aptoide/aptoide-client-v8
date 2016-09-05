@@ -49,21 +49,22 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	@Override
 	public void bindView(ActiveDownloadDisplayable displayable) {
 		this.displayable = displayable;
+		displayable.setOnPauseAction(() -> onViewDetached());
+		displayable.setOnResumeAction(() -> onViewAttached());
+	}
+
+	@Override public void onViewAttached() {
 		if (subscriptions == null || subscriptions.isUnsubscribed()) {
 			subscriptions = new CompositeSubscription();
 		}
+		subscriptions.add(
+				RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
 		subscriptions.add(displayable.getDownload()
 				.observeOn(Schedulers.computation())
 				.distinctUntilChanged()
 				.map(download -> download)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(this::updateUi));
-		subscriptions.add(RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
-	}
-
-	@Override
-	public void onViewAttached() {
-		subscriptions.add(RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
 	}
 
 	@Override

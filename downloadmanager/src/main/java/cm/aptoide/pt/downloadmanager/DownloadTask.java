@@ -122,9 +122,11 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				if (TextUtils.isEmpty(fileToDownload.getLink())) {
 					throw new IllegalArgumentException("A link to download must be provided");
 				}
-				BaseDownloadTask baseDownloadTask = FileDownloader.getImpl().create(fileToDownload.getLink());
+				BaseDownloadTask baseDownloadTask =
+						FileDownloader.getImpl().create(fileToDownload.getLink());
 				baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
-				fileToDownload.setDownloadId(baseDownloadTask.setListener(this).setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
+				fileToDownload.setDownloadId(baseDownloadTask.setListener(this)
+						.setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
 						.setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
 						.ready());
 				fileToDownload.setAppId(appId);
@@ -222,11 +224,6 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	@Override
 	protected void error(BaseDownloadTask task, Throwable e) {
-		if (!(e instanceof FileDownloadHttpException
-				&& ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR)) {
-			Logger.d(TAG, "Error on download: " + download.getAppId());
-			e.printStackTrace();
-		}
 		if (e instanceof FileDownloadHttpException
 				&& ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
 			Logger.d(TAG, "File not found on link: " + task.getUrl());
@@ -245,6 +242,9 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 					return;
 				}
 			}
+		} else {
+			Logger.d(TAG, "Error on download: " + download.getAppId());
+			e.printStackTrace();
 		}
 		setDownloadStatus(Download.ERROR, download, task);
 		AptoideDownloadManager.getInstance().currentDownloadFinished(download.getAppId());

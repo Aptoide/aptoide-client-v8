@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
@@ -29,9 +28,6 @@ import rx.subscriptions.CompositeSubscription;
 @Displayables({CompletedDownloadDisplayable.class})
 public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable> {
 
-	private TextView errorText;
-	private TextView progressText;
-	private ProgressBar downloadProgress;
 	private TextView appName;
 	private ImageView appIcon;
 	private TextView status;
@@ -63,6 +59,8 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 			ImageLoader.load(download.getIcon(), appIcon);
 		}
 		status.setText(download.getStatusName(itemView.getContext()));
+		displayable.setOnResumeAction(() -> onViewAttached());
+		displayable.setOnPauseAction(() -> onViewDetached());
 	}
 
 	@Override
@@ -92,7 +90,7 @@ public class CompletedDownloadWidget extends Widget<CompletedDownloadDisplayable
 					.sample(1, TimeUnit.SECONDS)
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(downloadStatus -> {
-						if (downloadStatus == Download.PAUSED) {
+						if (downloadStatus == Download.PAUSED || downloadStatus == Download.ERROR) {
 							resumeDownloadButton.setVisibility(View.VISIBLE);
 						} else {
 							resumeDownloadButton.setVisibility(View.GONE);

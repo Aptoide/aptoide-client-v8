@@ -7,10 +7,6 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-
-import java.util.List;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.Database;
@@ -18,8 +14,8 @@ import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
+import java.util.List;
 import rx.Observable;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -27,6 +23,7 @@ import rx.schedulers.Schedulers;
  */
 public class DownloadServiceHelper {
 
+	public static String TAG = DownloadServiceHelper.class.getSimpleName();
 	private final AptoideDownloadManager aptoideDownloadManager;
 	private PermissionManager permissionManager;
 
@@ -54,8 +51,6 @@ public class DownloadServiceHelper {
 		startDownloadService(appId, AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE);
 	}
 
-	public static String TAG = DownloadServiceHelper.class.getSimpleName();
-
 	/**
 	 * Starts a download. If there is a download running it is added to queue
 	 *
@@ -80,34 +75,6 @@ public class DownloadServiceHelper {
 			});
 			return download;
 		}).flatMap(aDownload -> getDownload(download.getAppId())));
-	}
-
-	public void startDownload(@NonNull PermissionRequest permissionRequest, @NonNull List<Download> downloads, Action1<Long> action) {
-
-		permissionManager.requestExternalStoragePermission(permissionRequest)
-				.concatMap(success -> Database.DownloadQ.getDownloads())
-				.first()
-				.subscribe(downloadsFromRealm -> {
-					for (int i = 0 ; i < downloads.size() ; i++) {
-						final Download download = getDownloadFromList(downloadsFromRealm, downloads.get(i));
-						if (download != null) {
-							Database.DownloadQ.save(download);
-							startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-							if (action != null) {
-								action.call(download.getAppId());
-							}
-						}
-					}
-				}, Throwable::printStackTrace);
-	}
-
-	private Download getDownloadFromList(List<Download> downloadsFromRealm, @NonNull Download download) {
-		for (int i = 0 ; i < downloadsFromRealm.size() ; i++) {
-			if (downloadsFromRealm.get(i).getAppId() == download.getAppId()) {
-				return downloadsFromRealm.get(i);
-			}
-		}
-		return download;
 	}
 
 	private void startDownloadService(long appId, String action) {

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -15,7 +14,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import lombok.Setter;
 import rx.Observable;
+import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/15/16.
@@ -24,6 +25,8 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 
 	private InstallManager installManager;
 	private DownloadServiceHelper downloadManager;
+	@Setter private Action0 onResumeAction;
+	@Setter private Action0 onPauseAction;
 
 	public CompletedDownloadDisplayable() {
 		super();
@@ -37,6 +40,20 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 
 	public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
 		super(pojo, fixedPerLineCount);
+	}
+
+	@Override public void onResume() {
+		super.onResume();
+		if (onResumeAction != null) {
+			onResumeAction.call();
+		}
+	}
+
+	@Override public void onPause() {
+		if (onPauseAction != null) {
+			onResumeAction.call();
+		}
+		super.onPause();
 	}
 
 	@Override

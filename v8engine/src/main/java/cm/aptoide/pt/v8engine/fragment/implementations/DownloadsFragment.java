@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.NewDatabase;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -31,7 +33,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-
 
 /**
  * Created by trinkes on 7/15/16.
@@ -68,12 +69,11 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 		super.load(refresh, savedInstanceState);
 		if (subscription == null || subscription.isUnsubscribed()) {
 			DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-			realm.where(Download.class)
-					.findAllAsync()
-					.asObservable()
-					.filter(downloads -> downloads.isLoaded() && downloads.isValid())
+			DownloadAccessor downloadAccessor = new DownloadAccessor(new NewDatabase());
+			downloadAccessor.getAll()
 					.first()
-					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads), Throwable::printStackTrace);
+					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads),
+							Throwable::printStackTrace);
 
 			subscription = downloadServiceHelper.getAllDownloads().sample(250, TimeUnit.MILLISECONDS)
 					.filter(downloads -> (shouldUpdateList(downloads, oldDownloadsList)))
@@ -106,7 +106,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 					download.getOverallDownloadStatus() == Download.PENDING) {
 				activeDisplayablesList.add(new ActiveDownloadDisplayable(download, downloadManager));
 			} else {
-				completedDisplayablesList.add(new CompletedDownloadDisplayable(download, installManager, downloadManager));
+				completedDisplayablesList.add(
+						new CompletedDownloadDisplayable(download, installManager, downloadManager));
 			}
 		}
 		if (completedDisplayablesList.size() > 0) {

@@ -51,7 +51,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       DownloadServiceHelper downloadManager =
           new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
       UpdatesAccessor updatesAccessor = new UpdatesAccessor(new NewDatabase());
-      updatesAccessor.getAll()
+      updatesAccessor.getUpdates()
           .first()
           .observeOn(Schedulers.io())
           .map(updates -> {
