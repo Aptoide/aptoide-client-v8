@@ -14,9 +14,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -158,8 +159,9 @@ public abstract class V8Engine extends DataProvider {
 
     setupCrashlytics();
 
-		AptoideDownloadManager.getInstance()
-				.init(this, new DownloadNotificationActionsActionsInterface(), new DownloadManagerSettingsI(), new DownloadAccessor(new NewDatabase()));
+    AptoideDownloadManager.getInstance()
+        .init(this, new DownloadNotificationActionsActionsInterface(),
+            new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class));
 
     // setupCurrentActivityListener();
 

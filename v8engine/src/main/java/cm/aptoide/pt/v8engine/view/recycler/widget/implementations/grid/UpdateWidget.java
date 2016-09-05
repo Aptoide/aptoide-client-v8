@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -74,7 +74,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	public void bindView(UpdateDisplayable updateDisplayable) {
 		this.displayable = updateDisplayable;
 		final String packageName = updateDisplayable.getPackageName();
-		Installed installed = Database.InstalledQ.get(packageName, displayable.getRealm());
+		Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, displayable.getRealm());
 		displayable.setPauseAction(this::onViewDetached);
 		displayable.setResumeAction(this::onViewAttached);
 		labelTextView.setText(updateDisplayable.getLabel());
@@ -92,8 +92,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 					.setNegativeButton(R.string.no, null)
 					.setPositiveButton(R.string.yes, (dialog, which) -> {
 						if (which == DialogInterface.BUTTON_POSITIVE) {
-							@Cleanup Realm realm1 = Database.get();
-							Database.UpdatesQ.setExcluded(packageName, true, realm1);
+							@Cleanup Realm realm1 = DeprecatedDatabase.get();
+							DeprecatedDatabase.UpdatesQ.setExcluded(packageName, true, realm1);
 							updateRowRelativeLayout.setVisibility(View.GONE);
 						}
 						dialog.dismiss();

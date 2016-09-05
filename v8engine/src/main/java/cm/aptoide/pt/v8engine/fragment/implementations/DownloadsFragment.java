@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.NewDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -69,7 +69,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 		super.load(refresh, savedInstanceState);
 		if (subscription == null || subscription.isUnsubscribed()) {
 			DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-			DownloadAccessor downloadAccessor = new DownloadAccessor(new NewDatabase());
+			DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
 			downloadAccessor.getAll()
 					.first()
 					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads),

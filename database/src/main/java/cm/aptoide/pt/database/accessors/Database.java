@@ -137,7 +137,7 @@ public final class Database {
         .map(something -> Database.getInternal());
   }
 
-  private <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
+  protected <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
     return Observable.just(results)
         .filter(data -> data.isLoaded())
         .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects));
