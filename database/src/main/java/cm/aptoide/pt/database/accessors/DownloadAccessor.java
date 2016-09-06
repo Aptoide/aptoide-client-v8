@@ -7,6 +7,7 @@ package cm.aptoide.pt.database.accessors;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import io.realm.Sort;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -48,8 +49,28 @@ public class DownloadAccessor implements Accessor {
 						.or()
 						.equalTo("overallDownloadStatus", Download.PENDING)
 						.or()
+						.equalTo("overallDownloadStatus", Download.IN_QUEUE).findAll().asObservable())
+				.unsubscribeOn(RealmSchedulers.getScheduler())
+				.flatMap((data) -> database.copyFromRealm(data))
+				.subscribeOn(RealmSchedulers.getScheduler())
+				.observeOn(Schedulers.io());
+	}
+
+	public Observable<List<Download>> getInQueueSortedDownloads() {
+		return Observable.fromCallable(() -> Database.get())
+				.flatMap(realm -> realm.where(Download.class)
 						.equalTo("overallDownloadStatus", Download.IN_QUEUE)
-						.findAll()
+						.findAllSorted("timeStamp", Sort.ASCENDING)
+						.asObservable())
+				.unsubscribeOn(RealmSchedulers.getScheduler())
+				.flatMap((data) -> database.copyFromRealm(data))
+				.subscribeOn(RealmSchedulers.getScheduler())
+				.observeOn(Schedulers.io());
+	}
+
+	public Observable<List<Download>> getAllSorted(Sort sort) {
+		return Observable.fromCallable(() -> Database.get())
+				.flatMap(realm -> realm.where(Download.class).findAllSorted("timeStamp", sort)
 						.asObservable())
 				.unsubscribeOn(RealmSchedulers.getScheduler())
 				.flatMap((data) -> database.copyFromRealm(data))

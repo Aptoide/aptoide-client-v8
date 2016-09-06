@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 7/15/16.
@@ -71,14 +72,16 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 			DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 			DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
 			downloadAccessor.getAll()
-					.first()
+					.observeOn(Schedulers.computation())
+					.first().map(downloads -> Download.sortDownloads(downloads, Download.DESCENDING))
+					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads),
 							Throwable::printStackTrace);
 
 			subscription = downloadServiceHelper.getAllDownloads().sample(250, TimeUnit.MILLISECONDS)
 					.filter(downloads -> (shouldUpdateList(downloads, oldDownloadsList)))
 					.map(downloads -> oldDownloadsList = downloads)
-					.map(Download::sortDownloads)
+					.map(downloads -> Download.sortDownloads(downloads, Download.DESCENDING))
 					.observeOn(AndroidSchedulers.mainThread())
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads));

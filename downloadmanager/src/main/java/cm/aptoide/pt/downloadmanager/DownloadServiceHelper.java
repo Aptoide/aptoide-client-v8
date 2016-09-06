@@ -9,11 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
-import io.realm.Realm;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -59,22 +59,29 @@ public class DownloadServiceHelper {
 	 *
 	 * @return An observable that reports the download state
 	 */
+	public Observable<Download> startDownload(DownloadAccessor downloadAccessor,
+			PermissionRequest permissionRequest, Download download) {
+		return permissionManager.requestExternalStoragePermission(permissionRequest)
+				.flatMap(success -> Observable.fromCallable(() -> {
+					getDownload(download.getAppId()).first().subscribe(storedDownload -> {
+						startDownloadService(download.getAppId(),
+								AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+					}, throwable -> {
+						if (throwable instanceof DownloadNotFoundException) {
+							downloadAccessor.save(download);
+							startDownloadService(download.getAppId(),
+									AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+						} else {
+							throwable.printStackTrace();
+						}
+					});
+					return download;
+				}).flatMap(aDownload -> getDownload(download.getAppId())));
+	}
+
 	public Observable<Download> startDownload(PermissionRequest permissionRequest, Download download) {
-		return permissionManager.requestExternalStoragePermission(permissionRequest).flatMap(success -> Observable.fromCallable(() -> {
-			getDownload(download.getAppId()).first().subscribe(storedDownload -> {
-				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-			}, throwable -> {
-				if (throwable instanceof DownloadNotFoundException) {
-					final Realm realm = DeprecatedDatabase.get();
-					DeprecatedDatabase.save(download, realm);
-					realm.close();
-					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-				} else {
-					throwable.printStackTrace();
-				}
-			});
-			return download;
-		}).flatMap(aDownload -> getDownload(download.getAppId())));
+		return startDownload(AccessorFactory.getAccessorFor(Download.class), permissionRequest,
+				download);
 	}
 
 	private void startDownloadService(long appId, String action) {
