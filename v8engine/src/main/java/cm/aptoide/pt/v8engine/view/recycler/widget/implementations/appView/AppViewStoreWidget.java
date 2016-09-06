@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -105,9 +105,8 @@ public class AppViewStoreWidget extends Widget<AppViewStoreDisplayable> {
 		followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
 		storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),store.getAppearance().getTheme()));
 
-		@Cleanup
-		Realm realm = Database.get();
-		boolean subscribed = Database.StoreQ.get(store.getId(), realm) != null;
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		boolean subscribed = DeprecatedDatabase.StoreQ.get(store.getId(), realm) != null;
 
 		if (subscribed) {
 			//int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();

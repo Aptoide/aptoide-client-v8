@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated;
@@ -12,7 +12,7 @@ import android.os.Build;
 
 import com.crashlytics.android.Crashlytics;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
@@ -65,7 +65,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 		}
 		Logger.w(TAG, "Migrating database started....");
 
-		Realm realm = Database.get();
+		Realm realm = DeprecatedDatabase.get();
 		realm.beginTransaction();
 		realm.deleteAll();
 		realm.commitTransaction();

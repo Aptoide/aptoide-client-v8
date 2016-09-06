@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
@@ -77,12 +77,12 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 	private static List<ApksData> getInstalledApksDataWithoutExcluded() {
 		LinkedList<ApksData> apksDatas = new LinkedList<>();
 
-		@Cleanup Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 
 		//RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
-		RealmResults<Installed> installeds = Database.InstalledQ.getAll(realm);
+		RealmResults<Installed> installeds = DeprecatedDatabase.InstalledQ.getAll(realm);
 		for (Installed installed : installeds) {
-			if (!Database.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
+			if (!DeprecatedDatabase.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
 				apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(), installed
 						.getSignature()));
 			}

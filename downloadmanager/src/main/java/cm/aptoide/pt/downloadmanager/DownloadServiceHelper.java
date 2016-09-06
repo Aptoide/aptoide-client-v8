@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.downloadmanager;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
 import io.realm.Realm;
@@ -65,9 +65,8 @@ public class DownloadServiceHelper {
 				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 			}, throwable -> {
 				if (throwable instanceof DownloadNotFoundException) {
-					@Cleanup
-					Realm realm = Database.get();
-					Database.save(download, realm);
+					@Cleanup Realm realm = DeprecatedDatabase.get();
+					DeprecatedDatabase.save(download, realm);
 					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 				}
 			});

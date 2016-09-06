@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import io.realm.Realm;
 import rx.functions.Action0;
@@ -57,7 +57,7 @@ public abstract class SupportV4BaseFragment extends RxFragment implements UiComp
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		realm = Database.get();
+		realm = DeprecatedDatabase.get();
 
 		return inflater.inflate(getContentViewId(), container, false);
 	}

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.downloadmanager;
@@ -15,7 +15,7 @@ import com.liulishuo.filedownloader.FileDownloader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
@@ -97,20 +97,19 @@ public class AptoideDownloadManager {
 	private void startNewDownload(Download download) {
 		download.setOverallDownloadStatus(Download.IN_QUEUE);
 		download.setOverallProgress(0);
-		@Cleanup
-		Realm realm = Database.get();
-		Database.save(download, realm);
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		DeprecatedDatabase.save(download, realm);
 
 		startNextDownload();
 	}
 
 	public void pauseDownload(long appId) {
-		@Cleanup Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		Download download = getStoredDownload(appId, realm);
 		if (download != null) {
 			if (download.getOverallDownloadStatus() != Download.PROGRESS) {
 				download.setOverallDownloadStatus(Download.PAUSED);
-				Database.save(download, realm);
+				DeprecatedDatabase.save(download, realm);
 			}
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
@@ -127,7 +126,7 @@ public class AptoideDownloadManager {
 	 */
 	@UiThread
 	public Observable<Download> getDownload(long appId) {
-		Realm realm = Database.get();
+		Realm realm = DeprecatedDatabase.get();
 		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
 		if (download == null ||
 				(download.getOverallDownloadStatus() == Download.COMPLETED && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING)) {
@@ -143,8 +142,7 @@ public class AptoideDownloadManager {
 	}
 
 	public Observable<List<Download>> getCurrentDownloads() {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		RealmResults<Download> download = realm.where(Download.class).findAll();
 		if (download.size() >= 0) {
 			return download.asObservable().map(results -> {
@@ -163,8 +161,7 @@ public class AptoideDownloadManager {
 	}
 
 	public Observable<List<Download>> getDownloads() {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		return realm.where(Download.class).findAll().asObservable().map(results -> {
 			List<Download> list = new ArrayList<>();
 			for (final Download result : results) {
@@ -181,11 +178,10 @@ public class AptoideDownloadManager {
 		FileDownloader.getImpl().pauseAll();
 
 		getCurrentDownloads().first().subscribe(downloads -> {
-			@Cleanup
-			Realm realm = Database.get();
+			@Cleanup Realm realm = DeprecatedDatabase.get();
 			for (final Download download : downloads) {
 				download.setOverallDownloadStatus(Download.PAUSED);
-				Database.save(download, realm);
+				DeprecatedDatabase.save(download, realm);
 			}
 		}, throwable -> {
 			Logger.d(TAG, "pauseAllDownloads: ");
@@ -194,7 +190,7 @@ public class AptoideDownloadManager {
 	}
 
 	private int getDownloadStatus(long appId) {
-		@Cleanup Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		Download download = getStoredDownload(appId, realm);
 		if (download != null) {
 			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
@@ -264,8 +260,7 @@ public class AptoideDownloadManager {
 	}
 
 	public Download getNextDownload() {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		RealmResults<Download> sortedDownloads = realm.where(Download.class)
 				.equalTo("overallDownloadStatus", Download.IN_QUEUE)
 				.findAllSorted("timeStamp", Sort.ASCENDING);
@@ -277,14 +272,13 @@ public class AptoideDownloadManager {
 	}
 
 	public void removeDownload(long appId) {
-		@Cleanup
-		Realm realm = Database.get();
+		@Cleanup Realm realm = DeprecatedDatabase.get();
 		Download download = realm.where(Download.class).equalTo("appId", appId).findFirst();
 		if (download != null) {
 			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
 				FileUtils.removeFile(fileToDownload.getFilePath());
 			}
-			Database.delete(download, realm);
+			DeprecatedDatabase.delete(download, realm);
 		}
 	}
 

@@ -1,10 +1,15 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 02/09/2016.
+ */
+
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import io.realm.Realm;
 import lombok.Cleanup;
@@ -42,7 +47,7 @@ public class NotificationEventReceiver extends BroadcastReceiver {
 					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
 						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
 						if (appid > 0) {
-							@Cleanup Realm realm = Database.get();
+							@Cleanup Realm realm = DeprecatedDatabase.get();
 							Download download = downloadManager.getStoredDownload(appid, realm);
 							if (download != null) {
 								downloadManager.startDownload(download.clone());
