@@ -8,7 +8,6 @@ package cm.aptoide.pt.downloadmanager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -18,12 +17,8 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import com.liulishuo.filedownloader.FileDownloader;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -43,6 +38,7 @@ public class AptoideDownloadManager {
 			"cm.aptoide.downloadmanager.action.notification";
 	static public final int PROGRESS_MAX_VALUE = 100;
 	private static final String TAG = AptoideDownloadManager.class.getSimpleName();
+	private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
 	/***********
 	 * Paths
 	 *****************/
@@ -58,6 +54,7 @@ public class AptoideDownloadManager {
 			downloadNotificationActionsInterface;
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
 	private DownloadAccessor downloadAccessor;
+	private CacheHelper cacheHelper;
 
 	public static Context getContext() {
 		return context;
@@ -90,9 +87,6 @@ public class AptoideDownloadManager {
 	 * message.
 	 */
 	public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-		//if (getDownloadStatus(download.getAppId()) == Download.COMPLETED) {
-		//	return Observable.just(download);
-		//}
 		return getDownloadStatus(download.getAppId()).flatMap(status -> {
 			if (status == Download.COMPLETED) {
 				return Observable.just(download);
@@ -110,6 +104,7 @@ public class AptoideDownloadManager {
 	private void startNewDownload(Download download) {
 		download.setOverallDownloadStatus(Download.IN_QUEUE);
 		download.setOverallProgress(0);
+		download.setTimeStamp(System.currentTimeMillis());
 		downloadAccessor.save(download);
 
 		startNextDownload();
@@ -182,9 +177,6 @@ public class AptoideDownloadManager {
 	}
 
 	private Observable<Integer> getDownloadStatus(long appId) {
-		//Download download = DeprecatedDatabase.DownloadQ.getDownloadPojo(appId);
-		//getDownload(appId).subscribe(download1 -> );
-
 		return getDownload(appId).map(download -> {
 			if (download != null) {
 				if (download.getOverallDownloadStatus() == Download.COMPLETED) {
@@ -199,11 +191,13 @@ public class AptoideDownloadManager {
 
 	public void init(Context context,
 			DownloadNotificationActionsInterface downloadNotificationActionsInterface,
-			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor) {
+			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
+			CacheHelper cacheHelper) {
 
 		FileDownloader.init(context);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
 		this.settingsInterface = settingsInterface;
+		this.cacheHelper = cacheHelper;
 
 		DOWNLOADS_STORAGE_PATH = settingsInterface.getDownloadDir();
 		APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
@@ -234,14 +228,16 @@ public class AptoideDownloadManager {
 
 	void startNextDownload() {
 		if (!isDownloading && !isPausing) {
-			Download nextDownload = getNextDownload();
-			if (nextDownload != null) {
-				isDownloading = true;
-				new DownloadTask(nextDownload).startDownload();
-				Logger.d(TAG, "Download with id " + nextDownload.getAppId() + " started");
-			} else {
-				CacheHelper.cleanCache(settingsInterface, DOWNLOADS_STORAGE_PATH);
-			}
+			getNextDownload().first().subscribe(download -> {
+				if (download != null) {
+					isDownloading = true;
+					new DownloadTask(downloadAccessor, download).startDownload();
+					Logger.d(TAG, "Download with id " + download.getAppId() + " started");
+				} else {
+					cacheHelper.cleanCache(downloadAccessor, DOWNLOADS_STORAGE_PATH,
+							settingsInterface.getMaxCacheSize() * VALUE_TO_CONVERT_MB_TO_BYTES);
+				}
+			}, throwable -> throwable.printStackTrace());
 		}
 	}
 
@@ -258,20 +254,25 @@ public class AptoideDownloadManager {
 		isDownloading = downloading;
 	}
 
-	public Download getNextDownload() {
-		@Cleanup Realm realm = DeprecatedDatabase.get();
-			RealmResults<Download> sortedDownloads = realm.where(Download.class)
-					.equalTo("overallDownloadStatus", Download.IN_QUEUE)
-					.findAllSorted("timeStamp", Sort.ASCENDING);
-			if (sortedDownloads.size() > 0) {
-				return realm.copyFromRealm(sortedDownloads.get(0));
-			} else {
+	public Observable<Download> getNextDownload() {
+		return downloadAccessor.getInQueueSortedDownloads().map(downloads -> {
+			if (downloads == null || downloads.size() <= 0) {
 				return null;
+			} else {
+				return downloads.get(0);
 			}
+		});
 	}
 
 	public void removeDownload(long appId) {
 		downloadAccessor.get(appId).map(download -> {
+			for (int i = 0; i < download.getFilesToDownload().size(); i++) {
+				final FileToDownload fileToDownload = download.getFilesToDownload().get(i);
+				FileDownloader.getImpl()
+						.clear(fileToDownload.getDownloadId(), fileToDownload.getFilePath());
+			}
+			return download;
+		}).first(download -> download.getOverallDownloadStatus() != Download.PROGRESS).map(download -> {
 			deleteDownloadFiles(download);
 			deleteDownloadFromDb(download.getAppId());
 			return download;

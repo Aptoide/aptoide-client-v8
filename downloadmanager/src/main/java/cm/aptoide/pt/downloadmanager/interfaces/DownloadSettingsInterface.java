@@ -17,6 +17,10 @@ public interface DownloadSettingsInterface {
 
 	String getButton1Text(Context context);
 
+	/**
+	 * gets the cache size that should be used
+	 * @return cache size in mb
+   */
 	long getMaxCacheSize();
 
 	@NonNull

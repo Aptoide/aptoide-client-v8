@@ -25,6 +25,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -161,7 +162,8 @@ public abstract class V8Engine extends DataProvider {
 
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(),
-            new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class));
+            new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class),
+            new CacheHelper());
 
     // setupCurrentActivityListener();
 

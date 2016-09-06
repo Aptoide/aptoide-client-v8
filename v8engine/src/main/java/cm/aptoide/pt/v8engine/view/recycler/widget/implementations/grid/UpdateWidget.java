@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -74,11 +76,14 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 	public void bindView(UpdateDisplayable updateDisplayable) {
 		this.displayable = updateDisplayable;
 		final String packageName = updateDisplayable.getPackageName();
-		Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, displayable.getRealm());
+		final InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
+		accessor.get(packageName)
+				.first()
+				.subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
+						throwable -> throwable.printStackTrace());
 		displayable.setPauseAction(this::onViewDetached);
 		displayable.setResumeAction(this::onViewAttached);
 		labelTextView.setText(updateDisplayable.getLabel());
-		installedVernameTextView.setText(installed.getVersionName());
 		updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
 		ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 

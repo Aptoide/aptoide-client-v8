@@ -17,18 +17,11 @@ import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
 
 import java.util.concurrent.TimeUnit;
 
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
-import com.liulishuo.filedownloader.BaseDownloadTask;
-import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
-import com.liulishuo.filedownloader.FileDownloader;
-import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
-import io.realm.Realm;
-import java.util.concurrent.TimeUnit;
-import lombok.Cleanup;
 import lombok.Setter;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
@@ -45,6 +38,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	private static final String TAG = DownloadTask.class.getSimpleName();
 	final Download download;
 	private final long appId;
+	private final DownloadAccessor downloadAccessor;
 	/**
 	 * this boolean is used to change between serial and parallel download (in this downloadTask) the default value is
 	 * true
@@ -52,9 +46,10 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 	@Setter boolean isSerial = true;
 	private ConnectableObservable<Download> observable;
 
-	public DownloadTask(Download download) {
+	public DownloadTask(DownloadAccessor downloadAccessor, Download download) {
 		this.download = download;
 		this.appId = download.getAppId();
+		this.downloadAccessor = downloadAccessor;
 
 		this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
 				.subscribeOn(Schedulers.io())
@@ -63,8 +58,8 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 				.filter(aLong1 -> download.getOverallDownloadStatus() == Download.PROGRESS || download.getOverallDownloadStatus() == Download.COMPLETED)
 				.map(aLong -> updateProgress())
 				.filter(updatedDownload -> {
-					if (updatedDownload.getOverallProgress() <= AptoideDownloadManager.PROGRESS_MAX_VALUE && download
-							.getOverallDownloadStatus() == Download.PROGRESS) {
+					if (updatedDownload.getOverallProgress() <= AptoideDownloadManager.PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() == Download
+							.PROGRESS) {
 						if (updatedDownload.getOverallProgress() == AptoideDownloadManager.PROGRESS_MAX_VALUE && download.getOverallDownloadStatus() !=
 								Download.COMPLETED) {
 							setDownloadStatus(Download.COMPLETED, download);
@@ -154,9 +149,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 
 	private synchronized void saveDownloadInDb(Download download) {
 		Observable.fromCallable(() -> {
-			Realm realm = DeprecatedDatabase.get();
-			DeprecatedDatabase.save(download, realm);
-			realm.close();
+			downloadAccessor.save(download);
 			return null;
 		}).subscribeOn(Schedulers.io()).subscribe();
 	}
@@ -240,8 +233,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
 						fileToDownload.getAltLink())) {
 					fileToDownload.setLink(fileToDownload.getAltLink());
 					fileToDownload.setAltLink(null);
-					@Cleanup Realm realm = DeprecatedDatabase.get();
-					DeprecatedDatabase.save(download, realm);
+					downloadAccessor.save(download);
 					Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
 					intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 					intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());

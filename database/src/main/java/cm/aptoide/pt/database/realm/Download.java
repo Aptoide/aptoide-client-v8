@@ -10,7 +10,6 @@ import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,6 +38,8 @@ public class Download extends RealmObject {
 	public static final int RETRY = 11;
 	public static final int NOT_DOWNLOADED = 12;
 	public static final int IN_QUEUE = 13;
+	public static final int ASCENDING = 1;
+	public static final int DESCENDING = -1;
 	RealmList<FileToDownload> filesToDownload;
 	@DownloadState int overallDownloadStatus = 0;
 	int overallProgress = 0;
@@ -49,20 +50,19 @@ public class Download extends RealmObject {
 	private int downloadSpeed;
 
 	public Download() {
-		this.timeStamp = Calendar.getInstance().getTimeInMillis();
 	}
 
+public static String TAG = Download.class.getSimpleName();
 
-	public static List<Download> sortDownloads(List<Download> downloads) {
-		Collections.sort(downloads, (lhs, rhs) -> {
-			if (lhs.timeStamp == rhs.timeStamp) {
-				return 0;
-			} else if (lhs.timeStamp >= rhs.timeStamp) {
-				return 1;
-			} else {
-				return -1;
-			}
-		});
+	/**
+	 * This method sorts the downloads by time stamp
+	 * @param downloads list of downloads to sort
+	 * @param sortOrder 1 if should be sorted ASCENDING, -1 if DESCENDING
+	 * @return
+   */
+	public static List<Download> sortDownloads(List<Download> downloads, @DownloadSort int sortOrder) {
+		Collections.sort(downloads,
+				(lhs, rhs) -> Long.valueOf(lhs.getTimeStamp()).compareTo(rhs.getTimeStamp()) * sortOrder);
 		return downloads;
 	}
 
@@ -158,6 +158,14 @@ public class Download extends RealmObject {
 		this.downloadSpeed = speed;
 	}
 
+	public long getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(long timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
 	@IntDef({INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN, STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED,
 			IN_QUEUE})
 
@@ -166,4 +174,13 @@ public class Download extends RealmObject {
 	public @interface DownloadState {
 
 	}
+
+	@IntDef({
+			ASCENDING, DESCENDING
+	})
+	@Retention(RetentionPolicy.SOURCE)
+
+	public @interface DownloadSort {
+	}
+
 }

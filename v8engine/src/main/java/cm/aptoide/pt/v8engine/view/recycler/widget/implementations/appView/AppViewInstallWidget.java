@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.IntentFilter;
+import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -24,13 +25,13 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -198,13 +199,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		downloadServiceHelper.getDownload(app.getId()).firstOrDefault(null).subscribe(download -> {
+		downloadServiceHelper.getDownload(app.getId()).firstOrDefault(null).observeOn(AndroidSchedulers.mainThread()).subscribe(download -> {
 			int downloadStatus = download.getOverallDownloadStatus();
 			if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING ||
 					downloadStatus == Download.PAUSED)) {
 				setDownloadBarVisible(true);
 				setupDownloadControls(app, download, displayable);
-				downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
+				downloadServiceHelper.getDownload(app.getId()).observeOn(AndroidSchedulers.mainThread()).subscribe(onGoingDownload -> {
 					manageDownload(onGoingDownload, displayable, app);
 				}, err -> {
 					Logger.e(TAG, err);
@@ -318,7 +319,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				setupDownloadControls(app, appDownload, displayable);
 
-				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> manageDownload(download, displayable, app), err -> {
+				downloadServiceHelper.startDownload(permissionRequest, appDownload).observeOn(AndroidSchedulers.mainThread()).subscribe(download -> manageDownload
+						(download, displayable,
+						app), err
+						-> {
 					Logger.e(TAG, err);
 				});
 
@@ -355,6 +359,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		};
 	}
 
+	@MainThread
 	private void manageDownload(Download download, AppViewInstallDisplayable displayable, GetAppMeta.App app) {
 
 		Context ctx = getContext();
@@ -423,6 +428,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		actionResume.setOnClickListener(view -> {
 			downloadServiceHelper.startDownload(permissionRequest, download)
+					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(onGoingDownload -> manageDownload(onGoingDownload, displayable, app), err -> {
 						Logger.e(TAG, err);
 					});

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.UpdatesAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
@@ -55,6 +56,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setOnClickListener((view) -> {
       DownloadServiceHelper downloadManager =
           new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+      final DownloadAccessor accessor = AccessorFactory.getAccessorFor(Download.class);
       UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
       updatesAccessor.getUpdates()
           .first()
@@ -68,7 +70,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
           })
           .flatMapIterable(downloads -> downloads)
           .map(
-              download -> downloadManager.startDownload((PermissionRequest) getContext(), download))
+              download -> downloadManager.startDownload(accessor, (PermissionRequest) getContext(), download))
           .toList()
           .flatMap(observables -> Observable.merge(observables))
           .filter(downloading -> downloading.getOverallDownloadStatus() == Download.COMPLETED)
