@@ -5,10 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.Browser;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +16,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.link.customtabs.CustomTabsHelper;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
@@ -80,17 +77,18 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 			getAppButton.setOnClickListener(view -> ((FragmentShower) getContext())
 					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
 		}
-		//		else {
-		//			getAppButton.setVisibility(View.GONE);
-		//		}
+
+		CustomTabsHelper.getInstance()
+				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
 
 		url.setOnClickListener(v -> {
-			openInBrowser(displayable.getUrl());
+			displayable.getLink().launch(getContext());
 			Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
 					.AppsTimeline
 					.OPEN_ARTICLE);
 		});
 	}
+
 
 	private void setCardviewMargin(ArticleDisplayable displayable) {
 		CardView.LayoutParams layoutParams = new CardView.LayoutParams(
@@ -101,14 +99,6 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		cardView.setLayoutParams(layoutParams);
 	}
 
-	private void openInBrowser(String url) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		Bundle bundle = new Bundle();
-		bundle.putString("Referer", "http://m.aptoide.com");
-		intent.putExtra(Browser.EXTRA_HEADERS, bundle);
-		getContext().startActivity(intent);
-	}
-
 	@Override
 	public void onViewAttached() {
 		if (subscriptions == null) {
@@ -116,7 +106,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 
 			subscriptions.add(RxView.clicks(articleHeader)
 					.subscribe(click -> {
-						openInBrowser(displayable.getBaseUrl());
+						displayable.getDeveloperLink().launch(getContext());
 						Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
 								.AppsTimeline
 								.OPEN_ARTICLE_HEADER);
