@@ -57,9 +57,7 @@ public class TimelineCardFilter {
     }
 
     @Override public Boolean call(TimelineCard card) {
-      cardIds.toString();
-      boolean result = cardIds.add(card.getCardId());
-      return result;
+      return cardIds.add(card.getCardId());
     }
   }
 }
