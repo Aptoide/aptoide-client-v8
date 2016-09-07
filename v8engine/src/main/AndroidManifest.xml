@@ -171,6 +171,8 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".link.customtabs.CustomTabNativeReceiver" />
+
         <service
             android:name="cm.aptoide.pt.iab.InAppBillingService"
             android:exported="true"

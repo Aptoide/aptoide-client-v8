@@ -9,8 +9,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.provider.Browser;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -18,14 +16,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import com.jakewharton.rxbinding.view.RxView;
 
-import org.w3c.dom.Text;
-
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.link.customtabs.CustomTabsHelper;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
@@ -77,7 +74,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 	public void bindView(VideoDisplayable displayable) {
 		this.displayable = displayable;
 		title.setText(displayable.getTitle());
-		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+		subtitle.setText(""); // jdandrade -> on purpose -> to be changed in the feature when videos are updated more frequently
 		videoTitle.setText(displayable.getVideoTitle());
 		setCardviewMargin(displayable);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
@@ -103,10 +100,13 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
 		}
 
+		CustomTabsHelper.getInstance()
+				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
+
 		media_layout.setOnClickListener(v ->{
 			Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(), Analytics
 					.AppsTimeline.OPEN_VIDEO);
-			openInBrowser(displayable.getUrl());
+			displayable.getLink().launch(getContext());
 		});
 	}
 
@@ -119,14 +119,6 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 		cardView.setLayoutParams(layoutParams);
 	}
 
-	private void openInBrowser(String url) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		Bundle bundle = new Bundle();
-		bundle.putString("Referer", "http://m.aptoide.com");
-		intent.putExtra(Browser.EXTRA_HEADERS, bundle);
-		getContext().startActivity(intent);
-	}
-
 	@Override
 	public void onViewAttached() {
 		if (subscriptions == null) {
@@ -134,9 +126,10 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 
 			subscriptions.add(RxView.clicks(videoHeader)
 					.subscribe(click -> {
-						openInBrowser(displayable.getBaseUrl());
-						Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(), Analytics
-								.AppsTimeline.OPEN_VIDEO_HEADER);
+						displayable.getBaseLink().launch(getContext());
+						Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
+								displayable.getVideoTitle(), displayable.getTitle(),
+								Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
 					}));
 		}
 	}
