@@ -7,6 +7,7 @@ package cm.aptoide.pt.database.accessors;
 
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import io.realm.RealmObject;
 
@@ -22,6 +23,8 @@ public final class AccessorFactory {
       return (A) new PaymentAccessor(new Database());
     } else if (clazz.equals(Installed.class)) {
       return (A) new InstalledAccessor(new Database());
+    } else if (clazz.equals(Rollback.class)) {
+      return (A) new RollbackAccessor(new Database());
     }
 
     // TODO: 02/09/16 add missing cases
