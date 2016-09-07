@@ -11,7 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import java.util.Arrays;
@@ -95,7 +98,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
-		timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY), new TimelineRepository.TimelineCardDuplicateFilter(new HashSet<>()));
+		timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
+				new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
+						AccessorFactory.getAccessorFor(Installed.class)));
 	}
 
 	@Override
