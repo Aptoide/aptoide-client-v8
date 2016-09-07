@@ -20,13 +20,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -53,9 +50,8 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import io.realm.Realm;
-import lombok.Cleanup;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -91,6 +87,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private App trustedVersion;
 	private DownloadServiceHelper downloadServiceHelper;
 	private PermissionRequest permissionRequest;
+	private CompositeSubscription subscriptions;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -116,6 +113,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
 
+		if (subscriptions == null || subscriptions.isUnsubscribed()) {
+			subscriptions = new CompositeSubscription();
+		}
 		downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
@@ -130,46 +130,75 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		String packageName = currentApp.getPackageName();
 
-		@Cleanup Realm realm = DeprecatedDatabase.get();
-		Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-		Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
+		//@Cleanup Realm realm = DeprecatedDatabase.get();
+		//Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+		//Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
 
 		//check if the app is installed or has an update
-		if (update != null) {
-			// app installed and has a pending update. setup update buttons
-			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-			actionButton.setText(R.string.update);
-			actionButton.setOnClickListener(installOrUpgradeListener(true, currentApp, getApp.getNodes().getVersions(), displayable));
+		//if (update != null) {
+		//	// app installed and has a pending update. setup update buttons
+		//	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+		//	actionButton.setText(R.string.update);
+		//	actionButton.setOnClickListener(installOrUpgradeListener(true, currentApp, getApp.getNodes().getVersions(), displayable));
+		//
+		//	// setup un-install button as visible in fragment menu
+		//	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
+		//		displayable.uninstall(getContext(), currentApp).subscribe();
+		//	});
+		//} else if (update == null && installed != null) {
+		//
+		//	// app installed and does not have a pending update. we can show open or downgrade buttons here.
+		//	// it is a downgrade if the appview version is inferior to the installed version
+		//	// it is a open if the appview version is equal to the installed version
+		//
+		//	if (currentApp.getFile().getVercode() < installed.getVersionCode()) {
+		//		actionButton.setText(R.string.downgrade);
+		//		actionButton.setOnClickListener(downgradeListener(currentApp, displayable));
+		//	} else {
+		//		actionButton.setText(R.string.open);
+		//		actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+		//	}
+		//
+		//	// setup un-install button as visible in fragment menu
+		//	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
+		//		displayable.uninstall(getContext(), currentApp).subscribe();
+		//	});
+		//} else {
+		//	// app not installed
+		//	setupInstallOrBuyButton(displayable, getApp);
+		//
+		//	// setup un-install button as invisible in fragment menu
+		//	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+		//}
 
-			// setup un-install button as visible in fragment menu
-			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-				displayable.uninstall(getContext(), currentApp).subscribe();
-			});
-		} else if (update == null && installed != null) {
-
-			// app installed and does not have a pending update. we can show open or downgrade buttons here.
-			// it is a downgrade if the appview version is inferior to the installed version
-			// it is a open if the appview version is equal to the installed version
-
-			if (currentApp.getFile().getVercode() < installed.getVersionCode()) {
-				actionButton.setText(R.string.downgrade);
-				actionButton.setOnClickListener(downgradeListener(currentApp, displayable));
+		InstalledAccessor installedAccessor = displayable.getInstalledAccessor();
+		subscriptions.add(installedAccessor.get(packageName)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(installed -> {
+					Logger.d(TAG, "bindView() called with: " + "displayable = [" + displayable + "]");
+					if (installed != null) {
+						((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
+							displayable.uninstall(getContext(), currentApp).subscribe();
+						});
+						if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
+							//current installed version
+							setupActionButton(R.string.open,
+									v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+						} else if (currentApp.getFile().getVercode() > installed.getVersionCode()) {
+							//update
+							setupActionButton(R.string.update,
+									installOrUpgradeListener(true, currentApp, getApp.getNodes().getVersions(),
+											displayable));
+						} else {
+							//downgrade
+							setupActionButton(R.string.downgrade, downgradeListener(currentApp, displayable));
+						}
 			} else {
-				actionButton.setText(R.string.open);
-				actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+						//app not installed
+						setupInstallOrBuyButton(displayable, getApp);
+						((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
 			}
-
-			// setup un-install button as visible in fragment menu
-			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-				displayable.uninstall(getContext(), currentApp).subscribe();
-			});
-		} else {
-			// app not installed
-			setupInstallOrBuyButton(displayable, getApp);
-
-			// setup un-install button as invisible in fragment menu
-			((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-		}
+				}, throwable -> throwable.printStackTrace()));
 
 		checkOnGoingDownload(getApp, displayable);
 
@@ -185,6 +214,11 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		permissionRequest = ((PermissionRequest) ctx.getBaseContext());
 	}
 
+	private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {
+		actionButton.setText(text);
+		actionButton.setOnClickListener(onClickListener);
+	}
+
 	@Override
 	public void onViewAttached() {
 	}
@@ -194,6 +228,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton.setOnClickListener(null);
 		actionPause.setOnClickListener(null);
 		actionCancel.setOnClickListener(null);
+		subscriptions.unsubscribe();
 	}
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
@@ -252,16 +287,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				@Override
 				public void appBought(long appId) {
 					if (app.getId() == appId) {
-						actionButton.setText(R.string.install);
-						actionButton.setOnClickListener(installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
+						setupActionButton(R.string.install,
+								installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
 						actionButton.performClick();
 					}
 				}
 			};
 			getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
 		} else {
-			actionButton.setText(R.string.install);
-			actionButton.setOnClickListener(installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
+			setupActionButton(R.string.install,
+					installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
 			if (displayable.isShouldInstall()) {
 				actionButton.postDelayed(() -> {
 					if (displayable.isVisible()) {

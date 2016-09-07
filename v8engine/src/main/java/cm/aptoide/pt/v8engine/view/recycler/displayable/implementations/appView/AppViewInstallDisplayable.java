@@ -9,8 +9,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
@@ -24,7 +24,6 @@ import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import lombok.Getter;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -41,13 +40,14 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
 	private long appId;
 	private String packageName;
+	private InstalledAccessor installedAccessor;
 
 	public AppViewInstallDisplayable() {
 		super();
 	}
 
-	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean
-			shouldInstall) {
+	public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp, MinimalAd minimalAd, boolean shouldInstall,
+			InstalledAccessor installedAccessor) {
 		super(getApp);
 		this.installManager = installManager;
 		this.appId = getApp.getNodes().getMeta().getData().getId();
@@ -55,10 +55,13 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		this.minimalAd = minimalAd;
 		this.shouldInstall = shouldInstall;
 		this.rollbackRepository = new RollbackRepository();
+		this.installedAccessor = installedAccessor;
 	}
 
-	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager, MinimalAd minimalAd, boolean shouldInstall) {
-		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall);
+	public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
+			MinimalAd minimalAd, boolean shouldInstall, InstalledAccessor installedAccessor) {
+		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
+				installedAccessor);
 	}
 
 	public void buyApp(Context context, GetAppMeta.App app) {
@@ -101,7 +104,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		}).concatWith(installManager.uninstall(context, packageName).concatWith(installManager.install(context, (PermissionRequest) context, appId)));
 		*/
 
-		return concatActionWithUninstall(context, app, Rollback.Action.DOWNGRADE);
+		return concatActionWithUninstall(context, app, Rollback.Action.DOWNGRADE).concatWith(
+				install(context, app));
 	}
 
 	private Observable<Void> concatActionWithUninstall(Context context, GetAppMeta.App app, Rollback.Action action) {
@@ -157,4 +161,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 		Logger.i(TAG, "onViewStateRestored");
 	}
 
+	public InstalledAccessor getInstalledAccessor() {
+		return installedAccessor;
+	}
 }

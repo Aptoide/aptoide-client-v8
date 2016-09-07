@@ -10,7 +10,6 @@ import android.content.ContextWrapper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
@@ -22,7 +21,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -82,18 +81,20 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 				final Download appDownload = displayable.getDownloadFromPojo();
 				Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
 				switch (action) {
+					case UPDATE:
 					case DOWNGRADE:
 						// find app update and download it, uninstall current and install update
 						// TODO: 28/07/16 sithengineer
 
-						ShowMessage.asSnack(view, R.string.updating_msg);
-						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-								//final String packageName = app.getPackageName();
-								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-								//displayable.upgrade(context).subscribe();
-							}
-						});
+						//ShowMessage.asSnack(view, R.string.updating_msg);
+						//downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+						//	if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+						//final String packageName = app.getPackageName();
+						//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+						//displayable.upgrade(context).subscribe();
+						//	}
+						//});
+						displayable.openAppview(((FragmentShower) getContext()));
 
 						break;
 
@@ -110,24 +111,12 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 								//final String packageName = app.getPackageName();
 								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-								displayable.install(context, (PermissionRequest) context, appDownload.getAppId()).subscribe();
+								displayable.install(context, (PermissionRequest) context, appDownload.getAppId())
+										.subscribe();
 							}
 						});
 						break;
 
-					case UPDATE:
-						// find current installed app. download previous, uninstall current and install previous
-						// TODO: 28/07/16 sithengineer
-
-						ShowMessage.asSnack(view,R.string.downgrading_msg);
-						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-								//final String packageName = app.getPackageName();
-								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-								displayable.downgrade(context, permissionRequest, download, pojo.getAppId()).subscribe();
-							}
-						});
-						break;
 				}
 			}, () -> {
 				Logger.e(TAG, "unable to access to external FS");

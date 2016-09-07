@@ -28,14 +28,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -81,7 +77,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
 import io.realm.Realm;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
@@ -230,7 +229,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		GetAppMeta.Media media = app.getMedia();
 
-		installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall);
+		installDisplayable =
+				AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
+						AccessorFactory.getAccessorFor(Installed.class));
 		displayables.add(installDisplayable);
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));

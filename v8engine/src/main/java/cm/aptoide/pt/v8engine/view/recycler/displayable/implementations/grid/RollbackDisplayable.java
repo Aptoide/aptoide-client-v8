@@ -6,13 +6,14 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
@@ -59,5 +60,9 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
 	public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest, Download currentDownload, long previousAppId) {
 		return Observable.concat(uninstall(context, currentDownload).ignoreElements(), install(context, permissionRequest, previousAppId));
+	}
+
+	public void openAppview(FragmentShower fragmentShower) {
+		fragmentShower.pushFragmentV4(AppViewFragment.newInstance(getPojo().getAppId()));
 	}
 }
