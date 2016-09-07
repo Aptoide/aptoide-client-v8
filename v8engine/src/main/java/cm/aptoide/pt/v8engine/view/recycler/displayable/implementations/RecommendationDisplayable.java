@@ -102,7 +102,7 @@ public class RecommendationDisplayable extends Displayable {
 		return dateCalculator.getTimeSinceDate(context, date);
 	}
 
-	public String getTimeSinceTimestamp(Context context) {
+	public String getTimeSinceRecommendation(Context context) {
 		return dateCalculator.getTimeSinceDate(context,timestamp);
 	}
 
