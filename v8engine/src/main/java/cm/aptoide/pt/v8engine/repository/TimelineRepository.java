@@ -36,7 +36,7 @@ public class TimelineRepository {
 	public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset, List<String> packageNames, boolean refresh) {
 		return GetUserTimelineRequest.of(action, limit, offset, packageNames)
 				.observe(refresh)
-				//.doOnNext(item -> filter.clear())
+				.doOnNext(item -> filter.clear())
 				.map(getUserTimeline -> getUserTimeline.getDatalist())
 				.flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
             .flatMap(item -> filter.filter(item)).toList()
