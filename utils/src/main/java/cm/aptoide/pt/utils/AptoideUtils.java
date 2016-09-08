@@ -422,7 +422,7 @@ public class AptoideUtils {
 
 	public static class RegexU {
 
-		private static final String STORE_ID_FROM_GET_URL = "store_id\\/(\\d+)\\/";
+		private static final String STORE_ID_FROM_GET_URL = "store_id\\=(\\d+)";
 		private static final String STORE_NAME_FROM_GET_URL = "store_name\\/(.*?)\\/";
 		private static final String SPLIT_URL_EXTENSION = "\\.(?=[^\\.]+$)";
 
