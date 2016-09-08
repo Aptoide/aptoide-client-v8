@@ -137,7 +137,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		}
 
 		subscription = displayableObservable
-				.<Datalist<Displayable>> compose(bindUntilEvent(FragmentEvent.PAUSE))
+				.<Datalist<Displayable>> compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(items -> addItems(items), throwable -> finishLoading((Throwable) throwable));
 	}
