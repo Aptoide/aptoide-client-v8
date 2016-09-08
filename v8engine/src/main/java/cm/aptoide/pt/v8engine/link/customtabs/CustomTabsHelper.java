@@ -99,7 +99,7 @@ public class CustomTabsHelper {
         .setCloseButtonIcon(
             BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_arrow_back))
         .addDefaultShareMenuItem()
-        .addMenuItem("Open in App", pendingIntent)
+        .addMenuItem(context.getString(R.string.customtabs_open_native_app), pendingIntent)
         .setStartAnimations(context, R.anim.slide_in_right, R.anim.slide_out_left)
         .setExitAnimations(context, R.anim.slide_in_left, R.anim.slide_out_right);
   }
