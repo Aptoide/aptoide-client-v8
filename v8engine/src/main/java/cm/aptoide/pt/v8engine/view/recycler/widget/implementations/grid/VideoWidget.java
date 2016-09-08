@@ -74,7 +74,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 	public void bindView(VideoDisplayable displayable) {
 		this.displayable = displayable;
 		title.setText(displayable.getTitle());
-		subtitle.setText(""); // jdandrade -> on purpose -> to be changed in the feature when videos are updated more frequently
+		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
 		videoTitle.setText(displayable.getVideoTitle());
 		setCardviewMargin(displayable);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);

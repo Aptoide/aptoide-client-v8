@@ -1,9 +1,11 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.v8engine.V8Engine;
 import java.util.Set;
 import rx.Observable;
 import rx.functions.Func1;
@@ -26,7 +28,24 @@ public class TimelineCardFilter {
     return Observable.just(item).filter(timelineItem -> timelineItem != null).<TimelineCard>map(
         timelineItem -> timelineItem.getData())
         .filter(duplicateFilter)
-        .flatMap(timelineItem -> filterInstalledRecommendation(timelineItem));
+        .flatMap(timelineCard -> filterInstalledRecommendation(timelineCard))
+        .flatMap(timelineCard -> filterAlreadyDoneUpdates(timelineCard));
+
+  }
+
+  private Observable<? extends TimelineCard> filterAlreadyDoneUpdates(TimelineCard timelineCard) {
+    if (timelineCard instanceof AppUpdate) {
+      return installedAccessor.get(((AppUpdate) timelineCard).getPackageName())
+          .firstOrDefault(null)
+          .flatMap(installed -> {
+        if (installed != null && installed.getVersionCode() == ((AppUpdate) timelineCard).getFile()
+            .getVercode()) {
+          return Observable.empty();
+        }
+        return Observable.just(timelineCard);
+      });
+    }
+    return Observable.just(timelineCard);
   }
 
   private Observable<? extends TimelineCard> filterInstalledRecommendation(
@@ -34,11 +53,12 @@ public class TimelineCardFilter {
     if (timelineItem instanceof Recommendation) {
       return installedAccessor.isInstalled(
           ((Recommendation) timelineItem).getRecommendedApp().getPackageName())
+          .firstOrDefault(false)
           .flatMap(installed -> {
             if (!installed) {
               return Observable.just(timelineItem);
             }
-            return Observable.empty();
+            return Observable.<TimelineCard>empty();
           });
     }
     return Observable.just(timelineItem);
