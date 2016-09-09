@@ -569,6 +569,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 					genericPleaseWaitDialog.dismiss();
 				}
 			}, true);
+		} else {
+			genericPleaseWaitDialog.dismiss();
 		}
 	}
 

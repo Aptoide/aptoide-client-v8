@@ -55,6 +55,9 @@ dependencies {
     debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
     releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
 
+    debugCompile project(path: ':utils', configuration: 'debug')
+    releaseCompile project(path: ':utils', configuration: 'release')
+
     //
     // custom libs in folders
     //

@@ -258,7 +258,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 		}
 
 		public void setup(Context context, Review review) {
-			ImageLoader.loadWithCircleTransformAndPlaceHolder(review.getUser().getAvatar(), userIconImageView, R.drawable.layer_1);
+			ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userIconImageView, R.drawable.layer_1);
 			userName.setText(review.getUser().getName());
 			ratingBar.setRating(review.getStats().getRating());
 			commentTitle.setText(review.getTitle());

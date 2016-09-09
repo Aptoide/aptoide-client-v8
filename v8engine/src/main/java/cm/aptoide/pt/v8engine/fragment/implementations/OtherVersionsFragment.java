@@ -248,7 +248,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 		}
 
 		private void setImage(String imgUrl) {
-			ImageLoader.loadWithCircleTransform(imgUrl, appIcon);
+			ImageLoader.load(imgUrl, appIcon);
 		}
 	}
 }

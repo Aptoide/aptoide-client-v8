@@ -27,4 +27,6 @@ public interface PermissionRequest {
 
 	@TargetApi(Build.VERSION_CODES.M)
 	void requestAccessToAccounts(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
+
+	void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
 }
