@@ -18,8 +18,8 @@
     -->
     <TextView
         android:id="@+id/partial_social_timeline_thumbnail_title"
-        style="@style/Widget.Aptoide.Card.Thumbnail"
         android:layout_width="match_parent"
+        android:textColor="@color/appstimeline_grey"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="12dp"

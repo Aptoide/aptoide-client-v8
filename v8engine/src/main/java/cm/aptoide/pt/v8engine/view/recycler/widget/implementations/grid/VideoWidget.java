@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
@@ -73,8 +74,10 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 	@Override
 	public void bindView(VideoDisplayable displayable) {
 		this.displayable = displayable;
+		Typeface typeFace = Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+		videoTitle.setTypeface(typeFace);
 		videoTitle.setText(displayable.getVideoTitle());
 		setCardviewMargin(displayable);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
@@ -100,8 +103,8 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
 		}
 
-		CustomTabsHelper.getInstance()
-				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
+//		CustomTabsHelper.getInstance()
+//				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
 
 		media_layout.setOnClickListener(v ->{
 			Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(), Analytics

@@ -153,5 +153,9 @@
 
     <color name="search_sponspored_label_background">#99d400</color>
 
+    <!-- AppsTimeline colors -->
+    <color name="appstimeline_grey">#4d4d4d</color>
+    <color name="appstimeline_recommends_title">#ff7200</color>
+
 
 </resources>
