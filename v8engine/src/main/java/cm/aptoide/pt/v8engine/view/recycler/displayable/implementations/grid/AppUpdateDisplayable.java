@@ -106,7 +106,8 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Spannable getVersionText(Context context) {
-		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_has_update, appVersionName), Typeface.BOLD, appVersionName);
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName), Typeface.BOLD,
+				appVersionName);
 	}
 
 	public Spannable getUpdateAppText(Context context) {
