@@ -273,4 +273,9 @@
     <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
     <string name="customtabs_open_native_app">Open in App</string>
 
+
+    <!--Download fragment-->
+    <string name="fragment_download_no_connection">No apps downloaded</string>
+    <string name="fragment_download_no_connection_subtitle">New apps will appear here as soon as you start downloading them!</string>
+
 </resources>
