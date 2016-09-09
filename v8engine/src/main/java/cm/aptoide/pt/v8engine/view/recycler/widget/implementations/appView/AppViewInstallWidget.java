@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -91,6 +92,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private App trustedVersion;
 	private DownloadServiceHelper downloadServiceHelper;
 	private PermissionRequest permissionRequest;
+	private boolean setupDownloadControlsRunned = false;
+	private boolean resumeButtonWasClicked = false;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -299,6 +302,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	public View.OnClickListener installOrUpgradeListener(boolean isUpdate, GetAppMeta.App app, ListAppVersions appVersions, AppViewInstallDisplayable
 			displayable) {
 
+
 		final Context context = getContext();
 
 		@StringRes
@@ -309,22 +313,24 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				Analytics.ClickedOnInstallButton.clicked(app);
 			}
 
-			permissionRequest.requestAccessToExternalFileSystem(() -> {
-
-				ShowMessage.asSnack(v, installOrUpgradeMsg);
-
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
 
-				setupDownloadControls(app, appDownload, displayable);
+				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+					manageDownload(download, displayable, app);
+					if(!setupDownloadControlsRunned) {
+						// TODO: 09/09/16 refactor this
+						ShowMessage.asSnack(v, installOrUpgradeMsg);
+						setupDownloadControls(app, appDownload, displayable);
+					}
+				}, err -> {
+					if (err instanceof SecurityException) {
+						ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+					}
 
-				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> manageDownload(download, displayable, app), err -> {
 					Logger.e(TAG, err);
 				});
 
-			}, () -> {
-				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
-			});
 		};
 
 		findTrustedVersion(app, appVersions);
@@ -407,7 +413,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 
 	private void setupDownloadControls(GetAppMeta.App app, Download download, AppViewInstallDisplayable displayable) {
-
+		setupDownloadControlsRunned = true;
 		long appId = app.getId();
 
 		actionCancel.setOnClickListener(view -> {
@@ -419,15 +425,22 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			downloadServiceHelper.pauseDownload(appId);
 			actionResume.setVisibility(View.VISIBLE);
 			actionPause.setVisibility(View.GONE);
+			resumeButtonWasClicked=false;
 		});
 
 		actionResume.setOnClickListener(view -> {
 			downloadServiceHelper.startDownload(permissionRequest, download)
-					.subscribe(onGoingDownload -> manageDownload(onGoingDownload, displayable, app), err -> {
+					.subscribe(onGoingDownload -> {
+						manageDownload(onGoingDownload, displayable, app);
+						if(!resumeButtonWasClicked) {
+							// TODO: 09/09/16 refactor me
+							actionResume.setVisibility(View.GONE);
+							actionPause.setVisibility(View.VISIBLE);
+							resumeButtonWasClicked = true;
+						}}
+							, err -> {
 						Logger.e(TAG, err);
 					});
-			actionResume.setVisibility(View.GONE);
-			actionPause.setVisibility(View.VISIBLE);
 		});
 
 		setDownloadBarVisible(true);
