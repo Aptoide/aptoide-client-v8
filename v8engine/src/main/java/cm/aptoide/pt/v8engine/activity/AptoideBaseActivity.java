@@ -307,11 +307,14 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 				public void onNext(GenericDialogs.EResponse eResponse) {
 					super.onNext(eResponse);
 					if (eResponse == GenericDialogs.EResponse.YES) {
-						/*if (toRunWhenAccessIsGranted != null) {
-							toRunWhenAccessIsGranted.call();
-						}*/
-						((FragmentShower) getApplicationContext()).pushFragmentV4(SettingsFragment.newInstance());
-					} else {
+						if (AptoideBaseActivity.this instanceof FragmentShower) {
+							((FragmentShower) AptoideBaseActivity.this).pushFragmentV4(SettingsFragment.newInstance());
+						} else {
+							Logger.e(AptoideBaseActivity.class.getSimpleName(), new IllegalArgumentException("The Fragment should be an instance of the " +
+									"Activity Context"));
+						}
+					}
+					else {
 						if (toRunWhenAccessIsDenied != null) {
 							toRunWhenAccessIsDenied.call();
 						}

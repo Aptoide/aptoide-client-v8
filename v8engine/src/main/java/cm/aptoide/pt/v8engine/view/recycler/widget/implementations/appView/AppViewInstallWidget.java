@@ -56,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -95,6 +96,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private boolean setupDownloadControlsRunned = false;
 	private boolean resumeButtonWasClicked = false;
 
+	//private Subscription subscribe;
+	//private long appID;
+
+
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
 	}
@@ -118,10 +123,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
+		//displayable.setOnResumeAction(() -> onViewAttached());
+		//displayable.setOnPauseAction(() -> onViewDetached());
 
 		downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
+		//appID = getApp.getNodes().getMeta().getData().getId();
 		GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
 		final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
@@ -190,6 +198,22 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	public void onViewAttached() {
+		/*subscribe = AptoideDownloadManager.getInstance().getDownloads()
+				.map(downloads -> {
+					for (int i = 0; i < downloads.size(); i++) {
+						if (downloads.get(i).getAppId() == appID && (downloads.get(i).getOverallDownloadStatus()
+								== Download.PROGRESS
+								|| downloads.get(i).getOverallDownloadStatus() == Download.PAUSED)) {
+
+							return true;
+						}
+					}
+					return false;
+				})
+				.distinctUntilChanged()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(showControllers -> {
+				}, throwable -> throwable.printStackTrace());*/
 	}
 
 	@Override
@@ -197,6 +221,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton.setOnClickListener(null);
 		actionPause.setOnClickListener(null);
 		actionCancel.setOnClickListener(null);
+		//subscribe.unsubscribe();
 	}
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
