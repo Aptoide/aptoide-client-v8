@@ -5,13 +5,13 @@
 
 package cm.aptoide.pt.database.realm;
 
-import java.util.Calendar;
-
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
+import java.util.Calendar;
 
 /**
  * Created by sithengineer on 12/05/16.
@@ -37,9 +37,9 @@ public class Rollback extends RealmObject {
 	private String icon;
 	private String versionName;
 	private int versionCode;
-	private long timestamp;
+	@PrimaryKey private long timestamp;
 	private String action;
-	@PrimaryKey private String md5;
+	@Required private String md5;
 	private boolean confirmed;
 	private String trustedBadge;
 	//	private String referrer;

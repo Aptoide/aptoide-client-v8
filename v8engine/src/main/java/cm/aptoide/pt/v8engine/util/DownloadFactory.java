@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -21,6 +20,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
+import java.util.Random;
 
 /**
  * Created by marcelobenites on 6/29/16.
@@ -89,18 +89,19 @@ public class DownloadFactory {
 	}
 
 	public Download create(Rollback rollback) {
-		validateApp(rollback.getAppId(), null, rollback.getPackageName(), rollback.getAppName(), rollback.getApkPath(), rollback.getAlternativeApkPath());
 		Download download = new Download();
-		download.setAppId(rollback.getAppId());
+		if (rollback.getAppId() <= 0) {
+			download.setAppId(new Random(System.currentTimeMillis()).nextLong());
+		} else {
+			download.setAppId(rollback.getAppId());
+		}
 		download.setIcon(rollback.getIcon());
 		download.setAppName(rollback.getAppName());
-		download.setFilesToDownload(createFileList(rollback.getAppId(), rollback.getPackageName(), rollback.getApkPath(), rollback.getAlternativeApkPath(),
-				rollback
-				.getMd5(), rollback
-
-						.getMainObbPath(), rollback.getMainObbMd5(), rollback.getPatchObbPath(), rollback.getPatchObbMd5(), rollback.getVersionCode(),
-				rollback.getMainObbName(), rollback
-						.getPatchObbName()));
+		download.setFilesToDownload(
+				createFileList(rollback.getAppId(), rollback.getPackageName(), rollback.getApkPath(),
+						rollback.getAlternativeApkPath(), rollback.getMd5(), rollback.getMainObbPath(),
+						rollback.getMainObbMd5(), rollback.getPatchObbPath(), rollback.getPatchObbMd5(),
+						rollback.getVersionCode(), rollback.getMainObbName(), rollback.getPatchObbName()));
 		return download;
 	}
 

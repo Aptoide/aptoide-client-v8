@@ -27,12 +27,15 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import io.realm.Sort;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -52,7 +55,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 	private TextView emptyData;
 	private Subscription subscription;
 	private DownloadServiceHelper downloadManager;
-	private InstallManager installManager;
+	private Installer installManager;
 
 	public RollbackFragment() { }
 
@@ -112,13 +115,19 @@ public class RollbackFragment extends GridRecyclerFragment {
 
 		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+		DownloadInstallationProvider installationProvider =
+				new DownloadInstallationProvider(downloadManager);
+		installManager = new RollbackInstallManager(
+				new InstallManager(permissionManager, getContext().getPackageManager(),
+						installationProvider),
+				new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class)),
+				new RollbackActionFactory(), installationProvider);
 	}
 
 	@UiThread
 	private void fetchRollbacks() {
 		RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
-		rollbackAccessor.getAllSorted(Sort.DESCENDING)
+		rollbackAccessor.getConfirmedRollbacks()
 				.observeOn(Schedulers.computation())
 				.map(rollbacks -> createDisplayables(rollbacks))
 				.observeOn(AndroidSchedulers.mainThread())

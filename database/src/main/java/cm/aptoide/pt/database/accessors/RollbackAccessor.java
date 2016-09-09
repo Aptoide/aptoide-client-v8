@@ -37,4 +37,44 @@ public class RollbackAccessor implements Accessor {
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
   }
+
+  public Observable<Rollback> get(String packageName) {
+    return database.get(Rollback.class, Rollback.PACKAGE_NAME, packageName);
+  }
+
+  public void save(Rollback rollback) {
+    Database.save(rollback);
+  }
+
+  public Observable<Rollback> getNotConfirmedRollback(String packageName) {
+    return Observable.fromCallable(() -> Database.get())
+        .flatMap(realm -> realm.where(Rollback.class)
+            .equalTo(Rollback.PACKAGE_NAME, packageName)
+            .equalTo(Rollback.CONFIRMED, false)
+            .findAllSorted(Rollback.TIMESTAMP, Sort.DESCENDING)
+            .asObservable()
+            .unsubscribeOn(RealmSchedulers.getScheduler()))
+        .flatMap(rollbacks -> database.copyFromRealm(rollbacks))
+        .map(rollbacks -> {
+          if (rollbacks.size() > 0) {
+            return rollbacks.get(0);
+          } else {
+            return null;
+          }
+        })
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
+
+  public Observable<List<Rollback>> getConfirmedRollbacks() {
+    return Observable.fromCallable(() -> Database.get())
+        .flatMap(realm -> realm.where(Rollback.class)
+            .equalTo(Rollback.CONFIRMED, true)
+            .findAllSorted(Rollback.TIMESTAMP, Sort.DESCENDING)
+            .asObservable()
+            .unsubscribeOn(RealmSchedulers.getScheduler()))
+        .flatMap(rollbacks -> database.copyFromRealm(rollbacks))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
 }

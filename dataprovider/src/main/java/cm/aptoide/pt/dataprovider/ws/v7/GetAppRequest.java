@@ -5,17 +5,15 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
@@ -52,6 +50,20 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 				forceServerRefresh)));
 	}
 
+	public static GetAppRequest ofMd5(String md5) {
+		BaseBodyDecorator decorator = new BaseBodyDecorator(
+				new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+				SecurePreferencesImplementation.getInstance());
+		IdsRepository idsRepository =
+				new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
+		boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+
+		return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
+				WebService.getDefaultConverter(), BASE_HOST,
+				(Body) decorator.decorate(new Body(forceServerRefresh, md5)));
+	}
+
 	@Override
 	protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getApp(body, bypassCache);
@@ -63,6 +75,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 		@Getter private Long appId;
 		@Getter private String packageName;
 		@Getter private boolean refresh;
+		@Getter @JsonProperty("apk_md5sum") private String md5;
 
 		public Body(Long appId, Boolean refresh) {
 			this.appId = appId;
@@ -71,6 +84,11 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
 		public Body(String packageName, Boolean refresh) {
 			this.packageName = packageName;
+			this.refresh = refresh;
+		}
+
+		public Body(Boolean refresh, String md5) {
+			this.md5 = md5;
 			this.refresh = refresh;
 		}
 	}

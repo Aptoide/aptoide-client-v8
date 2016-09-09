@@ -5,15 +5,14 @@
 
 package cm.aptoide.pt.v8engine.install.provider;
 
-import java.io.File;
-
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.v8engine.install.Installation;
+import cm.aptoide.pt.v8engine.install.RollbackInstallation;
+import java.io.File;
 
 /**
  * Created by marcelobenites on 7/22/16.
  */
-public class DownloadInstallationAdapter implements Installation {
+public class DownloadInstallationAdapter implements RollbackInstallation {
 
 	private final Download download;
 
@@ -39,6 +38,58 @@ public class DownloadInstallationAdapter implements Installation {
 	@Override
 	public File getFile() {
 		return new File(download.getFilesToDownload().get(0).getFilePath());
+	}
+
+	@Override public String getAppName() {
+		return download.getAppName();
+	}
+
+	@Override public String getIcon() {
+		return download.getIcon();
+	}
+
+	@Override public String downloadLink() {
+		return download.getFilesToDownload().get(0).getLink();
+	}
+
+	@Override public String getAltDownloadLink() {
+		return download.getFilesToDownload().get(0).getAltLink();
+	}
+
+	@Override public String getMainObbName() {
+		if (download.getFilesToDownload().size() > 1) {
+			return download.getFilesToDownload().get(1).getFileName();
+		} else {
+			return null;
+		}
+	}
+
+	@Override public String getMainObbPath() {
+		if (download.getFilesToDownload().size() > 1) {
+			return download.getFilesToDownload().get(1).getLink();
+		} else {
+			return null;
+		}
+	}
+
+	@Override public long getTimeStamp() {
+		return download.getTimeStamp();
+	}
+
+	@Override public String getPatchObbName() {
+		if (download.getFilesToDownload().size() > 2) {
+			return download.getFilesToDownload().get(2).getFileName();
+		} else {
+			return null;
+		}
+	}
+
+	@Override public String getPatchObbPath() {
+		if (download.getFilesToDownload().size() > 2) {
+			return download.getFilesToDownload().get(2).getLink();
+		} else {
+			return null;
+		}
 	}
 
 }

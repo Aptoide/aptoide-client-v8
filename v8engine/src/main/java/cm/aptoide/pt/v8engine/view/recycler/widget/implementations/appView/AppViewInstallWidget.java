@@ -50,6 +50,7 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -88,6 +89,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private DownloadServiceHelper downloadServiceHelper;
 	private PermissionRequest permissionRequest;
 	private CompositeSubscription subscriptions;
+	private boolean isUpdate;
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -178,7 +180,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					Logger.d(TAG, "bindView() called with: " + "displayable = [" + displayable + "]");
 					if (installed != null) {
 						((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-							displayable.uninstall(getContext(), currentApp).subscribe();
+							displayable.uninstall(getContext()).first().subscribe(aVoid -> {
+							}, throwable -> throwable.printStackTrace());
 						});
 						if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
 							//current installed version
@@ -186,8 +189,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 									v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
 						} else if (currentApp.getFile().getVercode() > installed.getVersionCode()) {
 							//update
+							isUpdate = true;
 							setupActionButton(R.string.update,
-									installOrUpgradeListener(true, currentApp, getApp.getNodes().getVersions(),
+									installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(),
 											displayable));
 						} else {
 							//downgrade
@@ -287,16 +291,18 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				@Override
 				public void appBought(long appId) {
 					if (app.getId() == appId) {
+						isUpdate = false;
 						setupActionButton(R.string.install,
-								installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
+								installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
 						actionButton.performClick();
 					}
 				}
 			};
 			getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
 		} else {
+			isUpdate = false;
 			setupActionButton(R.string.install,
-					installOrUpgradeListener(false, app, getApp.getNodes().getVersions(), displayable));
+					installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
 			if (displayable.isShouldInstall()) {
 				actionButton.postDelayed(() -> {
 					if (displayable.isVisible()) {
@@ -322,7 +328,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					if (download.getOverallDownloadStatus() == Download.COMPLETED) {
 						//final String packageName = app.getPackageName();
 						//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-						displayable.downgrade(getContext(), app).subscribe();
+
+						subscriptions.add(displayable.downgrade(getContext()).subscribe(aVoid -> {
+						}, throwable -> throwable.printStackTrace()));
 					}
 				});
 			}, () -> {
@@ -331,13 +339,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		};
 	}
 
-	public View.OnClickListener installOrUpgradeListener(boolean isUpdate, GetAppMeta.App app, ListAppVersions appVersions, AppViewInstallDisplayable
+	public View.OnClickListener installOrUpgradeListener(GetAppMeta.App app,
+			ListAppVersions appVersions, AppViewInstallDisplayable
 			displayable) {
 
 		final Context context = getContext();
-
-		@StringRes
-		final int installOrUpgradeMsg = isUpdate ? R.string.updating_msg : R.string.installing_msg;
+		@StringRes final int installOrUpgradeMsg =
+				this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
 		final View.OnClickListener installHandler = v -> {
 
 			if(installOrUpgradeMsg == R.string.installing_msg) {
@@ -421,7 +429,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				setDownloadBarVisible(false);
 
-				displayable.install(ctx, app).observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+				Observable<Void> install;
+				if (isUpdate) {
+					install = displayable.update(ctx);
+				} else {
+					install = displayable.install(ctx);
+				}
+
+				subscriptions.add(install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
 					if (minimalAd != null && minimalAd.getCpdUrl() != null) {
 						DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
 					}
@@ -430,12 +445,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						actionButton.setText(R.string.open);
 						// FIXME: 20/07/16 sithengineer refactor this ugly code
 						if (displayable.isVisible()) {
-							((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(() -> {
-								displayable.uninstall(ctx, app).subscribe();
-							});
+							((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(
+									() -> {
+										displayable.uninstall(ctx).subscribe(aVoid -> {
+										}, throwable -> throwable.printStackTrace());
+									});
 						}
 					}
-				});
+				}, throwable -> throwable.printStackTrace()));
 				break;
 			}
 		}
