@@ -22,7 +22,7 @@ public class BaseV7EndlessDatalistResponse<T> extends BaseV7EndlessResponse {
 
 	@Override
 	public int getNextSize() {
-		return hasData() ? NEXT_STEP : 0;
+		return hasData() ? datalist.getNext() : 0;
 	}
 
 	@Override
