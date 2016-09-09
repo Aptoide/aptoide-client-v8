@@ -13,6 +13,8 @@ class ManagedKeys {
 	public static final String HWSPECS_FILTER = "hwspecsChkBox";
 	public static final String MATURE_CHECK_BOX = "matureChkBox";
 	public static final String ANIMATIONS_ENABLED = "animationsEnabled";
+	public static final String GENERAL_DOWNLOADS_WIFI = "generalnetworkwifi";
+	public static final String GENERAL_DOWNLOADS_MOBILE = "generalnetworkmobile";
 	public static final String LAST_PUSH_NOTIFICATION_ID = "lastPushNotificationId";
 	public static final String CHECK_AUTO_UPDATE = "checkautoupdate";
 	public static final String PREF_ALWAYS_UPDATE = "dev_mode_always_update";

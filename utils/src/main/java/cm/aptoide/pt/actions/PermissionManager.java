@@ -16,4 +16,8 @@ public class PermissionManager {
 	public Observable<Void> requestExternalStoragePermission(PermissionRequest permissionRequest) {
 		return Observable.create(new RequestAccessToExternalFileSystemOnSubscribe(permissionRequest));
 	}
+
+	public Observable<Void> requestDownloadAccess(PermissionRequest permissionRequest){
+		return Observable.create(new RequestDownloadAccessOnSubscribe(permissionRequest));
+	}
 }

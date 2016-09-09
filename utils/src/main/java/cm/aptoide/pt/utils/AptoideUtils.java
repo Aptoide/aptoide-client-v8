@@ -822,7 +822,7 @@ public class AptoideUtils {
 					case TYPE_ETHERNET:
 						return "ethernet";
 					case TYPE_WIFI:
-						return "mobile";
+						return "wifi";
 					case TYPE_MOBILE:
 						return "mobile";
 				}
