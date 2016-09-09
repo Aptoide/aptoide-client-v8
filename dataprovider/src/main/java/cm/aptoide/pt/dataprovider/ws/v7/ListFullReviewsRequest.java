@@ -52,7 +52,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh());
+		Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh());
 		return new ListFullReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
 
@@ -137,11 +137,11 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 			this.refresh = refresh;
 		}
 
-		public Body(long storeId, int limit, int subLimit, boolean refresh) {
+		public Body(long storeId, int limit, int offset, boolean refresh) {
 
 			this.storeId = storeId;
 			this.limit = limit;
-			this.subLimit = subLimit;
+			this.offset = offset;
 			this.refresh = refresh;
 		}
 
