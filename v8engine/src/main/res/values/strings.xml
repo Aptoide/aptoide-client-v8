@@ -4,7 +4,7 @@
   -->
 
 <resources>
-    <string name="app_name">Aptoide Client V8 Concept</string>
+    <string name="app_name">Aptoide V8 Beta</string>
 
     <string name="dark">Dark</string>
     <string name="light">Light</string>
