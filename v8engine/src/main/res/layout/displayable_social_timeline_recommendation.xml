@@ -86,9 +86,10 @@
 
                 <ImageView
                     android:id="@+id/displayable_social_timeline_recommendation_icon"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_marginTop="9.3dp"
+                    android:paddingTop="3dp"
                     android:layout_marginBottom="12dp"
                     android:layout_marginLeft="12dp"
                     android:scaleType="fitCenter"
@@ -118,6 +119,7 @@
                     android:clickable="false"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:paddingTop="3dp"
                     tools:text="Similar to Empire of Kings"
                     android:layout_below="@+id/displayable_social_timeline_recommendation_name"
                     android:layout_marginRight="15.1dp"
@@ -134,11 +136,10 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="5dp"
                     tools:text="Get app Clash Royale"
-                    android:layout_alignBottom="@+id/displayable_social_timeline_recommendation_icon"
+                    android:layout_alignStart="@+id/displayable_social_timeline_recommendation_name"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="12dp"
-                    android:layout_marginLeft="13.3dp"
-                    android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"/>
+                    android:layout_below="@+id/displayable_social_timeline_recommendation_icon"/>
 
             </RelativeLayout>
         <View

@@ -82,8 +82,9 @@
 
             <ImageView
                 android:id="@+id/displayable_social_timeline_app_update_icon"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:paddingTop="3dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="9.3dp"
                 android:scaleType="fitCenter"
