@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.repository;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
@@ -52,7 +52,7 @@ public class AppRepository {
 		return getAppPayment(appId, sponsored, storeName).map(payment -> payment.getPaymentServices());
 	}
 
-	public Observable<GetApkInfoJson.Payment> getAppPayment(long appId, boolean sponsored, String storeName) {
+	public Observable<PaidApp.Payment> getAppPayment(long appId, boolean sponsored, String storeName) {
 		return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName).observe(true)
 				.flatMap(response -> {
 					if (response != null && response.isOk() && response.getPayment() != null) {

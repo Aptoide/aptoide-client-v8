@@ -17,6 +17,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentManager;
 import cm.aptoide.pt.v8engine.payment.Purchase;
+import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.view.PaymentView;
@@ -104,10 +105,18 @@ public class PaymentPresenter implements Presenter {
 					}
 					return Observable.just(purchase);
 				})
+				.onErrorResumeNext(throwable -> paymentAlreadyProcessed(throwable))
 				.doOnError(throwable -> removeLoadingAndDismiss(throwable))
 				.doOnNext(purchase -> removeLoadingAndDismiss(purchase))
 				.onErrorReturn(throwable -> null)
 				.subscribeOn(AndroidSchedulers.mainThread());
+	}
+
+	private Observable<Purchase> paymentAlreadyProcessed(Throwable throwable) {
+		if (throwable instanceof PaymentAlreadyProcessedException) {
+			return paymentManager.getPurchase(product);
+		}
+		return Observable.error(throwable);
 	}
 
 	@NonNull

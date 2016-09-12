@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
+import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -165,9 +166,8 @@ public abstract class V8Engine extends DataProvider {
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
     AptoideDownloadManager.getInstance()
-        .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
-            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
-            new FileUtils(action -> Analytics.File.moveFile(action)));
+            .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface, downloadAccessor, new CacheHelper(downloadAccessor,
+                    settingsInterface), new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient());
 
     // setupCurrentActivityListener();
 

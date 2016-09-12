@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.payment;
 import java.io.IOException;
 
 import cm.aptoide.pt.iab.InAppBillingSerializer;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import lombok.AllArgsConstructor;
 

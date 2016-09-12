@@ -46,8 +46,8 @@ public class PaymentManager {
 	}
 
 	public Observable<Purchase> getPurchase(AptoideProduct product) {
-		// Payment confirmation is stored locally. The user may clean local data and attempt to purchase a product again. We should always check if
-		// a purchase exists in server even if its payment confirmation is not stored locally.
+		// Always check if purchase exists even if there is no payment confirmation for the product.
+		// The only way to make sure the payment was successful is by having a purchase for the product.
 		return paymentRepository.getPaymentConfirmation(product)
 				.flatMap(paymentConfirmation -> paymentRepository.getPurchase(product))
 				.doOnNext(purchase -> paymentRepository.deletePaymentConfirmation(product))

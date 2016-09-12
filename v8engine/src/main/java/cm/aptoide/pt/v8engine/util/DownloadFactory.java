@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -37,9 +38,28 @@ public class DownloadFactory {
 		download.setAppId(appToDownload.getId());
 		download.setIcon(appToDownload.getIcon());
 		download.setAppName(appToDownload.getName());
-		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload
-				.getFile()
-				.getMd5sum(), appToDownload.getObb(), appToDownload.getFile().getPathAlt(), appToDownload.getFile().getVercode()));
+
+		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload.getFile().getMd5sum(), appToDownload.getObb(), appToDownload.getFile().getPathAlt(), appToDownload.getFile()
+				.getVercode()));
+
+		return download;
+	}
+
+	public Download create(GetAppMeta.App app, PaidApp paidApp) throws IllegalArgumentException {
+		final GetAppMeta.GetAppMetaFile file = app.getFile();
+
+		validateApp(app.getId(), app.getObb(), app.getPackageName(), app.getName(), file != null? file.getPath(): null,
+				file != null? file.getPathAlt(): null);
+
+		Download download = new Download();
+		download.setAppId(app.getId());
+		download.setIcon(app.getIcon());
+		download.setAppName(app.getName());
+
+		if (paidApp.getPayment().getAmount() > 0.0f && paidApp.getPayment().isPaid()) {
+			download.setFilesToDownload(createFileList(app.getId(), app.getPackageName(), paidApp.getPath().getStringPath(), app.getFile().getMd5sum(),
+					app.getObb(), app.getFile().getPathAlt(), app.getFile().getVercode()));
+		}
 		return download;
 	}
 
@@ -67,9 +87,9 @@ public class DownloadFactory {
 		download.setAppId(appToDownload.getId());
 		download.setIcon(appToDownload.getIcon());
 		download.setAppName(appToDownload.getName());
-		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile().getPath(), appToDownload
-				.getFile()
-				.getMd5sum(), appToDownload.getObb(), appToDownload.getFile().getPathAlt(), appToDownload.getFile().getVercode()));
+		download.setFilesToDownload(createFileList(appToDownload.getId(), appToDownload.getPackageName(), appToDownload.getFile()
+				.getPath(), appToDownload.getFile().getMd5sum(), appToDownload.getObb(), appToDownload.getFile().getPathAlt(), appToDownload.getFile()
+				.getVercode()));
 		return download;
 	}
 
