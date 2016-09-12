@@ -35,7 +35,6 @@ import rx.Observable;
  */
 public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRequest.Body> {
 
-	private static final String TAG = "lou";
 	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
 	private static final int MAX_REVIEWS = 10;
@@ -52,9 +51,11 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	}
 
 	public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
-		Log.d(TAG, "of: A");
 		// TODO: 12/09/16 diogoloureiro falta nos webservices same para o listreviews e para os comments
-		getStoreOnRequest(storeId);
+		final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
+		String username = storeOnRequest.getUsername();
+		String password = storeOnRequest.getPasswordSha1();
+
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 		Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh());
@@ -62,7 +63,6 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	}
 
 	public static ListFullReviewsRequest ofAction(String url, boolean refresh) {
-		Log.d(TAG, "of: B");
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
 				SecurePreferencesImplementation
 				.getInstance());
@@ -71,7 +71,6 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 
 
 	public static ListFullReviewsRequest of(String storeName, String packageName) {
-		Log.d(TAG, "of: C");
 		return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
 	}
 
@@ -86,7 +85,6 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	 * @return
 	 */
 	public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
-		Log.d(TAG, "of: D");
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
 		Body body = new Body(storeName, packageName, maxReviews, maxComments, ManagerPreferences.getAndResetForceServerRefresh());
