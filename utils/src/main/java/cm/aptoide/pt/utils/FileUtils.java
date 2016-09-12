@@ -37,6 +37,10 @@ public class FileUtils {
 	 * @return true if the the file was copied successfully, false otherwise
 	 */
 	public static void copyFile(String inputPath, String outputPath, String fileName) {
+		if (!fileExists(inputPath)) {
+			throw new RuntimeException("Input file doesn't exists");
+		}
+
 		InputStream in = null;
 		OutputStream out = null;
 		try {
@@ -122,6 +126,7 @@ public class FileUtils {
 
 		FileOutputStream fos = null;
 		try {
+			dir.mkdirs();
 			fos = new FileOutputStream(imageFile);
 
 			bm.compress(format, quality, fos);

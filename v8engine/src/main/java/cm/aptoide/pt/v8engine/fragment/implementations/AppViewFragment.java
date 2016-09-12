@@ -67,7 +67,7 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -208,8 +208,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		installManager = new RollbackInstallManager(
 				new InstallManager(permissionManager, getContext().getPackageManager(),
-						installationProvider),
-				new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class)),
+						installationProvider), RepositoryFactory.getRepositoryFor(Rollback.class),
 				new RollbackActionFactory(), installationProvider);
 
 		productFactory = new ProductFactory();

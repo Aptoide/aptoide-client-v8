@@ -174,13 +174,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//}
 
 		InstalledAccessor installedAccessor = displayable.getInstalledAccessor();
-		subscriptions.add(installedAccessor.get(packageName)
+		installedAccessor.get(packageName)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(installed -> {
-					Logger.d(TAG, "bindView() called with: " + "displayable = [" + displayable + "]");
 					if (installed != null) {
 						((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-							displayable.uninstall(getContext()).first().subscribe(aVoid -> {
+							displayable.uninstall(getContext()).subscribe(aVoid -> {
 							}, throwable -> throwable.printStackTrace());
 						});
 						if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
@@ -197,13 +196,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 							//downgrade
 							setupActionButton(R.string.downgrade, downgradeListener(currentApp, displayable));
 						}
-			} else {
+					} else {
 						//app not installed
 						setupInstallOrBuyButton(displayable, getApp);
 						((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-			}
-				}, throwable -> throwable.printStackTrace()));
-
+					}
+				}, throwable -> throwable.printStackTrace());
 		checkOnGoingDownload(getApp, displayable);
 
 		if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
@@ -329,8 +327,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						//final String packageName = app.getPackageName();
 						//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
 
-						subscriptions.add(displayable.downgrade(getContext()).subscribe(aVoid -> {
-						}, throwable -> throwable.printStackTrace()));
+						displayable.downgrade(getContext()).subscribe(aVoid -> {
+						}, throwable -> throwable.printStackTrace());
 					}
 				});
 			}, () -> {
@@ -436,7 +434,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 					install = displayable.install(ctx);
 				}
 
-				subscriptions.add(install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+				install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
 					if (minimalAd != null && minimalAd.getCpdUrl() != null) {
 						DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
 					}
@@ -452,7 +450,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 									});
 						}
 					}
-				}, throwable -> throwable.printStackTrace()));
+				}, throwable -> throwable.printStackTrace());
 				break;
 			}
 		}

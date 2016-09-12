@@ -11,5 +11,6 @@ public interface RollbackInstallationFactory {
 
   Observable<Rollback> createRollback(RollbackInstallation installation, Rollback.Action action);
 
-  Observable<Rollback> createRollback(Context context, String packageName, Rollback.Action action);
+  Observable<Rollback> createRollback(Context context, String packageName, Rollback.Action action,
+      String icon);
 }

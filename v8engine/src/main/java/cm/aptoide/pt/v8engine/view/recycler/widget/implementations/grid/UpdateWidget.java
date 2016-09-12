@@ -14,9 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.jakewharton.rxbinding.view.RxView;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
@@ -32,6 +29,7 @@ import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import io.realm.Realm;
 import lombok.Cleanup;
 import rx.Subscription;
@@ -134,7 +132,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 				(displayable))
 				.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
 				.flatMap(download -> displayable.getInstallManager()
-						.install(UpdateWidget.this.getContext(), (PermissionRequest) UpdateWidget.this.getContext(), download.getAppId()))
+						.update(UpdateWidget.this.getContext(),
+								(PermissionRequest) UpdateWidget.this.getContext(), download.getAppId()))
 				.onErrorReturn(throwable -> null)
 				.subscribe());
 	}

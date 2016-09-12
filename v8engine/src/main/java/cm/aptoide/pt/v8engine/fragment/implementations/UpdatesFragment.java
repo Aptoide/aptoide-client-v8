@@ -7,15 +7,10 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -26,14 +21,21 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
 import io.realm.RealmResults;
+import java.util.LinkedList;
+import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -46,7 +48,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	private List<Displayable> installedDisplayablesList = new LinkedList<>();
 	private Subscription installedSubscription;
 	private Subscription updatesSubscription;
-	private InstallManager installManager;
+	private Installer installManager;
 	private DownloadFactory downloadFactory;
 	private DownloadServiceHelper downloadManager;
 
@@ -60,7 +62,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 		super.onCreate(savedInstanceState);
 		PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+		installManager = new RollbackInstallManager(
+				new InstallManager(permissionManager, getContext().getPackageManager(),
+						new DownloadInstallationProvider(downloadManager)),
+				RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
+				new DownloadInstallationProvider(downloadManager));
 		downloadFactory = new DownloadFactory();
 	}
 

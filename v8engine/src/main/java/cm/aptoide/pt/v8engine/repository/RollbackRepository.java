@@ -19,8 +19,7 @@ import rx.Observable;
 /**
  * Created by sithengineer on 30/08/16.
  */
-@AllArgsConstructor
-public class RollbackRepository {
+@AllArgsConstructor public class RollbackRepository implements Repository {
 
 	private RollbackAccessor accessor;
 

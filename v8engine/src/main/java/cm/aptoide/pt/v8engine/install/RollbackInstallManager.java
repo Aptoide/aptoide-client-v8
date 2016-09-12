@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.install;
 import android.content.Context;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import lombok.AllArgsConstructor;
@@ -43,9 +42,8 @@ import rx.android.schedulers.AndroidSchedulers;
       long installationId) {
 
     return installationProvider.getInstallation(installationId)
-        .first()
         .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
-            Rollback.Action.UPDATE))
+            Rollback.Action.UPDATE, installation.getIcon()))
         .observeOn(AndroidSchedulers.mainThread())
         .concatWith(installManager.update(context, permissionRequest, installationId));
   }
@@ -53,20 +51,24 @@ import rx.android.schedulers.AndroidSchedulers;
   @Override public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest,
       long installationId) {
     return installationProvider.getInstallation(installationId)
-        .first()
         .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
-            Rollback.Action.DOWNGRADE))
+            Rollback.Action.DOWNGRADE, installation.getIcon()))
         .observeOn(AndroidSchedulers.mainThread())
         .concatWith(installManager.downgrade(context, permissionRequest, installationId));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {
-    return getRollbackObservable(packageName, Rollback.Action.UNINSTALL).observeOn(
-        RealmSchedulers.getScheduler()).concatWith(installManager.uninstall(context, packageName));
+    return rollbackProvider.createRollback(context, packageName, Rollback.Action.UNINSTALL, null)
+        .map(rollback -> {
+          repository.save(rollback);
+          return rollback;
+        })
+        .concatMap(rollback -> installManager.uninstall(context, packageName));
   }
 
-  private Observable<Void> getRollbackObservable(String packageName, Rollback.Action action) {
-    return rollbackProvider.createRollback(Application.getContext(), packageName, action)
+  private Observable<Void> getRollbackObservable(String packageName, Rollback.Action action,
+      String icon) {
+    return rollbackProvider.createRollback(Application.getContext(), packageName, action, icon)
         .map(rollback -> {
           repository.save(rollback);
           return null;

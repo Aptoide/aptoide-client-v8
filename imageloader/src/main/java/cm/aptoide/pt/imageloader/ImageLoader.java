@@ -5,15 +5,18 @@
 
 package cm.aptoide.pt.imageloader;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.widget.ImageView;
-
+import cm.aptoide.pt.preferences.Application;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.target.NotificationTarget;
-
-import cm.aptoide.pt.preferences.Application;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by neuro on 24-05-2016.
@@ -77,5 +80,21 @@ public class ImageLoader {
 
 	public static void loadImageToNotification(NotificationTarget notificationTarget, String url) {
 		Glide.with(Application.getContext().getApplicationContext()).load(url).asBitmap().into(notificationTarget);
+	}
+
+	@WorkerThread public static @Nullable Bitmap loadBitmap(Context context, String apkIconPath) {
+		try {
+			return Glide.
+					with(context).
+					load(apkIconPath).
+					asBitmap().
+					into(-1, -1). // full size
+					get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

@@ -48,10 +48,9 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		String packageName = intent.getData().getEncodedSchemeSpecificPart();
 
 		repository.getNotConfirmedRollback(packageName)
-				.first()
-				.filter(rollback -> rollback != null)
-				.subscribe(rollback -> repository.confirmRollback(rollback),
-						throwable -> throwable.printStackTrace());
+				.first().filter(rollback -> shouldConfirmRollback(rollback, action)).subscribe(rollback -> {
+			repository.confirmRollback(rollback);
+		}, throwable -> throwable.printStackTrace());
 
 		if(!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false))
 			return;
@@ -70,6 +69,17 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		}
 
 		closeRealm();
+	}
+
+	private boolean shouldConfirmRollback(Rollback rollback, String action) {
+		return rollback != null && ((rollback.getAction().equals(Rollback.Action.INSTALL.name())
+				&& action.equals(Intent.ACTION_PACKAGE_ADDED))
+				|| (rollback.getAction()
+				.equals(Rollback.Action.UNINSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_REMOVED))
+				|| (rollback.getAction().equals(Rollback.Action.UPDATE.name()) && action.equals(
+				Intent.ACTION_PACKAGE_REPLACED))
+				|| (rollback.getAction().equals(Rollback.Action.DOWNGRADE.name()) && action.equals(
+				Intent.ACTION_PACKAGE_ADDED)));
 	}
 
 	private void loadRealm() {
