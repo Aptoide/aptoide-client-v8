@@ -27,6 +27,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 
 	private TextView descriptionTextView;
 	private Button readMoreBtn;
+	private String storeName;
 
 	public AppViewDescriptionWidget(View itemView) {
 		super(itemView);
@@ -42,6 +43,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 	public void bindView(AppViewDescriptionDisplayable displayable) {
 		final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
 		final GetAppMeta.Media media = app.getMedia();
+		this.storeName = app.getStore().getName();
 
 		if(!TextUtils.isEmpty(media.getDescription())) {
 			descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
@@ -65,7 +67,7 @@ public class AppViewDescriptionWidget extends Widget<AppViewDescriptionDisplayab
 
 	private View.OnClickListener seeMoreHandler(final long appId) {
 		return v -> {
-			((FragmentShower) getContext()).pushFragmentV4(DescriptionFragment.newInstance(appId));
+			((FragmentShower) getContext()).pushFragmentV4(DescriptionFragment.newInstance(appId, storeName));
 		};
 	}
 }
