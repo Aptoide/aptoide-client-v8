@@ -102,25 +102,22 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 				Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
 				switch (action) {
 					case DOWNGRADE:
-						ShowMessage.asSnack(view, R.string.updating_msg);
 						displayable.update((FragmentShower) getContext());
 						break;
 					case INSTALL:
 						//only if the app is installed
 						//ShowMessage.asSnack(view, R.string.uninstall_msg);
-						ShowMessage.asSnack(view, "R.string.uninstall_msg");
+						ShowMessage.asSnack(view, R.string.uninstall);
 						displayable.uninstall(getContext(), displayable.getDownloadFromPojo())
 								.subscribe(uninstalled -> {
 								}, throwable -> throwable.printStackTrace());
 						break;
 
 					case UNINSTALL:
-						ShowMessage.asSnack(view, R.string.installing_msg);
 						displayable.install((FragmentShower) getContext());
 						break;
 
 					case UPDATE:
-						ShowMessage.asSnack(view, R.string.downgrading_msg);
 						displayable.update((FragmentShower) getContext());
 						break;
 				}
