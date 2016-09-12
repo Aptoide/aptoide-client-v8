@@ -18,7 +18,7 @@ public class BaseV7EndlessListResponse<T> extends BaseV7EndlessResponse {
 	private List<T> list;
 
 	@Override
-	public int getCurrentSize() {
+	public int getTotal() {
 		return list != null ? list.size() : 0;
 	}
 
