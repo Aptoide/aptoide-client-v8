@@ -134,10 +134,22 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 	}
 
 
-	protected static StoreCredentialsApp getStoreOnGetApp(String storeName) {
+	protected static StoreCredentialsApp getStoreOnRequest(String storeName) {
 		@Cleanup Realm realm = DeprecatedDatabase.get();
 		if (storeName != null) {
 			Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
+			if (store != null) {
+				return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
+			}
+		}
+		return new StoreCredentialsApp();
+	}
+
+	protected static StoreCredentialsApp getStoreOnRequest(Long storeId) {
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+
+		if (storeId != null) {
+			Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
 			if (store != null) {
 				return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
 			}
