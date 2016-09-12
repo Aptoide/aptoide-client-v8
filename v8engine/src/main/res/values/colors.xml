@@ -13,6 +13,7 @@
     <color name="aptoide_orange_700">@color/default_color_700</color>
     <color name="navdrawer_body_text_1_inverse">#deffffff</color>
     <color name="navdrawer_body_text_2_inverse">#d2ffffff</color>
+    <color name="cinza_medio">#b8b8b8</color>
 
     <color name="aptoide_color_focused">#e55c1b</color>
     <color name="aptoide_color_pressed">#000000</color>
