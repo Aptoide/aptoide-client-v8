@@ -36,7 +36,7 @@ public class Analytics {
 
 	private static final String TAG = Analytics.class.getSimpleName();
 
-	private static boolean ACTIVATE = BuildConfig.LOCALYTICS_CONFIGURED;
+	private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
     private static final boolean ACTIVATE_FLURRY = BuildConfig.FLURRY_CONFIGURED;
 	private static boolean isFirstSession;
 	private static final int ALL = Integer.MAX_VALUE;
@@ -54,13 +54,21 @@ public class Analytics {
      * @return true caso as flags fornecidas constem em accepted.
      */
     private static boolean checkAcceptability(int flag, int accepted) {
-        return (flag & accepted) == accepted;
+        if (accepted == LOCALYTICS && !ACTIVATE_LOCALYTICS) {
+            Logger.d(TAG, "Localytics Disabled ");
+            return false;
+        } else if (accepted == FLURRY && !ACTIVATE_FLURRY) {
+            Logger.d(TAG, "Flurry Disabled");
+            return false;
+        } else {
+            return (flag & accepted) == accepted;
+        }
     }
 
     private static void track(String event, String key, String attr, int flags) {
 
         try {
-            if (!ACTIVATE)
+            if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY)
                 return;
 
             HashMap stringObjectHashMap = new HashMap<>();
@@ -79,7 +87,7 @@ public class Analytics {
 
     private static void track(String event, HashMap map, int flags) {
         try {
-            if (!ACTIVATE){
+            if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY){
                 return;
             }
             if(checkAcceptability(flags, LOCALYTICS)){
@@ -102,7 +110,7 @@ public class Analytics {
     private static void track(String event, int flags) {
 
         try {
-            if (!ACTIVATE)
+            if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY)
                 return;
 
             if(checkAcceptability(flags, LOCALYTICS))
@@ -125,10 +133,10 @@ public class Analytics {
             public static void onCreate(android.app.Application application) {
 
 	            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
-	            ACTIVATE = ACTIVATE && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
+	            ACTIVATE_LOCALYTICS = ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
 	            isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-                Logger.d(TAG, "teste : " + ACTIVATE + " : " + isFirstSession);
-                if (!ACTIVATE && !isFirstSession) {
+                Logger.d(TAG, "teste : " + ACTIVATE_LOCALYTICS + " : " + isFirstSession);
+                if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
                     return;
                 }
 
@@ -145,7 +153,7 @@ public class Analytics {
                     Dimensions.setUTMDimensionsToUnknown();
                 }
 
-                if(isFirstSession && !ACTIVATE){
+                if(isFirstSession && !ACTIVATE_LOCALYTICS){
                     Dimensions.setSamplingTypeDimension("90% sampling");
                 }else{
                     Dimensions.setSamplingTypeDimension("Full-tracking");
@@ -216,21 +224,21 @@ public class Analytics {
 
             public static void onCreate(android.app.Activity activity) {
 
-                if (!ACTIVATE)
+                if (!ACTIVATE_LOCALYTICS)
                     return;
 
             }
 
             public static void onDestroy(android.app.Activity activity) {
 
-                if (!ACTIVATE)
+                if (!ACTIVATE_LOCALYTICS)
                     return;
 
             }
 
             public static void onResume(android.app.Activity activity) {
 
-                if(!ACTIVATE)
+                if(!ACTIVATE_LOCALYTICS)
                     return;
 
                 Localytics.onActivityResume(activity);
@@ -266,7 +274,7 @@ public class Analytics {
             }
 
             public static void onPause(android.app.Activity activity){
-	            if (!ACTIVATE && !isFirstSession)
+	            if (!ACTIVATE_LOCALYTICS && !isFirstSession)
 		            return;
 
                 Localytics.onActivityPaused(activity);
@@ -293,7 +301,7 @@ public class Analytics {
 
             }
 	        public static void onNewIntent(android.app.Activity activity, Intent intent) {
-		        if (!ACTIVATE && !isFirstSession) {
+		        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
 			        return;
 		        }
 		        Localytics.onNewIntent(activity, intent);
@@ -306,7 +314,7 @@ public class Analytics {
 
         public static void tagScreen(String screenName) {
 
-            if (!ACTIVATE)
+            if (!ACTIVATE_LOCALYTICS)
                 return;
 
             Logger.d(TAG, "Localytics: Screens: " + screenName);
@@ -804,7 +812,7 @@ public class Analytics {
         public static final String INSTALLER = "Installer";
 
         private static void setDimension(int i, String s) {
-	        if (!ACTIVATE && !isFirstSession) {
+	        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
 		        return;
 	        }
 
@@ -927,7 +935,7 @@ public class Analytics {
 //        }
 
         private static void ltv(String eventName, String packageName) {
-            if (!ACTIVATE) {
+            if (!ACTIVATE_LOCALYTICS) {
                 return;
             }
 
@@ -1005,7 +1013,4 @@ public class Analytics {
 	    }
     }
 
-//	public static class Viewed_Application{
-//		public static void
-//	}
 }
