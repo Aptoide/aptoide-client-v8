@@ -7,6 +7,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.List;
 
@@ -60,18 +61,20 @@ public class DownloadServiceHelper {
 	 * @return An observable that reports the download state
 	 */
 	public Observable<Download> startDownload(PermissionRequest permissionRequest, Download download) {
-		return permissionManager.requestExternalStoragePermission(permissionRequest).flatMap(success -> Observable.fromCallable(() -> {
-			aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
-				startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-			}, throwable -> {
-				if (throwable instanceof DownloadNotFoundException) {
-					@Cleanup Realm realm = DeprecatedDatabase.get();
-					DeprecatedDatabase.save(download, realm);
-					startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-				}
-			});
-			return download;
-		}).flatMap(aDownload -> aptoideDownloadManager.getDownload(download.getAppId())));
+		return permissionManager.requestExternalStoragePermission(permissionRequest)
+				.flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+				.flatMap(success -> Observable.fromCallable(() -> {
+					aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
+						startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+					}, throwable -> {
+						if (throwable instanceof DownloadNotFoundException) {
+							@Cleanup Realm realm = DeprecatedDatabase.get();
+							DeprecatedDatabase.save(download, realm);
+							startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+						}
+					});
+					return download;
+				}).flatMap(aDownload -> aptoideDownloadManager.getDownload(download.getAppId())));
 	}
 
 	private void startDownloadService(long appId, String action) {

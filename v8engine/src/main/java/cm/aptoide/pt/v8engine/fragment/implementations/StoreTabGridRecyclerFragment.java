@@ -37,6 +37,7 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
@@ -144,7 +145,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 		if (args.containsKey(BundleCons.LAYOUT)) {
 			layout = Layout.valueOf(args.getString(BundleCons.LAYOUT));
 		}
-		title = args.getString(BundleCons.TITLE);
+		title = args.getString(Translator.translate(BundleCons.TITLE));
 		action = args.getString(BundleCons.ACTION);
 		storeTheme = args.getString(BundleCons.STORE_THEME);
 	}

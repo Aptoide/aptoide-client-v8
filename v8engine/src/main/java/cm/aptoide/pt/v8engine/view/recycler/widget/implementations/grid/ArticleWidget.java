@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -64,6 +65,8 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 		this.displayable = displayable;
 		title.setText(displayable.getTitle());
 		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+		Typeface typeFace = Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
+		articleTitle.setTypeface(typeFace);
 		articleTitle.setText(displayable.getArticleTitle());
 		setCardviewMargin(displayable);
 		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
@@ -78,8 +81,8 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
 		}
 
-		CustomTabsHelper.getInstance()
-				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
+//		CustomTabsHelper.getInstance()
+//				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
 
 		url.setOnClickListener(v -> {
 			displayable.getLink().launch(getContext());

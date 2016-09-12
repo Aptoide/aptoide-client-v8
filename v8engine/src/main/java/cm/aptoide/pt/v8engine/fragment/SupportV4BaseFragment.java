@@ -118,4 +118,12 @@ public abstract class SupportV4BaseFragment extends RxFragment implements UiComp
 			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
 		}
 	}
+
+	public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied){
+		try {
+			((PermissionRequest) this.getActivity()).requestDownloadAccess(toRunWhenAccessIsGranted,toRunWhenAccessIsDenied);
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
+		}
+	}
 }

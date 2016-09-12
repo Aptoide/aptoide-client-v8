@@ -19,6 +19,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
+import cm.aptoide.pt.v8engine.util.Translator;
 
 /**
  * Created by neuro on 10-05-2016.
@@ -49,7 +50,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 		// StoreTabGridRecyclerFragment.
 		if (toolbar != null) {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
+			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Translator.translate(title));
 			((AppCompatActivity) getActivity()).getSupportActionBar()
 					.setDisplayHomeAsUpEnabled(true);
 			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);

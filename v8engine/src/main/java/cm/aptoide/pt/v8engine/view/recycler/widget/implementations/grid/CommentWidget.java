@@ -36,7 +36,7 @@ public class CommentWidget extends BaseWidget<CommentDisplayable> {
 	@Override
 	public void bindView(CommentDisplayable displayable) {
 		Comment comment = displayable.getPojo();
-		ImageLoader.loadWithCircleTransformAndPlaceHolder(comment.getUser().getAvatar(), userAvatar, R.drawable.layer_1);
+		ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser().getAvatar(), userAvatar, R.drawable.layer_1);
 		userName.setText(comment.getUser().getName());
 		date.setText(AptoideUtils.DateTimeU.getInstance().getTimeDiffString(getContext(), comment.getAdded().getTime()));
 		this.comment.setText(comment.getBody());

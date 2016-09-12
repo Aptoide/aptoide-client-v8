@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 
 import java.util.ArrayList;
@@ -64,6 +65,11 @@ public class RecommendationDisplayable extends Displayable {
 		return context.getString(titleResource);
 	}
 
+	public Spannable getStyledTitle(Context context) {
+		String aptoide = "Aptoide";
+		return spannableFactory.createColorSpan(context.getString(titleResource), ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
+	}
+
 	public int getMarginWidth(Context context, int orientation){
 		if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
 			return 0;
@@ -94,8 +100,8 @@ public class RecommendationDisplayable extends Displayable {
 	}
 
 	public Spannable getAppText(Context context) {
-		return spannableFactory.createStyleSpan(context
-				.getString(R.string.displayable_social_timeline_article_get_app_button, ""), Typeface.BOLD, "");
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_article_get_app_button, ""), ContextCompat.getColor
+				(context, R.color.appstimeline_grey), "");
 	}
 
 	public String getTimeSinceLastUpdate(Context context) {

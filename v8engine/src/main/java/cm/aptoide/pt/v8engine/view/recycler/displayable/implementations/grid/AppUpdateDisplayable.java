@@ -100,17 +100,16 @@ public class AppUpdateDisplayable extends Displayable {
 
 	public Spannable getHasUpdateText(Context context) {
 		final String update = context.getString(R.string.displayable_social_timeline_app_update);
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update),
-				ContextCompat.getColor(context, R.color.card_store_title), update);
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update), Typeface.BOLD, update);
 	}
 
 	public Spannable getVersionText(Context context) {
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName),
-				ContextCompat.getColor(context, R.color.black), appVersionName);
+		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName), Typeface.BOLD,
+				appVersionName);
 	}
 
 	public Spannable getUpdateAppText(Context context) {
-		String application = context.getString(R.string.displayable_social_timeline_app_update_application);
+		String application = context.getString(R.string.appstimeline_update_app);
 		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_button,
 				application), Typeface.BOLD, application);
 	}

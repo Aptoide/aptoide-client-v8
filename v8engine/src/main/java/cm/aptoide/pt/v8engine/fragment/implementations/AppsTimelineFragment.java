@@ -14,6 +14,18 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
+import com.trello.rxlifecycle.FragmentEvent;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -143,7 +155,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		}
 
 		subscription = displayableObservable
-				.<Datalist<Displayable>> compose(bindUntilEvent(FragmentEvent.PAUSE))
+				.<Datalist<Displayable>> compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(items -> addItems(items), throwable -> finishLoading((Throwable) throwable));
 	}
@@ -172,6 +184,12 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return getDisplayableList(packages, 0, refresh)
 				.doOnNext(item -> getAdapter().clearDisplayables())
 				.doOnUnsubscribe(() -> finishLoading());
+	}
+
+	@Override
+	public void reload() {
+		Analytics.AppsTimeline.pullToRefresh();
+		load(true, null);
 	}
 
 	private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
@@ -276,9 +294,11 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return false;
 	}
 
+
 	@NonNull
 	private boolean onStartLoadNext() {
 		if (!isTotal() && !isLoading()) {
+			Analytics.AppsTimeline.endlessScrollLoadMore();
 			addLoading();
 			return true;
 		}

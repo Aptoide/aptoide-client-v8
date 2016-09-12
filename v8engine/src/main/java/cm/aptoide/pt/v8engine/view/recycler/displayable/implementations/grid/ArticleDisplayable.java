@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 
 import cm.aptoide.pt.v8engine.link.Link;
@@ -84,7 +85,8 @@ public class ArticleDisplayable extends Displayable {
 	}
 
 	public Spannable getAppRelatedToText(Context context) {
-		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_article_related_to, appName), Typeface.BOLD, appName);
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_article_related_to, appName), ContextCompat.getColor
+				(context, R.color.appstimeline_grey), appName);
 	}
 
 	@Override

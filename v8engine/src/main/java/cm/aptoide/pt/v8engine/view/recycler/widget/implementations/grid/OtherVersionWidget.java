@@ -58,7 +58,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 		// left side
 		//versionBadge = (ImageView) itemView.findViewById(R.id.version_icon);
 		version = (TextView) itemView.findViewById(R.id.version_name);
-		trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
+//		trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
 		date = (TextView) itemView.findViewById(R.id.version_date);
 		downloads = (TextView) itemView.findViewById(R.id.downloads);
 		// right side
@@ -77,7 +77,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 			appId = app.getId();
 
 			version.setText(app.getFile().getVername());
-			setBadge(app, trustedBadge);
+//			setBadge(app, trustedBadge);
 			date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified().getTime()));
 			downloads.setText(String.format(DEFAULT_LOCALE, getContext().getString(R.string.other_versions_downloads_count_text), AptoideUtils.StringU
 					.withSuffix(app

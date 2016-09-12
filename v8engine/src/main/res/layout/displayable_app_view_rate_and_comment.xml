@@ -9,7 +9,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="192.6dp"
+    android:layout_height="200dp"
     android:paddingBottom="7.3dp"
     android:paddingTop="15dp"
     >
@@ -146,6 +146,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text="@string/top_comments"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="?colorPrimary"
             android:textSize="@dimen/text_size_large"
             />

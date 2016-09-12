@@ -20,30 +20,41 @@ import java.util.List;
 
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FullReview;
+import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.model.v7.ListReviews;
+import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by sithengineer on 02/08/16.
  */
-public class LatestReviewsFragment extends GridRecyclerFragmentWithDecorator implements Endless {
+public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
 
 	private static final String TAG = LatestReviewsFragment.class.getSimpleName();
 	// on v6, 50 was the limit
 	private static final int REVIEWS_LIMIT = 25;
 	private static final String STORE_ID = "storeId";
 
-	private ProgressBar progressBar;
-	private TextView emptyData;
-	//private Subscription subscription;
-
-	private int offset = 0;
-	private int limit = 9;
 	private long storeId;
+	private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+	private List<Displayable> displayables;
+
+
 
 	public static LatestReviewsFragment newInstance(long storeId) {
 		LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -87,40 +98,28 @@ public class LatestReviewsFragment extends GridRecyclerFragmentWithDecorator imp
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		super.load(refresh, savedInstanceState);
-		ListFullReviewsRequest.of(storeId, limit, offset).execute(listTopFullReviews -> {
+
+		ListFullReviewsRequest listFullReviewsRequest = ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0);
+		Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
 			List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
-			List<Displayable> displayables = new LinkedList<>();
+			displayables = new LinkedList<>();
 			for (final FullReview review : reviews) {
 				displayables.add(new RowReviewDisplayable(review));
 			}
-			setDisplayables(displayables);
-			finishLoading();
-			progressBar.setVisibility(View.GONE);
-			emptyData.setVisibility(View.GONE);
-		}, err -> {
-			Logger.e(TAG, err.getCause());
-		}, false);
+			addDisplayables(displayables);
+		};
+
+		recyclerView.clearOnScrollListeners();
+		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest, listFullReviewsAction,
+				errorRequestListener, refresh);
+		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+		endlessRecyclerOnScrollListener.onLoadMore(refresh);
+
 	}
 
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
 		setHasOptionsMenu(true);
-		emptyData = (TextView) view.findViewById(R.id.empty_data);
-	}
-
-	@Override
-	public int getOffset() {
-		return offset;
-	}
-
-	@Override
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
-
-	@Override
-	public Integer getLimit() {
-		return limit;
 	}
 }
