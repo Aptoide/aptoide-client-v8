@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -126,6 +129,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 		public Body(Integer limit, String query, Map<String,List<String>> storesAuthMap, List<String> storeNames, Boolean trusted) {
 			this.limit = limit;
 			this.query = query;
+			this.storesAuthMap = storesAuthMap;
 			this.storeNames = storeNames;
 			this.trusted = trusted;
 		}
