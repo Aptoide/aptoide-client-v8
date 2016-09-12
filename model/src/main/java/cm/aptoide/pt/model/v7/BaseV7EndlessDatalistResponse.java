@@ -16,13 +16,13 @@ public class BaseV7EndlessDatalistResponse<T> extends BaseV7EndlessResponse {
 	private Datalist<T> datalist;
 
 	@Override
-	public int getCurrentSize() {
-		return hasData() ? datalist.getList().size() : 0;
+	public int getTotal() {
+		return hasData() ? datalist.getTotal() : 0;
 	}
 
 	@Override
 	public int getNextSize() {
-		return hasData() ? NEXT_STEP : 0;
+		return hasData() ? datalist.getNext() : 0;
 	}
 
 	@Override

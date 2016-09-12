@@ -4,7 +4,7 @@
   -->
 
 <resources>
-    <string name="app_name">Aptoide Client V8 Concept</string>
+    <string name="app_name">Aptoide V8 Beta</string>
 
     <string name="dark">Dark</string>
     <string name="light">Light</string>
@@ -269,7 +269,15 @@
     <string name="summer_apps">Summer Apps</string>
     <string name="play_it">Play-It!</string>
 
-    <!--Search new string-->
+    <!--AppsTimeline new string-->
     <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
+    <string name="appstimeline_update_app">app</string>
+    <!--custom tabs-->
+    <string name="customtabs_open_native_app">Open in App</string>
+
+
+    <!--Download fragment-->
+    <string name="fragment_download_no_connection">No apps downloaded</string>
+    <string name="fragment_download_no_connection_subtitle">New apps will appear here as soon as you start downloading them!</string>
 
 </resources>

@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
 import java.util.List;
 
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
@@ -43,6 +44,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	// Views
 	private Button subscribedButton;
 	private Button everywhereButton;
+  private LinearLayout buttonsLayout;
 	private View noSearchLayout;
 	private EditText noSearchLayoutSearchQuery;
 	private ImageView noSearchLayoutSearchButton;
@@ -81,7 +83,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 		subscribedButton = (Button) view.findViewById(R.id.subscribed);
 		everywhereButton = (Button) view.findViewById(R.id.everywhere);
-		noSearchLayout = view.findViewById(R.id.no_search_results_layout);
+    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
+    noSearchLayout = view.findViewById(R.id.no_search_results_layout);
 		noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
 		noSearchLayoutSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
 
@@ -95,11 +98,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		if (hasSubscribedResults || hasEverywhereResults) {
 			super.setupViewPager();
 		} else {
-			Logger.d(this.getClass().getName(), "LOCALYTICS TESTING - NO SEARCH RESULT: " + query);
 			Analytics.Search.noSearchResults(query);
 
 			noSearchLayout.setVisibility(View.VISIBLE);
-			noSearchLayoutSearchButton.setOnClickListener(v -> {
+      buttonsLayout.setVisibility(View.INVISIBLE);
+      noSearchLayoutSearchButton.setOnClickListener(v -> {
 				String s = noSearchLayoutSearchQuery.getText().toString();
 
 				if (s.length() > 1) {
@@ -146,8 +149,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	}
 
 	private void executeSearchRequests() {
-		Logger.d(this.getClass().getName(), "LOCALYTICS TESTING - SEARCH CLICKED. QUERY: " + query);
-
 		Analytics.Search.searchTerm(query);
 
 		if (storeName != null) {

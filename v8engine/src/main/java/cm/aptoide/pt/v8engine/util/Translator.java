@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.util;
 
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 
@@ -20,8 +21,14 @@ public class Translator {
 			case "Updates":
 				translated = Application.getContext().getString(R.string.updates);
 				break;
+			case "Stores":
+				translated = Application.getContext().getString(R.string.stores);
+				break;
 			case "Downloads":
 				translated = Application.getContext().getString(R.string.downloads);
+				break;
+			case "Community":
+				translated = Application.getContext().getString(R.string.community);
 				break;
 			case "Latest Reviews":
 				translated = Application.getContext().getString(R.string.latest_reviews);
@@ -43,6 +50,9 @@ public class Translator {
 				break;
 			case "Local Top Apps":
 				translated = Application.getContext().getString(R.string.local_top_apps);
+				break;
+			case "Top Stores":
+				translated = Application.getContext().getString(R.string.top_stores_fragment_title);
 				break;
 			case "Top Games":
 				translated = Application.getContext().getString(R.string.top_games);

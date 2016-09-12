@@ -3,11 +3,13 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 
+import cm.aptoide.pt.v8engine.link.Link;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import java.util.Date;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -24,8 +26,8 @@ import lombok.Getter;
 public class VideoDisplayable extends Displayable {
 
 	@Getter private String videoTitle;
-	@Getter private String url;
-	@Getter private String baseUrl;
+	@Getter private Link link;
+	@Getter private Link baseLink;
 	@Getter private String title;
 	@Getter private String thumbnailUrl;
 	@Getter private String avatarUrl;
@@ -36,15 +38,18 @@ public class VideoDisplayable extends Displayable {
 	private DateCalculator dateCalculator;
 	private SpannableFactory spannableFactory;
 
-	public static VideoDisplayable from(Video video, DateCalculator dateCalculator, SpannableFactory
-			spannableFactory) {
+	public static VideoDisplayable from(Video video, DateCalculator dateCalculator, SpannableFactory spannableFactory,
+			LinksHandlerFactory linksHandlerFactory) {
 		String appName = null;
 		long appId = 0;
 		if (video.getApps() != null && video.getApps().size() > 0) {
 			appName = video.getApps().get(0).getName();
 			appId = video.getApps().get(0).getId();
 		}
-		return new VideoDisplayable(video.getTitle(), video.getUrl(), video.getPublisher().getBaseUrl(),video
+		return new VideoDisplayable(video.getTitle(),
+				linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
+				linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+						video.getPublisher().getBaseUrl()), video
 				.getPublisher().getName(), video.getThumbnailUrl(), video.getPublisher()
 				.getLogoUrl(), appId, appName, video.getDate(), dateCalculator, spannableFactory);
 	}
@@ -66,7 +71,8 @@ public class VideoDisplayable extends Displayable {
 	}
 
 	public Spannable getAppRelatedText(Context context) {
-		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_article_related_to, appName), Typeface.BOLD, appName);
+		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_article_related_to, appName), ContextCompat.getColor
+				(context, R.color.appstimeline_grey), appName);
 	}
 
 	@Override

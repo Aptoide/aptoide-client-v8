@@ -61,7 +61,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 		int totalItemCount = linearLayoutManager.getItemCount();
 		int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-		boolean hasMoreElements = offset <= total;
+		boolean hasMoreElements = offset < total;
 		boolean isOverLastPosition = (lastVisibleItemPosition >= (totalItemCount - 1));
 		boolean isOverVisibleThreshold = ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
 
@@ -80,8 +80,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 			}
 
 			if (response.hasData()) {
-				total += response.getCurrentSize();
-				offset += response.getNextSize();
+				total = response.getTotal();
+				offset = response.getNextSize();
 				v7request.getBody().setOffset(offset);
 			}
 

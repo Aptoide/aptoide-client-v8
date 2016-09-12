@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,15 +18,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.fragment.implementations.SettingsFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import lombok.Getter;
 import rx.functions.Action0;
@@ -42,6 +50,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 	@Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
 	@Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
 	@Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
+	@Nullable private Action0 toRunWhenDownloadAccessIsGranted;
+	@Nullable private Action0 toRunWhenDownloadAccessIsDenied;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -268,6 +278,51 @@ public abstract class AptoideBaseActivity extends AppCompatActivity implements U
 			return;
 		}
 		Logger.i(TAG, "already has permission to access accounts");
+		if (toRunWhenAccessIsGranted != null) {
+			toRunWhenAccessIsGranted.call();
+		}
+	}
+
+	public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied){
+		int message = R.string.general_downloads_dialog_no_download_rule_message;
+
+		if((AptoideUtils.SystemU.getConnectionType().equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile())
+				|| (AptoideUtils.SystemU.getConnectionType().equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi())) {
+			this.toRunWhenDownloadAccessIsGranted = toRunWhenAccessIsGranted;
+			this.toRunWhenDownloadAccessIsDenied = toRunWhenAccessIsDenied;
+			if ((AptoideUtils.SystemU.getConnectionType().equals("wifi") || AptoideUtils.SystemU.getConnectionType().equals("mobile"))
+					&& !ManagerPreferences.getGeneralDownloadsWifi() && !ManagerPreferences.getGeneralDownloadsMobile()) {
+				message = R.string.general_downloads_dialog_no_download_rule_message;
+			}
+			else if (AptoideUtils.SystemU.getConnectionType().equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi()) {
+				message = R.string.general_downloads_dialog_only_mobile_message;
+			}
+			else if (AptoideUtils.SystemU.getConnectionType().equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile()) {
+				message = R.string.general_downloads_dialog_only_wifi_message;
+			}
+
+			showMessageOKCancel(getString(message), new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+				@Override
+				public void onNext(GenericDialogs.EResponse eResponse) {
+					super.onNext(eResponse);
+					if (eResponse == GenericDialogs.EResponse.YES) {
+						if (AptoideBaseActivity.this instanceof FragmentShower) {
+							((FragmentShower) AptoideBaseActivity.this).pushFragmentV4(SettingsFragment.newInstance());
+						} else {
+							Logger.e(AptoideBaseActivity.class.getSimpleName(), new IllegalArgumentException("The Fragment should be an instance of the " +
+									"Activity Context"));
+						}
+					}
+					else {
+						if (toRunWhenAccessIsDenied != null) {
+							toRunWhenAccessIsDenied.call();
+						}
+					}
+				}
+			});
+			return;
+		}
 		if (toRunWhenAccessIsGranted != null) {
 			toRunWhenAccessIsGranted.call();
 		}
