@@ -5,6 +5,11 @@
 
 package cm.aptoide.pt.imageloader;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.widget.ImageView;
 
@@ -32,6 +37,16 @@ public class ImageLoader {
 
 	public static void load(String url, @DrawableRes ImageView imageView) {
 		Glide.with(Application.getContext()).load(AptoideUtils.IconSizeU.getNewImageUrl(url)).into(imageView);
+	}
+
+	public static Drawable load(@DrawableRes int drawableId) {
+		if(drawableId==0) return null;
+		Context ctx = Application.getContext();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			return ctx.getResources().getDrawable(drawableId, Application.getContext().getTheme());
+		}else{
+			return ctx.getResources().getDrawable(drawableId);
+		}
 	}
 
 	public static void load(@DrawableRes int drawableId, ImageView imageView) {
