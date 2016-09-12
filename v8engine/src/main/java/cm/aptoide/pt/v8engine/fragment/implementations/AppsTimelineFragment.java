@@ -13,6 +13,8 @@ import android.support.design.widget.Snackbar;
 
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import com.trello.rxlifecycle.FragmentEvent;
@@ -168,6 +170,12 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 				.doOnUnsubscribe(() -> finishLoading());
 	}
 
+	@Override
+	public void reload() {
+		Analytics.AppsTimeline.pullToRefresh();
+		load(true, null);
+	}
+
 	private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
 		return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
 				.filter(item -> onStartLoadNext())
@@ -270,9 +278,11 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return false;
 	}
 
+
 	@NonNull
 	private boolean onStartLoadNext() {
 		if (!isTotal() && !isLoading()) {
+			Analytics.AppsTimeline.endlessScrollLoadMore();
 			addLoading();
 			return true;
 		}
