@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
@@ -14,7 +13,7 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import io.realm.Realm;
@@ -46,7 +45,8 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private String patchObbName;
 	@Getter private String patchObbPath;
 	@Getter private String patchObbMd5;
-	@Getter private InstallManager installManager;
+
+	@Getter private Installer installManager;
 	private Download download;
 	@Getter private DownloadServiceHelper downloadManager;
 	@Setter private Action0 pauseAction;
@@ -56,8 +56,8 @@ public class UpdateDisplayable extends Displayable {
 	public UpdateDisplayable() {
 	}
 
-	public static UpdateDisplayable create(Update update, InstallManager installManager, DownloadFactory downloadFactory, DownloadServiceHelper
-			downloadManager, Realm realm) {
+	public static UpdateDisplayable create(Update update, Installer installManager,
+			DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
 
 		return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(), update.getIcon(), update.getVersionCode(), update.getMd5()
 				, update.getApkPath(), update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(), update.getMainObbPath(), update
@@ -68,10 +68,10 @@ public class UpdateDisplayable extends Displayable {
 	public Observable<Void> downloadAndInstall(Context context) {
 		Analytics.Updates.update();
 
-		return downloadManager.startDownload((PermissionRequest) context, download)
-				.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-				.flatMap(download -> installManager.install(context, (PermissionRequest) context, download.getAppId()))
-				.onErrorReturn(throwable -> null);
+		return downloadManager.startDownload(permissionRequest, download)
+				//				.ignoreElements()
+				.cast(Void.class)
+				.concatWith(installManager.update(context, permissionRequest, download.getAppId()));
 	}
 
 	@Override

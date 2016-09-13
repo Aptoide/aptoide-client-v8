@@ -18,6 +18,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -26,7 +27,10 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -217,9 +221,11 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     DownloadServiceHelper downloadManager =
         new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 
-    InstallManager installManager =
+    Installer installManager = new RollbackInstallManager(
         new InstallManager(permissionManager, getContext().getPackageManager(),
-            new DownloadInstallationProvider(downloadManager));
+            new DownloadInstallationProvider(downloadManager)),
+        RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
+        new DownloadInstallationProvider(downloadManager));
 
     PermissionRequest permissionRequest = ((PermissionRequest) getContext());
     DownloadServiceHelper downloadServiceHelper =
@@ -236,7 +242,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
   private Observable<Download> downloadAndInstall(Download download,
       PermissionRequest permissionRequest, DownloadServiceHelper downloadServiceHelper,
-      InstallManager installManager, Context context) {
+      Installer installManager, Context context) {
     Logger.v(TAG, "downloading app with id " + download.getAppId());
     return downloadServiceHelper.startDownload(permissionRequest, download)
         .map(downloadItem -> { // for logging purposes only
@@ -251,7 +257,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
             downloadItem.getAppId()).map(aVoid -> downloadItem));
   }
 
-  private Observable<Void> installAndRemoveFromList(InstallManager installManager, Context context,
+  private Observable<Void> installAndRemoveFromList(Installer installManager, Context context,
       long appId) {
     Logger.v(TAG, "installing app with id " + appId);
     return installManager.install(context, (PermissionRequest) context, appId)

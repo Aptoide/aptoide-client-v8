@@ -12,6 +12,6 @@ import rx.Observable;
  */
 public interface InstallationProvider {
 
-	Observable<Installation> getInstallation(long id);
+	Observable<RollbackInstallation> getInstallation(long id);
 
 }

@@ -15,6 +15,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Collections;
 import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Calendar;
 
 /**
  * Created by sithengineer on 17/05/16.
@@ -47,7 +50,6 @@ public class Download extends RealmObject {
 	private String Icon;
 	@SuppressWarnings({"all"}) private long timeStamp;
 	private int downloadSpeed;
-
 	public Download() {
 	}
 
@@ -62,6 +64,10 @@ public class Download extends RealmObject {
 		Collections.sort(downloads,
 				(lhs, rhs) -> Long.valueOf(lhs.getTimeStamp()).compareTo(rhs.getTimeStamp()) * sortOrder);
 		return downloads;
+	}
+
+	public long getTimeStamp() {
+		return timeStamp;
 	}
 
 	public String getStatusName(Context context) {

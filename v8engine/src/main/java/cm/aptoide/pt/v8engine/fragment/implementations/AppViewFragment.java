@@ -29,14 +29,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -60,7 +57,10 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -68,6 +68,7 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -82,7 +83,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
 import io.realm.Realm;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
@@ -121,7 +125,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	//
 	private MinimalAd minimalAd;
 	// Stored to postpone ads logic
-	private InstallManager installManager;
+	private Installer installManager;
 
 	private Action0 unInstallAction;
 	private MenuItem uninstallMenuItem;
@@ -140,12 +144,22 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private double taxRate;
 
 	private AppViewInstallDisplayable installDisplayable;
+	private String md5;
 	private PermissionManager permissionManager;
 
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
 		bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
 		bundle.putBoolean(BundleKeys.SHOULD_INSTALL.name(), shouldInstall);
+
+		AppViewFragment fragment = new AppViewFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
+
+	public static AppViewFragment newInstance(String md5) {
+		Bundle bundle = new Bundle();
+		bundle.putString(BundleKeys.MD5.name(), md5);
 
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
@@ -189,8 +203,15 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(),
-				new DownloadInstallationProvider(downloadManager));
+
+		DownloadInstallationProvider installationProvider =
+				new DownloadInstallationProvider(downloadManager);
+
+		installManager = new RollbackInstallManager(
+				new InstallManager(permissionManager, getContext().getPackageManager(),
+						installationProvider), RepositoryFactory.getRepositoryFor(Rollback.class),
+				new RollbackActionFactory(), installationProvider);
+
 		productFactory = new ProductFactory();
 		appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
 				productFactory);
@@ -203,6 +224,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		super.loadExtras(args);
 		appId = args.getLong(BundleKeys.APP_ID.name(), -1);
 		packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
+		md5 = args.getString(BundleKeys.MD5.name(), null);
 		shouldInstall = args.getBoolean(BundleKeys.SHOULD_INSTALL.name(), false);
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
 		sponsored = minimalAd != null;
@@ -231,7 +253,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 		GetAppMeta.Media media = app.getMedia();
 
-		installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall);
+		installDisplayable =
+				AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
+						AccessorFactory.getAccessorFor(Installed.class));
 		displayables.add(installDisplayable);
 		displayables.add(new AppViewStoreDisplayable(getApp));
 		displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -366,6 +390,27 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						setupObservables(getApp);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
+		} else if (!TextUtils.isEmpty(md5)) {
+			appRepository.getAppFromMd5(md5, refresh, sponsored)
+					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+					.flatMap(getApp -> manageOrganicAds(getApp))
+					.flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(getApp -> {
+						if (storeTheme == null) {
+							storeTheme =
+									getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+						}
+
+						// useful data for the schedule updates menu option
+						GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+						scheduled = Scheduled.from(app);
+
+						header.setup(getApp);
+						setupDisplayables(getApp);
+						setupObservables(getApp);
+						finishLoading();
+					}, throwable -> finishLoading(throwable));
 		} else {
 			Logger.d(TAG, "loading app info using app package name");
 			subscription = appRepository.getApp(packageName, refresh, sponsored)
@@ -374,7 +419,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(getApp -> {
 						if (storeTheme == null) {
-							storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+							storeTheme =
+									getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 						}
 
 						// useful data for the schedule updates menu option
@@ -534,7 +580,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		APP_ID,
 		MINIMAL_AD,
 		PACKAGE_NAME,
-		SHOULD_INSTALL
+		SHOULD_INSTALL,
+		MD5
 	}
 
 	private final class AppViewHeader {

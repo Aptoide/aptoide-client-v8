@@ -10,21 +10,18 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-
-import java.util.Date;
-
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
@@ -46,7 +43,7 @@ public class AppUpdateDisplayable extends Displayable {
 	@Getter private String packageName;
 	private Download download;
 	private DownloadServiceHelper downloadManager;
-	private InstallManager installManager;
+	private Installer installManager;
 	private DateCalculator dateCalculator;
 	private long appId;
 
@@ -54,8 +51,9 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
+			DownloadServiceHelper downloadManager, Installer installManager,
+			DateCalculator dateCalculator) {
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
 				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getPackageName(), downloadFactory
 				.create(appUpdate), downloadManager, installManager, dateCalculator, appUpdate.getId());
 	}
@@ -65,7 +63,7 @@ public class AppUpdateDisplayable extends Displayable {
 	}
 
 	public Observable<Void> install(Context context) {
-		return installManager.install(context, (PermissionRequest) context, download.getAppId());
+		return installManager.update(context, (PermissionRequest) context, download.getAppId());
 	}
 
 	public Observable<Download> download(PermissionRequest permissionRequest) {

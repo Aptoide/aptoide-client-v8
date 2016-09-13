@@ -22,6 +22,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -29,12 +30,19 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
+import java.util.LinkedList;
+import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -48,7 +56,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 	private List<Displayable> activeDisplayablesList = new LinkedList<>();
 	private List<Displayable> completedDisplayablesList = new LinkedList<>();
 	private Subscription subscription;
-	private InstallManager installManager;
+	private Installer installManager;
 	private DownloadServiceHelper downloadManager;
 	private List<Download> oldDownloadsList;
 	private PermissionManager permissionManager;
@@ -58,9 +66,15 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		final PermissionManager permissionManager = new PermissionManager();
+		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+		installManager = new RollbackInstallManager(
+				new InstallManager(permissionManager, getContext().getPackageManager(),
+						new DownloadInstallationProvider(downloadManager)),
+				RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
+				new DownloadInstallationProvider(downloadManager));
 	}
 
 	@Override public void load(boolean refresh, Bundle savedInstanceState) {

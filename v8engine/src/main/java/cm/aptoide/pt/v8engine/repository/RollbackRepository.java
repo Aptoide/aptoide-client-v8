@@ -5,21 +5,23 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import java.util.List;
-
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import rx.Observable;
 
 /**
  * Created by sithengineer on 30/08/16.
  */
-public class RollbackRepository {
+@AllArgsConstructor public class RollbackRepository implements Repository {
+
+	private RollbackAccessor accessor;
 
 	public Observable<Rollback> getRollback(String packageName, Rollback.Action action) {
 		final Realm realm = DeprecatedDatabase.get();
@@ -98,14 +100,31 @@ public class RollbackRepository {
 		});
 	}
 
-	public Observable<Void> addRollbackWithAction(GetAppMeta.App app, Rollback.Action action) {
+	public Observable<List<Rollback>> getConfirmedRollbacks() {
+		return accessor.getConfirmedRollbacks();
+	}
+
+	public Observable<Void> addRollbackWithAction(Rollback rollback) {
 		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = DeprecatedDatabase.get();
-			Rollback rollback = new Rollback(app, action);
-			realm.beginTransaction();
-			realm.copyToRealmOrUpdate(rollback);
-			realm.commitTransaction();
+			accessor.save(rollback);
 			return null;
 		});
+	}
+
+	public Observable<Rollback> getNotConfirmedRollback(String packageName) {
+		return accessor.getNotConfirmedRollback(packageName);
+	}
+
+	public void confirmRollback(Rollback rollback) {
+		rollback.setConfirmed(true);
+		save(rollback);
+	}
+
+	public Observable<Rollback> getRollback(String packageName) {
+		return accessor.get(packageName);
+	}
+
+	public void save(Rollback rollback) {
+		accessor.save(rollback);
 	}
 }
