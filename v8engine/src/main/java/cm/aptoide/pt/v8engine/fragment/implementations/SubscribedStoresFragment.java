@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +30,7 @@ import rx.Observable;
  */
 public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator {
 
-	private Button addStoreButton;
+	private FloatingActionButton addStoreButton;
 
 	public static SubscribedStoresFragment newInstance() {
 		SubscribedStoresFragment fragment = new SubscribedStoresFragment();
@@ -83,6 +84,6 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 	@Override
 	public void bindViews(View view) {
 		super.bindViews(view);
-		addStoreButton = (Button) view.findViewById(R.id.add_more_stores);
+		addStoreButton = (FloatingActionButton) view.findViewById(R.id.fabAddStore);
 	}
 }

@@ -22,13 +22,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.trello.rxlifecycle.FragmentEvent;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
@@ -69,7 +74,6 @@ import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.util.AppUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -83,10 +87,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
 import io.realm.Realm;
-import java.util.LinkedList;
-import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
@@ -174,9 +175,10 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		return fragment;
 	}
 
-	public static AppViewFragment newInstance(long appId, String storeTheme) {
+	public static AppViewFragment newInstance(long appId, String storeTheme, String storeName) {
 		Bundle bundle = new Bundle();
 		bundle.putLong(BundleKeys.APP_ID.name(), appId);
+		bundle.putString(BundleKeys.STORE_NAME.name(),storeName);
 		bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
 		AppViewFragment fragment = new AppViewFragment();
 		fragment.setArguments(bundle);
@@ -227,6 +229,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		md5 = args.getString(BundleKeys.MD5.name(), null);
 		shouldInstall = args.getBoolean(BundleKeys.SHOULD_INSTALL.name(), false);
 		minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
+		storeName = args.getString(BundleKeys.STORE_NAME.name());
 		sponsored = minimalAd != null;
 		storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
 	}
@@ -369,7 +372,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 		if (appId >= 0) {
 			Logger.d(TAG, "loading app info using app ID");
-			subscription = appRepository.getApp(appId, refresh, sponsored)
+			subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.flatMap(getApp -> manageOrganicAds(getApp))
 					.flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
@@ -576,6 +579,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private enum BundleKeys {
 		APP_ID,
+		STORE_NAME,
 		MINIMAL_AD,
 		PACKAGE_NAME,
 		SHOULD_INSTALL,

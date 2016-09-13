@@ -159,7 +159,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 		}
 
 		itemView.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(), AppViewFragment.newInstance
-				(pojo.getId(), pojo.getStore().getAppearance().getTheme())));
+				(pojo.getId(), pojo.getStore().getAppearance().getTheme(), pojo.getStore().getName())));
 	}
 
 	@Override

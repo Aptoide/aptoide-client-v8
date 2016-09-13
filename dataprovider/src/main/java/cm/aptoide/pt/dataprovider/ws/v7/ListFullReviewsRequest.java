@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
@@ -50,9 +51,13 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	}
 
 	public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
+		final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
+		String username = storeOnRequest.getUsername();
+		String password = storeOnRequest.getPasswordSha1();
+
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh());
+		Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(), username, password);
 		return new ListFullReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
 
@@ -79,7 +84,6 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 	 * @return
 	 */
 	public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
-
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 
 		Body body = new Body(storeName, packageName, maxReviews, maxComments, ManagerPreferences.getAndResetForceServerRefresh());
@@ -133,16 +137,21 @@ public class ListFullReviewsRequest extends V7<ListFullReviews,ListFullReviewsRe
 		private String storeName;
 		private Integer subLimit;
 
+		private String store_user;
+		private String store_pass_sha1;
+
 		public Body(boolean refresh) {
 			this.refresh = refresh;
 		}
 
-		public Body(long storeId, int limit, int offset, boolean refresh) {
+		public Body(long storeId, int limit, int offset, boolean refresh, String username, String password) {
 
 			this.storeId = storeId;
 			this.limit = limit;
 			this.offset = offset;
 			this.refresh = refresh;
+			this.store_user = username;
+			this.store_pass_sha1 = password;
 		}
 
 		public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {
