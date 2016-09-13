@@ -14,54 +14,52 @@ import android.content.Intent;
  */
 public class NotificationEventReceiver extends BroadcastReceiver {
 
-	private static final String TAG = NotificationEventReceiver.class.getSimpleName();
+  private static final String TAG = NotificationEventReceiver.class.getSimpleName();
 
-	public void onReceive(Intent intent) {
+  public void onReceive(Intent intent) {
 
-		String action = intent.getAction();
-		if (action != null) {
-			AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
-			switch (action) {
-				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE:
-					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
-						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
-						if (appid > 0) {
-							downloadManager.pauseDownload(appid);
-						} else {
-							downloadManager.pauseAllDownloads();
-						}
-					}
-					break;
-				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN:
-					if (downloadManager.getDownloadNotificationActionsInterface() != null) {
-						downloadManager.getDownloadNotificationActionsInterface()
-								.button1Pressed();
-					}
-					break;
-				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD:
-					if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
-						long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
-						if (appid > 0) {
-							downloadManager.getDownload(appid)
-									.subscribe(download -> downloadManager.startDownload(download),
-											throwable -> throwable.printStackTrace());
-						}
-					}
-					break;
-				case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION:
-					if (downloadManager.getDownloadNotificationActionsInterface() != null) {
-						if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
-							downloadManager.getDownloadNotificationActionsInterface()
-									.notificationPressed(intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0));
-						}
-						break;
-					}
-			}
-		}
-	}
+    String action = intent.getAction();
+    if (action != null) {
+      AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
+      switch (action) {
+        case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE:
+          if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
+            long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
+            if (appid > 0) {
+              downloadManager.pauseDownload(appid);
+            } else {
+              downloadManager.pauseAllDownloads();
+            }
+          }
+          break;
+        case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN:
+          if (downloadManager.getDownloadNotificationActionsInterface() != null) {
+            downloadManager.getDownloadNotificationActionsInterface().button1Pressed();
+          }
+          break;
+        case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD:
+          if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
+            long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
+            if (appid > 0) {
+              downloadManager.getDownload(appid)
+                  .subscribe(download -> downloadManager.startDownload(download),
+                      throwable -> throwable.printStackTrace());
+            }
+          }
+          break;
+        case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION:
+          if (downloadManager.getDownloadNotificationActionsInterface() != null) {
+            if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
+              downloadManager.getDownloadNotificationActionsInterface()
+                  .notificationPressed(intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0));
+            }
+            break;
+          }
+      }
+    }
+  }
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		onReceive(intent);
-	}
+  @Override public void onReceive(Context context, Intent intent) {
+    onReceive(intent);
+  }
 }

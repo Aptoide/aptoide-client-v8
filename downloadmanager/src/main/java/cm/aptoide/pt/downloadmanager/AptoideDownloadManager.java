@@ -133,7 +133,8 @@ public class AptoideDownloadManager {
 	}
 
 	/**
-	 * Observe changes to a download. This observable never completes it will emmit items whenever the
+	 * Observe changes to a download. This observable never completes it will emmit items whenever
+	 * the
 	 * download state changes.
 	 *
 	 * @return observable for download state changes.
@@ -169,7 +170,9 @@ public class AptoideDownloadManager {
 		FileDownloader.getImpl().pauseAll();
 		isPausing = true;
 
-		downloadAccessor.getRunningDownloads().first().doOnUnsubscribe(() -> isPausing = false)
+		downloadAccessor.getRunningDownloads()
+				.first()
+				.doOnUnsubscribe(() -> isPausing = false)
 				.subscribe(downloads -> {
 					for (int i = 0; i < downloads.size(); i++) {
 						downloads.get(i).setOverallDownloadStatus(Download.PAUSED);
@@ -192,8 +195,10 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface,
-	                 DownloadAccessor downloadAccessor, CacheManager cacheHelper) {
+	public void init(Context context,
+			DownloadNotificationActionsInterface downloadNotificationActionsInterface,
+			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
+			CacheManager cacheHelper) {
 
 		FileDownloader.init(context);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
@@ -210,9 +215,7 @@ public class AptoideDownloadManager {
 		this.downloadAccessor = downloadAccessor;
 	}
 
-	@NonNull
-	@Download.DownloadState
-	private int getStateIfFileExists(Download downloadToCheck) {
+	@NonNull @Download.DownloadState private int getStateIfFileExists(Download downloadToCheck) {
 		@Download.DownloadState int downloadStatus = Download.COMPLETED;
 		for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
 			if (!FileUtils.fileExists(fileToDownload.getFilePath())) {

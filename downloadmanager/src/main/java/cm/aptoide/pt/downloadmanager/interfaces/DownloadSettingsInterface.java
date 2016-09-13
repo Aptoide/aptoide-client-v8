@@ -9,23 +9,20 @@ import android.support.annotation.NonNull;
  */
 public interface DownloadSettingsInterface {
 
-	@DrawableRes
-	int getMainIcon();
+  @DrawableRes int getMainIcon();
 
-	@DrawableRes
-	int getButton1Icon();
+  @DrawableRes int getButton1Icon();
 
-	String getButton1Text(Context context);
+  String getButton1Text(Context context);
 
-	/**
-	 * gets the cache size that should be used
-	 *
-	 * @return cache size in mb
-	 */
-	long getMaxCacheSize();
+  /**
+   * gets the cache size that should be used
+   *
+   * @return cache size in mb
+   */
+  long getMaxCacheSize();
 
-	@NonNull
-	String getDownloadDir();
+  @NonNull String getDownloadDir();
 
-	String getObbDir();
+  String getObbDir();
 }
