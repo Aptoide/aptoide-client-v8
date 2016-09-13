@@ -23,9 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -52,8 +51,6 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import io.realm.Realm;
-import lombok.Cleanup;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -388,7 +385,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
 
-			downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribeOn(AndroidSchedulers.mainThread()).subscribe(download -> {
+			downloadServiceHelper.startDownload(permissionRequest, appDownload)
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(download -> {
 				manageDownload(download, displayable, app);
 				if (!setupDownloadControlsRunned) {
 					// TODO: 09/09/16 refactor this
