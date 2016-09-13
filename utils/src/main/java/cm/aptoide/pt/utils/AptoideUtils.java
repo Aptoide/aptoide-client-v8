@@ -1276,7 +1276,7 @@ public class AptoideUtils {
 			return splittedUrl[0] + "_" + size + "x" + size + "." + splittedUrl[1];
 		}
 
-		public static String generateSizeStringScreenshots(String orient) {
+		private static String generateSizeStringScreenshots(String orient) {
 			if (context == null || orient == null) {
 				return "";
 			}
@@ -1294,7 +1294,7 @@ public class AptoideUtils {
 		 *
 		 * @return A String with
 		 */
-		public static String parseIcon(String iconUrl) {
+		private static String parseIcon(String iconUrl) {
 
 			if (context == null || iconUrl == null) {
 				return "";

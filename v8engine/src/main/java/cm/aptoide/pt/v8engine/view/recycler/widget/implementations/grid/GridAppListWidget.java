@@ -64,7 +64,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
 			// FIXME
 			((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(app.getId()));
 		});
-		ImageLoader.load(AptoideUtils.IconSizeU.parseIcon(app.getIcon()), icon);
+		ImageLoader.load(app.getIcon(), icon);
 	}
 
 	@Override
