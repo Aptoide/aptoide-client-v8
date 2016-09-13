@@ -111,7 +111,7 @@ public class AppUpdateDisplayable extends Displayable {
 	public Spannable getUpdateAppText(Context context) {
 		String application = context.getString(R.string.appstimeline_update_app);
 		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_button,
-				application), Typeface.BOLD, application);
+				application), Typeface.NORMAL, application);
 	}
 
 	public String getCompletedText(Context context) {
