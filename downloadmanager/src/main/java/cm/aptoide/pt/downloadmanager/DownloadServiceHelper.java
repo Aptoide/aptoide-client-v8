@@ -7,23 +7,23 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.content.Intent;
+
+import java.util.List;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
-import java.util.List;
+import io.realm.Realm;
+import lombok.Cleanup;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 7/4/16.
  */
 public class DownloadServiceHelper {
 
-	public static String TAG = DownloadServiceHelper.class.getSimpleName();
 	private final AptoideDownloadManager aptoideDownloadManager;
 	private PermissionManager permissionManager;
 

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
@@ -64,8 +65,8 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 	@Override
 	public void bindView(RecommendationDisplayable displayable) {
 
-		title.setText(displayable.getTitle(getContext()));
-		subtitle.setText(displayable.getTimeSinceTimestamp(getContext()));
+		title.setText(displayable.getStyledTitle(getContext()));
+		subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
 
 		setCardviewMargin(displayable);
 

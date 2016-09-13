@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -634,7 +635,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			});
 			*/
 
-			fileSize.setText(AptoideUtils.StringU.formatBits(AppUtils.sumFileSizes(app.getSize(), app.getObb())));
+			fileSize.setText(AptoideUtils.StringU.formatBits(app.getSize()));
 
 			downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
 

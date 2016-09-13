@@ -91,7 +91,7 @@ public class RateAndReviewCommentWidget extends BaseWidget<RateAndReviewCommentD
 		final Review review = displayable.getPojo().getReview();
 		final String appName = displayable.getPojo().getAppName();
 
-		ImageLoader.loadWithCircleTransformAndPlaceHolder(review.getUser().getAvatar(), userImage, R.drawable.layer_1);
+		ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage, R.drawable.layer_1);
 		username.setText(review.getUser().getName());
 		ratingBar.setRating(review.getStats().getRating());
 		reviewTitle.setText(review.getTitle());

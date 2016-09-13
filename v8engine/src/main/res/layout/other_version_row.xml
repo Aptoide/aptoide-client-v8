@@ -4,7 +4,7 @@
   ~ Modified by SithEngineer on 07/07/2016.
   -->
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,81 +16,18 @@
     android:paddingRight="20dp"
     android:paddingStart="44dp"
     android:paddingTop="16dp"
-    android:weightSum="2"
+    android:weightSum="3"
+    tools:background="@android:color/transparent"
     >
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
-
-        <ImageView
-            android:id="@+id/version_icon"
-            android:layout_width="@dimen/other_version_icon_size"
-            android:layout_height="@dimen/other_version_icon_size"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:padding="4dp"
-            android:src="@drawable/ic_appview_version"
-            android:tint="@color/greenapple"
-            />
-
-        <TextView
-            android:id="@+id/version_name"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/other_version_icon_size"
-            android:layout_alignTop="@id/version_icon"
-            android:layout_marginEnd="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_toRightOf="@id/version_icon"
-            android:gravity="center_vertical"
-            android:maxWidth="100dp"
-            android:textSize="@dimen/text_size_large"
-            android:textStyle="bold"
-            tools:text="1.00.258"
-            />
-
-        <ImageView
-            android:id="@+id/badge_icon"
-            android:layout_width="@dimen/other_version_icon_size"
-            android:layout_height="@dimen/other_version_icon_size"
-            android:layout_toEndOf="@id/version_name"
-            android:layout_toRightOf="@id/version_name"
-            android:src="@drawable/ic_badge_trusted"
-            />
-
-        <TextView
-            android:id="@+id/version_date"
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:layout_below="@id/version_icon"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/text_size_medium_small"
-            tools:text="1 month ago"
-            />
-
-        <TextView
-            android:id="@+id/downloads"
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:layout_below="@id/version_date"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/text_size_medium_small"
-            tools:text="11K downloads"
-            />
-
-
-    </RelativeLayout>
-
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/app_name_layout"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:minWidth="80dp"
+        android:layout_alignParentRight="true"
         android:orientation="vertical"
+        tools:background="@android:color/transparent"
         >
 
         <ImageView
@@ -107,6 +44,9 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:maxLines="1"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textColor="@color/almost_black"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
             tools:text="Animirais Studio"
@@ -119,10 +59,80 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:maxLines="1"
+            android:lines="1"
+            android:textColor="@color/app_view_gray"
             android:textSize="@dimen/text_size_small"
             tools:text="2534 Followers"
             />
 
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/version_and_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_toStartOf="@id/app_name_layout"
+        tools:background="@android:color/transparent"
+        >
+
+        <TextView
+            android:id="@+id/version_name"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/other_version_icon_size_with_icon"
+            android:gravity="center_vertical"
+            android:textColor="@color/almost_black"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:lines="1"
+            android:ellipsize="end"
+            tools:text="1.00.258.985lsndakljndanalnalndalnad7"
+            android:drawableLeft="@drawable/ic_appview_version"
+            android:drawableRight="@drawable/ic_badge_trusted"
+            android:drawablePadding="4dp"
+            />
+
+        <!--
+        <ImageView
+            android:id="@+id/badge_icon"
+            android:layout_width="@dimen/other_version_icon_size"
+            android:layout_height="@dimen/other_version_icon_size"
+            android:layout_toEndOf="@id/version_name"
+            android:layout_toRightOf="@id/version_name"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_badge_trusted"
+            />
+        -->
+
+        <TextView
+            android:id="@+id/version_date"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_below="@id/version_name"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_medium_small"
+            android:textColor="@color/app_view_gray"
+            android:maxLines="1"
+            android:lines="1"
+            tools:text="1 month ago"
+            />
+
+        <TextView
+            android:id="@+id/downloads"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_below="@id/version_date"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_size_medium_small"
+            android:maxLines="1"
+            android:textColor="@color/app_view_gray"
+            android:lines="1"
+            tools:text="11K downloads"
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

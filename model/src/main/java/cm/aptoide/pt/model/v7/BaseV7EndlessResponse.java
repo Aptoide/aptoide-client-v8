@@ -16,7 +16,8 @@ public abstract class BaseV7EndlessResponse extends BaseV7Response {
 
 	protected static final int NEXT_STEP = 10;
 
-	public abstract int getCurrentSize();
+
+	public abstract int getTotal();
 	public abstract int getNextSize();
 	public abstract boolean hasData();
 }

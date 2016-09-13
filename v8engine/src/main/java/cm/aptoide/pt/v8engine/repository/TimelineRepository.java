@@ -7,47 +7,43 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
 
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.realm.Installed;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.Datalist;
-import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by marcelobenites on 7/5/16.
  */
 public class TimelineRepository {
 
-	public static final int STORE_LATEST_MINIMUM_NUMBER_OF_APPS = 3;
-	private final TimelineCardDuplicateFilter duplicateFilter;
-	private String action;
+  private final String action;
+  private final TimelineCardFilter filter;
 
-	public TimelineRepository(String action, TimelineCardDuplicateFilter duplicateFilter) {
-		this.action = action;
-		this.duplicateFilter = duplicateFilter;
-	}
+  public TimelineRepository(String action, TimelineCardFilter filter) {
+    this.action = action;
+    this.filter = filter;
+  }
 
 	public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset, List<String> packageNames, boolean refresh) {
 		return GetUserTimelineRequest.of(action, limit, offset, packageNames)
 				.observe(refresh)
-				.doOnNext(item -> duplicateFilter.clear())
+				.doOnNext(item -> filter.clear())
 				.map(getUserTimeline -> getUserTimeline.getDatalist())
 				.flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
-						.filter(timelineItem -> timelineItem != null)
-						.<TimelineCard>map(timelineItem -> timelineItem.getData())
-						.filter(duplicateFilter)
-						.filter(timelineItem -> !(timelineItem instanceof StoreLatestApps) || ((StoreLatestApps) timelineItem).getApps().size() >= STORE_LATEST_MINIMUM_NUMBER_OF_APPS)
-						.toList()
+            .flatMap(item -> filter.filter(item)).toList()
 						.<Datalist<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
 	}
 
-	@NonNull
+  @NonNull
 	private Datalist<TimelineCard> getTimelineCardDatalist(Datalist<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
 		Datalist<TimelineCard> cardDataList = new Datalist<>();
 		cardDataList.setCount(itemDataList.getCount());
@@ -70,23 +66,4 @@ public class TimelineRepository {
 		}
 		return items;
 	}
-
-	public static class TimelineCardDuplicateFilter implements Func1<TimelineCard, Boolean> {
-
-		private final Set<String> cardIds;
-
-		public TimelineCardDuplicateFilter(Set<String> cardIds) {
-			this.cardIds = cardIds;
-		}
-
-		public void clear() {
-			cardIds.clear();
-		}
-
-		@Override
-		public Boolean call(TimelineCard card) {
-			return cardIds.add(card.getCardId());
-		}
-	}
-	
 }

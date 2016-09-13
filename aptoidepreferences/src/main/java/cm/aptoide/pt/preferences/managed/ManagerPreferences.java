@@ -30,6 +30,14 @@ public class ManagerPreferences {
 		Preferences.get().edit().putInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, notificationId).apply();
 	}
 
+	public static boolean getGeneralDownloadsWifi(){
+		return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
+	}
+
+	public static boolean getGeneralDownloadsMobile(){
+		return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
+	}
+
 	public static boolean getAnimationsEnabledStatus() {
 		return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);
 	}

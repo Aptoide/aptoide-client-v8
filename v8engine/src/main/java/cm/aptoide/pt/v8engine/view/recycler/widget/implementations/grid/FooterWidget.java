@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -16,6 +17,7 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
+import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -42,11 +44,12 @@ public class FooterWidget extends Widget<FooterDisplayable> {
 		final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
 		final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
 
-		button.setText(displayable.getPojo().getActions().get(0).getLabel());
+		button.setText(Translator.translate(displayable.getPojo().getActions().get(0).getLabel()));
 		button.setOnClickListener((view) -> {
 			Event event = displayable.getPojo().getActions().get(0).getEvent();
-			FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreGridRecyclerFragment.newInstance(event, displayable.getPojo()
-					.getTitle()));
+			FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(), StoreGridRecyclerFragment.newInstance(event, Translator.translate(displayable
+					.getPojo()
+					.getTitle())));
 		});
 	}
 

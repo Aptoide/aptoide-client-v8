@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -55,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -91,6 +93,12 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	private App trustedVersion;
 	private DownloadServiceHelper downloadServiceHelper;
 	private PermissionRequest permissionRequest;
+	private boolean setupDownloadControlsRunned = false;
+	private boolean resumeButtonWasClicked = false;
+
+	//private Subscription subscribe;
+	//private long appID;
+
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -115,10 +123,13 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	public void bindView(AppViewInstallDisplayable displayable) {
+		//displayable.setOnResumeAction(() -> onViewAttached());
+		//displayable.setOnPauseAction(() -> onViewDetached());
 
 		downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
 		minimalAd = displayable.getMinimalAd();
 		GetApp getApp = displayable.getPojo();
+		//appID = getApp.getNodes().getMeta().getData().getId();
 		GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
 		final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
@@ -187,6 +198,22 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	@Override
 	public void onViewAttached() {
+		/*subscribe = AptoideDownloadManager.getInstance().getDownloads()
+				.map(downloads -> {
+					for (int i = 0; i < downloads.size(); i++) {
+						if (downloads.get(i).getAppId() == appID && (downloads.get(i).getOverallDownloadStatus()
+								== Download.PROGRESS
+								|| downloads.get(i).getOverallDownloadStatus() == Download.PAUSED)) {
+
+							return true;
+						}
+					}
+					return false;
+				})
+				.distinctUntilChanged()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(showControllers -> {
+				}, throwable -> throwable.printStackTrace());*/
 	}
 
 	@Override
@@ -194,6 +221,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton.setOnClickListener(null);
 		actionPause.setOnClickListener(null);
 		actionCancel.setOnClickListener(null);
+		//subscribe.unsubscribe();
 	}
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
@@ -304,6 +332,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	public View.OnClickListener installOrUpgradeListener(boolean isUpdate, GetAppMeta.App app, ListAppVersions appVersions, AppViewInstallDisplayable
 			displayable) {
 
+
 		final Context context = getContext();
 
 		@StringRes
@@ -314,24 +343,26 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				Analytics.ClickedOnInstallButton.clicked(app);
 			}
 
-			permissionRequest.requestAccessToExternalFileSystem(() -> {
-
-				ShowMessage.asSnack(v, installOrUpgradeMsg);
-
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
 
-				setupDownloadControls(app, appDownload, displayable);
-
 				downloadServiceHelper.startDownload(permissionRequest, appDownload)
 						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(download -> manageDownload(download, displayable, app), err -> {
+						.subscribe(download -> {
+					manageDownload(download, displayable, app);
+					if(!setupDownloadControlsRunned) {
+						// TODO: 09/09/16 refactor this
+						ShowMessage.asSnack(v, installOrUpgradeMsg);
+						setupDownloadControls(app, appDownload, displayable);
+					}
+				}, err -> {
+					if (err instanceof SecurityException) {
+						ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+					}
+
 					Logger.e(TAG, err);
 				});
 
-			}, () -> {
-				ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
-			});
 		};
 
 		findTrustedVersion(app, appVersions);
@@ -415,7 +446,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 	}
 
 	private void setupDownloadControls(GetAppMeta.App app, Download download, AppViewInstallDisplayable displayable) {
-
+		setupDownloadControlsRunned = true;
 		long appId = app.getId();
 
 		actionCancel.setOnClickListener(view -> {
@@ -427,16 +458,23 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			downloadServiceHelper.pauseDownload(appId);
 			actionResume.setVisibility(View.VISIBLE);
 			actionPause.setVisibility(View.GONE);
+			resumeButtonWasClicked=false;
 		});
 
 		actionResume.setOnClickListener(view -> {
 			downloadServiceHelper.startDownload(permissionRequest, download)
 					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(onGoingDownload -> manageDownload(onGoingDownload, displayable, app), err -> {
+					.subscribe(onGoingDownload -> {
+						manageDownload(onGoingDownload, displayable, app);
+						if(!resumeButtonWasClicked) {
+							// TODO: 09/09/16 refactor me
+							actionResume.setVisibility(View.GONE);
+							actionPause.setVisibility(View.VISIBLE);
+							resumeButtonWasClicked = true;
+						}}
+							, err -> {
 						Logger.e(TAG, err);
 					});
-			actionResume.setVisibility(View.GONE);
-			actionPause.setVisibility(View.VISIBLE);
 		});
 
 		setDownloadBarVisible(true);
