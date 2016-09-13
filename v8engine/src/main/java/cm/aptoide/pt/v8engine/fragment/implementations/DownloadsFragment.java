@@ -9,6 +9,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+
+import com.trello.rxlifecycle.FragmentEvent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -26,12 +35,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Act
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -60,13 +63,6 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
 	}
 
-	@Override public void onDestroyView() {
-		if (subscription != null && !subscription.isUnsubscribed()) {
-			subscription.unsubscribe();
-		}
-		super.onDestroyView();
-	}
-
 	@Override public void load(boolean refresh, Bundle savedInstanceState) {
 		super.load(refresh, savedInstanceState);
 		if (subscription == null || subscription.isUnsubscribed()) {
@@ -87,6 +83,14 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 					.subscribe(downloads -> updateUi(downloadServiceHelper, downloads));
 		}
+	}
+
+	@Override
+	public void onDestroyView() {
+		if (subscription != null && !subscription.isUnsubscribed()) {
+			subscription.unsubscribe();
+		}
+		super.onDestroyView();
 	}
 
 	@Override

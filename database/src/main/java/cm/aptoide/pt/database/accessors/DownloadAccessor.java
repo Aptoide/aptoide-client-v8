@@ -5,10 +5,11 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import java.util.List;
+
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
-import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 

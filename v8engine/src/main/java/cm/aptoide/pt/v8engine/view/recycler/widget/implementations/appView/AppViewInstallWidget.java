@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
@@ -345,22 +345,20 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
 
-			downloadServiceHelper.startDownload(permissionRequest, appDownload)
-					.subscribeOn(AndroidSchedulers.mainThread())
-					.subscribe(download -> {
-						manageDownload(download, displayable, app);
-						if (!setupDownloadControlsRunned) {
-							// TODO: 09/09/16 refactor this
-							ShowMessage.asSnack(v, installOrUpgradeMsg);
-							setupDownloadControls(app, appDownload, displayable);
-						}
-					}, err -> {
-						if (err instanceof SecurityException) {
-							ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
-						}
+			downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribeOn(AndroidSchedulers.mainThread()).subscribe(download -> {
+				manageDownload(download, displayable, app);
+				if (!setupDownloadControlsRunned) {
+					// TODO: 09/09/16 refactor this
+					ShowMessage.asSnack(v, installOrUpgradeMsg);
+					setupDownloadControls(app, appDownload, displayable);
+				}
+			}, err -> {
+				if (err instanceof SecurityException) {
+					ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+				}
 
-						Logger.e(TAG, err);
-					});
+				Logger.e(TAG, err);
+			});
 
 		};
 
