@@ -15,9 +15,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Collections;
 import java.util.List;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.Calendar;
 
 /**
  * Created by sithengineer on 17/05/16.
@@ -68,6 +65,10 @@ public class Download extends RealmObject {
 
 	public long getTimeStamp() {
 		return timeStamp;
+	}
+
+	public void setTimeStamp(long timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 
 	public String getStatusName(Context context) {
@@ -160,14 +161,6 @@ public class Download extends RealmObject {
 
 	public void setDownloadSpeed(int speed) {
 		this.downloadSpeed = speed;
-	}
-
-	public long getTimeStamp() {
-		return timeStamp;
-	}
-
-	public void setTimeStamp(long timeStamp) {
-		this.timeStamp = timeStamp;
 	}
 
 	@IntDef({INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN, STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED,

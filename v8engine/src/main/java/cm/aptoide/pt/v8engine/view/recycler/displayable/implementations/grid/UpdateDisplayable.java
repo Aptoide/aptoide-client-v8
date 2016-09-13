@@ -16,7 +16,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import io.realm.Realm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,7 +50,6 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private DownloadServiceHelper downloadManager;
 	@Setter private Action0 pauseAction;
 	@Setter private Action0 resumeAction;
-	@Getter private Realm realm;
 
 	public UpdateDisplayable() {
 	}
@@ -59,19 +57,20 @@ public class UpdateDisplayable extends Displayable {
 	public static UpdateDisplayable create(Update update, Installer installManager,
 			DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
 
-		return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(), update.getIcon(), update.getVersionCode(), update.getMd5()
-				, update.getApkPath(), update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(), update.getMainObbPath(), update
-				.getMainObbMd5(), update
-				.getPatchObbName(), update.getPatchObbPath(), update.getPatchObbMd5(), installManager, downloadFactory.create(update), downloadManager, null, null, realm);
+		return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
+				update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
+				update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
+				update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
+				update.getPatchObbPath(), update.getPatchObbMd5(), installManager,
+				downloadFactory.create(update), downloadManager, null, null);
 	}
 
 	public Observable<Void> downloadAndInstall(Context context) {
 		Analytics.Updates.update();
 
-		return downloadManager.startDownload(permissionRequest, download)
-				//				.ignoreElements()
-				.cast(Void.class)
-				.concatWith(installManager.update(context, permissionRequest, download.getAppId()));
+		return downloadManager.startDownload((PermissionRequest) context, download)
+				.concatMap(downloadCompleted -> installManager.update(context, (PermissionRequest) context,
+						download.getAppId()));
 	}
 
 	@Override

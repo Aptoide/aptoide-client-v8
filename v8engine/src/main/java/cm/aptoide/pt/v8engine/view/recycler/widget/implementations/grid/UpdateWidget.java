@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -110,15 +108,6 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 			return true;
 		});
-
-		updateLayout.setOnClickListener(v -> downloadManager.startDownload((PermissionRequest) UpdateWidget.this.getContext(), new DownloadFactory().create
-				(displayable))
-				.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-				.flatMap(download -> displayable.getInstallManager()
-						.update(UpdateWidget.this.getContext(),
-								(PermissionRequest) UpdateWidget.this.getContext(), download.getAppId()))
-				.onErrorReturn(throwable -> null)
-				.subscribe());
 	}
 
 	@Override

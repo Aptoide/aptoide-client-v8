@@ -8,16 +8,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -41,8 +31,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Act
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -75,6 +68,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 						new DownloadInstallationProvider(downloadManager)),
 				RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
 				new DownloadInstallationProvider(downloadManager));
+
+		oldDownloadsList = new ArrayList<>();
+
 	}
 
 	@Override public void load(boolean refresh, Bundle savedInstanceState) {
@@ -105,14 +101,6 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 			subscription.unsubscribe();
 		}
 		super.onDestroyView();
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		permissionManager = new PermissionManager();
-		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		oldDownloadsList = new ArrayList<>();
 	}
 
 	private void updateUi(DownloadServiceHelper downloadServiceHelper, List<Download> downloads) {

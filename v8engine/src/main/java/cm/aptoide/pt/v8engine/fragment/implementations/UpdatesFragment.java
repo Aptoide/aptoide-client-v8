@@ -104,11 +104,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 							updatesDisplayablesList.clear();
 
 							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager, AptoideUtils.StringU.getResString(R.string.updates),
-										realm));
+								updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
+										AptoideUtils.StringU.getResString(R.string.updates)));
 
 								for (Update update : updates) {
-									updatesDisplayablesList.add(UpdateDisplayable.create(update, installManager, downloadFactory, downloadManager, realm));
+									updatesDisplayablesList.add(
+											UpdateDisplayable.create(update, installManager, downloadFactory,
+													downloadManager));
 								}
 							}
 
