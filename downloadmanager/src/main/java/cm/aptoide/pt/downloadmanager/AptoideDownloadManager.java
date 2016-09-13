@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
@@ -54,7 +55,7 @@ public class AptoideDownloadManager {
 			downloadNotificationActionsInterface;
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
 	private DownloadAccessor downloadAccessor;
-	private CacheHelper cacheHelper;
+	private CacheManager cacheHelper;
 
 	public static Context getContext() {
 		return context;
@@ -192,7 +193,7 @@ public class AptoideDownloadManager {
 	public void init(Context context,
 			DownloadNotificationActionsInterface downloadNotificationActionsInterface,
 			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
-			CacheHelper cacheHelper) {
+			CacheManager cacheHelper) {
 
 		FileDownloader.init(context);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
@@ -226,16 +227,16 @@ public class AptoideDownloadManager {
 		startNextDownload();
 	}
 
-	void startNextDownload() {
+	synchronized void startNextDownload() {
 		if (!isDownloading && !isPausing) {
+			isDownloading = true;
 			getNextDownload().first().subscribe(download -> {
 				if (download != null) {
-					isDownloading = true;
 					new DownloadTask(downloadAccessor, download).startDownload();
 					Logger.d(TAG, "Download with id " + download.getAppId() + " started");
 				} else {
-					cacheHelper.cleanCache(downloadAccessor, DOWNLOADS_STORAGE_PATH,
-							settingsInterface.getMaxCacheSize() * VALUE_TO_CONVERT_MB_TO_BYTES);
+					isDownloading = false;
+					cacheHelper.cleanCache();
 				}
 			}, throwable -> throwable.printStackTrace());
 		}

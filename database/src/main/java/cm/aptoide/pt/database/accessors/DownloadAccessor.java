@@ -29,7 +29,11 @@ public class DownloadAccessor implements Accessor {
 	}
 
 	public void delete(long downloadId) {
-		database.delete(Download.class, Download.DOWNLOAD_ID, downloadId);
+		Observable.fromCallable(() -> {
+			database.delete(Download.class, Download.DOWNLOAD_ID, downloadId);
+			return null;
+		}).subscribeOn(RealmSchedulers.getScheduler()).subscribe(o -> {
+		}, throwable -> throwable.printStackTrace());
 	}
 
 	public Void save(Download download) {

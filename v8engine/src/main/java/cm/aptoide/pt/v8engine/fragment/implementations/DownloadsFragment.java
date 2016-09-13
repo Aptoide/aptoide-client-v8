@@ -28,6 +28,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +114,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 						new CompletedDownloadDisplayable(download, installManager, downloadManager));
 			}
 		}
+		Collections.reverse(activeDisplayablesList);
 		if (completedDisplayablesList.size() > 0) {
 			completedDisplayablesList.add(0, new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU.getResString(R.string
 					.completed))));
