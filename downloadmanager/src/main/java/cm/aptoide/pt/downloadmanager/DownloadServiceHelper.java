@@ -12,12 +12,13 @@ import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
-import io.realm.Realm;
-import lombok.Cleanup;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 7/4/16.
