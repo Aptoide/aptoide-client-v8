@@ -30,7 +30,7 @@ public class CacheHelper implements CacheManager{
     long maxCacheSize = dirSettings.getMaxCacheSize();
     String cacheDirPath = dirSettings.getDownloadDir();
 
-    downloadAccessor.getAllSorted(Sort.DESCENDING).first().map(downloads -> {
+    downloadAccessor.getAllSorted(Sort.ASCENDING).first().map(downloads -> {
       int i = 0;
       while (i < downloads.size() - 1 && FileUtils.dirSize(new File(cacheDirPath)) > maxCacheSize) {
 

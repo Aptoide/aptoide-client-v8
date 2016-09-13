@@ -56,7 +56,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import lombok.Cleanup;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -346,20 +345,22 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				DownloadFactory factory = new DownloadFactory();
 				Download appDownload = factory.create(app);
 
-				downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-					manageDownload(download, displayable, app);
-					if(!setupDownloadControlsRunned) {
-						// TODO: 09/09/16 refactor this
-						ShowMessage.asSnack(v, installOrUpgradeMsg);
-						setupDownloadControls(app, appDownload, displayable);
-					}
-				}, err -> {
-					if (err instanceof SecurityException) {
-						ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
-					}
+			downloadServiceHelper.startDownload(permissionRequest, appDownload)
+					.subscribeOn(AndroidSchedulers.mainThread())
+					.subscribe(download -> {
+						manageDownload(download, displayable, app);
+						if (!setupDownloadControlsRunned) {
+							// TODO: 09/09/16 refactor this
+							ShowMessage.asSnack(v, installOrUpgradeMsg);
+							setupDownloadControls(app, appDownload, displayable);
+						}
+					}, err -> {
+						if (err instanceof SecurityException) {
+							ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+						}
 
-					Logger.e(TAG, err);
-				});
+						Logger.e(TAG, err);
+					});
 
 		};
 
@@ -461,15 +462,16 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 		actionResume.setOnClickListener(view -> {
 			downloadServiceHelper.startDownload(permissionRequest, download)
+					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(onGoingDownload -> {
 						manageDownload(onGoingDownload, displayable, app);
-						if(!resumeButtonWasClicked) {
+						if (!resumeButtonWasClicked) {
 							// TODO: 09/09/16 refactor me
 							actionResume.setVisibility(View.GONE);
 							actionPause.setVisibility(View.VISIBLE);
 							resumeButtonWasClicked = true;
-						}}
-							, err -> {
+						}
+					}, err -> {
 						Logger.e(TAG, err);
 					});
 		});
