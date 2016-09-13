@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.view.View;
@@ -77,7 +78,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 			appId = app.getId();
 
 			version.setText(app.getFile().getVername());
-			setBadge(app, version);
+			setBadge(app);
 			date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified().getTime()));
 			downloads.setText(String.format(DEFAULT_LOCALE, getContext().getString(R.string.other_versions_downloads_count_text), AptoideUtils.StringU
 					.withSuffix(app
@@ -104,7 +105,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 
 	}
 
-	private void setBadge(App app, TextView labelWithBadge) {
+	private void setBadge(App app) {
 		@DrawableRes
 		int badgeResId;
 
@@ -122,8 +123,12 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 				badgeResId = 0;
 				break;
 		}
-
-		labelWithBadge.setCompoundDrawables(null, null, ImageLoader.load(badgeResId), null);
+		// keep the remaining compound drawables in TextView and set the one on the right
+		Drawable[] drawables = version.getCompoundDrawables();
+		//version.setCompoundDrawables(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
+		// does not work properly because "The Drawables must already have had setBounds(Rect) called". info from:
+		// https://developer.android.com/reference/android/widget/TextView.html#setCompoundDrawables
+		version.setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
 	}
 
 	private void setItemBackgroundColor(View itemView) {
