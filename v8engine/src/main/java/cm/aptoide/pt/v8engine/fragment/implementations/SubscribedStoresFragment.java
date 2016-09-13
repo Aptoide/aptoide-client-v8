@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -52,6 +54,25 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 			new AddStoreDialog().show(((FragmentActivity) getContext())
 					.getSupportFragmentManager(), "addStoreDialog");
 		});*/
+
+		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+				if (dy > 0 || dy < 0 && addStoreButton.isShown()) {
+					//Log.d("lou", "onScroled: dx:"+dx+" dy: "+dy);
+					//addStoreButton.getTranslationY();
+				}
+			}
+
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+				if (newState == RecyclerView.SCROLL_STATE_IDLE){
+
+				}
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+		});
 
 	}
 

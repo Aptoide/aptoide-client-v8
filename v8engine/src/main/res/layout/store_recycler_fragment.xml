@@ -11,27 +11,16 @@
 
     <include layout="@layout/partial_view_progress_bar"/>
 
-    <android.support.v7.widget.RecyclerView
-
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingLeft="@dimen/recycler_margin"
-        android:paddingRight="@dimen/recycler_margin"/>
+    <include layout="@layout/recycler_fragment"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddStore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add"
         android:translationY="-60dp"
-        app:layout_anchor="@id/recycler_view"
-        app:layout_anchorGravity="bottom|right|end"/>
-
-    <!--<include layout="@layout/recycler_fragment"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"/>-->
+        android:layout_gravity="right|bottom"/>
 </android.support.design.widget.CoordinatorLayout>
