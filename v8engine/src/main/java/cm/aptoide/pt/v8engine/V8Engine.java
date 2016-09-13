@@ -17,6 +17,7 @@ import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
@@ -160,10 +161,12 @@ public abstract class V8Engine extends DataProvider {
 
     setupCrashlytics();
 
+    final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
+    final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(),
-            new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class),
-            new CacheHelper());
+            settingsInterface, downloadAccessor,
+            new CacheHelper(downloadAccessor, settingsInterface));
 
     // setupCurrentActivityListener();
 
