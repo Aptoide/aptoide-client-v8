@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
@@ -38,6 +40,9 @@ import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
+import io.realm.Realm;
+import lombok.AllArgsConstructor;
+import lombok.Cleanup;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -126,6 +131,42 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 			}
 			return Observable.error(throwable);
 		});
+	}
+
+
+	protected static StoreCredentialsApp getStoreOnRequest(String storeName) {
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+		if (storeName != null) {
+			Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
+			if (store != null) {
+				return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
+			}
+		}
+		return new StoreCredentialsApp();
+	}
+
+	protected static StoreCredentialsApp getStoreOnRequest(Long storeId) {
+		@Cleanup Realm realm = DeprecatedDatabase.get();
+
+		if (storeId != null) {
+			Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
+			if (store != null) {
+				return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
+			}
+		}
+		return new StoreCredentialsApp();
+	}
+
+	@AllArgsConstructor
+	public static class StoreCredentialsApp {
+
+		@Getter private final String username;
+		@Getter private final String passwordSha1;
+
+		public StoreCredentialsApp() {
+			username = null;
+			passwordSha1 = null;
+		}
 	}
 
 	public interface Interfaces {

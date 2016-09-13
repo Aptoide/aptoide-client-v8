@@ -10,9 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import com.trello.rxlifecycle.FragmentEvent;
@@ -37,8 +40,14 @@ import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -52,6 +61,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Fea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
+import com.trello.rxlifecycle.FragmentEvent;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -76,7 +90,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 	private TimelineRepository timelineRepository;
 	private PackageRepository packageRepository;
 	private List<String> packages;
-	private InstallManager installManager;
+	private Installer installManager;
 
 	public static AppsTimelineFragment newInstance(String action) {
 		AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -97,7 +111,11 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		packageRepository = new PackageRepository(getContext().getPackageManager());
 		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+		installManager = new RollbackInstallManager(
+				new InstallManager(permissionManager, getContext().getPackageManager(),
+						new DownloadInstallationProvider(downloadManager)),
+				RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
+				new DownloadInstallationProvider(downloadManager));
 		timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
 				new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
 						AccessorFactory.getAccessorFor(Installed.class)));
@@ -166,6 +184,12 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return getDisplayableList(packages, 0, refresh)
 				.doOnNext(item -> getAdapter().clearDisplayables())
 				.doOnUnsubscribe(() -> finishLoading());
+	}
+
+	@Override
+	public void reload() {
+		Analytics.AppsTimeline.pullToRefresh();
+		load(true, null);
 	}
 
 	private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
@@ -270,9 +294,11 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 		return false;
 	}
 
+
 	@NonNull
 	private boolean onStartLoadNext() {
 		if (!isTotal() && !isLoading()) {
+			Analytics.AppsTimeline.endlessScrollLoadMore();
 			addLoading();
 			return true;
 		}

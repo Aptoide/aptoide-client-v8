@@ -13,63 +13,68 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Base64;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.InputStreamReader;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.InputStreamReader;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 7/18/16.
  */
-@AllArgsConstructor
-public class InstallManager {
+@AllArgsConstructor public class InstallManager implements Installer {
 
 	private final PermissionManager permissionManager;
-	private final PackageManager packageManager;
+	@Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
 	private final InstallationProvider installationProvider;
 
+	@Override
 	public Observable<Boolean> isInstalled(long installationId) {
 		return installationProvider.getInstallation(installationId)
 				.map(installation -> isInstalled(installation.getPackageName(), installation.getVersionCode()))
 				.onErrorReturn(throwable -> false);
 	}
 
+	@Override
 	public Observable<Void> install(Context context, PermissionRequest permissionRequest, long installationId) {
-		return permissionManager
-				.requestExternalStoragePermission(permissionRequest)
-				.ignoreElements()
-				.concatWith(
-					installationProvider.getInstallation(installationId)
-						.observeOn(Schedulers.computation())
-						.flatMap(
-								installation -> {
-									if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
-										return Observable.just(null);
-									} else {
-										return systemInstall(context, installation.getFile())
-											.onErrorResumeNext(
-												Observable.fromCallable(
-													() -> rootInstall(installation.getFile(), installation.getPackageName(), installation.getVersionCode())
-												)
-											)
-											.onErrorResumeNext(
-													defaultInstall(context, installation.getFile(), installation.getPackageName())
-											);
-									}
-								}
-						)
-				);
+		return permissionManager.requestExternalStoragePermission(permissionRequest)
+				.ignoreElements().concatWith(installationProvider.getInstallation(installationId)
+						.observeOn(Schedulers.computation()).flatMap(installation -> {
+							if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
+								return Observable.just(null);
+							} else {
+								return systemInstall(context, installation.getFile()).onErrorResumeNext(
+										Observable.fromCallable(
+												() -> rootInstall(installation.getFile(), installation.getPackageName(),
+														installation.getVersionCode())))
+										.onErrorResumeNext(defaultInstall(context, installation.getFile(),
+												installation.getPackageName()));
+							}
+						}));
 	}
 
+	@Override public Observable<Void> update(Context context, PermissionRequest permissionRequest,
+			long installationId) {
+		return install(context, permissionRequest, installationId);
+	}
+
+	@Override public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest,
+			long installationId) {
+		return installationProvider.getInstallation(installationId)
+				.first()
+				.concatMap(installation -> uninstall(context, installation.getPackageName()))
+				.concatWith(install(context, permissionRequest, installationId));
+	}
+
+	@Override
 	public Observable<Void> uninstall(Context context, String packageName) {
 		final Uri uri = Uri.fromParts("package", packageName, null);
 		final IntentFilter intentFilter = new IntentFilter();
@@ -141,8 +146,10 @@ public class InstallManager {
 
 	private boolean findBinary(String binaryName) {
 		boolean found = false;
-		final String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/", "/data/local/bin/", "/system/sd/xbin/",
-				"/system/bin/failsafe/", "/data/local/"};
+		final String[] places = {
+				"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/", "/data/local/bin/",
+				"/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"
+		};
 
 		for (String where : places) {
 			if (new File(where + binaryName).exists()) {
@@ -159,8 +166,11 @@ public class InstallManager {
 	}
 
 	private boolean checkRootPaths() {
-		String[] paths = {"/system/app/Superuser.apk", "/sbin/su", "/system/bin/su", "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su",
-				"/system/sd/xbin/su", "/system/bin/failsafe/su", "/data/local/su"};
+		String[] paths = {
+				"/system/app/Superuser.apk", "/sbin/su", "/system/bin/su", "/system/xbin/su",
+				"/data/local/xbin/su", "/data/local/bin/su", "/system/sd/xbin/su",
+				"/system/bin/failsafe/su", "/data/local/su"
+		};
 		for (String path : paths) {
 			if (new File(path).exists()) {
 				return true;

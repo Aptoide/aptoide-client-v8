@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 
@@ -12,12 +12,12 @@ import lombok.Getter;
 public class UpdatesHeaderDisplayable extends Displayable {
 
 	@Getter private String label;
-	@Getter private InstallManager installManager;
+	@Getter private Installer installManager;
 
 	public UpdatesHeaderDisplayable() {
 	}
 
-	public UpdatesHeaderDisplayable(InstallManager installManager, String label) {
+	public UpdatesHeaderDisplayable(Installer installManager, String label) {
 		this.installManager = installManager;
 		this.label = label;
 	}

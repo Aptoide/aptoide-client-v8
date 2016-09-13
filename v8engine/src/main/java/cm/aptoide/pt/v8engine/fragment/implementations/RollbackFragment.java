@@ -15,17 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -34,14 +27,23 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
+import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
-import io.realm.RealmResults;
-import io.realm.Sort;
+import com.trello.rxlifecycle.FragmentEvent;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 14/06/16.
@@ -53,7 +55,7 @@ public class RollbackFragment extends GridRecyclerFragment {
 	private TextView emptyData;
 	private Subscription subscription;
 	private DownloadServiceHelper downloadManager;
-	private InstallManager installManager;
+	private Installer installManager;
 
 	public RollbackFragment() { }
 
@@ -113,65 +115,51 @@ public class RollbackFragment extends GridRecyclerFragment {
 
 		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+		DownloadInstallationProvider installationProvider =
+				new DownloadInstallationProvider(downloadManager);
+		installManager = new RollbackInstallManager(
+				new InstallManager(permissionManager, getContext().getPackageManager(),
+						installationProvider),
+				new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class)),
+				new RollbackActionFactory(), installationProvider);
 	}
 
 	@UiThread
 	private void fetchRollbacks() {
-		subscription = DeprecatedDatabase.RollbackQ.getAll(realm).sort(Rollback.TIMESTAMP, Sort.ASCENDING)
-				.asObservable()
-				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+		RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+		rollbackAccessor.getConfirmedRollbacks()
+				.observeOn(Schedulers.computation())
+				.map(rollbacks -> createDisplayables(rollbacks))
 				.observeOn(AndroidSchedulers.mainThread())
+				.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
 				.subscribe(rollbacks -> {
-
 					if (rollbacks == null || rollbacks.isEmpty()) {
-
 						emptyData.setText(R.string.no_rollbacks_msg);
 						emptyData.setVisibility(View.VISIBLE);
 					} else {
-
 						emptyData.setVisibility(View.GONE);
-						sortRollbacksAndAdd(rollbacks);
+						setDisplayables(rollbacks);
 					}
-
 					finishLoading();
 				});
 	}
 
-	private String prettyTimestamp(long timestamp) {
-		return DATE_TIME_U.getTimeDiffString(getActivity(), timestamp);
-	}
-
-	// FIXME: 21/07/2016 slow method. could this be improved ??
-	@UiThread
-	private void sortRollbacksAndAdd(RealmResults<Rollback> rollbacks) {
-		// group by timestamp
-		TreeMap<Long,List<Displayable>> arrayOfDisplayables = new TreeMap<>(new Comparator<Long>() {
-			@Override
-			public int compare(Long lhs, Long rhs) {
-				//				long lhsDate = timestampAsLongFromString(lhs);
-				//				long rhsDate = timestampAsLongFromString(rhs);
-				//				return ((int) (lhsDate - rhsDate));
-				return lhs.compareTo(rhs);
-			}
-		});
-
-		List<Displayable> displayables = null;
-		for (Rollback rollback : rollbacks) {
-			displayables = arrayOfDisplayables.get(rollback.getTimestamp());
-			if (displayables == null) {
-				displayables = new LinkedList<>();
-				arrayOfDisplayables.put(rollback.getTimestamp(), displayables);
+	private List<Displayable> createDisplayables(List<Rollback> rollbacks) {
+		List<Displayable> displayables = new LinkedList<>();
+		long lastDay = 0;
+		for (int i = 0; i < rollbacks.size(); i++) {
+			Rollback rollback = rollbacks.get(i);
+			long daysAgo = TimeUnit.MILLISECONDS.toDays(rollback.getTimestamp());
+			if (lastDay != daysAgo) {
+				lastDay = daysAgo;
+				displayables.add(new FooterRowDisplayable(
+						new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT).format(
+								rollback.getTimestamp())));
 			}
 			displayables.add(new RollbackDisplayable(installManager, rollback));
 		}
 
-		// display headers and content
-		List<Displayable> displayablesToShow = new LinkedList<>();
-		for (Map.Entry<Long,List<Displayable>> arrayOfDisplayablesEntry : arrayOfDisplayables.entrySet()) {
-			displayablesToShow.add(new FooterRowDisplayable(prettyTimestamp(arrayOfDisplayablesEntry.getKey())));
-			displayablesToShow.addAll(arrayOfDisplayablesEntry.getValue());
-		}
-		setDisplayables(displayablesToShow);
+		Calendar.getInstance(AptoideUtils.LocaleU.DEFAULT);
+		return displayables;
 	}
 }

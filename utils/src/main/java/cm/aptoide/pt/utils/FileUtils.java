@@ -5,15 +5,15 @@
 
 package cm.aptoide.pt.utils;
 
+import android.graphics.Bitmap;
 import android.text.TextUtils;
-
+import cm.aptoide.pt.logger.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by trinkes on 5/18/16.
@@ -37,6 +37,10 @@ public class FileUtils {
 	 * @return true if the the file was copied successfully, false otherwise
 	 */
 	public static void copyFile(String inputPath, String outputPath, String fileName) {
+		if (!fileExists(inputPath)) {
+			throw new RuntimeException("Input file doesn't exists");
+		}
+
 		InputStream in = null;
 		OutputStream out = null;
 		try {
@@ -113,5 +117,33 @@ public class FileUtils {
 			}
 		}
 		return result;
+	}
+
+	public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm,
+			Bitmap.CompressFormat format, int quality) {
+
+		File imageFile = new File(dir, fileName);
+
+		FileOutputStream fos = null;
+		try {
+			dir.mkdirs();
+			fos = new FileOutputStream(imageFile);
+
+			bm.compress(format, quality, fos);
+
+			fos.close();
+
+			return true;
+		} catch (IOException e) {
+			Logger.e(TAG, e.getMessage());
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		return false;
 	}
 }

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
@@ -58,8 +57,12 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
 						DownloadFactory()
 						.create(update))
 						.filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-						.flatMap(download -> displayable.getInstallManager().install(getContext(), (PermissionRequest) getContext(), download.getAppId()))
-						.onErrorReturn(throwable -> null)
+						.flatMap(download -> displayable.getInstallManager()
+								.update(getContext(), (PermissionRequest) getContext(), download.getAppId()))
+						.onErrorReturn(throwable -> {
+							throwable.printStackTrace();
+							return null;
+						})
 						.subscribe();
 			}
 			Intent intent = new Intent();

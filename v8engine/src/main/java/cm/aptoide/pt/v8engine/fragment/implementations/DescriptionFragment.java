@@ -31,15 +31,18 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 	private static final String TAG = DescriptionFragment.class.getSimpleName();
 
 	private static final String APP_ID = "app_id";
+	private static final String STORE_NAME = "store_name";
 	private boolean hasAppId = false;
 	private long appId;
 	private TextView emptyData;
 	private TextView descriptionContainer;
+	private String storeName;
 
-	public static DescriptionFragment newInstance(long appId) {
+	public static DescriptionFragment newInstance(long appId, String storeName) {
 		DescriptionFragment fragment = new DescriptionFragment();
 		Bundle args = new Bundle();
 		args.putLong(APP_ID, appId);
+		args.putString(STORE_NAME, storeName);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -52,6 +55,10 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 			appId = args.getLong(APP_ID, -1);
 			hasAppId = true;
 		}
+
+		if(args.containsKey(STORE_NAME)){
+			storeName = args.getString(STORE_NAME);
+		}
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (hasAppId) {
 			Logger.d(TAG, "App Description should refresh? " + refresh);
-			GetAppRequest.of(appId).execute(getApp -> {
+			GetAppRequest.of(appId, storeName).execute(getApp -> {
 				setupAppDescription(getApp);
 				setupTitle(getApp);
 				finishLoading();

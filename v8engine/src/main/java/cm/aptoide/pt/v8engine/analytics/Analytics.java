@@ -762,6 +762,14 @@ public class Analytics {
 
         }
 
+	    public static void pullToRefresh() {
+		    track("Pull-to-refresh_Apps Timeline", FLURRY);
+	    }
+
+	    public static void endlessScrollLoadMore() {
+		    track("Endless-scroll_Apps Timeline", FLURRY);
+	    }
+
         private static void flurryTrack(HashMap<String,String> map, String cardType) {
             String eventName = cardType + "_" + EVENT_NAME;
             track(eventName, map, FLURRY);
@@ -989,28 +997,4 @@ public class Analytics {
 			Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: "+ sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY,false));
 		}
 	}
-
-    public static class Timeline{
-
-        public static void clickOnVideoCard(){
-
-        }
-
-        public static void clickOnArticleCard() {
-
-        }
-
-        public static void clickOnUpdateCard() {
-
-        }
-
-        public static void clickOnRecommendationCard(){
-
-        }
-
-	    public static void clickOnStoreLatestApps(){
-
-	    }
-    }
-
 }

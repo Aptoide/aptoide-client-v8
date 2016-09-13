@@ -6,16 +6,14 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.AllArgsConstructor;
@@ -46,14 +44,15 @@ public class UpdateDisplayable extends Displayable {
 	@Getter private String patchObbPath;
 	@Getter private String patchObbMd5;
 
-	@Getter private InstallManager installManager;
+	@Getter private Installer installManager;
 	private Download download;
 	private DownloadServiceHelper downloadManager;
 
 	public UpdateDisplayable() {
 	}
 
-	public static UpdateDisplayable create(Update update, InstallManager installManager, DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
+	public static UpdateDisplayable create(Update update, Installer installManager,
+			DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
 
 		return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(), update.getIcon(), update.getVersionCode(), update.getMd5()
 				, update
@@ -68,7 +67,7 @@ public class UpdateDisplayable extends Displayable {
 		return downloadManager.startDownload(permissionRequest, download)
 				//				.ignoreElements()
 				.cast(Void.class)
-				.concatWith(installManager.install(context, permissionRequest, download.getAppId()));
+				.concatWith(installManager.update(context, permissionRequest, download.getAppId()));
 	}
 
 	@Override

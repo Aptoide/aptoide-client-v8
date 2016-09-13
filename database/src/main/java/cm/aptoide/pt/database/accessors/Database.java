@@ -82,10 +82,11 @@ public final class Database {
   }
 
   public static <E extends RealmObject> void save(E realmObject) {
-    @Cleanup Realm realm = Realm.getDefaultInstance();
+    Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
     realm.insertOrUpdate(realmObject);
     realm.commitTransaction();
+    realm.close();
   }
 
   public static <E extends RealmObject> void save(List<E> realmObject) {
@@ -137,13 +138,13 @@ public final class Database {
         .map(something -> Database.getInternal());
   }
 
-  private <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
+  protected <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
     return Observable.just(results)
         .filter(data -> data.isLoaded())
         .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects));
   }
 
-  private <E extends RealmObject> Observable<E> copyFromRealm(E object) {
+  protected <E extends RealmObject> Observable<E> copyFromRealm(E object) {
     return Observable.just(object)
         .filter(data -> data.isLoaded())
         .map(realmObject -> Database.getInternal().copyFromRealm(realmObject));

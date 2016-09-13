@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.util.Log;
-
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -23,6 +23,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,13 +35,22 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "InstalledReceiver";
 	private Realm realm;
+	private RollbackRepository repository;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		loadRealm();
 
+		repository = new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+
+
 		String action = intent.getAction();
 		String packageName = intent.getData().getEncodedSchemeSpecificPart();
+
+		repository.getNotConfirmedRollback(packageName)
+				.first().filter(rollback -> shouldConfirmRollback(rollback, action)).subscribe(rollback -> {
+			repository.confirmRollback(rollback);
+		}, throwable -> throwable.printStackTrace());
 
 		if(!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false))
 			return;
@@ -61,6 +71,17 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 		closeRealm();
 	}
 
+	private boolean shouldConfirmRollback(Rollback rollback, String action) {
+		return rollback != null && ((rollback.getAction().equals(Rollback.Action.INSTALL.name())
+				&& action.equals(Intent.ACTION_PACKAGE_ADDED))
+				|| (rollback.getAction()
+				.equals(Rollback.Action.UNINSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_REMOVED))
+				|| (rollback.getAction().equals(Rollback.Action.UPDATE.name()) && action.equals(
+				Intent.ACTION_PACKAGE_REPLACED))
+				|| (rollback.getAction().equals(Rollback.Action.DOWNGRADE.name()) && action.equals(
+				Intent.ACTION_PACKAGE_ADDED)));
+	}
+
 	private void loadRealm() {
 		if (realm == null) {
 			realm = DeprecatedDatabase.get();
@@ -76,12 +97,11 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	protected void onPackageAdded(String packageName) {
 		Log.d(TAG, "Package added: " + packageName);
 
-		Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
-		if(rollback != null) {
-			String packageNameFromRollbackQ = rollback.getPackageName();
-			String trustedBadge = rollback.getTrustedBadge();
-			Analytics.ApplicationInstall.installed(packageName, trustedBadge);
-		}
+		//Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
+		//if(rollback != null) {
+		//	String trustedBadge = rollback.getTrustedBadge();
+		//	Analytics.ApplicationInstall.installed(packageName, trustedBadge);
+		//}
 
 		databaseOnPackageAdded(packageName);
 		checkAndBroadcastReferrer(packageName);
@@ -104,14 +124,13 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	protected void onPackageReplaced(String packageName, Context context) {
-		Log.d(TAG, "Packaged replaced: " + packageName);
+		Logger.d(TAG, "Packaged replaced: " + packageName);
 
 		databaseOnPackageReplaced(packageName, context);
 	}
 
 	protected void onPackageRemoved(String packageName) {
-		Log.d(TAG, "Packaged removed: " + packageName);
-
+		Logger.d(TAG, "Packaged removed: " + packageName);
 		databaseOnPackageRemoved(packageName);
 	}
 
@@ -120,10 +139,10 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 		DeprecatedDatabase.save(new Installed(packageInfo, V8Engine.getContext().getPackageManager()), realm);
 
-		Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
-		if (rollback != null) {
-			confirmAction(packageName, Rollback.Action.INSTALL);
-		}
+		//Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
+		//if (rollback != null) {
+		//	confirmAction(packageName, Rollback.Action.INSTALL);
+		//}
 	}
 
 	private void databaseOnPackageReplaced(String packageName, Context context) {
@@ -142,23 +161,23 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 		DeprecatedDatabase.save(new Installed(packageInfo, context.getPackageManager()), realm);
 
-		confirmAction(packageName, Rollback.Action.UPDATE);
+		//confirmAction(packageName, Rollback.Action.UPDATE);
 	}
 
 	private void databaseOnPackageRemoved(String packageName) {
 		DeprecatedDatabase.InstalledQ.delete(packageName, realm);
 		DeprecatedDatabase.UpdatesQ.delete(packageName, realm);
 
-		Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.DOWNGRADE);
-		if (rollback != null) {
-			confirmAction(packageName, Rollback.Action.DOWNGRADE);
-			Analytics.ApplicationInstall.downgraded(packageName, rollback.getTrustedBadge());
-		} else {
-			rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.UNINSTALL);
-			if (rollback != null) {
-				confirmAction(packageName, Rollback.Action.UNINSTALL);
-			}
-		}
+		//Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.DOWNGRADE);
+		//if (rollback != null) {
+		//	confirmAction(packageName, Rollback.Action.DOWNGRADE);
+		//	Analytics.ApplicationInstall.downgraded(packageName, rollback.getTrustedBadge());
+		//} else {
+		//	rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.UNINSTALL);
+		//	if (rollback != null) {
+		//		confirmAction(packageName, Rollback.Action.UNINSTALL);
+		//	}
+		//}
 	}
 
 	private void confirmAction(String packageName, Rollback.Action action) {

@@ -10,28 +10,24 @@ import android.content.ContextWrapper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import java.text.DateFormat;
+import rx.subscriptions.CompositeSubscription;
+
+import static android.text.format.DateFormat.getTimeFormat;
 
 /**
  * Created by sithengineer on 14/06/16.
  */
 public class RollbackWidget extends Widget<RollbackDisplayable> {
-
-	private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
 	private static final String TAG = RollbackWidget.class.getSimpleName();
 
@@ -40,6 +36,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 	private TextView appUpdateVersion;
 	private TextView appState;
 	private TextView rollbackAction;
+	private CompositeSubscription compositeSubscription;
 
 	public RollbackWidget(View itemView) {
 		super(itemView);
@@ -58,14 +55,38 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 	public void bindView(RollbackDisplayable displayable) {
 		final Rollback pojo = displayable.getPojo();
 
+		if (compositeSubscription == null || compositeSubscription.isUnsubscribed()) {
+			compositeSubscription = new CompositeSubscription();
+		}
+
 		ImageLoader.load(pojo.getIcon(), appIcon);
 		appName.setText(pojo.getAppName());
 		appUpdateVersion.setText(pojo.getVersionName());
-		appState.setText(
-			String.format(
-				getContext().getString(R.string.rollback_updated_at), DATE_TIME_U.getTimeDiffString(getContext(), pojo.getTimestamp())
-			)
-		);
+
+		StringBuilder builder = new StringBuilder();
+		switch (Rollback.Action.valueOf(pojo.getAction())) {
+			case UPDATE:
+				builder.append(getContext().getString(R.string.rollback_updated));
+				rollbackAction.setText(R.string.downgrade);
+				break;
+			case DOWNGRADE:
+				builder.append(getContext().getString(R.string.rollback_downgraded));
+				rollbackAction.setText(R.string.update);
+				break;
+			case UNINSTALL:
+				builder.append(getContext().getString(R.string.rollback_uninstalled));
+				rollbackAction.setText(R.string.install);
+				break;
+			case INSTALL:
+				builder.append(getContext().getString(R.string.rollback_installed));
+				rollbackAction.setText(R.string.uninstall);
+				break;
+		}
+		DateFormat timeFormat = getTimeFormat(getContext());
+		builder.append(" ");
+		builder.append(String.format(getContext().getString(R.string.at_time),
+				timeFormat.format(pojo.getTimestamp())));
+		appState.setText(builder.toString());
 
 		rollbackAction.setOnClickListener( view -> {
 
@@ -78,55 +99,26 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 			final PermissionRequest permissionRequest = ((PermissionRequest) contextWrapper.getBaseContext());
 
 			permissionRequest.requestAccessToExternalFileSystem(() -> {
-				final DownloadServiceHelper downloadServiceHelper = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-				final Download appDownload = displayable.getDownloadFromPojo();
 				Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
 				switch (action) {
 					case DOWNGRADE:
-						// find app update and download it, uninstall current and install update
-						// TODO: 28/07/16 sithengineer
-
-						ShowMessage.asSnack(view, R.string.updating_msg);
-						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-								//final String packageName = app.getPackageName();
-								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-								//displayable.upgrade(context).subscribe();
-							}
-						});
-
+						displayable.update((FragmentShower) getContext());
 						break;
-
 					case INSTALL:
 						//only if the app is installed
 						//ShowMessage.asSnack(view, R.string.uninstall_msg);
-						ShowMessage.asSnack(view, "R.string.uninstall_msg");
-						displayable.uninstall(getContext(), appDownload).subscribe();
+						ShowMessage.asSnack(view, R.string.uninstall);
+						displayable.uninstall(getContext(), displayable.getDownloadFromPojo())
+								.subscribe(uninstalled -> {
+								}, throwable -> throwable.printStackTrace());
 						break;
 
 					case UNINSTALL:
-						ShowMessage.asSnack(view, R.string.installing_msg);
-						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-								//final String packageName = app.getPackageName();
-								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-								displayable.install(context, (PermissionRequest) context, appDownload.getAppId()).subscribe();
-							}
-						});
+						displayable.install((FragmentShower) getContext());
 						break;
 
 					case UPDATE:
-						// find current installed app. download previous, uninstall current and install previous
-						// TODO: 28/07/16 sithengineer
-
-						ShowMessage.asSnack(view,R.string.downgrading_msg);
-						downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-							if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-								//final String packageName = app.getPackageName();
-								//final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-								displayable.downgrade(context, permissionRequest, download, pojo.getAppId()).subscribe();
-							}
-						});
+						displayable.update((FragmentShower) getContext());
 						break;
 				}
 			}, () -> {
@@ -142,6 +134,8 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
 	@Override
 	public void onViewDetached() {
-
+		if (compositeSubscription != null) {
+			compositeSubscription.unsubscribe();
+		}
 	}
 }

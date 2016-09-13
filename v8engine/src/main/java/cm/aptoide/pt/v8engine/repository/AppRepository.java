@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import java.util.List;
-
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -15,6 +13,7 @@ import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 
@@ -27,8 +26,8 @@ public class AppRepository {
 	private final NetworkOperatorManager operatorManager;
 	private final ProductFactory productFactory;
 
-	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(appId).observe(refresh)
+	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName) {
+		return GetAppRequest.of(appId,storeName).observe(refresh)
 				.flatMap(response -> {
 					if (response != null && response.isOk()) {
 						return getPaymentApp(response, sponsored);
@@ -71,5 +70,16 @@ public class AppRepository {
 			app.getNodes().getMeta().getData().setPayment(payment);
 			return app;
 		});
+	}
+
+	public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
+		return GetAppRequest.ofMd5(md5).observe(refresh).flatMap(response -> {
+			if (response != null && response.isOk()) {
+				return getPaymentApp(response, sponsored);
+			} else {
+				return Observable.error(
+						new RepositoryItemNotFoundException("No app found for package " + md5));
+			}
+		}).flatMap(app -> getPaymentApp(app, sponsored));
 	}
 }

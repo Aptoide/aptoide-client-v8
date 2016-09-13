@@ -7,15 +7,13 @@ package cm.aptoide.pt.database.realm;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.Calendar;
-
 import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Calendar;
 
 /**
  * Created by sithengineer on 17/05/16.
@@ -47,9 +45,12 @@ public class Download extends RealmObject {
 	@SuppressWarnings({"all"})
 	private long timeStamp;
 	private int downloadSpeed;
-
 	public Download() {
 		this.timeStamp = Calendar.getInstance().getTimeInMillis();
+	}
+
+	public long getTimeStamp() {
+		return timeStamp;
 	}
 
 	public String getStatusName(Context context) {

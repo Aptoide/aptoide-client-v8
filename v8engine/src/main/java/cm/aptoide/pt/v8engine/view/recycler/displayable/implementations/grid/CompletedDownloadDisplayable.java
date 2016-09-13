@@ -6,14 +6,13 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
 
@@ -22,14 +21,15 @@ import rx.Observable;
  */
 public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 
-	private InstallManager installManager;
+	private Installer installManager;
 	private DownloadServiceHelper downloadManager;
 
 	public CompletedDownloadDisplayable() {
 		super();
 	}
 
-	public CompletedDownloadDisplayable(Download pojo, InstallManager installManager, DownloadServiceHelper downloadManager) {
+	public CompletedDownloadDisplayable(Download pojo, Installer installManager,
+			DownloadServiceHelper downloadManager) {
 		super(pojo);
 		this.installManager = installManager;
 		this.downloadManager = downloadManager;
