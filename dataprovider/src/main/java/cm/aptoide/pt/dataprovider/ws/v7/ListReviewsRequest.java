@@ -42,9 +42,12 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 	}
 
 	public static ListReviewsRequest of(long storeId, int limit, int offset) {
+		final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
+		String username = storeOnRequest.getUsername();
+		String password = storeOnRequest.getPasswordSha1();
 		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
 		//IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh());
+		Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh(), username, password);
 		return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
 	}
 
@@ -110,13 +113,19 @@ public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> 
 		private String packageName;
 		private String storeName;
 		private Integer subLimit;
+		private String store_user;
+		private String store_pass_sha1;
 
-		public Body(long storeId, int limit, int subLimit, boolean refresh) {
+
+
+		public Body(long storeId, int limit, int subLimit, boolean refresh, String username, String password) {
 
 			this.storeId = storeId;
 			this.limit = limit;
 			this.subLimit = subLimit;
 			this.refresh = refresh;
+			this.store_user = username;
+			this.store_pass_sha1 = password;
 		}
 
 		public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {

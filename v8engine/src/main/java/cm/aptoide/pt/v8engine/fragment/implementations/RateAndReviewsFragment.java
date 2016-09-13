@@ -86,7 +86,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 			CountDownLatch countDownLatch = new CountDownLatch(reviews.size());
 
 			Observable.from(reviews)
-					.forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(), fullReview.getId(), 3).execute(listComments -> {
+					.forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(), fullReview.getId(), 3, storeName).execute(listComments -> {
 						fullReview.setCommentList(listComments);
 						countDownLatch.countDown();
 					}, e -> countDownLatch.countDown()));
