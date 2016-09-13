@@ -8,11 +8,6 @@ package cm.aptoide.pt.downloadmanager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
-import com.liulishuo.filedownloader.FileDownloader;
-
-import java.util.List;
-
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -22,6 +17,8 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInter
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
+import com.liulishuo.filedownloader.FileDownloader;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import rx.Observable;
@@ -107,7 +104,9 @@ public class AptoideDownloadManager {
 
 	private void startNewDownload(Download download) {
 		download.setOverallDownloadStatus(Download.IN_QUEUE);
-		download.setOverallProgress(0);
+		//commented to prevent the ui glitch with "0" value
+		// (trusting in progress value from outside can be dangerous)
+		//		download.setOverallProgress(0);
 		download.setTimeStamp(System.currentTimeMillis());
 		downloadAccessor.save(download);
 
