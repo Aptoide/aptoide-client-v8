@@ -53,7 +53,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter> extends Ba
 
 	@Override
 	public int getContentViewId() {
-		return R.layout.store_recycler_fragment;
+		return R.layout.recycler_fragment;
 	}
 
 	@Override

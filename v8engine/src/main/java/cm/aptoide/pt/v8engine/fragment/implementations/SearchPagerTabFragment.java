@@ -105,7 +105,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
 	@Override
 	public int getContentViewId() {
-		return R.layout.store_recycler_fragment;
+		return R.layout.recycler_fragment;
 	}
 
 	@Override
