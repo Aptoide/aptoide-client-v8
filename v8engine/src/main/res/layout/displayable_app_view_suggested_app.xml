@@ -13,55 +13,57 @@
     android:layout_marginRight="5dp"
     android:background="@drawable/displayable_app_view_suggested_app_border"
     android:clickable="true"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="81.3dp"
-        android:layout_height="81.3dp"
-        android:layout_gravity="center_vertical"
+  <ImageView
+      android:id="@+id/icon"
+      android:layout_width="81.3dp"
+      android:layout_height="81.3dp"
+      android:layout_gravity="center_vertical"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="15dp"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="15.5sp"
         />
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="15dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/sponsored"
+        android:textAllCaps="true"
+        android:textColor="#bebebe"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        />
 
-        <TextView
-            android:id="@+id/app_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="15.5sp"
-            />
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:shadowColor="@color/yellow"
+        android:textColor="#969696"
+        android:textSize="9sp"
+        />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/sponsored"
-            android:textAllCaps="true"
-            android:textColor="#bebebe"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:shadowColor="@color/yellow"
-            android:textColor="#969696"
-            android:textSize="9sp"
-            />
-
-    </LinearLayout>
+  </LinearLayout>
 
 </LinearLayout>

@@ -20,121 +20,121 @@
     tools:background="@android:color/transparent"
     >
 
-    <LinearLayout
-        android:id="@+id/app_name_layout"
-        android:layout_width="120dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:orientation="vertical"
-        tools:background="@android:color/transparent"
-        >
+  <LinearLayout
+      android:id="@+id/app_name_layout"
+      android:layout_width="120dp"
+      android:layout_height="match_parent"
+      android:layout_alignParentRight="true"
+      android:orientation="vertical"
+      tools:background="@android:color/transparent"
+      >
 
-        <ImageView
-            android:id="@+id/store_icon"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            tools:src="@drawable/user_account_white"
-            />
-
-        <TextView
-            android:id="@+id/store_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:maxLines="1"
-            android:lines="1"
-            android:ellipsize="end"
-            android:textColor="@color/almost_black"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold"
-            tools:text="Animirais Studio"
-            />
-
-        <TextView
-            android:id="@+id/store_followers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:maxLines="1"
-            android:lines="1"
-            android:textColor="@color/app_view_gray"
-            android:textSize="@dimen/text_size_small"
-            tools:text="2534 Followers"
-            />
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/version_and_info_layout"
+    <ImageView
+        android:id="@+id/store_icon"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_toStartOf="@id/app_name_layout"
-        tools:background="@android:color/transparent"
-        >
+        android:layout_height="44dp"
+        tools:src="@drawable/user_account_white"
+        />
+
+    <TextView
+        android:id="@+id/store_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textColor="@color/almost_black"
+        android:textSize="@dimen/text_size_medium"
+        android:textStyle="bold"
+        tools:text="Animirais Studio"
+        />
+
+    <TextView
+        android:id="@+id/store_followers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:lines="1"
+        android:textColor="@color/app_view_gray"
+        android:textSize="@dimen/text_size_small"
+        tools:text="2534 Followers"
+        />
+
+  </LinearLayout>
+
+  <RelativeLayout
+      android:id="@+id/version_and_info_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_alignParentLeft="true"
+      android:layout_toStartOf="@id/app_name_layout"
+      tools:background="@android:color/transparent"
+      >
 
 
-        <!--
-        -->
-        <TextView
-            android:id="@+id/version_name"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/other_version_icon_size_with_icon"
-            android:gravity="center_vertical"
-            android:textColor="@color/almost_black"
-            android:textSize="@dimen/text_size_large"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:lines="1"
-            android:ellipsize="end"
-            android:drawableLeft="@drawable/ic_appview_version"
-            android:drawablePadding="4dp"
-            tools:text="1.00.258.985lsndakljndanalnalndalnad7"
-            tools:drawableRight="@drawable/ic_badge_trusted"
-            />
+    <!--
+    -->
+    <TextView
+        android:id="@+id/version_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/other_version_icon_size_with_icon"
+        android:gravity="center_vertical"
+        android:textColor="@color/almost_black"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:lines="1"
+        android:ellipsize="end"
+        android:drawableLeft="@drawable/ic_appview_version"
+        android:drawablePadding="4dp"
+        tools:text="1.00.258.985lsndakljndanalnalndalnad7"
+        tools:drawableRight="@drawable/ic_badge_trusted"
+        />
 
-        <!--
-        <ImageView
-            android:id="@+id/badge_icon"
-            android:layout_width="@dimen/other_version_icon_size"
-            android:layout_height="@dimen/other_version_icon_size"
-            android:layout_toEndOf="@id/version_name"
-            android:layout_toRightOf="@id/version_name"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_badge_trusted"
-            />
-        -->
+    <!--
+    <ImageView
+        android:id="@+id/badge_icon"
+        android:layout_width="@dimen/other_version_icon_size"
+        android:layout_height="@dimen/other_version_icon_size"
+        android:layout_toEndOf="@id/version_name"
+        android:layout_toRightOf="@id/version_name"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_badge_trusted"
+        />
+    -->
 
-        <TextView
-            android:id="@+id/version_date"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_below="@id/version_name"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/text_size_medium_small"
-            android:textColor="@color/app_view_gray"
-            android:maxLines="1"
-            android:lines="1"
-            tools:text="1 month ago"
-            />
+    <TextView
+        android:id="@+id/version_date"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_below="@id/version_name"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_size_medium_small"
+        android:textColor="@color/app_view_gray"
+        android:maxLines="1"
+        android:lines="1"
+        tools:text="1 month ago"
+        />
 
-        <TextView
-            android:id="@+id/downloads"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_below="@id/version_date"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/text_size_medium_small"
-            android:maxLines="1"
-            android:textColor="@color/app_view_gray"
-            android:lines="1"
-            tools:text="11K downloads"
-            />
+    <TextView
+        android:id="@+id/downloads"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_below="@id/version_date"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_size_medium_small"
+        android:maxLines="1"
+        android:textColor="@color/app_view_gray"
+        android:lines="1"
+        tools:text="11K downloads"
+        />
 
 
-    </RelativeLayout>
+  </RelativeLayout>
 
 </RelativeLayout>

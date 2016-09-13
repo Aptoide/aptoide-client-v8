@@ -10,40 +10,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/description"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/aptoide_orange"
-        android:textSize="18sp"
-        />
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/description"
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/aptoide_orange"
+      android:textSize="18sp"
+      />
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="21dp"
-        android:layout_marginTop="18dp"
-        android:ellipsize="end"
-        android:maxLines="@integer/minimum_description_lines"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="11.5sp"
-        tools:text="this will contain the app description"
-        />
+  <TextView
+      android:id="@+id/description"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="21dp"
+      android:layout_marginTop="18dp"
+      android:ellipsize="end"
+      android:maxLines="@integer/minimum_description_lines"
+      android:textColor="?android:attr/textColorSecondary"
+      android:textSize="11.5sp"
+      tools:text="this will contain the app description"
+      />
 
-    <Button
-        android:id="@+id/read_more_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_border_silver"
-        android:padding="12dp"
-        android:text="@string/read_more"
-        android:textAllCaps="true"
-        android:textColor="@color/silver"
-        android:textSize="@dimen/text_size_small"
-        />
+  <Button
+      android:id="@+id/read_more_button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/button_border_silver"
+      android:padding="12dp"
+      android:text="@string/read_more"
+      android:textAllCaps="true"
+      android:textColor="@color/silver"
+      android:textSize="@dimen/text_size_small"
+      />
 
 </LinearLayout>

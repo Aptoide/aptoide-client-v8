@@ -13,124 +13,125 @@
     android:padding="24dp"
     >
 
-    <TextView
-        android:id="@+id/title"
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:gravity="center"
+      android:textColor="?colorPrimary"
+      android:textSize="@dimen/text_size_large"
+      tools:text="Rate Boom Beach"
+      />
+
+  <include
+      layout="@layout/separator_horizontal"
+      />
+
+  <RatingBar
+      android:id="@+id/rating_bar"
+      style="@style/RatingBarReviewDialog"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="8dp"
+      android:isIndicator="false"
+      android:nextFocusForward="@+id/input_title"
+      android:numStars="5"
+      android:rating="3.0"
+      android:stepSize="1.0"
+      />
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/tap_a_star"
+      android:textColor="@color/medium_custom_gray"
+      android:textSize="@dimen/text_size_medium_small"
+      />
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/input_layout_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="18dp"
+      >
+
+    <EditText
+        android:id="@+id/input_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:textColor="?colorPrimary"
-        android:textSize="@dimen/text_size_large"
-        tools:text="Rate Boom Beach"
+        android:ellipsize="end"
+        android:gravity="top|left|start"
+        android:hint="@string/title"
+        android:lines="1"
+        android:maxLines="1"
+        android:nextFocusForward="@+id/input_review"
+        android:textAlignment="textStart"
+        android:textColorHint="@color/black"
+        android:textSize="@dimen/text_size_medium"
         />
 
-    <include
-        layout="@layout/separator_horizontal"
+  </android.support.design.widget.TextInputLayout>
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/input_layout_review"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <EditText
+        android:id="@+id/input_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="top|left|start"
+        android:hint="@string/review_optional"
+        android:lines="5"
+        android:maxLines="6"
+        android:nextFocusForward="@id/input_review"
+        android:textAlignment="textStart"
+        android:textColorHint="@color/black"
+        android:textSize="@dimen/text_size_medium"
         />
 
-    <RatingBar
-        android:id="@+id/rating_bar"
-        style="@style/RatingBarReviewDialog"
+  </android.support.design.widget.TextInputLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <Button
+        android:id="@+id/rate_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:isIndicator="false"
-        android:nextFocusForward="@+id/input_title"
-        android:numStars="5"
-        android:rating="3.0"
-        android:stepSize="1.0"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:padding="6dp"
+        android:text="@string/rate"
+        android:textAllCaps="true"
+        android:textColor="?colorPrimary"
+        android:textSize="@dimen/text_size_medium"
         />
 
-    <TextView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/tap_a_star"
-        android:textColor="@color/medium_custom_gray"
-        android:textSize="@dimen/text_size_medium_small"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_toLeftOf="@id/rate_button"
+        android:layout_toStartOf="@id/rate_button"
+        android:background="@null"
+        android:padding="6dp"
+        android:text="@string/cancel"
+        android:textAllCaps="true"
+        android:textColor="@color/app_view_gray"
+        android:textSize="@dimen/text_size_medium"
         />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        >
-
-        <EditText
-            android:id="@+id/input_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="top|left|start"
-            android:hint="@string/title"
-            android:lines="1"
-            android:maxLines="1"
-            android:nextFocusForward="@+id/input_review"
-            android:textAlignment="textStart"
-            android:textColorHint="@color/black"
-            android:textSize="@dimen/text_size_medium"
-            />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_review"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/input_review"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="top|left|start"
-            android:hint="@string/review_optional"
-            android:lines="5"
-            android:maxLines="6"
-            android:nextFocusForward="@id/input_review"
-            android:textAlignment="textStart"
-            android:textColorHint="@color/black"
-            android:textSize="@dimen/text_size_medium"
-            />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <Button
-            android:id="@+id/rate_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@null"
-            android:padding="6dp"
-            android:text="@string/rate"
-            android:textAllCaps="true"
-            android:textColor="?colorPrimary"
-            android:textSize="@dimen/text_size_medium"
-            />
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_toLeftOf="@id/rate_button"
-            android:layout_toStartOf="@id/rate_button"
-            android:background="@null"
-            android:padding="6dp"
-            android:text="@string/cancel"
-            android:textAllCaps="true"
-            android:textColor="@color/app_view_gray"
-            android:textSize="@dimen/text_size_medium"
-            />
-    </RelativeLayout>
+  </RelativeLayout>
 
 </LinearLayout>

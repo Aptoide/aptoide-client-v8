@@ -13,73 +13,74 @@
     android:background="@color/white"
     >
 
-    <ImageView
-        android:id="@+id/app_icon"
-        android:layout_width="60dp"
+  <ImageView
+      android:id="@+id/app_icon"
+      android:layout_width="60dp"
+      android:layout_height="match_parent"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_marginRight="4dp"
+      tools:src="@color/red"
+      />
+
+  <FrameLayout
+      android:id="@+id/loading_selected_layout"
+      android:layout_width="60dp"
+      android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      >
+
+    <CheckBox
+        android:id="@+id/is_selected"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginRight="4dp"
-        tools:src="@color/red"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        tools:visibility="gone"
         />
-
-    <FrameLayout
-        android:id="@+id/loading_selected_layout"
-        android:layout_width="60dp"
+    <ProgressBar
+        android:id="@+id/progress_bar_is_installing"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true">
-
-        <CheckBox
-            android:id="@+id/is_selected"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:visibility="visible"
-            tools:visibility="gone"
-            />
-        <ProgressBar
-            android:id="@+id/progress_bar_is_installing"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:indeterminate="false"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/app_icon"
-        android:layout_toEndOf="@id/app_icon"
-        android:layout_toLeftOf="@id/loading_selected_layout"
-        android:layout_toRightOf="@id/app_icon"
-        android:layout_toStartOf="@id/loading_selected_layout"
-        android:gravity="center_vertical|left|start"
-        android:lines="1"
-        android:maxLines="1"
-        android:textSize="@dimen/text_size_large"
-        android:textStyle="bold"
-        tools:text="Boom Beach"
+        android:indeterminate="false"
+        android:visibility="gone"
+        tools:visibility="visible"
         />
+  </FrameLayout>
 
-    <TextView
-        android:id="@+id/app_version"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/app_name"
-        android:layout_marginTop="4dp"
-        android:layout_toEndOf="@id/app_icon"
-        android:layout_toLeftOf="@id/loading_selected_layout"
-        android:layout_toRightOf="@id/app_icon"
-        android:layout_toStartOf="@id/loading_selected_layout"
-        android:gravity="center_vertical|left|start"
-        android:lines="1"
-        android:maxLines="1"
-        android:textSize="@dimen/text_size_medium"
-        tools:text="v 1.0.0.2"
-        />
+  <TextView
+      android:id="@+id/app_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@id/app_icon"
+      android:layout_toEndOf="@id/app_icon"
+      android:layout_toLeftOf="@id/loading_selected_layout"
+      android:layout_toRightOf="@id/app_icon"
+      android:layout_toStartOf="@id/loading_selected_layout"
+      android:gravity="center_vertical|left|start"
+      android:lines="1"
+      android:maxLines="1"
+      android:textSize="@dimen/text_size_large"
+      android:textStyle="bold"
+      tools:text="Boom Beach"
+      />
+
+  <TextView
+      android:id="@+id/app_version"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/app_name"
+      android:layout_marginTop="4dp"
+      android:layout_toEndOf="@id/app_icon"
+      android:layout_toLeftOf="@id/loading_selected_layout"
+      android:layout_toRightOf="@id/app_icon"
+      android:layout_toStartOf="@id/loading_selected_layout"
+      android:gravity="center_vertical|left|start"
+      android:lines="1"
+      android:maxLines="1"
+      android:textSize="@dimen/text_size_medium"
+      tools:text="v 1.0.0.2"
+      />
 
 </RelativeLayout>

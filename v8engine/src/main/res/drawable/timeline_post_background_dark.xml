@@ -2,31 +2,31 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Bottom 2dp Shadow -->
-    <item>
-        <shape android:shape="rectangle">
+  <!-- Bottom 2dp Shadow -->
+  <item>
+    <shape android:shape="rectangle">
 
-            <solid android:color="#FF191919"/>
-            <corners android:radius="7dp"/>
+      <solid android:color="#FF191919"/>
+      <corners android:radius="7dp"/>
 
-        </shape>
-    </item>
+    </shape>
+  </item>
 
-    <!-- White Top color -->
-    <item android:bottom="3px">
+  <!-- White Top color -->
+  <item android:bottom="3px">
 
-        <shape
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:shape="rectangle">
+    <shape
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
 
-            <corners android:radius="5dp"/>
-            <solid android:color="#1e1e1e"/>
-            <stroke
-                android:width="1dip"
-                android:color="#232323"/>
-        </shape>
+      <corners android:radius="5dp"/>
+      <solid android:color="#1e1e1e"/>
+      <stroke
+          android:width="1dip"
+          android:color="#232323"/>
+    </shape>
 
-    </item>
+  </item>
 
 
 </layer-list>

@@ -8,21 +8,24 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
-    <include
-        android:id="@+id/ratingCard"
-        layout="@layout/appview_rating_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"/>
+  <include
+      android:id="@+id/ratingCard"
+      layout="@layout/appview_rating_card"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="10dp"
+      />
 
-    <include
-        layout="@layout/appview_rating_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"/>
+  <include
+      layout="@layout/appview_rating_bar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      />
 
 </LinearLayout>

@@ -11,8 +11,8 @@ apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 retrolambda {
-    jvmArgs '-noverify'
-    //defaultMethods true
+  jvmArgs '-noverify'
+  //defaultMethods true
 }
 
 Properties localProperties = new Properties()
@@ -21,16 +21,16 @@ localProperties.load(new FileInputStream(project.file("../../aptoideProperties/l
 def fabricApiKey = localProperties.FABRIC_API_KEY
 def fabricConfigured = fabricApiKey != null
 if (fabricConfigured) {
-    task fabricGenerateProperties {
-        doFirst {
-            def fabricProperties = project.file("fabric.properties")
-            fabricProperties.delete()
-            fabricProperties.append("# Do not modify this file -- YOUR CHANGES WILL BE ERASED!\n")
-            fabricProperties.append("apiKey=" + fabricApiKey)
-        }
+  task fabricGenerateProperties {
+    doFirst {
+      def fabricProperties = project.file("fabric.properties")
+      fabricProperties.delete()
+      fabricProperties.append("# Do not modify this file -- YOUR CHANGES WILL BE ERASED!\n")
+      fabricProperties.append("apiKey=" + fabricApiKey)
     }
-    preBuild.dependsOn(fabricGenerateProperties)
-    apply plugin: 'io.fabric'
+  }
+  preBuild.dependsOn(fabricGenerateProperties)
+  apply plugin: 'io.fabric'
 }
 
 //configurations.all {
@@ -42,228 +42,235 @@ if (fabricConfigured) {
 
 android {
 
-    compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
 
-    // keep the "applicationId" var in third place for the jenkins build script hack
-    defaultConfig {
-        versionName "8.0.0"
-        versionCode 1
-        applicationId "${APPLICATION_ID}"
-        minSdkVersion 15
-        targetSdkVersion TARGET_SDK_VERSION
+  // keep the "applicationId" var in third place for the jenkins build script hack
+  defaultConfig {
+    versionName "8.0.0"
+    versionCode 1
+    applicationId "${APPLICATION_ID}"
+    minSdkVersion 15
+    targetSdkVersion TARGET_SDK_VERSION
 
-        // common proguard files to append and configure proguard for the whole project
-//        proguardFile 'proguard_files/proguard-android-gif-drawable.pro'
-//        proguardFile 'proguard_files/proguard-androidannotations.pro'
-//        proguardFile 'proguard_files/proguard-support-v7-appcompat.pro'
-//        proguardFile 'proguard_files/proguard-support-v7-cardview.pro'
-//        //proguardFile 'proguard_files/proguard-google-analytics.pro'
-//        //proguardFile 'proguard_files/proguard-google-admob.pro'
-//        proguardFile 'proguard_files/proguard-sqlite.pro'
-//        proguardFile 'proguard_files/proguard-glide.pro'
-//        proguardFile 'proguard_files/proguard-retrolambda.pro'
-//        proguardFile 'proguard_files/proguard-rx-java.pro'
-//        proguardFile 'proguard_files/proguard-rxjava-promises.pro'
-//        proguardFile 'proguard_files/proguard-jackson-2.pro'
-//        proguardFile 'proguard_files/proguard-realm.pro'
-//        proguardFile 'proguard_files/proguard-square-okhttp3.pro'
-//        proguardFile 'proguard_files/proguard-square-retrofit2.pro'
-//        proguardFile 'proguard_files/proguard-crashlytics-2.pro'
-//        proguardFile 'proguard_files/proguard-fabric-twitter-kit.pro'
-//        proguardFile 'proguard_files/proguard-facebook.pro'
-//        proguardFile 'proguard_files/proguard-facebook-stetho.pro'
-//        proguardFile 'proguard_files/proguard-square-okio.pro'
-        proguardFile 'proguard-rules.pro'
-        proguardFile getDefaultProguardFile('proguard-android.txt')
-        testProguardFile 'proguard-test-rules.pro'
-        manifestPlaceholders = [ toolboxProviderAuthority:"cm.aptoide.pt.StubProvider"]
+    // common proguard files to append and configure proguard for the whole project
+    //        proguardFile 'proguard_files/proguard-android-gif-drawable.pro'
+    //        proguardFile 'proguard_files/proguard-androidannotations.pro'
+    //        proguardFile 'proguard_files/proguard-support-v7-appcompat.pro'
+    //        proguardFile 'proguard_files/proguard-support-v7-cardview.pro'
+    //        //proguardFile 'proguard_files/proguard-google-analytics.pro'
+    //        //proguardFile 'proguard_files/proguard-google-admob.pro'
+    //        proguardFile 'proguard_files/proguard-sqlite.pro'
+    //        proguardFile 'proguard_files/proguard-glide.pro'
+    //        proguardFile 'proguard_files/proguard-retrolambda.pro'
+    //        proguardFile 'proguard_files/proguard-rx-java.pro'
+    //        proguardFile 'proguard_files/proguard-rxjava-promises.pro'
+    //        proguardFile 'proguard_files/proguard-jackson-2.pro'
+    //        proguardFile 'proguard_files/proguard-realm.pro'
+    //        proguardFile 'proguard_files/proguard-square-okhttp3.pro'
+    //        proguardFile 'proguard_files/proguard-square-retrofit2.pro'
+    //        proguardFile 'proguard_files/proguard-crashlytics-2.pro'
+    //        proguardFile 'proguard_files/proguard-fabric-twitter-kit.pro'
+    //        proguardFile 'proguard_files/proguard-facebook.pro'
+    //        proguardFile 'proguard_files/proguard-facebook-stetho.pro'
+    //        proguardFile 'proguard_files/proguard-square-okio.pro'
+    proguardFile 'proguard-rules.pro'
+    proguardFile getDefaultProguardFile('proguard-android.txt')
+    testProguardFile 'proguard-test-rules.pro'
+    manifestPlaceholders = [toolboxProviderAuthority: "cm.aptoide.pt.StubProvider"]
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  signingConfigs { release }
+
+  productFlavors {
+    dev {
+      minSdkVersion 16
+      applicationIdSuffix ".dev"
+      versionName "8.0.0." + getDate()
+      versionCode getNextVersionCode("../../aptoideProperties/version.properties",
+          "DEV_VERSION_CODE")
+      resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
     }
 
-    lintOptions {
-        abortOnError false
+    nightly {
+      applicationIdSuffix ".dev"
+      versionName "8.0.0." + getDate()
+      versionCode getNextVersionCode("../../aptoideProperties/version.properties",
+          "NIGHTLY_VERSION_CODE")
+      resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
+      manifestPlaceholders = [toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.dev"]
     }
 
-    signingConfigs { release }
+    prod {
+      Integer value = getNextVersionCode("../../aptoideProperties/version.properties",
+          "PROD_VERSION_CODE")
+      versionCode value
+      versionName "8.0.0." + value
+      resValue "string", "authenticatorAccountType", APPLICATION_ID
+    }
+  }
 
-    productFlavors {
-        dev {
-            minSdkVersion 16
-            applicationIdSuffix ".dev"
-            versionName "8.0.0." + getDate()
-            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "DEV_VERSION_CODE")
-            resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
-        }
-
-        nightly {
-            applicationIdSuffix ".dev"
-            versionName "8.0.0." + getDate()
-            versionCode getNextVersionCode("../../aptoideProperties/version.properties", "NIGHTLY_VERSION_CODE")
-            resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
-            manifestPlaceholders = [ toolboxProviderAuthority:"cm.aptoide.pt.StubProvider.dev"]
-        }
-
-        prod {
-            Integer value = getNextVersionCode("../../aptoideProperties/version.properties", "PROD_VERSION_CODE")
-            versionCode value
-            versionName "8.0.0." + value
-            resValue "string", "authenticatorAccountType", APPLICATION_ID
-        }
+  buildTypes {
+    release {
+      zipAlignEnabled true
+      minifyEnabled true
+      shrinkResources true
+      signingConfig signingConfigs.release
     }
 
-    buildTypes {
-        release {
-            zipAlignEnabled true
-            minifyEnabled true
-            shrinkResources true
-            signingConfig signingConfigs.release
-        }
-
-        debug {
-            multiDexEnabled true
-            zipAlignEnabled false
-            minifyEnabled false
-            shrinkResources false
-            signingConfig signingConfigs.release
-        }
+    debug {
+      multiDexEnabled true
+      zipAlignEnabled false
+      minifyEnabled false
+      shrinkResources false
+      signingConfig signingConfigs.release
     }
+  }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  packagingOptions {
+    pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+    pickFirst 'META-INF/DEPENDENCIES.txt'
+    pickFirst 'META-INF/DEPENDENCIES'
+    pickFirst 'META-INF/LICENSE.txt'
+    pickFirst 'META-INF/LICENSE'
+    pickFirst 'META-INF/NOTICE.txt'
+    pickFirst 'META-INF/NOTICE'
+    pickFirst 'META-INF/MANIFEST.MF'
+    pickFirst 'META-INF/LGPL2.1'
+  }
+
+  applicationVariants.all { variant ->
+    if (variant.buildType.name == buildTypes.release.name) {
+
+      variant.outputs.each { output ->
+        project.ext { appName = 'aptoide' }
+        def newName = output.outputFile.name
+        newName = newName.replace("vanilla-", "$project.ext.appName-")
+        //"MyAppName" -> I set my app variables in the root project
+        newName = newName.replace("prod-release", versionName)
+        newName = newName.replace("release", versionName)
+        //noinspection GroovyAssignabilityCheck
+        output.outputFile = new File(output.outputFile.parent, newName)
+      }
+
+      variant.productFlavors.each { flavor ->
+        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
+            VersionCodeFileUpdateTask
+        versionUpdate.versionPropertiesFile =
+            project.file("../../aptoideProperties/version.properties")
+        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
+        versionUpdate.versionCode = variant.mergedFlavor.versionCode
+        variant.assemble.dependsOn versionUpdate
+      }
     }
+  }
 
-    packagingOptions {
-        pickFirst 'META-INF/services/javax.annotation.processing.Processor'
-        pickFirst 'META-INF/DEPENDENCIES.txt'
-        pickFirst 'META-INF/DEPENDENCIES'
-        pickFirst 'META-INF/LICENSE.txt'
-        pickFirst 'META-INF/LICENSE'
-        pickFirst 'META-INF/NOTICE.txt'
-        pickFirst 'META-INF/NOTICE'
-        pickFirst 'META-INF/MANIFEST.MF'
-        pickFirst 'META-INF/LGPL2.1'
-    }
-
-    applicationVariants.all {variant ->
-        if (variant.buildType.name == buildTypes.release.name) {
-
-            variant.outputs.each { output ->
-                project.ext { appName = 'aptoide' }
-                def newName = output.outputFile.name
-                newName = newName.replace("vanilla-", "$project.ext.appName-") //"MyAppName" -> I set my app variables in the root project
-                newName = newName.replace("prod-release", versionName)
-                newName = newName.replace("release", versionName)
-                //noinspection GroovyAssignabilityCheck
-                output.outputFile = new File(output.outputFile.parent, newName)
-            }
-
-            variant.productFlavors.each {flavor ->
-                VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode", VersionCodeFileUpdateTask
-                versionUpdate.versionPropertiesFile = project.file("../../aptoideProperties/version.properties")
-                versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
-                versionUpdate.versionCode = variant.mergedFlavor.versionCode
-                variant.assemble.dependsOn versionUpdate
-            }
-        }
-    }
-
-    dexOptions {
-        incremental true
-        javaMaxHeapSize "4g"
-    }
+  dexOptions {
+    incremental true
+    javaMaxHeapSize "4g"
+  }
 }
 
 dependencies {
 
-    //
-    // inter-projects dependencies
-    //
+  //
+  // inter-projects dependencies
+  //
 
-    debugCompile project(path: ':v8engine', configuration: 'debug')
-    releaseCompile project(path: ':v8engine', configuration: 'release')
+  debugCompile project(path: ':v8engine', configuration: 'debug')
+  releaseCompile project(path: ':v8engine', configuration: 'release')
 
-    //
-    // custom libs in folders
-    //
+  //
+  // custom libs in folders
+  //
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //
-    // from remote repos
-    //
+  //
+  // from remote repos
+  //
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    // Multi Dex support
-    compile "com.android.support:multidex:${MULTIDEX_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  // Multi Dex support
+  compile "com.android.support:multidex:${MULTIDEX_VERSION}"
 }
-
 
 class VersionCodeFileUpdateTask extends DefaultTask {
 
-    @InputFile
-    File versionPropertiesFile
+  @InputFile
+  File versionPropertiesFile
 
-    @Input
-    String versionPropertyKey
+  @Input
+  String versionPropertyKey
 
-    @Input
-    Integer versionCode
+  @Input
+  Integer versionCode
 
-    @TaskAction
-    def updateVersionCodeFile() {
-        if (versionPropertiesFile.canRead()) {
-            Properties versionProperties = new Properties()
-            versionProperties.load(new FileInputStream(versionPropertiesFile))
-            versionProperties[versionPropertyKey] = versionCode.toString()
-            versionProperties.store(versionPropertiesFile.newWriter(), null)
-        } else {
-            throw new GradleException("Could not read version.properties!")
-        }
+  @TaskAction
+  def updateVersionCodeFile() {
+    if (versionPropertiesFile.canRead()) {
+      Properties versionProperties = new Properties()
+      versionProperties.load(new FileInputStream(versionPropertiesFile))
+      versionProperties[versionPropertyKey] = versionCode.toString()
+      versionProperties.store(versionPropertiesFile.newWriter(), null)
+    } else {
+      throw new GradleException("Could not read version.properties!")
     }
+  }
 }
 
-
 Integer getNextVersionCode(String versionPropertiesFilePath, String versionPropertyKey) {
-    File versionPropertiesFile = project.file(versionPropertiesFilePath);
-    if (versionPropertiesFile.canRead()) {
-        Properties versionProperties = new Properties()
-        versionProperties.load(new FileInputStream(versionPropertiesFile))
+  File versionPropertiesFile = project.file(versionPropertiesFilePath);
+  if (versionPropertiesFile.canRead()) {
+    Properties versionProperties = new Properties()
+    versionProperties.load(new FileInputStream(versionPropertiesFile))
 
-        return versionProperties[versionPropertyKey].toInteger() + 1
-    } else {
-        throw new GradleException("Could not read version.properties!")
-    }
+    return versionProperties[versionPropertyKey].toInteger() + 1
+  } else {
+    throw new GradleException("Could not read version.properties!")
+  }
 }
 
 String getDate() {
-    def date = new Date()
-    def formattedDate = date.format('yyyyMMdd')
-    return formattedDate
+  def date = new Date()
+  def formattedDate = date.format('yyyyMMdd')
+  return formattedDate
 }
 
 def File propFile = project.file('../../aptoideProperties/signing.properties')
 if (propFile.canRead()) {
-    def Properties props = new Properties()
-    props.load(new FileInputStream(propFile))
+  def Properties props = new Properties()
+  props.load(new FileInputStream(propFile))
 
-    if (props != null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
-            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+  if (props != null &&
+      props.containsKey('STORE_FILE') &&
+      props.containsKey('STORE_PASSWORD') &&
+      props.containsKey('KEY_ALIAS') &&
+      props.containsKey('KEY_PASSWORD')) {
 
-        android.signingConfigs.release.storeFile = project.file(props['STORE_FILE'])
-        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
-        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
-        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
-        println 'all good to go'
-    } else {
-        android.buildTypes.release.signingConfig = null
-        println 'signing.properties found but some entries are missing'
-    }
-} else {
-    println 'signing.properties not found'
+    android.signingConfigs.release.storeFile = project.file(props['STORE_FILE'])
+    android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+    android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+    android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    println 'all good to go'
+  } else {
     android.buildTypes.release.signingConfig = null
+    println 'signing.properties found but some entries are missing'
+  }
+} else {
+  println 'signing.properties not found'
+  android.buildTypes.release.signingConfig = null
 }
 
 

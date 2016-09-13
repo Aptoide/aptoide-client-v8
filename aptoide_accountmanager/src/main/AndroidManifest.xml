@@ -1,30 +1,33 @@
 <manifest package="cm.aptoide.accountmanager"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+  <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+  <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+  <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
 
-    <application android:allowBackup="true" android:label="@string/app_name"
-        android:supportsRtl="true">
+  <application
+      android:allowBackup="true"
+      android:label="@string/app_name"
+      android:supportsRtl="true">
 
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true"
-            android:screenOrientation="nosensor"
-            android:windowSoftInputMode="stateHidden"/>
+    <activity
+        android:name=".LoginActivity"
+        android:exported="true"
+        android:screenOrientation="nosensor"
+        android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"/>
+    <activity
+        android:name="com.facebook.FacebookActivity"
+        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        android:label="@string/app_name"/>
 
-        <activity android:name=".MyAccountActivity"/>
+    <activity android:name=".MyAccountActivity"/>
 
-        <activity android:name=".SignUpActivity"/>
+    <activity android:name=".SignUpActivity"/>
 
-    </application>
+  </application>
 
 </manifest>

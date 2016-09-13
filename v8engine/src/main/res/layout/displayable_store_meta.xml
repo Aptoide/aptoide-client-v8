@@ -1,168 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout style="?attr/backgroundCard"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
 
-        <ImageView
-            android:id="@+id/store_avatar_storehome"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="@dimen/row_store_vertical_delimiter"
-            android:layout_marginTop="@dimen/row_store_vertical_delimiter"
-            android:scaleType="fitCenter"/>
-
-        <LinearLayout
-            android:id="@+id/subscribe_button_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/row_store_vertical_delimiter"
-            android:layout_marginTop="@dimen/row_store_vertical_delimiter"
-            android:background="@drawable/rounded_corners_white"
-            android:gravity="center"
-            android:minWidth="104dp">
-
-            <ImageView
-                android:id="@+id/iv_subscribed_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_check_white"/>
-
-            <TextView
-                android:id="@+id/store_subscribed_storehome"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:padding="@dimen/row_store_vertical_half_delimiter"
-                android:text="@string/appview_follow_store_button_text"
-                android:textAlignment="center"
-                android:textColor="?attr/inverseTextColor"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/store_name_home_row"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/store_avatar_storehome"
-            android:layout_toLeftOf="@+id/subscribe_button_layout"
-            android:layout_toRightOf="@id/store_avatar_storehome"
-            android:padding="@dimen/row_store_vertical_delimiter"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/store_description_storehome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:padding="@dimen/row_store_vertical_delimiter"
-            android:text="In this store you can download free Android apps using the Aptoide client for download and etc ipsus lorem ipsus lorem ipsus lorem ipsus"
-            android:textSize="12sp"/>
-
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/store_avatar_storehome"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/row_store_vertical_delimiter"
+        android:layout_marginTop="@dimen/row_store_vertical_delimiter"
+        android:scaleType="fitCenter"
+        />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/subscribe_button_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/row_store_vertical_delimiter"
+        android:layout_marginTop="@dimen/row_store_vertical_delimiter"
+        android:background="@drawable/rounded_corners_white"
+        android:gravity="center"
+        android:minWidth="104dp"
+        >
 
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
-            android:layout_marginLeft="@dimen/row_store_vertical_delimiter"
-            android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
-            android:layout_marginTop="@dimen/row_store_vertical_delimiter"
-            android:layout_weight="10"
-            android:orientation="vertical">
+      <ImageView
+          android:id="@+id/iv_subscribed_icon"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:src="@drawable/ic_check_white"
+          />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subscribers"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/store_subscribers_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="69.531"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
-            android:layout_marginLeft="@dimen/row_store_vertical_half_delimiter"
-            android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
-            android:layout_marginTop="@dimen/row_store_vertical_delimiter"
-            android:layout_weight="10"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Apps"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/store_apps_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="175.829"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
-            android:layout_marginLeft="@dimen/row_store_vertical_half_delimiter"
-            android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
-            android:layout_marginTop="@dimen/row_store_vertical_delimiter"
-            android:layout_weight="12"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Downloads"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/store_downloads_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="719.218.997"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
+      <TextView
+          android:id="@+id/store_subscribed_storehome"
+          android:layout_width="wrap_content"
+          android:layout_height="30dp"
+          android:gravity="center"
+          android:padding="@dimen/row_store_vertical_half_delimiter"
+          android:text="@string/appview_follow_store_button_text"
+          android:textAlignment="center"
+          android:textColor="?attr/inverseTextColor"
+          android:textSize="12sp"
+          />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/store_name_home_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/store_avatar_storehome"
+        android:layout_toLeftOf="@+id/subscribe_button_layout"
+        android:layout_toRightOf="@id/store_avatar_storehome"
+        android:padding="@dimen/row_store_vertical_delimiter"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        />
+
+
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <TextView
+        android:id="@+id/store_description_storehome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:padding="@dimen/row_store_vertical_delimiter"
+        android:text="In this store you can download free Android apps using the Aptoide client for download and etc ipsus lorem ipsus lorem ipsus lorem ipsus"
+        android:textSize="12sp"
+        />
+
+  </RelativeLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      >
+
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
+        android:layout_marginLeft="@dimen/row_store_vertical_delimiter"
+        android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginTop="@dimen/row_store_vertical_delimiter"
+        android:layout_weight="10"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Subscribers"
+          android:textSize="12sp"
+          android:textStyle="bold"
+          />
+
+      <TextView
+          android:id="@+id/store_subscribers_count"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:text="69.531"
+          android:textSize="14sp"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
+        android:layout_marginLeft="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginTop="@dimen/row_store_vertical_delimiter"
+        android:layout_weight="10"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Apps"
+          android:textSize="12sp"
+          android:textStyle="bold"
+          />
+
+      <TextView
+          android:id="@+id/store_apps_count"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:text="175.829"
+          android:textSize="14sp"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
+        android:layout_marginLeft="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginTop="@dimen/row_store_vertical_delimiter"
+        android:layout_weight="12"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Downloads"
+          android:textSize="12sp"
+          android:textStyle="bold"
+          />
+
+      <TextView
+          android:id="@+id/store_downloads_count"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:text="719.218.997"
+          android:textSize="14sp"
+          />
+    </LinearLayout>
+
+  </LinearLayout>
 
 </LinearLayout>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape android:id="@+id/listview_background_shape"
-       xmlns:android="http://schemas.android.com/apk/res/android">
-    <stroke
-        android:width="2dp"
-        android:color="#E5E5E5"/>
-    <padding
-        android:bottom="2dp"
-        android:left="2dp"
-        android:right="2dp"
-        android:top="2dp"/>
-    <corners android:radius="5dp"/>
-    <solid android:color="#ffffffff"/>
+    xmlns:android="http://schemas.android.com/apk/res/android">
+  <stroke
+      android:width="2dp"
+      android:color="#E5E5E5"/>
+  <padding
+      android:bottom="2dp"
+      android:left="2dp"
+      android:right="2dp"
+      android:top="2dp"/>
+  <corners android:radius="5dp"/>
+  <solid android:color="#ffffffff"/>
 </shape>

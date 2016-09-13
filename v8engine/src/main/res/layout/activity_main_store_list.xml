@@ -9,36 +9,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    >
 
 
-    <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+  <android.support.design.widget.CoordinatorLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <FrameLayout
+        android:id="@+id/fragment_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/fragment_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-
-        <include layout="@layout/app_bar_layout"/>
-
-    </android.support.design.widget.CoordinatorLayout>
-
-    <!-- The navigation drawer -->
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="?attr/backgroundMain"
-        android:saveEnabled="true"
-        app:headerLayout="@layout/drawer_header"
-        app:itemTextColor="?attr/tertiaryTextColor"
-        app:menu="@menu/menu_drawer"/>
+        />
+
+
+    <include layout="@layout/app_bar_layout"/>
+
+  </android.support.design.widget.CoordinatorLayout>
+
+  <!-- The navigation drawer -->
+  <android.support.design.widget.NavigationView
+      android:id="@+id/nav_view"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      android:background="?attr/backgroundMain"
+      android:saveEnabled="true"
+      app:headerLayout="@layout/drawer_header"
+      app:itemTextColor="?attr/tertiaryTextColor"
+      app:menu="@menu/menu_drawer"
+      />
 
 
 </android.support.v4.widget.DrawerLayout>

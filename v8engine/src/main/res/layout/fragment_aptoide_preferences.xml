@@ -7,22 +7,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+  <android.support.design.widget.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
 
-        <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
-    </android.support.design.widget.AppBarLayout>
+  </android.support.design.widget.AppBarLayout>
 
-    <!-- Required ViewGroup for PreferenceFragmentCompat -->
-    <FrameLayout
-        android:id="@+id/list_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+  <!-- Required ViewGroup for PreferenceFragmentCompat -->
+  <FrameLayout
+      android:id="@+id/list_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
 
-    </FrameLayout>
+  </FrameLayout>
 
 </LinearLayout>

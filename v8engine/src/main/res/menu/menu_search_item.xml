@@ -6,11 +6,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/versions"
-        android:title="@string/more_versions"
-        android:visible="false"/>
-    <item
-        android:id="@+id/go_to_store"
-        android:title="@string/menu_search_item_go_to_store"/>
+  <item
+      android:id="@+id/versions"
+      android:title="@string/more_versions"
+      android:visible="false"/>
+  <item
+      android:id="@+id/go_to_store"
+      android:title="@string/menu_search_item_go_to_store"/>
 </menu>

@@ -6,77 +6,76 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
-    jvmArgs '-noverify'
-    //defaultMethods true
+  jvmArgs '-noverify'
+  //defaultMethods true
 }
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
 
-    defaultConfig {
-        minSdkVersion 9
-        consumerProguardFiles "proguard-rules.txt"
+  defaultConfig {
+    minSdkVersion 9
+    consumerProguardFiles "proguard-rules.txt"
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  publishNonDefault true
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      shrinkResources false
     }
-
-    lintOptions {
-        abortOnError false
+    debug {
+      minifyEnabled false
+      shrinkResources false
     }
+  }
 
-    publishNonDefault true
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            shrinkResources false
-        }
-        debug {
-            minifyEnabled false
-            shrinkResources false
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dexOptions {
-        incremental true
-    }
+  dexOptions {
+    incremental true
+  }
 }
 
 dependencies {
 
-    //
-    // inter-projects dependencies
-    //
+  //
+  // inter-projects dependencies
+  //
 
-    debugCompile project(path: ':utils', configuration: 'debug')
-    releaseCompile project(path: ':utils', configuration: 'release')
+  debugCompile project(path: ':utils', configuration: 'debug')
+  releaseCompile project(path: ':utils', configuration: 'release')
 
-    debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
-    releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
+  debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
+  releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
 
-    //
-    // custom libs in folders
-    //
+  //
+  // custom libs in folders
+  //
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //
-    // from remote repos
-    //
+  //
+  // from remote repos
+  //
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
 
-    //noinspection GradleDependency
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile "com.fasterxml.jackson.core:jackson-annotations:${JACKSON_ANNOTATIONS_VERSION}"
+  compile "com.fasterxml.jackson.core:jackson-annotations:${JACKSON_ANNOTATIONS_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-    // Just for lombok not to complain
-    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
-
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

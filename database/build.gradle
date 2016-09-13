@@ -7,69 +7,69 @@ apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
-    jvmArgs '-noverify'
-    //defaultMethods true
+  jvmArgs '-noverify'
+  //defaultMethods true
 }
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
 
-    defaultConfig {
-        minSdkVersion 15
-        versionCode 3
-        consumerProguardFiles "proguard-rules.txt"
+  defaultConfig {
+    minSdkVersion 15
+    versionCode 3
+    consumerProguardFiles "proguard-rules.txt"
+  }
+
+  publishNonDefault true
+
+  buildTypes {
+    release {
+      buildConfigField 'boolean', 'DELETE_DB', 'false'
+      minifyEnabled false
+      shrinkResources false
     }
-
-    publishNonDefault true
-
-    buildTypes {
-        release {
-            buildConfigField 'boolean', 'DELETE_DB', 'false'
-            minifyEnabled false
-            shrinkResources false
-        }
-        debug {
-            buildConfigField 'boolean', 'DELETE_DB', 'false'
-            shrinkResources false
-            minifyEnabled false
-        }
+    debug {
+      buildConfigField 'boolean', 'DELETE_DB', 'false'
+      shrinkResources false
+      minifyEnabled false
     }
+  }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 
-    dexOptions {
-        incremental true
-    }
+  dexOptions {
+    incremental true
+  }
 }
 
 dependencies {
 
-    //
-    // inter-projects dependencies
-    //
+  //
+  // inter-projects dependencies
+  //
 
-    debugCompile project(path: ':model', configuration: 'debug')
-    releaseCompile project(path: ':model', configuration: 'release')
+  debugCompile project(path: ':model', configuration: 'debug')
+  releaseCompile project(path: ':model', configuration: 'release')
 
-    //
-    // custom libs in folders
-    //
+  //
+  // custom libs in folders
+  //
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //
-    // from remote repos
-    //
+  //
+  // from remote repos
+  //
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-    // Just for lombok not to complain
-    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

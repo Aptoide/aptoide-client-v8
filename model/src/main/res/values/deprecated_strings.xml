@@ -5,591 +5,591 @@
   -->
 
 <resources>
-    <!-- Error Messages -->
-    <string name="error_MARG_1">Missing store</string>
-    <string name="error_MARG_2">Missing app info</string>
-    <string name="error_MARG_3">Missing app version</string>
-    <string name="error_MARG_4">Missing login</string>
-    <string name="error_MARG_5">Missing app</string>
-    <string name="error_MARG_6">Missing MD5 data</string>
-    <string name="error_MARG_7">Missing package parameter</string>
-    <string name="error_MARG_8">Missing hmac parameter</string>
-    <string name="error_MARG_9">Missing limit parameter</string>
-    <string name="error_MARG_10">Missing offset parameter</string>
-    <string name="error_MARG_11">Missing lang parameter</string>
-    <string name="error_MARG_100">Missing app name</string>
-    <string name="error_MARG_101">Missing description</string>
-    <string name="error_MARG_102">Missing category</string>
-    <string name="error_MARG_103">Missing rating</string>
-    <string name="error_MARG_104">Missing flag</string>
-    <string name="error_MARG_105">Missing comment</string>
-    <string name="error_MARG_106">Missing vote</string>
-    <string name="error_MARG_107">Missing text</string>
-    <string name="error_MARG_108">Missing like parameter</string>
-    <string name="error_MARG_109">Missing email parameter</string>
-    <string name="error_MARG_110">Missing passhash parameter</string>
-    <string name="error_MARG_111">Missing name parameter</string>
-    <string name="error_MARG_112">Missing user-agent parameter</string>
-    <string name="error_MARG_113">Missing hash parameter</string>
-    <string name="error_MARG_200">Authentication error</string>
-    <string name="error_MARG_201">Invalid username/password combination</string>
-    <string name="error_MARG_202">Invalid token or user/pass</string>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Missing store</string>
+  <string name="error_MARG_2">Missing app info</string>
+  <string name="error_MARG_3">Missing app version</string>
+  <string name="error_MARG_4">Missing login</string>
+  <string name="error_MARG_5">Missing app</string>
+  <string name="error_MARG_6">Missing MD5 data</string>
+  <string name="error_MARG_7">Missing package parameter</string>
+  <string name="error_MARG_8">Missing hmac parameter</string>
+  <string name="error_MARG_9">Missing limit parameter</string>
+  <string name="error_MARG_10">Missing offset parameter</string>
+  <string name="error_MARG_11">Missing lang parameter</string>
+  <string name="error_MARG_100">Missing app name</string>
+  <string name="error_MARG_101">Missing description</string>
+  <string name="error_MARG_102">Missing category</string>
+  <string name="error_MARG_103">Missing rating</string>
+  <string name="error_MARG_104">Missing flag</string>
+  <string name="error_MARG_105">Missing comment</string>
+  <string name="error_MARG_106">Missing vote</string>
+  <string name="error_MARG_107">Missing text</string>
+  <string name="error_MARG_108">Missing like parameter</string>
+  <string name="error_MARG_109">Missing email parameter</string>
+  <string name="error_MARG_110">Missing passhash parameter</string>
+  <string name="error_MARG_111">Missing name parameter</string>
+  <string name="error_MARG_112">Missing user-agent parameter</string>
+  <string name="error_MARG_113">Missing hash parameter</string>
+  <string name="error_MARG_200">Authentication error</string>
+  <string name="error_MARG_201">Invalid username/password combination</string>
+  <string name="error_MARG_202">Invalid token or user/pass</string>
 
-    <string name="error_IARG_1">Invalid store</string>
-    <string name="error_IARG_2">Invalid login</string>
-    <string name="error_IARG_3">Invalid identifier</string>
-    <string name="error_IARG_4">Invalid MD5 data</string>
-    <string name="error_IARG_5">Invalid hmac format</string>
-    <string name="error_IARG_6">Invalid lang</string>
-    <string name="error_IARG_100">The minimum number of characters allowed in a comment is 10</string>
-    <string name="error_IARG_101">The minimum number of characters allowed in a reply comment is 10</string>
-    <string name="error_IARG_102">Invalid argument</string>
-    <string name="error_IARG_103">Invalid category</string>
-    <string name="error_IARG_104">Invalid rating</string>
-    <string name="error_IARG_105">The website is not a valid URL</string>
-    <string name="error_IARG_106">The e-mail address is not valid</string>
-    <string name="error_IARG_107">Invalid flag</string>
-    <string name="error_IARG_108">Invalid comment</string>
-    <string name="error_IARG_109">Invalid vote</string>
-    <string name="error_IARG_110">Invalid reply comment</string>
-    <string name="error_IARG_200">Invalid login token</string>
-    <string name="error_IARG_201">Invalid login mode</string>
-    <string name="error_IARG_300">Invalid custom category</string>
-    <string name="error_IARG_301">Invalid category</string>
-    <string name="error_IARG_302">The application provided already exists in this category</string>
+  <string name="error_IARG_1">Invalid store</string>
+  <string name="error_IARG_2">Invalid login</string>
+  <string name="error_IARG_3">Invalid identifier</string>
+  <string name="error_IARG_4">Invalid MD5 data</string>
+  <string name="error_IARG_5">Invalid hmac format</string>
+  <string name="error_IARG_6">Invalid lang</string>
+  <string name="error_IARG_100">The minimum number of characters allowed in a comment is 10</string>
+  <string name="error_IARG_101">The minimum number of characters allowed in a reply comment is 10</string>
+  <string name="error_IARG_102">Invalid argument</string>
+  <string name="error_IARG_103">Invalid category</string>
+  <string name="error_IARG_104">Invalid rating</string>
+  <string name="error_IARG_105">The website is not a valid URL</string>
+  <string name="error_IARG_106">The e-mail address is not valid</string>
+  <string name="error_IARG_107">Invalid flag</string>
+  <string name="error_IARG_108">Invalid comment</string>
+  <string name="error_IARG_109">Invalid vote</string>
+  <string name="error_IARG_110">Invalid reply comment</string>
+  <string name="error_IARG_200">Invalid login token</string>
+  <string name="error_IARG_201">Invalid login mode</string>
+  <string name="error_IARG_300">Invalid custom category</string>
+  <string name="error_IARG_301">Invalid category</string>
+  <string name="error_IARG_302">The application provided already exists in this category</string>
 
-    <string name="error_AUTH_1">Invalid login credentials!</string>
-    <string name="error_AUTH_2">Invalid credentials!</string>
-    <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
-    <string name="error_AUTH_4">HMAC Authentication failure</string>
-    <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address).</string>
-    <string name="error_AUTH_101">Could not login with Google. Please try again.</string>
-    <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
-    <string name="error_AUTH_103">Could not login with Facebook. Please try again.</string>
+  <string name="error_AUTH_1">Invalid login credentials!</string>
+  <string name="error_AUTH_2">Invalid credentials!</string>
+  <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
+  <string name="error_AUTH_4">HMAC Authentication failure</string>
+  <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address).</string>
+  <string name="error_AUTH_101">Could not login with Google. Please try again.</string>
+  <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
+  <string name="error_AUTH_103">Could not login with Facebook. Please try again.</string>
 
-    <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
-    <string name="error_WOP_7">Comment error</string>
-    <string name="error_WOP_8">Comment vote error</string>
-    <string name="error_WOP_9">The email provided already exists in the system</string>
-    <string name="error_WOP_10">The email provided does not exist in the system yet</string>
-    <string name="error_WOP_11">The store could not be created. Please try again.</string>
+  <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
+  <string name="error_WOP_7">Comment error</string>
+  <string name="error_WOP_8">Comment vote error</string>
+  <string name="error_WOP_9">The email provided already exists in the system</string>
+  <string name="error_WOP_10">The email provided does not exist in the system yet</string>
+  <string name="error_WOP_11">The store could not be created. Please try again.</string>
 
-    <string name="error_REPO_1">The store does not exist.</string>
-    <string name="error_REPO_2">The store was cancelled.</string>
-    <string name="error_REPO_3">The store does not belong to this user.</string>
-    <string name="error_REPO_4_no_store">Your account has no store created. You need to create one to make a review.</string>
-    <string name="error_REPO_7">This user already has a valid repo.</string>
+  <string name="error_REPO_1">The store does not exist.</string>
+  <string name="error_REPO_2">The store was cancelled.</string>
+  <string name="error_REPO_3">The store does not belong to this user.</string>
+  <string name="error_REPO_4_no_store">Your account has no store created. You need to create one to make a review.</string>
+  <string name="error_REPO_7">This user already has a valid repo.</string>
 
-    <string name="error_APK_1">Can\'t open this app with the given info and version</string>
-    <string name="error_APK_4">Can\'t open this app</string>
-    <string name="error_APK_Description">Description not available</string>
+  <string name="error_APK_1">Can\'t open this app with the given info and version</string>
+  <string name="error_APK_4">Can\'t open this app</string>
+  <string name="error_APK_Description">Description not available</string>
 
-    <string name="error_SYS_1">An unknown error occurred, please try again</string>
-    <string name="error_SYS_2">No data found, please try again later</string>
-    <string name="error_SYS_3">System is now in maintenance, please try again later</string>
-    <string name="error_SYS_4">This call is not supported by the current API version</string>
-    <string name="error_SYS_Billing">In-App Billing not supported in this device.</string>
+  <string name="error_SYS_1">An unknown error occurred, please try again</string>
+  <string name="error_SYS_2">No data found, please try again later</string>
+  <string name="error_SYS_3">System is now in maintenance, please try again later</string>
+  <string name="error_SYS_4">This call is not supported by the current API version</string>
+  <string name="error_SYS_Billing">In-App Billing not supported in this device.</string>
 
-    <string name="sign_out">Sign Out</string>
-    <string name="logged_as">You are logged as:</string>
+  <string name="sign_out">Sign Out</string>
+  <string name="logged_as">You are logged as:</string>
 
-    <string name="aptoide_description">Aptoide Official App Store</string>
+  <string name="aptoide_description">Aptoide Official App Store</string>
 
-    <string name="error_410">Sorry, the requested App was not found on this server.</string>
+  <string name="error_410">Sorry, the requested App was not found on this server.</string>
 
-    <!-- Main Pager entries -->
-    <string name="home_title">Home</string>
-    <string name="community">Community</string>
-    <string name="stores">Stores</string>
-    <string name="updates">Updates</string>
-    <string name="social_timeline">Social Timeline</string>
-    <string name="downloads">Downloads</string>
+  <!-- Main Pager entries -->
+  <string name="home_title">Home</string>
+  <string name="community">Community</string>
+  <string name="stores">Stores</string>
+  <string name="updates">Updates</string>
+  <string name="social_timeline">Social Timeline</string>
+  <string name="downloads">Downloads</string>
 
 
-    <string name="please_wait">Please wait…</string>
-    <string name="login_or_register">Login or register</string>
-    <string name="one_account_allowed">Only one account allowed</string>
-    <string name="signing_in">Signing in…</string>
-    <string name="fields_cannot_empty">Please check your email and password.</string>
-    <string name="new_to_aptoide">New to %s? Create a free account</string>
-    <string name="forgot_passwd">Forgot password?</string>
-    <string name="error_occured">An error occurred. Please try again</string>
-    <string name="simple_error_occured">An error occurred. </string>
-    <string name="or">- Or -</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="username">Email</string>
-    <string name="password">Password</string>
-    <string name="link_device_webinstall">Link account with Webinstall</string>
-    <string name="setcredentials">Login</string>
-    <string name="dont_have_an_account">Don\'t have an account? Sign up</string>
-    <string name="facebook_timeline_feature">Ooohhh… This feature only works with Facebook login and you’re logged in with another authentication</string>
+  <string name="please_wait">Please wait…</string>
+  <string name="login_or_register">Login or register</string>
+  <string name="one_account_allowed">Only one account allowed</string>
+  <string name="signing_in">Signing in…</string>
+  <string name="fields_cannot_empty">Please check your email and password.</string>
+  <string name="new_to_aptoide">New to %s? Create a free account</string>
+  <string name="forgot_passwd">Forgot password?</string>
+  <string name="error_occured">An error occurred. Please try again</string>
+  <string name="simple_error_occured">An error occurred. </string>
+  <string name="or">- Or -</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="username">Email</string>
+  <string name="password">Password</string>
+  <string name="link_device_webinstall">Link account with Webinstall</string>
+  <string name="setcredentials">Login</string>
+  <string name="dont_have_an_account">Don\'t have an account? Sign up</string>
+  <string name="facebook_timeline_feature">Ooohhh… This feature only works with Facebook login and you’re logged in with another authentication</string>
     <string name="facebook_tos">
         • Share the apps you install with your Facebook friends in a Timeline inside Aptoide
         \n\n• See, like and comment in the Timeline
         \n\n• We never, never, never post on your Facebook wall. We respect your privacy
     </string>
-    <string name="facebook_private_actions">This app will not post to Facebook</string>
-    <string name="facebook_timeline_login"> Do you want to Login with Facebook and try the Social Timeline?</string>
-    <string name="facebook_timeline_preview">Timeline Preview:</string>
-    <string name="whats_timeline">What is Aptoide Social Timeline?</string>
-    <string name="feedback_subject">Subject</string>
+  <string name="facebook_private_actions">This app will not post to Facebook</string>
+  <string name="facebook_timeline_login"> Do you want to Login with Facebook and try the Social Timeline?</string>
+  <string name="facebook_timeline_preview">Timeline Preview:</string>
+  <string name="whats_timeline">What is Aptoide Social Timeline?</string>
+  <string name="feedback_subject">Subject</string>
     <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can get:
         \n\• Steps you have done
         \n\• Errors you are seeing</string>
-    <string name="feedback_include_logs">Include ScreenShot and Logs</string>
-    <string name="feedback_not_valid">Please enter some valid Subject!</string>
-    <string name="feedback_no_email">No email client installed!</string>
-    <string name="register">Sign Up</string>
+  <string name="feedback_include_logs">Include ScreenShot and Logs</string>
+  <string name="feedback_not_valid">Please enter some valid Subject!</string>
+  <string name="feedback_no_email">No email client installed!</string>
+  <string name="register">Sign Up</string>
     <string name="password_validation_text">Password must be at least 8 characters and should have at least one letter and one number or special characters (!@#$%*)
     </string>
-    <string name="about_aptoide_antimalware">Aptoide Anti-Malware platform analyses applications in run-time and disables potential threats across all stores. This system scans all the new application files from the stores and certificates them by comparison against other Android Marketplaces.</string>
-    <string name="username_tip">Type your email</string>
-    <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and Content Policy for Developers</string>
+  <string name="about_aptoide_antimalware">Aptoide Anti-Malware platform analyses applications in run-time and disables potential threats across all stores. This system scans all the new application files from the stores and certificates them by comparison against other Android Marketplaces.</string>
+  <string name="username_tip">Type your email</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and Content Policy for Developers</string>
 
-    <string name="start_loading">Loading…</string>
-    <string name="store_already_added">Store already added!</string>
-    <string name="subscribe_newrepo_alrt">Do you want to subscribe this store?\n\n</string>
-    <string name="subscribe_store">Subscribe Store</string>
-    <string name="store_subscribed">Store %s subscribed</string>
-    <string name="subscribing">Subscribing %s store…</string>
-    <string name="create_store">Create store</string>
-    <string name="section">Section</string>
+  <string name="start_loading">Loading…</string>
+  <string name="store_already_added">Store already added!</string>
+  <string name="subscribe_newrepo_alrt">Do you want to subscribe this store?\n\n</string>
+  <string name="subscribe_store">Subscribe Store</string>
+  <string name="store_subscribed">Store %s subscribed</string>
+  <string name="subscribing">Subscribing %s store…</string>
+  <string name="create_store">Create store</string>
+  <string name="section">Section</string>
 
-    <string name="not_found">Not found</string>
+  <string name="not_found">Not found</string>
 
 
-    <!-- App permission -->
-    <string name="permissions">See Permissions</string>
-    <string name="permissions_na">Permissions: N/A</string>
-    <string name="additional_permissions">Additional Permissions</string>
-    <string name="no_permissions_required">No permissions required for this app.</string>
-    <string name="restore">Install</string>
+  <!-- App permission -->
+  <string name="permissions">See Permissions</string>
+  <string name="permissions_na">Permissions: N/A</string>
+  <string name="additional_permissions">Additional Permissions</string>
+  <string name="no_permissions_required">No permissions required for this app.</string>
+  <string name="restore">Install</string>
 
-    <!-- DownloadManager -->
-    <string name="timeout">Network connection timeout</string>
-    <string name="ip_blacklisted">Blacklisted IP</string>
-    <string name="connection_error">No network connection</string>
-    <string name="apk_not_found">Apk not found</string>
-    <string name="invalid_apk">Invalid apk</string>
-    <string name="remote_in_nospace">not enough space on your device.</string>
-    <string name="server_error">Server error</string>
-    <string name="paidapp_not_found">Error downloading app. Please try again or contact support.</string>
-    <string name="sd_error">Couldn\'t write to SDCard.</string>
-    <string name="sd_error_jolla">Couldn\'t download properly</string>
-    <string name="starting_download">Starting download</string>
-    <string name="installing">%s is installing…</string>
-    <string name="finished_install">%s has been installed.</string>
-    <string name="aptoide_downloading">%s is downloading</string>
-    <string name="remaining_time">remaining</string>
-    <string name="data_usage_constraint">Download is not allowed in Settings &gt; General Download Rules</string>
-    <string name="download_pending">Waiting</string>
+  <!-- DownloadManager -->
+  <string name="timeout">Network connection timeout</string>
+  <string name="ip_blacklisted">Blacklisted IP</string>
+  <string name="connection_error">No network connection</string>
+  <string name="apk_not_found">Apk not found</string>
+  <string name="invalid_apk">Invalid apk</string>
+  <string name="remote_in_nospace">not enough space on your device.</string>
+  <string name="server_error">Server error</string>
+  <string name="paidapp_not_found">Error downloading app. Please try again or contact support.</string>
+  <string name="sd_error">Couldn\'t write to SDCard.</string>
+  <string name="sd_error_jolla">Couldn\'t download properly</string>
+  <string name="starting_download">Starting download</string>
+  <string name="installing">%s is installing…</string>
+  <string name="finished_install">%s has been installed.</string>
+  <string name="aptoide_downloading">%s is downloading</string>
+  <string name="remaining_time">remaining</string>
+  <string name="data_usage_constraint">Download is not allowed in Settings &gt; General Download Rules</string>
+  <string name="download_pending">Waiting</string>
 
-    <!-- layouts -->
-    <string name="download_retry">Retry</string>
-    <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-    <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
+  <!-- layouts -->
+  <string name="download_retry">Retry</string>
+  <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
+  <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
 
-    <!-- Vote -->
-    <string name="reply">Reply</string>
-    <string name="vote_down">Vote Down</string>
-    <string name="vote_up">Vote Up</string>
-    <string name="casting_vote">Casting vote…</string>
-    <string name="vote_submitted">Your vote was successfully submitted</string>
-    <string name="votes">%s votes</string>
+  <!-- Vote -->
+  <string name="reply">Reply</string>
+  <string name="vote_down">Vote Down</string>
+  <string name="vote_up">Vote Up</string>
+  <string name="casting_vote">Casting vote…</string>
+  <string name="vote_submitted">Your vote was successfully submitted</string>
+  <string name="votes">%s votes</string>
 
-    <string name="reviewed_by">Reviewed by - %s</string>
-    <string name="installed_this">%s installed this.</string>
+  <string name="reviewed_by">Reviewed by - %s</string>
+  <string name="installed_this">%s installed this.</string>
 
-    <!-- adult -->
-    <string name="adult_pin_wrong">Wrong pin, try again.</string>
-    <string name="request_adult_pin">Insert the pin to unlock</string>
-    <string name="are_you_adult">Are you at least 21 years old?</string>
-    <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
+  <!-- adult -->
+  <string name="adult_pin_wrong">Wrong pin, try again.</string>
+  <string name="request_adult_pin">Insert the pin to unlock</string>
+  <string name="are_you_adult">Are you at least 21 years old?</string>
+  <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
 
-    <string name="schDown_nodownloadselect">No Downloads Selected</string>
-    <string name="no_sch_downloads">Browsing apps using mobile data and want to download later when you’re on a wifi connection? Use Schedule downloads and change your preferences on Settings -&gt; General Download Rules - to WiFi.</string>
-    <string name="schDown_installselected">Install Selected</string>
-    <string name="schDown_removeselected">Remove Selected</string>
-    <string name="schDown_invertselection">Invert Selection</string>
+  <string name="schDown_nodownloadselect">No Downloads Selected</string>
+  <string name="no_sch_downloads">Browsing apps using mobile data and want to download later when you’re on a wifi connection? Use Schedule downloads and change your preferences on Settings -&gt; General Download Rules - to WiFi.</string>
+  <string name="schDown_installselected">Install Selected</string>
+  <string name="schDown_removeselected">Remove Selected</string>
+  <string name="schDown_invertselection">Invert Selection</string>
 
-    <string name="schDwnBtn">Schedule Download</string>
-    <string name="schDown_install">Do you want to install all scheduled downloads?</string>
-    <string name="hidden_adult">Some apps are hidden because adult content filter is active. Do you want to list this apps?</string>
-    <string name="dont_show_again">Don\'t show this dialog again</string>
+  <string name="schDwnBtn">Schedule Download</string>
+  <string name="schDown_install">Do you want to install all scheduled downloads?</string>
+  <string name="hidden_adult">Some apps are hidden because adult content filter is active. Do you want to list this apps?</string>
+  <string name="dont_show_again">Don\'t show this dialog again</string>
 
-    <!-- App View -->
+  <!-- App View -->
 
-    <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
+  <string name="rollback_empty">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed apps (via Aptoide) including version and install date.</string>
 
-    <string name="see_more">See More</string>
-    <string name="see_less">See Less</string>
-    <string name="get_latest">Get latest version</string>
+  <string name="see_more">See More</string>
+  <string name="see_less">See Less</string>
+  <string name="get_latest">Get latest version</string>
 
-    <!-- Tab names -->
-    <string name="installed_tab">Installed</string>
-    <string name="updates_tab">Updates</string>
+  <!-- Tab names -->
+  <string name="installed_tab">Installed</string>
+  <string name="updates_tab">Updates</string>
 
-    <string name="feedback_send_button">Send Feedback</string>
+  <string name="feedback_send_button">Send Feedback</string>
 
-    <!-- NavDrawer List items -->
-    <string name="my_account">My Account</string>
-    <string name="setting_schdwntitle">Scheduled Downloads</string>
-    <string name="settings">Settings</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Backup Apps</string>
+  <!-- NavDrawer List items -->
+  <string name="my_account">My Account</string>
+  <string name="setting_schdwntitle">Scheduled Downloads</string>
+  <string name="settings">Settings</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Backup Apps</string>
 
-    <string name="menu_context_reparse">Reload</string>
-    <string name="menu_context_remove">Remove</string>
+  <string name="menu_context_reparse">Reload</string>
+  <string name="menu_context_remove">Remove</string>
 
-    <!-- Stores -->
-    <string name="search_other_stores">Or search for others…</string>
-    <string name="see_top_stores">See Top Stores</string>
-    <string name="subscribe">Subscribe</string>
-    <string name="unsubscribe">Unsubscribe</string>
-    <string name="store_name">Store Name</string>
-    <string name="insert_store_name">Insert store name:</string>
-    <string name="subscribe_pvt_store">Subscribe private store</string>
+  <!-- Stores -->
+  <string name="search_other_stores">Or search for others…</string>
+  <string name="see_top_stores">See Top Stores</string>
+  <string name="subscribe">Subscribe</string>
+  <string name="unsubscribe">Unsubscribe</string>
+  <string name="store_name">Store Name</string>
+  <string name="insert_store_name">Insert store name:</string>
+  <string name="subscribe_pvt_store">Subscribe private store</string>
 
-    <!-- Network -->
-    <string name="no_excluded_updates">No Excluded Updates</string>
-    <string name="no_excluded_updates_selected">No Excluded Updates selected</string>
-    <string name="exclude_update">Ignore Update</string>
-    <string name="install_update">Install Update</string>
+  <!-- Network -->
+  <string name="no_excluded_updates">No Excluded Updates</string>
+  <string name="no_excluded_updates_selected">No Excluded Updates selected</string>
+  <string name="exclude_update">Ignore Update</string>
+  <string name="install_update">Install Update</string>
 
-    <!-- Payments -->
-    <string name="payment_methods">Pay with:</string>
-    <string name="cancel">Cancel</string>
-    <string name="no_payments_available">No payments available.</string>
-    <string name="failed_auth_code">Failed to authorize account. Please try again.</string>
-    <string name="error_occured_paying">An error occurred. The payment wasn\'t completed.</string>
-    <string name="error_occured_retry_later">An error occurred. Aptoide will retry later automatically.</string>
-    <string name="account">Account</string>
+  <!-- Payments -->
+  <string name="payment_methods">Pay with:</string>
+  <string name="cancel">Cancel</string>
+  <string name="no_payments_available">No payments available.</string>
+  <string name="failed_auth_code">Failed to authorize account. Please try again.</string>
+  <string name="error_occured_paying">An error occurred. The payment wasn\'t completed.</string>
+  <string name="error_occured_retry_later">An error occurred. Aptoide will retry later automatically.</string>
+  <string name="account">Account</string>
     <string name="confirm_carrier_payment">Do you want to purchase \'{title}\' for {value}? You will be charged from
         your carrier.
     </string>
-    <string name="buy">Buy</string>
-    <string name="billing_result">Transaction result is: </string>
+  <string name="buy">Buy</string>
+  <string name="billing_result">Transaction result is: </string>
 
-    <string name="change_payment">Back</string>
-    <string name="rollback_installed">Installed</string>
-    <string name="rollback_uninstalled">Uninstalled</string>
-    <string name="rollback_updated">Updated</string>
-    <string name="rollback_updated_at">Updated at %1$s</string>
-    <string name="rollback_downgraded">Downgraded</string>
-    <string name="install">Install</string>
-    <string name="cannot_uninstall_self">Cannot uninstall installer.</string>
-    <string name="at_time">at %s</string>
-    <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
-    <string name="downgrade_requires_uninstall">Downgrade requires Application uninstall</string>
+  <string name="change_payment">Back</string>
+  <string name="rollback_installed">Installed</string>
+  <string name="rollback_uninstalled">Uninstalled</string>
+  <string name="rollback_updated">Updated</string>
+  <string name="rollback_updated_at">Updated at %1$s</string>
+  <string name="rollback_downgraded">Downgraded</string>
+  <string name="install">Install</string>
+  <string name="cannot_uninstall_self">Cannot uninstall installer.</string>
+  <string name="at_time">at %s</string>
+  <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
+  <string name="downgrade_requires_uninstall">Downgrade requires Application uninstall</string>
 
-    <string name="order_popup_title3">Adult Content</string>
-    <string name="friends_to_invite">All other Facebook friends in Aptoide</string>
-    <string name="invite_friends">Invite Friends</string>
-    <string name="timeline_is_empty_send_email">We\'ll send an email to those you choose</string>
-    <string name="facebook_timeline_friends_invited">Friends invited!</string>
-    <string name="select_friends_to_invite">Please select your friends to invite them!</string>
-    <string name="facebook_friends_list_using_timeline">are already using Aptoide Social Timeline</string>
-    <string name="and">and</string>
-    <string name="more_friends">more</string>
-    <string name="more_reviews">Reviews</string>
-    <string name="more_editors_choice">More Editors Choice</string>
-    <string name="more_versions">More Versions</string>
-    <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
-    <string name="X_download_number">%s down.</string>
-    <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
-    <string name="sponsored">Sponsored</string>
-    <string name="friends_installs">Your friends installs</string>
-    <string name="recommended_for_you">Recommended for you</string>
-    <string name="highlighted_apps">Highlighted</string>
-    <string name="button_more">More</string>
-    <string name="unhide_post">UNHIDE</string>
-    <string name="hide_post">HIDE</string>
-    <string name="like">Like</string>
-    <string name="comment">Comment</string>
-    <string name="hide_post_info">Your friends won\'t see this post</string>
-    <string name="timeline_like">Like</string>
-    <string name="likes">Likes</string>
-    <string name="unlike">Unlike</string>
-    <string name="timeline_empty_no_friends_send_email">It seems that your friends did not logged-in in Aptoide with their Facebook account. Send them an email to login with their Facebook Account</string>
-    <string name="timeline_empty_send_email_to_friends">Email Friends</string>
-    <string name="aptoide_timeline">Aptoide Timeline</string>
-    <string name="timeline_email_invitation">Invited you to join his Aptoide Social Timeline. Be connected!</string>
-    <string name="timeline_email_how_to_join">How can you join the Social Timeline?</string>
-    <string name="timeline_email_step1">1- Download the latest version of Aptoide:</string>
-    <string name="timeline_email_step2">2- Go to tab “Social Timeline” and join the network</string>
-    <string name="timeline_ad">Suggested App by Facebook</string>
-    <string name="facebook_start_timeline">Join Social Timeline</string>
-    <string name="facebook_join_friends">Do you want to join them in the Social Timeline?</string>
-    <string name="timeline_is_empty_no_friends">Your Timeline is empty. That\'s probably because you don\'t have friends on Aptoide yet or they don\'t have any posts.</string>
-    <string name="timeline_is_empty_start_invite">Let\'s start by inviting some friends:</string>
+  <string name="order_popup_title3">Adult Content</string>
+  <string name="friends_to_invite">All other Facebook friends in Aptoide</string>
+  <string name="invite_friends">Invite Friends</string>
+  <string name="timeline_is_empty_send_email">We\'ll send an email to those you choose</string>
+  <string name="facebook_timeline_friends_invited">Friends invited!</string>
+  <string name="select_friends_to_invite">Please select your friends to invite them!</string>
+  <string name="facebook_friends_list_using_timeline">are already using Aptoide Social Timeline</string>
+  <string name="and">and</string>
+  <string name="more_friends">more</string>
+  <string name="more_reviews">Reviews</string>
+  <string name="more_editors_choice">More Editors Choice</string>
+  <string name="more_versions">More Versions</string>
+  <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
+  <string name="X_download_number">%s down.</string>
+  <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
+  <string name="sponsored">Sponsored</string>
+  <string name="friends_installs">Your friends installs</string>
+  <string name="recommended_for_you">Recommended for you</string>
+  <string name="highlighted_apps">Highlighted</string>
+  <string name="button_more">More</string>
+  <string name="unhide_post">UNHIDE</string>
+  <string name="hide_post">HIDE</string>
+  <string name="like">Like</string>
+  <string name="comment">Comment</string>
+  <string name="hide_post_info">Your friends won\'t see this post</string>
+  <string name="timeline_like">Like</string>
+  <string name="likes">Likes</string>
+  <string name="unlike">Unlike</string>
+  <string name="timeline_empty_no_friends_send_email">It seems that your friends did not logged-in in Aptoide with their Facebook account. Send them an email to login with their Facebook Account</string>
+  <string name="timeline_empty_send_email_to_friends">Email Friends</string>
+  <string name="aptoide_timeline">Aptoide Timeline</string>
+  <string name="timeline_email_invitation">Invited you to join his Aptoide Social Timeline. Be connected!</string>
+  <string name="timeline_email_how_to_join">How can you join the Social Timeline?</string>
+  <string name="timeline_email_step1">1- Download the latest version of Aptoide:</string>
+  <string name="timeline_email_step2">2- Go to tab “Social Timeline” and join the network</string>
+  <string name="timeline_ad">Suggested App by Facebook</string>
+  <string name="facebook_start_timeline">Join Social Timeline</string>
+  <string name="facebook_join_friends">Do you want to join them in the Social Timeline?</string>
+  <string name="timeline_is_empty_no_friends">Your Timeline is empty. That\'s probably because you don\'t have friends on Aptoide yet or they don\'t have any posts.</string>
+  <string name="timeline_is_empty_start_invite">Let\'s start by inviting some friends:</string>
 
-    <!-- Review Activity-->
-    <string name="review_get_app">Get App</string>
-    <string name="review_final_verdict">Final Verdict</string>
-    <string name="review_speed">Speed</string>
-    <string name="review_usability">Usability</string>
-    <string name="review_addictive">Addictive</string>
-    <string name="review_stability">Stability</string>
-    <string name="review_by">Review by:\n%s</string>
-    <string name="review_title">Reviews</string>
-    <string name="review_good">Good</string>
-    <string name="review_bad">Bad</string>
-    <string name="review_finish">Finish</string>
-    <string name="review_final_score">Score</string>
-    <string name="make_review_title">Make Review</string>
-    <string name="size">Size</string>
-    <string name="set_sliders">Set the sliders</string>
-    <string name="write_one_pro">Write at least one pro</string>
-    <string name="write_one_con">Write at least one con</string>
-    <string name="write_your_final_verdict">Write Your final Verdict</string>
-    <string name="review_success">Review submited with success!</string>
-    <string name="store_privacy">Store privacy</string>
-    <string name="public_key">public</string>
-    <string name="private_key">private</string>
-    <string name="store_username">Username</string>
-    <string name="store_password">Password</string>
-    <string name="upload_app_backup_apps_installed">You need to upload this app to your store first. You can use Aptoide Backup Apps.</string>
-    <string name="upload_app_backup_apps_not_installed">You need to upload this app to your store first. Please install and use Aptoide Backup Apps.</string>
-    <string name="upload_app">Upload app</string>
-    <string name="create_review">Create review</string>
+  <!-- Review Activity-->
+  <string name="review_get_app">Get App</string>
+  <string name="review_final_verdict">Final Verdict</string>
+  <string name="review_speed">Speed</string>
+  <string name="review_usability">Usability</string>
+  <string name="review_addictive">Addictive</string>
+  <string name="review_stability">Stability</string>
+  <string name="review_by">Review by:\n%s</string>
+  <string name="review_title">Reviews</string>
+  <string name="review_good">Good</string>
+  <string name="review_bad">Bad</string>
+  <string name="review_finish">Finish</string>
+  <string name="review_final_score">Score</string>
+  <string name="make_review_title">Make Review</string>
+  <string name="size">Size</string>
+  <string name="set_sliders">Set the sliders</string>
+  <string name="write_one_pro">Write at least one pro</string>
+  <string name="write_one_con">Write at least one con</string>
+  <string name="write_your_final_verdict">Write Your final Verdict</string>
+  <string name="review_success">Review submited with success!</string>
+  <string name="store_privacy">Store privacy</string>
+  <string name="public_key">public</string>
+  <string name="private_key">private</string>
+  <string name="store_username">Username</string>
+  <string name="store_password">Password</string>
+  <string name="upload_app_backup_apps_installed">You need to upload this app to your store first. You can use Aptoide Backup Apps.</string>
+  <string name="upload_app_backup_apps_not_installed">You need to upload this app to your store first. Please install and use Aptoide Backup Apps.</string>
+  <string name="upload_app">Upload app</string>
+  <string name="create_review">Create review</string>
 
-    <!-- Settings-->
-    <string name="asksetadultpinmessage">Would you like to set a pin to unlock Adult content?</string>
-    <string name="setpin">Set Pin</string>
-    <string name="remove_mature_pin_title">Remove Adult Content pin</string>
-    <string name="remove_mature_pin_summary">Remove the Pin required to unlock adult Content</string>
-    <string name="set_mature_pin_title">Set Adult Content pin</string>
-    <string name="set_mature_pin_summary">Set a Pin that will be required to unlock adult Content</string>
-    <string name="settings_title_bar">Settings</string>
-    <string name="settings_dwn_network_rules">Mobile Network Options</string>
-    <string name="setting_sum_icon_download_rules">Allow icons being downloaded over mobile data connections</string>
-    <string name="setting_icon_download_rules">Icon Download Rules</string>
-    <string name="setting_wifi">WiFi</string>
-    <string name="setting_mobile">Mobile 3G/4G</string>
-    <string name="setting_3g">3G</string>
-    <string name="setting_4g">4G</string>
-    <string name="setting_ethernet">Ethernet</string>
-    <string name="setting_sum_general_download_rules">Download Apps, Editors Choice, Top Apps and Stores over allowed mobile data connections</string>
-    <string name="setting_general_download_rules">General Download Rules</string>
-    <string name="setting_hwspecstitle">Hardware Specs</string>
-    <string name="setting_hwspecssum">Hardware Info about your phone</string>
-    <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
-    <string name="setting_appfiltertitle">Filter Applications</string>
-    <string name="setting_category_autoupdate">Aptoide Auto update</string>
-    <string name="setting_category_autoupdate_title">Enable Aptoide auto update</string>
-    <string name="setting_dont_show_mature_content">Show mature content</string>
-    <string name="setting_mature_filtering">Adult Content</string>
-    <string name="setting_updates">Updates</string>
-    <string name="update_all">Update all</string>
-    <string name="whats_new">What\'s new?</string>
-    <string name="setting_updates_notification_sum">Show new updates notifications</string>
-    <string name="setting_updates_notification_title">Updates Notification</string>
-    <string name="setting_auto_update_sum">Enable applications automatic update</string>
-    <string name="setting_auto_update_title">Enable auto update</string>
-    <string name="show_all_updates">Don\'t show updates for applications with different signatures</string>
-    <string name="setting_allUpdates_filtering">Filter Updates</string>
-    <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a WiFi connection is present</string>
-    <string name="setting_schdwninstalltitle">Automatic Install</string>
-    <string name="setting_clear_memory">Clear Memory</string>
-    <string name="clearcontent_title">Remove data and configurations</string>
-    <string name="clearcache_title">Clear cache</string>
-    <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
-    <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
-    <string name="change_theme">Change theme</string>
-    <string name="theme">Themes</string>
-    <string name="root">Root</string>
-    <string name="allow_root">Allow root installation</string>
-    <string name="disable_social_timeline">Disable Social Timeline</string>
-    <string name="social_timeline_notifications_sum2">Enable Aptoide Social Timeline Notifications. You will receive the latest news on the notification bar.</string>
-    <string name="social_timeline_notifications">Timeline Notifications</string>
-    <string name="about_us">About us</string>
-    <string name="restart_aptoide">Please restart the application to change theme</string>
-    <string name="setting_sdk_version">SDK Version</string>
-    <string name="setting_screen_size">Screen Size</string>
-    <string name="setting_esgl_version">ESGL Version</string>
-    <string name="screenCode">Screen code</string>
-    <string name="cpuAbi">CPU</string>
-    <string name="about_site">Website:</string>
-    <string name="about_mail">Contact:</string>
-    <string name="clear_cache_sucess">Content successfully deleted</string>
-    <string name="clearcontent_sum">Deletes the data from the SD card.</string>
-    <string name="cache_using_X_mb">Using %s MB</string>
-    <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
-    <string name="clearcontent_sum_jolla">Deletes data</string>
-    <string name="clearcache_sum_jolla">Deletes cache (icons, screenshots)</string>
-    <string name="drawer_social_media_title">Let\'s stay connected</string>
-    <string name="read_more">Read More</string>
-    <string name="read_less">See less</string>
-    <string name="flag_this_app_good">Good</string>
-    <string name="flag_this_app_button_text">Flag this app</string>
-    <string name="appview_rating_card_text">Rating</string>
-    <string name="flag_this_app_need_licence">Need Licence</string>
-    <string name="flag_this_app_fake">Fake</string>
-    <string name="flag_this_app_freeze">Freeze</string>
-    <string name="flag_this_app_virus">Virus</string>
-    <string name="appview_recommended_for_you_title">Recommended for you</string>
-    <string name="appview_additional_information_title">Additional Information</string>
-    <string name="appview_comment_reply_button_text">Reply</string>
-    <string name="appview_header_trusted_text">Trusted</string>
-    <string name="appview_subscribe_store_button_text">Subscribe?</string>
-    <string name="appview_subscribed_store_button_text">Subscribed</string>
-    <string name="appview_rate_this_app_text">Rate this app</string>
-    <string name="appview_other_versions_in_others_stores">Other versions in other stores</string>
-    <string name="appview_rate_Success">App Rated</string>
-    <string name="ignoreUpdateText">Ignore Update</string>
-    <string name="ignored">Ignored</string>
-    <string name="noIgnoreUpdateText">The new version of an app doesn’t work on your device or some feature is missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop updating.</string>
-    <string name="createReviewButtonText">Create \nReview</string>
-    <string name="navigation_drawer_signup_login">Sign Up or Login</string>
-    <string name="active">Active</string>
-    <string name="completed">Completed</string>
-    <string name="_downloads"> downloads</string>
-    <string name="no_description">No description</string>
-    <string name="description">Description</string>
-    <string name="version">Version</string>
-    <string name="version_placeholder">Version: %s</string>
+  <!-- Settings-->
+  <string name="asksetadultpinmessage">Would you like to set a pin to unlock Adult content?</string>
+  <string name="setpin">Set Pin</string>
+  <string name="remove_mature_pin_title">Remove Adult Content pin</string>
+  <string name="remove_mature_pin_summary">Remove the Pin required to unlock adult Content</string>
+  <string name="set_mature_pin_title">Set Adult Content pin</string>
+  <string name="set_mature_pin_summary">Set a Pin that will be required to unlock adult Content</string>
+  <string name="settings_title_bar">Settings</string>
+  <string name="settings_dwn_network_rules">Mobile Network Options</string>
+  <string name="setting_sum_icon_download_rules">Allow icons being downloaded over mobile data connections</string>
+  <string name="setting_icon_download_rules">Icon Download Rules</string>
+  <string name="setting_wifi">WiFi</string>
+  <string name="setting_mobile">Mobile 3G/4G</string>
+  <string name="setting_3g">3G</string>
+  <string name="setting_4g">4G</string>
+  <string name="setting_ethernet">Ethernet</string>
+  <string name="setting_sum_general_download_rules">Download Apps, Editors Choice, Top Apps and Stores over allowed mobile data connections</string>
+  <string name="setting_general_download_rules">General Download Rules</string>
+  <string name="setting_hwspecstitle">Hardware Specs</string>
+  <string name="setting_hwspecssum">Hardware Info about your phone</string>
+  <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
+  <string name="setting_appfiltertitle">Filter Applications</string>
+  <string name="setting_category_autoupdate">Aptoide Auto update</string>
+  <string name="setting_category_autoupdate_title">Enable Aptoide auto update</string>
+  <string name="setting_dont_show_mature_content">Show mature content</string>
+  <string name="setting_mature_filtering">Adult Content</string>
+  <string name="setting_updates">Updates</string>
+  <string name="update_all">Update all</string>
+  <string name="whats_new">What\'s new?</string>
+  <string name="setting_updates_notification_sum">Show new updates notifications</string>
+  <string name="setting_updates_notification_title">Updates Notification</string>
+  <string name="setting_auto_update_sum">Enable applications automatic update</string>
+  <string name="setting_auto_update_title">Enable auto update</string>
+  <string name="show_all_updates">Don\'t show updates for applications with different signatures</string>
+  <string name="setting_allUpdates_filtering">Filter Updates</string>
+  <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a WiFi connection is present</string>
+  <string name="setting_schdwninstalltitle">Automatic Install</string>
+  <string name="setting_clear_memory">Clear Memory</string>
+  <string name="clearcontent_title">Remove data and configurations</string>
+  <string name="clearcache_title">Clear cache</string>
+  <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
+  <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
+  <string name="change_theme">Change theme</string>
+  <string name="theme">Themes</string>
+  <string name="root">Root</string>
+  <string name="allow_root">Allow root installation</string>
+  <string name="disable_social_timeline">Disable Social Timeline</string>
+  <string name="social_timeline_notifications_sum2">Enable Aptoide Social Timeline Notifications. You will receive the latest news on the notification bar.</string>
+  <string name="social_timeline_notifications">Timeline Notifications</string>
+  <string name="about_us">About us</string>
+  <string name="restart_aptoide">Please restart the application to change theme</string>
+  <string name="setting_sdk_version">SDK Version</string>
+  <string name="setting_screen_size">Screen Size</string>
+  <string name="setting_esgl_version">ESGL Version</string>
+  <string name="screenCode">Screen code</string>
+  <string name="cpuAbi">CPU</string>
+  <string name="about_site">Website:</string>
+  <string name="about_mail">Contact:</string>
+  <string name="clear_cache_sucess">Content successfully deleted</string>
+  <string name="clearcontent_sum">Deletes the data from the SD card.</string>
+  <string name="cache_using_X_mb">Using %s MB</string>
+  <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
+  <string name="clearcontent_sum_jolla">Deletes data</string>
+  <string name="clearcache_sum_jolla">Deletes cache (icons, screenshots)</string>
+  <string name="drawer_social_media_title">Let\'s stay connected</string>
+  <string name="read_more">Read More</string>
+  <string name="read_less">See less</string>
+  <string name="flag_this_app_good">Good</string>
+  <string name="flag_this_app_button_text">Flag this app</string>
+  <string name="appview_rating_card_text">Rating</string>
+  <string name="flag_this_app_need_licence">Need Licence</string>
+  <string name="flag_this_app_fake">Fake</string>
+  <string name="flag_this_app_freeze">Freeze</string>
+  <string name="flag_this_app_virus">Virus</string>
+  <string name="appview_recommended_for_you_title">Recommended for you</string>
+  <string name="appview_additional_information_title">Additional Information</string>
+  <string name="appview_comment_reply_button_text">Reply</string>
+  <string name="appview_header_trusted_text">Trusted</string>
+  <string name="appview_subscribe_store_button_text">Subscribe?</string>
+  <string name="appview_subscribed_store_button_text">Subscribed</string>
+  <string name="appview_rate_this_app_text">Rate this app</string>
+  <string name="appview_other_versions_in_others_stores">Other versions in other stores</string>
+  <string name="appview_rate_Success">App Rated</string>
+  <string name="ignoreUpdateText">Ignore Update</string>
+  <string name="ignored">Ignored</string>
+  <string name="noIgnoreUpdateText">The new version of an app doesn’t work on your device or some feature is missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop updating.</string>
+  <string name="createReviewButtonText">Create \nReview</string>
+  <string name="navigation_drawer_signup_login">Sign Up or Login</string>
+  <string name="active">Active</string>
+  <string name="completed">Completed</string>
+  <string name="_downloads"> downloads</string>
+  <string name="no_description">No description</string>
+  <string name="description">Description</string>
+  <string name="version">Version</string>
+  <string name="version_placeholder">Version: %s</string>
 
-    <!-- Headers -->
-    <string name="results_subscribed">Subscribed Stores</string>
-    <string name="results_in_store">Search results in %s store</string>
-    <string name="other_stores">Not subscribed Stores</string>
-    <string name="comments">Comments</string>
-    <string name="reviews">Reviews</string>
-    <string name="store">Store</string>
-    <string name="title_caps">TITLE</string>
+  <!-- Headers -->
+  <string name="results_subscribed">Subscribed Stores</string>
+  <string name="results_in_store">Search results in %s store</string>
+  <string name="other_stores">Not subscribed Stores</string>
+  <string name="comments">Comments</string>
+  <string name="reviews">Reviews</string>
+  <string name="store">Store</string>
+  <string name="title_caps">TITLE</string>
 
-    <string name="unsubscribe_yes_no">Are you sure you want to unsubscribe?</string>
-    <string name="unsubscribed_">"Unsubscribed "</string>
-    <string name="error_occured_uploading">You need to upload this app first.</string>
+  <string name="unsubscribe_yes_no">Are you sure you want to unsubscribe?</string>
+  <string name="unsubscribed_">"Unsubscribed "</string>
+  <string name="error_occured_uploading">You need to upload this app first.</string>
 
-    <!-- Auto Update -->
-    <string name="update_self_title">Update available</string>
-    <string name="update_self_msg">There is a new version of %s available\nDo you wish to update?</string>
-    <string name="retrieving_update">Retrieving update…</string>
+  <!-- Auto Update -->
+  <string name="update_self_title">Update available</string>
+  <string name="update_self_msg">There is a new version of %s available\nDo you wish to update?</string>
+  <string name="retrieving_update">Retrieving update…</string>
 
-    <string name="menu_search_item_go_to_store">Go to store</string>
-    <string name="srch_hint">Search for apps…</string>
+  <string name="menu_search_item_go_to_store">Go to store</string>
+  <string name="srch_hint">Search for apps…</string>
 
-    <!-- Badges -->
-    <string name="app_trusted">%s is Trusted</string>
-    <string name="app_warning">Warning: %s</string>
-    <string name="scanned_with_av">Scanned with Anti-Virus:</string>
-    <string name="compared_with_another_marketplace">Compared with another Android Marketplace:</string>
-    <string name="application_signature_analysis">Application signature compared with developer signature:</string>
-    <string name="application_signature_matched">Application signature match with signature related to the application developer.</string>
-    <string name="application_signature_not_matched">Application signature do not match with signature related to the application developer. Application may have been adulterated.</string>
-    <string name="application_signature_blacklisted">Application signature is not a Trusted signature at Aptoide Anti-Malware platform because it has been used to sign another application that does not match the signature related to the legit developer.</string>
-    <string name="scanned_manually_by_aptoide_team">Scanned manually by Aptoide Team:</string>
-    <string name="scanned_verified_by_tester">The application was reviewed manually by a tester from Aptoide Team which ensures the safety of the application.</string>
-    <string name="warning">Warning</string>
-    <string name="trusted_app">Trusted App</string>
-    <string name="unknown">Unknown</string>
+  <!-- Badges -->
+  <string name="app_trusted">%s is Trusted</string>
+  <string name="app_warning">Warning: %s</string>
+  <string name="scanned_with_av">Scanned with Anti-Virus:</string>
+  <string name="compared_with_another_marketplace">Compared with another Android Marketplace:</string>
+  <string name="application_signature_analysis">Application signature compared with developer signature:</string>
+  <string name="application_signature_matched">Application signature match with signature related to the application developer.</string>
+  <string name="application_signature_not_matched">Application signature do not match with signature related to the application developer. Application may have been adulterated.</string>
+  <string name="application_signature_blacklisted">Application signature is not a Trusted signature at Aptoide Anti-Malware platform because it has been used to sign another application that does not match the signature related to the legit developer.</string>
+  <string name="scanned_manually_by_aptoide_team">Scanned manually by Aptoide Team:</string>
+  <string name="scanned_verified_by_tester">The application was reviewed manually by a tester from Aptoide Team which ensures the safety of the application.</string>
+  <string name="warning">Warning</string>
+  <string name="trusted_app">Trusted App</string>
+  <string name="unknown">Unknown</string>
 
-    <!-- New Badges V7 -->
-    <string name="reason_third_party">We\'ve checked the app\'s signature and it matches with Google Play Store, so rest assured and enjoy the app.</string>
-    <string name="reason_scanned">Scanned with AptoideGuard plus 2 different anti-virus (Zoner 1.8 and Sophos 3.0).</string>
-    <string name="reason_signature">The cryptographic signature guarantees that the file is safe to install and wasn\'t tampered with in any way.</string>
-    <string name="reason_manual">This app was manually reviewed by Aptoide\'s expert team, and was flagged as Good.</string>
+  <!-- New Badges V7 -->
+  <string name="reason_third_party">We\'ve checked the app\'s signature and it matches with Google Play Store, so rest assured and enjoy the app.</string>
+  <string name="reason_scanned">Scanned with AptoideGuard plus 2 different anti-virus (Zoner 1.8 and Sophos 3.0).</string>
+  <string name="reason_signature">The cryptographic signature guarantees that the file is safe to install and wasn\'t tampered with in any way.</string>
+  <string name="reason_manual">This app was manually reviewed by Aptoide\'s expert team, and was flagged as Good.</string>
 
-    <string name="reason_failed">Application signature doesn\'t match with developer\'s signature. App may have been tampered with.</string>
-    <string name="reason_unknown">There isn\'t enough information about this app in Aptoide Anti-Malware platform.</string>
-
-
-    <!-- Comments -->
-    <string name="reply_to">Reply to %s</string>
-    <string name="comment_submitted">Your comment was successfully submitted</string>
-    <string name="write_your_comment">Write your comment</string>
-    <string name="write_a_comment">Write a comment</string>
-    <string name="no_comment_be_the_first">"No comments yet. Be the first!</string>
-
-    <!-- Dialogs -->
-    <string name="installapp_alrt">Do you wish to install: \n\n %s?</string>
-
-    <string name="suggested_app">Suggested App</string>
-
-    <!-- ABTesting -->
-    <string name="abTest1_label_1">Get app</string>
-    <string name="abTest1_label_2">Install</string>
-    <string name="abTest1_label_3">Install</string>
+  <string name="reason_failed">Application signature doesn\'t match with developer\'s signature. App may have been tampered with.</string>
+  <string name="reason_unknown">There isn\'t enough information about this app in Aptoide Anti-Malware platform.</string>
 
 
-    <!-- push notifications-->
-    <string name="notification_timeline_new_likes">You have %s new likes. Check in Social Timeline!</string>
-    <string name="notification_timeline_new_comments">You have %s new comments. Check in Social Timeline!</string>
-    <string name="notification_timeline_activity">You have %1$s new comments and %2$s likes. Check in Social Timeline!</string>
-    <string name="notification_social_timeline">Aptoide Social Timeline. Check it now!</string>
-    <string name="notification_timeline_posts">Your friends installed new apps!</string>
+  <!-- Comments -->
+  <string name="reply_to">Reply to %s</string>
+  <string name="comment_submitted">Your comment was successfully submitted</string>
+  <string name="write_your_comment">Write your comment</string>
+  <string name="write_a_comment">Write a comment</string>
+  <string name="no_comment_be_the_first">"No comments yet. Be the first!</string>
 
-    <!-- Updates -->
-    <string name="no_updates_available_retoric">Everything is up to date!</string>
-    <string name="no_new_updates_available">No new updates available!</string>
-    <string name="has_updates">%s has new updates available!</string>
-    <string name="new_updates">There are %s new updates available!</string>
-    <string name="one_new_update">There is %s new update available!</string>
-    <string name="updates_tab_adapter_uninstalled">Uninstalled</string>
-    <string name="updatesTabAdapterUninstall">Uninstall</string>
-    <string name="flag_good">Good</string>
-    <string name="flag_license">Needs License</string>
-    <string name="flag_fake">Fake</string>
-    <string name="flag_freeze">Freeze</string>
-    <string name="flag_virus">Virus</string>
-    <string name="flag_this_app">Flag this app</string>
-    <string name="flag_added">Flag added</string>
-    <string name="skip">Skip</string>
-    <string name="wizard_title_01">Welcome to Aptoide</string>
-    <string name="wizard_description_01">Create a free account and register to start building your own personalized App Store.\n\n Browse by theme stores and discover new and exciting applications.</string>
-    <string name="wizard_title_02">Increased Security</string>
-    <string name="wizard_description_02">Search for trusted badges and securely download apps.\n\n Incompatible issues? Search for previous versions of applications.</string>
-    <string name="wizard_title_03">New members of our family</string>
-    <string name="wizard_subtitle_03_1">Aptoide Lite</string>
-    <string name="wizard_description_03_1">for old devices and slow internet connection</string>
-    <string name="wizard_subtitle_03_2">Aptoide TV</string>
-    <string name="wizard_description_03_2">optimised App Store for Set top boxes and smart TV\'s</string>
-    <string name="wizard_reviews_title">Reviews</string>
-    <string name="wizard_reviews">You can now create your app\'s reviews with Aptoide!</string>
-    <string name="wizard_new_and_improved">Improved performance!</string>
-    <string name="wizard_new_and_improved_bullet_1">Save battery life</string>
-    <string name="wizard_new_and_improved_bullet_2">Reduce CPU and bandwidth usage</string>
-    <string name="wizard_new_and_improved_bullet_3">Load fewer resources</string>
-    <string name="wizard_new_and_improved_bullet_4">Clean User Interface</string>
-    <string name="wizard_new_homepage">New homepage layout</string>
-    <string name="wizard_new_top">New Top tab</string>
-    <string name="subscribe_apps_official_store">Subscribe \'apps\' Aptoide Official App Store</string>
-    <string name="wizard_next">Next</string>
-    <string name="wizard_prev">Previous</string>
-    <string name="search_activity_title">"'%s'"</string>
+  <!-- Dialogs -->
+  <string name="installapp_alrt">Do you wish to install: \n\n %s?</string>
 
-    <string name="share">Share</string>
-    <string name="share_on_timeline">Share on timeline</string>
+  <string name="suggested_app">Suggested App</string>
 
-    <!-- Search Widget-->
-    <string name="search_for_apps">Search for apps…</string>
-    <string name="empty_search">Empty search, write an application name</string>
-    <string name="manually_reviewed">Good App Guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn’t contain any threats</string>
+  <!-- ABTesting -->
+  <string name="abTest1_label_1">Get app</string>
+  <string name="abTest1_label_2">Install</string>
+  <string name="abTest1_label_3">Install</string>
 
-    <string name="no_apps_found">No apps found with current filter</string>
-    <string name="no_search_results_message">There are no results for your search. \nPlease, try other keywords.</string>
 
-    <!-- AppView developer area-->
-    <string name="developer">Developer</string>
-    <string name="website">Website: %s</string>
-    <string name="email">Email: %s</string>
-    <string name="privacy_policy">Privacy Policy: %s</string>
-    <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
-    <string name="na">N/A</string>
-    <string name="no_email_and_pass_error_message">Please insert an email and password to register.</string>
-    <string name="no_pass_error_message">Please insert a password to register.</string>
-    <string name="no_email_error_message">Please insert an email to register.</string>
-    <string name="website_copied">Website copied to clipboard</string>
-    <string name="email_copied">E-mail copied to clipboard</string>
-    <string name="privacy_copied">Privacy link copied to clipboard</string>
-    <string name="unsubscribing_store_message">Unsubscribing %s</string>
+  <!-- push notifications-->
+  <string name="notification_timeline_new_likes">You have %s new likes. Check in Social Timeline!</string>
+  <string name="notification_timeline_new_comments">You have %s new comments. Check in Social Timeline!</string>
+  <string name="notification_timeline_activity">You have %1$s new comments and %2$s likes. Check in Social Timeline!</string>
+  <string name="notification_social_timeline">Aptoide Social Timeline. Check it now!</string>
+  <string name="notification_timeline_posts">Your friends installed new apps!</string>
 
-    <!-- Search Fragment -->
-    <string name="all_stores">All Stores</string>
-    <string name="followed_stores">Followed Stores</string>
-    <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
+  <!-- Updates -->
+  <string name="no_updates_available_retoric">Everything is up to date!</string>
+  <string name="no_new_updates_available">No new updates available!</string>
+  <string name="has_updates">%s has new updates available!</string>
+  <string name="new_updates">There are %s new updates available!</string>
+  <string name="one_new_update">There is %s new update available!</string>
+  <string name="updates_tab_adapter_uninstalled">Uninstalled</string>
+  <string name="updatesTabAdapterUninstall">Uninstall</string>
+  <string name="flag_good">Good</string>
+  <string name="flag_license">Needs License</string>
+  <string name="flag_fake">Fake</string>
+  <string name="flag_freeze">Freeze</string>
+  <string name="flag_virus">Virus</string>
+  <string name="flag_this_app">Flag this app</string>
+  <string name="flag_added">Flag added</string>
+  <string name="skip">Skip</string>
+  <string name="wizard_title_01">Welcome to Aptoide</string>
+  <string name="wizard_description_01">Create a free account and register to start building your own personalized App Store.\n\n Browse by theme stores and discover new and exciting applications.</string>
+  <string name="wizard_title_02">Increased Security</string>
+  <string name="wizard_description_02">Search for trusted badges and securely download apps.\n\n Incompatible issues? Search for previous versions of applications.</string>
+  <string name="wizard_title_03">New members of our family</string>
+  <string name="wizard_subtitle_03_1">Aptoide Lite</string>
+  <string name="wizard_description_03_1">for old devices and slow internet connection</string>
+  <string name="wizard_subtitle_03_2">Aptoide TV</string>
+  <string name="wizard_description_03_2">optimised App Store for Set top boxes and smart TV\'s</string>
+  <string name="wizard_reviews_title">Reviews</string>
+  <string name="wizard_reviews">You can now create your app\'s reviews with Aptoide!</string>
+  <string name="wizard_new_and_improved">Improved performance!</string>
+  <string name="wizard_new_and_improved_bullet_1">Save battery life</string>
+  <string name="wizard_new_and_improved_bullet_2">Reduce CPU and bandwidth usage</string>
+  <string name="wizard_new_and_improved_bullet_3">Load fewer resources</string>
+  <string name="wizard_new_and_improved_bullet_4">Clean User Interface</string>
+  <string name="wizard_new_homepage">New homepage layout</string>
+  <string name="wizard_new_top">New Top tab</string>
+  <string name="subscribe_apps_official_store">Subscribe \'apps\' Aptoide Official App Store</string>
+  <string name="wizard_next">Next</string>
+  <string name="wizard_prev">Previous</string>
+  <string name="search_activity_title">"'%s'"</string>
+
+  <string name="share">Share</string>
+  <string name="share_on_timeline">Share on timeline</string>
+
+  <!-- Search Widget-->
+  <string name="search_for_apps">Search for apps…</string>
+  <string name="empty_search">Empty search, write an application name</string>
+  <string name="manually_reviewed">Good App Guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn’t contain any threats</string>
+
+  <string name="no_apps_found">No apps found with current filter</string>
+  <string name="no_search_results_message">There are no results for your search. \nPlease, try other keywords.</string>
+
+  <!-- AppView developer area-->
+  <string name="developer">Developer</string>
+  <string name="website">Website: %s</string>
+  <string name="email">Email: %s</string>
+  <string name="privacy_policy">Privacy Policy: %s</string>
+  <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
+  <string name="na">N/A</string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to register.</string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
+  <string name="website_copied">Website copied to clipboard</string>
+  <string name="email_copied">E-mail copied to clipboard</string>
+  <string name="privacy_copied">Privacy link copied to clipboard</string>
+  <string name="unsubscribing_store_message">Unsubscribing %s</string>
+
+  <!-- Search Fragment -->
+  <string name="all_stores">All Stores</string>
+  <string name="followed_stores">Followed Stores</string>
+  <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
 </resources>

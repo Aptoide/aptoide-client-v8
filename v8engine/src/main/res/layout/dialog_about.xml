@@ -4,93 +4,104 @@
   ~ Modified by SithEngineer on 02/06/2016.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="bottom"
-                android:orientation="vertical">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:id="@+id/aptoide_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+  <TextView
+      android:id="@+id/aptoide_version"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_gravity="center_horizontal"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      />
 
-    <ScrollView
-        android:id="@+id/scrollview"
+  <ScrollView
+      android:id="@+id/scrollview"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_above="@+id/site_layout"
+      android:layout_below="@+id/aptoide_version"
+      android:padding="5dp"
+      >
+
+    <LinearLayout
+        android:id="@+id/scroll_child"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/site_layout"
-        android:layout_below="@+id/aptoide_version"
-        android:padding="5dp">
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:orientation="vertical"
+        >
 
-        <LinearLayout
-            android:id="@+id/scroll_child"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="3dp"
-            android:orientation="vertical">
+      <TextView
+          android:id="@+id/credits"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/credits"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          />
+    </LinearLayout>
+  </ScrollView>
 
-            <TextView
-                android:id="@+id/credits"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/credits"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
-        </LinearLayout>
-    </ScrollView>
+  <LinearLayout
+      android:id="@+id/site_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@+id/contact_layout"
+      android:layout_centerHorizontal="true"
+      android:layout_gravity="center_horizontal"
+      android:orientation="horizontal"
+      android:padding="2dp"
+      >
 
-    <LinearLayout
-        android:id="@+id/site_layout"
+    <TextView
+        android:id="@+id/site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/contact_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:padding="2dp">
+        android:text="@string/about_site"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
 
-        <TextView
-            android:id="@+id/site"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/about_site"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:autoLink="web"
-            android:text="@string/aptoide_url"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/contact_layout"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:padding="2dp">
+        android:layout_marginLeft="3dp"
+        android:autoLink="web"
+        android:text="@string/aptoide_url"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+  </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/about_mail"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+  <LinearLayout
+      android:id="@+id/contact_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_centerHorizontal="true"
+      android:layout_gravity="center_horizontal"
+      android:orientation="horizontal"
+      android:padding="2dp"
+      >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:autoLink="email"
-            android:text="@string/aptoide_email"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/about_mail"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:autoLink="email"
+        android:text="@string/aptoide_email"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+  </LinearLayout>
 
 </RelativeLayout>

@@ -15,82 +15,82 @@
     android:layout_marginStart="4dp"
     >
 
-    <ImageView
-        android:id="@+id/user_icon"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/icon_user"
-        />
+  <ImageView
+      android:id="@+id/user_icon"
+      android:layout_width="34dp"
+      android:layout_height="34dp"
+      android:layout_marginTop="8dp"
+      android:src="@drawable/icon_user"
+      />
 
-    <RatingBar
-        android:id="@+id/rating_bar"
-        style="@style/RatingBarSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_toRightOf="@id/user_icon"
-        android:numStars="5"
-        android:stepSize="1.0"
-        tools:rating="3.0"
-        />
+  <RatingBar
+      android:id="@+id/rating_bar"
+      style="@style/RatingBarSmall"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_toRightOf="@id/user_icon"
+      android:numStars="5"
+      android:stepSize="1.0"
+      tools:rating="3.0"
+      />
 
-    <TextView
-        android:id="@+id/comment_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rating_bar"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_toRightOf="@id/user_icon"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        tools:text="Super Gameplay !!"
-        />
+  <TextView
+      android:id="@+id/comment_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/rating_bar"
+      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_toRightOf="@id/user_icon"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textSize="11sp"
+      android:textStyle="bold"
+      tools:text="Super Gameplay !!"
+      />
 
-    <TextView
-        android:id="@+id/user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/comment_title"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_toRightOf="@id/user_icon"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="@dimen/text_size_extra_small"
-        android:textStyle="bold"
-        tools:text="Mary Pollaki"
-        />
+  <TextView
+      android:id="@+id/user_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/comment_title"
+      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_toRightOf="@id/user_icon"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textSize="@dimen/text_size_extra_small"
+      android:textStyle="bold"
+      tools:text="Mary Pollaki"
+      />
 
-    <TextView
-        android:id="@+id/added_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/user_name"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_toRightOf="@id/user_name"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="@dimen/text_size_extra_small"
-        tools:text="3 days ago"
-        />
+  <TextView
+      android:id="@+id/added_date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@id/user_name"
+      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_toRightOf="@id/user_name"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textSize="@dimen/text_size_extra_small"
+      tools:text="3 days ago"
+      />
 
-    <TextView
-        android:id="@+id/comment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/user_name"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textSize="11sp"
-        tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
-        />
+  <TextView
+      android:id="@+id/comment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@id/user_name"
+      android:layout_marginTop="8dp"
+      android:ellipsize="end"
+      android:maxLines="2"
+      android:textSize="11sp"
+      tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
+      />
 
 </RelativeLayout>

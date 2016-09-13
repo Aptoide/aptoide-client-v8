@@ -6,81 +6,81 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
-    jvmArgs '-noverify'
-    //defaultMethods true
+  jvmArgs '-noverify'
+  //defaultMethods true
 }
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
 
-    defaultConfig {
-        minSdkVersion 9
-        consumerProguardFiles "proguard-rules.txt"
+  defaultConfig {
+    minSdkVersion 9
+    consumerProguardFiles "proguard-rules.txt"
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  publishNonDefault true
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      shrinkResources false
     }
-
-    lintOptions {
-        abortOnError false
+    debug {
+      minifyEnabled false
+      shrinkResources false
     }
+  }
 
-    publishNonDefault true
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            shrinkResources false
-        }
-        debug {
-            minifyEnabled false
-            shrinkResources false
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dexOptions {
-        incremental true
-    }
+  dexOptions {
+    incremental true
+  }
 }
 
 dependencies {
 
-    //
-    // inter-projects dependencies
-    //
+  //
+  // inter-projects dependencies
+  //
 
-    debugCompile project(path: ':utils', configuration: 'debug')
-    releaseCompile project(path: ':utils', configuration: 'release')
+  debugCompile project(path: ':utils', configuration: 'debug')
+  releaseCompile project(path: ':utils', configuration: 'release')
 
-    //
-    // custom libs in folders
-    //
+  //
+  // custom libs in folders
+  //
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //
-    // from remote repos
-    //
+  //
+  // from remote repos
+  //
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
 
-    //noinspection GradleDependency
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-    // And ProGuard rules for RxJava!
-    compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-    compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
-    compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
-    compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
+  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  // And ProGuard rules for RxJava!
+  compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+  compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+  compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
 
-    compile "com.jakewharton:disklrucache:${JW_LRU_CACHE_VERSION}"
+  compile "com.jakewharton:disklrucache:${JW_LRU_CACHE_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-    // Just for lombok not to complain
-    provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

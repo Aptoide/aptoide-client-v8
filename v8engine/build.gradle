@@ -7,14 +7,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
 retrolambda {
-    jvmArgs '-noverify'
-    //defaultMethods true
+  jvmArgs '-noverify'
+  //defaultMethods true
 }
 
 crashlytics {
-    enableNdk true
-    androidNdkOut 'src/main/obj'
-    androidNdkLibsOut 'src/main/libs'
+  enableNdk true
+  androidNdkOut 'src/main/obj'
+  androidNdkLibsOut 'src/main/libs'
 }
 
 Properties localProperties = new Properties()
@@ -22,189 +22,194 @@ localProperties.load(new FileInputStream(project.file("../../aptoideProperties/l
 
 android {
 
-    // Websockets
-    useLibrary 'org.apache.http.legacy'
+  // Websockets
+  useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
 
-    defaultConfig {
-        minSdkVersion 15
-        configureFabric delegate, localProperties.FABRIC_API_KEY
-        consumerProguardFiles "proguard-rules.txt"
+  defaultConfig {
+    minSdkVersion 15
+    configureFabric delegate, localProperties.FABRIC_API_KEY
+    consumerProguardFiles "proguard-rules.txt"
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  publishNonDefault true
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      shrinkResources false
+      configureFlurry delegate, localProperties.FLURRY_KEY
+      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
+      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
+      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
+          localProperties.SIXPACK_PASSWORD
     }
 
-    lintOptions {
-        abortOnError false
+    debug {
+      minifyEnabled false
+      shrinkResources false
+      configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
+      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
+      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
+      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
+          localProperties.SIXPACK_PASSWORD
     }
+  }
 
-    publishNonDefault true
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            shrinkResources false
-            configureFlurry delegate, localProperties.FLURRY_KEY
-            configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
-            configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
-            configureSixpackCredentials delegate, localProperties.SIXPACK_USER, localProperties.SIXPACK_PASSWORD
-        }
-
-        debug {
-            minifyEnabled false
-            shrinkResources false
-            configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
-            configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
-            configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
-            configureSixpackCredentials delegate, localProperties.SIXPACK_USER, localProperties.SIXPACK_PASSWORD
-        }
+  sourceSets {
+    main {
+      res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
     }
+  }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    sourceSets {
-        main {
-            res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
-        }
-    }
-
-    dexOptions {
-        incremental true
-    }
+  dexOptions {
+    incremental true
+  }
 }
 
 void configureSixpackCredentials(androidDelegate, user, password) {
-    boolean userExists = user != null
-    boolean passwordExists = password != null
+  boolean userExists = user != null
+  boolean passwordExists = password != null
 
-    if (userExists && passwordExists) {
-        androidDelegate.buildConfigField "String", "SIXPACK_USER", "\"" + user.toString() + "\""
-        androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + password.toString() + "\""
-    }
+  if (userExists && passwordExists) {
+    androidDelegate.buildConfigField "String", "SIXPACK_USER", "\"" + user.toString() + "\""
+    androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + password.toString() + "\""
+  }
 }
 
 void configureFabric(androidDelegate, key) {
-    androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
+  androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
 }
 
 void configureFlurry(androidDelegate, key) {
-    boolean keyExists = key != null
-    androidDelegate.buildConfigField "boolean", "FLURRY_CONFIGURED", keyExists.toString()
-    androidDelegate.buildConfigField "String", "FLURRY_KEY", "\"" + key.toString() + "\""
+  boolean keyExists = key != null
+  androidDelegate.buildConfigField "boolean", "FLURRY_CONFIGURED", keyExists.toString()
+  androidDelegate.buildConfigField "String", "FLURRY_KEY", "\"" + key.toString() + "\""
 }
 
 void configureLocalytics(androidDelegate, key) {
-    boolean keyExists = key != null
-    androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
-    androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists? key : ""]
+  boolean keyExists = key != null
+  androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
+  androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists ? key : ""]
 }
 
 void configurePayPal(androidDelegate, key, environment) {
-    boolean configurationExists = (key != null && environment != null)
-    if (!configurationExists || !(environment.equals("sandbox") || environment.equals("live") || environment.equals("mock"))) {
-        throw new InvalidUserDataException("Invalid PayPal configuration provided. Provide a valid key and environment (live, mock, sandbox)")
-    }
-    androidDelegate.buildConfigField "String", "PAYPAL_KEY", "\"" + key.toString() + "\""
-    androidDelegate.buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + environment.toString() + "\""
+  boolean configurationExists = (key != null && environment != null)
+  if (!configurationExists || !(environment.equals("sandbox") || environment.equals("live") ||
+      environment.equals("mock"))) {
+    throw new InvalidUserDataException(
+        "Invalid PayPal configuration provided. Provide a valid key and environment (live, mock, sandbox)")
+  }
+  androidDelegate.buildConfigField "String", "PAYPAL_KEY", "\"" + key.toString() + "\""
+  androidDelegate.buildConfigField "String", "PAYPAL_ENVIRONMENT",
+      "\"" + environment.toString() + "\""
 }
 
 dependencies {
 
-    //
-    // inter-projects dependencies
-    //
+  //
+  // inter-projects dependencies
+  //
 
-    debugCompile project(path: ':database', configuration: 'debug')
-    releaseCompile project(path: ':database', configuration: 'release')
+  debugCompile project(path: ':database', configuration: 'debug')
+  releaseCompile project(path: ':database', configuration: 'release')
 
-    debugCompile project(path: ':dataprovider', configuration: 'debug')
-    releaseCompile project(path: ':dataprovider', configuration: 'release')
+  debugCompile project(path: ':dataprovider', configuration: 'debug')
+  releaseCompile project(path: ':dataprovider', configuration: 'release')
 
-    debugCompile project(path: ':utils', configuration: 'debug')
-    releaseCompile project(path: ':utils', configuration: 'release')
+  debugCompile project(path: ':utils', configuration: 'debug')
+  releaseCompile project(path: ':utils', configuration: 'release')
 
-    debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
-    releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
+  debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
+  releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
 
-    debugCompile project(path: ':imageloader', configuration: 'debug')
-    releaseCompile project(path: ':imageloader', configuration: 'release')
+  debugCompile project(path: ':imageloader', configuration: 'debug')
+  releaseCompile project(path: ':imageloader', configuration: 'release')
 
-    debugCompile project(path: ':downloadmanager', configuration: 'debug')
-    releaseCompile project(path: ':downloadmanager', configuration: 'release')
+  debugCompile project(path: ':downloadmanager', configuration: 'debug')
+  releaseCompile project(path: ':downloadmanager', configuration: 'release')
 
-    //
-    // custom libs in folders
-    //
+  //
+  // custom libs in folders
+  //
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //
-    // from remote repos
-    //
+  //
+  // from remote repos
+  //
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
 
-    //noinspection GradleDependency
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+  //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
-    compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
+  compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
 
-    compile "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
-    // If you want pre-written Activities and Fragments you can subclass as providers
-    compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
+  compile "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
+  // If you want pre-written Activities and Fragments you can subclass as providers
+  compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
 
-    //    Apagar
-    compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
+  //    Apagar
+  compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
-    // for leak detection
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
-    //http://stackoverflow.com/questions/36762834/getting-errors-on-building-in-android-studio-2
-    debugCompile 'com.squareup.haha:haha:2.0.3'
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+  // for leak detection
+  debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+  //http://stackoverflow.com/questions/36762834/getting-errors-on-building-in-android-studio-2
+  debugCompile 'com.squareup.haha:haha:2.0.3'
+  releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+  testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
 
-    // Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
-        transitive = true
-    }
-    /*
-    // NDK Kit
-    compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
-        transitive = true
-    }
-    */
+  // Crashlytics Kit
+  compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
+    transitive = true
+  }
+  /*
+  // NDK Kit
+  compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
+      transitive = true
+  }
+  */
 
-    // paypal SDK
-    compile ("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}"){
-        exclude group: 'io.card'
-    }
+  // paypal SDK
+  compile("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
+    exclude group: 'io.card'
+  }
 
-    // Localytics sdk
-    compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
+  // Localytics sdk
+  compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
 
-    // Flurry Android sdk
-    compile "com.flurry.android:analytics:${FLURRY_VERSION}"
+  // Flurry Android sdk
+  compile "com.flurry.android:analytics:${FLURRY_VERSION}"
 }

@@ -13,106 +13,106 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/separator_horizontal"/>
+  <include layout="@layout/separator_horizontal"/>
+
+  <LinearLayout
+      android:id="@+id/store_layout"
+      android:layout_width="match_parent"
+      android:layout_height="55.6dp"
+      android:layout_gravity="center_vertical"
+      android:orientation="horizontal"
+      android:paddingBottom="10.3dp"
+      android:paddingEnd="31dp"
+      android:paddingRight="31dp"
+      android:paddingTop="12dp"
+      android:weightSum="3"
+      >
 
     <LinearLayout
-        android:id="@+id/store_layout"
-        android:layout_width="match_parent"
-        android:layout_height="55.6dp"
-        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="10.3dp"
-        android:paddingEnd="31dp"
-        android:paddingRight="31dp"
-        android:paddingTop="12dp"
-        android:weightSum="3"
         >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            >
+      <!--
+      <com.makeramen.roundedimageview.RoundedImageView
+          android:id="@+id/store_avatar"
+          android:layout_width="@dimen/appview_store_icon_size"
+          android:layout_height="@dimen/appview_store_icon_size"
+          android:layout_marginLeft="18.4dp"
+          android:layout_marginStart="18.4dp"
+          android:scaleType="centerInside"
+          app:riv_corner_radius="15dp"
+          tools:src="@drawable/ic_avatar_apps"
+          />
+      -->
 
-            <!--
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/store_avatar"
-                android:layout_width="@dimen/appview_store_icon_size"
-                android:layout_height="@dimen/appview_store_icon_size"
-                android:layout_marginLeft="18.4dp"
-                android:layout_marginStart="18.4dp"
-                android:scaleType="centerInside"
-                app:riv_corner_radius="15dp"
-                tools:src="@drawable/ic_avatar_apps"
-                />
-            -->
+      <ImageView
+          android:id="@+id/store_avatar"
+          android:layout_width="@dimen/appview_store_icon_size"
+          android:layout_height="@dimen/appview_store_icon_size"
+          android:layout_marginLeft="18.4dp"
+          android:layout_marginStart="18.4dp"
+          android:scaleType="centerInside"
+          tools:src="@drawable/ic_avatar_apps"
+          />
 
-            <ImageView
-                android:id="@+id/store_avatar"
-                android:layout_width="@dimen/appview_store_icon_size"
-                android:layout_height="@dimen/appview_store_icon_size"
-                android:layout_marginLeft="18.4dp"
-                android:layout_marginStart="18.4dp"
-                android:scaleType="centerInside"
-                tools:src="@drawable/ic_avatar_apps"
-                />
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="11.3dp"
+          android:layout_marginStart="11.3dp"
+          android:gravity="center_vertical"
+          android:orientation="vertical"
+          >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="11.3dp"
-                android:layout_marginStart="11.3dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                >
-
-                <TextView
-                    android:id="@+id/store_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:maxWidth="170dp"
-                    android:textSize="13.4sp"
-                    tools:text="Animiraistudio Store"
-                    />
-
-                <!--
-                    android:drawableLeft="@drawable/ic_user_icon_black"
-                    -->
-                <TextView
-                    android:id="@+id/store_number_users"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="2dp"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:textSize="9sp"
-                    tools:text="2534    Followers"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/follow_store_btn"
-            android:layout_width="0dp"
-            android:layout_height="29.7dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_border_orange3"
-            android:textAllCaps="true"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
-            android:textColor="@color/app_view_follow_orange"
-            android:textSize="8.4sp"
-            tools:text="@string/appview_follow_store_button_text"
+        <TextView
+            android:id="@+id/store_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:maxWidth="170dp"
+            android:textSize="13.4sp"
+            tools:text="Animiraistudio Store"
             />
+
+        <!--
+            android:drawableLeft="@drawable/ic_user_icon_black"
+            -->
+        <TextView
+            android:id="@+id/store_number_users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="2dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textSize="9sp"
+            tools:text="2534    Followers"
+            />
+
+      </LinearLayout>
 
     </LinearLayout>
 
-    <include layout="@layout/separator_horizontal"/>
+    <Button
+        android:id="@+id/follow_store_btn"
+        android:layout_width="0dp"
+        android:layout_height="29.7dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_border_orange3"
+        android:textAllCaps="true"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
+        android:textColor="@color/app_view_follow_orange"
+        android:textSize="8.4sp"
+        tools:text="@string/appview_follow_store_button_text"
+        />
+
+  </LinearLayout>
+
+  <include layout="@layout/separator_horizontal"/>
 
 </LinearLayout>

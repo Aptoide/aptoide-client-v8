@@ -14,35 +14,34 @@ import lombok.Data;
  * <li>{@link #userAvatarRepo}</li>
  * <li>{@link #matureSwitch}</li>
  */
-@Data
-public class UserInfo {
+@Data public class UserInfo {
 
-	/**
-	 * User name it's usually the email address. It has to be unique
-	 */
-	String userName;
-	/**
-	 * This is the name shown on comments to identify the user.
-	 */
-	String nickName;
-	/**
-	 * This identify the client and it's used on web install
-	 */
-	String queueName;
-	/**
-	 * Link to user avatar
-	 */
-	String userAvatar;
-	/**
-	 * Name of the user's repo
-	 */
-	String userRepo;
-	/**
-	 * Ling to user repo's avatar
-	 */
-	String userAvatarRepo;
-	/**
-	 * define the state of mature switch
-	 */
-	boolean matureSwitch;
+  /**
+   * User name it's usually the email address. It has to be unique
+   */
+  String userName;
+  /**
+   * This is the name shown on comments to identify the user.
+   */
+  String nickName;
+  /**
+   * This identify the client and it's used on web install
+   */
+  String queueName;
+  /**
+   * Link to user avatar
+   */
+  String userAvatar;
+  /**
+   * Name of the user's repo
+   */
+  String userRepo;
+  /**
+   * Ling to user repo's avatar
+   */
+  String userAvatarRepo;
+  /**
+   * define the state of mature switch
+   */
+  boolean matureSwitch;
 }

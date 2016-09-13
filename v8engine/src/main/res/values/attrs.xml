@@ -1,98 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BezelImageView">
-        <attr name="maskDrawable" format="reference"/>
-        <attr name="borderDrawable" format="reference"/>
-        <attr name="desaturateOnPress" format="boolean"/>
-    </declare-styleable>
+  <declare-styleable name="BezelImageView">
+    <attr name="maskDrawable" format="reference"/>
+    <attr name="borderDrawable" format="reference"/>
+    <attr name="desaturateOnPress" format="boolean"/>
+  </declare-styleable>
 
-    <attr name="customButton" format="reference"/>
-    <attr name="customButtonWhite" format="reference"/>
+  <attr name="customButton" format="reference"/>
+  <attr name="customButtonWhite" format="reference"/>
 
-    <attr name="toolbarTheme" format="reference"/>
+  <attr name="toolbarTheme" format="reference"/>
 
-    <attr name="backgroundMain" format="reference|color"/>
-    <attr name="backgroundSecondary" format="color|reference"/>
-    <attr name="backgroundInverse" format="color|reference"/>
-    <attr name="backgroundTabs" format="color|reference"/>
-    <attr name="backgroundWidgetSecondary" format="color|reference"/>
-    <attr name="tertiaryTextColor" format="color|reference"/>
-    <attr name="inverseTextColor" format="color|reference"/>
-    <attr name="separatorColor" format="color|reference"/>
-    <attr name="appManualReviewedMessageBackground" format="reference"/>
+  <attr name="backgroundMain" format="reference|color"/>
+  <attr name="backgroundSecondary" format="color|reference"/>
+  <attr name="backgroundInverse" format="color|reference"/>
+  <attr name="backgroundTabs" format="color|reference"/>
+  <attr name="backgroundWidgetSecondary" format="color|reference"/>
+  <attr name="tertiaryTextColor" format="color|reference"/>
+  <attr name="inverseTextColor" format="color|reference"/>
+  <attr name="separatorColor" format="color|reference"/>
+  <attr name="appManualReviewedMessageBackground" format="reference"/>
 
-    <attr name="sectionListView.sectionTextViewPadding" format="dimension"/>
-    <attr name="sectionListView.sectionTextViewTextColor" format="color"/>
-    <attr name="sectionListView.sectionTextViewTextSize" format="dimension"/>
+  <attr name="sectionListView.sectionTextViewPadding" format="dimension"/>
+  <attr name="sectionListView.sectionTextViewTextColor" format="color"/>
+  <attr name="sectionListView.sectionTextViewTextSize" format="dimension"/>
 
-    <attr name="sectionListView.sectionItemPadding" format="dimension"/>
-    <attr name="sectionListView.sectionItemBackground" format="color|reference"/>
+  <attr name="sectionListView.sectionItemPadding" format="dimension"/>
+  <attr name="sectionListView.sectionItemBackground" format="color|reference"/>
 
-    <attr name="sectionListView.listTextViewPadding" format="dimension"/>
-    <attr name="sectionListView.listTextViewTextColor" format="color"/>
-    <attr name="sectionListView.listTextViewTextSize" format="dimension"/>
+  <attr name="sectionListView.listTextViewPadding" format="dimension"/>
+  <attr name="sectionListView.listTextViewTextColor" format="color"/>
+  <attr name="sectionListView.listTextViewTextSize" format="dimension"/>
 
-    <attr name="sectionListView.listItemPadding" format="dimension"/>
-    <attr name="sectionListView.listItemBackground" format="color|reference"/>
+  <attr name="sectionListView.listItemPadding" format="dimension"/>
+  <attr name="sectionListView.listItemBackground" format="color|reference"/>
 
-    <attr name="icMyAccountDrawable" format="reference"/>
-    <attr name="icSearchDrawable" format="reference"/>
-    <attr name="icRollbackDrawable" format="reference"/>
-    <attr name="icScheduledDrawable" format="reference"/>
-    <attr name="icExcludedUpdatesDrawable" format="reference"/>
-    <attr name="icSettingsDrawable" format="reference"/>
-    <attr name="icSendFeedbackDrawable" format="reference"/>
+  <attr name="icMyAccountDrawable" format="reference"/>
+  <attr name="icSearchDrawable" format="reference"/>
+  <attr name="icRollbackDrawable" format="reference"/>
+  <attr name="icScheduledDrawable" format="reference"/>
+  <attr name="icExcludedUpdatesDrawable" format="reference"/>
+  <attr name="icSettingsDrawable" format="reference"/>
+  <attr name="icSendFeedbackDrawable" format="reference"/>
 
-    <attr name="backgroundHomeSeparator" format="color"/>
+  <attr name="backgroundHomeSeparator" format="color"/>
 
-    <attr name="backgroundCard" format="reference"/>
-    <attr name="appviewRatingCardBarckground" format="reference"/>
-    <attr name="backgroundCardColor" format="color|reference"/>
+  <attr name="backgroundCard" format="reference"/>
+  <attr name="appviewRatingCardBarckground" format="reference"/>
+  <attr name="backgroundCardColor" format="color|reference"/>
 
-    <attr name="backgroundAddStoreButton" format="color"/>
-    <attr name="backgroundHeaderLoggedIn" format="reference"/>
-    <attr name="customRowForeground" format="reference"/>
-    <attr name="customRowForegroundHomeLayout" format="reference"/>
-    <attr name="icAboutDrawable" format="reference"/>
-    <attr name="icAcceptDrawable" format="reference"/>
-    <attr name="icAddStoreDrawable" format="reference"/>
-    <attr name="icCancelDrawable" format="reference"/>
-    <attr name="icCollapseDrawable" format="reference"/>
-    <attr name="icDialogDrawable" format="reference"/>
-    <attr name="icDontLikeDrawable" format="reference"/>
-    <attr name="icDownloadsDrawable" format="reference"/>
-    <attr name="icEmailDrawable" format="reference"/>
-    <attr name="icErrorDrawable" format="reference"/>
-    <attr name="icExpandDrawable" format="reference"/>
-    <attr name="icLikeDrawable" format="reference"/>
-    <attr name="icNextItemDrawable" format="reference"/>
-    <attr name="icPlayDrawable" format="reference"/>
-    <attr name="icRatingBadDrawable" format="reference"/>
-    <attr name="icRatingFloatDrawable" format="reference"/>
-    <attr name="icRatingGoodDrawable" format="reference"/>
-    <attr name="icRevertDrawable" format="reference"/>
-    <attr name="icStoreInfoDrawable" format="reference"/>
-    <attr name="icTimelineAccessSecure" format="reference"/>
-    <attr name="icTimelineDrawable" format="reference"/>
-    <attr name="icUninstallDrawable" format="reference"/>
-    <attr name="icUpdateDrawable" format="reference"/>
-    <attr name="icViewMoreComments" format="reference"/>
-    <attr name="icWebSiteDrawable" format="reference"/>
-    <attr name="icWizardLeftArrowDrawable" format="reference"/>
-    <attr name="icWizardRightArrowDrawable" format="reference"/>
-    <attr name="icAppviewsPencil" format="reference"/>
-    <attr name="navigationDrawerColor" format="color"/>
-    <attr name="timelineButtonsBackgroundColor" format="reference"/>
-    <attr name="timelinePostBackground" format="reference"/>
-    <attr name="timelineSendDrawable" format="reference"/>
-    <attr name="homeLabelbackground" format="reference"/>
-    <attr name="headerSeparatorButton" format="reference"/>
-    <attr name="customColor" format="color"/>
+  <attr name="backgroundAddStoreButton" format="color"/>
+  <attr name="backgroundHeaderLoggedIn" format="reference"/>
+  <attr name="customRowForeground" format="reference"/>
+  <attr name="customRowForegroundHomeLayout" format="reference"/>
+  <attr name="icAboutDrawable" format="reference"/>
+  <attr name="icAcceptDrawable" format="reference"/>
+  <attr name="icAddStoreDrawable" format="reference"/>
+  <attr name="icCancelDrawable" format="reference"/>
+  <attr name="icCollapseDrawable" format="reference"/>
+  <attr name="icDialogDrawable" format="reference"/>
+  <attr name="icDontLikeDrawable" format="reference"/>
+  <attr name="icDownloadsDrawable" format="reference"/>
+  <attr name="icEmailDrawable" format="reference"/>
+  <attr name="icErrorDrawable" format="reference"/>
+  <attr name="icExpandDrawable" format="reference"/>
+  <attr name="icLikeDrawable" format="reference"/>
+  <attr name="icNextItemDrawable" format="reference"/>
+  <attr name="icPlayDrawable" format="reference"/>
+  <attr name="icRatingBadDrawable" format="reference"/>
+  <attr name="icRatingFloatDrawable" format="reference"/>
+  <attr name="icRatingGoodDrawable" format="reference"/>
+  <attr name="icRevertDrawable" format="reference"/>
+  <attr name="icStoreInfoDrawable" format="reference"/>
+  <attr name="icTimelineAccessSecure" format="reference"/>
+  <attr name="icTimelineDrawable" format="reference"/>
+  <attr name="icUninstallDrawable" format="reference"/>
+  <attr name="icUpdateDrawable" format="reference"/>
+  <attr name="icViewMoreComments" format="reference"/>
+  <attr name="icWebSiteDrawable" format="reference"/>
+  <attr name="icWizardLeftArrowDrawable" format="reference"/>
+  <attr name="icWizardRightArrowDrawable" format="reference"/>
+  <attr name="icAppviewsPencil" format="reference"/>
+  <attr name="navigationDrawerColor" format="color"/>
+  <attr name="timelineButtonsBackgroundColor" format="reference"/>
+  <attr name="timelinePostBackground" format="reference"/>
+  <attr name="timelineSendDrawable" format="reference"/>
+  <attr name="homeLabelbackground" format="reference"/>
+  <attr name="headerSeparatorButton" format="reference"/>
+  <attr name="customColor" format="color"/>
 
-    <attr name="gridItemRatingBar" format="reference"/>
-    <attr name="titleLabelStyle" format="reference"/>
-    <attr name="storesTextColor" format="reference|color"/>
-    <attr name="appviewRatingCardTextColor" format="reference|color"/>
+  <attr name="gridItemRatingBar" format="reference"/>
+  <attr name="titleLabelStyle" format="reference"/>
+  <attr name="storesTextColor" format="reference|color"/>
+  <attr name="appviewRatingCardTextColor" format="reference|color"/>
 
-    <attr name="alertDialog" format="reference"/>
+  <attr name="alertDialog" format="reference"/>
 </resources>

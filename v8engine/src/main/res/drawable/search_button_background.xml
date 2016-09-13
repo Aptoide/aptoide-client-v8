@@ -1,23 +1,23 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/aptoide_orange" android:state_pressed="true">
-        <shape>
-            <solid
-                android:color="@color/aptoide_orange"/>
-            <stroke
-                android:width="1dp"
-                android:color="@color/aptoide_orange"/>
-            <corners
-                android:radius="45dp"/>
-        </shape>
-    </item>
-    <item android:color="@color/aptoide_orange">
-        <shape>
-            <solid android:color="@color/aptoide_orange"/>
-            <stroke
-                android:width="1dp"
-                android:color="@color/aptoide_orange"/>
-            <corners
-                android:radius="45dp"/>
-        </shape>
-    </item>
+  <item android:color="@color/aptoide_orange" android:state_pressed="true">
+    <shape>
+      <solid
+          android:color="@color/aptoide_orange"/>
+      <stroke
+          android:width="1dp"
+          android:color="@color/aptoide_orange"/>
+      <corners
+          android:radius="45dp"/>
+    </shape>
+  </item>
+  <item android:color="@color/aptoide_orange">
+    <shape>
+      <solid android:color="@color/aptoide_orange"/>
+      <stroke
+          android:width="1dp"
+          android:color="@color/aptoide_orange"/>
+      <corners
+          android:radius="45dp"/>
+    </shape>
+  </item>
 </selector>

@@ -11,87 +11,89 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:layout_marginLeft="60dp">
+    android:layout_marginLeft="60dp"
+    >
 
-    <!--
-        android:layout_width="120dp"
-    -->
-    <TextView
-        android:id="@+id/partial_social_timeline_thumbnail_title"
-        android:layout_width="match_parent"
-        android:textColor="@color/appstimeline_grey"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="12dp"
-        android:layout_alignParentTop="true"
-        android:ellipsize="end"
-        android:maxLines="3"
-        tools:text="Best backup apps: save all your Android's innards fkgfkj fkjgfjfgkfj fgkjgfj"
-        />
-    <ImageView
-        android:id="@+id/partial_social_timeline_thumbnail_image"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="16dp"
-        android:layout_below="@id/partial_social_timeline_thumbnail_title"
-        android:scaleType="centerCrop"
-        tools:ignore="contentDescription"
-        tools:src="@drawable/background_card_dark"
-        />
+  <!--
+      android:layout_width="120dp"
+  -->
+  <TextView
+      android:id="@+id/partial_social_timeline_thumbnail_title"
+      android:layout_width="match_parent"
+      android:textColor="@color/appstimeline_grey"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginTop="12dp"
+      android:layout_alignParentTop="true"
+      android:ellipsize="end"
+      android:maxLines="3"
+      tools:text="Best backup apps: save all your Android's innards fkgfkj fkjgfjfgkfj fgkjgfj"
+      />
+  <ImageView
+      android:id="@+id/partial_social_timeline_thumbnail_image"
+      android:layout_width="match_parent"
+      android:layout_height="72dp"
+      android:layout_centerVertical="true"
+      android:layout_marginBottom="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="16dp"
+      android:layout_below="@id/partial_social_timeline_thumbnail_title"
+      android:scaleType="centerCrop"
+      tools:ignore="contentDescription"
+      tools:src="@drawable/background_card_dark"
+      />
 
-    <!--
-        android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
-        android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
-        android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
-    -->
-    <TextView
-        android:id="@+id/partial_social_timeline_thumbnail_related_to"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/partial_social_timeline_thumbnail_image"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="12dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        tools:text="Related to APPz"/>
+  <!--
+      android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
+      android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
+      android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
+  -->
+  <TextView
+      android:id="@+id/partial_social_timeline_thumbnail_related_to"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/partial_social_timeline_thumbnail_image"
+      android:layout_marginBottom="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginTop="12dp"
+      android:maxLines="1"
+      android:ellipsize="end"
+      tools:text="Related to APPz"
+      />
 
-    <View
-        android:id="@+id/partial_social_timeline_thumbnail_divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:layout_below="@id/partial_social_timeline_thumbnail_related_to"
-        android:layout_marginEnd="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginStart="12dp"
-        android:background="@color/timeline_separator"
-        android:visibility="gone"
-        />
+  <View
+      android:id="@+id/partial_social_timeline_thumbnail_divider"
+      android:layout_width="match_parent"
+      android:layout_height="0.7dp"
+      android:layout_below="@id/partial_social_timeline_thumbnail_related_to"
+      android:layout_marginEnd="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="12dp"
+      android:layout_marginStart="12dp"
+      android:background="@color/timeline_separator"
+      android:visibility="gone"
+      />
 
-    <Button
-        android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
-        style="@style/Widget.Aptoide.Card.Button"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@id/partial_social_timeline_thumbnail_divider"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="96dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        tools:text="Get app Game of War"
-        tools:visibility="visible"
-        />
+  <Button
+      android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
+      style="@style/Widget.Aptoide.Card.Button"
+      android:layout_width="match_parent"
+      android:layout_height="30dp"
+      android:layout_below="@id/partial_social_timeline_thumbnail_divider"
+      android:layout_marginBottom="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginLeft="96dp"
+      android:layout_marginRight="16dp"
+      android:layout_marginStart="96dp"
+      android:layout_marginTop="12dp"
+      android:gravity="center_vertical"
+      android:visibility="gone"
+      tools:text="Get app Game of War"
+      tools:visibility="visible"
+      />
 </RelativeLayout>
 
 

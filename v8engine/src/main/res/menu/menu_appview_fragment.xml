@@ -5,30 +5,30 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/ic_search"
-        android:orderInCategory="1"
-        android:title="@string/search"
-        app:actionLayout="@layout/searchview_layout"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always|collapseActionView"/>
+  <item
+      android:id="@+id/action_search"
+      android:icon="@drawable/ic_search"
+      android:orderInCategory="1"
+      android:title="@string/search"
+      app:actionLayout="@layout/searchview_layout"
+      app:actionViewClass="android.support.v7.widget.SearchView"
+      app:showAsAction="always|collapseActionView"/>
 
-    <item
-        android:id="@+id/menu_share"
-        android:title="@string/share"
-        app:showAsAction="never"/>
+  <item
+      android:id="@+id/menu_share"
+      android:title="@string/share"
+      app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/menu_schedule"
-        android:title="@string/schDwnBtn"
-        app:showAsAction="never"/>
+  <item
+      android:id="@+id/menu_schedule"
+      android:title="@string/schDwnBtn"
+      app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/menu_uninstall"
-        android:title="@string/uninstall"
-        android:visible="false"
-        app:showAsAction="never"/>
+  <item
+      android:id="@+id/menu_uninstall"
+      android:title="@string/uninstall"
+      android:visible="false"
+      app:showAsAction="never"/>
 </menu>

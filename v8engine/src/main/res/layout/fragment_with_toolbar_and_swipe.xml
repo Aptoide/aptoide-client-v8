@@ -11,78 +11,79 @@
     android:layout_height="match_parent"
     >
 
-    <include
-        layout="@layout/partial_view_incl_no_network"
-        tools:visibility="gone"
-        />
+  <include
+      layout="@layout/partial_view_incl_no_network"
+      tools:visibility="gone"
+      />
+
+  <include
+      layout="@layout/partial_view_error"
+      tools:visibility="gone"
+      />
+
+
+  <!-- is this necessary ?? -->
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?android:actionBarSize"
+      >
 
     <include
-        layout="@layout/partial_view_error"
-        tools:visibility="gone"
-        />
-
-
-    <!-- is this necessary ?? -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?android:actionBarSize"
-        >
-
-        <include
-            layout="@layout/partial_view_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/empty_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?android:actionBarSize"
-        android:padding="@dimen/label_padding"
-        android:textAlignment="center"
-        android:textSize="16sp"
+        layout="@layout/partial_view_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone"
-        tools:text="@string/no_excluded_updates_msg"
         tools:visibility="visible"
         />
+  </RelativeLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+  <TextView
+      android:id="@+id/empty_data"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?android:actionBarSize"
+      android:padding="@dimen/label_padding"
+      android:textAlignment="center"
+      android:textSize="16sp"
+      android:visibility="gone"
+      tools:text="@string/no_excluded_updates_msg"
+      tools:visibility="visible"
+      />
+
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?android:actionBarSize"
+      android:visibility="visible"
+      tools:visibility="gone"
+      >
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?android:actionBarSize"
-        android:visibility="visible"
-        tools:visibility="gone"
-        >
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/recycler_margin"
+        android:paddingRight="@dimen/recycler_margin"
+        />
 
-        <android.support.v7.widget.RecyclerView
+  </android.support.v4.widget.SwipeRefreshLayout>
 
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingLeft="@dimen/recycler_margin"
-            android:paddingRight="@dimen/recycler_margin"
-            />
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/app_bar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="?android:actionBarSize"
+      >
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        />
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            />
-
-    </android.support.design.widget.AppBarLayout>
+  </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,9 +5,9 @@
   ~ Modified by SithEngineer on 17/06/2016.
   -->
 <resources>
-    <!--
-        <item name="design_layout_snackbar_include" tools:override="true" type="layout">
-            @layout/custom_snackbar
-        </item>
-    -->
+  <!--
+      <item name="design_layout_snackbar_include" tools:override="true" type="layout">
+          @layout/custom_snackbar
+      </item>
+  -->
 </resources>

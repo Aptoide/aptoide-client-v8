@@ -9,27 +9,29 @@
     android:layout_height="match_parent"
     >
 
-    <include layout="@layout/partial_view_incl_no_network"/>
+  <include layout="@layout/partial_view_incl_no_network"/>
 
-    <include layout="@layout/partial_view_error"/>
+  <include layout="@layout/partial_view_error"/>
 
-    <include layout="@layout/partial_view_progress_bar"/>
+  <include layout="@layout/partial_view_progress_bar"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <android.support.v7.widget.RecyclerView
-
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingLeft="@dimen/recycler_margin"
-            android:paddingRight="@dimen/recycler_margin"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/recycler_margin"
+        android:paddingRight="@dimen/recycler_margin"
+        />
+  </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
 

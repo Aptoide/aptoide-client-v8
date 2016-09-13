@@ -13,80 +13,80 @@
     android:padding="24dp"
     >
 
-    <TextView
-        android:id="@+id/title"
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="20dp"
+      android:gravity="left|center_vertical"
+      android:textColor="?colorPrimary"
+      android:textSize="@dimen/text_size_large"
+      android:visibility="gone"
+      tools:text="Boom Beach"
+      />
+
+  <include
+      layout="@layout/separator_horizontal"
+      android:visibility="gone"
+      />
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/input_layout_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="6dp"
+      >
+
+    <EditText
+        android:id="@+id/input_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:gravity="left|center_vertical"
+        android:ellipsize="none"
+        android:gravity="top|left|start"
+        android:hint="@string/write_your_comment"
+        android:lines="4"
+        android:textAlignment="textStart"
+        android:textColorHint="@color/app_view_gray"
+        android:textSize="@dimen/text_size_medium"
+        />
+
+  </android.support.design.widget.TextInputLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <Button
+        android:id="@+id/comment_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:padding="6dp"
+        android:text="@string/comment"
+        android:textAllCaps="true"
         android:textColor="?colorPrimary"
-        android:textSize="@dimen/text_size_large"
-        android:visibility="gone"
-        tools:text="Boom Beach"
+        android:textSize="@dimen/text_size_medium"
         />
 
-    <include
-        layout="@layout/separator_horizontal"
-        android:visibility="gone"
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_toLeftOf="@id/comment_button"
+        android:layout_toStartOf="@id/comment_button"
+        android:background="@null"
+        android:padding="6dp"
+        android:text="@string/cancel"
+        android:textAllCaps="true"
+        android:textColor="@color/app_view_gray"
+        android:textSize="@dimen/text_size_medium"
         />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        >
-
-        <EditText
-            android:id="@+id/input_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="none"
-            android:gravity="top|left|start"
-            android:hint="@string/write_your_comment"
-            android:lines="4"
-            android:textAlignment="textStart"
-            android:textColorHint="@color/app_view_gray"
-            android:textSize="@dimen/text_size_medium"
-            />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <Button
-            android:id="@+id/comment_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@null"
-            android:padding="6dp"
-            android:text="@string/comment"
-            android:textAllCaps="true"
-            android:textColor="?colorPrimary"
-            android:textSize="@dimen/text_size_medium"
-            />
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_toLeftOf="@id/comment_button"
-            android:layout_toStartOf="@id/comment_button"
-            android:background="@null"
-            android:padding="6dp"
-            android:text="@string/cancel"
-            android:textAllCaps="true"
-            android:textColor="@color/app_view_gray"
-            android:textSize="@dimen/text_size_medium"
-            />
-    </RelativeLayout>
+  </RelativeLayout>
 
 </LinearLayout>
 

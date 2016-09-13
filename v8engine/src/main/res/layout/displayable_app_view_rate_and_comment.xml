@@ -14,223 +14,20 @@
     android:paddingTop="15dp"
     >
 
-    <RelativeLayout
-        android:id="@+id/rating_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="11dp"
-        android:layout_marginStart="11dp"
-        android:orientation="vertical"
-        >
-
-        <Button
-            android:id="@+id/rate_this_button"
-            android:layout_width="127.7dp"
-            android:layout_height="39.3dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/button_border_silver"
-            android:gravity="center"
-            android:text="@string/appview_rate_this_app"
-            android:textAllCaps="true"
-            android:textColor="@color/silver"
-            android:textSize="@dimen/text_size_small"
-            android:visibility="invisible"
-            />
-
-        <RelativeLayout
-            android:layout_width="113dp"
-            android:layout_height="113dp"
-            android:layout_above="@id/rate_this_button"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/layer_2"
-            >
-
-            <LinearLayout
-                android:id="@+id/users_icon_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                >
-
-                <ImageView
-                    android:id="@+id/users_icon"
-                    android:layout_width="7.3dp"
-                    android:layout_height="8.7dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_user_icon"
-                    />
-
-                <TextView
-                    android:id="@+id/users_voted"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center_vertical|left|start"
-                    android:text="@string/zero"
-                    android:textColor="@color/white"
-                    android:textSize="10.6sp"
-                    />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/rating_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/users_icon_layout"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:lineSpacingMultiplier="0.9"
-                android:maxLines="1"
-                android:text="@string/zero"
-                android:textColor="@color/white"
-                android:textSize="42sp"
-                />
-
-            <RatingBar
-                android:id="@+id/rating_bar"
-                style="@style/RatingBarSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rating_value"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="6dp"
-                android:numStars="5"
-                android:rating="0"
-                android:stepSize="0.5"
-                />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/comments_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="11dp"
-        android:layout_toEndOf="@id/rating_layout"
-        android:layout_toRightOf="@id/rating_layout"
-        android:visibility="gone"
-        tools:visibility="visible"
-        >
-
-        <Button
-            android:id="@+id/read_all_button"
-            android:layout_width="match_parent"
-            android:layout_height="39.3dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button_border_silver"
-            android:text="@string/appview_read_all"
-            android:textAllCaps="true"
-            android:textColor="@color/silver"
-            android:textSize="@dimen/text_size_small"
-            />
-
-        <TextView
-            android:id="@+id/top_comments_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/top_comments"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="?colorPrimary"
-            android:textSize="@dimen/text_size_large"
-            />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/read_all_button"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/top_comments_title"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="4dp">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/top_comments_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/top_comments_progress"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="113dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/rating_layout"
-        android:layout_toRightOf="@id/rating_layout"
-        android:indeterminate="true"
-        android:padding="8dp"
-        android:visibility="visible"
-        />
-
-    <RelativeLayout
-        android:id="@+id/empty_reviews_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@id/rating_layout"
-        android:layout_toRightOf="@id/rating_layout"
-        android:visibility="gone"
-        tools:visibility="gone"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="33dp"
-            android:layout_marginTop="13dp"
-            android:orientation="vertical"
-            >
-
-            <ImageView
-                android:id="@+id/empty_review_icon"
-                android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:src="@drawable/vector_smart_object"
-                />
-
-            <TextView
-                android:id="@+id/empty_review_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top|center_horizontal"
-                android:lines="2"
-                android:paddingTop="10dp"
-                android:text="@string/rate_this_app"
-                android:textColor="@color/app_view_gray"
-                android:textSize="@dimen/text_size_medium_large"
-                />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+  <RelativeLayout
+      android:id="@+id/rating_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_marginLeft="11dp"
+      android:layout_marginStart="11dp"
+      android:orientation="vertical"
+      >
 
     <Button
-        android:id="@+id/rate_this_button2"
-        android:layout_width="match_parent"
+        android:id="@+id/rate_this_button"
+        android:layout_width="127.7dp"
         android:layout_height="39.3dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -240,7 +37,211 @@
         android:textAllCaps="true"
         android:textColor="@color/silver"
         android:textSize="@dimen/text_size_small"
-        tools:visibility="gone"
+        android:visibility="invisible"
         />
+
+    <RelativeLayout
+        android:layout_width="113dp"
+        android:layout_height="113dp"
+        android:layout_above="@id/rate_this_button"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/layer_2"
+        >
+
+      <LinearLayout
+          android:id="@+id/users_icon_layout"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="16dp"
+          android:orientation="horizontal"
+          >
+
+        <ImageView
+            android:id="@+id/users_icon"
+            android:layout_width="7.3dp"
+            android:layout_height="8.7dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_user_icon"
+            />
+
+        <TextView
+            android:id="@+id/users_voted"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical|left|start"
+            android:text="@string/zero"
+            android:textColor="@color/white"
+            android:textSize="10.6sp"
+            />
+      </LinearLayout>
+
+      <TextView
+          android:id="@+id/rating_value"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/users_icon_layout"
+          android:gravity="center"
+          android:includeFontPadding="false"
+          android:lineSpacingMultiplier="0.9"
+          android:maxLines="1"
+          android:text="@string/zero"
+          android:textColor="@color/white"
+          android:textSize="42sp"
+          />
+
+      <RatingBar
+          android:id="@+id/rating_bar"
+          style="@style/RatingBarSmall"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/rating_value"
+          android:layout_centerInParent="true"
+          android:layout_marginTop="6dp"
+          android:numStars="5"
+          android:rating="0"
+          android:stepSize="0.5"
+          />
+
+    </RelativeLayout>
+
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:id="@+id/comments_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="11dp"
+      android:layout_toEndOf="@id/rating_layout"
+      android:layout_toRightOf="@id/rating_layout"
+      android:visibility="gone"
+      tools:visibility="visible"
+      >
+
+    <Button
+        android:id="@+id/read_all_button"
+        android:layout_width="match_parent"
+        android:layout_height="39.3dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_border_silver"
+        android:text="@string/appview_read_all"
+        android:textAllCaps="true"
+        android:textColor="@color/silver"
+        android:textSize="@dimen/text_size_small"
+        />
+
+    <TextView
+        android:id="@+id/top_comments_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/top_comments"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="?colorPrimary"
+        android:textSize="@dimen/text_size_large"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/read_all_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/top_comments_title"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="4dp"
+        >
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/top_comments_list"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+    </RelativeLayout>
+
+  </RelativeLayout>
+
+  <android.support.v4.widget.ContentLoadingProgressBar
+      android:id="@+id/top_comments_progress"
+      style="@style/Widget.AppCompat.ProgressBar"
+      android:layout_width="match_parent"
+      android:layout_height="113dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_toEndOf="@id/rating_layout"
+      android:layout_toRightOf="@id/rating_layout"
+      android:indeterminate="true"
+      android:padding="8dp"
+      android:visibility="visible"
+      />
+
+  <RelativeLayout
+      android:id="@+id/empty_reviews_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="10dp"
+      android:layout_toEndOf="@id/rating_layout"
+      android:layout_toRightOf="@id/rating_layout"
+      android:visibility="gone"
+      tools:visibility="gone"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="33dp"
+        android:layout_marginTop="13dp"
+        android:orientation="vertical"
+        >
+
+      <ImageView
+          android:id="@+id/empty_review_icon"
+          android:layout_width="match_parent"
+          android:layout_height="41dp"
+          android:src="@drawable/vector_smart_object"
+          />
+
+      <TextView
+          android:id="@+id/empty_review_text"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:gravity="top|center_horizontal"
+          android:lines="2"
+          android:paddingTop="10dp"
+          android:text="@string/rate_this_app"
+          android:textColor="@color/app_view_gray"
+          android:textSize="@dimen/text_size_medium_large"
+          />
+
+    </LinearLayout>
+
+  </RelativeLayout>
+
+  <Button
+      android:id="@+id/rate_this_button2"
+      android:layout_width="match_parent"
+      android:layout_height="39.3dp"
+      android:layout_alignParentBottom="true"
+      android:layout_centerHorizontal="true"
+      android:background="@drawable/button_border_silver"
+      android:gravity="center"
+      android:text="@string/appview_rate_this_app"
+      android:textAllCaps="true"
+      android:textColor="@color/silver"
+      android:textSize="@dimen/text_size_small"
+      tools:visibility="gone"
+      />
 
 </RelativeLayout>

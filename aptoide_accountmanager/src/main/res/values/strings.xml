@@ -1,75 +1,75 @@
 <resources>
-    <string name="app_name">AccountManager</string>
-    <string name="one_account_allowed">Only one account allowed</string>
-    <string name="or">or</string>
-    <string name="username">Email</string>
-    <string name="password">Password</string>
-    <string name="link_device_webinstall">Link account with Webinstall</string>
-    <string name="register">Sign Up</string>
-    <string name="setcredentials">Login</string>
-    <string name="forgot_passwd">Forgot password?</string>
-    <string name="fields_cannot_empty">Please check your email and password.</string>
-    <string name="unknown_error">Unknown Error</string>
+  <string name="app_name">AccountManager</string>
+  <string name="one_account_allowed">Only one account allowed</string>
+  <string name="or">or</string>
+  <string name="username">Email</string>
+  <string name="password">Password</string>
+  <string name="link_device_webinstall">Link account with Webinstall</string>
+  <string name="register">Sign Up</string>
+  <string name="setcredentials">Login</string>
+  <string name="forgot_passwd">Forgot password?</string>
+  <string name="fields_cannot_empty">Please check your email and password.</string>
+  <string name="unknown_error">Unknown Error</string>
     <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
         Content Policy for Developers
     </string>
     <string name="no_email_and_pass_error_message">Please insert an email and password to
         register.
     </string>
-    <string name="no_pass_error_message">Please insert a password to register.</string>
-    <string name="no_email_error_message">Please insert an email to register.</string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
     <string name="password_validation_text">Password must be at least 8 characters and should have
         at least one letter and one number or special characters (!@#$%*)
     </string>
-    <string name="logged_as">You are logged as:</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="default_account_type">cm.aptoide.pt</string>
+  <string name="logged_as">You are logged as:</string>
+  <string name="sign_out">Sign Out</string>
+  <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Garant permission</string>
+  <string name="facebook_garant_permission_button">Garant permission</string>
     <string name="facebook_email_permission_regected_message">Aptoide needs your email to make an
         account
     </string>
-    <string name="user_canceled">Canceled by user</string>
+  <string name="user_canceled">Canceled by user</string>
 
-    <!--errors-->
-    <string name="error_occured">An error occurred. Please try again</string>
-    <string name="error_invalid_grant">Invalid username and password combination</string>
-    <string name="ws_error_MARG_200">@string/error_occured</string>
-    <string name="ws_error_MARG_203">@string/error_occured</string>
-    <string name="ws_error_MARG_204">@string/error_occured</string>
-    <string name="ws_error_IARG_200">@string/error_occured</string>
-    <string name="ws_error_AUTH_2">Invalid credentials!</string>
-    <string name="ws_error_AUTH_7">@string/error_occured</string>
-    <string name="ws_error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address)</string>
-    <string name="ws_error_AUTH_101">Could not login with Google. Please try again.</string>
-    <string name="ws_error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address)</string>
-    <string name="ws_error_AUTH_103">Could not login with Facebook. Please try again.</string>
-    <string name="ws_error_invalid_grant">Invalid username and password combination</string>
-    <string name="ws_error_MARG_12">Missing hmac parameter</string>
-    <string name="ws_error_MARG_109">Missing email parameter</string>
-    <string name="ws_error_MARG_110">Missing passhash parameter</string>
-    <string name="ws_error_MARG_111">Missing name parameter</string>
-    <string name="ws_error_MARG_112">Missing user-agent parameter</string>
-    <string name="ws_error_IARG_5">Invalid hmac format</string>
-    <string name="ws_error_IARG_106">The e-mail address is not valid</string>
-    <string name="ws_error_IARG_111">Invalid passhash format</string>
+  <!--errors-->
+  <string name="error_occured">An error occurred. Please try again</string>
+  <string name="error_invalid_grant">Invalid username and password combination</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
+  <string name="ws_error_AUTH_2">Invalid credentials!</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
+  <string name="ws_error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address)</string>
+  <string name="ws_error_AUTH_101">Could not login with Google. Please try again.</string>
+  <string name="ws_error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address)</string>
+  <string name="ws_error_AUTH_103">Could not login with Facebook. Please try again.</string>
+  <string name="ws_error_invalid_grant">Invalid username and password combination</string>
+  <string name="ws_error_MARG_12">Missing hmac parameter</string>
+  <string name="ws_error_MARG_109">Missing email parameter</string>
+  <string name="ws_error_MARG_110">Missing passhash parameter</string>
+  <string name="ws_error_MARG_111">Missing name parameter</string>
+  <string name="ws_error_MARG_112">Missing user-agent parameter</string>
+  <string name="ws_error_IARG_5">Invalid hmac format</string>
+  <string name="ws_error_IARG_106">The e-mail address is not valid</string>
+  <string name="ws_error_IARG_111">Invalid passhash format</string>
     <string name="ws_error_REPO_4">That store name is invalid, you can only use letters, numbers or
         dashes.</string>
-    <string name="ws_error_REPO_7">This user already has a valid repo.</string>
-    <string name="ws_error_REPO_5">That store name must be at least 3 characters long.</string>
+  <string name="ws_error_REPO_7">This user already has a valid repo.</string>
+  <string name="ws_error_REPO_5">That store name must be at least 3 characters long.</string>
     <string name="ws_error_REPO_6">That store name is already taken, you need to choose another
         one.</string>
-    <string name="ws_error_WOP_9">The email provided already exists in Aptoide</string>
-    <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>
-    <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
+  <string name="ws_error_WOP_9">The email provided already exists in Aptoide</string>
+  <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>
+  <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
     <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
         this limit increased please contact support at suport@aptoide.com or create more users tomorrow</string>
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
-    <string name="login_activity_title">Login Activity</string>
-    <string name="login_successful">Login successful</string>
-    <string name="user_created">User Created</string>
-    <!-- WIZARD -->
-    <string name="wizard_skip"><b>SKIP</b></string>
+  <string name="login_activity_title">Login Activity</string>
+  <string name="login_successful">Login successful</string>
+  <string name="user_created">User Created</string>
+  <!-- WIZARD -->
+  <string name="wizard_skip"><b>SKIP</b></string>
 
 </resources>

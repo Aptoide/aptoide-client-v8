@@ -13,26 +13,26 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/separator_horizontal"/>
+  <include layout="@layout/separator_horizontal"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/recommended_for_you"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/aptoide_orange"
-        android:textSize="18sp"
-        />
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:layout_marginTop="20dp"
+      android:text="@string/recommended_for_you"
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/aptoide_orange"
+      android:textSize="18sp"
+      />
 
-    <android.support.v7.widget.RecyclerView
+  <android.support.v7.widget.RecyclerView
 
-        android:id="@+id/appview_suggested_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        />
+      android:id="@+id/appview_suggested_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:clipToPadding="false"
+      />
 
 
 </LinearLayout>

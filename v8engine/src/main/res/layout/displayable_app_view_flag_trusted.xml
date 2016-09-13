@@ -16,99 +16,100 @@
 
     >
 
-    <!--
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/flag_results"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/aptoide_orange"
-        android:textSize="18sp"
-        />
-    -->
+  <!--
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="5dp"
+      android:layout_marginTop="10dp"
+      android:text="@string/flag_results"
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/aptoide_orange"
+      android:textSize="18sp"
+      />
+  -->
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/button_border_silver"
+      android:gravity="center"
+      android:orientation="horizontal"
+      android:weightSum="1"
+
+      >
+
+    <LinearLayout
+        android:layout_width="77dp"
+        android:layout_height="77dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/working_well"
+        android:clickable="true"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/working_well_count_label"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="29dp"
+          android:gravity="center"
+          android:lines="2"
+          android:maxLines="2"
+          android:text="@string/working_well"
+          android:textAllCaps="true"
+          android:textColor="@color/white"
+          android:textSize="@dimen/text_size_small"
+          android:textStyle="italic|bold"
+          />
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_border_silver"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_margin="4dp"
+        android:orientation="vertical"
         android:weightSum="1"
-
         >
 
-        <LinearLayout
-            android:layout_width="77dp"
-            android:layout_height="77dp"
-            android:layout_margin="4dp"
-            android:background="@drawable/working_well"
-            android:clickable="true"
-            android:orientation="vertical"
-            >
+      <TextView
+          android:id="@+id/virus_count_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:lines="1"
+          android:maxLines="1"
+          android:text="@string/appview_good_app_guaranteed"
+          android:textAllCaps="false"
+          android:textColor="@color/working_well_text_color"
+          android:textSize="@dimen/text_size_large"
+          android:textStyle="bold"
+          />
 
-            <TextView
-                android:id="@+id/working_well_count_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="29dp"
-                android:gravity="center"
-                android:lines="2"
-                android:maxLines="2"
-                android:text="@string/working_well"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_small"
-                android:textStyle="italic|bold"
-                />
+      <TextView
+          android:id="@+id/virus_count"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="1dp"
+          android:layout_marginEnd="5dp"
+          android:layout_marginLeft="1dp"
+          android:layout_marginRight="5dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="1dp"
+          android:gravity="left"
+          android:lines="4"
+          android:maxLines="5"
+          android:text="@string/appview_good_app_description"
+          android:textColor="@color/dark_custom_gray"
+          android:textSize="@dimen/text_size_medium_small"
+          />
 
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:orientation="vertical"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/virus_count_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:lines="1"
-                android:maxLines="1"
-                android:text="@string/appview_good_app_guaranteed"
-                android:textAllCaps="false"
-                android:textColor="@color/working_well_text_color"
-                android:textSize="@dimen/text_size_large"
-                android:textStyle="bold"
-                />
-
-            <TextView
-                android:id="@+id/virus_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="1dp"
-                android:gravity="left"
-                android:lines="4"
-                android:maxLines="5"
-                android:text="@string/appview_good_app_description"
-                android:textColor="@color/dark_custom_gray"
-                android:textSize="@dimen/text_size_medium_small"
-                />
-
-        </LinearLayout>
     </LinearLayout>
+  </LinearLayout>
 </LinearLayout>

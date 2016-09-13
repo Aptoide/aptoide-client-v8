@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">DownloadManager</string>
-    <string name="aptoide_downloading">%s is downloading</string>
-    <string name="pause_download">Pause</string>
-    <string name="resume_download">Resume</string>
+  <string name="app_name">DownloadManager</string>
+  <string name="aptoide_downloading">%s is downloading</string>
+  <string name="pause_download">Pause</string>
+  <string name="resume_download">Resume</string>
     <string name="general_downloads_dialog_only_mobile_message">"You choose to download only on Mobile 3G/4G. Do you want to change the
         settings?"</string>
-    <string name="general_downloads_dialog_only_wifi_message">"You choose to download only on WiFi. Do you want to change the settings?"</string>
-    <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Do you want to change the settings?</string>
+  <string name="general_downloads_dialog_only_wifi_message">"You choose to download only on WiFi. Do you want to change the settings?"</string>
+  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Do you want to change the settings?</string>
 </resources>

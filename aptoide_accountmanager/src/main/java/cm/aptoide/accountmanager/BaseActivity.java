@@ -10,25 +10,22 @@ import android.view.MenuItem;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-	private static final String TAG = BaseActivity.class.getSimpleName();
+  private static final String TAG = BaseActivity.class.getSimpleName();
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setTitle(getActivityTitle());
-	}
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setTitle(getActivityTitle());
+  }
 
-	protected abstract String getActivityTitle();
+  protected abstract String getActivityTitle();
 
-	@LayoutRes
-	abstract int getLayoutId();
+  @LayoutRes abstract int getLayoutId();
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int i = item.getItemId();
-		if (i == android.R.id.home || i == R.id.home || i == 0) {
-			finish();
-		}
-		return super.onOptionsItemSelected(item);
-	}
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+    if (i == android.R.id.home || i == R.id.home || i == 0) {
+      finish();
+    }
+    return super.onOptionsItemSelected(item);
+  }
 }

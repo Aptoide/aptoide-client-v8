@@ -5,179 +5,195 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/displayable_social_timeline_app_update_card">
+    android:id="@+id/displayable_social_timeline_app_update_card"
+    >
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <RelativeLayout
+        android:id="@+id/displayable_social_timeline_app_update_header"
+        android:layout_width="match_parent"
+        android:layout_height="63.3dp"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:id="@+id/displayable_social_timeline_app_update_card_image"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginTop="14dp"
+          android:layout_marginLeft="12.7dp"
+          tools:ignore="contentDescription"
+          tools:src="@drawable/img_people_mockup"
+          />
+
+      <TextView
+          android:id="@+id/displayable_social_timeline_app_update_card_title"
+          style="@style/Widget.Aptoide.Card.Title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
+          android:layout_marginRight="48dp"
+          android:layout_marginStart="72dp"
+          android:layout_marginTop="14.7dp"
+          android:ellipsize="end"
+          android:lines="1"
+          tools:text="Hamata6 Store"
+          />
+
+      <TextView
+          android:id="@+id/displayable_social_timeline_app_update_card_card_subtitle"
+          style="@style/Widget.Aptoide.Card.Subtitle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/displayable_social_timeline_app_update_card_title"
+          android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
+          android:layout_marginRight="48dp"
+          android:layout_marginStart="72dp"
+          android:ellipsize="end"
+          android:lines="1"
+          tools:text="Há duas horas"
+          />
+
+      <ImageView
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_alignEnd="@+id/card_custom_view_line_separator"
+          android:layout_alignTop="@id/displayable_social_timeline_app_update_card_title"
+          android:src="@drawable/appstimeline_appupdate_shop_icon"
+          />
+
+      <View
+          android:id="@+id/card_custom_view_line_separator"
+          android:layout_marginLeft="12dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_width="match_parent"
+          android:layout_height="0.7dp"
+          android:layout_alignParentBottom="true"
+          android:background="@color/timeline_separator"
+          />
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        >
 
-        <RelativeLayout
-            android:id="@+id/displayable_social_timeline_app_update_header"
-            android:layout_width="match_parent"
-            android:layout_height="63.3dp"
-            android:orientation="horizontal">
+      <ImageView
+          android:id="@+id/displayable_social_timeline_app_update_icon"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:paddingTop="3dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginTop="9.3dp"
+          android:scaleType="fitCenter"
+          tools:ignore="contentDescription"
+          tools:src="@mipmap/ic_launcher"
+          />
 
-            <ImageView
-                android:id="@+id/displayable_social_timeline_app_update_card_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="12.7dp"
-                tools:ignore="contentDescription"
-                tools:src="@drawable/img_people_mockup"/>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@id/displayable_social_timeline_app_update_icon"
+          android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
+          android:layout_toRightOf="@id/displayable_social_timeline_app_update_icon"
+          android:layout_marginLeft="14.3dp"
+          android:orientation="vertical"
+          >
 
-            <TextView
-                android:id="@+id/displayable_social_timeline_app_update_card_title"
-                style="@style/Widget.Aptoide.Card.Title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
-                android:layout_marginLeft="72dp"
-                android:layout_marginRight="48dp"
-                android:layout_marginStart="72dp"
-                android:layout_marginTop="14.7dp"
-                android:ellipsize="end"
-                android:lines="1"
-                tools:text="Hamata6 Store"/>
-
-            <TextView
-                android:id="@+id/displayable_social_timeline_app_update_card_card_subtitle"
-                style="@style/Widget.Aptoide.Card.Subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/displayable_social_timeline_app_update_card_title"
-                android:layout_marginEnd="48dp"
-                android:layout_marginLeft="72dp"
-                android:layout_marginRight="48dp"
-                android:layout_marginStart="72dp"
-                android:ellipsize="end"
-                android:lines="1"
-                tools:text="Há duas horas"/>
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignEnd="@+id/card_custom_view_line_separator"
-                android:layout_alignTop="@id/displayable_social_timeline_app_update_card_title"
-                android:src="@drawable/appstimeline_appupdate_shop_icon"/>
-
-            <View
-                android:id="@+id/card_custom_view_line_separator"
-                android:layout_marginLeft="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/timeline_separator"/>
-        </RelativeLayout>
-
-
-        <RelativeLayout
+        <TextView
+            android:id="@+id/displayable_social_timeline_app_update_name"
+            style="@style/Widget.Aptoide.Card.Title.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/displayable_social_timeline_app_update_icon"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:paddingTop="3dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="9.3dp"
-                android:scaleType="fitCenter"
-                tools:ignore="contentDescription"
-                tools:src="@mipmap/ic_launcher"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/displayable_social_timeline_app_update_icon"
-                android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
-                android:layout_toRightOf="@id/displayable_social_timeline_app_update_icon"
-                android:layout_marginLeft="14.3dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/displayable_social_timeline_app_update_name"
-                    style="@style/Widget.Aptoide.Card.Title.Large"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="12dp"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="@string/displayable_social_timeline_app_update_name"
-                    tools:text="App Snapchat"/>
-
-                <TextView
-                    android:id="@+id/displayable_social_timeline_app_update"
-                    style="@style/Widget.Aptoide.Card.Title.Large"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="12dp"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="@string/displayable_social_timeline_app_has_update"
-                    tools:text="has an update"/>
-
-                <TextView
-                    android:id="@+id/displayable_social_timeline_app_update_version"
-                    style="@style/Widget.Aptoide.Card.Subtitle.Large"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginTop="4dp"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="@string/displayable_social_timeline_app_update_version"
-                    tools:text="Version: 1.2.3"/>
-
-
-                <TextView
-                    android:id="@+id/displayable_social_timeline_app_update_error"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/displayable_social_timeline_app_update_error"
-                    android:textColor="@color/red_700"
-                    android:visibility="gone"
-                    tools:text="Update Error"
-                    tools:visibility="gone"/>
-
-                <Button
-                    android:id="@+id/displayable_social_timeline_app_update_button"
-                    style="@style/Widget.Aptoide.Card.Button"
-                    android:layout_marginBottom="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:textColor="@color/appstimeline_grey"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="12dp"
-                    android:drawableLeft="@drawable/timeline_update_app"
-                    android:drawableStart="@drawable/timeline_update_app"
-                    android:gravity="center_vertical"
-                    android:text="@string/displayable_social_timeline_app_update_button"
-                    tools:text="Update application"/>
-
-            </LinearLayout>
-        </RelativeLayout>
-
-        <View
-            android:id="@+id/partial_social_timeline_thumbnail_divider2"
-            android:layout_width="match_parent"
-            android:layout_height="0.7dp"
-            android:layout_marginBottom="25dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginStart="12dp"
-            android:background="@color/timeline_separator"
-            android:visibility="visible"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="12dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/displayable_social_timeline_app_update_name"
+            tools:text="App Snapchat"
             />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/displayable_social_timeline_app_update"
+            style="@style/Widget.Aptoide.Card.Title.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="12dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/displayable_social_timeline_app_has_update"
+            tools:text="has an update"
+            />
+
+        <TextView
+            android:id="@+id/displayable_social_timeline_app_update_version"
+            style="@style/Widget.Aptoide.Card.Subtitle.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/displayable_social_timeline_app_update_version"
+            tools:text="Version: 1.2.3"
+            />
+
+
+        <TextView
+            android:id="@+id/displayable_social_timeline_app_update_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/displayable_social_timeline_app_update_error"
+            android:textColor="@color/red_700"
+            android:visibility="gone"
+            tools:text="Update Error"
+            tools:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/displayable_social_timeline_app_update_button"
+            style="@style/Widget.Aptoide.Card.Button"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textColor="@color/appstimeline_grey"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="12dp"
+            android:drawableLeft="@drawable/timeline_update_app"
+            android:drawableStart="@drawable/timeline_update_app"
+            android:gravity="center_vertical"
+            android:text="@string/displayable_social_timeline_app_update_button"
+            tools:text="Update application"
+            />
+
+      </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/partial_social_timeline_thumbnail_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:background="@color/timeline_separator"
+        android:visibility="visible"
+        />
+  </LinearLayout>
 </android.support.v7.widget.CardView>
 

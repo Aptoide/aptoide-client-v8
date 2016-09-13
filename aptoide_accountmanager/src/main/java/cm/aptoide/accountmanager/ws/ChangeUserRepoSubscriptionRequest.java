@@ -18,32 +18,34 @@ import rx.Observable;
  */
 public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericResponseV3> {
 
-	private String storeName;
-	private boolean subscribe;
+  private String storeName;
+  private boolean subscribe;
 
-	protected ChangeUserRepoSubscriptionRequest(OkHttpClient client, Converter.Factory converterFactory) {
-		super(client, converterFactory);
-	}
+  protected ChangeUserRepoSubscriptionRequest(OkHttpClient client,
+      Converter.Factory converterFactory) {
+    super(client, converterFactory);
+  }
 
-	public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe) {
-		ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest = new ChangeUserRepoSubscriptionRequest
-				(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter());
+  public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe) {
+    ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest =
+        new ChangeUserRepoSubscriptionRequest(OkHttpClientFactory.getSingletonClient(),
+            WebService.getDefaultConverter());
 
-		changeUserRepoSubscriptionRequest.storeName = storeName;
-		changeUserRepoSubscriptionRequest.subscribe = subscribe;
+    changeUserRepoSubscriptionRequest.storeName = storeName;
+    changeUserRepoSubscriptionRequest.subscribe = subscribe;
 
-		return changeUserRepoSubscriptionRequest;
-	}
+    return changeUserRepoSubscriptionRequest;
+  }
 
-	@Override
-	protected Observable<GenericResponseV3> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+  @Override protected Observable<GenericResponseV3> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
 
-		map.put("mode", "json");
-		map.put("repo", storeName);
-		map.put("status", subscribe ? "subscribed" : "unsubscribed");
+    map.put("mode", "json");
+    map.put("repo", storeName);
+    map.put("status", subscribe ? "subscribed" : "unsubscribed");
 
-		map.put("access_token", AptoideAccountManager.getAccessToken());
+    map.put("access_token", AptoideAccountManager.getAccessToken());
 
-		return interfaces.changeUserRepoSubscription(map);
-	}
+    return interfaces.changeUserRepoSubscription(map);
+  }
 }

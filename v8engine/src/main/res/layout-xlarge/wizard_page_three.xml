@@ -4,21 +4,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="@color/aptoide_orange">
+    android:background="@color/aptoide_orange"
+    >
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal">
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:gravity="center_horizontal"
+      >
 
     <ImageView
         android:src="@drawable/wizard_aptoide_logo"
         android:id="@+id/aptoide_logo"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_margin="20dp" />
+        android:layout_margin="20dp"
+        />
 
     <TextView
         android:textColor="@color/white"
@@ -27,7 +30,8 @@
         android:text="@string/wizard_title_viewpager_three"
         android:textSize="40sp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="7dp" />
+        android:layout_marginBottom="7dp"
+        />
 
     <ImageView
         android:src="@drawable/wizard_community"
@@ -36,65 +40,73 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="60dp"
-        android:layout_marginBottom="40dp" />
+        android:layout_marginBottom="40dp"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/wizard_description_part_one_viewpager_three"
-            android:textSize="28sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/wizard_description_part_one_viewpager_three"
+        android:textSize="28sp"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/wizard_description_part_two_viewpager_three"
-            android:textSize="28sp"
-            android:layout_margin="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/wizard_description_part_two_viewpager_three"
+        android:textSize="28sp"
+        android:layout_margin="10dp"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/wizard_description_part_three_viewpager_three"
-            android:textSize="28sp" />
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/wizard_description_part_three_viewpager_three"
+        android:textSize="28sp"
+        />
+  </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:layout_marginBottom="10dp">
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="fill_parent"
+      android:gravity="center"
+      android:layout_marginBottom="10dp"
+      >
 
-        <Button
-            android:id="@+id/registerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wizard_register_now_button"
-            android:textColor="@color/aptoide_orange"
-            android:textSize="18sp"
-            android:background="@drawable/wizard_custom_register_button"
-            android:layout_marginBottom="10dp" />
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wizard_register_now_button"
+        android:textColor="@color/aptoide_orange"
+        android:textSize="18sp"
+        android:background="@drawable/wizard_custom_register_button"
+        android:layout_marginBottom="10dp"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/wizard_be_a_part_of_aptoide"
-            android:textSize="24sp"
-            android:layout_margin="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/wizard_be_a_part_of_aptoide"
+        android:textSize="24sp"
+        android:layout_margin="10dp"
+        />
 
-        <TextView
-            android:id="@+id/login_link"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:text="@string/wizard_or_login" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/login_link"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:text="@string/wizard_or_login"
+        />
+  </LinearLayout>
 
 
 </LinearLayout>

@@ -5,39 +5,44 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="@color/aptoide_orange"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
-    <ImageView
-        android:id="@+id/aptoide_logo"
-        android:src="@drawable/wizard_aptoide_logo"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_margin="20dp" />
+  <ImageView
+      android:id="@+id/aptoide_logo"
+      android:src="@drawable/wizard_aptoide_logo"
+      android:layout_width="200dp"
+      android:layout_height="50dp"
+      android:layout_margin="20dp"
+      />
 
-    <TextView
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/wizard_title_viewpager_two"
-        android:textSize="40sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="7dp" />
+  <TextView
+      android:textColor="@color/white"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/wizard_title_viewpager_two"
+      android:textSize="40sp"
+      android:layout_marginTop="10dp"
+      android:layout_marginBottom="7dp"
+      />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="@string/wizard_sub_title_viewpager_two"
-        android:textSize="28sp" />
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/white"
+      android:text="@string/wizard_sub_title_viewpager_two"
+      android:textSize="28sp"
+      />
 
-    <ImageView
-        android:src="@drawable/wizard_apps_feed"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="60dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_marginBottom="20dp"/>
+  <ImageView
+      android:src="@drawable/wizard_apps_feed"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:padding="60dp"
+      android:layout_marginTop="20dp"
+      android:layout_marginLeft="80dp"
+      android:layout_marginRight="80dp"
+      android:layout_marginBottom="20dp"
+      />
 
 </LinearLayout>

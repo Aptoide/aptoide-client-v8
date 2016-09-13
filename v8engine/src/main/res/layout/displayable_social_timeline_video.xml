@@ -5,197 +5,210 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/card">
+    android:id="@+id/card"
+    >
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <RelativeLayout
+        android:id="@+id/displayable_social_timeline_video_header"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="63.3dp"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          tools:ignore="contentDescription"
+          tools:src="@drawable/img_people_mockup"
+          android:id="@+id/card_image"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginTop="14dp"
+          android:layout_marginLeft="12.7dp"
+          />
+
+      <TextView
+          android:layout_marginTop="14.7dp"
+          android:id="@+id/card_title"
+          style="@style/Widget.Aptoide.Card.Title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="72dp"
+          android:layout_marginLeft="72dp"
+          android:lines="1"
+          android:ellipsize="end"
+          android:layout_marginEnd="48dp"
+          android:layout_marginRight="48dp"
+          tools:text="Aptoide Team"
+          />
+
+      <TextView
+          android:lines="1"
+          android:ellipsize="end"
+          android:id="@+id/card_subtitle"
+          style="@style/Widget.Aptoide.Card.Subtitle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/card_title"
+          android:layout_marginStart="72dp"
+          android:layout_marginLeft="72dp"
+          android:layout_marginEnd="48dp"
+          android:layout_marginRight="48dp"
+          tools:text="Há duas horas"
+          />
+
+      <ImageView
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:src="@drawable/appstimeline_video_play_icon"
+          android:layout_alignEnd="@+id/card_custom_view_line_separator"
+          android:layout_alignTop="@id/card_title"
+          />
+
+      <View
+          android:id="@+id/card_custom_view_line_separator"
+          android:layout_marginLeft="12dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_width="match_parent"
+          android:layout_height="0.7dp"
+          android:layout_alignParentBottom="true"
+          android:background="@color/timeline_separator"
+          />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/partial_social_timeline_thumbnail"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:clickable="true"
+        android:layout_marginLeft="60dp"
+        >
 
-        <RelativeLayout
-            android:id="@+id/displayable_social_timeline_video_header"
-            android:clickable="true"
+      <!--
+          android:layout_width="120dp"
+      -->
+
+      <FrameLayout
+          android:id="@+id/media_layout"
+          style="@style/focusableBackground"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/partial_social_timeline_thumbnail_title"
+          android:layout_marginBottom="12dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="15dp"
+          android:layout_marginStart="12dp"
+          android:clickable="true"
+          android:gravity="center"
+          >
+        <ImageView
+            android:id="@+id/partial_social_timeline_thumbnail_image"
             android:layout_width="match_parent"
-            android:layout_height="63.3dp"
-            android:orientation="horizontal">
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            tools:ignore="contentDescription"
+            tools:src="@drawable/icon_brand_aptoide"
+            />
 
-            <ImageView
-                tools:ignore="contentDescription"
-                tools:src="@drawable/img_people_mockup"
-                android:id="@+id/card_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="12.7dp"/>
-
-            <TextView
-                android:layout_marginTop="14.7dp"
-                android:id="@+id/card_title"
-                style="@style/Widget.Aptoide.Card.Title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="72dp"
-                android:layout_marginLeft="72dp"
-                android:lines="1"
-                android:ellipsize="end"
-                android:layout_marginEnd="48dp"
-                android:layout_marginRight="48dp"
-                tools:text="Aptoide Team"/>
-
-            <TextView
-                android:lines="1"
-                android:ellipsize="end"
-                android:id="@+id/card_subtitle"
-                style="@style/Widget.Aptoide.Card.Subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/card_title"
-                android:layout_marginStart="72dp"
-                android:layout_marginLeft="72dp"
-                android:layout_marginEnd="48dp"
-                android:layout_marginRight="48dp"
-                tools:text="Há duas horas"/>
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/appstimeline_video_play_icon"
-                android:layout_alignEnd="@+id/card_custom_view_line_separator"
-                android:layout_alignTop="@id/card_title"/>
-
-            <View
-                android:id="@+id/card_custom_view_line_separator"
-                android:layout_marginLeft="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/timeline_separator"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/partial_social_timeline_thumbnail"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/play_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:layout_marginLeft="60dp">
-
-            <!--
-                android:layout_width="120dp"
-            -->
-
-            <FrameLayout
-                android:id="@+id/media_layout"
-                style="@style/focusableBackground"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/partial_social_timeline_thumbnail_title"
-                android:layout_marginBottom="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginStart="12dp"
-                android:clickable="true"
-                android:gravity="center">
-                <ImageView
-                    android:id="@+id/partial_social_timeline_thumbnail_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:scaleType="centerCrop"
-                    tools:ignore="contentDescription"
-                    tools:src="@drawable/icon_brand_aptoide"/>
-
-                <ImageView
-                    android:id="@+id/play_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/btn_movie_play_normal"
-                    android:visibility="visible" />
-
-                </FrameLayout>
-
-            <!--
-                android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
-                android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
-                android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
-            -->
-            <TextView
-                android:id="@+id/partial_social_timeline_thumbnail_title"
-                style="@style/Widget.Aptoide.Card.Thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:typeface="serif"
-                android:ellipsize="end"
-                android:maxLines="3"
-                tools:text="Best backup apps: save all your Android's innards"
-                />
-
-            <View
-                android:id="@+id/partial_social_timeline_thumbnail_divider"
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_below="@id/media_layout"
-                android:layout_marginEnd="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginStart="12dp"
-                android:background="@color/timeline_separator"
-                android:visibility="gone"
-                />
-            <TextView
-                android:id="@+id/partial_social_timeline_thumbnail_related_to"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/media_layout"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="12dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="Related to APPz"/>
-
-            <Button
-                android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
-                style="@style/Widget.Aptoide.Card.Button"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@id/partial_social_timeline_thumbnail_related_to"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="96dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="96dp"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:visibility="gone"
-                tools:text="Get app Game of War"
-                tools:visibility="visible"
-                />
-        </RelativeLayout>
-        <View
-            android:id="@+id/partial_social_timeline_thumbnail_divider2"
-            android:layout_width="match_parent"
-            android:layout_height="0.7dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="25dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginStart="12dp"
-            android:background="@color/timeline_separator"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_movie_play_normal"
             android:visibility="visible"
             />
-    </LinearLayout>
+
+      </FrameLayout>
+
+      <!--
+          android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
+          android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
+          android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
+      -->
+      <TextView
+          android:id="@+id/partial_social_timeline_thumbnail_title"
+          style="@style/Widget.Aptoide.Card.Thumbnail"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="15dp"
+          android:layout_marginTop="12dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginStart="12dp"
+          android:typeface="serif"
+          android:ellipsize="end"
+          android:maxLines="3"
+          tools:text="Best backup apps: save all your Android's innards"
+          />
+
+      <View
+          android:id="@+id/partial_social_timeline_thumbnail_divider"
+          android:layout_width="match_parent"
+          android:layout_height="0.7dp"
+          android:layout_below="@id/media_layout"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
+          android:background="@color/timeline_separator"
+          android:visibility="gone"
+          />
+      <TextView
+          android:id="@+id/partial_social_timeline_thumbnail_related_to"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/media_layout"
+          android:layout_marginBottom="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="15dp"
+          android:layout_marginTop="12dp"
+          android:maxLines="1"
+          android:ellipsize="end"
+          tools:text="Related to APPz"
+          />
+
+      <Button
+          android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
+          style="@style/Widget.Aptoide.Card.Button"
+          android:layout_width="match_parent"
+          android:layout_height="30dp"
+          android:layout_below="@id/partial_social_timeline_thumbnail_related_to"
+          android:layout_marginBottom="16dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="96dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="96dp"
+          android:layout_marginTop="12dp"
+          android:gravity="center_vertical"
+          android:visibility="gone"
+          tools:text="Get app Game of War"
+          tools:visibility="visible"
+          />
+    </RelativeLayout>
+    <View
+        android:id="@+id/partial_social_timeline_thumbnail_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:background="@color/timeline_separator"
+        android:visibility="visible"
+        />
+  </LinearLayout>
 </android.support.v7.widget.CardView>
 

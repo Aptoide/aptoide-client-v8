@@ -5,14 +5,14 @@
   -->
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-            android:hint="@string/srch_hint"
-            android:includeInGlobalSearch="true"
-            android:label="@string/srch_hint"
-            android:queryAfterZeroResults="false"
+    android:hint="@string/srch_hint"
+    android:includeInGlobalSearch="true"
+    android:label="@string/srch_hint"
+    android:queryAfterZeroResults="false"
 
-            android:searchSuggestAuthority="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
-            android:searchSuggestIntentAction="android.intent.action.SEARCH"
-            android:searchSuggestSelection=" ?"
-            android:searchSuggestThreshold="3">
+    android:searchSuggestAuthority="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+    android:searchSuggestIntentAction="android.intent.action.SEARCH"
+    android:searchSuggestSelection=" ?"
+    android:searchSuggestThreshold="3">
 
 </searchable>

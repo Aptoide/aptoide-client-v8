@@ -5,16 +5,17 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="100dp"
-              android:layout_height="100dp"
-              android:layout_margin="10dp"
-              android:background="@android:color/holo_red_dark"
-              android:orientation="vertical">
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="10dp"
+    android:background="@android:color/holo_red_dark"
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ola"
-        />
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="ola"
+      />
 
 </LinearLayout>

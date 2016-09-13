@@ -4,119 +4,131 @@
     android:layout_height="fill_parent"
     android:background="@color/aptoide_orange"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
-    <android.support.v4.view.ViewPager
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:id="@+id/viewPager"
-        android:layout_weight="0.6" />
+  <android.support.v4.view.ViewPager
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/viewPager"
+      android:layout_weight="0.6"
+      />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="#20000000" />
+  <View
+      android:layout_width="fill_parent"
+      android:layout_height="1dip"
+      android:background="#20000000"
+      />
+
+  <LinearLayout
+      android:id="@+id/wizard_navigation_menu"
+      android:layout_width="fill_parent"
+      android:layout_height="100dp"
+      android:background="@android:color/transparent"
+      android:weightSum="1"
+      android:orientation="horizontal"
+      android:measureWithLargestChild="false"
+      android:layout_weight="0.4"
+      >
 
     <LinearLayout
-        android:id="@+id/wizard_navigation_menu"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/transparent"
-        android:weightSum="1"
-        android:orientation="horizontal"
-        android:measureWithLargestChild="false"
-        android:layout_weight="0.4">
+        android:id="@+id/wizard_skip"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.333"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:weightSum="10"
+        android:focusable="false"
+        android:gravity="center"
+        >
 
-        <LinearLayout
-            android:id="@+id/wizard_skip"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.333"
-            android:baselineAligned="false"
-            android:clickable="true"
-            android:weightSum="10"
-            android:focusable="false"
-            android:gravity="center">
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.333"
-            android:weightSum="1"
-            android:baselineAligned="false"
-            android:clickable="false"
-            android:gravity="center">
-
-            <RadioGroup
-                android:id="@+id/wizard_indicator_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/wizard_indicator_one"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/wizard_custom_indicator"
-                    android:clickable="false"
-                    android:button="@android:color/transparent"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:id="@+id/wizard_indicator_two"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/wizard_custom_indicator"
-                    android:button="@android:color/transparent"
-                    android:clickable="false" />
-
-                <RadioButton
-                    android:id="@+id/wizard_indicator_three"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/wizard_custom_indicator"
-                    android:button="@android:color/transparent"
-                    android:clickable="false" />
-            </RadioGroup>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/wizard_next_clickable_space"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.333"
-            android:weightSum="1"
-            android:baselineAligned="false"
-            android:clickable="true"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/wizard_skip_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/wizard_skip"
-                android:visibility="gone"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                android:padding="5dp" />
-
-            <ImageView
-                android:id="@+id/wizard_next_arrow_icon"
-                android:src="@drawable/wizard_next_arrow"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-        </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.333"
+        android:weightSum="1"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:gravity="center"
+        >
+
+      <RadioGroup
+          android:id="@+id/wizard_indicator_group"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          >
+
+        <RadioButton
+            android:id="@+id/wizard_indicator_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wizard_custom_indicator"
+            android:clickable="false"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            />
+
+        <RadioButton
+            android:id="@+id/wizard_indicator_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wizard_custom_indicator"
+            android:button="@android:color/transparent"
+            android:clickable="false"
+            />
+
+        <RadioButton
+            android:id="@+id/wizard_indicator_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wizard_custom_indicator"
+            android:button="@android:color/transparent"
+            android:clickable="false"
+            />
+      </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wizard_next_clickable_space"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.333"
+        android:weightSum="1"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:gravity="center"
+        >
+
+      <TextView
+          android:id="@+id/wizard_skip_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          android:text="@string/wizard_skip"
+          android:visibility="gone"
+          android:textSize="14sp"
+          android:textColor="@color/white"
+          android:padding="5dp"
+          />
+
+      <ImageView
+          android:id="@+id/wizard_next_arrow_icon"
+          android:src="@drawable/wizard_next_arrow"
+          android:visibility="visible"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+    </LinearLayout>
+
+  </LinearLayout>
 
 </LinearLayout>

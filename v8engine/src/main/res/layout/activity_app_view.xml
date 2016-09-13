@@ -11,12 +11,12 @@
     android:orientation="vertical"
     >
 
-    <fragment
-        android:name="cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_app_view"
-        />
+  <fragment
+      android:name="cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:layout="@layout/fragment_app_view"
+      />
 
 </FrameLayout>

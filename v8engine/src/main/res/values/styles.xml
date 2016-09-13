@@ -6,728 +6,744 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@drawable/ab_background_aptoide</item>
-        <item name="logo">@drawable/ic_widget_launcher</item>
-        <item name="displayOptions">showHome|useLogo</item>
-        <item name="titleTextStyle">@style/titleStyle</item>
-
-        <item name="android:background">@drawable/ab_background_aptoide</item>
-        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
-        <item name="android:titleTextStyle" tools:ignore="NewApi">@style/titleStyle</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card" parent="">
-        <item name="cardCornerRadius">8.3dp</item>
-        <item name="android:background">@drawable/dialog_bg</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Title" parent="Base.TextAppearance.AppCompat.Small">
-        <item name="android:textSize">14.3sp</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Body">
-        <item name="android:textSize">14.7sp</item>
-        <item name="android:textColor">#b8b8b8</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Title.Large" parent="Base.TextAppearance.AppCompat.Title">
-        <item name="android:textSize">18.3sp</item>
-        <item name="android:textColor">#b8b8b8</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Title.Large.Black">
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Subtitle.Large">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#b8b8b8</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Title.Feature">
-        <item name="android:textColor">#ff7200</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Title.LatestApps">
-        <item name="android:textColor">@color/card_store_title</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Thumbnail" parent="Base.TextAppearance.AppCompat.Small">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:textColor">#43484e</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Button" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">#4d4d4d</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:drawableStart">@drawable/timeline_arrow_get_app</item>
-    </style>
-
-    <style name="Widget.Aptoide.Card.Subtitle" parent="Base.TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">#9a9a9a</item>
-    </style>>
-
-    <style name="Widget.Aptoide.Card.Headline" parent="Base.TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">13sp</item>
-        <item name="android:textColor">#43484e</item>
-    </style>
-
-    <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="AutoCompleteTextView" parent="@style/Theme.AppCompat">
-        <item name="android:textColorHint">@android:color/white</item>
-    </style>
-
-    <style name="customRowStyleHomeLayout">
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-    </style>
-
-    <style name="navigationDrawerColorLight">
-        <item name="android:background">@android:color/white</item>
-    </style>
-
-    <style name="backgroundTabsStyleLight">
-        <item name="android:background">@drawable/background_tabs_light</item>
-    </style>
-
-    <style name="headerSeparatorButtonStyleAptoide" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/flat_selector</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:layout_margin">5dp</item>
-    </style>
-
-    <style name="focusableBackground">
-        <item name="android:foreground">@drawable/highlight_overlay</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-    </style>
-
-    <style name="RatingBarExtraSmall">
-        <item name="android:progressDrawable">@drawable/rating_bar_grid_item</item>
-        <item name="android:isIndicator">true</item>
-        <item name="android:minHeight">10dp</item>
-        <item name="android:maxHeight">10dp</item>
-        <item name="android:focusableInTouchMode">false</item>
-        <item name="android:clickable">false</item>
-        <item name="android:focusable">false</item>
-    </style>
-
-    <style name="RatingBarSmall">
-        <item name="android:progressDrawable">@drawable/rating_bar_small</item>
-        <item name="android:isIndicator">true</item>
-        <item name="android:minHeight">13dp</item>
-        <item name="android:maxHeight">13dp</item>
-        <item name="android:focusableInTouchMode">false</item>
-        <item name="android:clickable">false</item>
-        <item name="android:focusable">false</item>
-    </style>
-
-    <style name="RatingBarMedium">
-        <item name="android:progressDrawable">@drawable/rating_bar_medium</item>
-        <item name="android:isIndicator">true</item>
-        <item name="android:minHeight">22dp</item>
-        <item name="android:maxHeight">22dp</item>
-        <item name="android:focusableInTouchMode">false</item>
-        <item name="android:clickable">false</item>
-        <item name="android:focusable">false</item>
-    </style>
-
-    <style name="RatingBarLargeSelectable">
-        <!--<item name="android:progressDrawable">@drawable/rating_bar_big</item>-->
-        <item name="android:progressDrawable">@drawable/rating_bar_medium</item>
-        <item name="android:minHeight">26dp</item>
-        <item name="android:maxHeight">26dp</item>
-    </style>
-
-    <style name="RatingBarReviewDialog">
-        <item name="android:progressDrawable">@drawable/rating_bar_review</item>
-        <item name="android:minHeight">36dp</item>
-        <item name="android:maxHeight">36dp</item>
-    </style>
-
-    <style name="backgroundCardStyleLight">
-        <item name="android:background">@drawable/white_card</item>
-    </style>
-
-    <style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/aptoide_btn_default_holo_light</item>
-    </style>
-
-    <style name="WidgetButtonCustomAptoideWhite" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/aptoide_white_btn_default_holo_light</item>
-        <item name="android:textColor">@color/orange_700</item>
-    </style>
-
-    <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="backgroundCardStyleDark">
-        <item name="android:background">@drawable/dark_card</item>
-    </style>
-
-    <style name="backgroundTabsStyleDark">
-        <item name="android:background">@drawable/background_tabs_dark</item>
-    </style>
-
-    <style name="navigationDrawerColorDark">
-        <item name="android:background">@android:color/black</item>
-    </style>
-
-    <style name="headerSeparatorButtonStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:layout_gravity">center_vertical|right</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-    </style>
-
-    <style name="WidgetButtonCustomGray" parent="@android:style/Widget.Button">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/gray_btn_default_holo_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="focusableRowBackground">
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-    </style>
-
-    <style name="Toolbar" parent="@style/Theme.AppCompat">
-    </style>
-
-    <style name="ToolbarDark" parent="@style/Theme.AppCompat">
-        <!--<item name="pstsIndicatorColor">@color/aptoide_orange</item>-->
-    </style>
-
-    <style name="customRowStyle">
-        <item name="android:foreground">@drawable/highlight_overlay</item>
-    </style>
-
-    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@android:color/white</item>
-    </style>
-
-    <style name="Widget.Aptoide.RatingBar.GridItem" parent="Widget.AppCompat.RatingBar">
-        <item name="android:progressDrawable">@drawable/rating_bar</item>
-    </style>
-
-    <style name="titleLabel">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:gravity">left</item>
-    </style>
-
-    <style name="badgeReasonStyle">
-        <item name="android:paddingRight">44dp</item>
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="WidgetButtonCarrierBillingFortumo" parent="WidgetButtonCustom">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:drawableLeft">@drawable/ic_action_fortumo</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:background">@drawable/fortumo_btn_default_holo_light</item>
-    </style>
-
-
-    <!-- Base application theme. -->
-    <!--<style name="CustomToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">-->
-    <!--<item name="android:textColorPrimary">@color/white</item>-->
-    <!--<item name="android:textColor">@color/black</item>-->
-    <!--<item name="android:textColorSecondary">@color/white</item>-->
-    <!--<item name="android:textColorPrimaryInverse">@color/white</item>-->
-    <!--</style>-->
-
-    <!--<style name="Widget.Aptoide.Button.Header" parent="Widget.AppCompat.Button.Small">-->
-    <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
-    <!--</style>-->
-
-    <style name="AppViewHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/appview_title_text_size</item>
-    </style>
-
-    <style name="OtherVersionsHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/appview_title_text_size</item>
-    </style>
-
-    <style name="RollBackSectionTextViewStyle" parent="@android:style/Widget.TextView">
-        <item name="android:padding">?sectionListView.sectionTextViewPadding</item>
-        <item name="android:textColor">?sectionListView.sectionTextViewTextColor</item>
-        <item name="android:textSize">?sectionListView.sectionTextViewTextSize</item>
-    </style>
-
-    <style name="TextViewAppLabel">
-
-    </style>
-
-    <style name="RollBackSectionItemStyle">
-        <item name="android:padding">?sectionListView.sectionItemPadding</item>
-        <item name="android:background">?sectionListView.sectionItemBackground</item>
-    </style>
-
-
-    <style name="MenuDrawer"/>
-
-    <style name="MenuDrawer.Widget"/>
-
-    <style name="MenuDrawer.Widget.Title">
-        <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">32dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-
-    <!--<style name="WidgetButtonCustom" parent="@android:style/Widget.Button">-->
-    <!--<item name="android:layout_width">wrap_content</item>-->
-    <!--<item name="android:layout_height">wrap_content</item>-->
-    <!--<item name="android:textAppearance">@android:style/TextAppearance.Medium</item>-->
-    <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
-    <!--<item name="android:maxLines">1</item>-->
-    <!--<item name="android:ellipsize">end</item>-->
-    <!--<item name="android:singleLine">true</item>-->
-    <!--<item name="android:paddingLeft">15dp</item>-->
-    <!--<item name="android:paddingRight">15dp</item>-->
-    <!--<item name="android:textStyle">normal</item>-->
-    <!--<item name="android:gravity">center</item>-->
-    <!--</style>-->
-
-
-    <!--<style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">-->
-    <!--<item name="android:background">@drawable/aptoide_btn_default_holo_light</item>-->
-    <!--</style>-->
-
-    <!--<style name="WidgetButtonCustomGray" parent="@android:style/Widget.Button">-->
-    <!--<item name="android:layout_width">fill_parent</item>-->
-    <!--<item name="android:layout_height">wrap_content</item>-->
-    <!--<item name="android:background">@drawable/gray_btn_default_holo_light</item>-->
-    <!--<item name="android:textAppearance">@android:style/TextAppearance.Medium</item>-->
-    <!--<item name="android:textColor">?android:attr/textColorPrimary</item>-->
-    <!--<item name="android:maxLines">1</item>-->
-    <!--<item name="android:ellipsize">end</item>-->
-    <!--<item name="android:singleLine">true</item>-->
-    <!--<item name="android:layout_margin">2dp</item>-->
-    <!--<item name="android:textStyle">normal</item>-->
-    <!--</style>-->
-
-
-    <style name="WidgetButtonVisa" parent="WidgetButtonCustom">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:drawableLeft">@drawable/ic_action_credit_card_dark</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:background">@drawable/visa_btn_default_holo_light</item>
-    </style>
-
-    <style name="WidgetButtonPaypal" parent="WidgetButtonCustom">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:drawableLeft">@drawable/ic_action_paypal_dark</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:background">@drawable/paypal_btn_default_holo_light</item>
-    </style>
-
-    <style name="WidgetButtonCarrierBillingUnitel" parent="WidgetButtonCustom">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:drawableLeft">@drawable/ic_action_unitel2</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:background">@drawable/unitel_btn_default_holo_light</item>
-    </style>
-
-    <style name="TimelineCommentsDialog" parent="@style/FinskyLightDialogTheme">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <style name="FinskyLightDialogTheme" parent="AptoideThemeDefault">
-        <item name="android:windowBackground">@drawable/dialog_full_holo_light</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowSoftInputMode">stateUnchanged|adjustResize</item>
-
-    </style>
-
-    <style name="WizardPageTitle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">6dp</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:textColor">?attr/customColor</item>
-    </style>
-
-    <style name="WizardPageSubtitle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">4dp</item>
-        <item name="android:paddingLeft">6dp</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="PurchaseDialog" parent="@style/FinskyLightDialogTheme">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="windowActionBar">false</item>
-    </style>
-
-    <style name="Aptoide.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
-        <item name="android:layout">@layout/fragment_aptoide_preferences</item>
-        <item name="android:labelTextSize">@dimen/text_size_medium</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:windowTitleSize">@dimen/text_size_large</item>
-    </style>
-
-    <style name="AppViewWidget">
-        <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
-        <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>
-        <item name="android:paddingLeft">@dimen/appview_side_margin</item>
-        <item name="android:paddingRight">@dimen/appview_side_margin</item>
-    </style>
-
-    <style name="ToolbarGrey" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/grey</item>
-    </style>
-
-    <style name="ToolbarTeal" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/teal</item>
-    </style>
-
-    <style name="ToolbarBrown" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/brown</item>
-    </style>
-
-    <style name="ToolbarBluegrey" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/bluegrey</item>
-    </style>
-
-    <style name="ToolbarLightgreen" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/lightgreen</item>
-    </style>
-
-    <style name="ToolbarAmber" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/amber</item>
-    </style>
-
-    <style name="ToolbarLime" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/lime</item>
-    </style>
-
-    <style name="ToolbarOrange" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/orange</item>
-    </style>
-
-    <style name="ToolbarPink" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/pink</item>
-    </style>
-
-    <style name="ToolbarIndigo" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/indigo</item>
-    </style>
-
-    <style name="ToolbarRed" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/red</item>
-    </style>
-
-    <style name="ToolbarGreen" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/green</item>
-    </style>
-
-    <style name="ToolbarDeeppurple" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/deeppurple</item>
-    </style>
-
-    <style name="ToolbarBlack" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/grey</item>
-    </style>
-
-    <style name="ToolbarLightblue" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/lightblue</item>
-    </style>
-
-    <style name="ToolbarGreyTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/grey_700</item>
-    </style>
-
-    <style name="ToolbarTealTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/teal_700</item>
-    </style>
-
-    <style name="ToolbarBrownTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/brown_700</item>
-    </style>
-
-    <style name="ToolbarBluegreyTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/bluegrey_700</item>
-    </style>
-
-    <style name="ToolbarLightgreenTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/lightgreen_700</item>
-    </style>
-
-    <style name="ToolbarAmberTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/amber_700</item>
-    </style>
-
-    <style name="ToolbarLimeTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/lime_700</item>
-    </style>
-
-    <style name="ToolbarOrangeTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/orange_700</item>
-    </style>
-
-    <style name="ToolbarPinkTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/pink_700</item>
-    </style>
-
-    <style name="ToolbarIndigoTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/indigo_700</item>
-    </style>
-
-    <style name="ToolbarRedTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/red_700</item>
-    </style>
-
-    <style name="ToolbarGreenTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/green_700</item>
-    </style>
-
-    <style name="ToolbarDeeppurpleTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/deeppurple_700</item>
-    </style>
-
-    <style name="ToolbarBlackTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/grey_700</item>
-    </style>
-
-    <style name="ToolbarLightblueTransparent" parent="@style/Theme.AppCompat">
-        <item name="pstsIndicatorColor">@color/lightblue_700</item>
-    </style>
-
-
-    <!-- Widgets for non-default themes -->
-
-    <style name="WidgetButtonCustomOrange" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/orange_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideOrange" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/orange_btn_default_holo_light</item>
-        <item name="android:textColor" >@color/orange_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomPink" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/pink_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoidePink" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/pink_btn_default_holo_light</item>
-        <item name="android:textColor" >@color/pink_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomRed" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/red_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideRed" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/red_btn_default_holo_light</item>
-        <item name="android:textColor" >@color/red_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomGreen" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/green_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideGreen" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/green_btn_default_holo_light</item>
-        <item name="android:textColor" >@color/green_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomLime" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/lime_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideLime" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/lime_btn_default_holo_light</item>
-        <item name="android:textColor" >@color/lime_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomIndigo" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/indigo_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideIndigo" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/indigo_btn_default_holo_light</item>
-        <item name="android:textColor" >@color/indigo_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomDeepPurple" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideDeepPurple" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
-        <item name="android:textColor">@color/deeppurple_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomAmber" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/amber_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideAmber" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/amber_btn_default_holo_light</item>
-        <item name="android:textColor">@color/amber_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomBlack" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/black_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideBlack" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/black_btn_default_holo_light</item>
-        <item name="android:textColor" >@color/black</item>
-    </style>
-
-    <style name="WidgetButtonCustomLightblue" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideLightblue" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
-        <item name="android:textColor">@color/lightblue_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomLightgreen" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideLightgreen" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
-        <item name="android:textColor">@color/lightgreen_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomBluegrey" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideBluegrey" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
-        <item name="android:textColor">@color/bluegrey_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomBrown" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/brown_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideBrown" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/brown_btn_default_holo_light</item>
-        <item name="android:textColor">@color/brown_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomTeal" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/teal_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideTeal" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/teal_btn_default_holo_light</item>
-        <item name="android:textColor">@color/teal_700</item>
-    </style>
-
-    <style name="WidgetButtonCustomGrey" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/grey_btn_default_holo_light</item>
-    </style>
-    <style name="WidgetButtonCustomAptoideGrey" parent="WidgetButtonCustomAptoide">
-        <item name="android:background">@drawable/grey_btn_default_holo_light</item>
-        <item name="android:textColor">@color/grey_700</item>
-    </style>
-
-    <style name="FragmentRateAndReviewsLabel">
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:drawableLeft">@drawable/grid_item_star_full_small</item>
-        <item name="android:drawablePadding">6dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">8.3sp</item>
-    </style>
-
-    <style name="FragmentRateAndReviewsCount">
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:text">@string/zero</item>
-        <item name="android:textSize">8.3sp</item>
-        <item name="android:gravity">right</item>
-    </style>
-
-    <style name="FragmentRateAndReviewsProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">10dp</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:indeterminate">false</item>
-        <item name="android:max">100</item>
-        <item name="android:progress">0</item>
-        <item name="android:progressDrawable">@drawable/dark_progress_bar</item>
-    </style>
-
-    <style name="WidgetButtonCustomAptoideTwoLines" parent="WidgetButtonCustomAptoide">
-        <item name="android:textSize">12sp</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:maxLines">2</item>
-    </style>
-
-    <style name="AptoideAppView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+  <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <item name="background">@drawable/ab_background_aptoide</item>
+    <item name="logo">@drawable/ic_widget_launcher</item>
+    <item name="displayOptions">showHome|useLogo</item>
+    <item name="titleTextStyle">@style/titleStyle</item>
+
+    <item name="android:background">@drawable/ab_background_aptoide</item>
+    <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    <item name="android:titleTextStyle" tools:ignore="NewApi">@style/titleStyle</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card" parent="">
+    <item name="cardCornerRadius">8.3dp</item>
+    <item name="android:background">@drawable/dialog_bg</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Title" parent="Base.TextAppearance.AppCompat.Small">
+    <item name="android:textSize">14.3sp</item>
+    <item name="android:textColor">@color/black</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Body">
+    <item name="android:textSize">14.7sp</item>
+    <item name="android:textColor">#b8b8b8</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Title.Large" parent="Base.TextAppearance.AppCompat.Title">
+    <item name="android:textSize">18.3sp</item>
+    <item name="android:textColor">#b8b8b8</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Title.Large.Black">
+    <item name="android:textColor">@android:color/black</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Subtitle.Large">
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">#b8b8b8</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Title.Feature">
+    <item name="android:textColor">#ff7200</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Title.LatestApps">
+    <item name="android:textColor">@color/card_store_title</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Thumbnail" parent="Base.TextAppearance.AppCompat.Small">
+    <item name="android:textStyle">bold</item>
+    <item name="android:textSize">13sp</item>
+    <item name="android:textColor">#43484e</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Button" parent="Widget.AppCompat.Button.Borderless">
+    <item name="android:textColor">#4d4d4d</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:padding">0dp</item>
+    <item name="android:minHeight">0dp</item>
+    <item name="android:minWidth">0dp</item>
+    <item name="android:drawablePadding">16dp</item>
+    <item name="android:drawableStart">@drawable/timeline_arrow_get_app</item>
+  </style>
+
+  <style name="Widget.Aptoide.Card.Subtitle" parent="Base.TextAppearance.AppCompat.Caption">
+    <item name="android:textSize">10sp</item>
+    <item name="android:textColor">#9a9a9a</item>
+  </style>
+  >
+
+  <style name="Widget.Aptoide.Card.Headline" parent="Base.TextAppearance.AppCompat.Caption">
+    <item name="android:textSize">13sp</item>
+    <item name="android:textColor">#43484e</item>
+  </style>
+
+  <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <item name="android:textColor">@android:color/white</item>
+  </style>
+
+  <style name="AutoCompleteTextView" parent="@style/Theme.AppCompat">
+    <item name="android:textColorHint">@android:color/white</item>
+  </style>
+
+  <style name="customRowStyleHomeLayout">
+    <item name="android:clickable">true</item>
+    <item name="android:focusable">true</item>
+  </style>
+
+  <style name="navigationDrawerColorLight">
+    <item name="android:background">@android:color/white</item>
+  </style>
+
+  <style name="backgroundTabsStyleLight">
+    <item name="android:background">@drawable/background_tabs_light</item>
+  </style>
+
+  <style name="headerSeparatorButtonStyleAptoide" parent="headerSeparatorButtonStyle">
+    <item name="android:background">@drawable/flat_selector</item>
+    <item name="android:padding">5dp</item>
+    <item name="android:layout_margin">5dp</item>
+  </style>
+
+  <style name="focusableBackground">
+    <item name="android:foreground">@drawable/highlight_overlay</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:clickable">true</item>
+    <item name="android:focusable">true</item>
+  </style>
+
+  <style name="RatingBarExtraSmall">
+    <item name="android:progressDrawable">@drawable/rating_bar_grid_item</item>
+    <item name="android:isIndicator">true</item>
+    <item name="android:minHeight">10dp</item>
+    <item name="android:maxHeight">10dp</item>
+    <item name="android:focusableInTouchMode">false</item>
+    <item name="android:clickable">false</item>
+    <item name="android:focusable">false</item>
+  </style>
+
+  <style name="RatingBarSmall">
+    <item name="android:progressDrawable">@drawable/rating_bar_small</item>
+    <item name="android:isIndicator">true</item>
+    <item name="android:minHeight">13dp</item>
+    <item name="android:maxHeight">13dp</item>
+    <item name="android:focusableInTouchMode">false</item>
+    <item name="android:clickable">false</item>
+    <item name="android:focusable">false</item>
+  </style>
+
+  <style name="RatingBarMedium">
+    <item name="android:progressDrawable">@drawable/rating_bar_medium</item>
+    <item name="android:isIndicator">true</item>
+    <item name="android:minHeight">22dp</item>
+    <item name="android:maxHeight">22dp</item>
+    <item name="android:focusableInTouchMode">false</item>
+    <item name="android:clickable">false</item>
+    <item name="android:focusable">false</item>
+  </style>
+
+  <style name="RatingBarLargeSelectable">
+    <!--<item name="android:progressDrawable">@drawable/rating_bar_big</item>-->
+    <item name="android:progressDrawable">@drawable/rating_bar_medium</item>
+    <item name="android:minHeight">26dp</item>
+    <item name="android:maxHeight">26dp</item>
+  </style>
+
+  <style name="RatingBarReviewDialog">
+    <item name="android:progressDrawable">@drawable/rating_bar_review</item>
+    <item name="android:minHeight">36dp</item>
+    <item name="android:maxHeight">36dp</item>
+  </style>
+
+  <style name="backgroundCardStyleLight">
+    <item name="android:background">@drawable/white_card</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/aptoide_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideWhite" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/aptoide_white_btn_default_holo_light</item>
+    <item name="android:textColor">@color/orange_700</item>
+  </style>
+
+  <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    <item name="android:textColor">@android:color/white</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:paddingLeft">15dp</item>
+    <item name="android:paddingRight">15dp</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:gravity">center</item>
+  </style>
+
+  <style name="backgroundCardStyleDark">
+    <item name="android:background">@drawable/dark_card</item>
+  </style>
+
+  <style name="backgroundTabsStyleDark">
+    <item name="android:background">@drawable/background_tabs_dark</item>
+  </style>
+
+  <style name="navigationDrawerColorDark">
+    <item name="android:background">@android:color/black</item>
+  </style>
+
+  <style name="headerSeparatorButtonStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_alignParentRight">true</item>
+    <item name="android:gravity">center</item>
+    <item name="android:paddingRight">10dp</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    <item name="android:paddingLeft">10dp</item>
+    <item name="android:layout_marginRight">5dp</item>
+    <item name="android:layout_marginLeft">5dp</item>
+    <item name="android:textColor">@android:color/white</item>
+    <item name="android:textStyle">italic</item>
+    <item name="android:layout_gravity">center_vertical|right</item>
+    <item name="android:clickable">true</item>
+    <item name="android:focusable">true</item>
+  </style>
+
+  <style name="WidgetButtonCustomGray" parent="@android:style/Widget.Button">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@drawable/gray_btn_default_holo_light</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:layout_margin">2dp</item>
+    <item name="android:textStyle">normal</item>
+  </style>
+
+  <style name="focusableRowBackground">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:clickable">true</item>
+    <item name="android:focusable">true</item>
+  </style>
+
+  <style name="Toolbar" parent="@style/Theme.AppCompat">
+  </style>
+
+  <style name="ToolbarDark" parent="@style/Theme.AppCompat">
+    <!--<item name="pstsIndicatorColor">@color/aptoide_orange</item>-->
+  </style>
+
+  <style name="customRowStyle">
+    <item name="android:foreground">@drawable/highlight_overlay</item>
+  </style>
+
+  <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+    <item name="spinBars">true</item>
+    <item name="color">@android:color/white</item>
+  </style>
+
+  <style name="Widget.Aptoide.RatingBar.GridItem" parent="Widget.AppCompat.RatingBar">
+    <item name="android:progressDrawable">@drawable/rating_bar</item>
+  </style>
+
+  <style name="titleLabel">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <item name="android:paddingBottom">5dp</item>
+    <item name="android:paddingLeft">5dp</item>
+    <item name="android:paddingRight">5dp</item>
+    <item name="android:paddingTop">10dp</item>
+    <item name="android:gravity">left</item>
+  </style>
+
+  <style name="badgeReasonStyle">
+    <item name="android:paddingRight">44dp</item>
+    <item name="android:paddingLeft">4dp</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+
+  <style name="WidgetButtonCarrierBillingFortumo" parent="WidgetButtonCustom">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:drawableLeft">@drawable/ic_action_fortumo</item>
+    <item name="android:layout_margin">2dp</item>
+    <item name="android:background">@drawable/fortumo_btn_default_holo_light</item>
+  </style>
+
+
+  <!-- Base application theme. -->
+  <!--<style name="CustomToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">-->
+  <!--<item name="android:textColorPrimary">@color/white</item>-->
+  <!--<item name="android:textColor">@color/black</item>-->
+  <!--<item name="android:textColorSecondary">@color/white</item>-->
+  <!--<item name="android:textColorPrimaryInverse">@color/white</item>-->
+  <!--</style>-->
+
+  <!--<style name="Widget.Aptoide.Button.Header" parent="Widget.AppCompat.Button.Small">-->
+  <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
+  <!--</style>-->
+
+  <style name="AppViewHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
+    <item name="android:textColor">@color/white</item>
+    <item name="android:textSize">@dimen/appview_title_text_size</item>
+  </style>
+
+  <style name="OtherVersionsHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
+    <item name="android:textColor">@color/black</item>
+    <item name="android:textSize">@dimen/appview_title_text_size</item>
+  </style>
+
+  <style name="RollBackSectionTextViewStyle" parent="@android:style/Widget.TextView">
+    <item name="android:padding">?sectionListView.sectionTextViewPadding</item>
+    <item name="android:textColor">?sectionListView.sectionTextViewTextColor</item>
+    <item name="android:textSize">?sectionListView.sectionTextViewTextSize</item>
+  </style>
+
+  <style name="TextViewAppLabel">
+
+  </style>
+
+  <style name="RollBackSectionItemStyle">
+    <item name="android:padding">?sectionListView.sectionItemPadding</item>
+    <item name="android:background">?sectionListView.sectionItemBackground</item>
+  </style>
+
+
+  <style name="MenuDrawer"/>
+
+  <style name="MenuDrawer.Widget"/>
+
+  <style name="MenuDrawer.Widget.Title">
+    <item name="android:textAppearance">?android:attr/textAppearance</item>
+    <item name="android:textSize">18sp</item>
+    <item name="android:paddingLeft">16dp</item>
+    <item name="android:paddingRight">32dp</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:drawablePadding">16dp</item>
+    <item name="android:gravity">center_vertical</item>
+  </style>
+
+
+  <!--<style name="WidgetButtonCustom" parent="@android:style/Widget.Button">-->
+  <!--<item name="android:layout_width">wrap_content</item>-->
+  <!--<item name="android:layout_height">wrap_content</item>-->
+  <!--<item name="android:textAppearance">@android:style/TextAppearance.Medium</item>-->
+  <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
+  <!--<item name="android:maxLines">1</item>-->
+  <!--<item name="android:ellipsize">end</item>-->
+  <!--<item name="android:singleLine">true</item>-->
+  <!--<item name="android:paddingLeft">15dp</item>-->
+  <!--<item name="android:paddingRight">15dp</item>-->
+  <!--<item name="android:textStyle">normal</item>-->
+  <!--<item name="android:gravity">center</item>-->
+  <!--</style>-->
+
+
+  <!--<style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">-->
+  <!--<item name="android:background">@drawable/aptoide_btn_default_holo_light</item>-->
+  <!--</style>-->
+
+  <!--<style name="WidgetButtonCustomGray" parent="@android:style/Widget.Button">-->
+  <!--<item name="android:layout_width">fill_parent</item>-->
+  <!--<item name="android:layout_height">wrap_content</item>-->
+  <!--<item name="android:background">@drawable/gray_btn_default_holo_light</item>-->
+  <!--<item name="android:textAppearance">@android:style/TextAppearance.Medium</item>-->
+  <!--<item name="android:textColor">?android:attr/textColorPrimary</item>-->
+  <!--<item name="android:maxLines">1</item>-->
+  <!--<item name="android:ellipsize">end</item>-->
+  <!--<item name="android:singleLine">true</item>-->
+  <!--<item name="android:layout_margin">2dp</item>-->
+  <!--<item name="android:textStyle">normal</item>-->
+  <!--</style>-->
+
+
+  <style name="WidgetButtonVisa" parent="WidgetButtonCustom">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:drawableLeft">@drawable/ic_action_credit_card_dark</item>
+    <item name="android:layout_margin">2dp</item>
+    <item name="android:background">@drawable/visa_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonPaypal" parent="WidgetButtonCustom">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:drawableLeft">@drawable/ic_action_paypal_dark</item>
+    <item name="android:layout_margin">2dp</item>
+    <item name="android:background">@drawable/paypal_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCarrierBillingUnitel" parent="WidgetButtonCustom">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:drawableLeft">@drawable/ic_action_unitel2</item>
+    <item name="android:layout_margin">2dp</item>
+    <item name="android:background">@drawable/unitel_btn_default_holo_light</item>
+  </style>
+
+  <style name="TimelineCommentsDialog" parent="@style/FinskyLightDialogTheme">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="windowActionBar">false</item>
+    <item name="android:windowFullscreen">true</item>
+  </style>
+
+  <style name="FinskyLightDialogTheme" parent="AptoideThemeDefault">
+    <item name="android:windowBackground">@drawable/dialog_full_holo_light</item>
+    <item name="android:windowFrame">@null</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:windowSoftInputMode">stateUnchanged|adjustResize</item>
+
+  </style>
+
+  <style name="WizardPageTitle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginBottom">8dp</item>
+    <item name="android:paddingLeft">6dp</item>
+    <item name="android:textSize">25sp</item>
+    <item name="android:textColor">?attr/customColor</item>
+  </style>
+
+  <style name="WizardPageSubtitle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginBottom">4dp</item>
+    <item name="android:paddingLeft">6dp</item>
+    <item name="android:textSize">15sp</item>
+  </style>
+
+  <style name="PurchaseDialog" parent="@style/FinskyLightDialogTheme">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="windowActionBar">false</item>
+  </style>
+
+  <style name="Aptoide.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+    <item name="android:layout">@layout/fragment_aptoide_preferences</item>
+    <item name="android:labelTextSize">@dimen/text_size_medium</item>
+    <item name="android:textSize">@dimen/text_size_medium</item>
+    <item name="android:windowTitleSize">@dimen/text_size_large</item>
+  </style>
+
+  <style name="AppViewWidget">
+    <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
+    <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>
+    <item name="android:paddingLeft">@dimen/appview_side_margin</item>
+    <item name="android:paddingRight">@dimen/appview_side_margin</item>
+  </style>
+
+  <style name="ToolbarGrey" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/grey</item>
+  </style>
+
+  <style name="ToolbarTeal" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/teal</item>
+  </style>
+
+  <style name="ToolbarBrown" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/brown</item>
+  </style>
+
+  <style name="ToolbarBluegrey" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/bluegrey</item>
+  </style>
+
+  <style name="ToolbarLightgreen" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/lightgreen</item>
+  </style>
+
+  <style name="ToolbarAmber" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/amber</item>
+  </style>
+
+  <style name="ToolbarLime" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/lime</item>
+  </style>
+
+  <style name="ToolbarOrange" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/orange</item>
+  </style>
+
+  <style name="ToolbarPink" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/pink</item>
+  </style>
+
+  <style name="ToolbarIndigo" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/indigo</item>
+  </style>
+
+  <style name="ToolbarRed" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/red</item>
+  </style>
+
+  <style name="ToolbarGreen" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/green</item>
+  </style>
+
+  <style name="ToolbarDeeppurple" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/deeppurple</item>
+  </style>
+
+  <style name="ToolbarBlack" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/grey</item>
+  </style>
+
+  <style name="ToolbarLightblue" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/lightblue</item>
+  </style>
+
+  <style name="ToolbarGreyTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/grey_700</item>
+  </style>
+
+  <style name="ToolbarTealTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/teal_700</item>
+  </style>
+
+  <style name="ToolbarBrownTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/brown_700</item>
+  </style>
+
+  <style name="ToolbarBluegreyTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/bluegrey_700</item>
+  </style>
+
+  <style name="ToolbarLightgreenTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/lightgreen_700</item>
+  </style>
+
+  <style name="ToolbarAmberTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/amber_700</item>
+  </style>
+
+  <style name="ToolbarLimeTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/lime_700</item>
+  </style>
+
+  <style name="ToolbarOrangeTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/orange_700</item>
+  </style>
+
+  <style name="ToolbarPinkTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/pink_700</item>
+  </style>
+
+  <style name="ToolbarIndigoTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/indigo_700</item>
+  </style>
+
+  <style name="ToolbarRedTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/red_700</item>
+  </style>
+
+  <style name="ToolbarGreenTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/green_700</item>
+  </style>
+
+  <style name="ToolbarDeeppurpleTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/deeppurple_700</item>
+  </style>
+
+  <style name="ToolbarBlackTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/grey_700</item>
+  </style>
+
+  <style name="ToolbarLightblueTransparent" parent="@style/Theme.AppCompat">
+    <item name="pstsIndicatorColor">@color/lightblue_700</item>
+  </style>
+
+
+  <!-- Widgets for non-default themes -->
+
+  <style name="WidgetButtonCustomOrange" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/orange_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideOrange" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/orange_btn_default_holo_light</item>
+    <item name="android:textColor">@color/orange_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomPink" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/pink_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoidePink" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/pink_btn_default_holo_light</item>
+    <item name="android:textColor">@color/pink_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomRed" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/red_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideRed" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/red_btn_default_holo_light</item>
+    <item name="android:textColor">@color/red_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomGreen" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/green_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideGreen" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/green_btn_default_holo_light</item>
+    <item name="android:textColor">@color/green_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomLime" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/lime_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideLime" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/lime_btn_default_holo_light</item>
+    <item name="android:textColor">@color/lime_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomIndigo" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/indigo_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideIndigo" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/indigo_btn_default_holo_light</item>
+    <item name="android:textColor">@color/indigo_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomDeepPurple" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideDeepPurple" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
+    <item name="android:textColor">@color/deeppurple_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomAmber" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/amber_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideAmber" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/amber_btn_default_holo_light</item>
+    <item name="android:textColor">@color/amber_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomBlack" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/black_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideBlack" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/black_btn_default_holo_light</item>
+    <item name="android:textColor">@color/black</item>
+  </style>
+
+  <style name="WidgetButtonCustomLightblue" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideLightblue" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
+    <item name="android:textColor">@color/lightblue_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomLightgreen" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideLightgreen" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
+    <item name="android:textColor">@color/lightgreen_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomBluegrey" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideBluegrey" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
+    <item name="android:textColor">@color/bluegrey_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomBrown" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/brown_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideBrown" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/brown_btn_default_holo_light</item>
+    <item name="android:textColor">@color/brown_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomTeal" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/teal_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideTeal" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/teal_btn_default_holo_light</item>
+    <item name="android:textColor">@color/teal_700</item>
+  </style>
+
+  <style name="WidgetButtonCustomGrey" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/grey_btn_default_holo_light</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideGrey" parent="WidgetButtonCustomAptoide">
+    <item name="android:background">@drawable/grey_btn_default_holo_light</item>
+    <item name="android:textColor">@color/grey_700</item>
+  </style>
+
+  <style name="FragmentRateAndReviewsLabel">
+    <item name="android:layout_alignParentLeft">true</item>
+    <item name="android:layout_centerVertical">true</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:drawableLeft">@drawable/grid_item_star_full_small</item>
+    <item name="android:drawablePadding">6dp</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textSize">8.3sp</item>
+  </style>
+
+  <style name="FragmentRateAndReviewsCount">
+    <item name="android:layout_alignParentRight">true</item>
+    <item name="android:layout_centerVertical">true</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:text">@string/zero</item>
+    <item name="android:textSize">8.3sp</item>
+    <item name="android:gravity">right</item>
+  </style>
+
+  <style name="FragmentRateAndReviewsProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">10dp</item>
+    <item name="android:layout_centerVertical">true</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:layout_marginLeft">10dp</item>
+    <item name="android:layout_marginRight">10dp</item>
+    <item name="android:indeterminate">false</item>
+    <item name="android:max">100</item>
+    <item name="android:progress">0</item>
+    <item name="android:progressDrawable">@drawable/dark_progress_bar</item>
+  </style>
+
+  <style name="WidgetButtonCustomAptoideTwoLines" parent="WidgetButtonCustomAptoide">
+    <item name="android:textSize">12sp</item>
+    <item name="android:singleLine">false</item>
+    <item name="android:maxLines">2</item>
+  </style>
+
+  <style name="AptoideAppView">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
 
 </resources>

@@ -7,34 +7,37 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <include layout="@layout/partial_view_incl_no_network"/>
+  <include layout="@layout/partial_view_incl_no_network"/>
 
-    <include layout="@layout/partial_view_error"/>
+  <include layout="@layout/partial_view_error"/>
 
-    <include layout="@layout/partial_view_progress_bar"/>
+  <include layout="@layout/partial_view_progress_bar"/>
 
-    <include layout="@layout/view_pager"/>
+  <include layout="@layout/view_pager"/>
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/app_bar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        />
+
+
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/tabsHeight"
+        android:background="?attr/backgroundTabs"
+        android:theme="?attr/toolbarTheme"
+        />
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            />
-
-
-        <com.astuetz.PagerSlidingTabStrip
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tabsHeight"
-            android:background="?attr/backgroundTabs"
-            android:theme="?attr/toolbarTheme"/>
-
-    </android.support.design.widget.AppBarLayout>
+  </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>

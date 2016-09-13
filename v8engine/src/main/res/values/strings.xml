@@ -4,280 +4,280 @@
   -->
 
 <resources>
-    <string name="app_name">Aptoide V8 Beta</string>
+  <string name="app_name">Aptoide V8 Beta</string>
 
-    <string name="dark">Dark</string>
-    <string name="light">Light</string>
+  <string name="dark">Dark</string>
+  <string name="light">Light</string>
 
-    <string name="updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
-    <string name="updates_filter_setting_title">Just show me stable app version updates</string>
-    <string name="aptoide_email">aptoide@aptoide.com</string>
-    <string name="aptoide_url">http://www.aptoide.com/</string>
+  <string name="updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
+  <string name="updates_filter_setting_title">Just show me stable app version updates</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
 
-    <!-- Permission pop-ups messages -->
-    <string name="access_to_external_storage_rationale">You need to allow access to External Storage</string>
-    <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
-    <string name="unsubscribe">Unsubscribe</string>
-    <string name="developer_website">Website: %s</string>
-    <string name="not_available">N/A</string>
-    <string name="developer_email">Email: %s</string>
-    <string name="developer_privacy_policy">Privacy Policy: %s</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_external_storage_rationale">You need to allow access to External Storage</string>
+  <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
+  <string name="unsubscribe">Unsubscribe</string>
+  <string name="developer_website">Website: %s</string>
+  <string name="not_available">N/A</string>
+  <string name="developer_email">Email: %s</string>
+  <string name="developer_privacy_policy">Privacy Policy: %s</string>
 
 
-    <string name="action_settings">Settings</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
-    <string name="button_header_more">more</string>
-    <string name="search">Search</string>
+  <string name="action_settings">Settings</string>
+  <string name="open">Open</string>
+  <string name="close">Close</string>
+  <string name="button_header_more">more</string>
+  <string name="search">Search</string>
 
-    <string name="update">Update</string>
-    <string name="uninstall">Uninstall</string>
-    <string name="downgrade">Downgrade</string>
-    <string name="reinstall">Reinstall</string>
-    <string name="get_app">get app</string>
-    <string name="appview_followers_count_text">%1$s   Followers</string>
-    <string name="other_versions_downloads_count_text">%1$s   downloads</string>
+  <string name="update">Update</string>
+  <string name="uninstall">Uninstall</string>
+  <string name="downgrade">Downgrade</string>
+  <string name="reinstall">Reinstall</string>
+  <string name="get_app">get app</string>
+  <string name="appview_followers_count_text">%1$s   Followers</string>
+  <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 
-    <!-- Common (menu) -->
-    <string name="menu_select_all">Select All</string>
-    <string name="menu_select_none">Select None</string>
-    <string name="clear">Clear</string>
+  <!-- Common (menu) -->
+  <string name="menu_select_all">Select All</string>
+  <string name="menu_select_none">Select None</string>
+  <string name="clear">Clear</string>
 
-    <!-- Excluded Updates Fragment -->
-    <string name="excluded_updates">Excluded Updates</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">Excluded Updates</string>
     <string name="no_excluded_updates_msg">The new version of an app doesn’t work on your device or some feature is
         missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop
         updating.</string>
 
-    <!-- Excluded Updates Fragment (menu) -->
-    <string name="restore_updates">Restore Updates</string>
-    <string name="open_apps_manager">Open Apps Manager</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">Restore Updates</string>
+  <string name="open_apps_manager">Open Apps Manager</string>
 
-    <!-- Rollback Fragment -->
-    <string name="rollback">Rollback</string>
+  <!-- Rollback Fragment -->
+  <string name="rollback">Rollback</string>
     <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
         apps (via Aptoide) including version and install date.</string>
 
-    <!-- Timeline Fragment -->
-    <string name="menu_card_timeline_clear">Clear</string>
-    <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
-    <string name="fragment_social_timeline_no_connection">No network connection</string>
-    <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
+  <!-- Timeline Fragment -->
+  <string name="menu_card_timeline_clear">Clear</string>
+  <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
+  <string name="fragment_social_timeline_no_connection">No network connection</string>
+  <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
 
-    <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
-    <string name="displayable_social_timeline_app_update_name">App %1$s</string>
-    <string name="displayable_social_timeline_app_has_update">has an %1$s</string>
-    <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
-    <string name="displayable_social_timeline_app_update">update</string>
-    <string name="displayable_social_timeline_app_update_application">application</string>
-    <string name="displayable_social_timeline_app_update_version">Version: %1$s</string>
-    <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
-    <string name="appview_other_versions"><u>Other Versions</u></string>
-    <string name="appview_latest_version_text">Latest version</string>
-    <string name="appview_rate_this_app">rate this app</string>
-    <string name="appview_read_all">read all <![CDATA[>]]></string>
-    <string name="zero">0</string>
-    <string name="working_well">Working Well</string>
-    <string name="needs_license">Needs License</string>
-    <string name="fake_app">Fake App</string>
-    <string name="virus">Virus</string>
-    <string name="additional_information">Additional information</string>
-    <string name="displayable_social_timeline_app_update_updated">Updated</string>
-    <string name="displayable_social_timeline_app_update_updating">Updating</string>
-    <string name="displayable_social_timeline_app_update_error">Update Error</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
+  <string name="displayable_social_timeline_app_update_name">App %1$s</string>
+  <string name="displayable_social_timeline_app_has_update">has an %1$s</string>
+  <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
+  <string name="displayable_social_timeline_app_update">update</string>
+  <string name="displayable_social_timeline_app_update_application">application</string>
+  <string name="displayable_social_timeline_app_update_version">Version: %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
+  <string name="appview_other_versions"><u>Other Versions</u></string>
+  <string name="appview_latest_version_text">Latest version</string>
+  <string name="appview_rate_this_app">rate this app</string>
+  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="zero">0</string>
+  <string name="working_well">Working Well</string>
+  <string name="needs_license">Needs License</string>
+  <string name="fake_app">Fake App</string>
+  <string name="virus">Virus</string>
+  <string name="additional_information">Additional information</string>
+  <string name="displayable_social_timeline_app_update_updated">Updated</string>
+  <string name="displayable_social_timeline_app_update_updating">Updating</string>
+  <string name="displayable_social_timeline_app_update_error">Update Error</string>
 
-        <!-- need translation -->
-    <string name="appview_good_app_guaranteed">Good App Guaranteed!</string>
+  <!-- need translation -->
+  <string name="appview_good_app_guaranteed">Good App Guaranteed!</string>
     <string name="appview_good_app_description">This applications passed the security test for virus, malware and other malicious attacks and doesn\'t
         contain any threats!</string>
-        <!-- -->
+  <!-- -->
 
-    <!-- Preferences -->
-    <string name="animations">Animations</string>
-    <string name="animations_enabled">Animations enabled</string>
+  <!-- Preferences -->
+  <string name="animations">Animations</string>
+  <string name="animations_enabled">Animations enabled</string>
 
-    <!-- "Other <app name> versions on different Stores" -->
-    <string name="other_versions_partial_title_1">Other</string>
-    <string name="other_versions_partial_title_2">versions on different Stores</string>
-    <string name="other_versions">Other versions</string>
-    <string name="displayable_social_timeline_recommendation_similar_to">Similar to %1$s</string>
-    <string name="displayable_social_timeline_recommendation_similar_and">and</string>
-    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide recommends</string>
-    <string name="social_facebook_screen_title">Facebook</string>
-    <string name="social_twitter_screen_title">Twitter</string>
-    <string name="top_comments">Top Comments</string>
-    <string name="rate">Rate</string>
-    <string name="rate_app">Rate %s</string>
-    <string name="title">Title</string>
-    <string name="tap_a_star">Tap a star to rate</string>
-    <string name="review">Review</string>
-    <string name="optional">optional</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="other_versions_partial_title_1">Other</string>
+  <string name="other_versions_partial_title_2">versions on different Stores</string>
+  <string name="other_versions">Other versions</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">Similar to %1$s</string>
+  <string name="displayable_social_timeline_recommendation_similar_and">and</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide recommends</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Top Comments</string>
+  <string name="rate">Rate</string>
+  <string name="rate_app">Rate %s</string>
+  <string name="title">Title</string>
+  <string name="tap_a_star">Tap a star to rate</string>
+  <string name="review">Review</string>
+  <string name="optional">optional</string>
 
-    <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
-    <string name="other_versions_on_different_stores">Other versions on different stores</string>
-    <string name="review_optional">Review (optional)</string>
-    <string name="feedback_not_valid">Please enter some valid Subject!</string>
-    <string name="thank_you_for_your_opinion">Thank you for your opinion!</string>
-    <string name="ignore_update">Ignore Update</string>
-    <string name="five_numeric">5</string>
-    <string name="four_numeric">4</string>
-    <string name="three_numeric">3</string>
-    <string name="two_numeric">2</string>
-    <string name="one_numeric">1</string>
-    <string name="just_reviews">Just Reviews</string>
-    <string name="downgrading_msg">Downgrading</string>
-    <string name="updating_msg">Updating</string>
-    <string name="installing_msg">Installing</string>
-    <string name="needs_permission_to_fs">Needs permission to use the external File System</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">Other versions on different stores</string>
+  <string name="review_optional">Review (optional)</string>
+  <string name="feedback_not_valid">Please enter some valid Subject!</string>
+  <string name="thank_you_for_your_opinion">Thank you for your opinion!</string>
+  <string name="ignore_update">Ignore Update</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Just Reviews</string>
+  <string name="downgrading_msg">Downgrading</string>
+  <string name="updating_msg">Updating</string>
+  <string name="installing_msg">Installing</string>
+  <string name="needs_permission_to_fs">Needs permission to use the external File System</string>
 
-    <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
-    <string name="pause_all_downloads">Pause Downloads</string>
-    <string name="all_stores">All Stores</string>
-    <string name="followed_stores">Followed Stores</string>
-    <string name="storage_access_permission_request_message">Please allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
+  <string name="pause_all_downloads">Pause Downloads</string>
+  <string name="all_stores">All Stores</string>
+  <string name="followed_stores">Followed Stores</string>
+  <string name="storage_access_permission_request_message">Please allow access to your phone’s storage so we can download and install this app.</string>
 
-    <!-- WIZARD -->
-    <string name="wizard_skip"><b>SKIP</b></string>
-    <!-- WIZARD PAGE 1 -->
-    <string name="wizard_welcome_message"><b>Welcome!</b></string>
-    <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
+  <!-- WIZARD -->
+  <string name="wizard_skip"><b>SKIP</b></string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
 
-    <!-- WIZARD PAGE 2 -->
-    <string name="wizard_title_viewpager_two"><b>Apps Feed</b></string>
-    <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two"><b>Apps Feed</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
 
-    <!-- WIZARD PAGE 3 -->
-    <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
-    <string name="wizard_register_now_button">Register now</string>
-    <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
-    <string name="wizard_or_login"><u>or Login</u></string>
+  <!-- WIZARD PAGE 3 -->
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
 
-    <string name="you_need_to_be_logged_in">You need to be logged in</string>
-    <string name="login">Login</string>
-    <string name="follow">Follow</string>
-    <!--need translation-->
-    <string name="followed">Following</string>
-    <string name="unfollow_yes_no">Are you sure you want to unfollow?</string>
-    <string name="unfollow">Unfollow</string>
-    <string name="appview_follow_store_button_text">Follow?</string>
-    <string name="unfollowing_store_message">Unfollowing %s</string>
-    <string name="store_followed">Store %s followed</string>
+  <string name="you_need_to_be_logged_in">You need to be logged in</string>
+  <string name="login">Login</string>
+  <string name="follow">Follow</string>
+  <!--need translation-->
+  <string name="followed">Following</string>
+  <string name="unfollow_yes_no">Are you sure you want to unfollow?</string>
+  <string name="unfollow">Unfollow</string>
+  <string name="appview_follow_store_button_text">Follow?</string>
+  <string name="unfollowing_store_message">Unfollowing %s</string>
+  <string name="store_followed">Store %s followed</string>
 
-    <!---->
-    <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
-    <string name="rate_this_app">Rate this app</string>
+  <!---->
+  <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
+  <string name="rate_this_app">Rate this app</string>
 
-    <string name="dialog_install_warning_proceed_button">Proceed</string>
-    <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
-    <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
-    <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
+  <string name="dialog_install_warning_proceed_button">Proceed</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
+  <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
+  <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
     <string name="dialog_install_warning_credibility_text">Before proceeding, check the Store\'s
         credibility and other user comments. Aptoide always recommends that you only install %1$s Trusted apps.</string>
-    <string name="dialog_install_warning_trusted_version_button">Trusted Version</string>
-    <string name="dialog_install_warning_get_trusted_version_button">Get</string>
-    <string name="flag_results">Flag results</string>
-    <string name="helpful">Helpful</string>
-    <string name="not_helpful">Not Helpful</string>
-    <string name="description_not_available">No available description for this app</string>
-    <string name="top_stores_fragment_title">Top Stores</string>
+  <string name="dialog_install_warning_trusted_version_button">Trusted Version</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Get</string>
+  <string name="flag_results">Flag results</string>
+  <string name="helpful">Helpful</string>
+  <string name="not_helpful">Not Helpful</string>
+  <string name="description_not_available">No available description for this app</string>
+  <string name="top_stores_fragment_title">Top Stores</string>
 
-    <!--server translations hammered-->
-    <string name="home_title">Home</string>
-    <string name="community">Community</string>
-    <string name="stores">Stores</string>
-    <string name="updates">Updates</string>
-    <string name="social_timeline">Social Timeline</string>
-    <string name="downloads">Downloads</string>
-    <string name="latest_reviews">Latest Reviews</string>
-    <string name="latest_comments">Latest Comments</string>
-    <string name="action">Action</string>
-    <string name="adventure">Adventure</string>
-    <string name="all">All</string>
-    <string name="applications">Applications</string>
-    <string name="arcade">Arcade</string>
-    <string name="arcade_action">Arcade &amp; Action</string>
-    <string name="auto_update">Auto Update</string>
-    <string name="board">Board</string>
-    <string name="books_reference">Books &amp; Reference</string>
-    <string name="brain_puzzle">Brain &amp; Puzzle</string>
-    <string name="business">Business</string>
-    <string name="card">Card</string>
-    <string name="cards_casino">Cards &amp; Casino</string>
-    <string name="casino">Casino</string>
-    <string name="casual">Casual</string>
-    <string name="comics">Comics</string>
-    <string name="communication">Communication</string>
-    <string name="demo">Demo</string>
-    <string name="education">Education</string>
-    <string name="educational">Educational</string>
-    <string name="enable">Enable</string>
-    <string name="entertainment">Entertainment</string>
-    <string name="family">Family</string>
-    <string name="finance">Finance</string>
-    <string name="games">Games</string>
-    <string name="health">Health</string>
-    <string name="health_fitness">Health &amp; Fitness</string>
-    <string name="highlighted">Highlighted</string>
-    <string name="local_top_apps">Local Top Apps</string>
-    <string name="lifestyle">Lifestyle</string>
-    <string name="media_video">Media &amp; Video</string>
-    <string name="medical">Medical</string>
-    <string name="multimedia">Multimedia</string>
-    <string name="music">Music</string>
-    <string name="music_audio">Music &amp; Audio</string>
-    <string name="news_magazines">News &amp; Magazines</string>
-    <string name="news_weather">News &amp; Weather</string>
-    <string name="personalization">Personalization</string>
-    <string name="photography">Photography</string>
-    <string name="productivity">Productivity</string>
-    <string name="puzzle">Puzzle</string>
-    <string name="quick_start">Quick Start</string>
-    <string name="racing">Racing</string>
-    <string name="reference">Reference</string>
-    <string name="role_playing">Role Playing</string>
-    <string name="simulation">Simulation</string>
-    <string name="social">Social</string>
-    <string name="software_libraries">Software Libraries</string>
-    <string name="sports">Sports</string>
-    <string name="sports_games">Sports Games</string>
-    <string name="strategy">Strategy</string>
-    <string name="themes">Themes</string>
-    <string name="tools">Tools</string>
-    <string name="top_apps">Top Apps</string>
-    <string name="top_games">Top Games</string>
-    <string name="transport">Transport</string>
-    <string name="transportation">Transportations</string>
-    <string name="travel">Travel</string>
-    <string name="travel_local">Travel &amp; Local</string>
-    <string name="trending">Trending</string>
-    <string name="trivia">Trivia</string>
-    <string name="word">Word</string>
-    <string name="libraries_demo">Libraries &amp; Demo</string>
-    <string name="shopping">Shopping</string>
-    <string name="weather">Weather</string>
-    <string name="latest_applications">Latest Applications</string>
-    <string name="top_apps_in_store">Top Apps In This Store</string>
-    <string name="apps_for_kids">Apps for Kids</string>
-    <string name="aptoide_publishers">Aptoide Publishers</string>
-    <string name="music_video">Music &amp; Video</string>
-    <string name="essential_apps">Essential Apps</string>
-    <string name="summer_apps">Summer Apps</string>
-    <string name="play_it">Play-It!</string>
+  <!--server translations hammered-->
+  <string name="home_title">Home</string>
+  <string name="community">Community</string>
+  <string name="stores">Stores</string>
+  <string name="updates">Updates</string>
+  <string name="social_timeline">Social Timeline</string>
+  <string name="downloads">Downloads</string>
+  <string name="latest_reviews">Latest Reviews</string>
+  <string name="latest_comments">Latest Comments</string>
+  <string name="action">Action</string>
+  <string name="adventure">Adventure</string>
+  <string name="all">All</string>
+  <string name="applications">Applications</string>
+  <string name="arcade">Arcade</string>
+  <string name="arcade_action">Arcade &amp; Action</string>
+  <string name="auto_update">Auto Update</string>
+  <string name="board">Board</string>
+  <string name="books_reference">Books &amp; Reference</string>
+  <string name="brain_puzzle">Brain &amp; Puzzle</string>
+  <string name="business">Business</string>
+  <string name="card">Card</string>
+  <string name="cards_casino">Cards &amp; Casino</string>
+  <string name="casino">Casino</string>
+  <string name="casual">Casual</string>
+  <string name="comics">Comics</string>
+  <string name="communication">Communication</string>
+  <string name="demo">Demo</string>
+  <string name="education">Education</string>
+  <string name="educational">Educational</string>
+  <string name="enable">Enable</string>
+  <string name="entertainment">Entertainment</string>
+  <string name="family">Family</string>
+  <string name="finance">Finance</string>
+  <string name="games">Games</string>
+  <string name="health">Health</string>
+  <string name="health_fitness">Health &amp; Fitness</string>
+  <string name="highlighted">Highlighted</string>
+  <string name="local_top_apps">Local Top Apps</string>
+  <string name="lifestyle">Lifestyle</string>
+  <string name="media_video">Media &amp; Video</string>
+  <string name="medical">Medical</string>
+  <string name="multimedia">Multimedia</string>
+  <string name="music">Music</string>
+  <string name="music_audio">Music &amp; Audio</string>
+  <string name="news_magazines">News &amp; Magazines</string>
+  <string name="news_weather">News &amp; Weather</string>
+  <string name="personalization">Personalization</string>
+  <string name="photography">Photography</string>
+  <string name="productivity">Productivity</string>
+  <string name="puzzle">Puzzle</string>
+  <string name="quick_start">Quick Start</string>
+  <string name="racing">Racing</string>
+  <string name="reference">Reference</string>
+  <string name="role_playing">Role Playing</string>
+  <string name="simulation">Simulation</string>
+  <string name="social">Social</string>
+  <string name="software_libraries">Software Libraries</string>
+  <string name="sports">Sports</string>
+  <string name="sports_games">Sports Games</string>
+  <string name="strategy">Strategy</string>
+  <string name="themes">Themes</string>
+  <string name="tools">Tools</string>
+  <string name="top_apps">Top Apps</string>
+  <string name="top_games">Top Games</string>
+  <string name="transport">Transport</string>
+  <string name="transportation">Transportations</string>
+  <string name="travel">Travel</string>
+  <string name="travel_local">Travel &amp; Local</string>
+  <string name="trending">Trending</string>
+  <string name="trivia">Trivia</string>
+  <string name="word">Word</string>
+  <string name="libraries_demo">Libraries &amp; Demo</string>
+  <string name="shopping">Shopping</string>
+  <string name="weather">Weather</string>
+  <string name="latest_applications">Latest Applications</string>
+  <string name="top_apps_in_store">Top Apps In This Store</string>
+  <string name="apps_for_kids">Apps for Kids</string>
+  <string name="aptoide_publishers">Aptoide Publishers</string>
+  <string name="music_video">Music &amp; Video</string>
+  <string name="essential_apps">Essential Apps</string>
+  <string name="summer_apps">Summer Apps</string>
+  <string name="play_it">Play-It!</string>
 
-    <!--AppsTimeline new string-->
-    <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
-    <string name="appstimeline_update_app">app</string>
-    <!--custom tabs-->
-    <string name="customtabs_open_native_app">Open in App</string>
+  <!--AppsTimeline new string-->
+  <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
+  <string name="appstimeline_update_app">app</string>
+  <!--custom tabs-->
+  <string name="customtabs_open_native_app">Open in App</string>
 
 
-    <!--Download fragment-->
-    <string name="fragment_download_no_connection">No apps downloaded</string>
-    <string name="fragment_download_no_connection_subtitle">New apps will appear here as soon as you start downloading them!</string>
+  <!--Download fragment-->
+  <string name="fragment_download_no_connection">No apps downloaded</string>
+  <string name="fragment_download_no_connection_subtitle">New apps will appear here as soon as you start downloading them!</string>
 
 </resources>
