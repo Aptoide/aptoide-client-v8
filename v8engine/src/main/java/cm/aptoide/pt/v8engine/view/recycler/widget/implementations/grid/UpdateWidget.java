@@ -120,7 +120,8 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		subscriptions.add(RxView.clicks(updateButtonLayout).flatMap(click -> {
 			displayable.downloadAndInstall(getContext()).subscribe();
 			return null;
-		}).retry().subscribe());
+		}).retry().subscribe(o -> {
+		}, throwable -> throwable.printStackTrace()));
 
 		subscriptions.add(displayable.getDownloadManager()
 				.getAllDownloads()
