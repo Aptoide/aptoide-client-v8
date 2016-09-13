@@ -307,16 +307,19 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
 		//check if the app is paid
-		if (!app.getPayment().isPaid()) {
+		if (app.isPaid() && !app.getPay().isPaid()) {
 			// TODO: 05/08/16 sithengineer replace that for placeholders in resources as soon as we are able to add new strings for translation
-			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPayment().getPrice() + ")");
+			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay().getPriceDescription()+ ")");
 			actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
 			AppBoughtReceiver receiver = new AppBoughtReceiver() {
 				@Override
-				public void appBought(long appId) {
+				public void appBought(long appId, String path) {
 					if (app.getId() == appId) {
 						isUpdate = false;
-						setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+						app.getFile().setPath(path);
+						app.getPay().setPaid();
+						setupActionButton(R.string.install,
+								installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
 						actionButton.performClick();
 					}
 				}

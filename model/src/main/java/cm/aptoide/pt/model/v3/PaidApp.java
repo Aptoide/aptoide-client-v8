@@ -47,9 +47,6 @@ public class PaidApp extends BaseV3Response {
 			return status.equalsIgnoreCase("OK");
 		}
 
-		public String getPrice() {
-			return symbol + " " + String.valueOf(amount);
-		}
 	}
 
 	@Data

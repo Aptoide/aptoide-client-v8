@@ -40,10 +40,10 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
@@ -296,7 +296,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	public void buyApp(GetAppMeta.App app) {
-		startActivityForResult(PaymentActivity.getIntent(getActivity(), productFactory.create(app, app.getPayment())), PAY_APP_REQUEST_CODE);
+		startActivityForResult(PaymentActivity.getIntent(getActivity(), productFactory.create(app)), PAY_APP_REQUEST_CODE);
 	}
 
 	@Override
@@ -308,6 +308,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				FragmentActivity fragmentActivity = getActivity();
 				Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
 				installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+				installApp.putExtra(AppBoughtReceiver.APP_PATH, data.getStringExtra(BillingBinder.INAPP_PURCHASE_DATA));
 				fragmentActivity.sendBroadcast(installApp);
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Logger.i(TAG, "The user canceled.");

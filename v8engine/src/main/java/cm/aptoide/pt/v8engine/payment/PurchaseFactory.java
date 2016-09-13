@@ -10,6 +10,7 @@ import java.io.IOException;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import lombok.AllArgsConstructor;
 
 /**
@@ -35,12 +36,12 @@ public class PurchaseFactory {
 		};
 	}
 
-	public Purchase create() {
+	public Purchase create(GetAppMeta.App app) {
 		return new Purchase() {
 
 			@Override
 			public String getData() {
-				return null;
+				return app.getFile().getPath();
 			}
 
 			@Override

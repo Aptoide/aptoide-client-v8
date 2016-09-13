@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-import cm.aptoide.pt.model.v3.PaidApp;
+import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
 import lombok.Data;
@@ -43,18 +43,28 @@ public class GetAppMeta extends BaseV7Response {
 		private Stats stats;
 		private Obb obb;
 		private Pay pay;
-		private PaidApp.Payment payment;
+
+		public boolean isPaid() {
+			return (pay != null && pay.getPrice() != null && pay.getPrice().floatValue() > 0.0f);
+		}
 	}
 
 	@Data
 	public static class Pay {
 
+		private int productId;
+		private List<PaymentService> paymentServices;
 		private Number price;
 		private String currency;
 		private String symbol;
+		private String status;
 
-		public boolean isPaidApp() {
-			return (price != null)? price.floatValue() > 0.0f: false;
+		public boolean isPaid() {
+			return status.equalsIgnoreCase("OK");
+		}
+
+		public void setPaid() {
+			status = "OK";
 		}
 
 		public String getPriceDescription() {

@@ -17,9 +17,9 @@ import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
  */
 public class ProductFactory {
 
-	public AptoideProduct create(GetAppMeta.App app, PaidApp.Payment payment) {
-		return new PaidAppProduct(payment.getMetadata().getId(), app.getIcon(), app.getName(), app.getMedia().getDescription(),
-				payment.getPrice(), app.getId(), app.getStore().getName());
+	public AptoideProduct create(GetAppMeta.App app) {
+		return new PaidAppProduct(app.getPay().getProductId(), app.getIcon(), app.getName(), app.getMedia().getDescription(),
+				app.getPay().getPriceDescription(), app.getId(), app.getStore().getName());
 	}
 
 	public AptoideProduct create(InAppBillingSkuDetailsResponse.Metadata metadata, int apiVersion, String developerPayload, String packageName,
