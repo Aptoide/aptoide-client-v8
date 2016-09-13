@@ -26,8 +26,8 @@ public class AppRepository {
 	private final NetworkOperatorManager operatorManager;
 	private final ProductFactory productFactory;
 
-	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored) {
-		return GetAppRequest.of(appId).observe(refresh)
+	public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName) {
+		return GetAppRequest.of(appId,storeName).observe(refresh)
 				.flatMap(response -> {
 					if (response != null && response.isOk()) {
 						return getPaymentApp(response, sponsored);
