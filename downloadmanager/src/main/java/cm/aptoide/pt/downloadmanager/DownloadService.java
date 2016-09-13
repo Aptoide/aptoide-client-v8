@@ -16,11 +16,9 @@ import android.support.v4.app.NotificationCompat;
 
 import java.util.Locale;
 
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import java.util.Locale;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -138,7 +136,7 @@ public class DownloadService extends Service {
 					case Download.PROGRESS:
 						pauseDownloadsIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE, bundle);
 						PendingIntent pPause = getPendingIntent(pauseDownloadsIntent, download);
-						builder.addAction(R.drawable.ic_pause, AptoideDownloadManager.getContext().getString(R.string.pause_download), pPause);
+						builder.addAction(R.drawable.media_pause, AptoideDownloadManager.getContext().getString(R.string.pause_download), pPause);
 						break;
 				}
 

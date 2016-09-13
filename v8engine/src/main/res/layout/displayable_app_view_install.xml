@@ -78,7 +78,7 @@
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
           android:padding="4dp"
-          android:src="@drawable/close"
+          android:src="@drawable/cross"
           />
 
       <ImageView
@@ -90,7 +90,7 @@
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
           android:padding="15dp"
-          android:src="@drawable/pause"
+          android:src="@drawable/media_pause"
           />
 
       <ImageView
@@ -102,7 +102,7 @@
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
           android:padding="15dp"
-          android:src="@drawable/play"
+          android:src="@drawable/media_play"
           android:visibility="gone"
           tools:visibility="visible"
           />
