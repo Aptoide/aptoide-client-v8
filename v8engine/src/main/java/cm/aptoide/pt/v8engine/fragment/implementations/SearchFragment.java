@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,6 +51,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	private ImageView noSearchLayoutSearchButton;
 	private String storeName;
 	private boolean onlyTrustedApps;
+	private int selectedButton = 0;
 
 	public static SearchFragment newInstance(String query) {
 		return newInstance(query, false);
@@ -83,11 +85,11 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 		subscribedButton = (Button) view.findViewById(R.id.subscribed);
 		everywhereButton = (Button) view.findViewById(R.id.everywhere);
-    buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
-    noSearchLayout = view.findViewById(R.id.no_search_results_layout);
+        buttonsLayout = (LinearLayout) view.findViewById(R.id.buttons_layout);
+        noSearchLayout = view.findViewById(R.id.no_search_results_layout);
 		noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
 		noSearchLayoutSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
-
+		setButtonBackgrounds(selectedButton);
 		setHasOptionsMenu(true);
 	}
 
@@ -218,28 +220,41 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		}
 	}
 
+	private void setButtonBackgrounds(int currentItem){
+		if (currentItem==0) {
+				subscribedButtonListener();
+		}
+		else if (currentItem==1){
+				everywhereButtonListener();
+		}
+	}
+
 	private void setupButtonsListeners() {
 		if (hasSubscribedResults) {
-			subscribedButton.setOnClickListener(v -> {
-				mViewPager.setCurrentItem(0);
-				subscribedButton.setBackgroundResource(R.drawable.search_button_background);
-				subscribedButton.setTextColor(getResources().getColor(R.color.white));
-
-				everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
-				everywhereButton.setBackgroundResource(0);
-			});
+			subscribedButton.setOnClickListener(v -> subscribedButtonListener());
 		}
 
 		if (hasEverywhereResults) {
-			everywhereButton.setOnClickListener(v -> {
-				mViewPager.setCurrentItem(1);
-				everywhereButton.setBackgroundResource(R.drawable.search_button_background);
-				everywhereButton.setTextColor(getResources().getColor(R.color.white));
-
-				subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
-				subscribedButton.setBackgroundResource(0);
-			});
+			everywhereButton.setOnClickListener(v -> everywhereButtonListener());
 		}
+	}
+
+	private void subscribedButtonListener(){
+		selectedButton=0;
+		mViewPager.setCurrentItem(0);
+		subscribedButton.setBackgroundResource(R.drawable.search_button_background);
+		subscribedButton.setTextColor(getResources().getColor(R.color.white));
+		everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+		everywhereButton.setBackgroundResource(0);
+	}
+
+	private void everywhereButtonListener(){
+		selectedButton=1;
+		mViewPager.setCurrentItem(1);
+		everywhereButton.setBackgroundResource(R.drawable.search_button_background);
+		everywhereButton.setTextColor(getResources().getColor(R.color.white));
+		subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+		subscribedButton.setBackgroundResource(0);
 	}
 
 	@Override
@@ -262,6 +277,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
 		outState.putString(BundleCons.QUERY, query);
 		outState.putString(BundleCons.STORE_NAME, storeName);
+		outState.putInt(BundleCons.SELECTED_BUTTON, selectedButton);
 	}
 
 	@Override
@@ -290,10 +306,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
 		if (savedInstanceState != null) {
 			query = savedInstanceState.getString(BundleCons.QUERY);
 			storeName = savedInstanceState.getString(BundleCons.STORE_NAME);
+			setButtonBackgrounds(savedInstanceState.getInt(BundleCons.SELECTED_BUTTON));
 		}
 	}
 
@@ -316,5 +332,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
 		public static final String QUERY = "query";
 		public static final String STORE_NAME = "storeName";
 		public static final String ONLY_TRUSTED = "onlyTrustedApps";
+		public static final String SELECTED_BUTTON = "selectedbutton";
 	}
 }
