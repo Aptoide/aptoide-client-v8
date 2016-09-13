@@ -13,13 +13,15 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by sithengineer on 17/05/16.
  */
 public class Download extends RealmObject {
 
+	public static final String DOWNLOAD_ID = "appId";
 	public static final int INVALID_STATUS = 0;
 	public static final int COMPLETED = 1;
 	public static final int BLOCK_COMPLETE = 2;
@@ -34,23 +36,39 @@ public class Download extends RealmObject {
 	public static final int RETRY = 11;
 	public static final int NOT_DOWNLOADED = 12;
 	public static final int IN_QUEUE = 13;
+	public static final int ASCENDING = 1;
+	public static final int DESCENDING = -1;
+	public static String TAG = Download.class.getSimpleName();
 	RealmList<FileToDownload> filesToDownload;
-	@DownloadState
-	int overallDownloadStatus = 0;
+	@DownloadState int overallDownloadStatus = 0;
 	int overallProgress = 0;
-	@PrimaryKey
-	private long appId;
+	@PrimaryKey private long appId;
 	private String appName;
 	private String Icon;
-	@SuppressWarnings({"all"})
-	private long timeStamp;
+	@SuppressWarnings({"all"}) private long timeStamp;
 	private int downloadSpeed;
 	public Download() {
-		this.timeStamp = Calendar.getInstance().getTimeInMillis();
+	}
+
+	/**
+	 * This method sorts the downloads by time stamp
+	 *
+	 * @param downloads list of downloads to sort
+	 * @param sortOrder 1 if should be sorted ASCENDING, -1 if DESCENDING
+	 */
+	public static List<Download> sortDownloads(List<Download> downloads,
+			@DownloadSort int sortOrder) {
+		Collections.sort(downloads,
+				(lhs, rhs) -> Long.valueOf(lhs.getTimeStamp()).compareTo(rhs.getTimeStamp()) * sortOrder);
+		return downloads;
 	}
 
 	public long getTimeStamp() {
 		return timeStamp;
+	}
+
+	public void setTimeStamp(long timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 
 	public String getStatusName(Context context) {
@@ -69,6 +87,10 @@ public class Download extends RealmObject {
 			case IN_QUEUE:
 				toReturn = context.getString(R.string.download_queue);
 				break;
+			case INVALID_STATUS:
+				toReturn = ""; //this state only appears while download manager doesn't get the download(before the AptoideDownloadManager#startDownload
+				// method runs)
+				break;
 			case WARN:
 			case BLOCK_COMPLETE:
 			case CONNECTED:
@@ -77,7 +99,6 @@ public class Download extends RealmObject {
 			case NOT_DOWNLOADED:
 			case ERROR:
 			case FILE_MISSING:
-			case INVALID_STATUS:
 			default:
 				toReturn = context.getString(R.string.simple_error_occured);
 		}
@@ -134,30 +155,6 @@ public class Download extends RealmObject {
 		Icon = icon;
 	}
 
-	@Override
-	public Download clone() {
-		Download clone = new Download();
-		clone.setAppId(this.getAppId());
-		clone.setOverallDownloadStatus(this.getOverallDownloadStatus());
-		clone.setOverallProgress(this.getOverallProgress());
-		if (this.getAppName() != null) {
-			clone.setAppName(new String(this.getAppName()));
-		}
-		clone.setFilesToDownload(cloneDownloadFiles(this.getFilesToDownload()));
-		clone.setDownloadSpeed(this.getDownloadSpeed());
-		clone.setIcon(this.getIcon());
-
-		return clone;
-	}
-
-	private RealmList<FileToDownload> cloneDownloadFiles(RealmList<FileToDownload> filesToDownload) {
-		RealmList<FileToDownload> clone = new RealmList<>();
-		for (final FileToDownload fileToDownload : filesToDownload) {
-			clone.add(fileToDownload.clone());
-		}
-		return clone;
-	}
-
 	public int getDownloadSpeed() {
 		return downloadSpeed;
 	}
@@ -173,5 +170,12 @@ public class Download extends RealmObject {
 
 	public @interface DownloadState {
 
+	}
+
+	@IntDef({
+			ASCENDING, DESCENDING
+	}) @Retention(RetentionPolicy.SOURCE)
+
+	public @interface DownloadSort {
 	}
 }

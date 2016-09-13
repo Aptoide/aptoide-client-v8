@@ -43,7 +43,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/app_view_header_alfa_gradient"
+                android:foreground="@drawable/app_view_header_gradient"
                 app:layout_collapseMode="parallax"
                 >
 

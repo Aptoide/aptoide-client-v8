@@ -5,9 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.jakewharton.rxbinding.view.RxView;
-
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -15,7 +12,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Subscription;
+import com.jakewharton.rxbinding.view.RxView;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/18/16.
@@ -29,8 +29,7 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	private TextView downloadProgressTv;
 	private ImageView pauseCancelButton;
 	private ImageView appIcon;
-	private Subscription subscribe;
-	private Download download;
+	private CompositeSubscription subscriptions;
 	private ActiveDownloadDisplayable displayable;
 
 	public ActiveDownloadWidget(View itemView) {
@@ -50,7 +49,32 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 	@Override
 	public void bindView(ActiveDownloadDisplayable displayable) {
 		this.displayable = displayable;
-		download = displayable.getPojo();
+		displayable.setOnPauseAction(() -> onViewDetached());
+		displayable.setOnResumeAction(() -> onViewAttached());
+	}
+
+	@Override public void onViewAttached() {
+		if (subscriptions == null || subscriptions.isUnsubscribed()) {
+			subscriptions = new CompositeSubscription();
+		}
+		subscriptions.add(
+				RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
+		subscriptions.add(displayable.getDownload()
+				.observeOn(Schedulers.computation())
+				.distinctUntilChanged()
+				.map(download -> download)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(this::updateUi));
+	}
+
+	@Override
+	public void onViewDetached() {
+		if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+			subscriptions.unsubscribe();
+		}
+	}
+
+	private Void updateUi(Download download) {
 		appName.setText(download.getAppName());
 		if (!TextUtils.isEmpty(download.getIcon())) {
 			ImageLoader.load(download.getIcon(), appIcon);
@@ -63,25 +87,6 @@ public class ActiveDownloadWidget extends Widget<ActiveDownloadDisplayable> {
 		}
 		downloadProgressTv.setText(download.getOverallProgress() + "%");
 		downloadSpeedTv.setText(String.valueOf(AptoideUtils.StringU.formatBits((long) download.getDownloadSpeed())));
-
-		if (subscribe != null && subscribe.isUnsubscribed()) {
-			subscribe.unsubscribe();
-		}
-		subscribe = RxView.clicks(pauseCancelButton).subscribe(aVoid -> {
-			displayable.pauseInstall(download);
-		});
-	}
-
-	@Override
-	public void onViewAttached() {
-		if (subscribe == null) {
-			subscribe = RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall(download));
-		}
-
-	}
-
-	@Override
-	public void onViewDetached() {
-
+		return null;
 	}
 }

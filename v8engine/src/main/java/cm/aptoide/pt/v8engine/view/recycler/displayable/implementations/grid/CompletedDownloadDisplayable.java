@@ -14,7 +14,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import lombok.Setter;
 import rx.Observable;
+import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/15/16.
@@ -23,6 +25,8 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 
 	private Installer installManager;
 	private DownloadServiceHelper downloadManager;
+	@Setter private Action0 onResumeAction;
+	@Setter private Action0 onPauseAction;
 
 	public CompletedDownloadDisplayable() {
 		super();
@@ -39,6 +43,20 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 		super(pojo, fixedPerLineCount);
 	}
 
+	@Override public void onResume() {
+		super.onResume();
+		if (onResumeAction != null) {
+			onResumeAction.call();
+		}
+	}
+
+	@Override public void onPause() {
+		if (onPauseAction != null) {
+			onResumeAction.call();
+		}
+		super.onPause();
+	}
+
 	@Override
 	public Type getType() {
 		return Type.COMPLETED_DOWNLOAD;
@@ -49,27 +67,27 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 		return R.layout.completed_donwload_row_layout;
 	}
 
-	public void removeDownload(Download download) {
-		downloadManager.removeDownload(download.getAppId());
+	public void removeDownload() {
+		downloadManager.removeDownload(getPojo().getAppId());
 	}
 
-	public Observable<Integer> downloadStatus(Download download) {
-		return downloadManager.getDownload(download.getAppId())
+	public Observable<Integer> downloadStatus() {
+		return downloadManager.getDownload(getPojo().getAppId())
 				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
 				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
 	}
 
-	public Observable<Download> resumeDownload(PermissionRequest permissionRequest, Download download) {
-		return downloadManager.startDownload(permissionRequest, download);
+	public Observable<Download> resumeDownload(PermissionRequest permissionRequest) {
+		return downloadManager.startDownload(permissionRequest, getPojo());
 	}
 
-	public Observable<Void> installOrOpenDownload(Context context, Download download) {
-		return installManager.isInstalled(download.getAppId()).flatMap(installed -> {
+	public Observable<Void> installOrOpenDownload(Context context) {
+		return installManager.isInstalled(getPojo().getAppId()).flatMap(installed -> {
 			if (installed) {
-				AptoideUtils.SystemU.openApp(download.getFilesToDownload().get(0).getPackageName());
+				AptoideUtils.SystemU.openApp(getPojo().getFilesToDownload().get(0).getPackageName());
 				return Observable.empty();
 			}
-			return installManager.install(context, (PermissionRequest) context, download.getAppId());
+			return installManager.install(context, (PermissionRequest) context, getPojo().getAppId());
 		});
 	}
 }

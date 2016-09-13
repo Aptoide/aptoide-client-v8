@@ -146,6 +146,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 
 	private AppViewInstallDisplayable installDisplayable;
 	private String md5;
+	private PermissionManager permissionManager;
 
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
@@ -203,7 +204,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		final PermissionManager permissionManager = new PermissionManager();
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 
 		DownloadInstallationProvider installationProvider =
@@ -361,6 +361,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		permissionManager = new PermissionManager();
+		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
 	}
 
 	@Override

@@ -33,14 +33,26 @@ public class FileUtils {
 	 * @param inputPath  Path to the directory where the file to be copied is
 	 * @param outputPath Path to the directory where the file should be copied
 	 * @param fileName   Name of the file to be copied
-	 *
-	 * @return true if the the file was copied successfully, false otherwise
 	 */
 	public static void copyFile(String inputPath, String outputPath, String fileName) {
 		if (!fileExists(inputPath)) {
 			throw new RuntimeException("Input file doesn't exists");
 		}
 
+		File file = new File(inputPath + fileName);
+		if (!file.renameTo(new File(outputPath + fileName))) {
+			cloneFile(inputPath, outputPath, fileName);
+		}
+	}
+
+	/**
+	 * this method clones a file, it opens the file and using a stream, the new file will be written
+	 *
+	 * @param inputPath  Path to the directory where the file to be copied is
+	 * @param outputPath Path to the directory where the file should be copied
+	 * @param fileName   Name of the file to be copied
+	 */
+	public static void cloneFile(String inputPath, String outputPath, String fileName) {
 		InputStream in = null;
 		OutputStream out = null;
 		try {

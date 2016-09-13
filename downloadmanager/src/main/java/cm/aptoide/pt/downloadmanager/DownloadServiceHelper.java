@@ -7,18 +7,18 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import java.util.List;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
-import io.realm.Realm;
-import lombok.Cleanup;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 7/4/16.
@@ -60,28 +60,41 @@ public class DownloadServiceHelper {
 	 *
 	 * @return An observable that reports the download state
 	 */
-	public Observable<Download> startDownload(PermissionRequest permissionRequest, Download download) {
+	public Observable<Download> startDownload(DownloadAccessor downloadAccessor,
+			PermissionRequest permissionRequest, Download download) {
 		return permissionManager.requestExternalStoragePermission(permissionRequest)
 				.flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
 				.flatMap(success -> Observable.fromCallable(() -> {
-					aptoideDownloadManager.getDownload(download.getAppId()).first().subscribe(storedDownload -> {
-						startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+					getDownload(download.getAppId()).first().subscribe(storedDownload -> {
+						startDownloadService(download.getAppId(),
+								AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
 					}, throwable -> {
 						if (throwable instanceof DownloadNotFoundException) {
-							@Cleanup Realm realm = DeprecatedDatabase.get();
-							DeprecatedDatabase.save(download, realm);
-							startDownloadService(download.getAppId(), AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+							downloadAccessor.save(download);
+							startDownloadService(download.getAppId(),
+									AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
+						} else {
+							throwable.printStackTrace();
 						}
 					});
 					return download;
-				}).flatMap(aDownload -> aptoideDownloadManager.getDownload(download.getAppId())));
+				}).flatMap(aDownload -> getDownload(download.getAppId())));
+	}
+
+	public Observable<Download> startDownload(PermissionRequest permissionRequest, Download download) {
+		return startDownload(AccessorFactory.getAccessorFor(Download.class), permissionRequest,
+				download);
 	}
 
 	private void startDownloadService(long appId, String action) {
-		Intent intent = new Intent(Application.getContext(), DownloadService.class);
-		intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, appId);
-		intent.setAction(action);
-		Application.getContext().startService(intent);
+		Observable.fromCallable(() -> {
+			Intent intent = new Intent(Application.getContext(), DownloadService.class);
+			intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, appId);
+			intent.setAction(action);
+			Application.getContext().startService(intent);
+			return null;
+		}).subscribeOn(Schedulers.computation()).subscribe(o -> {
+		}, Throwable::printStackTrace);
 	}
 
 	/**
@@ -100,15 +113,6 @@ public class DownloadServiceHelper {
 	 */
 	public Observable<List<Download>> getAllDownloads() {
 		return aptoideDownloadManager.getDownloads();
-	}
-
-	/**
-	 * This method finds all the downloads that are in {@link Download#IN_QUEUE} and {@link Download#PAUSED} states.
-	 *
-	 * @return an observable with a download list
-	 */
-	public Observable<List<Download>> getRunningDownloads() {
-		return aptoideDownloadManager.getCurrentDownloads();
 	}
 
 	/**

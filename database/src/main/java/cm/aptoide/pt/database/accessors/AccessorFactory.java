@@ -5,10 +5,12 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.database.realm.Update;
 import io.realm.RealmObject;
 
 /**
@@ -23,6 +25,10 @@ public final class AccessorFactory {
       return (A) new PaymentAccessor(new Database());
     } else if (clazz.equals(Installed.class)) {
       return (A) new InstalledAccessor(new Database());
+    } else if (clazz.equals(Download.class)) {
+      return (A) new DownloadAccessor(new Database());
+    } else if (clazz.equals(Update.class)) {
+      return (A) new UpdatesAccessor(new Database());
     } else if (clazz.equals(Rollback.class)) {
       return (A) new RollbackAccessor(new Database());
     }

@@ -44,6 +44,8 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
  */
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
 
+	private static final String TAG = MainActivityFragment.class.getSimpleName();
+
 	@Override
 	protected android.support.v4.app.Fragment createFragment() {
 		return HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home);
@@ -52,6 +54,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		if (savedInstanceState == null) {
 			startService(new Intent(this, PullingContentService.class));
 			if (ManagerPreferences.isAutoUpdateEnable()) {

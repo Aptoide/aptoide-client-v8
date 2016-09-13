@@ -20,9 +20,9 @@ import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import io.realm.Realm;
-import lombok.Cleanup;
+import java.util.Locale;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -39,9 +39,9 @@ public class DownloadService extends Service {
 	private Intent openAppsManagerIntent;
 	private Subscription notificationUpdateSubscription;
 	private Notification notification;
+	private Subscription stopMechanismSubscription;
 
 	private void pauseDownloads(Intent intent) {
-		// TODO: 7/4/16 trinkes pause with specific id
 		long appId = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0);
 		if (appId > 0) {
 			downloadManager.pauseDownload(appId);
@@ -52,22 +52,19 @@ public class DownloadService extends Service {
 
 	private void startDownload(long appId) {
 		if (appId > 0) {
-			@Cleanup Realm realm = DeprecatedDatabase.get();
-			Download download = downloadManager.getStoredDownload(appId, realm);
-			if (download != null) {
-				downloadManager.startDownload(download.clone())
+			subscriptions.add(downloadManager.getDownload(appId).first().subscribe(download -> {
+				downloadManager.startDownload(download)
 						.first()
-						.subscribe(download1 -> Logger.d(TAG, "startDownload" +
-								"() " +
-								"called with: " + "appId = [" + appId + "]"), Throwable::printStackTrace);
+						.subscribe(downloadFromRealm -> Logger.d(TAG, "startDownload called with: appId = [" + appId + "]"), Throwable::printStackTrace);
 				setupNotifications();
-			}
+			}));
 		}
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Logger.d(TAG, "Download service is starting");
 		downloadManager = AptoideDownloadManager.getInstance();
 		downloadManager.initDownloadService(this);
 		subscriptions = new CompositeSubscription();
@@ -110,16 +107,22 @@ public class DownloadService extends Service {
 	}
 
 	private void setupStopSelfMechanism() {
-		subscriptions.add(downloadManager.getCurrentDownloads().filter(downloads -> downloads.size() <= 0).subscribe(downloads1 -> {
-			stopSelf();
-		}));
+		if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
+			stopMechanismSubscription = downloadManager.getCurrentDownloads()
+					.observeOn(Schedulers.computation())
+					.filter(downloads -> downloads == null || downloads.size() <= 0).subscribe(downloads -> {
+						Logger.d(TAG, "Download service is stopping");
+						stopSelf();
+					}, Throwable::printStackTrace);
+			subscriptions.add(stopMechanismSubscription);
+		}
 	}
 
 	private void setupNotifications() {
 		if (notificationUpdateSubscription == null || notificationUpdateSubscription.isUnsubscribed()) {
 			openAppsManagerIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null);
 
-			notificationUpdateSubscription = downloadManager.getCurrentDownload().subscribe(download -> {
+			downloadManager.getCurrentDownload().subscribe(download -> {
 				Bundle bundle = new Bundle();
 				bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
 				notificationClickIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION, bundle);
@@ -148,6 +151,9 @@ public class DownloadService extends Service {
 				}
 				startForeground(NOTIFICATION_ID, notification);
 				setupStopSelfMechanism();
+			});
+
+			notificationUpdateSubscription = downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
 			}, Throwable::printStackTrace);
 			subscriptions.add(notificationUpdateSubscription);
 		}
