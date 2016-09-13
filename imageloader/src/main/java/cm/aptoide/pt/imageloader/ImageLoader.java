@@ -44,11 +44,17 @@ public class ImageLoader {
 		Glide.with(Application.getContext()).load(AptoideUtils.IconSizeU.getNewImageUrl(url)).into(imageView);
 	}
 
+	/**
+	 * Loads a Drawable resource from the app bundle.
+	 *
+	 * @param drawableId drawable id
+	 * @return {@link Drawable} with the passing drawable id or null if id = 0
+	 */
 	public static Drawable load(@DrawableRes int drawableId) {
 		if(drawableId==0) return null;
 		Context ctx = Application.getContext();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			return ctx.getResources().getDrawable(drawableId, Application.getContext().getTheme());
+			return ctx.getResources().getDrawable(drawableId, ctx.getTheme());
 		}else{
 			return ctx.getResources().getDrawable(drawableId);
 		}

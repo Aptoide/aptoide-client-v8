@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.view.View;
@@ -39,7 +40,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 	// left side
 	//private ImageView versionBadge;
 	private TextView version;
-	private ImageView trustedBadge;
+	//private ImageView trustedBadge;
 	private TextView date;
 	private TextView downloads;
 	// right side
@@ -58,7 +59,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 		// left side
 		//versionBadge = (ImageView) itemView.findViewById(R.id.version_icon);
 		version = (TextView) itemView.findViewById(R.id.version_name);
-//		trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
+		//trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
 		date = (TextView) itemView.findViewById(R.id.version_date);
 		downloads = (TextView) itemView.findViewById(R.id.downloads);
 		// right side
@@ -77,7 +78,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 			appId = app.getId();
 
 			version.setText(app.getFile().getVername());
-//			setBadge(app, trustedBadge);
+			setBadge(app);
 			date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified().getTime()));
 			downloads.setText(String.format(DEFAULT_LOCALE, getContext().getString(R.string.other_versions_downloads_count_text), AptoideUtils.StringU
 					.withSuffix(app
@@ -104,7 +105,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 
 	}
 
-	private void setBadge(App app, ImageView trustedBadge) {
+	private void setBadge(App app) {
 		@DrawableRes
 		int badgeResId;
 
@@ -119,13 +120,15 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable> implemen
 
 			default:
 			case UNKNOWN:
-				//badgeResId = R.drawable.ic_badge_unknown;
-				//break;
-				trustedBadge.setVisibility(View.GONE);
-				return;
+				badgeResId = 0;
+				break;
 		}
-
-		ImageLoader.load(badgeResId, trustedBadge);
+		// keep the remaining compound drawables in TextView and set the one on the right
+		Drawable[] drawables = version.getCompoundDrawables();
+		//version.setCompoundDrawables(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
+		// does not work properly because "The Drawables must already have had setBounds(Rect) called". info from:
+		// https://developer.android.com/reference/android/widget/TextView.html#setCompoundDrawables
+		version.setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
 	}
 
 	private void setItemBackgroundColor(View itemView) {
