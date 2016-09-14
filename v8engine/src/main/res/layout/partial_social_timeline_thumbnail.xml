@@ -45,22 +45,18 @@
       tools:src="@drawable/background_card_dark"
       />
 
-  <!--
-      android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
-      android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
-      android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
-  -->
   <TextView
       android:id="@+id/partial_social_timeline_thumbnail_related_to"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/partial_social_timeline_thumbnail_image"
-      android:layout_marginBottom="12dp"
+      android:layout_marginBottom="24dp"
       android:layout_marginLeft="12dp"
       android:layout_marginRight="15dp"
       android:layout_marginTop="12dp"
       android:maxLines="1"
       android:ellipsize="end"
+      android:textSize="11sp"
       tools:text="Related to APPz"
       />
 
