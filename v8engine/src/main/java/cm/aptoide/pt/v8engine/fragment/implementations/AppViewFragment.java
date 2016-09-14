@@ -312,8 +312,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				fragmentActivity.sendBroadcast(installApp);
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 
-				if (data.hasExtra(BillingBinder.RESPONSE_CODE)
+				if (data != null && data.hasExtra(BillingBinder.RESPONSE_CODE)
 						&& BillingBinder.RESULT_ITEM_ALREADY_OWNED == data.getIntExtra(BillingBinder.RESPONSE_CODE, -1)) {
+					shouldInstall = true;
 					load(true, null);
 				} else {
 					Logger.i(TAG, "The user canceled.");
