@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.downloadmanager;
 
-import java.io.File;
-
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -15,6 +13,7 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Sort;
+import java.io.File;
 import lombok.AllArgsConstructor;
 
 /**
@@ -23,12 +22,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CacheHelper implements CacheManager {
 
+  private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();
   private DownloadAccessor downloadAccessor;
   private DownloadSettingsInterface dirSettings;
 
   public void cleanCache() {
-    long maxCacheSize = dirSettings.getMaxCacheSize();
+    long maxCacheSize = dirSettings.getMaxCacheSize() * VALUE_TO_CONVERT_MB_TO_BYTES;
     String cacheDirPath = dirSettings.getDownloadDir();
 
     downloadAccessor.getAllSorted(Sort.ASCENDING).first().map(downloads -> {
