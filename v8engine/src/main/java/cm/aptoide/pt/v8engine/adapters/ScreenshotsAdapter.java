@@ -139,12 +139,10 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 				final ArrayList<String> imagesUris
 		) {
 
-			String thumbnail = AptoideUtils.ImageSizeU.screenshotToThumb(item.getUrl(), item.getOrientation());
-
 			media_layout.setForeground(null);
 			play_button.setVisibility(View.GONE);
 
-			ImageLoader.load(thumbnail, getPlaceholder(item.getOrientation()), screenshot);
+			ImageLoader.loadScreenshotToThumb(item.getUrl(), item.getOrientation(), getPlaceholder(item.getOrientation()), screenshot);
 
 			itemView.setOnClickListener(
 					v ->{

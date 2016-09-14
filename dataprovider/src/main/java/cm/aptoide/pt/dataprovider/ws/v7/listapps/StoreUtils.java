@@ -108,13 +108,7 @@ public class StoreUtils {
 				store.setStoreName(storeData.getName());
 				store.setDownloads(storeData.getStats().getDownloads());
 
-				String avatar = storeData.getAvatar();
-
-				if (avatar != null) {
-					avatar = AptoideUtils.ImageSizeU.parseAvatarUrl(avatar);
-				}
-
-				store.setIconPath(avatar);
+				store.setIconPath(storeData.getAvatar());
 				store.setTheme(storeData.getAppearance().getTheme());
 
 				if (isPrivateCredentialsSet(getStoreMetaRequest)) {
