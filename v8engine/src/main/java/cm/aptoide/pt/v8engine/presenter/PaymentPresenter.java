@@ -105,18 +105,11 @@ public class PaymentPresenter implements Presenter {
 					}
 					return Observable.just(purchase);
 				})
-				.onErrorResumeNext(throwable -> paymentAlreadyProcessed(throwable))
+				.observeOn(AndroidSchedulers.mainThread())
 				.doOnError(throwable -> removeLoadingAndDismiss(throwable))
 				.doOnNext(purchase -> removeLoadingAndDismiss(purchase))
 				.onErrorReturn(throwable -> null)
 				.subscribeOn(AndroidSchedulers.mainThread());
-	}
-
-	private Observable<Purchase> paymentAlreadyProcessed(Throwable throwable) {
-		if (throwable instanceof PaymentAlreadyProcessedException) {
-			return paymentManager.getPurchase(product);
-		}
-		return Observable.error(throwable);
 	}
 
 	@NonNull
@@ -173,25 +166,17 @@ public class PaymentPresenter implements Presenter {
 
 	private void clearLoginStateAndDismiss(Throwable throwable) {
 		clearLoginState();
-		dismiss(throwable);
+		view.dismiss(throwable);
 	}
 
 	private void removeLoadingAndDismiss(Throwable throwable) {
 		view.removeLoading();
-		dismiss(throwable);
-	}
-
-	private void dismiss(Throwable throwable) {
 		view.dismiss(throwable);
 	}
 
 	private void removeLoadingAndDismiss(Purchase purchase) {
 		view.removeLoading();
-		try {
-			view.dismiss(purchase);
-		} catch (IOException e) {
-			dismiss(e);
-		}
+		view.dismiss(purchase);
 	}
 
 	private boolean clearLoginState() {

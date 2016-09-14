@@ -311,9 +311,14 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				installApp.putExtra(AppBoughtReceiver.APP_PATH, data.getStringExtra(BillingBinder.INAPP_PURCHASE_DATA));
 				fragmentActivity.sendBroadcast(installApp);
 			} else if (resultCode == Activity.RESULT_CANCELED) {
-				Logger.i(TAG, "The user canceled.");
-				ShowMessage.asSnack(header.badge, R.string.user_canceled);
 
+				if (data.hasExtra(BillingBinder.RESPONSE_CODE)
+						&& BillingBinder.RESULT_ITEM_ALREADY_OWNED == data.getIntExtra(BillingBinder.RESPONSE_CODE, -1)) {
+					load(true, null);
+				} else {
+					Logger.i(TAG, "The user canceled.");
+					ShowMessage.asSnack(header.badge, R.string.user_canceled);
+				}
 			} else {
 				Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
 				ShowMessage.asSnack(header.badge, R.string.unknown_error);
