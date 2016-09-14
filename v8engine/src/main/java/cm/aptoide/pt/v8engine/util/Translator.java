@@ -228,6 +228,9 @@ public class Translator {
 			case "Top Apps":
 				translated = Application.getContext().getString(R.string.top_apps);
 				break;
+			case "Latest Apps":
+				translated = Application.getContext().getString(R.string.latest_applications);
+				break;
 			case "Latest Applications":
 				translated = Application.getContext().getString(R.string.latest_applications);
 				break;
@@ -256,6 +259,9 @@ public class Translator {
 				translated = Application.getContext().getString(R.string.more_editors_choice);
 				break;
 			case "More Editor's Choice":
+				translated = Application.getContext().getString(R.string.more_editors_choice);
+				break;
+			case "More Editors' Choice":
 				translated = Application.getContext().getString(R.string.more_editors_choice);
 				break;
 			default:
