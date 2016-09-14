@@ -163,9 +163,9 @@
           layout="@layout/separator_vertical"
           android:layout_width="1dp"
           android:layout_height="match_parent"
-          android:layout_marginEnd="13.7dp"
+          android:layout_marginEnd="14dp"
           android:layout_marginLeft="4dp"
-          android:layout_marginRight="13.7dp"
+          android:layout_marginRight="14dp"
           android:layout_marginStart="4dp"
           />
 
@@ -175,6 +175,8 @@
           android:layout_marginEnd="10dp"
           android:layout_marginRight="10dp"
           android:orientation="vertical"
+          android:gravity="center_vertical"
+          tools:background="@color/red"
           >
 
         <LinearLayout
@@ -183,8 +185,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="invisible"
-            tools:visibility="visible"
+            android:visibility="gone"
             >
 
           <TextView
@@ -197,17 +198,18 @@
               android:paddingRight="4dp"
               android:singleLine="true"
               android:text="@string/appview_latest_version_text"
-              android:textColor="?android:attr/textColorSecondary"
+              android:textColor="@color/app_view_gray"
               android:textSize="@dimen/text_size_small"
               android:textStyle="bold"
               />
 
           <ImageView
               android:id="@+id/latest_available_icon"
-              android:layout_width="20dp"
-              android:layout_height="20dp"
+              android:layout_width="15dp"
+              android:layout_height="15dp"
               android:src="@drawable/ic_latest_version"
-              android:tint="@color/green_tint_default"
+              android:visibility="invisible"
+              tools:visibility="visible"
               />
 
         </LinearLayout>
@@ -215,7 +217,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:orientation="horizontal"
             >
 
@@ -237,12 +239,27 @@
               android:maxLines="1"
               android:maxWidth="70dp"
               android:textColor="@color/almost_black"
-              android:textSize="11.6sp"
+              android:textSize="@dimen/text_size_medium_small"
               android:textStyle="bold"
-              tools:text="1.07.6"
+              tools:text="6.3.3b1"
               />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/not_latest_available_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/newer_version_available"
+            android:textColor="@color/lighter_custom_gray"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            />
 
       </LinearLayout>
 

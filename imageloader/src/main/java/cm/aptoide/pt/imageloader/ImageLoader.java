@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -52,12 +53,11 @@ public class ImageLoader {
 	 */
 	public static Drawable load(@DrawableRes int drawableId) {
 		if(drawableId==0) return null;
-		Context ctx = Application.getContext();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			return ctx.getResources().getDrawable(drawableId, ctx.getTheme());
-		}else{
-			return ctx.getResources().getDrawable(drawableId);
-		}
+
+		Resources res = Application.getContext().getResources();
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		Bitmap bitmap = BitmapFactory.decodeResource(res, drawableId, options);
+		return new BitmapDrawable(res, bitmap);
 	}
 
 	public static void load(@DrawableRes int drawableId, ImageView imageView) {

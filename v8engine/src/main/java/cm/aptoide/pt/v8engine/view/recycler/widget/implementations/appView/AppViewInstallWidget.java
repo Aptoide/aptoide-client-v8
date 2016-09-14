@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -81,8 +82,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	// app info
 	private TextView versionName;
-	private View latestAvailableText;
+	private View latestAvailableLayout;
 	private View latestAvailableTrustedSeal;
+	private View notLatestAvailableText;
 	private TextView otherVersions;
 	private MinimalAd minimalAd;
 
@@ -96,7 +98,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	//private Subscription subscribe;
 	//private long appID;
-
 
 	public AppViewInstallWidget(View itemView) {
 		super(itemView);
@@ -115,8 +116,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		actionButton = (Button) itemView.findViewById(R.id.action_btn);
 		versionName = (TextView) itemView.findViewById(R.id.store_version_name);
 		otherVersions = (TextView) itemView.findViewById(R.id.other_versions);
-		latestAvailableText = itemView.findViewById(R.id.latest_available_text);
+		latestAvailableLayout = itemView.findViewById(R.id.latest_available_layout);
 		latestAvailableTrustedSeal = itemView.findViewById(R.id.latest_available_icon);
+		notLatestAvailableText = itemView.findViewById(R.id.not_latest_available_text);
 	}
 
 	@Override
@@ -184,42 +186,40 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//}
 
 		InstalledAccessor installedAccessor = displayable.getInstalledAccessor();
-		installedAccessor.get(packageName)
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(installed -> {
-					if (installed != null) {
-						((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-							displayable.uninstall(getContext()).subscribe(aVoid -> {
-							}, throwable -> throwable.printStackTrace());
-						});
-						if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
-							//current installed version
-							setupActionButton(R.string.open,
-									v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
-						} else if (currentApp.getFile().getVercode() > installed.getVersionCode()) {
-							//update
-							isUpdate = true;
-							setupActionButton(R.string.update,
-									installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(),
-											displayable));
-						} else {
-							//downgrade
-							setupActionButton(R.string.downgrade, downgradeListener(currentApp, displayable));
-						}
-					} else {
-						//app not installed
-						setupInstallOrBuyButton(displayable, getApp);
-						((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-					}
-				}, throwable -> throwable.printStackTrace());
+		installedAccessor.get(packageName).observeOn(AndroidSchedulers.mainThread()).subscribe(installed -> {
+			if (installed != null) {
+				((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
+					displayable.uninstall(getContext()).subscribe(aVoid -> {
+					}, throwable -> throwable.printStackTrace());
+				});
+				if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
+					//current installed version
+					setupActionButton(R.string.open, v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+				} else if (currentApp.getFile().getVercode() > installed.getVersionCode()) {
+					//update
+					isUpdate = true;
+					setupActionButton(R.string.update, installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(), displayable));
+				} else {
+					//downgrade
+					setupActionButton(R.string.downgrade, downgradeListener(currentApp, displayable));
+				}
+			} else {
+				//app not installed
+				setupInstallOrBuyButton(displayable, getApp);
+				((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+			}
+		}, throwable -> throwable.printStackTrace());
 		checkOnGoingDownload(getApp, displayable);
 
 		if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
-			latestAvailableText.setVisibility(View.VISIBLE);
-		}
-
-		if (isThisTheLatestTrustedVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
-			latestAvailableTrustedSeal.setVisibility(View.VISIBLE);
+			notLatestAvailableText.setVisibility(View.GONE);
+			latestAvailableLayout.setVisibility(View.VISIBLE);
+			if (isThisTheLatestTrustedVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
+				latestAvailableTrustedSeal.setVisibility(View.VISIBLE);
+			}
+		} else {
+			notLatestAvailableText.setVisibility(View.VISIBLE);
+			latestAvailableLayout.setVisibility(View.GONE);
 		}
 
 		ContextWrapper ctx = (ContextWrapper) versionName.getContext();
@@ -261,25 +261,20 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 	public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
 		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		downloadServiceHelper.getDownload(app.getId())
-				.firstOrDefault(null)
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(download -> {
+		downloadServiceHelper.getDownload(app.getId()).firstOrDefault(null).observeOn(AndroidSchedulers.mainThread()).subscribe(download -> {
 			int downloadStatus = download.getOverallDownloadStatus();
 			if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING ||
 					downloadStatus == Download.PAUSED)) {
 				setDownloadBarVisible(true);
 				setupDownloadControls(app, download, displayable);
-				downloadServiceHelper.getDownload(app.getId())
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(onGoingDownload -> {
+				downloadServiceHelper.getDownload(app.getId()).observeOn(AndroidSchedulers.mainThread()).subscribe(onGoingDownload -> {
 					manageDownload(onGoingDownload, displayable, app);
 				}, err -> {
 					Logger.e(TAG, err);
 				});
 			}
 		}, err -> {
-			if(!(err instanceof DownloadNotFoundException)) {
+			if (!(err instanceof DownloadNotFoundException)) {
 				Logger.e(TAG, err);
 			}
 			// ignore because download does not exist
@@ -314,15 +309,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		//check if the app is paid
 		if (!app.getPayment().isPaid()) {
 			// TODO: 05/08/16 sithengineer replace that for placeholders in resources as soon as we are able to add new strings for translation
-			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPayment().getPrice()+ ")");
+			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPayment().getPrice() + ")");
 			actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
 			AppBoughtReceiver receiver = new AppBoughtReceiver() {
 				@Override
 				public void appBought(long appId) {
 					if (app.getId() == appId) {
 						isUpdate = false;
-						setupActionButton(R.string.install,
-								installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+						setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
 						actionButton.performClick();
 					}
 				}
@@ -330,8 +324,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
 		} else {
 			isUpdate = false;
-			setupActionButton(R.string.install,
-					installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+			setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
 			if (displayable.isShouldInstall()) {
 				actionButton.postDelayed(() -> {
 					if (displayable.isVisible()) {
@@ -368,26 +361,20 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		};
 	}
 
-	public View.OnClickListener installOrUpgradeListener(GetAppMeta.App app,
-			ListAppVersions appVersions, AppViewInstallDisplayable
-			displayable) {
-
+	public View.OnClickListener installOrUpgradeListener(GetAppMeta.App app, ListAppVersions appVersions, AppViewInstallDisplayable displayable) {
 
 		final Context context = getContext();
-		@StringRes final int installOrUpgradeMsg =
-				this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
+		@StringRes final int installOrUpgradeMsg = this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
 		final View.OnClickListener installHandler = v -> {
 
-			if(installOrUpgradeMsg == R.string.installing_msg) {
+			if (installOrUpgradeMsg == R.string.installing_msg) {
 				Analytics.ClickedOnInstallButton.clicked(app);
 			}
 
-				DownloadFactory factory = new DownloadFactory();
-				Download appDownload = factory.create(app);
+			DownloadFactory factory = new DownloadFactory();
+			Download appDownload = factory.create(app);
 
-			downloadServiceHelper.startDownload(permissionRequest, appDownload)
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(download -> {
+			downloadServiceHelper.startDownload(permissionRequest, appDownload).observeOn(AndroidSchedulers.mainThread()).subscribe(download -> {
 				manageDownload(download, displayable, app);
 				if (!setupDownloadControlsRunned) {
 					// TODO: 09/09/16 refactor this
@@ -401,7 +388,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
 				Logger.e(TAG, err);
 			});
-
 		};
 
 		findTrustedVersion(app, appVersions);
@@ -480,11 +466,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 						actionButton.setText(R.string.open);
 						// FIXME: 20/07/16 sithengineer refactor this ugly code
 						if (displayable.isVisible()) {
-							((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(
-									() -> {
-										displayable.uninstall(ctx).subscribe(aVoid -> {
-										}, throwable -> throwable.printStackTrace());
-									});
+							((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(() -> {
+								displayable.uninstall(ctx).subscribe(aVoid -> {
+								}, throwable -> throwable.printStackTrace());
+							});
 						}
 					}
 				}, throwable -> throwable.printStackTrace());
@@ -508,23 +493,21 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 			downloadServiceHelper.pauseDownload(appId);
 			actionResume.setVisibility(View.VISIBLE);
 			actionPause.setVisibility(View.GONE);
-			resumeButtonWasClicked=false;
+			resumeButtonWasClicked = false;
 		});
 
 		actionResume.setOnClickListener(view -> {
-			downloadServiceHelper.startDownload(permissionRequest, download)
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(onGoingDownload -> {
-						manageDownload(onGoingDownload, displayable, app);
-						if (!resumeButtonWasClicked) {
-							// TODO: 09/09/16 refactor me
-							actionResume.setVisibility(View.GONE);
-							actionPause.setVisibility(View.VISIBLE);
-							resumeButtonWasClicked = true;
-						}
-					}, err -> {
-						Logger.e(TAG, err);
-					});
+			downloadServiceHelper.startDownload(permissionRequest, download).observeOn(AndroidSchedulers.mainThread()).subscribe(onGoingDownload -> {
+				manageDownload(onGoingDownload, displayable, app);
+				if (!resumeButtonWasClicked) {
+					// TODO: 09/09/16 refactor me
+					actionResume.setVisibility(View.GONE);
+					actionPause.setVisibility(View.VISIBLE);
+					resumeButtonWasClicked = true;
+				}
+			}, err -> {
+				Logger.e(TAG, err);
+			});
 		});
 
 		setDownloadBarVisible(true);
@@ -559,7 +542,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 		if (canCompare) {
 			boolean isLatestVersion = app.getFile().getMd5sum().equals(appVersions.getList().get(0).getFile().getMd5sum());
 			if (isLatestVersion) {
-				return app.getFile().getMalware().getRank()== Malware.Rank.TRUSTED;
+				return app.getFile().getMalware().getRank() == Malware.Rank.TRUSTED;
 			}
 		}
 		return false;
@@ -592,7 +575,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 				if (app.getId() != version.getId() && version.getFile() != null && version.getFile().getMalware() != null && Malware.Rank.TRUSTED.equals
 						(version
 
-								.getFile().getMalware().getRank())) {
+						.getFile().getMalware().getRank())) {
 					trustedVersion = version;
 				}
 			}
