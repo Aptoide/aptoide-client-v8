@@ -5,5 +5,5 @@ package cm.aptoide.pt.downloadmanager.interfaces;
  */
 public interface CacheManager {
 
-	void cleanCache();
+  void cleanCache();
 }

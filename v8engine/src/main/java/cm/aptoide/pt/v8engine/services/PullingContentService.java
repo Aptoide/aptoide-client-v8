@@ -105,8 +105,7 @@ public class PullingContentService extends Service {
 			}
 
 			Notification notification = new NotificationCompat.Builder(Application.getContext()).setContentIntent(resultPendingIntent)
-					.setOngoing(false)
-					.setSmallIcon(Application.getConfiguration().getIcon())
+					.setOngoing(false).setSmallIcon(R.drawable.ic_stat_aptoide_notification)
 					.setContentTitle(contentTitle)
 					.setContentText(contentText)
 					.setTicker(tickerText)
@@ -129,8 +128,7 @@ public class PullingContentService extends Service {
 
 			PendingIntent resultPendingIntent = PendingIntent.getBroadcast(Application.getContext(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			Notification notification = new NotificationCompat.Builder(Application.getContext()).setContentIntent(resultPendingIntent)
-					.setOngoing(false)
-					.setSmallIcon(Application.getConfiguration().getIcon())
+					.setOngoing(false).setSmallIcon(R.drawable.ic_stat_aptoide_notification)
 					.setContentTitle(pushNotification.getTitle())
 					.setContentText(pushNotification.getMessage())
 					.build();
