@@ -36,6 +36,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
   final Download download;
   private final long appId;
   private final DownloadAccessor downloadAccessor;
+  private final FileUtils fileUtils;
   /**
    * this boolean is used to change between serial and parallel download (in this downloadTask) the
    * default value is
@@ -44,10 +45,11 @@ public class DownloadTask extends FileDownloadLargeFileListener {
   @Setter boolean isSerial = true;
   private ConnectableObservable<Download> observable;
 
-  public DownloadTask(DownloadAccessor downloadAccessor, Download download) {
+  public DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils) {
     this.download = download;
     this.appId = download.getAppId();
     this.downloadAccessor = downloadAccessor;
+    this.fileUtils = fileUtils;
 
     this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
         .subscribeOn(Schedulers.io())
@@ -277,7 +279,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
     }
     return Observable.fromCallable(() -> {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        FileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, fileToDownload.getPath(),
+        fileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, fileToDownload.getPath(),
             fileToDownload.getFileName());
       }
       return null;

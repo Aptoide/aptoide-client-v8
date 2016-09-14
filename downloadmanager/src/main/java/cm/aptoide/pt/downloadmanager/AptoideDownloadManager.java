@@ -56,6 +56,7 @@ public class AptoideDownloadManager {
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
 	private DownloadAccessor downloadAccessor;
 	private CacheManager cacheHelper;
+	private FileUtils fileUtils;
 
 	public static Context getContext() {
 		return context;
@@ -198,12 +199,13 @@ public class AptoideDownloadManager {
 	public void init(Context context,
 			DownloadNotificationActionsInterface downloadNotificationActionsInterface,
 			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
-			CacheManager cacheHelper) {
+			CacheManager cacheHelper, FileUtils fileUtils) {
 
 		FileDownloader.init(context);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
 		this.settingsInterface = settingsInterface;
 		this.cacheHelper = cacheHelper;
+		this.fileUtils = fileUtils;
 
 		DOWNLOADS_STORAGE_PATH = settingsInterface.getDownloadDir();
 		APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
@@ -235,7 +237,7 @@ public class AptoideDownloadManager {
 			isDownloading = true;
 			getNextDownload().first().subscribe(download -> {
 				if (download != null) {
-					new DownloadTask(downloadAccessor, download).startDownload();
+					new DownloadTask(downloadAccessor, download, fileUtils).startDownload();
 					Logger.d(TAG, "Download with id " + download.getAppId() + " started");
 				} else {
 					isDownloading = false;

@@ -5,16 +5,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.zip.ZipFile;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -24,9 +14,16 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
-
 import com.flurry.android.FlurryAgent;
 import com.localytics.android.Localytics;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.zip.ZipFile;
 
 /**
  * Created by neuro on 07-05-2015.f
@@ -34,17 +31,15 @@ import com.localytics.android.Localytics;
  */
 public class Analytics {
 
-	private static final String TAG = Analytics.class.getSimpleName();
-
-	private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
+    // Constantes globais a todos os eventos.
+    public static final String ACTION = "Action";
+    private static final String TAG = Analytics.class.getSimpleName();
     private static final boolean ACTIVATE_FLURRY = BuildConfig.FLURRY_CONFIGURED;
-	private static boolean isFirstSession;
 	private static final int ALL = Integer.MAX_VALUE;
     private static final int LOCALYTICS = 1 << 0;
     private static final int FLURRY = 1 << 1;
-
-    // Constantes globais a todos os eventos.
-    public static final String ACTION = "Action";
+    private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
+    private static boolean isFirstSession;
 
     /**
      * Verifica se as flags fornecidas constam em accepted.
@@ -695,7 +690,7 @@ public class Analytics {
         private static final String APPLICATION_NAME = "Application Name";
         private static final String WARNING = "Warning";
         private static final String APPLICATION_PUBLISHER = "Application Publisher";
-    
+
         public static void clicked(GetAppMeta.App app) {
             try {
                 HashMap<String, String> map = new HashMap<>();
@@ -880,9 +875,8 @@ public class Analytics {
     public static class AppViewViewedFrom {
 
         public static final String APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY = "App_Viewed_Open_From";
-        private static ArrayList<String> STEPS = new ArrayList<>();
-
         public static final int NUMBER_OF_STEPS_TO_RECORD = 5;
+        private static ArrayList<String> STEPS = new ArrayList<>();
 
         public static void appViewOpenFrom(String packageName, String developerName, String trustedBadge) {
 
@@ -997,4 +991,14 @@ public class Analytics {
 			Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: "+ sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY,false));
 		}
 	}
+
+    public static class File {
+
+        public static final String EVENT_NAME = "Download_99percent";
+        public static final String ATTRIBUTE = "APK";
+
+        public static void moveFile(String moveType) {
+            track(EVENT_NAME, ATTRIBUTE, moveType, FLURRY);
+        }
+    }
 }
