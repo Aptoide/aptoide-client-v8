@@ -6,7 +6,6 @@
 package cm.aptoide.pt.preferences.managed;
 
 import android.preference.PreferenceManager;
-
 import cm.aptoide.pt.preferences.Application;
 
 /**
@@ -85,5 +84,10 @@ public class ManagerPreferences {
 
 	public static void setNeedsDbMigration(boolean migrationNeeded) {
 		Preferences.get().edit().putBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, migrationNeeded).apply();
+	}
+
+	public static boolean isUpdateNotificationEnable() {
+		return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+				.getBoolean(ManagedKeys.PREF_SHOW_UPDATE_NOTIFICATION, true);
 	}
 }

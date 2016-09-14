@@ -22,4 +22,5 @@ class ManagedKeys {
 	public static final String MAX_FILE_CACHE = "maxFileCache";
 	public static final String FORCE_SERVER_REFRESH_FLAG = "forceServerRefreshFlag";
 	public static final String PREF_NEEDS_DB_MIGRATION = "needsDbMigration";
+	public static final String PREF_SHOW_UPDATE_NOTIFICATION = "showUpdatesNotification";
 }
