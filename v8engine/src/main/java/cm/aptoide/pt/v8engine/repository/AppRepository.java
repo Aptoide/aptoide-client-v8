@@ -15,7 +15,6 @@ import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 
@@ -32,7 +31,7 @@ public class AppRepository {
 		return GetAppRequest.of(appId,storeName).observe(refresh)
 				.flatMap(response -> {
 					if (response != null && response.isOk()) {
-						return addPayment(sponsored, response);
+						return addPayment(sponsored, response, refresh);
 					} else {
 						return Observable.error(new RepositoryItemNotFoundException("No app found for app id " + appId));
 					}
@@ -43,7 +42,7 @@ public class AppRepository {
 		return GetAppRequest.of(packageName).observe(refresh)
 				.flatMap(response -> {
 					if (response != null && response.isOk()) {
-						return addPayment(sponsored, response);
+						return addPayment(sponsored, response, refresh);
 					} else {
 						return Observable.error(new RepositoryItemNotFoundException("No app found for app package" + packageName));
 					}
@@ -54,34 +53,39 @@ public class AppRepository {
 		return getPaidApp(appId, sponsored, storeName, refresh).map(paidApp -> paidApp.getPayment().getPaymentServices());
 	}
 
-	private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp) {
-		return Observable.just(getApp.getNodes().getMeta().getData())
-				.flatMap(app -> {
-					if (app.isPaid()) {
-						return getPaidApp(app.getId(), sponsored, app.getStore().getName(), false)
+	private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
+		return getPaidApp(getApp.getNodes().getMeta().getData().getId(), sponsored,
+        getApp.getNodes().getMeta().getData().getStore().getName(), refresh)
 								.map(paidApp -> {
 
 									if (paidApp.getPayment().isPaid()) {
-										getApp.getNodes().getMeta().getData().getFile().setPath(paidApp.getPath().getStringPath());
+										getApp.getNodes().getMeta().getData().getFile()
+                        .setPath(paidApp.getPath().getStringPath());
 									} else {
-										app.getPay().setProductId(paidApp.getPayment().getMetadata().getId());
-										app.getPay().setPaymentServices(paidApp.getPayment().getPaymentServices());
+                    getApp.getNodes().getMeta().getData().getPay()
+                        .setProductId(paidApp.getPayment().getMetadata().getId());
+                    getApp.getNodes().getMeta().getData().getPay()
+                        .setPaymentServices(paidApp.getPayment().getPaymentServices());
 									}
-									app.getPay().setStatus(paidApp.getPayment().getStatus());
+                  getApp.getNodes().getMeta().getData().getPay()
+                      .setStatus(paidApp.getPayment().getStatus());
 									return getApp;
-								});
+								})
+				.onErrorResumeNext(throwable -> {
+					if (throwable instanceof RepositoryItemNotFoundException) {
+						return Observable.just(getApp);
 					}
-					return Observable.just(getApp);
+					return Observable.error(throwable);
 				});
 	}
 
-	private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName, boolean refresh) {
-		return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName).observe(true)
+	public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName, boolean refresh) {
+		return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName).observe(refresh)
 				.flatMap(response -> {
-					if (response != null && response.isOk() && response.getPayment() != null) {
+					if (response != null && response.isOk() && response.isPaid()) {
 						return Observable.just(response);
 					} else {
-						return Observable.error(new RepositoryItemNotFoundException("No payment information found for app id " + appId + " in store " +
+						return Observable.error(new RepositoryItemNotFoundException("No paid app found for app id " + appId + " in store " +
 								storeName));
 					}
 				});
@@ -91,7 +95,7 @@ public class AppRepository {
 		return GetAppRequest.ofMd5(md5).observe(refresh)
 				.flatMap(response -> {
 					if (response != null && response.isOk()) {
-						return addPayment(sponsored, response);
+						return addPayment(sponsored, response, refresh);
 					} else {
 						return Observable.error(new RepositoryItemNotFoundException("No app found for app md5" + md5));
 					}

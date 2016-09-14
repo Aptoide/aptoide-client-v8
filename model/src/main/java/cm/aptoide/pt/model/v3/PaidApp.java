@@ -25,6 +25,10 @@ public class PaidApp extends BaseV3Response {
 	@JsonProperty("apk")
 	public Path path;
 
+	public boolean isPaid() {
+		return (payment != null && payment.getAmount() != null && payment.getAmount().floatValue() > 0.0f);
+	}
+
 	@Data
 	public static class Payment {
 

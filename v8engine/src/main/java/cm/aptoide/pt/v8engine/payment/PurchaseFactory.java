@@ -36,12 +36,12 @@ public class PurchaseFactory {
 		};
 	}
 
-	public Purchase create(GetAppMeta.App app) {
+	public Purchase create(PaidApp app) {
 		return new Purchase() {
 
 			@Override
 			public String getData() {
-				return app.getFile().getPath();
+				return app.getPath().getStringPath();
 			}
 
 			@Override

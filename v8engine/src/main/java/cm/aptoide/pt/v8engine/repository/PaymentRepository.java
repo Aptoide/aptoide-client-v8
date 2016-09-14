@@ -49,10 +49,10 @@ public class PaymentRepository {
 						inAppBillingProduct.getType()).flatMap(purchaseInformation -> getPurchase(purchaseInformation, inAppBillingProduct.getSku()));
 			} else {
 				final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
-				return appRepository.getApp(paidAppProduct.getAppId(), true, false, paidAppProduct.getStoreName())
+				return appRepository.getPaidApp(paidAppProduct.getAppId(), false, paidAppProduct.getStoreName(), true)
 						.flatMap(app -> {
-							if (app.getNodes().getMeta().getData().isPaid()) {
-								return Observable.just(purchaseFactory.create(app.getNodes().getMeta().getData()));
+							if (app.getPayment().isPaid()) {
+								return Observable.just(purchaseFactory.create(app));
 							}
 							return Observable.error(new RepositoryItemNotFoundException("Purchase not found for product " + paidAppProduct.getId()));
 						});
