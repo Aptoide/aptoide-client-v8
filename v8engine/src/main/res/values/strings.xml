@@ -100,7 +100,7 @@
   <string name="other_versions_partial_title_1">Other</string>
   <string name="other_versions_partial_title_2">versions on different Stores</string>
   <string name="other_versions">Other versions</string>
-  <string name="displayable_social_timeline_recommendation_similar_to">Similar to %1$s</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">based on %1$s</string>
   <string name="displayable_social_timeline_recommendation_similar_and">and</string>
   <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide recommends</string>
   <string name="social_facebook_screen_title">Facebook</string>
