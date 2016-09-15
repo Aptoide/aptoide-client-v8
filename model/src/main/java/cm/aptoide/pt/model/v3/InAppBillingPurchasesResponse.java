@@ -8,6 +8,7 @@ package cm.aptoide.pt.model.v3;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 
 import lombok.Data;
@@ -36,6 +37,9 @@ public class InAppBillingPurchasesResponse extends BaseV3Response {
 		private List<String> signatureList;
 	}
 
+	// Order must be kept here because the resulting JSON String is going to be encrypted using a
+	// public key and the resulting signature must match a signature generated on server side.
+	@JsonPropertyOrder({ "orderId", "packageName", "productId", "purchaseTime", "purchaseToken",  "developerPayload" })
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@Data
 	public static class InAppBillingPurchase {
