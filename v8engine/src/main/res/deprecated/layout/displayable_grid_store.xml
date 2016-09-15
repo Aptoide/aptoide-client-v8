@@ -60,7 +60,7 @@
             android:maxLines="1"
             android:padding="4dp"
             android:singleLine="true"
-            android:text="Apps"
+            android:text="@string/apps"
             android:textColor="?attr/storesTextColor"
             android:textSize="18sp"/>
 

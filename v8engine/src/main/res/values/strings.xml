@@ -167,6 +167,8 @@
   <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
+  <string name="subscribers">Subscribers</string>
+  <string name="apps">Apps</string>
 
   <!---->
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
