@@ -15,7 +15,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 public class Aptoide extends AptoideBase {
 
   @Override public void onCreate() {
-    //AptoideUtils.SystemU.clearApplicationData(this);
     clearAppDataOnNewBuild();
 
     super.onCreate();
