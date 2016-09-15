@@ -28,12 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
@@ -87,7 +81,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
 import io.realm.Realm;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
@@ -147,6 +144,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private AppViewInstallDisplayable installDisplayable;
 	private String md5;
 	private PermissionManager permissionManager;
+	private Menu menu;
 
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
@@ -324,6 +322,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
+		this.menu = menu;
 		inflater.inflate(R.menu.menu_appview_fragment, menu);
 		SearchUtils.setupGlobalSearchView(menu, getActivity());
 		uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
@@ -390,6 +389,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						header.setup(getApp);
 						setupDisplayables(getApp);
 						setupObservables(getApp);
+						showHideMenus(true);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
 		} else if (!TextUtils.isEmpty(md5)) {
@@ -403,7 +403,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 							storeTheme =
 									getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 						}
-
 						// useful data for the schedule updates menu option
 						GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 						scheduled = Scheduled.from(app);
@@ -411,6 +410,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						header.setup(getApp);
 						setupDisplayables(getApp);
 						setupObservables(getApp);
+						showHideMenus(true);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
 		} else {
@@ -432,8 +432,16 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						header.setup(getApp);
 						setupDisplayables(getApp);
 						setupObservables(getApp);
+						showHideMenus(true);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
+		}
+	}
+
+	private void showHideMenus(boolean visible) {
+		for (int i = 0; i < menu.size(); i++) {
+			MenuItem item = menu.getItem(i);
+			item.setVisible(visible);
 		}
 	}
 
