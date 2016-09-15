@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -103,8 +105,21 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 		super.onDestroyView();
 	}
 
+	@Override
+	public int getContentViewId() {
+		return R.layout.recycler_fragment_downloads;
+	}
+
 	private void updateUi(DownloadServiceHelper downloadServiceHelper, List<Download> downloads) {
 		fillDisplayableList(downloadServiceHelper, downloads);
+		View v = getView();
+		if (v != null)
+			if(downloads.size()==0) {
+				getView().findViewById(R.id.no_apps_downloaded).setVisibility(View.VISIBLE);
+			}
+			else {
+				getView().findViewById(R.id.no_apps_downloaded).setVisibility(View.GONE);
+			}
 		setDisplayables();
 	}
 
@@ -166,5 +181,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 		displayables.addAll(activeDisplayablesList);
 		displayables.addAll(completedDisplayablesList);
 		setDisplayables(displayables);
+
+
 	}
 }
