@@ -145,6 +145,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private String md5;
 	private PermissionManager permissionManager;
 	private Menu menu;
+	private String appName;
+	private String wUrl;
 
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
@@ -336,10 +338,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			getActivity().onBackPressed();
 			return true;
 		} else if (i == R.id.menu_share) {
-
-			ShowMessage.asSnack(this.getView(), "TO DO");
-			// TODO: 19/07/16 sithengineer
-
+			shareApp(appName, wUrl);
 			return true;
 		} else if (i == R.id.menu_schedule) {
 			@Cleanup Realm realm = DeprecatedDatabase.get();
@@ -358,13 +357,23 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void shareApp(String appName, String wUrl) {
+		if (wUrl != null) {
+			Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+			sharingIntent.setType("text/plain");
+			sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
+					appName + "\"");
+			sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+			startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+		}
+	}
+
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 	}
 
-	@Override
-	public void load(boolean refresh, Bundle savedInstanceState) {
+	@Override public void load(boolean refresh, Bundle savedInstanceState) {
 
 		if (subscription != null) {
 			subscription.unsubscribe();
@@ -390,6 +399,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						setupDisplayables(getApp);
 						setupObservables(getApp);
 						showHideMenus(true);
+						setupShare(getApp);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
 		} else if (!TextUtils.isEmpty(md5)) {
@@ -584,6 +594,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
 		this.unInstallAction = unInstallAction;
 		uninstallMenuItem.setVisible(unInstallAction != null);
+	}
+
+	public void setupShare(GetApp app) {
+		appName = app.getNodes().getMeta().getData().getName();
+		wUrl = app.getNodes().getMeta().getData().getUrls().getW();
 	}
 
 	private enum BundleKeys {
