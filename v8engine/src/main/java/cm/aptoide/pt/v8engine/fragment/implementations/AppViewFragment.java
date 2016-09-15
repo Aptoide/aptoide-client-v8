@@ -28,12 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
@@ -46,6 +40,7 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -87,7 +82,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
 import io.realm.Realm;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
@@ -147,6 +145,9 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	private AppViewInstallDisplayable installDisplayable;
 	private String md5;
 	private PermissionManager permissionManager;
+	private Menu menu;
+	private String appName;
+	private String wUrl;
 
 	public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
 		Bundle bundle = new Bundle();
@@ -206,6 +207,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		super.onCreate(savedInstanceState);
 		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 
+		permissionManager = new PermissionManager();
 		DownloadInstallationProvider installationProvider =
 				new DownloadInstallationProvider(downloadManager);
 
@@ -294,7 +296,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	}
 
 	public void buyApp(GetAppMeta.App app) {
-		startActivityForResult(PaymentActivity.getIntent(getActivity(), productFactory.create(app, app.getPayment())), PAY_APP_REQUEST_CODE);
+		startActivityForResult(PaymentActivity.getIntent(getActivity(), productFactory.create(app)), PAY_APP_REQUEST_CODE);
 	}
 
 	@Override
@@ -306,11 +308,18 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 				FragmentActivity fragmentActivity = getActivity();
 				Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
 				installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
+				installApp.putExtra(AppBoughtReceiver.APP_PATH, data.getStringExtra(BillingBinder.INAPP_PURCHASE_DATA));
 				fragmentActivity.sendBroadcast(installApp);
 			} else if (resultCode == Activity.RESULT_CANCELED) {
-				Logger.i(TAG, "The user canceled.");
-				ShowMessage.asSnack(header.badge, R.string.user_canceled);
 
+				if (data != null && data.hasExtra(BillingBinder.RESPONSE_CODE)
+						&& BillingBinder.RESULT_ITEM_ALREADY_OWNED == data.getIntExtra(BillingBinder.RESPONSE_CODE, -1)) {
+					shouldInstall = true;
+					load(true, null);
+				} else {
+					Logger.i(TAG, "The user canceled.");
+					ShowMessage.asSnack(header.badge, R.string.user_canceled);
+				}
 			} else {
 				Logger.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
 				ShowMessage.asSnack(header.badge, R.string.unknown_error);
@@ -323,6 +332,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
+		this.menu = menu;
 		inflater.inflate(R.menu.menu_appview_fragment, menu);
 		SearchUtils.setupGlobalSearchView(menu, getActivity());
 		uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
@@ -336,10 +346,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 			getActivity().onBackPressed();
 			return true;
 		} else if (i == R.id.menu_share) {
-
-			ShowMessage.asSnack(this.getView(), "TO DO");
-			// TODO: 19/07/16 sithengineer
-
+			shareApp(appName, wUrl);
 			return true;
 		} else if (i == R.id.menu_schedule) {
 			@Cleanup Realm realm = DeprecatedDatabase.get();
@@ -358,15 +365,23 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		permissionManager = new PermissionManager();
-		installManager = new InstallManager(permissionManager, getContext().getPackageManager(), new DownloadInstallationProvider(downloadManager));
+	private void shareApp(String appName, String wUrl) {
+		if (wUrl != null) {
+			Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+			sharingIntent.setType("text/plain");
+			sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
+					appName + "\"");
+			sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+			startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+		}
 	}
 
 	@Override
-	public void load(boolean refresh, Bundle savedInstanceState) {
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+	}
+
+	@Override public void load(boolean refresh, Bundle savedInstanceState) {
 
 		if (subscription != null) {
 			subscription.unsubscribe();
@@ -391,6 +406,8 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						header.setup(getApp);
 						setupDisplayables(getApp);
 						setupObservables(getApp);
+						showHideMenus(true);
+						setupShare(getApp);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
 		} else if (!TextUtils.isEmpty(md5)) {
@@ -404,7 +421,6 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 							storeTheme =
 									getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
 						}
-
 						// useful data for the schedule updates menu option
 						GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 						scheduled = Scheduled.from(app);
@@ -412,6 +428,7 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						header.setup(getApp);
 						setupDisplayables(getApp);
 						setupObservables(getApp);
+						showHideMenus(true);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
 		} else {
@@ -433,8 +450,16 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 						header.setup(getApp);
 						setupDisplayables(getApp);
 						setupObservables(getApp);
+						showHideMenus(true);
 						finishLoading();
 					}, throwable -> finishLoading(throwable));
+		}
+	}
+
+	private void showHideMenus(boolean visible) {
+		for (int i = 0; i < menu.size(); i++) {
+			MenuItem item = menu.getItem(i);
+			item.setVisible(visible);
 		}
 	}
 
@@ -577,6 +602,11 @@ public class AppViewFragment extends GridRecyclerFragment implements Scrollable,
 	public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
 		this.unInstallAction = unInstallAction;
 		uninstallMenuItem.setVisible(unInstallAction != null);
+	}
+
+	public void setupShare(GetApp app) {
+		appName = app.getNodes().getMeta().getData().getName();
+		wUrl = app.getNodes().getMeta().getData().getUrls().getW();
 	}
 
 	private enum BundleKeys {

@@ -7,13 +7,12 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
 
-import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.ErrorResponse;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
@@ -69,7 +68,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces,U> {
 
 		@POST("getApkInfo")
 		@FormUrlEncoded
-		Observable<GetApkInfoJson> getApkInfo(@FieldMap Map<String, String> args, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+		Observable<PaidApp> getApkInfo(@FieldMap Map<String, String> args, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
 		@POST("processInAppBilling")
 		@FormUrlEncoded

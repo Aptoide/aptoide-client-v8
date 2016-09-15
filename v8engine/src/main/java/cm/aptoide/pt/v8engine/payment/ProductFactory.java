@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
@@ -17,9 +17,9 @@ import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
  */
 public class ProductFactory {
 
-	public AptoideProduct create(GetAppMeta.App app, GetApkInfoJson.Payment payment) {
-		return new PaidAppProduct(payment.getMetadata().getId(), app.getIcon(), app.getName(), app.getMedia().getDescription(), app.getPayment().getPrice(),
-				app.getId(), app.getStore().getName());
+	public AptoideProduct create(GetAppMeta.App app) {
+		return new PaidAppProduct(app.getPay().getProductId(), app.getIcon(), app.getName(), app.getMedia().getDescription(),
+				app.getPay().getPriceDescription(), app.getId(), app.getStore().getName());
 	}
 
 	public AptoideProduct create(InAppBillingSkuDetailsResponse.Metadata metadata, int apiVersion, String developerPayload, String packageName,

@@ -8,6 +8,12 @@ package cm.aptoide.pt.downloadmanager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.util.FileDownloadHelper;
+
+import java.util.List;
+
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -17,10 +23,9 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInter
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
-import com.liulishuo.filedownloader.FileDownloader;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -199,9 +204,9 @@ public class AptoideDownloadManager {
 	public void init(Context context,
 			DownloadNotificationActionsInterface downloadNotificationActionsInterface,
 			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
-			CacheManager cacheHelper, FileUtils fileUtils) {
+			CacheManager cacheHelper, FileUtils fileUtils, FileDownloadHelper.OkHttpClientCustomMaker httpClientFactory) {
 
-		FileDownloader.init(context);
+		FileDownloader.init(context, httpClientFactory);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
 		this.settingsInterface = settingsInterface;
 		this.cacheHelper = cacheHelper;

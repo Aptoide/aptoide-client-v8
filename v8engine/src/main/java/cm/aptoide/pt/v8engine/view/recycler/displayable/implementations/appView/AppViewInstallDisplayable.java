@@ -25,6 +25,7 @@ import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import lombok.Getter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 06/05/16.

@@ -70,7 +70,7 @@
   <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
   <string name="displayable_social_timeline_app_update">update</string>
   <string name="displayable_social_timeline_app_update_application">application</string>
-  <string name="displayable_social_timeline_app_update_version">Version: %1$s</string>
+  <string name="displayable_social_timeline_app_update_version">Version %1$s</string>
   <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
   <string name="appview_other_versions"><u>Other Versions</u></string>
   <string name="appview_latest_version_text">Latest version</string>
@@ -100,7 +100,7 @@
   <string name="other_versions_partial_title_1">Other</string>
   <string name="other_versions_partial_title_2">versions on different Stores</string>
   <string name="other_versions">Other versions</string>
-  <string name="displayable_social_timeline_recommendation_similar_to">Similar to %1$s</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">based on %1$s</string>
   <string name="displayable_social_timeline_recommendation_similar_and">and</string>
   <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide recommends</string>
   <string name="social_facebook_screen_title">Facebook</string>
@@ -167,6 +167,8 @@
   <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
+  <string name="subscribers">Subscribers</string>
+  <string name="apps">Apps</string>
 
   <!---->
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>

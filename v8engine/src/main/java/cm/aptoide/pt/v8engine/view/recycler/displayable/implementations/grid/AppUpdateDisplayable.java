@@ -53,7 +53,7 @@ public class AppUpdateDisplayable extends Displayable {
 	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
 			DownloadServiceHelper downloadManager, Installer installManager,
 			DateCalculator dateCalculator) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
+		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
 				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getPackageName(), downloadFactory
 				.create(appUpdate), downloadManager, installManager, dateCalculator, appUpdate.getId());
 	}

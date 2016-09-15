@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view;
 
+import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface PaymentView extends View {
 
 	void removeLoading();
 
-	void dismiss(Purchase purchase) throws IOException;
+	void dismiss(Purchase purchase);
 
 	void dismiss(Throwable throwable);
 

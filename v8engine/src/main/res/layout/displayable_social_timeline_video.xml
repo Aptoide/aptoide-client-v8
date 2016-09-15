@@ -67,7 +67,7 @@
           android:layout_height="15dp"
           android:src="@drawable/appstimeline_video_play_icon"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"
-          android:layout_alignTop="@id/card_title"
+          android:layout_marginTop="@dimen/appstimeline_card_icon"
           />
 
       <View
@@ -170,10 +170,11 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_below="@+id/media_layout"
-          android:layout_marginBottom="12dp"
+          android:layout_marginBottom="24dp"
           android:layout_marginLeft="12dp"
           android:layout_marginRight="15dp"
           android:layout_marginTop="12dp"
+          android:textSize="11sp"
           android:maxLines="1"
           android:ellipsize="end"
           tools:text="Related to APPz"

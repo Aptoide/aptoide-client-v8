@@ -21,12 +21,13 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor public class CacheHelper implements CacheManager {
 
+  private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();
   private DownloadAccessor downloadAccessor;
   private DownloadSettingsInterface dirSettings;
 
   public void cleanCache() {
-    long maxCacheSize = dirSettings.getMaxCacheSize();
+    long maxCacheSize = dirSettings.getMaxCacheSize() * VALUE_TO_CONVERT_MB_TO_BYTES;
     String cacheDirPath = dirSettings.getDownloadDir();
 
     downloadAccessor.getAllSorted(Sort.ASCENDING).first().map(downloads -> {

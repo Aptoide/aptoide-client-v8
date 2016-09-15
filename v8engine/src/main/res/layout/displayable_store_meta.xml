@@ -109,7 +109,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Subscribers"
+          android:text="@string/subscribers"
           android:textSize="12sp"
           android:textStyle="bold"
           />
@@ -138,7 +138,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Apps"
+          android:text="@string/apps"
           android:textSize="12sp"
           android:textStyle="bold"
           />
@@ -167,7 +167,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Downloads"
+          android:text="@string/downloads"
           android:textSize="12sp"
           android:textStyle="bold"
           />
