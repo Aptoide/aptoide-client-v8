@@ -44,7 +44,7 @@ public class ImageLoader {
     Glide.with(Application.getContext()).load(url).placeholder(loadingPlaceHolder).into(imageView);
   }
 
-  public static void load(String url, @DrawableRes ImageView imageView) {
+  public static void load(String url, ImageView imageView) {
     Glide.with(Application.getContext())
         .load(AptoideUtils.IconSizeU.getNewImageUrl(url))
         .into(imageView);
@@ -57,7 +57,9 @@ public class ImageLoader {
    * @return {@link Drawable} with the passing drawable id or null if id = 0
    */
   public static Drawable load(@DrawableRes int drawableId) {
-    if (drawableId == 0) return null;
+    if (drawableId == 0) {
+      return null;
+    }
     Context ctx = Application.getContext();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       return ctx.getResources().getDrawable(drawableId, ctx.getTheme());
@@ -76,8 +78,8 @@ public class ImageLoader {
         imageView, placeHolderDrawableId);
   }
 
-  public static void loadWithCircleTransformAndPlaceHolder(String url,
-      @DrawableRes ImageView imageView, @DrawableRes int placeHolderDrawableId) {
+  public static void loadWithCircleTransformAndPlaceHolder(String url, ImageView imageView,
+      @DrawableRes int placeHolderDrawableId) {
     Glide.with(Application.getContext())
         .load(url)
         .transform(new CircleTransform(Application.getContext()))
