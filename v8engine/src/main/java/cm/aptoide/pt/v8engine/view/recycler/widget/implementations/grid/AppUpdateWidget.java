@@ -42,7 +42,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 	private ImageView appIcon;
 	private TextView appUpdate;
 
-	private Button updateButton;
+	private TextView updateButton;
 	private CompositeSubscription subscriptions;
 	private TextView errorText;
 	private AppUpdateDisplayable displayable;
@@ -61,7 +61,8 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 		appName = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_name);
 		appIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_app_update_icon);
 		appVersion = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_version);
-		updateButton = (Button) itemView.findViewById(R.id.displayable_social_timeline_app_update_button);
+		updateButton =
+				(TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_button);
 		errorText = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_error);
 		appUpdate = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update);
 		storeImage = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_image);
@@ -136,7 +137,11 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 				showDownloadError(displayable, error);
 				Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
 				return Observable.just(null);
-			})).distinctUntilChanged().subscribe(status -> updateDownloadStatus(displayable, status)));
+			}))
+					.distinctUntilChanged()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(status -> updateDownloadStatus(displayable, status),
+							throwable -> throwable.printStackTrace()));
 		}
 	}
 
