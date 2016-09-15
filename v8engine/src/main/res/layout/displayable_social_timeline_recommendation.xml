@@ -70,7 +70,7 @@
           android:layout_height="15dp"
           android:src="@drawable/appstimeline_recommendation_compass_icon"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"
-          android:layout_alignTop="@id/displayable_social_timeline_recommendation_card_title"
+          android:layout_marginTop="16.7dp"
           />
 
       <View
@@ -131,7 +131,7 @@
           android:ellipsize="end"
           android:maxLines="2"
           android:paddingTop="3dp"
-          tools:text="Similar to Empire of Kings"
+          tools:text="based on Empire of Kings"
           android:layout_below="@+id/displayable_social_timeline_recommendation_name"
           android:layout_marginRight="15.1dp"
           android:layout_marginLeft="13.3dp"

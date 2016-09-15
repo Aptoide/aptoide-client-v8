@@ -105,7 +105,7 @@
         android:summary="@string/settings_maxFileCache_sum"
         android:title="@string/settings_maxFileCache_title"/>
   </PreferenceCategory>
-
+  <!--
   <PreferenceCategory
       android:key="changetheme"
       android:title="@string/change_theme">
@@ -116,7 +116,7 @@
         android:key="theme"
         android:title="@string/theme"/>
   </PreferenceCategory>
-
+  -->
   <PreferenceCategory android:title="@string/root">
     <CheckBoxPreference
         android:key="allowRoot"

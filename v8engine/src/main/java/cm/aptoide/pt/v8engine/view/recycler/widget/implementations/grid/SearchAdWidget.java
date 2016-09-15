@@ -55,7 +55,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 		description.setText(Html.fromHtml(ad.getData().getDescription()));
 		sponsored.setTypeface(null, Typeface.BOLD);
 		sponsored.setText((getContext().getResources().getText(R.string.sponsored) + "").toUpperCase());
-		ImageLoader.load(AptoideUtils.IconSizeU.parseIcon(ad.getData().getIcon()), icon);
+		ImageLoader.load(ad.getData().getIcon(), icon);
 
 		itemView.setOnClickListener(view -> {
 			//	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");

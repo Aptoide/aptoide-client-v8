@@ -150,7 +150,7 @@ public class SearchWidget extends Widget<SearchDisplayable> {
 		}
 
 		store.setText(pojo.getStore().getName());
-		ImageLoader.load(AptoideUtils.IconSizeU.parseIcon(pojo.getIcon()), icon);
+		ImageLoader.load(pojo.getIcon(), icon);
 
 		if (Malware.Rank.TRUSTED.equals(pojo.getFile().getMalware().getRank())) {
 			icTrusted.setVisibility(View.VISIBLE);
