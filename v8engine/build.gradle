@@ -177,6 +177,8 @@ dependencies {
   // If you want pre-written Activities and Fragments you can subclass as providers
   compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
 
+  compile 'eu.chainfire:libsuperuser:1.0.0.+'
+
   //    Apagar
   compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
   compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
