@@ -618,7 +618,7 @@ public class AptoideUtils {
     }
 
     public static String commaSeparatedValues(List<?> list) {
-      String s = new String();
+      String s = "";
 
       if (list.size() > 0) {
         s = list.get(0).toString();
@@ -820,6 +820,33 @@ public class AptoideUtils {
         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).
             hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
       }
+    }
+
+    public static void clearApplicationData(Context context) {
+      File cache = context.getCacheDir();
+      File appDir = new File(cache.getParent());
+      if (appDir.exists()) {
+        String[] children = appDir.list();
+        for (String s : children) {
+          if (!s.equals("lib")) {
+            deleteDir(new File(appDir, s));
+          }
+        }
+      }
+    }
+
+    public static boolean deleteDir(File dir) {
+      if (dir != null && dir.isDirectory()) {
+        String[] children = dir.list();
+        for (String child : children) {
+          boolean success = deleteDir(new File(dir, child));
+          if (!success) {
+            return false;
+          }
+        }
+      }
+
+      return dir != null && dir.delete();
     }
   }
 
@@ -1292,7 +1319,7 @@ public class AptoideUtils {
         if (iconUrl.contains("_icon")) {
           String sizeString = IconSizeU.generateSizeString();
           if (sizeString != null && !sizeString.isEmpty()) {
-            String[] splittedUrl = splitUrlExtension(iconUrl);;
+            String[] splittedUrl = splitUrlExtension(iconUrl);
             iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
           }
         }
