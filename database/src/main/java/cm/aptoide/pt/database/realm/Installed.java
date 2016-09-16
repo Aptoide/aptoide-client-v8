@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
@@ -26,6 +27,7 @@ public class Installed extends RealmObject {
 	public static final String VERSION_CODE = "versionCode";
 	public static final String VERSION_NAME = "versionName";
 	public static final String SIGNATURE = "signature";
+	public static final String STORE_NAME = "storeName";
 
 	//	@PrimaryKey private int id = -1;
 	private String icon;
@@ -35,20 +37,22 @@ public class Installed extends RealmObject {
 	private String versionName;
 	private String signature;
 	private boolean systemApp;
+	private String storeName;
 
 	public Installed() {
 	}
 
-	public Installed(PackageInfo packageInfo, @NonNull PackageManager packageManager) {
-		this(packageInfo);
+	public Installed(@NonNull PackageInfo packageInfo){
+		this(packageInfo, null);
 	}
 
-	public Installed(PackageInfo packageInfo) {
+	public Installed(@NonNull PackageInfo packageInfo, @Nullable String storeName) {
 		setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
 		setName(AptoideUtils.SystemU.getApkLabel(packageInfo));
 		setPackageName(packageInfo.packageName);
 		setVersionCode(packageInfo.versionCode);
 		setVersionName(packageInfo.versionName);
+		setStoreName(storeName);
 		setSystemApp((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
 		if (packageInfo.signatures != null && packageInfo.signatures.length > 0) {
 			setSignature(AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
@@ -125,5 +129,13 @@ public class Installed extends RealmObject {
 
 	public void setSystemApp(boolean systemApp) {
 		this.systemApp = systemApp;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 }

@@ -70,6 +70,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
 		appName = pojo.getName();
 		packageName = pojo.getPackageName();
+		final String storeName = pojo.getStoreName();
 
 		labelTextView.setText(pojo.getName());
 		verNameTextView.setText(pojo.getVersionName());
@@ -81,7 +82,7 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
 		createReviewLayout.setOnClickListener(v -> {
 			Analytics.Updates.createReview();
-			DialogUtils.showRateDialog(getContext(), appName, packageName, null, null);
+			DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
 		});
 	}
 

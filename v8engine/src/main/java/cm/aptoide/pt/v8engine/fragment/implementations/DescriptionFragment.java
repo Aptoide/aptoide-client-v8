@@ -69,12 +69,11 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 	@Override
 	public void load(boolean refresh, Bundle savedInstanceState) {
 		if (hasAppId) {
-			Logger.d(TAG, "App Description should refresh? " + refresh);
 			GetAppRequest.of(appId, storeName).execute(getApp -> {
 				setupAppDescription(getApp);
 				setupTitle(getApp);
 				finishLoading();
-			}, refresh);
+			}, false);
 		} else {
 			Logger.e(TAG, "App id unavailable");
 			setDataUnavailable();

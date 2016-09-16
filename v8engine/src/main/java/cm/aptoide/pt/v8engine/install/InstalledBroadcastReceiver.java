@@ -137,7 +137,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 	private void databaseOnPackageAdded(String packageName) {
 		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-		DeprecatedDatabase.save(new Installed(packageInfo, V8Engine.getContext().getPackageManager()), realm);
+		DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
 		//Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
 		//if (rollback != null) {
@@ -159,7 +159,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 			}
 		}
 
-		DeprecatedDatabase.save(new Installed(packageInfo, context.getPackageManager()), realm);
+		DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
 		//confirmAction(packageName, Rollback.Action.UPDATE);
 	}

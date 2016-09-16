@@ -223,7 +223,7 @@ public abstract class V8Engine extends DataProvider {
           (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
       for (PackageInfo packageInfo : installedApps) {
-        Installed installed = new Installed(packageInfo, getPackageManager());
+        Installed installed = new Installed(packageInfo);
         DeprecatedDatabase.save(installed, realm);
       }
       return null;

@@ -67,7 +67,7 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
 	private void fetchStores() {
 		final ListStoresRequest listStoresRequest = ListStoresRequest.ofTopStores(offset, STORES_LIMIT_PER_REQUEST);
 		EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
-				errorRequestListener, false);
+				errorRequestListener);
 		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 		endlessRecyclerOnScrollListener.onLoadMore(false);
 	}

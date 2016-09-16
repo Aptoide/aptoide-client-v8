@@ -69,14 +69,14 @@ public class OkHttpClientFactory {
 			if (response != null) {
 
 				if(BuildConfig.DEBUG) {
-					Logger.v(TAG, String.format("cache hit '%s'", request.url()));
+					Logger.v(TAG, String.format("cache hit '%s'", httpUrl));
 				}
 
 				return response;
 			}
 
 			if(BuildConfig.DEBUG) {
-				Logger.v(TAG, String.format("cache miss '%s'", request.url()));
+				Logger.v(TAG, String.format("cache miss '%s'", httpUrl));
 			}
 
 			return customCache.put(request, chain.proceed(request));

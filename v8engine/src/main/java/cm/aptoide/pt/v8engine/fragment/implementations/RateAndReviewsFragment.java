@@ -273,7 +273,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		ListReviewsRequest of = ListReviewsRequest.of(storeName, packageName);
 
 		endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of, listFullReviewsSuccessRequestListener,
-				errorRequestListener, false);
+				errorRequestListener);
 		recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 		endlessRecyclerOnScrollListener.onLoadMore(false);
 	}
