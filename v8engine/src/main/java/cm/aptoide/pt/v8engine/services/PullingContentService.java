@@ -14,9 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-
-import com.bumptech.glide.request.target.NotificationTarget;
-
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -29,6 +26,7 @@ import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
+import com.bumptech.glide.request.target.NotificationTarget;
 
 /**
  * Created by trinkes on 7/13/16.
@@ -96,7 +94,9 @@ public class PullingContentService extends Service {
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(Application.getContext(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		int numberUpdates = listAppsUpdates.getList().size();
-		if (numberUpdates > 0 && numberUpdates != ManagerPreferences.getLastUpdates()) {
+		if (numberUpdates > 0
+				&& numberUpdates != ManagerPreferences.getLastUpdates()
+				&& ManagerPreferences.isUpdateNotificationEnable()) {
 			CharSequence tickerText = AptoideUtils.StringU.getFormattedString(R.string.has_updates, Application.getConfiguration().getMarketName());
 			CharSequence contentTitle = Application.getConfiguration().getMarketName();
 			CharSequence contentText = AptoideUtils.StringU.getFormattedString(R.string.new_updates, numberUpdates);
@@ -105,8 +105,7 @@ public class PullingContentService extends Service {
 			}
 
 			Notification notification = new NotificationCompat.Builder(Application.getContext()).setContentIntent(resultPendingIntent)
-					.setOngoing(false)
-					.setSmallIcon(Application.getConfiguration().getIcon())
+					.setOngoing(false).setSmallIcon(R.drawable.ic_stat_aptoide_notification)
 					.setContentTitle(contentTitle)
 					.setContentText(contentText)
 					.setTicker(tickerText)
@@ -129,8 +128,7 @@ public class PullingContentService extends Service {
 
 			PendingIntent resultPendingIntent = PendingIntent.getBroadcast(Application.getContext(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			Notification notification = new NotificationCompat.Builder(Application.getContext()).setContentIntent(resultPendingIntent)
-					.setOngoing(false)
-					.setSmallIcon(Application.getConfiguration().getIcon())
+					.setOngoing(false).setSmallIcon(R.drawable.ic_stat_aptoide_notification)
 					.setContentTitle(pushNotification.getTitle())
 					.setContentText(pushNotification.getMessage())
 					.build();

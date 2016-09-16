@@ -15,7 +15,7 @@ public class DownloadManagerSettingsI implements DownloadSettingsInterface {
 	
 	@Override
 	public int getMainIcon() {
-		return V8Engine.getConfiguration().getIcon();
+		return android.R.drawable.stat_sys_download;
 	}
 
 	@Override

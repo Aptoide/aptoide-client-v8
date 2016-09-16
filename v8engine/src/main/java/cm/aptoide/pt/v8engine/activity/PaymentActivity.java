@@ -17,13 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.jakewharton.rxbinding.view.RxView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -44,6 +37,9 @@ import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.view.PaymentView;
+import com.jakewharton.rxbinding.view.RxView;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 
 public class PaymentActivity extends ActivityView implements PaymentView {
@@ -104,7 +100,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 	}
 
 	@Override
-	public void dismiss(Purchase purchase) throws IOException {
+	public void dismiss(Purchase purchase) {
 		finish(RESULT_OK, intentFactory.create(purchase));
 	}
 

@@ -17,6 +17,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentManager;
 import cm.aptoide.pt.v8engine.payment.Purchase;
+import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.view.PaymentView;
@@ -104,6 +105,7 @@ public class PaymentPresenter implements Presenter {
 					}
 					return Observable.just(purchase);
 				})
+				.observeOn(AndroidSchedulers.mainThread())
 				.doOnError(throwable -> removeLoadingAndDismiss(throwable))
 				.doOnNext(purchase -> removeLoadingAndDismiss(purchase))
 				.onErrorReturn(throwable -> null)
@@ -164,25 +166,17 @@ public class PaymentPresenter implements Presenter {
 
 	private void clearLoginStateAndDismiss(Throwable throwable) {
 		clearLoginState();
-		dismiss(throwable);
+		view.dismiss(throwable);
 	}
 
 	private void removeLoadingAndDismiss(Throwable throwable) {
 		view.removeLoading();
-		dismiss(throwable);
-	}
-
-	private void dismiss(Throwable throwable) {
 		view.dismiss(throwable);
 	}
 
 	private void removeLoadingAndDismiss(Purchase purchase) {
 		view.removeLoading();
-		try {
-			view.dismiss(purchase);
-		} catch (IOException e) {
-			dismiss(e);
-		}
+		view.dismiss(purchase);
 	}
 
 	private boolean clearLoginState() {

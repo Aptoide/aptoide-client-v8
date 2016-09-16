@@ -281,5 +281,8 @@
   <!--Download fragment-->
   <string name="fragment_download_no_connection">No apps downloaded</string>
   <string name="fragment_download_no_connection_subtitle">New apps will appear here as soon as you start downloading them!</string>
+  <string name="newer_version_available">Newer version available</string>
+
+  <string name="add_store">Add store</string>
 
 </resources>

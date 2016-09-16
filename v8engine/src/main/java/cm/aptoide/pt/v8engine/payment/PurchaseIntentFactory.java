@@ -21,17 +21,20 @@ public class PurchaseIntentFactory {
 
 	private final ErrorCodeFactory codeFactory;
 
-	public Intent create(Purchase purchase) throws IOException {
-		final Intent intent = new Intent();
-		intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_OK);
-		if (purchase.getData() != null) {
+	public Intent create(Purchase purchase) {
+		Intent intent;
+
+		try {
+			intent = new Intent();
 			intent.putExtra(BillingBinder.INAPP_PURCHASE_DATA, purchase.getData());
-		}
+			intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_OK);
 
-		if (purchase.getSignature() !=  null) {
-			intent.putExtra(BillingBinder.INAPP_DATA_SIGNATURE, purchase.getSignature());
+			if (purchase.getSignature() !=  null) {
+				intent.putExtra(BillingBinder.INAPP_DATA_SIGNATURE, purchase.getSignature());
+			}
+		} catch (IOException e) {
+			intent = create(e);
 		}
-
 		return intent;
 	}
 

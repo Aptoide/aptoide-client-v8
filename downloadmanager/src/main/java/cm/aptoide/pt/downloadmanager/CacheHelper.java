@@ -19,8 +19,7 @@ import lombok.AllArgsConstructor;
 /**
  * Created by trinkes on 7/7/16.
  */
-@AllArgsConstructor
-public class CacheHelper implements CacheManager {
+@AllArgsConstructor public class CacheHelper implements CacheManager {
 
   private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();

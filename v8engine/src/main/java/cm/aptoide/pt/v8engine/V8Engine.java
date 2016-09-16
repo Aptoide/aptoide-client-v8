@@ -12,16 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.flurry.android.FlurryAgent;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
-import java.util.Collections;
-import java.util.List;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -38,15 +28,24 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
+import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.flurry.android.FlurryAgent;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import java.util.Collections;
+import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
@@ -168,7 +167,7 @@ public abstract class V8Engine extends DataProvider {
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
     AptoideDownloadManager.getInstance()
             .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface, downloadAccessor, new CacheHelper(downloadAccessor,
-                    settingsInterface));
+                    settingsInterface), new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient());
 
     // setupCurrentActivityListener();
 

@@ -17,14 +17,15 @@ public abstract class AppBoughtReceiver extends BroadcastReceiver {
 
 	public static final String APP_ID = "appId";
 	public static final String APP_BOUGHT = "APP_BOUGHT";
+	public static final String APP_PATH = "APP_PATH";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 		if (TextUtils.equals(action, APP_BOUGHT)) {
-			appBought(intent.getLongExtra(APP_ID, -1));
+			appBought(intent.getLongExtra(APP_ID, -1), intent.getStringExtra(APP_PATH));
 		}
 	}
 
-	public abstract void appBought(long appId);
+	public abstract void appBought(long appId, String path);
 }

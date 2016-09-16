@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.util.FileDownloadHelper;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -59,6 +61,7 @@ public class AptoideDownloadManager {
 	@Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
 	private DownloadAccessor downloadAccessor;
 	private CacheManager cacheHelper;
+	private FileUtils fileUtils;
 
 	public static Context getContext() {
 		return context;
@@ -107,7 +110,9 @@ public class AptoideDownloadManager {
 
 	private void startNewDownload(Download download) {
 		download.setOverallDownloadStatus(Download.IN_QUEUE);
-		download.setOverallProgress(0);
+		//commented to prevent the ui glitch with "0" value
+		// (trusting in progress value from outside can be dangerous)
+		//		download.setOverallProgress(0);
 		download.setTimeStamp(System.currentTimeMillis());
 		downloadAccessor.save(download);
 
@@ -134,7 +139,8 @@ public class AptoideDownloadManager {
 	}
 
 	/**
-	 * Observe changes to a download. This observable never completes it will emmit items whenever the
+	 * Observe changes to a download. This observable never completes it will emmit items whenever
+	 * the
 	 * download state changes.
 	 *
 	 * @return observable for download state changes.
@@ -170,7 +176,9 @@ public class AptoideDownloadManager {
 		FileDownloader.getImpl().pauseAll();
 		isPausing = true;
 
-		downloadAccessor.getRunningDownloads().first().doOnUnsubscribe(() -> isPausing = false)
+		downloadAccessor.getRunningDownloads()
+				.first()
+				.doOnUnsubscribe(() -> isPausing = false)
 				.subscribe(downloads -> {
 					for (int i = 0; i < downloads.size(); i++) {
 						downloads.get(i).setOverallDownloadStatus(Download.PAUSED);
@@ -193,13 +201,16 @@ public class AptoideDownloadManager {
 		});
 	}
 
-	public void init(Context context, DownloadNotificationActionsInterface downloadNotificationActionsInterface, DownloadSettingsInterface settingsInterface,
-	                 DownloadAccessor downloadAccessor, CacheManager cacheHelper) {
+	public void init(Context context,
+			DownloadNotificationActionsInterface downloadNotificationActionsInterface,
+			DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
+			CacheManager cacheHelper, FileUtils fileUtils, FileDownloadHelper.OkHttpClientCustomMaker httpClientFactory) {
 
-		FileDownloader.init(context);
+		FileDownloader.init(context, httpClientFactory);
 		this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
 		this.settingsInterface = settingsInterface;
 		this.cacheHelper = cacheHelper;
+		this.fileUtils = fileUtils;
 
 		DOWNLOADS_STORAGE_PATH = settingsInterface.getDownloadDir();
 		APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
@@ -211,9 +222,7 @@ public class AptoideDownloadManager {
 		this.downloadAccessor = downloadAccessor;
 	}
 
-	@NonNull
-	@Download.DownloadState
-	private int getStateIfFileExists(Download downloadToCheck) {
+	@NonNull @Download.DownloadState private int getStateIfFileExists(Download downloadToCheck) {
 		@Download.DownloadState int downloadStatus = Download.COMPLETED;
 		for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
 			if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
@@ -233,7 +242,7 @@ public class AptoideDownloadManager {
 			isDownloading = true;
 			getNextDownload().first().subscribe(download -> {
 				if (download != null) {
-					new DownloadTask(downloadAccessor, download).startDownload();
+					new DownloadTask(downloadAccessor, download, fileUtils).startDownload();
 					Logger.d(TAG, "Download with id " + download.getAppId() + " started");
 				} else {
 					isDownloading = false;

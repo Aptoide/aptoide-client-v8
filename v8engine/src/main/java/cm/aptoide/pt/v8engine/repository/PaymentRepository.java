@@ -49,10 +49,10 @@ public class PaymentRepository {
 						inAppBillingProduct.getType()).flatMap(purchaseInformation -> getPurchase(purchaseInformation, inAppBillingProduct.getSku()));
 			} else {
 				final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
-				return appRepository.getAppPayment(paidAppProduct.getAppId(), false, paidAppProduct.getStoreName())
-						.flatMap(payment -> {
-							if (payment.isPaid()) {
-								return Observable.just(purchaseFactory.create());
+				return appRepository.getPaidApp(paidAppProduct.getAppId(), false, paidAppProduct.getStoreName(), true)
+						.flatMap(app -> {
+							if (app.getPayment().isPaid()) {
+								return Observable.just(purchaseFactory.create(app));
 							}
 							return Observable.error(new RepositoryItemNotFoundException("Purchase not found for product " + paidAppProduct.getId()));
 						});
@@ -69,7 +69,7 @@ public class PaymentRepository {
 						.map(paymentService -> paymentFactory.create(context, paymentService, product))
 						.toList();
 			} else {
-				return appRepository.getPaymentServices(((PaidAppProduct) product).getAppId(), false, ((PaidAppProduct) product).getStoreName())
+				return appRepository.getPaymentServices(((PaidAppProduct) product).getAppId(), false, ((PaidAppProduct) product).getStoreName(), true)
 						.flatMapIterable(paymentServices -> paymentServices)
 						.map(paymentService -> paymentFactory.create(context, paymentService, product))
 						.toList();

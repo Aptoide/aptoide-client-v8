@@ -13,10 +13,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-
-import java.util.Locale;
-
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
@@ -55,14 +51,14 @@ public class DownloadService extends Service {
 			subscriptions.add(downloadManager.getDownload(appId).first().subscribe(download -> {
 				downloadManager.startDownload(download)
 						.first()
-						.subscribe(downloadFromRealm -> Logger.d(TAG, "startDownload called with: appId = [" + appId + "]"), Throwable::printStackTrace);
+						.subscribe(downloadFromRealm -> Logger.d(TAG,
+								"startDownload called with: appId = [" + appId + "]"), Throwable::printStackTrace);
 				setupNotifications();
 			}));
 		}
 	}
 
-	@Override
-	public void onCreate() {
+	@Override public void onCreate() {
 		super.onCreate();
 		Logger.d(TAG, "Download service is starting");
 		downloadManager = AptoideDownloadManager.getInstance();
@@ -70,8 +66,7 @@ public class DownloadService extends Service {
 		subscriptions = new CompositeSubscription();
 	}
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	@Override public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent != null) {
 			String action = intent.getAction();
 			if (action != null) {
@@ -94,15 +89,12 @@ public class DownloadService extends Service {
 		return START_STICKY;
 	}
 
-	@Override
-	public void onDestroy() {
+	@Override public void onDestroy() {
 		subscriptions.unsubscribe();
 		super.onDestroy();
 	}
 
-	@Nullable
-	@Override
-	public IBinder onBind(Intent intent) {
+	@Nullable @Override public IBinder onBind(Intent intent) {
 		return null;
 	}
 
@@ -110,7 +102,8 @@ public class DownloadService extends Service {
 		if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
 			stopMechanismSubscription = downloadManager.getCurrentDownloads()
 					.observeOn(Schedulers.computation())
-					.filter(downloads -> downloads == null || downloads.size() <= 0).subscribe(downloads -> {
+					.filter(downloads -> downloads == null || downloads.size() <= 0)
+					.subscribe(downloads -> {
 						Logger.d(TAG, "Download service is stopping");
 						stopSelf();
 					}, Throwable::printStackTrace);
@@ -120,12 +113,15 @@ public class DownloadService extends Service {
 
 	private void setupNotifications() {
 		if (notificationUpdateSubscription == null || notificationUpdateSubscription.isUnsubscribed()) {
-			openAppsManagerIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null);
+			openAppsManagerIntent =
+					createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null);
 
 			downloadManager.getCurrentDownload().subscribe(download -> {
 				Bundle bundle = new Bundle();
 				bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
-				notificationClickIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION, bundle);
+				notificationClickIntent =
+						createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION,
+								bundle);
 
 				bundle = new Bundle();
 				bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
@@ -133,55 +129,68 @@ public class DownloadService extends Service {
 				PendingIntent pOpenAppsManager = getPendingIntent(openAppsManagerIntent, download);
 				PendingIntent pNotificationClick = getPendingIntent(notificationClickIntent, download);
 
-				NotificationCompat.Builder builder = new NotificationCompat.Builder(AptoideDownloadManager.getContext());
+				NotificationCompat.Builder builder =
+						new NotificationCompat.Builder(AptoideDownloadManager.getContext());
 				switch (download.getOverallDownloadStatus()) {
 					case Download.PROGRESS:
-						pauseDownloadsIntent = createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE, bundle);
+						pauseDownloadsIntent =
+								createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE,
+										bundle);
 						PendingIntent pPause = getPendingIntent(pauseDownloadsIntent, download);
-						builder.addAction(R.drawable.ic_pause, AptoideDownloadManager.getContext().getString(R.string.pause_download), pPause);
+						builder.addAction(R.drawable.media_pause,
+								AptoideDownloadManager.getContext().getString(R.string.pause_download), pPause);
 						break;
 				}
 
 				if (notification == null) {
-					notification = buildStandardNotification(download, pOpenAppsManager, pNotificationClick, builder).build();
+					notification = buildStandardNotification(download, pOpenAppsManager, pNotificationClick,
+							builder).build();
 				} else {
 					long oldWhen = notification.when;
-					notification = buildStandardNotification(download, pOpenAppsManager, pNotificationClick, builder).build();
+					notification = buildStandardNotification(download, pOpenAppsManager, pNotificationClick,
+							builder).build();
 					notification.when = oldWhen;
 				}
 				startForeground(NOTIFICATION_ID, notification);
 				setupStopSelfMechanism();
 			});
 
-			notificationUpdateSubscription = downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
-			}, Throwable::printStackTrace);
+			notificationUpdateSubscription =
+					downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
+					}, Throwable::printStackTrace);
 			subscriptions.add(notificationUpdateSubscription);
 		}
 	}
 
-	private NotificationCompat.Builder buildStandardNotification(Download download, PendingIntent pOpenAppsManager, PendingIntent pNotificationClick,
-	                                                             NotificationCompat.Builder builder) {
+	private NotificationCompat.Builder buildStandardNotification(Download download,
+			PendingIntent pOpenAppsManager, PendingIntent pNotificationClick,
+			NotificationCompat.Builder builder) {
 		builder.setSmallIcon(AptoideDownloadManager.getInstance().getSettingsInterface().getMainIcon())
 				.setContentTitle(String.format(Locale.ENGLISH, AptoideDownloadManager.getContext()
-						.getResources()
-						.getString(R.string.aptoide_downloading), Application.getConfiguration().getMarketName()))
+								.getResources()
+								.getString(R.string.aptoide_downloading),
+						Application.getConfiguration().getMarketName()))
 				.setContentText(new StringBuilder().append(download.getAppName())
 						.append(" - ")
 						.append(download.getStatusName(AptoideDownloadManager.getContext())))
 				.setContentIntent(pNotificationClick)
-				.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, download.getOverallProgress(), false)
-				.addAction(AptoideDownloadManager.getInstance().getSettingsInterface().getButton1Icon(), AptoideDownloadManager.getInstance()
-						.getSettingsInterface()
-						.getButton1Text(AptoideDownloadManager.getContext()), pOpenAppsManager);
+				.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, download.getOverallProgress(),
+						false)
+				.addAction(AptoideDownloadManager.getInstance().getSettingsInterface().getButton1Icon(),
+						AptoideDownloadManager.getInstance()
+								.getSettingsInterface()
+								.getButton1Text(AptoideDownloadManager.getContext()), pOpenAppsManager);
 		return builder;
 	}
 
 	private PendingIntent getPendingIntent(Intent intent, Download download) {
-		return PendingIntent.getBroadcast(AptoideDownloadManager.getContext(), download.getFilesToDownload().get(0).getDownloadId(), intent, 0);
+		return PendingIntent.getBroadcast(AptoideDownloadManager.getContext(),
+				download.getFilesToDownload().get(0).getDownloadId(), intent, 0);
 	}
 
 	private Intent createNotificationIntent(String intentAction, @Nullable Bundle bundle) {
-		Intent intent = new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+		Intent intent =
+				new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
 		intent.setAction(intentAction);
 		if (bundle != null) {
 			intent.putExtras(bundle);

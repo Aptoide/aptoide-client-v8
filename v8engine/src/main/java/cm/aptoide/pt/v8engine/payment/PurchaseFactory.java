@@ -8,8 +8,9 @@ package cm.aptoide.pt.v8engine.payment;
 import java.io.IOException;
 
 import cm.aptoide.pt.iab.InAppBillingSerializer;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import lombok.AllArgsConstructor;
 
 /**
@@ -35,12 +36,12 @@ public class PurchaseFactory {
 		};
 	}
 
-	public Purchase create() {
+	public Purchase create(PaidApp app) {
 		return new Purchase() {
 
 			@Override
 			public String getData() {
-				return null;
+				return app.getPath().getStringPath();
 			}
 
 			@Override

@@ -7,13 +7,6 @@ package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-
-import java.io.IOException;
-import java.util.Date;
-
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
@@ -25,7 +18,11 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import io.realm.Realm;
+import java.io.IOException;
+import java.util.Date;
 import lombok.Cleanup;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -45,6 +42,11 @@ public class DataproviderUtils {
 	}
 
 	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
+		@Cleanup Realm realm1 = DeprecatedDatabase.get();
+		if (DeprecatedDatabase.StoreQ.getAll(realm1).size() == 0) {
+			return;
+		}
+
 		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
 			@Cleanup Realm realm = DeprecatedDatabase.get();
 			for (App app : listAppsUpdates.getList()) {

@@ -17,10 +17,17 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetApkInfoJson extends BaseV3Response {
+public class PaidApp extends BaseV3Response {
 
 	@JsonProperty("payment")
 	private Payment payment;
+
+	@JsonProperty("apk")
+	public Path path;
+
+	public boolean isPaid() {
+		return (payment != null && payment.getAmount() != null && payment.getAmount().floatValue() > 0.0f);
+	}
 
 	@Data
 	public static class Payment {
@@ -30,9 +37,6 @@ public class GetApkInfoJson extends BaseV3Response {
 
 		@JsonProperty("currency_symbol")
 		private String symbol;
-
-		@JsonProperty("apkpath")
-		private String apkPath;
 
 		@JsonProperty("metadata")
 		private Metadata metadata;
@@ -47,9 +51,6 @@ public class GetApkInfoJson extends BaseV3Response {
 			return status.equalsIgnoreCase("OK");
 		}
 
-		public String getPrice() {
-			return symbol + " " + String.valueOf(amount);
-		}
 	}
 
 	@Data
@@ -57,5 +58,13 @@ public class GetApkInfoJson extends BaseV3Response {
 
 		@JsonProperty("id")
 		private int id;
+	}
+
+	@Data
+	public static class Path {
+
+		@JsonProperty("path")
+		private String stringPath;
+
 	}
 }

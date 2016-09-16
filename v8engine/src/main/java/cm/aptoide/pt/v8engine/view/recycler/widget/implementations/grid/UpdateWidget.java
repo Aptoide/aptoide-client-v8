@@ -77,10 +77,10 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		this.displayable = updateDisplayable;
 		final String packageName = updateDisplayable.getPackageName();
 		final InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
-		accessor.get(packageName)
+		subscriptions.add(accessor.get(packageName)
 				.first()
 				.subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
-						throwable -> throwable.printStackTrace());
+						throwable -> throwable.printStackTrace()));
 		displayable.setPauseAction(this::onViewDetached);
 		displayable.setResumeAction(this::onViewAttached);
 		labelTextView.setText(updateDisplayable.getLabel());

@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.payment;
 
 import android.content.Context;
 
+import cm.aptoide.pt.v8engine.payment.exception.PaymentPurchaseNotFoundException;
 import java.util.List;
 
 import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
@@ -36,7 +37,7 @@ public class PaymentManager {
 				.flatMap(purchase -> Observable.<Purchase>error(new PaymentAlreadyProcessedException("Product " + payment.getProduct().getId() + " already " +
 						"purchased.")))
 				.onErrorResumeNext(throwable -> {
-					if (throwable instanceof RepositoryItemNotFoundException) {
+					if (throwable instanceof PaymentPurchaseNotFoundException) {
 						return RxPayment.process(payment)
 								.flatMap(paymentConfirmation -> paymentRepository.savePaymentConfirmation(paymentConfirmation)
 								.flatMap(saved -> getPurchase((AptoideProduct) payment.getProduct())));
@@ -46,14 +47,11 @@ public class PaymentManager {
 	}
 
 	public Observable<Purchase> getPurchase(AptoideProduct product) {
-		// Payment confirmation is stored locally. The user may clean local data and attempt to purchase a product again. We should always check if
-		// a purchase exists in server even if its payment confirmation is not stored locally.
-		return paymentRepository.getPaymentConfirmation(product)
-				.flatMap(paymentConfirmation -> paymentRepository.getPurchase(product))
+		return paymentRepository.getPurchase(product)
 				.doOnNext(purchase -> paymentRepository.deletePaymentConfirmation(product))
 				.onErrorResumeNext(throwable -> {
 					if (throwable instanceof RepositoryItemNotFoundException) {
-						return paymentRepository.getPurchase(product);
+						return Observable.error(new PaymentPurchaseNotFoundException("Purchase not found for product " + product.getId()));
 					}
 					return Observable.error(throwable);
 				});

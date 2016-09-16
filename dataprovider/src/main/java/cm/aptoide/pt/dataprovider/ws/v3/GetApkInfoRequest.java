@@ -11,14 +11,14 @@ import java.util.Map;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
  * Created by sithengineer on 21/07/16.
  */
-public class GetApkInfoRequest extends V3<GetApkInfoJson> {
+public class GetApkInfoRequest extends V3<PaidApp> {
 
 	private Map<String,String> args;
 
@@ -66,7 +66,7 @@ public class GetApkInfoRequest extends V3<GetApkInfoJson> {
 	}
 
 	@Override
-	protected Observable<GetApkInfoJson> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+	protected Observable<PaidApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 		return interfaces.getApkInfo(args, bypassCache);
 	}
 }
