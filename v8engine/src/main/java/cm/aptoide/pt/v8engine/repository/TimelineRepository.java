@@ -33,37 +33,40 @@ public class TimelineRepository {
     this.filter = filter;
   }
 
-	public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset, List<String> packageNames, boolean refresh) {
-		return GetUserTimelineRequest.of(action, limit, offset, packageNames)
-				.observe(refresh)
-				.doOnNext(item -> filter.clear())
-				.map(getUserTimeline -> getUserTimeline.getDatalist())
-				.flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
-            .flatMap(item -> filter.filter(item)).toList()
-						.<Datalist<TimelineCard>>map(list -> getTimelineCardDatalist(itemDataList, list)));
-	}
+  public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
+      List<String> packageNames, boolean refresh) {
+    return GetUserTimelineRequest.of(action, limit, offset, packageNames)
+        .observe(refresh)
+        .doOnNext(item -> filter.clear())
+        .map(getUserTimeline -> getUserTimeline.getDatalist())
+        .flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
+            .concatMap(item -> filter.filter(item))
+            .toList().<Datalist<TimelineCard>>map(
+                list -> getTimelineCardDatalist(itemDataList, list)));
+  }
 
-  @NonNull
-	private Datalist<TimelineCard> getTimelineCardDatalist(Datalist<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
-		Datalist<TimelineCard> cardDataList = new Datalist<>();
-		cardDataList.setCount(itemDataList.getCount());
-		cardDataList.setOffset(itemDataList.getOffset());
-		cardDataList.setTotal(itemDataList.getTotal());
-		cardDataList.setHidden(itemDataList.getHidden());
-		cardDataList.setLoaded(itemDataList.isLoaded());
-		cardDataList.setLimit(itemDataList.getLimit());
-		cardDataList.setNext(itemDataList.getNext());
-		cardDataList.setList(list);
-		return cardDataList;
-	}
+  @NonNull private Datalist<TimelineCard> getTimelineCardDatalist(
+      Datalist<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
+    Datalist<TimelineCard> cardDataList = new Datalist<>();
+    cardDataList.setCount(itemDataList.getCount());
+    cardDataList.setOffset(itemDataList.getOffset());
+    cardDataList.setTotal(itemDataList.getTotal());
+    cardDataList.setHidden(itemDataList.getHidden());
+    cardDataList.setLoaded(itemDataList.isLoaded());
+    cardDataList.setLimit(itemDataList.getLimit());
+    cardDataList.setNext(itemDataList.getNext());
+    cardDataList.setList(list);
+    return cardDataList;
+  }
 
-	private List<TimelineItem<TimelineCard>> getTimelineList(Datalist<TimelineItem<TimelineCard>> datalist) {
-		List<TimelineItem<TimelineCard>> items;
-		if (datalist == null) {
-			items = new ArrayList<>();
-		} else {
-			items = datalist.getList();
-		}
-		return items;
-	}
+  private List<TimelineItem<TimelineCard>> getTimelineList(
+      Datalist<TimelineItem<TimelineCard>> datalist) {
+    List<TimelineItem<TimelineCard>> items;
+    if (datalist == null) {
+      items = new ArrayList<>();
+    } else {
+      items = datalist.getList();
+    }
+    return items;
+  }
 }
