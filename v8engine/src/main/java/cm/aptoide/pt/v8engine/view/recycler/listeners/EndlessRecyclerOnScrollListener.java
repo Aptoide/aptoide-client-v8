@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.listeners;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
@@ -30,6 +29,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 	private ErrorRequestListener errorRequestListener;
 	private int total;
 	private int offset;
+	private boolean stableData = false;
 
 	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
 			extends
@@ -61,7 +61,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 		int totalItemCount = linearLayoutManager.getItemCount();
 		int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-		boolean hasMoreElements = offset <= total;
+    boolean hasMoreElements = (stableData) ? offset < total : offset <= total;
 		boolean isOverLastPosition = (lastVisibleItemPosition >= (totalItemCount - 1));
 		boolean isOverVisibleThreshold = ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
 
@@ -80,7 +80,9 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 			}
 
 			if (response.hasData()) {
-				if(response.hasStableTotal()) {
+
+				stableData= response.hasStableTotal();
+				if(stableData) {
 					total = response.getTotal();
 					offset = response.getNextSize();
 				}else {
