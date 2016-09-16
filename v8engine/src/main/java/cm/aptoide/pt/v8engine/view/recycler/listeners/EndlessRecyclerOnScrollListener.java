@@ -23,13 +23,13 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   private final Action1 successRequestListener;
 
-  private boolean loading;
-  private int visibleThreshold;
-  // The minimum amount of items to have below your current scroll position before load
-  private boolean bypassCache;
-  private ErrorRequestListener errorRequestListener;
-  private int total;
-  private int offset;
+	private boolean loading;
+	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before load
+	private boolean bypassCache;
+	private ErrorRequestListener errorRequestListener;
+	private int total;
+	private int offset;
+	private boolean stableData = false;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
@@ -66,10 +66,9 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     int totalItemCount = linearLayoutManager.getItemCount();
     int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-    boolean hasMoreElements = offset <= total;
-    boolean isOverLastPosition = (lastVisibleItemPosition >= (totalItemCount - 1));
-    boolean isOverVisibleThreshold =
-        ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
+    boolean hasMoreElements = (stableData) ? offset < total : offset <= total;
+		boolean isOverLastPosition = (lastVisibleItemPosition >= (totalItemCount - 1));
+		boolean isOverVisibleThreshold = ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
 
     return !loading && (hasMoreElements || offset == 0) && (isOverLastPosition
         || isOverVisibleThreshold);
@@ -85,16 +84,18 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
         adapter.popDisplayable();
       }
 
-      if (response.hasData()) {
-        if (response.hasStableTotal()) {
-          total = response.getTotal();
-          offset = response.getNextSize();
-        } else {
-          total += response.getTotal();
-          offset += response.getNextSize();
-        }
-        v7request.getBody().setOffset(offset);
-      }
+			if (response.hasData()) {
+
+				stableData= response.hasStableTotal();
+				if(stableData) {
+					total = response.getTotal();
+					offset = response.getNextSize();
+				}else {
+					total += response.getTotal();
+					offset += response.getNextSize();
+				}
+				v7request.getBody().setOffset(offset);
+			}
 
       // FIXME: 17/08/16 sithengineer use response.getList() instead
 

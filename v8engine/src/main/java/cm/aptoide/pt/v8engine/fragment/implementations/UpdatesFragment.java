@@ -79,16 +79,22 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 	@Override
 	public void reload() {
 		super.reload();
-		DataproviderUtils.checkUpdates(listAppsUpdates -> {
-			if (listAppsUpdates.getList().size() == 0) {
-				finishLoading();
-				ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
-			}
-			if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
-				ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
-			}
-		});
-	}
+
+    if (DeprecatedDatabase.StoreQ.getAll(realm).size() == 0) {
+      ShowMessage.asSnack(getView(), R.string.add_store);
+      finishLoading();
+    } else {
+      DataproviderUtils.checkUpdates(listAppsUpdates -> {
+        if (listAppsUpdates.getList().size() == 0) {
+          finishLoading();
+          ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
+        }
+        if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
+          ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
+        }
+      });
+    }
+  }
 
 	private void fetchUpdates() {
 		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
