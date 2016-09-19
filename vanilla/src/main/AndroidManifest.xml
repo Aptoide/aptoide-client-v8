@@ -34,7 +34,15 @@
     <provider
         android:exported="true"
         android:authorities="${toolboxProviderAuthority}"
-        android:name="cm.aptoide.pt.v8engine.toolbox.ToolboxContentProvider"/>
+        android:name="cm.aptoide.pt.v8engine.toolbox.ToolboxContentProvider"
+        />
+
+    <provider
+        android:exported="false"
+        android:authorities="${suggestionProviderAuthority}"
+        android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+        />
+
   </application>
 
 </manifest>

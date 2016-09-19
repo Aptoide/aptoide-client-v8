@@ -160,11 +160,6 @@
       </intent-filter>
     </receiver>
 
-    <provider
-        android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
-        android:authorities="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
-        android:exported="false"/>
-
     <meta-data
         android:name="LOCALYTICS_APP_KEY"
         android:value="${LOCALYTICS_APP_KEY}"/>

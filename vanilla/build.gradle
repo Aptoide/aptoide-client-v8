@@ -77,7 +77,10 @@ android {
     proguardFile 'proguard-rules.pro'
     proguardFile getDefaultProguardFile('proguard-android.txt')
     testProguardFile 'proguard-test-rules.pro'
-    manifestPlaceholders = [toolboxProviderAuthority: "cm.aptoide.pt.StubProvider"]
+    manifestPlaceholders = [
+        toolboxProviderAuthority: "cm.aptoide.pt.StubProvider",
+        suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+    ]
   }
 
   lintOptions {
@@ -89,22 +92,39 @@ android {
   productFlavors {
 
     internal {
-      minSdkVersion 16
+      minSdkVersion 21
+
+      // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
+      //applicationId "${APPLICATION_ID}.intern"
+
       versionName "8.0.0." + getDate()
       versionCode getNextVersionCode("../../aptoideProperties/version.properties",
           "INTERNAL_VERSION_CODE")
+
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
-      manifestPlaceholders = [toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.internal"]
+
+      manifestPlaceholders = [
+          toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.internal",
+          suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal"
+      ]
     }
 
     dev {
+      // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
+      //applicationId "${APPLICATION_ID}.dev"
+
       versionName "8.0.0." + getDate()
       versionCode getNextVersionCode("../../aptoideProperties/version.properties",
           "DEV_VERSION_CODE")
+
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
-      manifestPlaceholders = [toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.dev"]
+
+      manifestPlaceholders = [
+          toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.dev",
+          suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev"
+      ]
     }
 
     prod {
