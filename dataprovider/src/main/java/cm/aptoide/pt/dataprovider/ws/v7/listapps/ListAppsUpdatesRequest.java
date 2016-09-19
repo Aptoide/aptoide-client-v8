@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -137,11 +138,13 @@ import rx.schedulers.Schedulers;
     @Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
     @Getter private List<Long> storeIds;
     @Setter @Getter private String aaid;
+    @Getter private String notApkTags;
 
     public Body(List<ApksData> apksData, List<Long> storeIds, String aaid) {
       this.apksData = apksData;
       this.storeIds = storeIds;
       this.aaid = aaid;
+      setNotApkTags();
     }
 
     public Body(Body body) {
@@ -151,6 +154,13 @@ import rx.schedulers.Schedulers;
       this.setAptoideVercode(body.getAptoideVercode());
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
+      this.notApkTags = body.getNotApkTags();
+    }
+
+    private void setNotApkTags() {
+      if (ManagerPreferences.getUpdatesFilterKey()) {
+        this.notApkTags = "alpha,beta";
+      }
     }
   }
 

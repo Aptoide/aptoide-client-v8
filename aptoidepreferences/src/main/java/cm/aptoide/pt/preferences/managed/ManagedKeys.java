@@ -23,4 +23,5 @@ class ManagedKeys {
   public static final String FORCE_SERVER_REFRESH_FLAG = "forceServerRefreshFlag";
   public static final String PREF_NEEDS_DB_MIGRATION = "needsDbMigration";
   public static final String PREF_SHOW_UPDATE_NOTIFICATION = "showUpdatesNotification";
+  public static final String UPDATES_FILTER_KEY = "updatesFilterKey";
 }

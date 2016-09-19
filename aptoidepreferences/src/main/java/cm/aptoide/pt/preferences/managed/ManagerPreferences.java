@@ -21,6 +21,13 @@ public class ManagerPreferences {
     Preferences.get().edit().putBoolean(ManagedKeys.HWSPECS_FILTER, flag).apply();
   }
 
+  /**
+   * @return true when updates should hide alpha and beta versions.
+   */
+  public static boolean getUpdatesFilterKey() {
+    return Preferences.get().getBoolean(ManagedKeys.UPDATES_FILTER_KEY, false);
+  }
+
   public static int getLastPushNotificationId() {
     return Preferences.get().getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
   }
