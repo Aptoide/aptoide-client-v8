@@ -10,7 +10,7 @@ package cm.aptoide.pt.v8engine.repository.exception;
  */
 public class RepositoryIllegalArgumentException extends Exception {
 
-	public RepositoryIllegalArgumentException(String detailMessage) {
-		super(detailMessage);
-	}
+  public RepositoryIllegalArgumentException(String detailMessage) {
+    super(detailMessage);
+  }
 }

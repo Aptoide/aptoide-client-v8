@@ -9,22 +9,22 @@ import io.realm.annotations.PrimaryKey;
  */
 public class RealmInteger extends RealmObject {
 
-	@PrimaryKey private String id;
-	private Integer integer;
+  @PrimaryKey private String id;
+  private Integer integer;
 
-	public RealmInteger(Integer downloadId) {
-		this.id = IdUtils.randomString();
-		this.integer = downloadId;
-	}
+  public RealmInteger(Integer downloadId) {
+    this.id = IdUtils.randomString();
+    this.integer = downloadId;
+  }
 
-	public RealmInteger() {
-	}
+  public RealmInteger() {
+  }
 
-	public Integer getInteger() {
-		return integer;
-	}
+  public Integer getInteger() {
+    return integer;
+  }
 
-	public void setInteger(Integer integer) {
-		this.integer = integer;
-	}
+  public void setInteger(Integer integer) {
+    this.integer = integer;
+  }
 }

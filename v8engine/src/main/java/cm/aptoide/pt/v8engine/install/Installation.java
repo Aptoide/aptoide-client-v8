@@ -7,19 +7,16 @@ package cm.aptoide.pt.v8engine.install;
 
 import java.io.File;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * Created by marcelobenites on 7/22/16.
  */
 public interface Installation {
 
-	long getId();
+  long getId();
 
-	String getPackageName();
+  String getPackageName();
 
-	int getVersionCode();
+  int getVersionCode();
 
-	File getFile();
+  File getFile();
 }

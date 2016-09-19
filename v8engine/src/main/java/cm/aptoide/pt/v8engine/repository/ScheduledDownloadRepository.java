@@ -5,10 +5,9 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import java.util.List;
-
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -16,29 +15,29 @@ import rx.Observable;
  */
 public class ScheduledDownloadRepository implements Repository {
 
-	private final ScheduledAccessor scheduledAccessor;
+  private final ScheduledAccessor scheduledAccessor;
 
-	protected ScheduledDownloadRepository(ScheduledAccessor scheduledAccessor) {
-		this.scheduledAccessor = scheduledAccessor;
-	}
+  protected ScheduledDownloadRepository(ScheduledAccessor scheduledAccessor) {
+    this.scheduledAccessor = scheduledAccessor;
+  }
 
-	public Observable<Scheduled> getScheduledUpdate(long appId){
-		return scheduledAccessor.get(appId);
-	}
+  public Observable<Scheduled> getScheduledUpdate(long appId) {
+    return scheduledAccessor.get(appId);
+  }
 
-	public Observable<List<Scheduled>> getAllScheduledDownloads() {
-		return scheduledAccessor.getAll();
-	}
+  public Observable<List<Scheduled>> getAllScheduledDownloads() {
+    return scheduledAccessor.getAll();
+  }
 
-	public void deleteScheduledDownload(long appId) {
-		scheduledAccessor.delete(appId);
-	}
+  public void deleteScheduledDownload(long appId) {
+    scheduledAccessor.delete(appId);
+  }
 
-	public Observable<List<Scheduled>> setInstalling(List<Scheduled> scheduledList) {
-		return scheduledAccessor.setInstalling(scheduledList);
-	}
+  public Observable<List<Scheduled>> setInstalling(List<Scheduled> scheduledList) {
+    return scheduledAccessor.setInstalling(scheduledList);
+  }
 
-	public Observable<Scheduled> setInstalling(Scheduled scheduled) {
-		return scheduledAccessor.setInstalling(scheduled);
-	}
+  public Observable<Scheduled> setInstalling(Scheduled scheduled) {
+    return scheduledAccessor.setInstalling(scheduled);
+  }
 }

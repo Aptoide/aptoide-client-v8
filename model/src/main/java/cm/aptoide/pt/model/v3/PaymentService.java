@@ -5,43 +5,34 @@
 
 package cm.aptoide.pt.model.v3;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Data;
 
 /**
  * Created by rmateus on 21-05-2014.
  */
-@Data
-public class PaymentService {
+@Data public class PaymentService {
 
-    private int id;
+  private int id;
 
-    @JsonProperty("short_name")
-    private String shortName;
+  @JsonProperty("short_name") private String shortName;
 
-    private String name;
+  private String name;
 
-    private ArrayList<PaymentType> types;
+  private ArrayList<PaymentType> types;
 
-    private double price;
+  private double price;
 
-    private String currency;
+  private String currency;
 
-    private double taxRate;
+  private double taxRate;
 
-    private String sign;
+  private String sign;
 
-    @Data
-    public static class PaymentType {
+  @Data public static class PaymentType {
 
-        private String reqType;
-        private String label;
-    }
+    private String reqType;
+    private String label;
+  }
 }

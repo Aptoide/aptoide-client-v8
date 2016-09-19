@@ -15,24 +15,22 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class OtherVersionDisplayable extends DisplayablePojo<App> {
 
-	public OtherVersionDisplayable() {
-	}
+  public OtherVersionDisplayable() {
+  }
 
-	public OtherVersionDisplayable(App pojo) {
-		super(pojo);
-	}
+  public OtherVersionDisplayable(App pojo) {
+    super(pojo);
+  }
 
-	public OtherVersionDisplayable(App pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  public OtherVersionDisplayable(App pojo, boolean fixedPerLineCount) {
+    super(pojo, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.OTHER_VERSION_ROW;
-	}
+  @Override public Type getType() {
+    return Type.OTHER_VERSION_ROW;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.other_version_row;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.other_version_row;
+  }
 }

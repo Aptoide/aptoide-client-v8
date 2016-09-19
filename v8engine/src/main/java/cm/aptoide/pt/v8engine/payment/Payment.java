@@ -5,12 +5,6 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.LayoutRes;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
 
 /**
@@ -18,26 +12,26 @@ import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
  */
 public interface Payment {
 
-	int getId();
+  int getId();
 
-	String getType();
+  String getType();
 
-	Product getProduct();
+  Product getProduct();
 
-	Price getPrice();
+  Price getPrice();
 
-	String getDescription();
+  String getDescription();
 
-	void removeListener();
+  void removeListener();
 
-	boolean isProcessing();
+  boolean isProcessing();
 
-	void process(PaymentConfirmationListener listener);
+  void process(PaymentConfirmationListener listener);
 
-	static interface PaymentConfirmationListener {
+  static interface PaymentConfirmationListener {
 
-		void onSuccess(PaymentConfirmation paymentConfirmation);
+    void onSuccess(PaymentConfirmation paymentConfirmation);
 
-		void onError(PaymentException exception);
-	}
+    void onError(PaymentException exception);
+  }
 }

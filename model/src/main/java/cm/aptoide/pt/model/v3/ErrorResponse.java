@@ -10,6 +10,6 @@ package cm.aptoide.pt.model.v3;
  */
 public class ErrorResponse {
 
-	public String code;
-	public String msg;
+  public String code;
+  public String msg;
 }

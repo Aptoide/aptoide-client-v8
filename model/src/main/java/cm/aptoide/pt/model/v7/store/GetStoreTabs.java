@@ -5,26 +5,22 @@
 
 package cm.aptoide.pt.model.v7.store;
 
-import java.util.List;
-
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * Created by hsousa on 17/09/15.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class GetStoreTabs extends BaseV7Response {
+@Data @EqualsAndHashCode(callSuper = true) public class GetStoreTabs extends BaseV7Response {
 
-	private List<Tab> list;
+  private List<Tab> list;
 
-	@Data
-	public static class Tab {
+  @Data public static class Tab {
 
-		private String label;
-		private Event event;
-	}
+    private String label;
+    private Event event;
+  }
 }

@@ -15,19 +15,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
-	public FooterDisplayable() { }
+  public FooterDisplayable() {
+  }
 
-	public FooterDisplayable(GetStoreWidgets.WSWidget pojo) {
-		super(pojo);
-	}
+  public FooterDisplayable(GetStoreWidgets.WSWidget pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.FOOTER_ROW;
-	}
+  @Override public Type getType() {
+    return Type.FOOTER_ROW;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_footer;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_footer;
+  }
 }

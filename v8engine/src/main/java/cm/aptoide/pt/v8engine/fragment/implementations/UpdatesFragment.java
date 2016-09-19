@@ -44,41 +44,39 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
-	private List<Displayable> updatesDisplayablesList = new LinkedList<>();
-	private List<Displayable> installedDisplayablesList = new LinkedList<>();
-	private Subscription installedSubscription;
-	private Subscription updatesSubscription;
-	private Installer installManager;
-	private DownloadFactory downloadFactory;
-	private DownloadServiceHelper downloadManager;
+  private List<Displayable> updatesDisplayablesList = new LinkedList<>();
+  private List<Displayable> installedDisplayablesList = new LinkedList<>();
+  private Subscription installedSubscription;
+  private Subscription updatesSubscription;
+  private Installer installManager;
+  private DownloadFactory downloadFactory;
+  private DownloadServiceHelper downloadManager;
 
-	public static UpdatesFragment newInstance() {
-		UpdatesFragment fragment = new UpdatesFragment();
-		return fragment;
-	}
+  public static UpdatesFragment newInstance() {
+    UpdatesFragment fragment = new UpdatesFragment();
+    return fragment;
+  }
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		PermissionManager permissionManager = new PermissionManager();
-		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new RollbackInstallManager(
-				new InstallManager(permissionManager, getContext().getPackageManager(),
-						new DownloadInstallationProvider(downloadManager)),
-				RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
-				new DownloadInstallationProvider(downloadManager));
-		downloadFactory = new DownloadFactory();
-	}
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    PermissionManager permissionManager = new PermissionManager();
+    downloadManager =
+        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+    installManager = new RollbackInstallManager(
+        new InstallManager(permissionManager, getContext().getPackageManager(),
+            new DownloadInstallationProvider(downloadManager)),
+        RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
+        new DownloadInstallationProvider(downloadManager));
+    downloadFactory = new DownloadFactory();
+  }
 
-	@Override
-	public void load(boolean refresh, Bundle savedInstanceState) {
-		fetchUpdates();
-		fetchInstalled();
-	}
+  @Override public void load(boolean refresh, Bundle savedInstanceState) {
+    fetchUpdates();
+    fetchInstalled();
+  }
 
-	@Override
-	public void reload() {
-		super.reload();
+  @Override public void reload() {
+    super.reload();
 
     if (DeprecatedDatabase.StoreQ.getAll(realm).size() == 0) {
       ShowMessage.asSnack(getView(), R.string.add_store);
@@ -96,69 +94,71 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     }
   }
 
-	private void fetchUpdates() {
-		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-			updatesSubscription = DeprecatedDatabase.UpdatesQ.getAll(realm, false)
-					.asObservable()
-					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(updates -> {
+  private void fetchUpdates() {
+    if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
+      updatesSubscription = DeprecatedDatabase.UpdatesQ.getAll(realm, false)
+          .asObservable()
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(updates -> {
 
-						if (updates.size() == updatesDisplayablesList.size() - 1) {
-							finishLoading();
-						} else {
-							updatesDisplayablesList.clear();
+            if (updates.size() == updatesDisplayablesList.size() - 1) {
+              finishLoading();
+            } else {
+              updatesDisplayablesList.clear();
 
-							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-										AptoideUtils.StringU.getResString(R.string.updates)));
+              if (updates.size() > 0) {
+                updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
+                    AptoideUtils.StringU.getResString(R.string.updates)));
 
-								for (Update update : updates) {
-									updatesDisplayablesList.add(
-											UpdateDisplayable.create(update, installManager, downloadFactory,
-													downloadManager));
-								}
-							}
+                for (Update update : updates) {
+                  updatesDisplayablesList.add(
+                      UpdateDisplayable.create(update, installManager, downloadFactory,
+                          downloadManager));
+                }
+              }
 
-							setDisplayables();
-						}
-					}, Throwable::printStackTrace);
-		}
-	}
+              setDisplayables();
+            }
+          }, Throwable::printStackTrace);
+    }
+  }
 
-	private void fetchInstalled() {
-		if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
-			RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAll(realm);
-			installedSubscription = realmResults.asObservable()
-					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-					.subscribe(installeds -> {
-						installedDisplayablesList.clear();
+  private void fetchInstalled() {
+    if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
+      RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAll(realm);
+      installedSubscription = realmResults.asObservable()
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(installeds -> {
+            installedDisplayablesList.clear();
 
-						installedDisplayablesList.add(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
-								.getResString(R.string.installed_tab))));
+            installedDisplayablesList.add(new StoreGridHeaderDisplayable(
+                new GetStoreWidgets.WSWidget().setTitle(
+                    AptoideUtils.StringU.getResString(R.string.installed_tab))));
 
-						RealmResults<Installed> all = realmResults;
-						for (int i = all.size() - 1; i >= 0; i--) {
-							if (!DeprecatedDatabase.UpdatesQ.contains(all.get(i).getPackageName(), false, realm)) {
-								if (!all.get(i).isSystemApp()) {
-									installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
-								}
-							}
-						}
+            RealmResults<Installed> all = realmResults;
+            for (int i = all.size() - 1; i >= 0; i--) {
+              if (!DeprecatedDatabase.UpdatesQ.contains(all.get(i).getPackageName(), false,
+                  realm)) {
+                if (!all.get(i).isSystemApp()) {
+                  installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
+                }
+              }
+            }
 
-						setDisplayables();
-					}, Throwable::printStackTrace);
-			if (realmResults.size() == 0) {
-				finishLoading();
-			}
-			finishLoading();
-		}
-	}
+            setDisplayables();
+          }, Throwable::printStackTrace);
+      if (realmResults.size() == 0) {
+        finishLoading();
+      }
+      finishLoading();
+    }
+  }
 
-	private void setDisplayables() {
-		LinkedList<Displayable> displayables = new LinkedList<>();
-		displayables.addAll(updatesDisplayablesList);
-		displayables.addAll(installedDisplayablesList);
-		setDisplayables(displayables);
-	}
+  private void setDisplayables() {
+    LinkedList<Displayable> displayables = new LinkedList<>();
+    displayables.addAll(updatesDisplayablesList);
+    displayables.addAll(installedDisplayablesList);
+    setDisplayables(displayables);
+  }
 }

@@ -5,12 +5,10 @@
 
 package cm.aptoide.pt.database.accessors;
 
-import java.util.Locale;
-
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
 import io.realm.RealmMigration;
-
+import java.util.Locale;
 
 /**
  * Created by sithengineer on 12/05/16.
@@ -19,13 +17,12 @@ import io.realm.RealmMigration;
  */
 class RealmToRealmDatabaseMigration implements RealmMigration {
 
-	private static final String TAG = RealmToRealmDatabaseMigration.class.getName();
+  private static final String TAG = RealmToRealmDatabaseMigration.class.getName();
 
-	@Override
-	public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+  @Override public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
-		Logger.w(TAG, String.format(Locale.ROOT, "realm database migration from version %d to %d",
-				oldVersion, newVersion));
-
-	}
+    Logger.w(TAG,
+        String.format(Locale.ROOT, "realm database migration from version %d to %d", oldVersion,
+            newVersion));
+  }
 }

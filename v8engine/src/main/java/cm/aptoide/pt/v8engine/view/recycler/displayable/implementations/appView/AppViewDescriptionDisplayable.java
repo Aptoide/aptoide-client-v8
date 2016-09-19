@@ -14,24 +14,22 @@ import cm.aptoide.pt.v8engine.R;
  */
 public class AppViewDescriptionDisplayable extends AppViewDisplayable {
 
-	public AppViewDescriptionDisplayable() {
-	}
+  public AppViewDescriptionDisplayable() {
+  }
 
-	public AppViewDescriptionDisplayable(GetApp getApp) {
-		super(getApp);
-	}
+  public AppViewDescriptionDisplayable(GetApp getApp) {
+    super(getApp);
+  }
 
-	public AppViewDescriptionDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-		super(getApp, fixedPerLineCount);
-	}
+  public AppViewDescriptionDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+    super(getApp, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_VIEW_DESCRIPTION;
-	}
+  @Override public Type getType() {
+    return Type.APP_VIEW_DESCRIPTION;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_app_view_description;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_description;
+  }
 }

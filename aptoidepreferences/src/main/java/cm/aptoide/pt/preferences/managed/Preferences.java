@@ -7,7 +7,6 @@ package cm.aptoide.pt.preferences.managed;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
 import cm.aptoide.pt.preferences.Application;
 
 /**
@@ -15,9 +14,10 @@ import cm.aptoide.pt.preferences.Application;
  */
 class Preferences {
 
-	private static final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Application.getContext());
+  private static final SharedPreferences preferences =
+      PreferenceManager.getDefaultSharedPreferences(Application.getContext());
 
-	public static SharedPreferences get() {
-		return preferences;
-	}
+  public static SharedPreferences get() {
+    return preferences;
+  }
 }

@@ -31,7 +31,6 @@ import rx.schedulers.Schedulers;
   }
 
   /**
-   * @param icon
    * @param context used to get app info context.getPackageManager().getPackageInfo()
    */
   @Override public Observable<Rollback> createRollback(Context context, String packageName,

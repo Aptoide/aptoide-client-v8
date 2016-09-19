@@ -15,24 +15,22 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class AppViewScreenshotsDisplayable extends DisplayablePojo<GetAppMeta.App> {
 
-	public AppViewScreenshotsDisplayable() {
-	}
+  public AppViewScreenshotsDisplayable() {
+  }
 
-	public AppViewScreenshotsDisplayable(GetAppMeta.App pojo) {
-		super(pojo);
-	}
+  public AppViewScreenshotsDisplayable(GetAppMeta.App pojo) {
+    super(pojo);
+  }
 
-	public AppViewScreenshotsDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  public AppViewScreenshotsDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
+    super(pojo, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_VIEW_IMAGES;
-	}
+  @Override public Type getType() {
+    return Type.APP_VIEW_IMAGES;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_app_view_images;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_images;
+  }
 }

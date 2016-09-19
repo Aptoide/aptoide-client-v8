@@ -195,8 +195,7 @@ public class RequestCache {
       Response response = cacheEntry.getResponse(request);
 
       Calendar cacheMaxTime = Calendar.getInstance();
-      cacheMaxTime.setTime(
-          SIMPLE_DATE_FORMAT.parse(snapshot.getString(TIMESTAMP_BUCKET_INDEX)));
+      cacheMaxTime.setTime(SIMPLE_DATE_FORMAT.parse(snapshot.getString(TIMESTAMP_BUCKET_INDEX)));
       int maxSeconds = response.cacheControl().maxAgeSeconds();
       cacheMaxTime.add(Calendar.SECOND, maxSeconds);
 

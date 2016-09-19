@@ -18,12 +18,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.permissions.ApkPermission;
@@ -31,6 +25,9 @@ import cm.aptoide.pt.permissions.ApkPermissionGroup;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.AppUtils;
+import com.bumptech.glide.Glide;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hsousa on 18/11/15.
@@ -40,77 +37,79 @@ import cm.aptoide.pt.v8engine.util.AppUtils;
  */
 public class DialogPermissions extends DialogFragment {
 
-	private GetApp getApp;
-	private String appName;
-	private String versionName;
-	private String icon;
-	private String size;
+  private GetApp getApp;
+  private String appName;
+  private String versionName;
+  private String icon;
+  private String size;
 
-	public static DialogPermissions newInstance(GetApp getApp) {
-		GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-		DialogPermissions dialog = new DialogPermissions();
-		dialog.getApp = getApp;
-		dialog.appName = app.getName();
-		dialog.versionName = app.getFile().getVername();
-		dialog.icon = app.getIcon();
-		dialog.size = AptoideUtils.StringU.formatBits(AppUtils.sumFileSizes(app.getFile().getFilesize(), app.getObb()));
-		return dialog;
-	}
+  public static DialogPermissions newInstance(GetApp getApp) {
+    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+    DialogPermissions dialog = new DialogPermissions();
+    dialog.getApp = getApp;
+    dialog.appName = app.getName();
+    dialog.versionName = app.getFile().getVername();
+    dialog.icon = app.getIcon();
+    dialog.size = AptoideUtils.StringU.formatBits(
+        AppUtils.sumFileSizes(app.getFile().getFilesize(), app.getObb()));
+    return dialog;
+  }
 
-	@Override
-	public void onPause() {
-		dismiss();
-		super.onPause();
-	}
+  @Override public void onPause() {
+    dismiss();
+    super.onPause();
+  }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Material_Light_Dialog_Alert);
-		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
-		} else {
-			setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Dialog);
-		}
-	}
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Material_Light_Dialog_Alert);
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
+    } else {
+      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Dialog);
+    }
+  }
 
-	@NonNull
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		@SuppressLint("InflateParams")
-		final View v = LayoutInflater.from(getActivity()).inflate(R.layout.layout_dialog_permissions, null);
-		AlertDialog builder = new AlertDialog.Builder(getActivity()).setView(v).create();
+    @SuppressLint("InflateParams") final View v =
+        LayoutInflater.from(getActivity()).inflate(R.layout.layout_dialog_permissions, null);
+    AlertDialog builder = new AlertDialog.Builder(getActivity()).setView(v).create();
 
-		v.findViewById(R.id.dialog_ok_button).setOnClickListener(v1 -> dismiss());
+    v.findViewById(R.id.dialog_ok_button).setOnClickListener(v1 -> dismiss());
 
-		TextView tvAppInfo = (TextView) v.findViewById(R.id.dialog_app_info);
-		tvAppInfo.setText(getString(R.string.dialog_version_size, versionName, size));
+    TextView tvAppInfo = (TextView) v.findViewById(R.id.dialog_app_info);
+    tvAppInfo.setText(getString(R.string.dialog_version_size, versionName, size));
 
-		TextView tvAppName = (TextView) v.findViewById(R.id.dialog_app_name);
-		tvAppName.setText(appName);
+    TextView tvAppName = (TextView) v.findViewById(R.id.dialog_app_name);
+    tvAppName.setText(appName);
 
-		Glide.with(this).load(icon).into((ImageView) v.findViewById(R.id.dialog_appview_icon));
+    Glide.with(this).load(icon).into((ImageView) v.findViewById(R.id.dialog_appview_icon));
 
-		final TableLayout tableLayout = (TableLayout) v.findViewById(R.id.dialog_table_permissions);
+    final TableLayout tableLayout = (TableLayout) v.findViewById(R.id.dialog_table_permissions);
 
-		final List<String> usedPermissions = getApp.getNodes().getMeta().getData().getFile().getUsedPermissions();
+    final List<String> usedPermissions =
+        getApp.getNodes().getMeta().getData().getFile().getUsedPermissions();
 
-		List<ApkPermission> apkPermissions = AptoideUtils.SystemU.parsePermissions(getContext(), usedPermissions);
-		final ArrayList<ApkPermissionGroup> apkPermissionsGroup = AppUtils.fillPermissionsGroups(apkPermissions);
+    List<ApkPermission> apkPermissions =
+        AptoideUtils.SystemU.parsePermissions(getContext(), usedPermissions);
+    final ArrayList<ApkPermissionGroup> apkPermissionsGroup =
+        AppUtils.fillPermissionsGroups(apkPermissions);
 
-		if (apkPermissionsGroup.size() == 0) {
-			TextView noPermissions = new TextView(getContext());
-			noPermissions.setText(getString(R.string.no_permissions_required));
-			noPermissions.setPadding(5, 5, 5, 5);
-		} else {
-			AppUtils.fillPermissionsForTableLayout(getContext(), tableLayout, apkPermissionsGroup);
-		}
+    if (apkPermissionsGroup.size() == 0) {
+      TextView noPermissions = new TextView(getContext());
+      noPermissions.setText(getString(R.string.no_permissions_required));
+      noPermissions.setPadding(5, 5, 5, 5);
+    } else {
+      AppUtils.fillPermissionsForTableLayout(getContext(), tableLayout, apkPermissionsGroup);
+    }
 
-		builder.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+    builder.getWindow()
+        .setBackgroundDrawable(
+            new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
-		return builder;
-	}
+    return builder;
+  }
 }

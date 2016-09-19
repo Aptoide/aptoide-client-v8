@@ -11,6 +11,6 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by neuro on 22-04-2016.
  */
-@EqualsAndHashCode(callSuper = true)
-public class ListAppVersions extends BaseV7EndlessListResponse<App> {
+@EqualsAndHashCode(callSuper = true) public class ListAppVersions
+    extends BaseV7EndlessListResponse<App> {
 }

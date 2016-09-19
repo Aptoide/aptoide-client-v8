@@ -5,10 +5,12 @@
 
 package cm.aptoide.accountmanager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
@@ -16,6 +18,7 @@ import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -66,6 +69,33 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     setupShowHidePassButton();
     setupToolbar();
     setupViewListeners();
+
+    mLoginButton.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override public boolean onLongClick(View view) {
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(LoginActivity.this);
+        builderSingle.setTitle("Login with:");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(LoginActivity.this,
+            android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add("ana.simoes@aptoide.com");
+        arrayAdapter.add("ana.simoes+1@aptoide.com");
+        arrayAdapter.add("ana.simoes+2@aptoide.com");
+        arrayAdapter.add("ana.simoes+3@aptoide.com");
+        arrayAdapter.add("fabio.costa+15@aptoide.com");
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+          @Override public void onClick(DialogInterface dialog, int which) {
+
+            password_box.setText("aptoide1234");
+            emailBox.setText(arrayAdapter.getItem(which));
+          }
+        });
+        builderSingle.show();
+
+        return true;
+      }
+    });
   }
 
   @Override protected String getActivityTitle() {

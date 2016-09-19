@@ -14,21 +14,19 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  * Created by trinkes on 8/4/16.
  */
 public class CommentDisplayable extends DisplayablePojo<Comment> {
-	
-	public CommentDisplayable(Comment pojo) {
-		super(pojo);
-	}
 
-	public CommentDisplayable() {
-	}
+  public CommentDisplayable(Comment pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_COMMENT_TO_REVIEW;
-	}
+  public CommentDisplayable() {
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.comment_layout;
-	}
+  @Override public Type getType() {
+    return Type.APP_COMMENT_TO_REVIEW;
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.comment_layout;
+  }
 }

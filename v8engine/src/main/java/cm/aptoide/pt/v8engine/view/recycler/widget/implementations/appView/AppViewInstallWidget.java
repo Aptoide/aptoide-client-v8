@@ -239,7 +239,7 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void onViewAttached() {
     /*subscribe = AptoideDownloadManager.getInstance().getDownloads()
-				.map(downloads -> {
+        .map(downloads -> {
 					for (int i = 0; i < downloads.size(); i++) {
 						if (downloads.get(i).getAppId() == appID && (downloads.get(i).getOverallDownloadStatus()
 								== Download.PROGRESS
@@ -318,36 +318,37 @@ import rx.subscriptions.CompositeSubscription;
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
-		//check if the app is paid
-		if (app.isPaid() && !app.getPay().isPaid()) {
-			actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay().getPriceDescription()+ ")");
-			actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
-			AppBoughtReceiver receiver = new AppBoughtReceiver() {
-				@Override
-				public void appBought(long appId, String path) {
-					if (app.getId() == appId) {
-						isUpdate = false;
-						app.getFile().setPath(path);
-						app.getPay().setPaid();
-						setupActionButton(R.string.install,
-								installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
-						actionButton.performClick();
-					}
-				}
-			};
-			getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
-		} else {
-			isUpdate = false;
-			setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
-			if (displayable.isShouldInstall()) {
-				actionButton.postDelayed(() -> {
-					if (displayable.isVisible()) {
-						actionButton.performClick();
-					}
-				}, 1000);
-			}
-		}
-	}
+    //check if the app is paid
+    if (app.isPaid() && !app.getPay().isPaid()) {
+      actionButton.setText(
+          getContext().getString(R.string.buy) + " (" + app.getPay().getPriceDescription() + ")");
+      actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
+      AppBoughtReceiver receiver = new AppBoughtReceiver() {
+        @Override public void appBought(long appId, String path) {
+          if (app.getId() == appId) {
+            isUpdate = false;
+            app.getFile().setPath(path);
+            app.getPay().setPaid();
+            setupActionButton(R.string.install,
+                installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+            actionButton.performClick();
+          }
+        }
+      };
+      getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
+    } else {
+      isUpdate = false;
+      setupActionButton(R.string.install,
+          installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+      if (displayable.isShouldInstall()) {
+        actionButton.postDelayed(() -> {
+          if (displayable.isVisible()) {
+            actionButton.performClick();
+          }
+        }, 1000);
+      }
+    }
+  }
 
   private View.OnClickListener downgradeListener(final GetAppMeta.App app,
       AppViewInstallDisplayable displayable) {
@@ -579,7 +580,8 @@ import rx.subscriptions.CompositeSubscription;
   /**
    * Checks if the current app that we are viewing is the latest version available.
    * <p>
-   * This is done by comparing the current app md5sum with the first app md5sum in the list of other
+   * This is done by comparing the current app md5sum with the first app md5sum in the list of
+   * other
    * versions, since the other versions list is sorted using
    * several criterea (vercode, cpu, malware ranking, etc.).
    *

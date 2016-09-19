@@ -1,41 +1,40 @@
 package cm.aptoide.pt.model.v7.timeline;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Date;
-import java.util.List;
-
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode(exclude = {"store", "apps", "latestUpdate"})
-public class StoreLatestApps implements TimelineCard {
+@EqualsAndHashCode(exclude = { "store", "apps", "latestUpdate" }) public class StoreLatestApps
+    implements TimelineCard {
 
-	@Getter private final String cardId;
-	@Getter private final Store store;
-	@Getter private final List<App> apps;
+  @Getter private final String cardId;
+  @Getter private final Store store;
+  @Getter private final List<App> apps;
 
-	private Date latestUpdate;
+  private Date latestUpdate;
 
-	@JsonCreator
-	public StoreLatestApps(@JsonProperty("uid") String cardId, @JsonProperty("store") Store store, @JsonProperty("apps") List<App> apps) {
-		this.cardId = cardId;
-		this.store = store;
-		this.apps = apps;
-	}
+  @JsonCreator
+  public StoreLatestApps(@JsonProperty("uid") String cardId, @JsonProperty("store") Store store,
+      @JsonProperty("apps") List<App> apps) {
+    this.cardId = cardId;
+    this.store = store;
+    this.apps = apps;
+  }
 
-	public Date getLatestUpdate() {
-		if (latestUpdate == null) {
-			for (App app : apps) {
-				if (latestUpdate == null || (app.getUpdated() != null && app.getUpdated().getTime() > latestUpdate
-						.getTime())) {
-					latestUpdate = app.getUpdated();
-				}
-			}
-		}
-		return latestUpdate;
-	}
+  public Date getLatestUpdate() {
+    if (latestUpdate == null) {
+      for (App app : apps) {
+        if (latestUpdate == null || (app.getUpdated() != null
+            && app.getUpdated().getTime() > latestUpdate.getTime())) {
+          latestUpdate = app.getUpdated();
+        }
+      }
+    }
+    return latestUpdate;
+  }
 }

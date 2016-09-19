@@ -12,27 +12,24 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by sithengineer on 04/05/16.
  */
-@Deprecated
-public class AppViewCommentsDisplayable extends AppViewDisplayable {
+@Deprecated public class AppViewCommentsDisplayable extends AppViewDisplayable {
 
-	public AppViewCommentsDisplayable() {
-	}
+  public AppViewCommentsDisplayable() {
+  }
 
-	public AppViewCommentsDisplayable(GetApp getApp) {
-		super(getApp);
-	}
+  public AppViewCommentsDisplayable(GetApp getApp) {
+    super(getApp);
+  }
 
-	public AppViewCommentsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-		super(getApp, fixedPerLineCount);
-	}
+  public AppViewCommentsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+    super(getApp, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_VIEW_COMMENTS;
-	}
+  @Override public Type getType() {
+    return Type.APP_VIEW_COMMENTS;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_app_view_comments;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_comments;
+  }
 }

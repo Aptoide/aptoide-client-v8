@@ -12,23 +12,23 @@ import java.util.List;
  */
 public class GenericResponseV2 {
 
-	String status;
+  String status;
 
-	List<ErrorResponse> errors;
+  List<ErrorResponse> errors;
 
-	public String getStatus() {
-		return status;
-	}
+  public String getStatus() {
+    return status;
+  }
 
-	public List<ErrorResponse> getErrors() {
-		return errors;
-	}
+  public List<ErrorResponse> getErrors() {
+    return errors;
+  }
 
-	public boolean hasErrors() {
-		return errors != null && !errors.isEmpty();
-	}
+  public boolean hasErrors() {
+    return errors != null && !errors.isEmpty();
+  }
 
-	public boolean isOk() {
-		return status != null && status.equalsIgnoreCase("ok");
-	}
+  public boolean isOk() {
+    return status != null && status.equalsIgnoreCase("ok");
+  }
 }

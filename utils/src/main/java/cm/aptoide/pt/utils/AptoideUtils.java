@@ -1201,7 +1201,6 @@ public class AptoideUtils {
       return size + "x" + ScreenU.getDensityDpi();
     }
 
-
     private static String parseScreenshotUrl(String screenshotUrl, String orientation) {
       String sizeString = generateSizeStringScreenshotsdd(orientation);
 

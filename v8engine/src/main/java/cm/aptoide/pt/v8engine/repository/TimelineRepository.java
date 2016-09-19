@@ -6,18 +6,12 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
-
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 
 /**

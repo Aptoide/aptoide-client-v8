@@ -30,115 +30,111 @@ import rx.Observable;
  * <p>
  * http://ws2.aptoide.com/api/7/listReviews/info/1
  */
-public class ListReviewsRequest extends V7<ListReviews,ListReviewsRequest.Body> {
+public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body> {
 
-	private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
+  private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
-	private static final int MAX_REVIEWS = 10;
-	private static final int MAX_COMMENTS = 10;
+  private static final int MAX_REVIEWS = 10;
+  private static final int MAX_COMMENTS = 10;
 
-	protected ListReviewsRequest(Body body, String baseHost) {
-		super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
-	}
+  protected ListReviewsRequest(Body body, String baseHost) {
+    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
+        baseHost);
+  }
 
-	public static ListReviewsRequest of(long storeId, int limit, int offset) {
-		final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
-		String username = storeOnRequest.getUsername();
-		String password = storeOnRequest.getPasswordSha1();
-		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-		//IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh(), username, password);
-		return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
-	}
+  public static ListReviewsRequest of(long storeId, int limit, int offset) {
+    final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
+    String username = storeOnRequest.getUsername();
+    String password = storeOnRequest.getPasswordSha1();
+    BaseBodyDecorator decorator = new BaseBodyDecorator(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        SecurePreferencesImplementation.getInstance());
+    //IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh(),
+        username, password);
+    return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
+  }
 
-	public static ListReviewsRequest of(String storeName, String packageName) {
-		return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
-	}
+  public static ListReviewsRequest of(String storeName, String packageName) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
+  }
 
-	/**
-	 * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
-	 *
-	 * @param storeName
-	 * @param packageName
-	 * @param maxReviews
-	 * @param maxComments
-	 *
-	 * @return
-	 */
-	public static ListReviewsRequest of(String storeName, String packageName, int maxReviews, int maxComments) {
-		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-		//IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(storeName, packageName, maxReviews, maxComments, ManagerPreferences.getAndResetForceServerRefresh());
-		return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
-	}
+  /**
+   * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
+   */
+  public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
+      int maxComments) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        SecurePreferencesImplementation.getInstance());
+    //IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    Body body = new Body(storeName, packageName, maxReviews, maxComments,
+        ManagerPreferences.getAndResetForceServerRefresh());
+    return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
+  }
 
-	/**
-	 * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
-	 *
-	 * @param storeName
-	 * @param packageName
-	 * @param maxReviews
-	 *
-	 * @return
-	 */
-	public static ListReviewsRequest ofTopReviews(String storeName, String packageName, int maxReviews) {
-		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
-		//IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-		Body body = new Body(storeName, packageName, maxReviews, 0, ManagerPreferences.getAndResetForceServerRefresh());
-		return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
-	}
+  /**
+   * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
+   */
+  public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
+      int maxReviews) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        SecurePreferencesImplementation.getInstance());
+    //IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    Body body = new Body(storeName, packageName, maxReviews, 0,
+        ManagerPreferences.getAndResetForceServerRefresh());
+    return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
+  }
 
-	@Override
-	protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.listReviews(body, bypassCache);
-	}
+  @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    return interfaces.listReviews(body, bypassCache);
+  }
 
-	@Data
-	@Accessors(chain = false)
-	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody implements Endless {
+  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
+      extends BaseBody implements Endless {
 
-		@Getter private Integer limit;
-		@Getter @Setter private int offset;
-		private String lang;
-		private boolean mature;
-		private String q = Api.Q;
-		@Getter private boolean refresh;
+    @Getter private Integer limit;
+    @Getter @Setter private int offset;
+    private String lang;
+    private boolean mature;
+    private String q = Api.Q;
+    @Getter private boolean refresh;
 
-		private Order order;
-		private Sort sort;
+    private Order order;
+    private Sort sort;
 
-		private Long storeId;
-		private Long reviewId;
-		private String packageName;
-		private String storeName;
-		private Integer subLimit;
-		private String store_user;
-		private String store_pass_sha1;
+    private Long storeId;
+    private Long reviewId;
+    private String packageName;
+    private String storeName;
+    private Integer subLimit;
+    private String store_user;
+    private String store_pass_sha1;
 
+    public Body(long storeId, int limit, int subLimit, boolean refresh, String username,
+        String password) {
 
+      this.storeId = storeId;
+      this.limit = limit;
+      this.subLimit = subLimit;
+      this.refresh = refresh;
+      this.store_user = username;
+      this.store_pass_sha1 = password;
+    }
 
-		public Body(long storeId, int limit, int subLimit, boolean refresh, String username, String password) {
+    public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {
 
-			this.storeId = storeId;
-			this.limit = limit;
-			this.subLimit = subLimit;
-			this.refresh = refresh;
-			this.store_user = username;
-			this.store_pass_sha1 = password;
-		}
+      this.packageName = packageName;
+      this.storeName = storeName;
+      this.limit = limit;
+      this.subLimit = subLimit;
+      this.refresh = refresh;
+    }
 
-		public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {
-
-			this.packageName = packageName;
-			this.storeName = storeName;
-			this.limit = limit;
-			this.subLimit = subLimit;
-			this.refresh = refresh;
-		}
-
-		public enum Sort {
-			latest, points
-		}
-	}
+    public enum Sort {
+      latest, points
+    }
+  }
 }

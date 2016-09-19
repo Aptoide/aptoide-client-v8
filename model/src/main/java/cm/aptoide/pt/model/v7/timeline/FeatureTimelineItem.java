@@ -7,20 +7,17 @@ package cm.aptoide.pt.model.v7.timeline;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode
-public class FeatureTimelineItem implements TimelineItem<TimelineCard> {
+@EqualsAndHashCode public class FeatureTimelineItem implements TimelineItem<TimelineCard> {
 
-	private final Feature feature;
+  private final Feature feature;
 
-	@JsonCreator public FeatureTimelineItem(@JsonProperty("data") Feature feature) {
-		this.feature = feature;
-	}
+  @JsonCreator public FeatureTimelineItem(@JsonProperty("data") Feature feature) {
+    this.feature = feature;
+  }
 
-	@Override
-	public Feature getData() {
-		return feature;
-	}
+  @Override public Feature getData() {
+    return feature;
+  }
 }

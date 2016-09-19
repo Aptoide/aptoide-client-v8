@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.support.annotation.LayoutRes;
-
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
@@ -17,21 +16,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridAppGraphicDisplayable extends DisplayablePojo<App> {
 
-	public GridAppGraphicDisplayable() {
-	}
+  public GridAppGraphicDisplayable() {
+  }
 
-	public GridAppGraphicDisplayable(App pojo) {
-		super(pojo);
-	}
+  public GridAppGraphicDisplayable(App pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APPS_GROUP_GRAPHIC;
-	}
+  @Override public Type getType() {
+    return Type.APPS_GROUP_GRAPHIC;
+  }
 
-	@LayoutRes
-	@Override
-	public int getViewLayout() {
-		return R.layout.brick_app_item_list;
-	}
+  @LayoutRes @Override public int getViewLayout() {
+    return R.layout.brick_app_item_list;
+  }
 }

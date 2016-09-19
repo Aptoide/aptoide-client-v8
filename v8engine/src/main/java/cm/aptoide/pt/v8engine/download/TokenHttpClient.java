@@ -5,11 +5,9 @@
 
 package cm.aptoide.pt.v8engine.download;
 
-import com.liulishuo.filedownloader.util.FileDownloadHelper;
-
-import java.io.IOException;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import com.liulishuo.filedownloader.util.FileDownloadHelper;
+import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -22,16 +20,16 @@ import okhttp3.Response;
  */
 public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMaker {
 
-	@Override
-	public OkHttpClient customMake() {
-		return new OkHttpClient.Builder()
-				.addInterceptor(new Interceptor() {
-					@Override
-					public Response intercept(Chain chain) throws IOException {
-						Request request = chain.request().newBuilder().post(RequestBody.create(MediaType.parse("application/json"),
-								"{\"access_token\" : \""+ AptoideAccountManager.getAccessToken() +"\"}")).build();
-						return chain.proceed(request);
-					}
-				}).build();
-	}
+  @Override public OkHttpClient customMake() {
+    return new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+      @Override public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request()
+            .newBuilder()
+            .post(RequestBody.create(MediaType.parse("application/json"),
+                "{\"access_token\" : \"" + AptoideAccountManager.getAccessToken() + "\"}"))
+            .build();
+        return chain.proceed(request);
+      }
+    }).build();
+  }
 }

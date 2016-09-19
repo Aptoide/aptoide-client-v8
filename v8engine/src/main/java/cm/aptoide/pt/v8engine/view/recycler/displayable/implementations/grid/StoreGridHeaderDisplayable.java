@@ -16,28 +16,25 @@ import lombok.Getter;
  */
 public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
-	@Getter private String storeTheme;
+  @Getter private String storeTheme;
 
-	public StoreGridHeaderDisplayable() {
-	}
+  public StoreGridHeaderDisplayable() {
+  }
 
-	public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
-		super(pojo);
-	}
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
+    super(pojo);
+  }
 
-	public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo, String storeTheme) {
-		super(pojo);
-		this.storeTheme = storeTheme;
-	}
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo, String storeTheme) {
+    super(pojo);
+    this.storeTheme = storeTheme;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.HEADER_ROW;
-	}
+  @Override public Type getType() {
+    return Type.HEADER_ROW;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_header;
-	}
-
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_header;
+  }
 }

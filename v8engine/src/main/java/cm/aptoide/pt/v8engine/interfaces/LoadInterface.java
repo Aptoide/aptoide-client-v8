@@ -12,5 +12,5 @@ import android.os.Bundle;
  */
 public interface LoadInterface {
 
-	void load(boolean refresh, Bundle savedInstanceState);
+  void load(boolean refresh, Bundle savedInstanceState);
 }

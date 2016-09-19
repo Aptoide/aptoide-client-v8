@@ -14,24 +14,22 @@ import cm.aptoide.pt.v8engine.R;
  */
 public class AppViewRateAndCommentsDisplayable extends AppViewDisplayable {
 
-	public AppViewRateAndCommentsDisplayable() {
-	}
+  public AppViewRateAndCommentsDisplayable() {
+  }
 
-	public AppViewRateAndCommentsDisplayable(GetApp getApp) {
-		super(getApp);
-	}
+  public AppViewRateAndCommentsDisplayable(GetApp getApp) {
+    super(getApp);
+  }
 
-	public AppViewRateAndCommentsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-		super(getApp, fixedPerLineCount);
-	}
+  public AppViewRateAndCommentsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+    super(getApp, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_VIEW_RATE_AND_COMMENT;
-	}
+  @Override public Type getType() {
+    return Type.APP_VIEW_RATE_AND_COMMENT;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_app_view_rate_and_comment;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_rate_and_comment;
+  }
 }

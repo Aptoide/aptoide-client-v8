@@ -9,30 +9,30 @@ import io.realm.annotations.PrimaryKey;
  */
 public class RealmString extends RealmObject {
 
-	@PrimaryKey private String id;
-	private String string;
+  @PrimaryKey private String id;
+  private String string;
 
-	public RealmString(String string) {
-		this.id = IdUtils.randomString();
-		this.string = string;
-	}
+  public RealmString(String string) {
+    this.id = IdUtils.randomString();
+    this.string = string;
+  }
 
-	public RealmString() {
-	}
+  public RealmString() {
+  }
 
-	public String getId() {
-		return id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public String getString() {
-		return string;
-	}
+  public String getString() {
+    return string;
+  }
 
-	public void setString(String string) {
-		this.string = string;
-	}
+  public void setString(String string) {
+    this.string = string;
+  }
 }

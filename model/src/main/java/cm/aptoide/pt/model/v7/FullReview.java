@@ -10,14 +10,12 @@ import lombok.Data;
 /**
  * Created by sithengineer on 02/08/16.
  */
-@Data
-public class FullReview extends Review {
+@Data public class FullReview extends Review {
 
-	private AppData data;
+  private AppData data;
 
-	@Data
-	public static class AppData {
+  @Data public static class AppData {
 
-		private GetAppMeta.App app;
-	}
+    private GetAppMeta.App app;
+  }
 }

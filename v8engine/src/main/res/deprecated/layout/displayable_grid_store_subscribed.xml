@@ -7,8 +7,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
-    <include layout="@layout/displayable_grid_store"/>
+  <include layout="@layout/displayable_grid_store"/>
 
 </FrameLayout>

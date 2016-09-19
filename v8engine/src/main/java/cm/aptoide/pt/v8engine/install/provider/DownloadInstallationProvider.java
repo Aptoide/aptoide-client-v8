@@ -16,17 +16,16 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 7/25/16.
  */
-@AllArgsConstructor
-public class DownloadInstallationProvider implements InstallationProvider {
+@AllArgsConstructor public class DownloadInstallationProvider implements InstallationProvider {
 
-	private final DownloadServiceHelper downloadManager;
+  private final DownloadServiceHelper downloadManager;
 
-	@Override public Observable<RollbackInstallation> getInstallation(long id) {
-		return downloadManager.getDownload(id).first().flatMap(download -> {
-			if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-				return Observable.just(new DownloadInstallationAdapter(download));
-			}
-			return Observable.error(new InstallationException("Installation file not available."));
-		});
-	}
+  @Override public Observable<RollbackInstallation> getInstallation(long id) {
+    return downloadManager.getDownload(id).first().flatMap(download -> {
+      if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+        return Observable.just(new DownloadInstallationAdapter(download));
+      }
+      return Observable.error(new InstallationException("Installation file not available."));
+    });
+  }
 }

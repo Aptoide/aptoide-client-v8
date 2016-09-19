@@ -15,25 +15,22 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by neuro on 11-05-2016.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class SubscribedStoreDisplayable extends DisplayablePojo<Store> {
+@Data @EqualsAndHashCode(callSuper = true) public class SubscribedStoreDisplayable
+    extends DisplayablePojo<Store> {
 
-	public SubscribedStoreDisplayable() {
-		super();
-	}
+  public SubscribedStoreDisplayable() {
+    super();
+  }
 
-	public SubscribedStoreDisplayable(Store pojo) {
-		super(pojo);
-	}
+  public SubscribedStoreDisplayable(Store pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.SUBSCRIBED_STORE;
-	}
+  @Override public Type getType() {
+    return Type.SUBSCRIBED_STORE;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_store_subscribed;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_store_subscribed;
+  }
 }

@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-    <include layout="@layout/partial_view_no_apps_downloaded"/>
-    <include layout="@layout/recycler_fragment"/>
+  <include layout="@layout/partial_view_no_apps_downloaded"/>
+  <include layout="@layout/recycler_fragment"/>
 
 </FrameLayout>

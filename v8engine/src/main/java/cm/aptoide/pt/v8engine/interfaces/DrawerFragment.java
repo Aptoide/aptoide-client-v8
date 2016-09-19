@@ -5,9 +5,9 @@ package cm.aptoide.pt.v8engine.interfaces;
  */
 public interface DrawerFragment {
 
-	boolean isDrawerOpened();
+  boolean isDrawerOpened();
 
-	void openDrawer();
+  void openDrawer();
 
-	void closeDrawer();
+  void closeDrawer();
 }

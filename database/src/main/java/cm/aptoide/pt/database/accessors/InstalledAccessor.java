@@ -5,9 +5,8 @@
 
 package cm.aptoide.pt.database.accessors;
 
-import java.util.List;
-
 import cm.aptoide.pt.database.realm.Installed;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -15,25 +14,25 @@ import rx.Observable;
  */
 public class InstalledAccessor implements Accessor {
 
-	private final Database database;
+  private final Database database;
 
-	protected InstalledAccessor(Database db) {
-		this.database = db;
-	}
+  protected InstalledAccessor(Database db) {
+    this.database = db;
+  }
 
-	public Observable<List<Installed>> getAll() {
-		return database.getAll(Installed.class);
-	}
+  public Observable<List<Installed>> getAll() {
+    return database.getAll(Installed.class);
+  }
 
-	public Observable<Installed> get(String packageName) {
-		return database.get(Installed.class, Installed.PACKAGE_NAME, packageName);
-	}
+  public Observable<Installed> get(String packageName) {
+    return database.get(Installed.class, Installed.PACKAGE_NAME, packageName);
+  }
 
-	public void delete(String packageName) {
-		database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
-	}
+  public void delete(String packageName) {
+    database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
+  }
 
-	public Observable<Boolean> isInstalled(String packageName) {
-		return get(packageName).map(installed -> installed!=null);
-	}
+  public Observable<Boolean> isInstalled(String packageName) {
+    return get(packageName).map(installed -> installed != null);
+  }
 }

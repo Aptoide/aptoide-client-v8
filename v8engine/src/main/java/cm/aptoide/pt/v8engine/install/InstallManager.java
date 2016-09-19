@@ -117,31 +117,29 @@ import rx.schedulers.Schedulers;
     try {
       //if (Shell.SU.available()) {
 
-        Shell.Builder shellBuilder = new Shell.Builder();
-        Shell.Interactive interactiveShell = shellBuilder.useSU()
-            .setWatchdogTimeout(10) // seconds
-            .addCommand("pm install -r " + file.getAbsolutePath(), 0,
-                (commandCode, exitCode, output) -> {
-                  if (exitCode == 0) {
-                    Logger.v(TAG, "app successfully installed using root");
-                    return;
-                  }
+      Shell.Builder shellBuilder = new Shell.Builder();
+      Shell.Interactive interactiveShell = shellBuilder.useSU().setWatchdogTimeout(10) // seconds
+          .addCommand("pm install -r " + file.getAbsolutePath(), 0,
+              (commandCode, exitCode, output) -> {
+                if (exitCode == 0) {
+                  Logger.v(TAG, "app successfully installed using root");
+                  return;
+                }
 
-                  Logger.e(TAG, "Error using su to install package " + packageName);
-                  for (String s : output) {
-                    Logger.e(TAG, "su command result: " + s);
-                  }
-                })
-            .open();
+                Logger.e(TAG, "Error using su to install package " + packageName);
+                for (String s : output) {
+                  Logger.e(TAG, "su command result: " + s);
+                }
+              }).open();
 
-        interactiveShell.waitForIdle();
+      interactiveShell.waitForIdle();
 
-        if (!isInstalled(packageName, versionCode)) {
-          throw new RuntimeException("Could not verify installation.");
-        }
+      if (!isInstalled(packageName, versionCode)) {
+        throw new RuntimeException("Could not verify installation.");
+      }
 
-        // app sucessfully installed using root
-        return null;
+      // app sucessfully installed using root
+      return null;
       //} else {
       //  throw new RuntimeException("Device not rooted.");
       //}

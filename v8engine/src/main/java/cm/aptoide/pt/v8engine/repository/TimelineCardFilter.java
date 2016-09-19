@@ -25,8 +25,7 @@ public class TimelineCardFilter {
 
   public Observable<TimelineCard> filter(TimelineItem<TimelineCard> item) {
     return Observable.just(item).filter(timelineItem -> timelineItem != null).<TimelineCard>map(
-        timelineItem -> timelineItem.getData())
-        .filter(duplicateFilter)
+        timelineItem -> timelineItem.getData()).filter(duplicateFilter)
         .flatMap(timelineCard -> filterInstalledRecommendation(timelineCard))
         .flatMap(timelineCard -> filterAlreadyDoneUpdates(timelineCard));
   }
@@ -36,12 +35,13 @@ public class TimelineCardFilter {
       return installedAccessor.get(((AppUpdate) timelineCard).getPackageName())
           .firstOrDefault(null)
           .flatMap(installed -> {
-        if (installed != null && installed.getVersionCode() == ((AppUpdate) timelineCard).getFile()
-            .getVercode()) {
-          return Observable.empty();
-        }
-        return Observable.just(timelineCard);
-      });
+            if (installed != null
+                && installed.getVersionCode() == ((AppUpdate) timelineCard).getFile()
+                .getVercode()) {
+              return Observable.empty();
+            }
+            return Observable.just(timelineCard);
+          });
     }
     return Observable.just(timelineCard);
   }

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.view.View;
-
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
@@ -16,35 +15,30 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created by sithengineer on 04/05/16.
  */
-@Deprecated
-@Displayables({AppViewCommentsDisplayable.class})
-public class AppViewCommentsWidget extends Widget<AppViewCommentsDisplayable> {
+@Deprecated @Displayables({ AppViewCommentsDisplayable.class }) public class AppViewCommentsWidget
+    extends Widget<AppViewCommentsDisplayable> {
 
-	private View writeCommentView;
+  private View writeCommentView;
 
-	public AppViewCommentsWidget(View itemView) {
-		super(itemView);
-	}
+  public AppViewCommentsWidget(View itemView) {
+    super(itemView);
+  }
 
-	@Override
-	protected void assignViews(View itemView) {
-		writeCommentView = itemView.findViewById(R.id.write_comment);
-	}
+  @Override protected void assignViews(View itemView) {
+    writeCommentView = itemView.findViewById(R.id.write_comment);
+  }
 
-	@Override
-	public void bindView(AppViewCommentsDisplayable displayable) {
-		// TODO
+  @Override public void bindView(AppViewCommentsDisplayable displayable) {
+    // TODO
 
-		writeCommentView.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
-	}
+    writeCommentView.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
+  }
 
-	@Override
-	public void onViewAttached() {
+  @Override public void onViewAttached() {
 
-	}
+  }
 
-	@Override
-	public void onViewDetached() {
+  @Override public void onViewDetached() {
 
-	}
+  }
 }

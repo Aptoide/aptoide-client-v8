@@ -16,13 +16,11 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 // FIXME Warning: Generating equals/hashCode implementation but without a call to superclass, even though this
 // class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
-@Data
-@Accessors(chain = true)
-public class AptoideWsV7Exception extends IllegalStateException {
+@Data @Accessors(chain = true) public class AptoideWsV7Exception extends IllegalStateException {
 
-	private BaseV7Response baseResponse;
+  private BaseV7Response baseResponse;
 
-	public AptoideWsV7Exception(Throwable cause) {
-		super(cause);
-	}
+  public AptoideWsV7Exception(Throwable cause) {
+    super(cause);
+  }
 }

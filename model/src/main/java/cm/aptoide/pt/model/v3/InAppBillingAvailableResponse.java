@@ -6,28 +6,23 @@
 package cm.aptoide.pt.model.v3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * Created by marcelobenites on 8/25/16.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class InAppBillingAvailableResponse extends BaseV3Response {
+@Data @EqualsAndHashCode(callSuper = true) public class InAppBillingAvailableResponse
+    extends BaseV3Response {
 
-	@JsonProperty("response")
-	private InAppBillingAvailable inAppBillingAvailable;
+  @JsonProperty("response") private InAppBillingAvailable inAppBillingAvailable;
 
-	@Data
-	public static class InAppBillingAvailable {
+  @Data public static class InAppBillingAvailable {
 
-		@JsonProperty("iabavailable")
-		private String inAppBillingAvailable;
+    @JsonProperty("iabavailable") private String inAppBillingAvailable;
 
-		public boolean isAvailable() {
-			return inAppBillingAvailable!=null && inAppBillingAvailable.equalsIgnoreCase("ok");
-		}
-	}
+    public boolean isAvailable() {
+      return inAppBillingAvailable != null && inAppBillingAvailable.equalsIgnoreCase("ok");
+    }
+  }
 }

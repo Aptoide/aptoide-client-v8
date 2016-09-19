@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -16,7 +15,7 @@ import cm.aptoide.pt.v8engine.R;
 public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 
 	/*
-	private WeakReference<Fragment> weakFragment;
+  private WeakReference<Fragment> weakFragment;
 
 	protected abstract Fragment create();
 
@@ -53,24 +52,24 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 	}
 	*/
 
-	protected abstract Fragment createFragment();
+  protected abstract Fragment createFragment();
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.fragment_placeholder, createFragment())
-					.commit();
-		}
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (savedInstanceState == null) {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.fragment_placeholder, createFragment())
+          .commit();
+    }
+  }
 
-	}
-
-	protected Fragment getCurrentFragment() {
-		if (getSupportFragmentManager().getFragments() != null && getSupportFragmentManager().getFragments().size() > 0) {
-			return getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getFragments().size() - 1);
-		} else {
-			return null;
-		}
-	}
+  protected Fragment getCurrentFragment() {
+    if (getSupportFragmentManager().getFragments() != null
+        && getSupportFragmentManager().getFragments().size() > 0) {
+      return getSupportFragmentManager().getFragments()
+          .get(getSupportFragmentManager().getFragments().size() - 1);
+    } else {
+      return null;
+    }
+  }
 }

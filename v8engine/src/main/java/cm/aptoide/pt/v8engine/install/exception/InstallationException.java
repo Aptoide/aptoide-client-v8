@@ -10,11 +10,11 @@ package cm.aptoide.pt.v8engine.install.exception;
  */
 public class InstallationException extends Exception {
 
-	public InstallationException(String detailMessage) {
-		super(detailMessage);
-	}
+  public InstallationException(String detailMessage) {
+    super(detailMessage);
+  }
 
-	public InstallationException(Throwable throwable) {
-		super(throwable);
-	}
+  public InstallationException(Throwable throwable) {
+    super(throwable);
+  }
 }

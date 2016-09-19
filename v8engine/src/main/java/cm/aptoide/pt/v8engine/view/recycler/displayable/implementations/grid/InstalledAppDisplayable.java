@@ -15,20 +15,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class InstalledAppDisplayable extends DisplayablePojo<Installed> {
 
-	public InstalledAppDisplayable() {
-	}
+  public InstalledAppDisplayable() {
+  }
 
-	public InstalledAppDisplayable(Installed pojo) {
-		super(pojo);
-	}
+  public InstalledAppDisplayable(Installed pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.INSTALLED;
-	}
+  @Override public Type getType() {
+    return Type.INSTALLED;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.installed_row;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.installed_row;
+  }
 }

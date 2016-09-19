@@ -5,13 +5,10 @@
 
 package cm.aptoide.pt.v8engine.view;
 
-import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
-import java.io.IOException;
-import java.util.List;
-
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -19,24 +16,23 @@ import rx.Observable;
  */
 public interface PaymentView extends View {
 
-	Observable<Payment> paymentSelection();
+  Observable<Payment> paymentSelection();
 
-	Observable<Void> cancellationSelection();
+  Observable<Void> cancellationSelection();
 
-	void showLoading();
+  void showLoading();
 
-	void showPayments(List<Payment> paymentList);
+  void showPayments(List<Payment> paymentList);
 
-	void showProduct(AptoideProduct product);
+  void showProduct(AptoideProduct product);
 
-	void removeLoading();
+  void removeLoading();
 
-	void dismiss(Purchase purchase);
+  void dismiss(Purchase purchase);
 
-	void dismiss(Throwable throwable);
+  void dismiss(Throwable throwable);
 
-	void dismiss();
+  void dismiss();
 
-	void showPaymentsNotFoundMessage();
-
+  void showPaymentsNotFoundMessage();
 }

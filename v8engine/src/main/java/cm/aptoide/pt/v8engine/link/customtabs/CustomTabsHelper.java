@@ -5,8 +5,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -19,13 +17,8 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.customtabs.CustomTabsSession;
 import android.support.v4.content.ContextCompat;
-
-import cm.aptoide.pt.v8engine.V8Engine;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
  * Created by jdandrade on 02/09/16.
@@ -92,7 +85,8 @@ public class CustomTabsHelper {
 
   @NonNull public CustomTabsIntent.Builder getBuilder(Context context) {
     Intent openInNativeIntent = new Intent(V8Engine.getContext(), CustomTabNativeReceiver.class);
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(V8Engine.getContext(), 0, openInNativeIntent, 0);
+    PendingIntent pendingIntent =
+        PendingIntent.getBroadcast(V8Engine.getContext(), 0, openInNativeIntent, 0);
     return new CustomTabsIntent.Builder(getCustomTabsSession()).setToolbarColor(
         ContextCompat.getColor(context, R.color.aptoide_orange))
         .setShowTitle(true)

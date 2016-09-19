@@ -15,23 +15,22 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class RowReviewDisplayable extends DisplayablePojo<FullReview> {
 
-	public RowReviewDisplayable() { }
+  public RowReviewDisplayable() {
+  }
 
-	public RowReviewDisplayable(FullReview pojo) {
-		super(pojo);
-	}
+  public RowReviewDisplayable(FullReview pojo) {
+    super(pojo);
+  }
 
-	public RowReviewDisplayable(FullReview pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  public RowReviewDisplayable(FullReview pojo, boolean fixedPerLineCount) {
+    super(pojo, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.REVIEWS_GROUP;
-	}
+  @Override public Type getType() {
+    return Type.REVIEWS_GROUP;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_row_review;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_row_review;
+  }
 }

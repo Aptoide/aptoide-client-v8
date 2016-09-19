@@ -9,5 +9,5 @@ package cm.aptoide.pt.database.exceptions;
  * Created by marcelobenites on 6/30/16.
  */
 public class DownloadNotFoundException extends Exception {
-	
+
 }

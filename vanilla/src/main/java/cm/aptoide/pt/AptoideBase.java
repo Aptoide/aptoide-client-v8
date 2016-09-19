@@ -14,14 +14,12 @@ import cm.aptoide.pt.v8engine.V8Engine;
  */
 public class AptoideBase extends V8Engine {
 
-	@Override
-	public void onCreate() {
-		MultiDex.install(this);
-		super.onCreate();
-	}
+  @Override public void onCreate() {
+    MultiDex.install(this);
+    super.onCreate();
+  }
 
-	@Override
-	protected AptoideConfiguration createConfiguration() {
-		return new VanillaConfiguration();
-	}
+  @Override protected AptoideConfiguration createConfiguration() {
+    return new VanillaConfiguration();
+  }
 }

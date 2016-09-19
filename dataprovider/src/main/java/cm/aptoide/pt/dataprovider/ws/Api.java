@@ -14,10 +14,10 @@ import cm.aptoide.pt.utils.AptoideUtils;
  */
 public class Api {
 
-	public static final String LANG = AptoideUtils.SystemU.getCountryCode();
-	public static final String Q = AptoideUtils.Core.filters(ManagerPreferences.getHWSpecsFilter());
+  public static final String LANG = AptoideUtils.SystemU.getCountryCode();
+  public static final String Q = AptoideUtils.Core.filters(ManagerPreferences.getHWSpecsFilter());
 
-	public static final Boolean isMature() {
-		return SecurePreferences.isAdultSwitchActive();
-	}
+  public static final Boolean isMature() {
+    return SecurePreferences.isAdultSwitchActive();
+  }
 }

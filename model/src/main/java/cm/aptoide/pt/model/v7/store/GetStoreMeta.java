@@ -12,9 +12,7 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by neuro on 22-04-2016.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class GetStoreMeta extends BaseV7Response {
+@Data @EqualsAndHashCode(callSuper = true) public class GetStoreMeta extends BaseV7Response {
 
-	private Store data;
+  private Store data;
 }

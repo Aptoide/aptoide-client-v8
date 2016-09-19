@@ -10,11 +10,11 @@ package cm.aptoide.pt.preferences.secure;
  */
 public class SecureKeys {
 
-	public static final String USER_DATA_LOADED = "userDataLoaded";
-	public static final String FIRST_RUN = "firstRun";
-	
-	public static final String ADULT_CONTENT_PIN = "Maturepin";
-	public static final String IS_TIMELINE_ACTIVE = "TLA";
-	public static final String ADULT_CONTENT_SWITCH = "aptoide_account_manager_mature_switch";
-	public static final String ANIMATIONS_ENABLED = "googleAdvertisingId";
+  public static final String USER_DATA_LOADED = "userDataLoaded";
+  public static final String FIRST_RUN = "firstRun";
+
+  public static final String ADULT_CONTENT_PIN = "Maturepin";
+  public static final String IS_TIMELINE_ACTIVE = "TLA";
+  public static final String ADULT_CONTENT_SWITCH = "aptoide_account_manager_mature_switch";
+  public static final String ANIMATIONS_ENABLED = "googleAdvertisingId";
 }

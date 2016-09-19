@@ -10,7 +10,7 @@ package cm.aptoide.pt.v8engine.payment.exception;
  */
 public class PaymentAlreadyProcessedException extends PaymentException {
 
-	public PaymentAlreadyProcessedException(String message) {
-		super(message);
-	}
+  public PaymentAlreadyProcessedException(String message) {
+    super(message);
+  }
 }

@@ -10,42 +10,40 @@ import java.util.List;
 
 public class ApkPermissionGroup {
 
-	private String name;
-	private List<String> descriptions = new ArrayList<>();
+  private String name;
+  private List<String> descriptions = new ArrayList<>();
 
-	public ApkPermissionGroup(String name, String description) {
-		this.name = name;
-		this.descriptions.add(description);
-	}
+  public ApkPermissionGroup(String name, String description) {
+    this.name = name;
+    this.descriptions.add(description);
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public List<String> getDescriptions() {
-		return descriptions;
-	}
+  public List<String> getDescriptions() {
+    return descriptions;
+  }
 
-	public void setDescription(String description) {
-		this.descriptions.add(description);
-	}
+  public void setDescription(String description) {
+    this.descriptions.add(description);
+  }
 
-	/**
-	 * The contains method was overridden to check if the object contains the same permissions size and name. Could be refactored to check if the permissions'
-	 * list is the same.
-	 *
-	 * @param o
-	 *
-	 * @return
-	 */
-	@Override
-	public boolean equals(Object o) {
-		return o instanceof ApkPermissionGroup && this.getName()
-				.equals(((ApkPermissionGroup) o).getName()) && this.descriptions.size() == ((ApkPermissionGroup) o).descriptions.size();
-	}
+  /**
+   * The contains method was overridden to check if the object contains the same permissions size
+   * and name. Could be refactored to check if the permissions'
+   * list is the same.
+   */
+  @Override public boolean equals(Object o) {
+    return o instanceof ApkPermissionGroup
+        && this.getName()
+        .equals(((ApkPermissionGroup) o).getName())
+        && this.descriptions.size() == ((ApkPermissionGroup) o).descriptions.size();
+  }
 }
 

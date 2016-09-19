@@ -16,27 +16,25 @@ import lombok.Getter;
  */
 public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.EventImage> {
 
-	@Getter private String storeTheme;
+  @Getter private String storeTheme;
 
-	public GridDisplayDisplayable() {
-	}
+  public GridDisplayDisplayable() {
+  }
 
-	public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo) {
-		super(pojo);
-	}
+  public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo) {
+    super(pojo);
+  }
 
-	public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme) {
-		super(pojo);
-		this.storeTheme = storeTheme;
-	}
+  public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme) {
+    super(pojo);
+    this.storeTheme = storeTheme;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.DISPLAYS;
-	}
+  @Override public Type getType() {
+    return Type.DISPLAYS;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_display;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_display;
+  }
 }

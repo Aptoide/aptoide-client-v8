@@ -10,24 +10,22 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridStoreMetaDisplayable extends DisplayablePojo<GetStoreMeta> {
 
-	public GridStoreMetaDisplayable() {
-	}
+  public GridStoreMetaDisplayable() {
+  }
 
-	public GridStoreMetaDisplayable(GetStoreMeta pojo) {
-		super(pojo);
-	}
+  public GridStoreMetaDisplayable(GetStoreMeta pojo) {
+    super(pojo);
+  }
 
-	public GridStoreMetaDisplayable(GetStoreMeta pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  public GridStoreMetaDisplayable(GetStoreMeta pojo, boolean fixedPerLineCount) {
+    super(pojo, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.STORE_META;
-	}
+  @Override public Type getType() {
+    return Type.STORE_META;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_store_meta;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_store_meta;
+  }
 }

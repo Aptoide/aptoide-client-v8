@@ -10,18 +10,16 @@ import lombok.Data;
 /**
  * Class containing the extra Obb file. http://ws2.aptoide.com/api/7/getApp/app_id/12966861
  */
-@Data
-public class Obb {
+@Data public class Obb {
 
-	private ObbItem patch;
-	private ObbItem main;
+  private ObbItem patch;
+  private ObbItem main;
 
-	@Data
-	public static class ObbItem {
+  @Data public static class ObbItem {
 
-		private String path;
-		private String md5sum;
-		private long filesize;
-		private String filename;
-	}
+    private String path;
+    private String md5sum;
+    private long filesize;
+    private String filename;
+  }
 }

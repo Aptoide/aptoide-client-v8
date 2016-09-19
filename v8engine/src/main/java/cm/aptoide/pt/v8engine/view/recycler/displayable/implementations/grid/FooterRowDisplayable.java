@@ -14,20 +14,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class FooterRowDisplayable extends DisplayablePojo<String> {
 
-	public FooterRowDisplayable() {
-	}
+  public FooterRowDisplayable() {
+  }
 
-	public FooterRowDisplayable(String pojo) {
-		super(pojo);
-	}
+  public FooterRowDisplayable(String pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.FOOTER_ROW;
-	}
+  @Override public Type getType() {
+    return Type.FOOTER_ROW;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_footer_text;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_footer_text;
+  }
 }

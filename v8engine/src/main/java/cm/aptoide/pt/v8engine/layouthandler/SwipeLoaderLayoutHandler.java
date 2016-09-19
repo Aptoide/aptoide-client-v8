@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.layouthandler;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 
@@ -18,37 +17,33 @@ import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
  */
 public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
 
-	protected SwipeRefreshLayout swipeContainer;
+  protected SwipeRefreshLayout swipeContainer;
 
-	public SwipeLoaderLayoutHandler(int baseViewId, ReloadInterface reloadInterface) {
-		super(baseViewId, reloadInterface);
-	}
+  public SwipeLoaderLayoutHandler(int baseViewId, ReloadInterface reloadInterface) {
+    super(baseViewId, reloadInterface);
+  }
 
-	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-		swipeContainer.setColorSchemeResources(R.color.default_progress_bar_color, R.color
-				.default_color, R.color.default_progress_bar_color, R.color.default_color);
-		swipeContainer.setOnRefreshListener(((ReloadInterface) loadInterface)::reload);
-	}
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+    swipeContainer.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    swipeContainer.setOnRefreshListener(((ReloadInterface) loadInterface)::reload);
+  }
 
-	@Override
-	public void onFinishLoading(Throwable throwable) {
-		super.onFinishLoading(throwable);
-		swipeContainer.setRefreshing(false);
-		swipeContainer.setEnabled(false);
-	}
+  @Override public void onFinishLoading(Throwable throwable) {
+    super.onFinishLoading(throwable);
+    swipeContainer.setRefreshing(false);
+    swipeContainer.setEnabled(false);
+  }
 
-	@Override
-	protected void onFinishLoading() {
-		super.onFinishLoading();
-		swipeContainer.setRefreshing(false);
-	}
+  @Override protected void onFinishLoading() {
+    super.onFinishLoading();
+    swipeContainer.setRefreshing(false);
+  }
 
-	@Override
-	public void restoreState() {
-		super.restoreState();
-		swipeContainer.setEnabled(true);
-	}
+  @Override public void restoreState() {
+    super.restoreState();
+    swipeContainer.setEnabled(true);
+  }
 }
