@@ -87,20 +87,22 @@ android {
   signingConfigs { release }
 
   productFlavors {
-    dev {
+
+    internal {
       minSdkVersion 16
+      applicationIdSuffix ".internal"
+      versionName "8.0.0." + getDate()
+      versionCode getNextVersionCode("../../aptoideProperties/version.properties",
+          "INTERNAL_VERSION_CODE")
+      resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
+      manifestPlaceholders = [toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.internal"]
+    }
+
+    dev {
       applicationIdSuffix ".dev"
       versionName "8.0.0." + getDate()
       versionCode getNextVersionCode("../../aptoideProperties/version.properties",
           "DEV_VERSION_CODE")
-      resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
-    }
-
-    nightly {
-      applicationIdSuffix ".dev"
-      versionName "8.0.0." + getDate()
-      versionCode getNextVersionCode("../../aptoideProperties/version.properties",
-          "NIGHTLY_VERSION_CODE")
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
       manifestPlaceholders = [toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.dev"]
     }
