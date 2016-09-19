@@ -96,7 +96,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private void fetchUpdates() {
     if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-      updatesSubscription = DeprecatedDatabase.UpdatesQ.getAll(realm, false)
+      updatesSubscription = DeprecatedDatabase.UpdatesQ.getAllSorted(realm, false)
           .asObservable()
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .observeOn(AndroidSchedulers.mainThread())
@@ -126,7 +126,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private void fetchInstalled() {
     if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
-      RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAll(realm);
+      RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAllSorted(realm);
       installedSubscription = realmResults.asObservable()
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(installeds -> {
@@ -137,7 +137,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
                     AptoideUtils.StringU.getResString(R.string.installed_tab))));
 
             RealmResults<Installed> all = realmResults;
-            for (int i = all.size() - 1; i >= 0; i--) {
+            for (int i = 0; i < all.size(); i++) {
               if (!DeprecatedDatabase.UpdatesQ.contains(all.get(i).getPackageName(), false,
                   realm)) {
                 if (!all.get(i).isSystemApp()) {

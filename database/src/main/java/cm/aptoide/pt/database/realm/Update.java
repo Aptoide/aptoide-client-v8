@@ -19,6 +19,7 @@ import io.realm.annotations.PrimaryKey;
 public class Update extends RealmObject {
 
   public static final String APP_ID = "appId";
+  public static final String LABEL = "label";
   public static final String ICON = "icon";
   public static final String PACKAGE_NAME = "packageName";
   public static final String VERSION_CODE = "versionCode";

@@ -129,6 +129,10 @@ import io.realm.RealmResults;
       return realm.where(Installed.class).findAll();
     }
 
+    public static RealmResults<Installed> getAllSorted(Realm realm) {
+      return realm.where(Installed.class).findAllSorted(Installed.NAME);
+    }
+
     public static Installed get(String packageName, Realm realm) {
       return realm.where(Installed.class).equalTo(Installed.PACKAGE_NAME, packageName).findFirst();
     }
@@ -204,6 +208,12 @@ import io.realm.RealmResults;
 
     public static RealmResults<Update> getAll(Realm realm, boolean excluded) {
       return realm.where(Update.class).equalTo(Update.EXCLUDED, excluded).findAll();
+    }
+
+    public static RealmResults<Update> getAllSorted(Realm realm, boolean excluded) {
+      return realm.where(Update.class)
+          .equalTo(Update.EXCLUDED, excluded)
+          .findAllSorted(Update.LABEL);
     }
 
     //		public static boolean contains(String packageName, Realm realm) {
