@@ -70,7 +70,6 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 
 		appName = pojo.getName();
 		packageName = pojo.getPackageName();
-		final String storeName = pojo.getStoreName();
 
 		labelTextView.setText(pojo.getName());
 		verNameTextView.setText(pojo.getVersionName());
@@ -80,10 +79,18 @@ public class InstalledAppWidget extends Widget<InstalledAppDisplayable> {
 			// TODO: 25-05-2016 neuro apagar em principio
 		});
 
-		createReviewLayout.setOnClickListener(v -> {
-			Analytics.Updates.createReview();
-			DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
-		});
+		// [AN-512] - Create Review on Installed Apps List
+		// only show create review if store info is associated with this install
+		final String storeName = pojo.getStoreName();
+		if(!TextUtils.isEmpty(storeName)) {
+			createReviewLayout.setVisibility(View.VISIBLE);
+			createReviewLayout.setOnClickListener(v -> {
+				Analytics.Updates.createReview();
+				DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
+			});
+		}else{
+			createReviewLayout.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
