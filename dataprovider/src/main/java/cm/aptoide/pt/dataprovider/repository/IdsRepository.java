@@ -8,13 +8,11 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-
 import java.security.SecureRandom;
 import java.util.UUID;
-
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import lombok.AllArgsConstructor;
 
 /**
@@ -103,11 +101,19 @@ public class IdsRepository {
 	}
 
 	public String getAndroidId() {
-		return sharedPreferences.getString(ANDROID_ID_CLIENT, null);
+		String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
+
+		if (androidId == null) {
+			androidId = Settings.Secure.getString(DataProvider.getContext().getContentResolver(),
+					Settings.Secure.ANDROID_ID);
+			setAndroidId(androidId);
+		}
+
+		return androidId;
 	}
 
 	private void setAndroidId(String android) {
-		if (getAndroidId() != null) {
+		if (sharedPreferences.getString(ANDROID_ID_CLIENT, null) != null) {
 			throw new RuntimeException("Android ID already set!");
 		}
 
