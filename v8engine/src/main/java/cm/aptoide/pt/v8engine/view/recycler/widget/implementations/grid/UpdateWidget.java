@@ -77,6 +77,11 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 		this.displayable = updateDisplayable;
 		final String packageName = updateDisplayable.getPackageName();
 		final InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
+
+		if (subscriptions == null || subscriptions.isUnsubscribed()) {
+			subscriptions = new CompositeSubscription();
+		}
+
 		subscriptions.add(accessor.get(packageName)
 				.first()
 				.subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
@@ -112,16 +117,11 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
 
 	@Override
 	public void onViewAttached() {
-
-		if (subscriptions == null || subscriptions.isUnsubscribed()) {
-			subscriptions = new CompositeSubscription();
-		}
-
-		subscriptions.add(RxView.clicks(updateButtonLayout).flatMap(click -> {
-			displayable.downloadAndInstall(getContext()).subscribe();
-			return null;
-		}).retry().subscribe(o -> {
-		}, throwable -> throwable.printStackTrace()));
+		subscriptions.add(RxView.clicks(updateButtonLayout)
+				.flatMap(click -> displayable.downloadAndInstall(getContext()))
+				.retry()
+				.subscribe(o -> {
+				}, throwable -> throwable.printStackTrace()));
 
 		subscriptions.add(displayable.getDownloadManager()
 				.getAllDownloads()

@@ -60,7 +60,7 @@ public class DownloadServiceHelper {
   public Observable<Download> startDownload(DownloadAccessor downloadAccessor,
       PermissionRequest permissionRequest, Download download) {
     return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+        .concatWith(permissionManager.requestDownloadAccess(permissionRequest))
         .flatMap(success -> Observable.fromCallable(() -> {
           getDownload(download.getAppId()).first().subscribe(storedDownload -> {
             startDownloadService(download.getAppId(),
