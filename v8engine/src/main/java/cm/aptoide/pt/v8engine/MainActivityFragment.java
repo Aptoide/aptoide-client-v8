@@ -49,8 +49,14 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         StoreContext.home);
   }
 
+  @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
+  }
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Analytics.Lifecycle.Activity.onCreate(this);
 
     if (savedInstanceState == null) {
       startService(new Intent(this, PullingContentService.class));

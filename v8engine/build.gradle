@@ -49,6 +49,8 @@ android {
       configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
       configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
           localProperties.SIXPACK_PASSWORD
+      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
 
     debug {
@@ -59,6 +61,8 @@ android {
       configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
       configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
           localProperties.SIXPACK_PASSWORD
+      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
   }
 
@@ -208,6 +212,9 @@ dependencies {
 
   // Localytics sdk
   compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
+  //Only used by localytics
+  compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
+  compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
 
   // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"

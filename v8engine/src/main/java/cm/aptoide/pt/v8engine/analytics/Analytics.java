@@ -212,6 +212,7 @@ public class Analytics {
       public static void onCreate(android.app.Activity activity) {
 
         if (!ACTIVATE_LOCALYTICS) return;
+        Localytics.registerPush(BuildConfig.GOOGLE_SENDER_ID);
       }
 
       public static void onDestroy(android.app.Activity activity) {
