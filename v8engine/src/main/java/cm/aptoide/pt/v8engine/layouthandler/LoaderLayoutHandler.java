@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import rx.Observable;
@@ -51,6 +52,7 @@ public class LoaderLayoutHandler {
 
   public void finishLoading(Throwable throwable) {
     Logger.printException(throwable);
+    CrashReports.logException(throwable);
 
     AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
   }

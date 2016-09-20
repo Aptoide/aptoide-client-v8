@@ -16,6 +16,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
 import java.io.File;
@@ -144,6 +145,7 @@ import rx.schedulers.Schedulers;
       //  throw new RuntimeException("Device not rooted.");
       //}
     } catch (Exception e) {
+      CrashReports.logException(e);
       throw new InstallationException("Installation with root failed for "
           + packageName
           + ". Error message: "
@@ -159,6 +161,7 @@ import rx.schedulers.Schedulers;
       Intent intent = new Intent(Intent.ACTION_DELETE, uri);
       context.startActivity(intent);
     } catch (PackageManager.NameNotFoundException e) {
+      CrashReports.logException(e);
       throw new InstallationException(e);
     }
   }
@@ -176,6 +179,7 @@ import rx.schedulers.Schedulers;
       info = packageManager.getPackageInfo(packageName, 0);
       return (info != null && info.versionCode == versionCode);
     } catch (PackageManager.NameNotFoundException e) {
+      CrashReports.logException(e);
       return false;
     }
   }

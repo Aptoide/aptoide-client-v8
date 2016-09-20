@@ -29,6 +29,7 @@ import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
@@ -94,6 +95,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
           } catch (InterruptedException e) {
+            CrashReports.logString("ReviewID",String.valueOf(reviewId));
+            CrashReports.logException(e);
             e.printStackTrace();
           }
           AptoideUtils.ThreadU.runOnUiThread(() -> {

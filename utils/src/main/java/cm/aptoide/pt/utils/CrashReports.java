@@ -21,7 +21,8 @@ public class CrashReports {
    * @param fabric_configured true by default
    */
   public static void setup(Context context, boolean fabric_configured) {
-    Fabric.with(context, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(!fabric_configured).build()).build());
+    Fabric.with(context, new Crashlytics.Builder().core(
+        new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG || !fabric_configured).build()).build());
   }
 
   /**

@@ -19,6 +19,7 @@ import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -86,17 +87,22 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
             return autoUpdateInfo;
           }
         } catch (PackageManager.NameNotFoundException e) {
+          CrashReports.logException(e);
           e.printStackTrace();
         }
       }
     } catch (ParserConfigurationException e) {
       e.printStackTrace();
+      CrashReports.logException(e);
     } catch (SAXException e) {
       e.printStackTrace();
+      CrashReports.logException(e);
     } catch (MalformedURLException e) {
       e.printStackTrace();
+      CrashReports.logException(e);
     } catch (IOException e) {
       e.printStackTrace();
+      CrashReports.logException(e);
     } finally {
       if (connection != null) {
         connection.disconnect();
@@ -152,6 +158,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                       e.printStackTrace();
                       Logger.d("Aptoide-Auto-Update",
                           "Update package checksum failed!  Keeping current version.");
+                      CrashReports.logException(e);
                       if (this.dialog.isShowing()) {
                         this.dialog.dismiss();
                       }

@@ -41,6 +41,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
@@ -727,6 +728,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         accountManager.addAccountExplicitly(account, userPassword, null);
       } catch (SecurityException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import com.trello.rxlifecycle.components.support.RxFragment;
 import io.realm.Realm;
@@ -131,6 +132,14 @@ public abstract class SupportV4BaseFragment extends RxFragment
     } catch (ClassCastException e) {
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
+    }
+  }
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser){
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      CrashReports.ScreenUtils.addScreenToHistory(getClass().getSimpleName());
     }
   }
 }

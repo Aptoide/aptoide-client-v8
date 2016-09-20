@@ -18,6 +18,7 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -155,6 +156,7 @@ import rx.Observable;
 
             DataproviderUtils.AdNetworksUtils.knockImpression(MinimalAd.from(ad));
           } catch (Exception ignored) {
+            CrashReports.logException(ignored);
           }
         }
       }

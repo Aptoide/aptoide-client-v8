@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import com.trello.rxlifecycle.components.RxFragment;
 import io.realm.Realm;
@@ -83,6 +84,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(
           toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -95,6 +97,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
           toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -107,6 +110,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted,
           toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -118,6 +122,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale,
           toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -129,8 +134,17 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestDownloadAccess(toRunWhenAccessIsGranted,
           toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
+    }
+  }
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser){
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      CrashReports.ScreenUtils.addScreenToHistory(getClass().getSimpleName());
     }
   }
 }
