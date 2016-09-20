@@ -76,7 +76,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   }
 
   private void setUpAnalytics() {
-    Analytics.Lifecycle.Activity.onCreate(this);
     Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
     Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
     Analytics.Dimensions.setGmsPresent(
