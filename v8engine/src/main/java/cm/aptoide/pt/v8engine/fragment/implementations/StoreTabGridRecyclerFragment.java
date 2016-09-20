@@ -290,9 +290,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    super.load(refresh, savedInstanceState);
-    if (refresh) {
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    super.load(created, refresh, savedInstanceState);
+    if (created) {
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
       if (!validateAcceptedName(name)) {
@@ -302,26 +302,26 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
       switch (name) {
         case listApps:
-          caseListApps(url, refresh);
+          caseListApps(url, created);
           break;
         case getStore:
-          caseGetStore(url, refresh);
+          caseGetStore(url, created);
           break;
         case getStoreWidgets:
-          caseGetStoreWidgets(url, refresh);
+          caseGetStoreWidgets(url, created);
           break;
         case listReviews:
-          caseListReviews(url, refresh);
+          caseListReviews(url, created);
           break;
         //		break;
         //	case getApkComments:
         //todo
         //		break;
         case getAds:
-          caseGetAds(refresh);
+          caseGetAds(created);
           break;
         case listStores:
-          caseListStores(url, refresh);
+          caseListStores(url, created);
           break;
       }
     } else {

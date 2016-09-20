@@ -64,14 +64,14 @@ public class LoaderLayoutHandler {
       noNetworkConnectionView.setVisibility(View.VISIBLE);
       retryNoNetworkView.setOnClickListener(view -> {
         restoreState();
-        loadInterface.load(true, null);
+        loadInterface.load(true, false, null);
       });
     } else {
       noNetworkConnectionView.setVisibility(View.GONE);
       genericErrorView.setVisibility(View.VISIBLE);
       retryErrorView.setOnClickListener(view -> {
         restoreState();
-        loadInterface.load(true, null);
+        loadInterface.load(true, false, null);
       });
     }
   }

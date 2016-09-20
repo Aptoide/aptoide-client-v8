@@ -61,8 +61,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     return new ScheduledDownloadsFragment();
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "refresh excluded updates? " + (refresh ? "yes" : "no"));
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "refresh excluded updates? " + (created ? "yes" : "no"));
     fetchScheduledDownloads();
   }
 

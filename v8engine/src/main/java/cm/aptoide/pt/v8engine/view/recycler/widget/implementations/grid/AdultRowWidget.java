@@ -43,7 +43,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
             FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
             ((BaseLoaderFragment) supportFragmentManager.getFragments()
-                .get(supportFragmentManager.getBackStackEntryCount())).load(true, null);
+                .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
           }
         }, dialog1 -> {
           shouldITrackNextChange = false;
@@ -58,7 +58,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         }
         FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
         ((BaseLoaderFragment) supportFragmentManager.getFragments()
-            .get(supportFragmentManager.getBackStackEntryCount())).load(true, null);
+            .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
         AptoideAccountManager.updateMatureSwitch(false);
       }
     });

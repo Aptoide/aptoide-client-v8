@@ -325,7 +325,7 @@ public class AppViewFragment extends GridRecyclerFragment
             && BillingBinder.RESULT_ITEM_ALREADY_OWNED == data.getIntExtra(
             BillingBinder.RESPONSE_CODE, -1)) {
           shouldInstall = true;
-          load(true, null);
+          load(true, true, null);
         } else {
           Logger.i(TAG, "The user canceled.");
           ShowMessage.asSnack(header.badge, R.string.user_canceled);
@@ -389,7 +389,7 @@ public class AppViewFragment extends GridRecyclerFragment
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
 
     if (subscription != null) {
       subscription.unsubscribe();
@@ -397,7 +397,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
+      subscription = appRepository.getApp(appId, created, sponsored, storeName)
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
@@ -420,7 +420,7 @@ public class AppViewFragment extends GridRecyclerFragment
             finishLoading();
           }, throwable -> finishLoading(throwable));
     } else if (!TextUtils.isEmpty(md5)) {
-      appRepository.getAppFromMd5(md5, refresh, sponsored)
+      appRepository.getAppFromMd5(md5, created, sponsored)
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
@@ -442,7 +442,7 @@ public class AppViewFragment extends GridRecyclerFragment
           }, throwable -> finishLoading(throwable));
     } else {
       Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(packageName, refresh, sponsored)
+      subscription = appRepository.getApp(packageName, created, sponsored)
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .observeOn(AndroidSchedulers.mainThread())

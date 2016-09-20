@@ -22,7 +22,7 @@ public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragmentWith
   }
 
   @Override public void reload() {
-    load(true, null);
+    load(true, true, null);
   }
 
   @Override public int getContentViewId() {

@@ -303,8 +303,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return R.id.search_results_layout;
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    if (refresh) {
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    if (created) {
       executeSearchRequests();
     } else {
       handleFinishLoading();

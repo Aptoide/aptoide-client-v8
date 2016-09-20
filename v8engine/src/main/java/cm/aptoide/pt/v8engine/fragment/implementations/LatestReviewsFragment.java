@@ -73,8 +73,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     this.storeId = args.getLong(STORE_ID, -1);
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    super.load(refresh, savedInstanceState);
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    super.load(created, refresh, savedInstanceState);
 
     ListFullReviewsRequest listFullReviewsRequest =
         ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0);
@@ -92,7 +92,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
             listFullReviewsAction, errorRequestListener, true);
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
+    endlessRecyclerOnScrollListener.onLoadMore(created);
   }
 
   @Override public void bindViews(View view) {
