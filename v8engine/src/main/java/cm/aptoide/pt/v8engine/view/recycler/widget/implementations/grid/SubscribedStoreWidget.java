@@ -19,6 +19,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
@@ -27,7 +28,6 @@ import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import com.crashlytics.android.Crashlytics;
 import io.realm.Realm;
 import lombok.Cleanup;
 
@@ -99,7 +99,7 @@ import lombok.Cleanup;
             }
           }, e -> {
             Logger.e(TAG, e);
-            Crashlytics.logException(e);
+            CrashReports.logException(e);
           });
     });
   }

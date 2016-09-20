@@ -12,13 +12,13 @@ import android.os.Build;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 import cm.aptoide.pt.v8engine.deprecated.tables.Updates;
-import com.crashlytics.android.Crashlytics;
 import io.realm.Realm;
 
 /**
@@ -116,7 +116,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
 
     if (agregateExceptions != null) {
-      Crashlytics.logException(agregateExceptions);
+      CrashReports.logException(agregateExceptions);
     }
 
     ManagerPreferences.setNeedsDbMigration(false);
