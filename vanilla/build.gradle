@@ -1,5 +1,3 @@
-import java.util.concurrent.TimeUnit
-
 /*
  * Copyright (c) 2016.
  * Modified by SithEngineer on 29/07/2016.
@@ -78,9 +76,9 @@ android {
     proguardFile 'proguard-rules.pro'
     proguardFile getDefaultProguardFile('proguard-android.txt')
     testProguardFile 'proguard-test-rules.pro'
-    manifestPlaceholders = [
-        toolboxProviderAuthority: "cm.aptoide.pt.StubProvider",
-        suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+    manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider",
+                            suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider",
+                            currentApplicationId       : "cm.aptoide.pt"
     ]
   }
 
@@ -105,9 +103,9 @@ android {
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
 
-      manifestPlaceholders = [
-          toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.internal",
-          suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal"
+      manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.internal",
+                              suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal",
+                              currentApplicationId       : "cm.aptoide.pt.internal"
       ]
     }
 
@@ -122,9 +120,9 @@ android {
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
 
-      manifestPlaceholders = [
-          toolboxProviderAuthority: "cm.aptoide.pt.StubProvider.dev",
-          suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev"
+      manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.dev",
+                              suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev",
+                              currentApplicationId       : "cm.aptoide.pt.dev"
       ]
     }
 
