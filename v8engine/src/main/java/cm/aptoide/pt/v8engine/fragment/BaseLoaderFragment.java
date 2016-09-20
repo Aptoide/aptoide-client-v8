@@ -29,7 +29,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    load(!created, savedInstanceState);
+    load(!created, false, savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -78,5 +78,5 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     }
   }
 
-  public abstract void load(boolean refresh, Bundle savedInstanceState);
+  public abstract void load(boolean created, boolean refresh, Bundle savedInstanceState);
 }

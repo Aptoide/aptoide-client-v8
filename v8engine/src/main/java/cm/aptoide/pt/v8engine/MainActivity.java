@@ -80,8 +80,8 @@ public class MainActivity extends AptoideBaseLoaderActivity {
     return R.id.app_bar_layout;
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    GetStoreRequest.of("apps", StoreContext.home).execute(this::setupViewPager, refresh);
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    GetStoreRequest.of("apps", StoreContext.home).execute(this::setupViewPager, created);
   }
 
   private void setupNavigationView() {

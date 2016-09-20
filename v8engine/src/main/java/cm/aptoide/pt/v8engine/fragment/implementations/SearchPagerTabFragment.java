@@ -78,9 +78,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     return fragment;
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    super.load(refresh, savedInstanceState);
-    if (refresh) {
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    super.load(created, refresh, savedInstanceState);
+    if (created) {
       GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
         if (getAdsResponse.getAds().size() > 0) {
           refreshed = true;
@@ -97,9 +97,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
-              listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
+              listSearchAppsSuccessRequestListener, errorRequestListener, created);
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-      endlessRecyclerOnScrollListener.onLoadMore(refresh);
+      endlessRecyclerOnScrollListener.onLoadMore(created);
     } else {
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     }

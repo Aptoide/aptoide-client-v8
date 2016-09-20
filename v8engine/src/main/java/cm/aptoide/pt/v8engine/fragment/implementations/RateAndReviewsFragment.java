@@ -184,9 +184,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     reviewId = args.getLong(REVIEW_ID, -1);
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + refresh);
-    fetchRating(refresh);
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "Other versions should refresh? " + created);
+    fetchRating(created);
     fetchReviews();
   }
 

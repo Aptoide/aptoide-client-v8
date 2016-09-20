@@ -59,7 +59,7 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
     });
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
 
     Observable<RealmResults<Store>> realmResultsObservable =
         DeprecatedDatabase.StoreQ.getAll(realm).asObservable();

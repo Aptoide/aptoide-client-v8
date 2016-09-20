@@ -110,8 +110,8 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
             AccessorFactory.getAccessorFor(Installed.class)));
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    super.load(refresh, savedInstanceState);
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    super.load(created, refresh, savedInstanceState);
 
     if (subscription != null) {
       subscription.unsubscribe();
@@ -119,7 +119,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
     final Observable<List<String>> packagesObservable;
     final Observable<Datalist<Displayable>> displayableObservable;
-    if (refresh) {
+    if (created) {
       if (savedInstanceState != null
           && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
         packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
@@ -128,7 +128,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
         packagesObservable = refreshPackages();
       }
       displayableObservable = packagesObservable.flatMap(
-          packages -> Observable.concat(getFreshDisplayables(refresh, packages),
+          packages -> Observable.concat(getFreshDisplayables(created, packages),
               getNextDisplayables(packages)));
     } else {
 
@@ -140,7 +140,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
       if (adapter.getItemCount() == 0) {
         displayableObservable = packagesObservable.flatMap(
-            packages -> Observable.concat(getFreshDisplayables(refresh, packages),
+            packages -> Observable.concat(getFreshDisplayables(created, packages),
                 getNextDisplayables(packages)));
       } else {
         displayableObservable =
@@ -148,9 +148,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
       }
     }
 
-    subscription = displayableObservable.<Datalist<Displayable>>compose(
+    subscription = displayableObservable.compose(
         bindUntilEvent(FragmentEvent.DESTROY_VIEW)).observeOn(AndroidSchedulers.mainThread())
-        .subscribe(items -> addItems(items), throwable -> finishLoading((Throwable) throwable));
+        .subscribe(items -> addItems(items), throwable -> finishLoading(throwable));
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -179,7 +179,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
   @Override public void reload() {
     Analytics.AppsTimeline.pullToRefresh();
-    load(true, null);
+    load(true, true, null);
   }
 
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {

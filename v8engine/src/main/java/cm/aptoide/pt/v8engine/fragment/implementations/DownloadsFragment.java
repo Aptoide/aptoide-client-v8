@@ -73,8 +73,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     oldDownloadsList = new ArrayList<>();
   }
 
-  @Override public void load(boolean refresh, Bundle savedInstanceState) {
-    super.load(refresh, savedInstanceState);
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    super.load(created, refresh, savedInstanceState);
     if (subscription == null || subscription.isUnsubscribed()) {
       DownloadServiceHelper downloadServiceHelper =
           new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
