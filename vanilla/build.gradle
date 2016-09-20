@@ -10,12 +10,13 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
+
 retrolambda {
   jvmArgs '-noverify'
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
+/*Properties localProperties = new Properties()
 localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 def fabricApiKey = localProperties.FABRIC_API_KEY
@@ -31,7 +32,7 @@ if (fabricConfigured) {
   }
   preBuild.dependsOn(fabricGenerateProperties)
   apply plugin: 'io.fabric'
-}
+}*/
 
 //configurations.all {
 //    resolutionStrategy {
@@ -225,6 +226,9 @@ dependencies {
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   // Multi Dex support
   compile "com.android.support:multidex:${MULTIDEX_VERSION}"
+  compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
+    transitive = true;
+  }
 }
 
 class VersionCodeFileUpdateTask extends DefaultTask {
