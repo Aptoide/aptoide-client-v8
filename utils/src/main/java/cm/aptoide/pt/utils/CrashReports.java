@@ -16,19 +16,12 @@ public class CrashReports {
   @Setter private static String language;
 
   /**
-   * setup crashes reports
-   *
+   * setup crash reports
    * @param context context from the class that's calling this method
    * @param fabric_configured true by default
    */
   public static void setup(Context context, boolean fabric_configured) {
-
-    /*Fabric.with(context, new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG || !fabric_configured).build())
-        .build());*/
-    Fabric.with(context, new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(true).build())
-        .build());
+    Fabric.with(context, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(!fabric_configured).build()).build());
   }
 
   /**
