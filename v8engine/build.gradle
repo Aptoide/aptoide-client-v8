@@ -73,9 +73,6 @@ android {
     }
   }
 
-  dexOptions {
-    incremental true
-  }
 }
 
 void configureSixpackCredentials(androidDelegate, user, password) {
