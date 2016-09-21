@@ -37,9 +37,8 @@ import rx.Observable;
     });
   }
 
-  public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
-      String storeName) {
-    return GetAppRequest.of(packageName, storeName).observe(refresh).flatMap(response -> {
+  public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored) {
+    return GetAppRequest.of(packageName).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         return addPayment(sponsored, response, refresh);
       } else {

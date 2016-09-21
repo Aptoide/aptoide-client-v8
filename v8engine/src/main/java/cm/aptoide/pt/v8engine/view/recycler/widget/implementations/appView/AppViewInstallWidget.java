@@ -135,7 +135,6 @@ import rx.subscriptions.CompositeSubscription;
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
     final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
-    displayable.setInstallButton(actionButton);
     versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
       OtherVersionsFragment fragment =
