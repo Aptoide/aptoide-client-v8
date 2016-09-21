@@ -77,7 +77,7 @@
         android:summary="@string/show_all_updates"
         android:title="@string/setting_allUpdates_filtering"/>
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="updatesFilterKey"
         android:summary="@string/updates_filter_summary"
         android:title="@string/updates_filter_setting_title"/>
