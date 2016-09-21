@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.layouthandler;
 
 import android.support.annotation.IdRes;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
@@ -83,7 +84,10 @@ public class LoaderLayoutHandler {
       onFinishLoading();
       return null;
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
-    }, Logger::printException);
+    }, e -> {
+      Logger.printException(e);
+      CrashReports.logException(e);
+    });
   }
 
   protected void onFinishLoading() {

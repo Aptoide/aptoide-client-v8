@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.payment.rx;
 
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
@@ -37,6 +38,7 @@ import rx.subscriptions.Subscriptions;
         if (!subscriber.isUnsubscribed()) {
           subscriber.onError(exception);
         }
+        CrashReports.logException(exception);
       }
     });
   }

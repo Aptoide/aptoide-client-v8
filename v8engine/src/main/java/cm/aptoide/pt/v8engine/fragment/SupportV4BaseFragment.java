@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +36,7 @@ public abstract class SupportV4BaseFragment extends RxFragment
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
+    CrashReports.ScreenUtils.getInstance().incrementNumberOfScreens();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -51,11 +53,15 @@ public abstract class SupportV4BaseFragment extends RxFragment
     super.onDestroyView();
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    CrashReports.ScreenUtils.getInstance().decrementNumberOfScreens();
+  }
+
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
 
     realm = DeprecatedDatabase.get();
-
     return inflater.inflate(getContentViewId(), container, false);
   }
 
@@ -139,7 +145,7 @@ public abstract class SupportV4BaseFragment extends RxFragment
   public void setUserVisibleHint(boolean isVisibleToUser){
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
-      CrashReports.ScreenUtils.addScreenToHistory(getClass().getSimpleName());
+      CrashReports.ScreenUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
     }
   }
 }

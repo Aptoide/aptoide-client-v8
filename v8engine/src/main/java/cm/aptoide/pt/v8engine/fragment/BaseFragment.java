@@ -35,6 +35,7 @@ public abstract class BaseFragment extends RxFragment
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
+
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -57,6 +58,20 @@ public abstract class BaseFragment extends RxFragment
     realm = DeprecatedDatabase.get();
 
     return inflater.inflate(getContentViewId(), container, false);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    CrashReports.ScreenUtils.getInstance().incrementNumberOfScreens();
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    CrashReports.ScreenUtils.getInstance().decrementNumberOfScreens();
   }
 
   /**
@@ -144,7 +159,8 @@ public abstract class BaseFragment extends RxFragment
   public void setUserVisibleHint(boolean isVisibleToUser){
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
-      CrashReports.ScreenUtils.addScreenToHistory(getClass().getSimpleName());
+      //CrashReports.ScreenUtils.addScreenToHistory(getClass().getSimpleName());
+      CrashReports.ScreenUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
     }
   }
 }

@@ -9,6 +9,7 @@ import android.app.SearchManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.CrashReports;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import java.io.IOException;
@@ -64,6 +65,7 @@ public class WebSocketSingleton {
         blockingQueue.add(mCursor);
       } catch (JSONException e) {
         Logger.printException(e);
+        CrashReports.logException(e);
       }
     }
 
@@ -77,6 +79,7 @@ public class WebSocketSingleton {
 
     @Override public void onError(Exception error) {
       Logger.printException(error);
+      CrashReports.logException(error);
     }
   };
 
@@ -106,6 +109,7 @@ public class WebSocketSingleton {
           g.close();
         } catch (IOException e) {
           Logger.printException(e);
+          CrashReports.logException(e);
         }
         //"{\"query\":\"" + query + "\"}"
 

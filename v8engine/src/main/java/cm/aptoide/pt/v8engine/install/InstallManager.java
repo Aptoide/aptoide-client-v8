@@ -61,7 +61,7 @@ import rx.schedulers.Schedulers;
                     .onErrorResumeNext(defaultInstall(context, installation.getFile(),
                         installation.getPackageName()));
               }
-            }));
+            }).doOnError(CrashReports::logException));
   }
 
   @Override public Observable<Void> update(Context context, PermissionRequest permissionRequest,

@@ -867,7 +867,10 @@ public class AptoideUtils {
     public static void runOnIoThread(Runnable runnable) {
       Observable.just(null)
           .observeOn(Schedulers.io())
-          .subscribe(o -> runnable.run(), Logger::printException);
+          .subscribe(o -> runnable.run(), e -> {
+            Logger.printException(e);
+            CrashReports.logException(e);
+          });
     }
 
     public static void runOnUiThread(Runnable runnable) {

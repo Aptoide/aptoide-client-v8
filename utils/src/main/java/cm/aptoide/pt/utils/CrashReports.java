@@ -1,10 +1,15 @@
 package cm.aptoide.pt.utils;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import cm.aptoide.pt.logger.Logger;
+import android.os.Build;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import io.fabric.sdk.android.Fabric;
+import cm.aptoide.pt.logger.Logger;
+import java.util.ArrayList;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -12,8 +17,9 @@ import lombok.Setter;
  */
 public class CrashReports {
 
-  private final static String TAG = CrashReports.class.getSimpleName();
-  @Setter private static String language;
+  private final static String TAG = CrashReports.class.getSimpleName();   //TAG for the logger
+  @Setter private static String language;                                 //var with the language the app is set to
+  @Getter @Setter private static boolean fabric_configured = true;        //var if fabric is configured or not, true by default
 
   /**
    * setup crash reports
@@ -21,18 +27,19 @@ public class CrashReports {
    * @param fabric_configured true by default
    */
   public static void setup(Context context, boolean fabric_configured) {
+    setFabric_configured(fabric_configured);
     Fabric.with(context, new Crashlytics.Builder().core(
         new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG || !fabric_configured).build()).build());
+    Logger.d(TAG,"Setup of CrashReports");
   }
 
   /**
    * logs exception in crashes
-   *
    * @param throwable exception you want to send
    */
   public static void logException(Throwable throwable) {
-    Crashlytics.logException(throwable);
     Crashlytics.setString("Language", language);
+    Crashlytics.logException(throwable);
     Logger.d(TAG, "logException: " + throwable.toString());
   }
 
@@ -49,7 +56,6 @@ public class CrashReports {
 
   /**
    * logs message in crashes
-   *
    * @param priority priority given to the message
    * @param tag unique tag that identifies the message
    * @param message message you want to send
