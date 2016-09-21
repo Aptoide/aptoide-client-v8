@@ -123,7 +123,7 @@ import rx.subscriptions.CompositeSubscription;
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     //displayable.setOnResumeAction(() -> onViewAttached());
     //displayable.setOnPauseAction(() -> onViewDetached());
-
+    displayable.setInstallButton(actionButton);
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
     }
