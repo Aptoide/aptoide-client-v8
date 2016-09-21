@@ -2,6 +2,7 @@ package cm.aptoide.pt.dataprovider.ws;
 
 import android.content.SharedPreferences;
 
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -20,7 +21,10 @@ public class BaseBodyDecorator {
 
 
 	public BaseBody decorate(BaseBody baseBody){
-		baseBody.setAccessToken(AptoideAccountManager.getAccessToken());
+		String access_token = AptoideAccountManager.getAccessToken();
+		if(TextUtils.isEmpty(access_token)) {
+			baseBody.setAccessToken(AptoideAccountManager.getAccessToken());
+		}
 		baseBody.setAptoideId(idsRepository.getAptoideClientUUID());
 		baseBody.setAptoideVercode(AptoideUtils.Core.getVerCode());
 		baseBody.setCdn("pool");
@@ -32,5 +36,5 @@ public class BaseBodyDecorator {
 
 		return baseBody;
 	}
-	
+
 }
