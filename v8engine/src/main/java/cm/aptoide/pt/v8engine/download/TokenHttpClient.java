@@ -23,11 +23,18 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
   @Override public OkHttpClient customMake() {
     return new OkHttpClient.Builder().addInterceptor(new Interceptor() {
       @Override public Response intercept(Chain chain) throws IOException {
-        Request request = chain.request()
-            .newBuilder()
-            .post(RequestBody.create(MediaType.parse("application/json"),
-                "{\"access_token\" : \"" + AptoideAccountManager.getAccessToken() + "\"}"))
-            .build();
+
+        Request request = chain.request();
+
+        // Paid apps URLs are actually web services. We need to add token information in order
+        // to validate user is allowed to download the app.
+        if (request.url().host().contains("webservices.aptoide.com")) {
+          request = request.newBuilder()
+              .post(RequestBody.create(MediaType.parse("application/json"),
+                  "{\"access_token\" : \"" + AptoideAccountManager.getAccessToken() + "\"}"))
+              .build();
+        }
+
         return chain.proceed(request);
       }
     }).build();

@@ -608,10 +608,7 @@ public class AptoideUtils {
         final String displayLanguage = Locale.getDefault().getDisplayLanguage();
         Logger.e("UnknownFormatConversion",
             "String: " + resourceEntryName + " Locale: " + displayLanguage);
-        //// TODO: 18-05-2016 neuro uncomment
-        //			Crashlytics.log(3, "UnknownFormatConversion", "String: " + resourceEntryName + " Locale:
-        // " +
-        // displayLanguage);
+        CrashReports.logMessage(3, "UnknownFormatConversion", "String: " + resourceEntryName + " Locale: " + displayLanguage);
         result = resources.getString(resId);
       }
       return result;
@@ -1231,9 +1228,8 @@ public class AptoideUtils {
         }
       } catch (Exception e) {
         Logger.printException(e);
-        // FIXME uncomment the following lines
-        //Crashlytics.setString("imageUrl", imageUrl);
-        //Crashlytics.logException(e);
+        CrashReports.logString("imageUrl",imageUrl);
+        CrashReports.logException(e);
       }
 
       return screen;

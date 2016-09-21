@@ -29,6 +29,7 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -190,7 +191,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       windowManager.addView(view, params);
     } catch (Exception e) {
       // TODO: 09-06-2016 neuro
-      //            Crashlytics.logException(e);
+      CrashReports.logException(e);
     }
   }
 

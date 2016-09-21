@@ -99,7 +99,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
               listSearchAppsSuccessRequestListener, errorRequestListener, created);
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-      endlessRecyclerOnScrollListener.onLoadMore(refresh);
+      endlessRecyclerOnScrollListener.onLoadMore(created);
     } else {
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     }
