@@ -39,8 +39,7 @@ import rx.Observable;
 
   public static GetStoreRequest of(String storeName, StoreContext storeContext) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
     final StoreCredentials store = getStore(storeName);
     final Body body = new Body(storeName, WidgetsArgs.createDefault());
@@ -55,8 +54,7 @@ import rx.Observable;
 
   public static GetStoreRequest ofAction(String url) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
     V7Url v7Url = new V7Url(url).remove("getStore");
     Long storeId = v7Url.getStoreId();

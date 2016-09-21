@@ -35,10 +35,7 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
     Body body = new Body(reviewId, helpful ? "up" : "down");
     return new SetReviewRatingRequest((Body) decorator.decorate(body), BASE_HOST);
   }

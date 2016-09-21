@@ -50,10 +50,15 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
     final View googleSignIn = activity.findViewById(R.id.g_sign_in_button);
     final int connectionResult =
         GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
-    final Collection<Integer> badResults =
-        Arrays.asList(ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_DISABLED);
+
+    //final Collection<Integer> badResults =
+    //    Arrays.asList(ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_DISABLED, ConnectionResult.SERVICE_DISABLED);
+    //GoogleLoginUtils.gmsAvailable =
+    //    BuildConfig.GMS_CONFIGURED && !badResults.contains(connectionResult);
+
     GoogleLoginUtils.gmsAvailable =
-        BuildConfig.GMS_CONFIGURED && !badResults.contains(connectionResult);
+        BuildConfig.GMS_CONFIGURED && connectionResult == ConnectionResult.SUCCESS;
+
     if (!gmsAvailable) {
       googleSignIn.setVisibility(View.GONE);
       return;

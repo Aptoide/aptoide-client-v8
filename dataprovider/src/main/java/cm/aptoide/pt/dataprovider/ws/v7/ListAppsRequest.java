@@ -36,8 +36,8 @@ import rx.Observable;
 
   public static ListAppsRequest ofAction(String url) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     V7Url v7Url = new V7Url(url).remove("listApps");
     Long storeId = v7Url.getStoreId();
