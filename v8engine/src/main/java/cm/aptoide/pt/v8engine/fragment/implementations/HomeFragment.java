@@ -110,9 +110,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     Installed installedBackupApps =
         DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
     if (installedBackupApps == null) {
-      AppViewFragment.newInstance(BACKUP_APPS_PACKAGE_NAME, false);
       FragmentUtils.replaceFragmentV4(this.getActivity(),
-          AppViewFragment.newInstance(BACKUP_APPS_PACKAGE_NAME, false));
+          AppViewFragment.newInstance(BACKUP_APPS_PACKAGE_NAME,
+              AppViewFragment.OpenType.OPEN_ONLY));
     } else {
       Intent i =
           getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);

@@ -31,7 +31,7 @@ import rx.Observable;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static GetAppRequest of(String packageName) {
+  public static GetAppRequest of(String packageName, String storeName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
         SecurePreferencesImplementation.getInstance());
@@ -42,7 +42,7 @@ import rx.Observable;
 
     return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
         WebService.getDefaultConverter(), BASE_HOST,
-        (Body) decorator.decorate(new Body(packageName, forceServerRefresh)));
+        (Body) decorator.decorate(new Body(packageName, storeName, forceServerRefresh)));
   }
 
   public static GetAppRequest of(long appId) {
@@ -99,10 +99,17 @@ import rx.Observable;
     @Getter private String packageName;
     @Getter private boolean refresh;
     @Getter @JsonProperty("apk_md5sum") private String md5;
+    @Getter @JsonProperty("store_name") private String storeName;
 
     public Body(Long appId, Boolean refresh) {
       this.appId = appId;
       this.refresh = refresh;
+    }
+
+    public Body(String packageName, String storeName, boolean refresh) {
+      this.packageName = packageName;
+      this.refresh = refresh;
+      this.storeName = storeName;
     }
 
     public Body(String packageName, Boolean refresh) {

@@ -245,7 +245,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     }
     if (itemId == R.id.menu_install) {
       ((FragmentShower) getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(packageName, true));
+          AppViewFragment.newInstance(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
     return super.onOptionsItemSelected(item);

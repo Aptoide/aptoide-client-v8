@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -47,9 +48,12 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
@@ -117,7 +121,7 @@ public class AppViewFragment extends GridRecyclerFragment
   //	private GetAppMeta.App app;
   private long appId;
   private String packageName;
-  private boolean shouldInstall;
+  private OpenType openType;
   private Scheduled scheduled;
   private String storeTheme;
   //
@@ -150,11 +154,14 @@ public class AppViewFragment extends GridRecyclerFragment
   private String appName;
   private String wUrl;
 
-  public static AppViewFragment newInstance(String packageName, boolean shouldInstall) {
+  public static AppViewFragment newInstance(String packageName, String storeName,
+      OpenType openType) {
     Bundle bundle = new Bundle();
-    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putBoolean(BundleKeys.SHOULD_INSTALL.name(), shouldInstall);
-
+    if (!TextUtils.isEmpty(packageName)) {
+      bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    }
+    bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -203,6 +210,10 @@ public class AppViewFragment extends GridRecyclerFragment
     return newInstance(MinimalAd.from(ad));
   }
 
+  public static Fragment newInstance(String packageName, OpenType openType) {
+    return newInstance(packageName, null, openType);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     downloadManager =
@@ -229,7 +240,12 @@ public class AppViewFragment extends GridRecyclerFragment
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
     md5 = args.getString(BundleKeys.MD5.name(), null);
-    shouldInstall = args.getBoolean(BundleKeys.SHOULD_INSTALL.name(), false);
+    openType = (OpenType) args.getSerializable(BundleKeys.SHOULD_INSTALL.name());
+    if (openType == null) {
+      openType = OpenType.OPEN_ONLY;
+    } else {
+      args.remove(BundleKeys.SHOULD_INSTALL.name());
+    }
     minimalAd = args.getParcelable(BundleKeys.MINIMAL_AD.name());
     storeName = args.getString(BundleKeys.STORE_NAME.name());
     sponsored = minimalAd != null;
@@ -265,9 +281,8 @@ public class AppViewFragment extends GridRecyclerFragment
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     GetAppMeta.Media media = app.getMedia();
 
-    installDisplayable =
-        AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            AccessorFactory.getAccessorFor(Installed.class));
+    installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
+        openType == OpenType.OPEN_AND_INSTALL, AccessorFactory.getAccessorFor(Installed.class));
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -324,7 +339,7 @@ public class AppViewFragment extends GridRecyclerFragment
             && data.hasExtra(BillingBinder.RESPONSE_CODE)
             && BillingBinder.RESULT_ITEM_ALREADY_OWNED == data.getIntExtra(
             BillingBinder.RESPONSE_CODE, -1)) {
-          shouldInstall = true;
+          openType = OpenType.OPEN_AND_INSTALL;
           load(true, null);
         } else {
           Logger.i(TAG, "The user canceled.");
@@ -403,66 +418,62 @@ public class AppViewFragment extends GridRecyclerFragment
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(getApp -> {
-            if (storeTheme == null) {
-              storeTheme =
-                  getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
-            }
-
-            // useful data for the schedule updates menu option
-            GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-            scheduled = Scheduled.from(app);
-
-            header.setup(getApp);
-            setupDisplayables(getApp);
-            setupObservables(getApp);
-            showHideMenus(true);
-            setupShare(getApp);
-            finishLoading();
+            setupAppView(getApp);
           }, throwable -> finishLoading(throwable));
     } else if (!TextUtils.isEmpty(md5)) {
-      appRepository.getAppFromMd5(md5, refresh, sponsored)
+      subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(getApp -> {
-            if (storeTheme == null) {
-              storeTheme =
-                  getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
-            }
-            // useful data for the schedule updates menu option
-            GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-            scheduled = Scheduled.from(app);
-
-            header.setup(getApp);
-            setupDisplayables(getApp);
-            setupObservables(getApp);
-            showHideMenus(true);
-            finishLoading();
+            setupAppView(getApp);
           }, throwable -> finishLoading(throwable));
     } else {
       Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(packageName, refresh, sponsored)
+      subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(getApp -> {
-            if (storeTheme == null) {
-              storeTheme =
-                  getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
-            }
-
-            // useful data for the schedule updates menu option
-            GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-            scheduled = Scheduled.from(app);
-
-            header.setup(getApp);
-            setupDisplayables(getApp);
-            setupObservables(getApp);
-            showHideMenus(true);
-            finishLoading();
+            setupAppView(getApp);
           }, throwable -> finishLoading(throwable));
     }
+  }
+
+  private void setupAppView(GetApp getApp) {
+    if (storeTheme == null) {
+      storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+    }
+
+    // useful data for the schedule updates menu option
+    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+    scheduled = Scheduled.from(app);
+
+    header.setup(getApp);
+    setupDisplayables(getApp);
+    setupObservables(getApp);
+    showHideMenus(true);
+    setupShare(getApp);
+    if (openType == OpenType.OPEN_WITH_INSTALL_POPUP) {
+
+      GenericDialogs.createGenericOkCancelMessage(getContext(),
+          Application.getConfiguration().getMarketName(),
+          getContext().getString(R.string.installapp_alrt, appName))
+          .subscribe(new SimpleSubscriber<GenericDialogs.EResponse>() {
+            @Override public void onNext(GenericDialogs.EResponse eResponse) {
+              super.onNext(eResponse);
+              switch (eResponse) {
+                case YES:
+                  installDisplayable.startInstallationProcess();
+                  break;
+                default:
+                  break;
+              }
+            }
+          });
+    }
+    finishLoading();
   }
 
   private void showHideMenus(boolean visible) {
@@ -618,6 +629,21 @@ public class AppViewFragment extends GridRecyclerFragment
     MD5
   }
 
+  public enum OpenType {
+    /**
+     * Only open the appview
+     */
+    OPEN_ONLY,
+    /**
+     * opens the appView and starts the installation
+     */
+    OPEN_AND_INSTALL,
+    /**
+     * open the appView and ask user if want to install the app
+     */
+    OPEN_WITH_INSTALL_POPUP
+  }
+
   private final class AppViewHeader {
 
     private static final String BADGE_DIALOG_TAG = "badgeDialog";
@@ -759,4 +785,3 @@ public class AppViewFragment extends GridRecyclerFragment
     }
   }
 }
-
