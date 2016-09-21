@@ -1,6 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws;
 
-import android.content.SharedPreferences;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -14,10 +14,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor public class BaseBodyDecorator {
 
   private final IdsRepository idsRepository;
-  private final SharedPreferences preferences;
 
   public BaseBody decorate(BaseBody baseBody) {
-    baseBody.setAccessToken(AptoideAccountManager.getAccessToken());
+
+    String access_token = AptoideAccountManager.getAccessToken();
+    if (!TextUtils.isEmpty(access_token)) {
+      baseBody.setAccessToken(access_token);
+    }
+
     baseBody.setAptoideId(idsRepository.getAptoideClientUUID());
     baseBody.setAptoideVercode(AptoideUtils.Core.getVerCode());
     baseBody.setCdn("pool");

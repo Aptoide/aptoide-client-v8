@@ -36,8 +36,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, String storeName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
@@ -59,8 +58,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
@@ -79,10 +77,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       boolean trustedOnly) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(),

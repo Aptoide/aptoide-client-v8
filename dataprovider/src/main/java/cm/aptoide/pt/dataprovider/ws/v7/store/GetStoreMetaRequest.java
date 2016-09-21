@@ -42,8 +42,7 @@ import rx.Observable;
 
   public static GetStoreMetaRequest ofAction(String url) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
     V7Url v7Url = new V7Url(url).remove("getStoreMeta");
     Long storeId = v7Url.getStoreId();
@@ -65,8 +64,7 @@ import rx.Observable;
 
   public static GetStoreMetaRequest of(String storeName, String username, String passwordSha1) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
     final Body body = new Body(storeName);
     body.setStoreUser(username);
@@ -77,8 +75,7 @@ import rx.Observable;
 
   public static GetStoreMetaRequest of(String storeName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
     final StoreCredentials store = getStore(storeName);
     final Body body = new Body(storeName);

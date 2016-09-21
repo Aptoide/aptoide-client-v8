@@ -41,8 +41,7 @@ import rx.Observable;
 
   public static ListAppVersionsRequest of() {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(MAX_LIMIT);
     return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(),
@@ -51,10 +50,7 @@ import rx.Observable;
 
   public static ListAppVersionsRequest of(int limit, int offset) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation
-
-            .getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(limit);
     body.setOffset(offset);
@@ -64,8 +60,7 @@ import rx.Observable;
 
   public static ListAppVersionsRequest of(String packageName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(MAX_LIMIT);
     return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(),
@@ -74,8 +69,7 @@ import rx.Observable;
 
   public static ListAppVersionsRequest of(String packageName, int limit, int offset) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        SecurePreferencesImplementation.getInstance());
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(limit);
     body.setOffset(offset);

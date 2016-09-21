@@ -524,13 +524,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           ProgressDialog genericPleaseWaitDialog =
               GenericDialogs.createGenericPleaseWaitDialog(v.getContext());
           genericPleaseWaitDialog.show();
-          RegisterUserUsingWebServices(callback, genericPleaseWaitDialog);
+          registerUserUsingWebServices(callback, genericPleaseWaitDialog);
         }
       }
     });
   }
 
-  static void RegisterUserUsingWebServices(IRegisterUser callback,
+  static void registerUserUsingWebServices(IRegisterUser callback,
       ProgressDialog genericPleaseWaitDialog) {
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
