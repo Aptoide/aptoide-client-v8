@@ -31,6 +31,8 @@
   <string name="button_header_more">more</string>
   <string name="search">Search</string>
 
+
+  <string name="up_to_date">Up to date</string>
   <string name="update">Update</string>
   <string name="uninstall">Uninstall</string>
   <string name="downgrade">Downgrade</string>
