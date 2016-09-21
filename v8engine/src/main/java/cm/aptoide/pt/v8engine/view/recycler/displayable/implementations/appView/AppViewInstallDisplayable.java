@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -42,6 +43,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private long appId;
   private String packageName;
   private InstalledAccessor installedAccessor;
+  private Button installButton;
 
   public AppViewInstallDisplayable() {
     super();
@@ -87,6 +89,16 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public Observable<Void> downgrade(Context context) {
     return installManager.downgrade(context, (PermissionRequest) context, appId);
+  }
+
+  public void startInstallationProcess() {
+    if (installButton != null) {
+      installButton.performClick();
+    }
+  }
+
+  public void setInstallButton(Button installButton) {
+    this.installButton = installButton;
   }
 
   @Override public Type getType() {
