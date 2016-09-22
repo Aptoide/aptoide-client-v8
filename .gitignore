@@ -37,4 +37,4 @@ captures/
 
 signing.properties
 google-services.json
-fabric.properties
+**/crashlytics-build.properties
