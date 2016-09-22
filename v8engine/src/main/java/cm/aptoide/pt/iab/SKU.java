@@ -20,7 +20,7 @@ import lombok.Getter;
 
   @Getter private String price;
 
-  @Getter @JsonProperty("price_currency") private String currency;
+  @Getter @JsonProperty("price_currency_code") private String currency;
 
   @Getter @JsonProperty("price_amount_micros") private long amount;
 
