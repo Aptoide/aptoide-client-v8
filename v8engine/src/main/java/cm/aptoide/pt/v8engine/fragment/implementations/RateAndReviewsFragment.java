@@ -29,6 +29,7 @@ import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
@@ -94,6 +95,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
           } catch (InterruptedException e) {
+            CrashReports.logString("ReviewID",String.valueOf(reviewId));
+            CrashReports.logException(e);
             e.printStackTrace();
           }
           AptoideUtils.ThreadU.runOnUiThread(() -> {
@@ -245,7 +248,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     }
     if (itemId == R.id.menu_install) {
       ((FragmentShower) getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(packageName, true));
+          AppViewFragment.newInstance(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
     return super.onOptionsItemSelected(item);

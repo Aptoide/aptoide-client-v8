@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import com.trello.rxlifecycle.components.RxFragment;
 import io.realm.Realm;
@@ -34,6 +35,7 @@ public abstract class BaseFragment extends RxFragment
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
+
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -56,6 +58,20 @@ public abstract class BaseFragment extends RxFragment
     realm = DeprecatedDatabase.get();
 
     return inflater.inflate(getContentViewId(), container, false);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    CrashReports.ScreenUtils.getInstance().incrementNumberOfScreens();
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    CrashReports.ScreenUtils.getInstance().decrementNumberOfScreens();
   }
 
   /**
@@ -83,6 +99,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(
           toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -95,6 +112,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
           toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -107,6 +125,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted,
           toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -118,6 +137,7 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale,
           toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
     }
@@ -129,8 +149,18 @@ public abstract class BaseFragment extends RxFragment
       ((PermissionRequest) this.getActivity()).requestDownloadAccess(toRunWhenAccessIsGranted,
           toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
+      CrashReports.logException(e);
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionRequest.class.getName());
+    }
+  }
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser){
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      //CrashReports.ScreenUtils.addScreenToHistory(getClass().getSimpleName());
+      CrashReports.ScreenUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
     }
   }
 }

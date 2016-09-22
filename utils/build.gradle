@@ -2,10 +2,8 @@
  * Copyright (c) 2016.
  * Modified by SithEngineer on 08/07/2016.
  */
-
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'io.fabric'
 
 Properties localProperties = new Properties()
 localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
@@ -22,7 +20,7 @@ android {
   defaultConfig {
     minSdkVersion 9
     consumerProguardFiles "proguard-rules.txt"
-    resValue "string", "fabric.ApiKey", localProperties.FABRIC_API_KEY
+    configureFabric delegate, localProperties.FABRIC_API_KEY
   }
 
   lintOptions {
@@ -49,11 +47,9 @@ android {
 
 }
 
-repositories {
-  mavenCentral()
-  maven { url 'https://maven.fabric.io/public' }
+void configureFabric(androidDelegate, key) {
+  androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
 }
-
 
 dependencies {
 
@@ -86,7 +82,8 @@ dependencies {
   compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"
   // And ProGuard rules for RxJava!
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-  compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
+
+  compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true;
   }
 }

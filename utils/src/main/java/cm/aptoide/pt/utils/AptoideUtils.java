@@ -101,6 +101,7 @@ public class AptoideUtils {
         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
         return info.versionCode;
       } catch (PackageManager.NameNotFoundException e) {
+        CrashReports.logException(e);
         return -1;
       }
     }
@@ -123,6 +124,7 @@ public class AptoideUtils {
       try {
         myversionCode = manager.getPackageInfo(context.getPackageName(), 0).versionCode;
       } catch (PackageManager.NameNotFoundException ignore) {
+        CrashReports.logException(ignore);
       }
 
       String filters =
@@ -162,6 +164,7 @@ public class AptoideUtils {
         return md.digest();
       } catch (NoSuchAlgorithmException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       }
 
       return new byte[0];
@@ -172,6 +175,7 @@ public class AptoideUtils {
         return convToHex(computeSha1(text.getBytes("iso-8859-1")));
       } catch (UnsupportedEncodingException e) {
         Logger.e(TAG, "computeSha1(String)", e);
+        CrashReports.logException(e);
       }
       return "";
     }
@@ -188,8 +192,10 @@ public class AptoideUtils {
         e.printStackTrace();
       } catch (UnsupportedEncodingException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       } catch (InvalidKeyException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       }
       return "";
     }
@@ -243,6 +249,7 @@ public class AptoideUtils {
         is.close();
       } catch (Exception e) {
         e.printStackTrace();
+        CrashReports.logException(e);
         return null;
       }
 
@@ -452,6 +459,7 @@ public class AptoideUtils {
         v1.setDrawingCacheEnabled(false);
       } catch (Exception e) {
         Logger.e("FeedBackActivity-screenshot", "Exception: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       }
 
@@ -465,9 +473,11 @@ public class AptoideUtils {
         fout.close();
       } catch (FileNotFoundException e) {
         Logger.e("FeedBackActivity-screenshot", "FileNotFoundException: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       } catch (IOException e) {
         Logger.e("FeedBackActivity-screenshot", "IOException: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       }
       return imageFile;
@@ -480,6 +490,7 @@ public class AptoideUtils {
         try {
           return valueOf(screen);
         } catch (Exception e) {
+          CrashReports.logException(e);
           return notfound;
         }
       }
@@ -680,6 +691,7 @@ public class AptoideUtils {
             .getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
       } catch (PackageManager.NameNotFoundException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       }
       return null;
     }
@@ -745,6 +757,7 @@ public class AptoideUtils {
         process = Runtime.getRuntime().exec("logcat -d");
       } catch (IOException e) {
         Logger.e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       }
       FileOutputStream outputStream;
@@ -771,6 +784,7 @@ public class AptoideUtils {
         }
         outputStream.write(log.toString().getBytes());
       } catch (IOException e) {
+        CrashReports.logException(e);
         return logsFile;
       }
 
@@ -801,6 +815,7 @@ public class AptoideUtils {
               }
             }
           } catch (Exception e) {
+            CrashReports.logException(e);
             Logger.printException(e);
           }
         }
@@ -852,7 +867,10 @@ public class AptoideUtils {
     public static void runOnIoThread(Runnable runnable) {
       Observable.just(null)
           .observeOn(Schedulers.io())
-          .subscribe(o -> runnable.run(), Logger::printException);
+          .subscribe(o -> runnable.run(), e -> {
+            Logger.printException(e);
+            CrashReports.logException(e);
+          });
     }
 
     public static void runOnUiThread(Runnable runnable) {
@@ -867,6 +885,7 @@ public class AptoideUtils {
       try {
         Thread.sleep(l);
       } catch (InterruptedException e) {
+        CrashReports.logException(e);
         e.printStackTrace();
       }
     }
@@ -1320,6 +1339,7 @@ public class AptoideUtils {
         }
       } catch (Exception e) {
         Logger.printException(e);
+        CrashReports.logException(e);
       }
       return iconUrl;
     }

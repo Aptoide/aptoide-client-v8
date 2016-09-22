@@ -12,6 +12,7 @@ import android.util.Log;
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.V8Engine;
 import dalvik.system.DexFile;
@@ -68,10 +69,12 @@ public enum DisplayableLoader {
               Displayable d = (Displayable) displayableClass.newInstance();
               displayableHashMap.put(d.getType(), (Class<? extends Displayable>) displayableClass);
             } catch (Exception e) {
+              CrashReports.logException(e);
               Log.e(TAG, "", e);
             }
           }
         } catch (Exception e) {
+          CrashReports.logException(e);
           Log.e(TAG, "", e);
         } finally {
           if (dexFile != null) {
@@ -80,6 +83,7 @@ public enum DisplayableLoader {
         }
       }
     } catch (Exception e) {
+      CrashReports.logException(e);
       Log.e(TAG, "", e);
     }
 
@@ -109,8 +113,10 @@ public enum DisplayableLoader {
     try {
       return displayableClass.newInstance();
     } catch (InstantiationException e) {
+      CrashReports.logException(e);
       e.printStackTrace();
     } catch (IllegalAccessException e) {
+      CrashReports.logException(e);
       e.printStackTrace();
     }
 
@@ -124,6 +130,7 @@ public enum DisplayableLoader {
       try {
         return ((DisplayablePojo<T>) displayable).setPojo(pojo);
       } catch (ClassCastException e) {
+        CrashReports.logException(e);
         Logger.e(TAG, "Trying to instantiate a DisplayablePojo with a wrong type!");
       }
     } else {

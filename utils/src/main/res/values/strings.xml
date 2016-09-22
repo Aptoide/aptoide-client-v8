@@ -6,6 +6,7 @@
 <resources>
   <string name="app_name">Utils</string>
   <string name="please_wait">Please wait…</string>
+  <string name="continue_option">Continue</string>
 
   <!-- DateUtils -->
   <string name="WidgetProvider_timestamp_today">Today</string>

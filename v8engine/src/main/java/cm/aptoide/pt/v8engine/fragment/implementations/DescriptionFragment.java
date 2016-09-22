@@ -19,6 +19,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
 
@@ -102,6 +103,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         }
       }
     } catch (NullPointerException e) {
+      CrashReports.logException(e);
       Logger.e(TAG, e);
     }
     setDataUnavailable();
@@ -115,6 +117,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         return;
       }
     } catch (NullPointerException e) {
+      CrashReports.logException(e);
       Logger.e(TAG, e);
     }
     setDataUnavailable();

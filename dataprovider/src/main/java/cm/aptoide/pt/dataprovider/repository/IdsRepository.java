@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.provider.Settings;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
 import java.util.UUID;
@@ -65,6 +66,7 @@ import lombok.AllArgsConstructor;
       try {
         gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
       } catch (Exception e) {
+        CrashReports.logException(e);
         e.printStackTrace();
       }
     }

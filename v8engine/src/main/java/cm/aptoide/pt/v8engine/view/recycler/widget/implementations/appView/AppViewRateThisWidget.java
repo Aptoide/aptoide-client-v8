@@ -14,6 +14,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateThisDisplayable;
@@ -67,18 +68,21 @@ import java.util.Locale;
       }
     } catch (Exception ex) {
       Logger.e(TAG, ex);
+      CrashReports.logException(ex);
     }
 
     try {
       comunityRatingIndicator.bindView(pojo);
     } catch (Exception ex) {
       Logger.e(TAG, ex);
+      CrashReports.logException(ex);
     }
 
     try {
       flagThisApp.bindView(pojo);
     } catch (Exception ex) {
       Logger.e(TAG, ex);
+      CrashReports.logException(ex);
     }
   }
 
@@ -125,6 +129,7 @@ import java.util.Locale;
         }
       } catch (Exception e) {
         Logger.e(TAG, e);
+        CrashReports.logException(e);
       }
     }
 
@@ -266,6 +271,7 @@ import java.util.Locale;
         }
       } catch (Exception e) {
         Logger.e(TAG, e);
+        CrashReports.logException(e);
       }
     }
 

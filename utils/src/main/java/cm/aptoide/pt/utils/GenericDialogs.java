@@ -120,6 +120,42 @@ public class GenericDialogs {
     });
   }
 
+  public static Observable<EResponse> createGenericContinueCancelMessage(Context context, String title,
+      String message) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+			/*
+			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
+					.setMessage(message)
+					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+						subscriber.onNext(EResponse.YES);
+						subscriber.onCompleted();
+					})
+					.setOnCancelListener(dialog -> {
+						subscriber.onNext(EResponse.CANCEL);
+						subscriber.onCompleted();
+					})
+					.create();
+			// cleaning up
+			subscriber.add(Subscriptions.create(ad::dismiss));
+			ad.show();
+			*/
+
+      final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
+      dialog.setTitle(title).setMessage(message).setPositiveButton(R.string.continue_option, v -> {
+        subscriber.onNext(EResponse.YES);
+        subscriber.onCompleted();
+        dialog.dismiss();
+      }).setNegativeButton(android.R.string.cancel, v -> {
+        dialog.dismiss();
+        subscriber.onNext(EResponse.CANCEL);
+        subscriber.onCompleted();
+      });
+      // cleaning up
+      subscriber.add(Subscriptions.create(dialog::dismiss));
+      dialog.show();
+    });
+  }
+
   /**
    * Creates an endless progressDialog to be shown when user is waiting for something
    *

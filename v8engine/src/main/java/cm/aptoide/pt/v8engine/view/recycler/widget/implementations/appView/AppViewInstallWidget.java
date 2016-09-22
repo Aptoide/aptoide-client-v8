@@ -37,7 +37,9 @@ import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
@@ -123,7 +125,7 @@ import rx.subscriptions.CompositeSubscription;
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     //displayable.setOnResumeAction(() -> onViewAttached());
     //displayable.setOnPauseAction(() -> onViewDetached());
-
+    displayable.setInstallButton(actionButton);
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
     }
@@ -359,23 +361,40 @@ import rx.subscriptions.CompositeSubscription;
           ((PermissionRequest) contextWrapper.getBaseContext());
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
-        ShowMessage.asSnack(view, R.string.downgrading_msg);
 
-        DownloadFactory factory = new DownloadFactory();
-        Download appDownload = factory.create(app);
-        downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
-          if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-            //final String packageName = app.getPackageName();
-            //final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+        showMessageOKCancel(getContext().getResources().getString(R.string.downgrade_warning_dialog), new SimpleSubscriber<GenericDialogs.EResponse>() {
 
-            displayable.downgrade(getContext()).subscribe(aVoid -> {
-            }, throwable -> throwable.printStackTrace());
+          @Override public void onNext(GenericDialogs.EResponse eResponse) {
+            super.onNext(eResponse);
+            if (eResponse == GenericDialogs.EResponse.YES) {
+              ShowMessage.asSnack(view, R.string.downgrading_msg);
+
+              DownloadFactory factory = new DownloadFactory();
+              Download appDownload = factory.create(app);
+              downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+                if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+                  //final String packageName = app.getPackageName();
+                  //final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+
+                  displayable.downgrade(getContext()).subscribe(aVoid -> {
+                  }, throwable -> throwable.printStackTrace());
+                }
+              });
+              Analytics.Rollback.downgradeDialogContinue();
+            } else {
+              Analytics.Rollback.downgradeDialogCancel();
+            }
           }
         });
       }, () -> {
         ShowMessage.asSnack(view, R.string.needs_permission_to_fs);
       });
     };
+  }
+
+  private void showMessageOKCancel(String message,
+      SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
+    GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message).subscribe(subscriber);
   }
 
   public View.OnClickListener installOrUpgradeListener(GetAppMeta.App app,

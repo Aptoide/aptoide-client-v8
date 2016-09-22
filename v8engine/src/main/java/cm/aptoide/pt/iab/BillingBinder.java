@@ -12,6 +12,7 @@ import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
@@ -72,6 +73,7 @@ import rx.Observable;
           .toBlocking()
           .first();
     } catch (Exception exception) {
+      CrashReports.logException(exception);
       Logger.e("BillingBinder", exception.getMessage());
       exception.printStackTrace();
 
@@ -103,6 +105,7 @@ import rx.Observable;
             try {
               return Observable.just(serializer.serializeProducts(products));
             } catch (IOException e) {
+              CrashReports.logException(e);
               return Observable.error(e);
             }
           }).toBlocking().first();
@@ -111,6 +114,7 @@ import rx.Observable;
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
       return result;
     } catch (Exception exception) {
+      CrashReports.logException(exception);
       Logger.e("BillingBinder", exception.getMessage());
       exception.printStackTrace();
 
@@ -143,6 +147,7 @@ import rx.Observable;
 
         result.putParcelable(BUY_INTENT, pendingIntent);
       } catch (Exception exception) {
+        CrashReports.logException(exception);
         Logger.e("BillingBinder", exception.getMessage());
         exception.printStackTrace();
 
@@ -187,6 +192,7 @@ import rx.Observable;
       result.putInt(RESPONSE_CODE, RESULT_OK);
       return result;
     } catch (Exception exception) {
+      CrashReports.logException(exception);
       Logger.e("BillingBinder", exception.getMessage());
       exception.printStackTrace();
 
@@ -203,6 +209,7 @@ import rx.Observable;
           .toBlocking()
           .first();
     } catch (Exception exception) {
+      CrashReports.logException(exception);
       Logger.e("BillingBinder", exception.getMessage());
       exception.printStackTrace();
 

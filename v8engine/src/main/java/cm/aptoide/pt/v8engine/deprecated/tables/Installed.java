@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import io.realm.RealmObject;
 
 /**
@@ -64,6 +65,7 @@ public final class Installed extends BaseTable {
           return new cm.aptoide.pt.database.realm.Installed(packageInfo);
         }
       } catch (PackageManager.NameNotFoundException ex) {
+        CrashReports.logException(ex);
         Logger.e(TAG, ex);
       }
     }

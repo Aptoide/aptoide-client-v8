@@ -12,6 +12,7 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
@@ -298,6 +299,7 @@ public enum DisplayableType {
     try {
       return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
     } catch (Exception e) {
+      CrashReports.logException(e);
       String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
       Logger.e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
@@ -308,6 +310,7 @@ public enum DisplayableType {
     try {
       return displayableClass.newInstance();
     } catch (Exception e) {
+      CrashReports.logException(e);
       String errMsg =
           String.format("Error instantiating displayable '%s'", displayableClass.getName());
       Logger.e(TAG, errMsg, e);

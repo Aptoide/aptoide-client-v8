@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
@@ -36,6 +37,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.Cleanup;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 20-06-2016.
@@ -50,6 +52,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
+
+    if (clickUrl == null) {
+      Logger.d("ExtractReferrer", "No click_url for packageName " + packageName);
+      return;
+    }
 
     if (!AptoideUtils.ThreadU.isUiThread()) {
       throw new RuntimeException("ExtractReferrer must be run on UI thread!");
@@ -161,8 +168,12 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
                 if (retries > 0) {
                   GetAdsRequest.ofSecondTry(packageName)
-                      .execute(getAdsResponse -> extractReferrer(minimalAd, retries - 1,
-                          broadcastReferrer));
+                      .observe()
+                      .filter(ReferrerUtils::hasAds)
+                      .observeOn(AndroidSchedulers.mainThread())
+                      .subscribe(getAdsResponse -> extractReferrer(
+                          MinimalAd.from(getAdsResponse.getAds().get(0)), retries - 1,
+                          broadcastReferrer), CrashReports::logException);
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
                   excludedNetworks.remove(packageName);
@@ -193,6 +204,13 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       // TODO: 09-06-2016 neuro
       CrashReports.logException(e);
     }
+  }
+
+  private static Boolean hasAds(GetAdsResponse getAdsResponse) {
+    return getAdsResponse != null
+        && getAdsResponse.getAds() != null
+        && getAdsResponse.getAds().size() > 0
+        && getAdsResponse.getAds().get(0) != null;
   }
 
   private static String getReferrer(String uriAsString) {
