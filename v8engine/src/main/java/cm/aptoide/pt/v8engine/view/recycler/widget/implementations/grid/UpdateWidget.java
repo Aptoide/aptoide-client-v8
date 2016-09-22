@@ -93,8 +93,8 @@ import rx.subscriptions.CompositeSubscription;
     updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
         AppViewFragment.newInstance(updateDisplayable.getAppId())));
 
-    updateRowRelativeLayout.setOnLongClickListener(v -> {
-      AlertDialog.Builder builder = new AlertDialog.Builder(updateRowRelativeLayout.getContext());
+    final View.OnLongClickListener longClickListener = v -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
       builder.setTitle(R.string.ignore_update)
           .setCancelable(true)
           .setNegativeButton(R.string.no, null)
@@ -102,7 +102,7 @@ import rx.subscriptions.CompositeSubscription;
             if (which == DialogInterface.BUTTON_POSITIVE) {
               @Cleanup Realm realm1 = DeprecatedDatabase.get();
               DeprecatedDatabase.UpdatesQ.setExcluded(packageName, true, realm1);
-              updateRowRelativeLayout.setVisibility(View.GONE);
+              v.setVisibility(View.GONE);
             }
             dialog.dismiss();
           });
@@ -110,7 +110,9 @@ import rx.subscriptions.CompositeSubscription;
       builder.create().show();
 
       return true;
-    });
+    };
+
+    updateRowRelativeLayout.setOnLongClickListener(longClickListener);
   }
 
   @Override public void onViewAttached() {
