@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.base;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 
@@ -20,9 +21,9 @@ public class BaseGridLayoutManager extends GridLayoutManager {
     setSpanSizeLookup(new SpanSizeLookup(baseAdapter));
   }
 
-  private static class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
+  private class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 
-    private BaseAdapter baseAdapter;
+    private final BaseAdapter baseAdapter;
 
     public SpanSizeLookup(BaseAdapter baseAdapter) {
       this.baseAdapter = baseAdapter;
@@ -30,7 +31,21 @@ public class BaseGridLayoutManager extends GridLayoutManager {
 
     @Override public int getSpanSize(int position) {
       final Displayable displayable = baseAdapter.getDisplayable(position);
-      return displayable != null ? displayable.getSpanSize() : 1;
+
+      if (displayable == null) {
+        return 1;
+      } else {
+        if (displayable.getSpanSize() <= getSpanCount()) {
+          return displayable.getSpanSize();
+        } else {
+          CrashReports.logException(new IllegalArgumentException("Displayable "
+              + displayable.getClass().getSimpleName()
+              + " at position "
+              + position
+              + " spanSize > getSpanCount()! "));
+          return getSpanCount();
+        }
+      }
     }
   }
 }
