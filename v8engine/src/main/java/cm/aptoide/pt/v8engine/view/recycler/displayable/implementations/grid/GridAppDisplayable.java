@@ -10,6 +10,7 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import lombok.Getter;
 
 /**
  * Created by sithengineer on 28/04/16.
@@ -18,11 +19,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridAppDisplayable extends DisplayablePojo<App> {
 
+  @Getter private String widgetGroupTag;
+
   public GridAppDisplayable() {
   }
 
-  public GridAppDisplayable(App pojo) {
+  public GridAppDisplayable(App pojo, String widgetGroupTag) {
     super(pojo);
+    this.widgetGroupTag = widgetGroupTag;
   }
 
   @Override public Type getType() {

@@ -899,6 +899,9 @@ public class Analytics {
     }
 
     public static void addStepToList(String step) {
+
+      Log.d(TAG, "addStepToList() called with: step = [" + step + "]");
+
       boolean flag = STEPS.size() >= NUMBER_OF_STEPS_TO_RECORD ? removeLeastRecentlyAddedElement()
           : STEPS.add(step);
       if (!flag) {

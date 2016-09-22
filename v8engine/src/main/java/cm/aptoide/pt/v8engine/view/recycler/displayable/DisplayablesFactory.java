@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
@@ -176,9 +177,7 @@ public class DisplayablesFactory {
       }
 
       for (App app : apps) {
-        DisplayablePojo<App> diplayable =
-            (DisplayablePojo<App>) DisplayableType.newDisplayable((wsWidget.getType()));
-        diplayable.setPojo(app);
+        DisplayablePojo<App> diplayable = new GridAppDisplayable(app, wsWidget.getTag());
         displayables.add(diplayable);
       }
     }
