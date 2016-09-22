@@ -106,8 +106,7 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override protected void assignViews(View itemView) {
     downloadProgressLayout = (RelativeLayout) itemView.findViewById(R.id.download_progress_layout);
-    installAndLatestVersionLayout =
-        (RelativeLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
+    installAndLatestVersionLayout = (RelativeLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
     shareInTimeline = (CheckBox) itemView.findViewById(R.id.share_in_timeline);
     downloadProgress = (ProgressBar) itemView.findViewById(R.id.download_progress);
     textProgress = (TextView) itemView.findViewById(R.id.text_progress);
@@ -367,11 +366,16 @@ import rx.subscriptions.CompositeSubscription;
           @Override public void onNext(GenericDialogs.EResponse eResponse) {
             super.onNext(eResponse);
             if (eResponse == GenericDialogs.EResponse.YES) {
-              ShowMessage.asSnack(view, R.string.downgrading_msg);
 
+              ShowMessage.asSnack(view, R.string.downgrading_msg);
               DownloadFactory factory = new DownloadFactory();
               Download appDownload = factory.create(app);
               downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+                /*if (!setupDownloadControlsRunned) {
+                  // TODO: 09/09/16 refactor this
+                  setupDownloadControls(app, appDownload, displayable);
+                }*/
+
                 if (download.getOverallDownloadStatus() == Download.COMPLETED) {
                   //final String packageName = app.getPackageName();
                   //final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
@@ -571,6 +575,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   private void setDownloadBarVisible(boolean visible) {
+    // TODO: 22/09/16 diogo.loureiro crashes on downgrade
     installAndLatestVersionLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
     downloadProgressLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
   }
