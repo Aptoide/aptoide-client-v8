@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.receivers;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.UriMatcher;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -52,7 +54,16 @@ import org.xml.sax.XMLReader;
  * Created by neuro on 10-08-2016.
  */
 public class DeepLinkIntentReceiver extends AppCompatActivity {
+  public static final String AUTHORITY = "cm.aptoide.pt";
+  public static final int DEEPLINK_ID = 1;
+  public static final String DEEP_LINK = "deeplink";
   private static final String TAG = DeepLinkIntentReceiver.class.getSimpleName();
+  private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+  static {
+    sURIMatcher.addURI(AUTHORITY, DEEP_LINK, DEEPLINK_ID);
+  }
+
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
@@ -64,7 +75,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
-    // TODO: 10-08-2016 jdandrade
     Analytics.ApplicationLaunch.website(uri);
 
     if (uri.startsWith("aptoiderepo")) {
@@ -176,9 +186,24 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       downloadMyApp();
     } else if (uri.startsWith("aptoideinstall://")) {
       parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
+    } else if (uri.startsWith("aptoide://")) {
+      Uri parse = Uri.parse(uri);
+      switch (sURIMatcher.match(parse)) {
+        case DEEPLINK_ID:
+          startGenericDeepLink(parse);
+          break;
+      }
+      finish();
     } else {
       finish();
     }
+  }
+
+  private void startGenericDeepLink(Uri parse) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.GENERIC_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.URI, parse);
+    startActivity(intent);
   }
 
   private void parseAptoideInstallUri(String substring) {
@@ -386,6 +411,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String FROM_AD = "fromAd";
     public static final String APP_VIEW_FRAGMENT = "appViewFragment";
     public static final String SEARCH_FRAGMENT = "searchFragment";
+    public static final String GENERIC_DEEPLINK = "generic_deeplink";
   }
 
   public static class DeepLinksKeys {
@@ -394,6 +420,15 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String PACKAGE_NAME_KEY = "packageName";
     public static final String STORENAME_KEY = "storeName";
     public static final String SHOW_AUTO_INSTALL_POPUP = "show_auto_install_popup";
+    public static final String URI = "uri";
+
+    //deep link query parameters
+    public static final String ACTION = "action";
+    public static final String TYPE = "type";
+    public static final String NAME = "name";
+    public static final String LAYOUT = "layout";
+    public static final String TITLE = "title";
+    public static final String STORE_THEME = "storetheme";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

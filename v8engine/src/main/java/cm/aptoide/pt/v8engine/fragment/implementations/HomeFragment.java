@@ -60,14 +60,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   @Getter @Setter private Event.Name desiredViewPagerItem = null;
   private ChangeTabReceiver receiver;
 
-  public static HomeFragment newInstance(String storeName) {
-    return newInstance(storeName, StoreContext.store);
-  }
-
-  public static HomeFragment newInstance(String storeName, StoreContext storeContext) {
+  public static HomeFragment newInstance(String storeName, StoreContext storeContext,
+      String storeTheme) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);
     args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
+    args.putSerializable(BundleCons.STORE_THEME, storeTheme);
     HomeFragment fragment = new HomeFragment();
     fragment.setArguments(args);
     return fragment;

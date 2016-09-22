@@ -9,13 +9,18 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -26,6 +31,7 @@ import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
@@ -35,6 +41,8 @@ import cm.aptoide.pt.v8engine.services.PullingContentService;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 /**
@@ -46,7 +54,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   @Override protected android.support.v4.app.Fragment createFragment() {
     return HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(),
-        StoreContext.home);
+        StoreContext.home, "default");
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -101,6 +109,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
       fromTimelineDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink(intent);
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
+      genericDeepLink(intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else {
       Analytics.ApplicationLaunch.launcher();
     }
@@ -153,6 +163,31 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
   private void newUpdatesDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.newUpdatesNotification();
     setMainPagerPosition(Event.Name.myUpdates);
+  }
+
+  private void genericDeepLink(Uri uri) {
+    Event event = new Event();
+    String queryType = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TYPE);
+    String queryLayout = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.LAYOUT);
+    String queryName = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.NAME);
+    String queryAction = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.ACTION);
+    if (!TextUtils.isEmpty(queryType) && !TextUtils.isEmpty(queryLayout) && !TextUtils.isEmpty(
+        queryName) && !TextUtils.isEmpty(queryAction)) {
+      try {
+        queryAction = URLDecoder.decode(queryAction, "UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+      }
+      event.setAction(queryAction != null ? queryAction.replace(V7.BASE_HOST, "") : null);
+      event.setType(Event.Type.valueOf(queryType));
+      event.setName(Event.Name.valueOf(queryName));
+      GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
+      data.setLayout(Layout.valueOf(queryLayout));
+      event.setData(data);
+      pushFragmentV4(StoreGridRecyclerFragment.newInstance(event,
+          uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
+          uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME)));
+    }
   }
 
   private void setMainPagerPosition(Event.Name name) {
