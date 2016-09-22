@@ -15,6 +15,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.Arrays;
@@ -126,6 +127,7 @@ public class StoreUtils {
       if (errorRequestListener != null) {
         errorRequestListener.onError(e);
       }
+      CrashReports.logException(e);
     });
   }
 

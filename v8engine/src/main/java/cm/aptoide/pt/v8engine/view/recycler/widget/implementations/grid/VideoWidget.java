@@ -43,6 +43,8 @@ public class VideoWidget extends Widget<VideoDisplayable> {
   private View videoHeader;
   private TextView relatedTo;
 
+  private String appName;
+
   public VideoWidget(View itemView) {
     super(itemView);
   }
@@ -75,7 +77,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
-    relatedTo.setText(displayable.getAppRelatedText(getContext()));
+    //relatedTo.setText(displayable.getAppRelatedText(getContext()));
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       media_layout.setForeground(
@@ -84,12 +86,12 @@ public class VideoWidget extends Widget<VideoDisplayable> {
       media_layout.setForeground(getContext().getResources().getDrawable(R.color.overlay_black));
     }
 
-    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
-      getAppButton.setVisibility(View.VISIBLE);
-      getAppButton.setText(displayable.getAppText(getContext()));
-      getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(displayable.getAppId())));
-    }
+    //if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
+    //  getAppButton.setVisibility(View.VISIBLE);
+    //  getAppButton.setText(displayable.getAppText(getContext()));
+    //  getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
+    //      AppViewFragment.newInstance(displayable.getAppId())));
+    //}
 
     //		CustomTabsHelper.getInstance()
     //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
@@ -116,12 +118,35 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
+      subscriptions.add(displayable.getRelatedToApplication().subscribe(installeds -> {
+        if (installeds != null && !installeds.isEmpty()) {
+          appName = installeds.get(0).getName();
+        } else {
+          setAppNameToFirstLinkedApp();
+        }
+        if (appName != null) {
+          relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+        }
+      }, throwable -> {
+        setAppNameToFirstLinkedApp();
+        if (appName != null) {
+          relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+        }
+        throwable.printStackTrace();
+      }));
+
       subscriptions.add(RxView.clicks(videoHeader).subscribe(click -> {
         displayable.getBaseLink().launch(getContext());
         Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
             displayable.getVideoTitle(), displayable.getTitle(),
             Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
       }));
+    }
+  }
+
+  private void setAppNameToFirstLinkedApp() {
+    if (!displayable.getRelatedToAppsList().isEmpty()) {
+      appName = displayable.getRelatedToAppsList().get(0).getName();
     }
   }
 

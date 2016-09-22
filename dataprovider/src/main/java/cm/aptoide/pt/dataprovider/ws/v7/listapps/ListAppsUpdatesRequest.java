@@ -19,6 +19,7 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -124,6 +125,7 @@ import rx.schedulers.Schedulers;
       try {
         countDownLatch.await();
       } catch (InterruptedException e) {
+        CrashReports.logException(e);
         e.printStackTrace();
       }
 

@@ -14,6 +14,7 @@ import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.CrashReports;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -81,7 +82,7 @@ public class DownloadServiceHelper {
   public Observable<Download> startDownload(PermissionRequest permissionRequest,
       Download download) {
     return startDownload(AccessorFactory.getAccessorFor(Download.class), permissionRequest,
-        download);
+        download).doOnError(CrashReports::logException);
   }
 
   private void startDownloadService(long appId, String action) {

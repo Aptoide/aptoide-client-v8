@@ -159,7 +159,7 @@ public abstract class V8Engine extends DataProvider {
       Logger.w(TAG, "application has debug flag active");
     }
 
-    CrashReports.setup(getContext(),BuildConfig.FABRIC_CONFIGURED);
+    CrashReports.setup(getContext());
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();

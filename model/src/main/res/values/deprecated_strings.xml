@@ -399,6 +399,7 @@
   <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
   <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
   <string name="change_theme">Change theme</string>
+  <string name="change_theme_soon">Coming soon</string>
   <string name="theme">Themes</string>
   <string name="root">Root</string>
   <string name="allow_root">Allow root installation</string>

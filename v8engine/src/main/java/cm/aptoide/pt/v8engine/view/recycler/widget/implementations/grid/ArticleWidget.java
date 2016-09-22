@@ -19,6 +19,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -38,6 +39,8 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private View articleHeader;
   private ArticleDisplayable displayable;
   private TextView relatedTo;
+
+  private String appName;
 
   public ArticleWidget(View itemView) {
     super(itemView);
@@ -69,11 +72,11 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
-    relatedTo.setText(displayable.getAppRelatedToText(getContext()));
+    //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
 
-    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
+    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
       getAppButton.setVisibility(View.VISIBLE);
-      getAppButton.setText(displayable.getAppText(getContext()));
+      getAppButton.setText(displayable.getAppText(getContext(), appName));
       getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
           AppViewFragment.newInstance(displayable.getAppId())));
     }
@@ -104,12 +107,36 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
+      subscriptions.add(displayable.getRelatedToApplication().subscribe(installeds -> {
+        if (installeds != null && !installeds.isEmpty()) {
+          appName = installeds.get(0).getName();
+        } else {
+          setAppNameToFirstLinkedApp();
+        }
+        if (appName != null) {
+          relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+        }
+      }, throwable -> {
+        setAppNameToFirstLinkedApp();
+        if (appName != null) {
+          relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+        }
+        throwable.printStackTrace();
+      }));
+
+
       subscriptions.add(RxView.clicks(articleHeader).subscribe(click -> {
         displayable.getDeveloperLink().launch(getContext());
         Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
             displayable.getArticleTitle(), displayable.getTitle(),
             Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
       }));
+    }
+  }
+
+  private void setAppNameToFirstLinkedApp() {
+    if (!displayable.getRelatedToAppsList().isEmpty()) {
+      appName = displayable.getRelatedToAppsList().get(0).getName();
     }
   }
 

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.websocket;
 
 import android.util.Log;
+import cm.aptoide.pt.utils.CrashReports;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -322,6 +323,7 @@ public class HybiParser {
     try {
       return new String(buffer, "UTF-8");
     } catch (UnsupportedEncodingException e) {
+      CrashReports.logException(e);
       throw new RuntimeException(e);
     }
   }
@@ -334,6 +336,7 @@ public class HybiParser {
     try {
       return (string).getBytes("UTF-8");
     } catch (UnsupportedEncodingException e) {
+      CrashReports.logException(e);
       throw new RuntimeException(e);
     }
   }

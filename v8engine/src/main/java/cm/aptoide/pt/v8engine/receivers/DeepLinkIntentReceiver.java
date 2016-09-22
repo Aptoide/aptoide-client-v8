@@ -22,6 +22,7 @@ import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
@@ -134,6 +135,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         try {
           ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
         } catch (IOException e) {
+          CrashReports.logException(e);
           Logger.printException(e);
         }
 
@@ -158,6 +160,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       try {
         params = AptoideUtils.StringU.splitQuery(URI.create(uri));
       } catch (UnsupportedEncodingException e) {
+        CrashReports.logException(e);
         Logger.printException(e);
       }
 
@@ -174,6 +177,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
             long id = Long.parseLong(uid);
             startFromAppView(id);
           } catch (NumberFormatException e) {
+            CrashReports.logException(e);
             Logger.printException(e);
             ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
           }
@@ -226,6 +230,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
           startFromAppView(id);
           return;
         } catch (NumberFormatException e) {
+          CrashReports.logException(e);
           Logger.printException(e);
         }
       }
@@ -309,6 +314,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
+      CrashReports.logException(e);
       Logger.printException(e);
     }
   }
@@ -375,6 +381,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       getit.close();
       saveit.close();
     } catch (Exception e) {
+      CrashReports.logException(e);
       Logger.printException(e);
     }
   }
@@ -389,6 +396,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
+      CrashReports.logException(e);
       Logger.printException(e);
     }
   }
@@ -441,6 +449,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         downloadMyappFile(params[0]);
         parseXmlMyapp(TMP_MYAPP_FILE);
       } catch (Exception e) {
+        CrashReports.logException(e);
         Logger.printException(e);
       }
 

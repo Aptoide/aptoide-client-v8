@@ -288,5 +288,8 @@
   <string name="newer_version_available">Newer version available</string>
 
   <string name="add_store">Add store</string>
+  <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
+
+  <string name="displayable_social_timeline_similar_to">similar to %1$s</string>
 
 </resources>

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.networkclient;
 
+import cm.aptoide.pt.utils.CrashReports;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;
@@ -98,6 +99,7 @@ public class DiskLruUnitTest {
 					resp1.body().source().readString(charset)
 			);
 		} catch (Exception e) {
+			CrashReports.logException(e);
 			e.printStackTrace();
 			fail();
 		}
@@ -117,6 +119,7 @@ public class DiskLruUnitTest {
 
 			assertEquals("response body content after get() is not the same", expectedResponseBodyData, currentData);
 		} catch (Exception e) {
+			CrashReports.logException(e);
 			e.printStackTrace();
 			fail();
 		}

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
@@ -22,6 +23,7 @@ import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
+import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
@@ -47,6 +49,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.App
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
@@ -80,6 +83,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
   private PackageRepository packageRepository;
   private List<String> packages;
   private Installer installManager;
+  private AccessorFactory accessorFactory;
 
   public static AppsTimelineFragment newInstance(String action) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -108,6 +112,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)));
+    accessorFactory = new AccessorFactory();
   }
 
   @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
@@ -148,8 +153,8 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
       }
     }
 
-    subscription = displayableObservable.compose(
-        bindUntilEvent(FragmentEvent.DESTROY_VIEW)).observeOn(AndroidSchedulers.mainThread())
+    subscription = displayableObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(items -> addItems(items), throwable -> finishLoading(throwable));
   }
 
@@ -202,7 +207,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
         .flatMap(datalist -> Observable.just(datalist)
             .flatMapIterable(dataList -> dataList.getList())
             .map(card -> cardToDisplayable(card, dateCalculator, spannableFactory, downloadFactory,
-                downloadManager, linksHandlerFactory))
+                downloadManager, linksHandlerFactory, accessorFactory))
             .toList()
             .map(list -> createDisplayableDataList(datalist, list)));
   }
@@ -299,13 +304,14 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
   @NonNull private Displayable cardToDisplayable(TimelineCard card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-      DownloadServiceHelper downloadManager, LinksHandlerFactory linksHandlerFactory) {
+      DownloadServiceHelper downloadManager, LinksHandlerFactory linksHandlerFactory,
+      AccessorFactory accessorFactory) {
     if (card instanceof Article) {
       return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
-          linksHandlerFactory);
+          linksHandlerFactory, accessorFactory);
     } else if (card instanceof Video) {
       return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
-          linksHandlerFactory);
+          linksHandlerFactory, accessorFactory);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
@@ -316,8 +322,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator,
           spannableFactory);
+    } else if (card instanceof Similar) {
+      return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory);
     }
     throw new IllegalArgumentException(
-        "Only articles, features, store latest apps, app updates and videos supported.");
+        "Only articles, features, store latest apps, app updates, videos and recommendations supported.");
   }
 }
