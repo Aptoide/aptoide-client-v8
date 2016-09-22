@@ -619,7 +619,8 @@ public class AptoideUtils {
         final String displayLanguage = Locale.getDefault().getDisplayLanguage();
         Logger.e("UnknownFormatConversion",
             "String: " + resourceEntryName + " Locale: " + displayLanguage);
-        CrashReports.logMessage(3, "UnknownFormatConversion", "String: " + resourceEntryName + " Locale: " + displayLanguage);
+        CrashReports.logMessage(3, "UnknownFormatConversion",
+            "String: " + resourceEntryName + " Locale: " + displayLanguage);
         result = resources.getString(resId);
       }
       return result;
@@ -865,12 +866,10 @@ public class AptoideUtils {
   public static final class ThreadU {
 
     public static void runOnIoThread(Runnable runnable) {
-      Observable.just(null)
-          .observeOn(Schedulers.io())
-          .subscribe(o -> runnable.run(), e -> {
-            Logger.printException(e);
-            CrashReports.logException(e);
-          });
+      Observable.just(null).observeOn(Schedulers.io()).subscribe(o -> runnable.run(), e -> {
+        Logger.printException(e);
+        CrashReports.logException(e);
+      });
     }
 
     public static void runOnUiThread(Runnable runnable) {
@@ -1102,7 +1101,6 @@ public class AptoideUtils {
 
     static {
       mStoreIconSizes = new HashMap<>();
-      mStoreIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "450x450");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "300x300");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_HIGH, "225x225");
@@ -1112,7 +1110,6 @@ public class AptoideUtils {
 
     static {
       mIconSizes = new HashMap<>();
-      mIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "");
       mIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "288x288");
       mIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "192x192");
       mIconSizes.put(DisplayMetrics.DENSITY_HIGH, "144x144");
@@ -1192,13 +1189,13 @@ public class AptoideUtils {
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
             return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
           } else {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
           }
         case ICONS_SIZE_TYPE:
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
             return mIconSizes.get(DisplayMetrics.DENSITY_LOW);
           } else {
-            return mIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+            return mIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
           }
       }
       return null;
@@ -1247,7 +1244,7 @@ public class AptoideUtils {
         }
       } catch (Exception e) {
         Logger.printException(e);
-        CrashReports.logString("imageUrl",imageUrl);
+        CrashReports.logString("imageUrl", imageUrl);
         CrashReports.logException(e);
       }
 
@@ -1279,10 +1276,14 @@ public class AptoideUtils {
       }
 
       String iconRes = mStoreIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
-      iconRes = (iconRes != null ? iconRes : getDefaultSize(STORE_ICONS_SIZE_TYPE));
+      iconRes = (TextUtils.isEmpty(iconRes) ? getDefaultSize(STORE_ICONS_SIZE_TYPE) : iconRes);
 
-      String[] splittedUrl = splitUrlExtension(url);
-      return splittedUrl[0] + "_" + iconRes + "." + splittedUrl[1];
+      if (TextUtils.isEmpty(iconRes)) {
+        return url;
+      } else {
+        String[] splittedUrl = splitUrlExtension(url);
+        return splittedUrl[0] + "_" + iconRes + "." + splittedUrl[1];
+      }
     }
 
     private static String generateSizeString() {
