@@ -32,6 +32,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
@@ -171,23 +172,31 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     String queryLayout = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.LAYOUT);
     String queryName = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.NAME);
     String queryAction = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.ACTION);
-    if (!TextUtils.isEmpty(queryType) && !TextUtils.isEmpty(queryLayout) && !TextUtils.isEmpty(
-        queryName) && !TextUtils.isEmpty(queryAction)) {
+    if (validateDeepLinkRequiredArgs(queryType, queryLayout, queryName, queryAction)) {
       try {
         queryAction = URLDecoder.decode(queryAction, "UTF-8");
-      } catch (UnsupportedEncodingException e) {
+        event.setAction(queryAction != null ? queryAction.replace(V7.BASE_HOST, "") : null);
+        event.setType(Event.Type.valueOf(queryType));
+        event.setName(Event.Name.valueOf(queryName));
+        GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
+        data.setLayout(Layout.valueOf(queryLayout));
+        event.setData(data);
+        pushFragmentV4(StoreGridRecyclerFragment.newInstance(event,
+            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
+            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME)));
+      } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }
-      event.setAction(queryAction != null ? queryAction.replace(V7.BASE_HOST, "") : null);
-      event.setType(Event.Type.valueOf(queryType));
-      event.setName(Event.Name.valueOf(queryName));
-      GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
-      data.setLayout(Layout.valueOf(queryLayout));
-      event.setData(data);
-      pushFragmentV4(StoreGridRecyclerFragment.newInstance(event,
-          uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
-          uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME)));
     }
+  }
+
+  private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,
+      String queryName, String queryAction) {
+    return !TextUtils.isEmpty(queryType)
+        && !TextUtils.isEmpty(queryLayout)
+        && !TextUtils.isEmpty(queryName)
+        && !TextUtils.isEmpty(queryAction)
+        && StoreTabGridRecyclerFragment.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
   private void setMainPagerPosition(Event.Name name) {
