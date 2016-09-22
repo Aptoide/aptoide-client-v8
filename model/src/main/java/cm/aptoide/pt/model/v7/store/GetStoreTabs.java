@@ -21,6 +21,7 @@ import lombok.EqualsAndHashCode;
   @Data public static class Tab {
 
     private String label;
+    private String tag;
     private Event event;
   }
 }

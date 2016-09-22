@@ -54,7 +54,8 @@ public class DisplayablesFactory {
             break;
 
           case STORES_GROUP:
-            displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme));
+            displayables.add(
+                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
             displayables.add(getStores(wsWidget.getViewObject()));
             break;
 
@@ -173,7 +174,7 @@ public class DisplayablesFactory {
       }
     } else {
       if (apps.size() > 0) {
-        displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme));
+        displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
       }
 
       for (App app : apps) {
@@ -211,7 +212,7 @@ public class DisplayablesFactory {
 
     for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
       DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo =
-          new GridDisplayDisplayable(eventImage, storeTheme);
+          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag());
 
       Event.Name name = displayablePojo.getPojo().getEvent().getName();
       if (Event.Name.facebook.equals(name)
