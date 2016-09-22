@@ -58,6 +58,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Row
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
@@ -109,6 +110,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RowRevie
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ScheduledDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SimilarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
@@ -158,8 +160,9 @@ public enum DisplayableType {
   SOCIAL_TIMELINE_FEATURE(FeatureWidget.class, FeatureDisplayable.class),
   SOCIAL_TIMELINE_STORE_LATEST_APPS(StoreLatestAppsWidget.class, StoreLatestAppsDisplayable.class),
   SOCIAL_TIMELINE_STORE_APP_UPDATE(AppUpdateWidget.class, AppUpdateDisplayable.class),
-  SOCIAL_TIMELINE_RECOMMENDATION(RecommendationWidget.class, RecommendationDisplayable.class),
   SOCIAL_TIMELINE_VIDEO(VideoWidget.class, VideoDisplayable.class),
+  SOCIAL_TIMELINE_SIMILAR(SimilarWidget.class, SimilarDisplayable.class),
+  SOCIAL_TIMELINE_RECOMMENDATION(RecommendationWidget.class, RecommendationDisplayable.class),
 
   ROLLBACK(RollbackWidget.class, RollbackDisplayable.class),
 

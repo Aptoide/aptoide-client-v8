@@ -289,4 +289,6 @@
 
   <string name="add_store">Add store</string>
 
+  <string name="displayable_social_timeline_similar_to">similar to %1$s</string>
+
 </resources>
