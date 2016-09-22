@@ -7,6 +7,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -61,7 +62,7 @@ public class DownloadServiceHelper {
   public Observable<Download> startDownload(DownloadAccessor downloadAccessor,
       PermissionRequest permissionRequest, Download download) {
     return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .concatWith(permissionManager.requestDownloadAccess(permissionRequest))
+        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
         .flatMap(success -> Observable.fromCallable(() -> {
           getDownload(download.getAppId()).first().subscribe(storedDownload -> {
             startDownloadService(download.getAppId(),
@@ -73,6 +74,8 @@ public class DownloadServiceHelper {
                   AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
             } else {
               throwable.printStackTrace();
+              Log.d("lou",throwable.toString());
+              CrashReports.logException(throwable);
             }
           });
           return download;
