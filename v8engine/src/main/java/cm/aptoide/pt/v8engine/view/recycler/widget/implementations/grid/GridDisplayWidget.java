@@ -53,7 +53,7 @@ import lombok.Cleanup;
       if (StoreTabGridRecyclerFragment.validateAcceptedName(name)) {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
             StoreGridRecyclerFragment.newInstance(event, pojo.getLabel(),
-                displayable.getStoreTheme()));
+                displayable.getStoreTheme(), displayable.getTag()));
       } else {
         switch (name) {
           case facebook:

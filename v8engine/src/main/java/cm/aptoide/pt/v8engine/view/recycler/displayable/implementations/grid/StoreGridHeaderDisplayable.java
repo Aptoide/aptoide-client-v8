@@ -17,6 +17,7 @@ import lombok.Getter;
 public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 
   @Getter private String storeTheme;
+  @Getter private String tag;
 
   public StoreGridHeaderDisplayable() {
   }
@@ -25,9 +26,10 @@ public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.
     super(pojo);
   }
 
-  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo, String storeTheme) {
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo, String storeTheme, String tag) {
     super(pojo);
     this.storeTheme = storeTheme;
+    this.tag = tag;
   }
 
   @Override public Type getType() {

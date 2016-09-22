@@ -15,6 +15,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
@@ -71,6 +72,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
     itemView.setOnClickListener(v -> {
       // FIXME
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getWidgetGroupTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(
           AppViewFragment.newInstance(appId, pojo.getStore().getAppearance().getTheme(),
               tvStoreName.getText().toString()));

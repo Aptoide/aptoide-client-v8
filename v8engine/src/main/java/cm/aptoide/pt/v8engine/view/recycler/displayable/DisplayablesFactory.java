@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
@@ -53,7 +54,8 @@ public class DisplayablesFactory {
             break;
 
           case STORES_GROUP:
-            displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme));
+            displayables.add(
+                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
             displayables.add(getStores(wsWidget.getViewObject()));
             break;
 
@@ -172,13 +174,11 @@ public class DisplayablesFactory {
       }
     } else {
       if (apps.size() > 0) {
-        displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme));
+        displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
       }
 
       for (App app : apps) {
-        DisplayablePojo<App> diplayable =
-            (DisplayablePojo<App>) DisplayableType.newDisplayable((wsWidget.getType()));
-        diplayable.setPojo(app);
+        DisplayablePojo<App> diplayable = new GridAppDisplayable(app, wsWidget.getTag());
         displayables.add(diplayable);
       }
     }
@@ -212,7 +212,7 @@ public class DisplayablesFactory {
 
     for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
       DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo =
-          new GridDisplayDisplayable(eventImage, storeTheme);
+          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag());
 
       Event.Name name = displayablePojo.getPojo().getEvent().getName();
       if (Event.Name.facebook.equals(name)

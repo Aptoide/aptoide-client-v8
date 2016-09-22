@@ -100,7 +100,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
       case getUserTimeline:
         return AppsTimelineFragment.newInstance(event.getAction());
       default:
-        return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel(), storeTheme);
+        return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel(), storeTheme,
+            tab.getTag());
     }
   }
 

@@ -17,6 +17,7 @@ import lombok.Getter;
 public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.EventImage> {
 
   @Getter private String storeTheme;
+  @Getter private String tag;
 
   public GridDisplayDisplayable() {
   }
@@ -25,9 +26,10 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
     super(pojo);
   }
 
-  public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme) {
+  public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme, String tag) {
     super(pojo);
     this.storeTheme = storeTheme;
+    this.tag = tag;
   }
 
   @Override public Type getType() {

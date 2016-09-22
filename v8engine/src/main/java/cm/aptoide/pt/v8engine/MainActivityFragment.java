@@ -183,7 +183,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         event.setData(data);
         pushFragmentV4(StoreGridRecyclerFragment.newInstance(event,
             uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
-            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME)));
+            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME), "default"));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

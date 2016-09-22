@@ -51,7 +51,7 @@ import java.util.List;
       FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
           StoreGridRecyclerFragment.newInstance(
               displayable.getPojo().getActions().get(0).getEvent(),
-              displayable.getPojo().getTitle(), displayable.getStoreTheme()));
+              displayable.getPojo().getTitle(), displayable.getStoreTheme(), displayable.getTag()));
       Analytics.AppViewViewedFrom.addStepToList(pojo.getTitle());
     });
   }
