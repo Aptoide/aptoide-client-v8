@@ -40,7 +40,6 @@ import rx.subscriptions.CompositeSubscription;
 @Displayables({ UpdateDisplayable.class }) public class UpdateWidget
     extends Widget<UpdateDisplayable> {
 
-  private static final String TAG = UpdateWidget.class.getSimpleName();
   private View updateRowRelativeLayout;
   private TextView labelTextView;
   private ImageView iconImageView;
@@ -102,7 +101,6 @@ import rx.subscriptions.CompositeSubscription;
             if (which == DialogInterface.BUTTON_POSITIVE) {
               @Cleanup Realm realm1 = DeprecatedDatabase.get();
               DeprecatedDatabase.UpdatesQ.setExcluded(packageName, true, realm1);
-              v.setVisibility(View.GONE);
             }
             dialog.dismiss();
           });
