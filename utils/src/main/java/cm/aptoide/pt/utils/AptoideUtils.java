@@ -1101,6 +1101,7 @@ public class AptoideUtils {
 
     static {
       mStoreIconSizes = new HashMap<>();
+      mStoreIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "600x600");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "450x450");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "300x300");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_HIGH, "225x225");
@@ -1110,6 +1111,7 @@ public class AptoideUtils {
 
     static {
       mIconSizes = new HashMap<>();
+      mIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "384x384");
       mIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "288x288");
       mIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "192x192");
       mIconSizes.put(DisplayMetrics.DENSITY_HIGH, "144x144");
@@ -1189,13 +1191,13 @@ public class AptoideUtils {
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
             return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
           } else {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
           }
         case ICONS_SIZE_TYPE:
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
             return mIconSizes.get(DisplayMetrics.DENSITY_LOW);
           } else {
-            return mIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
+            return mIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
           }
       }
       return null;
