@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Art
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -107,23 +108,24 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
-      subscriptions.add(displayable.getRelatedToApplication().subscribe(installeds -> {
-        if (installeds != null && !installeds.isEmpty()) {
-          appName = installeds.get(0).getName();
-        } else {
-          setAppNameToFirstLinkedApp();
-        }
-        if (appName != null) {
-          relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-        }
-      }, throwable -> {
-        setAppNameToFirstLinkedApp();
-        if (appName != null) {
-          relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-        }
-        throwable.printStackTrace();
-      }));
-
+      subscriptions.add(displayable.getRelatedToApplication()
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(installeds -> {
+            if (installeds != null && !installeds.isEmpty()) {
+              appName = installeds.get(0).getName();
+            } else {
+              setAppNameToFirstLinkedApp();
+            }
+            if (appName != null) {
+              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            }
+          }, throwable -> {
+            setAppNameToFirstLinkedApp();
+            if (appName != null) {
+              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            }
+            throwable.printStackTrace();
+          }));
 
       subscriptions.add(RxView.clicks(articleHeader).subscribe(click -> {
         displayable.getDeveloperLink().launch(getContext());

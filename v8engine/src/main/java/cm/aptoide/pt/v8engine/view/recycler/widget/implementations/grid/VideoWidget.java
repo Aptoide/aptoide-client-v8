@@ -21,6 +21,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -118,22 +119,24 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
-      subscriptions.add(displayable.getRelatedToApplication().subscribe(installeds -> {
-        if (installeds != null && !installeds.isEmpty()) {
-          appName = installeds.get(0).getName();
-        } else {
-          setAppNameToFirstLinkedApp();
-        }
-        if (appName != null) {
-          relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
-        }
-      }, throwable -> {
-        setAppNameToFirstLinkedApp();
-        if (appName != null) {
-          relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
-        }
-        throwable.printStackTrace();
-      }));
+      subscriptions.add(displayable.getRelatedToApplication()
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(installeds -> {
+            if (installeds != null && !installeds.isEmpty()) {
+              appName = installeds.get(0).getName();
+            } else {
+              setAppNameToFirstLinkedApp();
+            }
+            if (appName != null) {
+              relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+            }
+          }, throwable -> {
+            setAppNameToFirstLinkedApp();
+            if (appName != null) {
+              relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+            }
+            throwable.printStackTrace();
+          }));
 
       subscriptions.add(RxView.clicks(videoHeader).subscribe(click -> {
         displayable.getBaseLink().launch(getContext());
