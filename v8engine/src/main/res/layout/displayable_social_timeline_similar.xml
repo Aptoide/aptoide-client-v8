@@ -5,12 +5,12 @@
   -->
 
 <android.support.v7.widget.CardView
-    style="@style/Widget.Aptoide.Card"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/displayable_social_timeline_recommendation_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    style="@style/Widget.Aptoide.Card"
     >
 
   <LinearLayout
@@ -29,67 +29,68 @@
           android:id="@+id/displayable_social_timeline_recommendation_card_icon"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:layout_marginTop="14dp"
           android:layout_marginLeft="12.7dp"
+          android:layout_marginStart="12.7dp"
+          android:layout_marginTop="14dp"
           tools:ignore="contentDescription"
           tools:src="@drawable/img_people_mockup"
           />
 
       <TextView
           android:id="@+id/displayable_social_timeline_recommendation_card_title"
-          android:textColor="@color/appstimeline_grey"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
           android:layout_marginRight="48dp"
           android:layout_marginStart="72dp"
-          android:layout_marginLeft="72dp"
           android:layout_marginTop="14.7dp"
           android:ellipsize="end"
           android:lines="1"
+          android:textColor="@color/appstimeline_grey"
           tools:text="Aptoide recommends"
           />
 
       <TextView
           android:id="@+id/displayable_social_timeline_recommendation_card_subtitle"
-          style="@style/Widget.Aptoide.Card.Subtitle"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_below="@id/displayable_social_timeline_recommendation_card_title"
           android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
           android:layout_marginRight="48dp"
           android:layout_marginStart="72dp"
-          android:layout_marginLeft="72dp"
           android:ellipsize="end"
           android:lines="1"
           tools:text="Há duas horas"
+          style="@style/Widget.Aptoide.Card.Subtitle"
           />
 
       <ImageView
           android:layout_width="15dp"
           android:layout_height="15dp"
-          android:src="@drawable/appstimeline_recommendation_compass_icon"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
+          android:src="@drawable/appstimeline_recommendation_compass_icon"
           />
 
       <View
           android:id="@+id/card_custom_view_line_separator"
-          android:layout_marginLeft="12dp"
-          android:layout_marginEnd="12dp"
-          android:layout_marginRight="12dp"
-          android:layout_marginStart="12dp"
           android:layout_width="match_parent"
           android:layout_height="0.7dp"
           android:layout_alignParentBottom="true"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
           android:background="@color/timeline_separator"
           />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/displayable_social_timeline_recommendation_card_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/displayable_social_timeline_recommendation_card_content"
         android:orientation="vertical"
         >
 
@@ -97,10 +98,11 @@
           android:id="@+id/displayable_social_timeline_recommendation_icon"
           android:layout_width="80dp"
           android:layout_height="80dp"
-          android:layout_marginTop="9.3dp"
-          android:paddingTop="3dp"
           android:layout_marginBottom="12dp"
           android:layout_marginLeft="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="9.3dp"
+          android:paddingTop="3dp"
           android:scaleType="fitCenter"
           tools:ignore="contentDescription"
           tools:src="@mipmap/ic_launcher"
@@ -108,44 +110,50 @@
 
       <TextView
           android:id="@+id/displayable_social_timeline_recommendation_name"
-          style="@style/Widget.Aptoide.Card.Title.Large.Black"
-          android:textColor="@color/black"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginRight="15.1dp"
+          android:layout_alignTop="@+id/displayable_social_timeline_recommendation_icon"
+          android:layout_marginEnd="15.1dp"
           android:layout_marginLeft="13.3dp"
+          android:layout_marginRight="15.1dp"
+          android:layout_marginStart="13.3dp"
+          android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
+          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:ellipsize="end"
           android:lines="1"
+          android:textColor="@color/black"
           tools:text="Clash Royale"
-          android:layout_alignTop="@+id/displayable_social_timeline_recommendation_icon"
-          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
+          style="@style/Widget.Aptoide.Card.Title.Large.Black"
           />
 
       <TextView
           android:id="@+id/displayable_social_timeline_recommendation_similar_apps"
-          style="@style/Widget.Aptoide.Card.Body"
-          android:background="@android:color/transparent"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_below="@+id/displayable_social_timeline_recommendation_name"
+          android:layout_marginEnd="15.1dp"
+          android:layout_marginLeft="13.3dp"
+          android:layout_marginRight="15.1dp"
+          android:layout_marginStart="13.3dp"
+          android:layout_toEndOf="@+id/displayable_social_timeline_recommendation_icon"
+          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
+          android:background="@android:color/transparent"
           android:clickable="false"
           android:ellipsize="end"
           android:maxLines="2"
           android:paddingTop="3dp"
           tools:text="based on Empire of Kings"
-          android:layout_below="@+id/displayable_social_timeline_recommendation_name"
-          android:layout_marginRight="15.1dp"
-          android:layout_marginLeft="13.3dp"
-          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
+          style="@style/Widget.Aptoide.Card.Body"
           />
 
       <TextView
           android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="30dp"
-          android:layout_alignParentRight="true"
           android:layout_alignStart="@+id/displayable_social_timeline_recommendation_name"
           android:layout_below="@+id/displayable_social_timeline_recommendation_icon"
           android:layout_marginBottom="5dp"
+          android:layout_marginEnd="12dp"
           android:layout_marginRight="12dp"
           android:background="@android:color/transparent"
           android:clickable="false"
@@ -159,12 +167,12 @@
         android:id="@+id/partial_social_timeline_thumbnail_divider2"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="3dp"
         android:layout_marginBottom="25dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="15dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="3dp"
         android:background="@color/timeline_separator"
         android:visibility="visible"
         />

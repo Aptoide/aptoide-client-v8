@@ -19,7 +19,7 @@ public class SpannableFactory {
   }
 
   @NonNull public Spannable createColorSpan(String text, int color, String... spanTexts) {
-    final Spannable result = new SpannableString(text);
+    Spannable result = new SpannableString(text);
     for (String spanText : spanTexts) {
       int spanTextStart = text.indexOf(spanText);
       result.setSpan(new ForegroundColorSpan(color), spanTextStart,

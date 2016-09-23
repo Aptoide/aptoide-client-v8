@@ -5,12 +5,12 @@
   -->
 
 <android.support.v7.widget.CardView
-    style="@style/Widget.Aptoide.Card"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/card"
+    style="@style/Widget.Aptoide.Card"
     >
 
   <LinearLayout
@@ -30,15 +30,15 @@
           android:id="@+id/card_image"
           android:layout_width="40dp"
           android:layout_height="40dp"
-          android:layout_marginTop="14dp"
           android:layout_marginLeft="12.7dp"
+          android:layout_marginStart="12.7dp"
+          android:layout_marginTop="14dp"
           tools:ignore="contentDescription"
           tools:src="@drawable/img_people_mockup"
           />
 
       <TextView
           android:id="@+id/card_title"
-          style="@style/Widget.Aptoide.Card.Title"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="48dp"
@@ -49,11 +49,11 @@
           android:ellipsize="end"
           android:lines="1"
           tools:text="Hamata6 Store"
+          style="@style/Widget.Aptoide.Card.Title"
           />
 
       <TextView
           android:id="@+id/card_subtitle"
-          style="@style/Widget.Aptoide.Card.Subtitle"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_below="@+id/card_title"
@@ -64,25 +64,26 @@
           android:ellipsize="end"
           android:lines="1"
           tools:text="Há duas horas"
+          style="@style/Widget.Aptoide.Card.Subtitle"
           />
 
       <ImageView
-          android:src="@drawable/appstimeline_article_icon"
           android:layout_width="15dp"
           android:layout_height="15dp"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
+          android:src="@drawable/appstimeline_article_icon"
           />
 
       <View
           android:id="@+id/card_custom_view_line_separator"
-          android:layout_marginLeft="12dp"
-          android:layout_marginEnd="12dp"
-          android:layout_marginRight="15dp"
-          android:layout_marginStart="12dp"
           android:layout_width="match_parent"
           android:layout_height="0.7dp"
           android:layout_alignParentBottom="true"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="15dp"
+          android:layout_marginStart="12dp"
           android:background="@color/timeline_separator"
           />
     </RelativeLayout>
@@ -94,8 +95,8 @@
         android:id="@+id/partial_social_timeline_thumbnail_divider"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginBottom="25dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="15dp"
         android:layout_marginStart="12dp"

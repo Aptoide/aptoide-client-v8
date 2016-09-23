@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView
-    android:id="@+id/no_apps_downloaded"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_apps_downloaded"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
@@ -20,37 +20,38 @@
         android:id="@+id/error_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:src="@drawable/ic_img_no_apps_downloaded"
-        android:layout_centerHorizontal="true"
         />
 
     <TextView
         android:id="@+id/error_text"
-        style="?android:textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/error_image"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:padding="10dp"
         android:text="@string/fragment_download_no_connection"
-        android:layout_below="@+id/error_image"
-        android:layout_centerHorizontal="true"
+        style="?android:textAppearanceMedium"
         />
 
     <TextView
         android:id="@+id/error_text2"
-        style="?android:textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/error_text"
-        android:gravity="center_horizontal"
-        android:text="@string/fragment_download_no_connection_subtitle"
-        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@id/error_image"
         android:layout_alignLeft="@+id/error_image"
         android:layout_alignRight="@+id/error_image"
+        android:layout_alignStart="@id/error_image"
+        android:layout_below="@+id/error_text"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text="@string/fragment_download_no_connection_subtitle"
+        style="?android:textAppearanceMedium"
         />
 
   </RelativeLayout>

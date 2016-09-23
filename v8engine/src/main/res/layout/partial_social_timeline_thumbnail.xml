@@ -5,13 +5,13 @@
   -->
 
 <RelativeLayout
-    android:id="@+id/partial_social_timeline_thumbnail"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_social_timeline_thumbnail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:layout_marginLeft="60dp"
+    android:clickable="true"
     >
 
   <!--
@@ -20,26 +20,28 @@
   <TextView
       android:id="@+id/partial_social_timeline_thumbnail_title"
       android:layout_width="match_parent"
-      android:textColor="@color/appstimeline_grey"
       android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
       android:layout_marginBottom="12dp"
       android:layout_marginLeft="12dp"
       android:layout_marginRight="15dp"
       android:layout_marginTop="12dp"
-      android:layout_alignParentTop="true"
       android:ellipsize="end"
       android:maxLines="3"
+      android:textColor="@color/appstimeline_grey"
       tools:text="Best backup apps: save all your Android's innards fkgfkj fkjgfjfgkfj fgkjgfj"
       />
   <ImageView
       android:id="@+id/partial_social_timeline_thumbnail_image"
       android:layout_width="match_parent"
       android:layout_height="72dp"
+      android:layout_below="@id/partial_social_timeline_thumbnail_title"
       android:layout_centerVertical="true"
       android:layout_marginBottom="12dp"
+      android:layout_marginEnd="16dp"
       android:layout_marginLeft="12dp"
       android:layout_marginRight="16dp"
-      android:layout_below="@id/partial_social_timeline_thumbnail_title"
+      android:layout_marginStart="12dp"
       android:scaleType="centerCrop"
       tools:ignore="contentDescription"
       tools:src="@drawable/background_card_dark"
@@ -54,8 +56,8 @@
       android:layout_marginLeft="12dp"
       android:layout_marginRight="15dp"
       android:layout_marginTop="12dp"
-      android:maxLines="1"
       android:ellipsize="end"
+      android:maxLines="1"
       android:textSize="11sp"
       tools:text="Related to APPz"
       />
@@ -75,7 +77,6 @@
 
   <Button
       android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
-      style="@style/Widget.Aptoide.Card.Button"
       android:layout_width="match_parent"
       android:layout_height="30dp"
       android:layout_below="@id/partial_social_timeline_thumbnail_divider"
@@ -89,6 +90,7 @@
       android:visibility="gone"
       tools:text="Get app Game of War"
       tools:visibility="visible"
+      style="@style/Widget.Aptoide.Card.Button"
       />
 </RelativeLayout>
 
