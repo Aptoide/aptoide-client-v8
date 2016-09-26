@@ -370,7 +370,11 @@ import rx.subscriptions.CompositeSubscription;
               ShowMessage.asSnack(view, R.string.downgrading_msg);
               DownloadFactory factory = new DownloadFactory();
               Download appDownload = factory.create(app);
-              downloadServiceHelper.startDownload(permissionRequest, appDownload).subscribe(download -> {
+              downloadServiceHelper.startDownload(permissionRequest, appDownload)
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(download -> {
+                    setupDownloadControls(app, appDownload, displayable);
+                    manageDownload(download, displayable, app);
                 /*if (!setupDownloadControlsRunned) {
                   // TODO: 09/09/16 refactor this
                   setupDownloadControls(app, appDownload, displayable);
