@@ -19,7 +19,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created with IntelliJ IDEA. User: brutus Date: 26-09-2013 Time: 10:32 To change this template use
+ * Created with IntelliJ IDEA. User: brutus Date: 26-09-2013 Time: 10:32 To change this template
+ * use
  * File | Settings |
  * File Templates.
  */

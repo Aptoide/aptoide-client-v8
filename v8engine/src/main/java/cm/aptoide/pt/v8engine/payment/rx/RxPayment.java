@@ -14,11 +14,11 @@ import rx.Observable;
  */
 public class RxPayment {
 
-  public static Observable<PaymentConfirmation> process(Payment payment) {
-    return Observable.create(new ProcessPaymentOnSubscribe(payment));
-  }
-
   private RxPayment() {
     throw new AssertionError("No instances");
+  }
+
+  public static Observable<PaymentConfirmation> process(Payment payment) {
+    return Observable.create(new ProcessPaymentOnSubscribe(payment));
   }
 }

@@ -80,7 +80,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
       if (SecurePreferences.isWizardAvailable()) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         pushFragmentV4(new BaseWizardViewerFragment());
-        SecurePreferences.setFirstRun(false);
+        SecurePreferences.setWizardAvailable(false);
       }
 
       handleDeepLinks(getIntent());

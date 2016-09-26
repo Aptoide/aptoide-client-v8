@@ -5,8 +5,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.ChangeUserSettingsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.ArrayList;
-import java.util.HashMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
@@ -45,7 +45,7 @@ import rx.Observable;
   @Override
   protected Observable<ChangeUserSettingsResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    HashMap<String, String> parameters = new HashMap<>();
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
     parameters.put("mode", "json");
     ArrayList<String> parametersList = setupParameters();
     parameters.put("settings", TextUtils.join(",", parametersList));

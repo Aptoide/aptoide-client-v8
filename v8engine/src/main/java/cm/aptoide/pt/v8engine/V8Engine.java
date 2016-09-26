@@ -38,6 +38,7 @@ import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -47,6 +48,7 @@ import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -79,6 +81,9 @@ public abstract class V8Engine extends DataProvider {
       }
 
       DataproviderUtils.checkUpdates();
+    }, e -> {
+      Logger.e(TAG, e);
+      //CrashReports.logException(e);
     });
   }
 
@@ -113,6 +118,8 @@ public abstract class V8Engine extends DataProvider {
     //
     super.onCreate();
 
+    RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
+
     DeprecatedDatabase.initialize(this);
     Database.initialize(this);
 
@@ -143,7 +150,7 @@ public abstract class V8Engine extends DataProvider {
         } else {
           generateAptoideUUID().subscribe(success -> addDefaultStore());
         }
-        //			    SecurePreferences.setFirstRun(false);    //jdandrade - Disabled this line so i could run first run wizard.
+        SecurePreferences.setFirstRun(false);
       }).subscribe();
     }
 

@@ -8,8 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
-import java.util.HashMap;
-import java.util.Map;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -17,16 +16,22 @@ import rx.Observable;
  */
 public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesResponse> {
 
-  private Map<String, String> args;
+  private HashMapNotNull<String, String> args;
+
+  private InAppBillingPurchasesRequest(String baseHost, HashMapNotNull<String, String> args) {
+    super(baseHost);
+    this.args = args;
+  }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type) {
-    Map<String, String> args = getBaseArgs(apiVersion, packageName, type);
+    HashMapNotNull<String, String> args = getBaseArgs(apiVersion, packageName, type);
     return new InAppBillingPurchasesRequest(BASE_HOST, args);
   }
 
   @NonNull
-  private static Map<String, String> getBaseArgs(int apiVersion, String packageName, String type) {
-    Map<String, String> args = new HashMap<String, String>();
+  private static HashMapNotNull<String, String> getBaseArgs(int apiVersion, String packageName,
+      String type) {
+    HashMapNotNull<String, String> args = new HashMapNotNull<String, String>();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
@@ -34,11 +39,6 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
     args.put("access_token", AptoideAccountManager.getAccessToken());
     args.put("purchasetype", type);
     return args;
-  }
-
-  private InAppBillingPurchasesRequest(String baseHost, Map<String, String> args) {
-    super(baseHost);
-    this.args = args;
   }
 
   @Override

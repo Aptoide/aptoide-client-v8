@@ -337,12 +337,12 @@ public class Analytics {
       //            track(EVENT_NAME, ACTION, DOWNGRADED, ALL);
     }
 
-    public static void downgradeDialogContinue(){
-      track(EVENT_NAME_DOWNGRADE_DIALOG,ACTION,"Continue",FLURRY);
+    public static void downgradeDialogContinue() {
+      track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Continue", FLURRY);
     }
 
-    public static void downgradeDialogCancel(){
-      track(EVENT_NAME_DOWNGRADE_DIALOG,ACTION,"Cancel",FLURRY);
+    public static void downgradeDialogCancel() {
+      track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Cancel", FLURRY);
     }
 
     public static void clear() {

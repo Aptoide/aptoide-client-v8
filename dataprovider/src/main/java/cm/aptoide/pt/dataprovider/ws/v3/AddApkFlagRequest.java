@@ -7,8 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import java.util.HashMap;
-import java.util.Map;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -16,15 +15,15 @@ import rx.Observable;
  */
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
-  private Map<String, String> args;
+  private HashMapNotNull<String, String> args;
 
-  protected AddApkFlagRequest(Map<String, String> args) {
+  protected AddApkFlagRequest(HashMapNotNull<String, String> args) {
     super(BASE_HOST);
     this.args = args;
   }
 
   public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag) {
-    Map<String, String> args = new HashMap<>();
+    HashMapNotNull<String, String> args = new HashMapNotNull<>();
 
     args.put("repo", storeName);
     args.put("md5sum", appMd5sum);

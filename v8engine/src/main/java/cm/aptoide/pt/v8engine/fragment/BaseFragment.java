@@ -35,7 +35,6 @@ public abstract class BaseFragment extends RxFragment
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
-
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -155,8 +154,7 @@ public abstract class BaseFragment extends RxFragment
     }
   }
 
-  @Override
-  public void setUserVisibleHint(boolean isVisibleToUser){
+  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
       //CrashReports.ScreenUtils.addScreenToHistory(getClass().getSimpleName());

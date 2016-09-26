@@ -13,9 +13,9 @@ import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
-import java.util.HashMap;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -84,26 +84,26 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 
     @FormUrlEncoded @POST("3/oauth2Authentication")
     @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
-    Observable<OAuth> oauth2Authentication(@FieldMap HashMap<String, String> args);
+    Observable<OAuth> oauth2Authentication(@FieldMap HashMapNotNull<String, String> args);
 
     @FormUrlEncoded @POST("3/getUserInfo")
     @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
-    Observable<CheckUserCredentialsJson> getUserInfo(@FieldMap HashMap<String, String> args);
+    Observable<CheckUserCredentialsJson> getUserInfo(@FieldMap HashMapNotNull<String, String> args);
 
     @POST("3/createUser") @FormUrlEncoded
     @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
-    Observable<OAuth> createUser(@FieldMap HashMap<String, String> args);
+    Observable<OAuth> createUser(@FieldMap HashMapNotNull<String, String> args);
 
     @POST("3/changeUserSettings") @FormUrlEncoded
     @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
     Observable<ChangeUserSettingsResponse> changeUserSettings(
-        @FieldMap HashMap<String, String> args);
+        @FieldMap HashMapNotNull<String, String> args);
 
     @POST("3/changeUserRepoSubscription") @FormUrlEncoded
     Observable<GenericResponseV3> changeUserRepoSubscription(
-        @FieldMap HashMap<String, String> args);
+        @FieldMap HashMapNotNull<String, String> args);
 
     @POST("3/getUserRepoSubscription") @FormUrlEncoded
-    Observable<GetUserRepoSubscription> getUserRepos(@FieldMap HashMap<String, String> args);
+    Observable<GetUserRepoSubscription> getUserRepos(@FieldMap HashMapNotNull<String, String> args);
   }
 }

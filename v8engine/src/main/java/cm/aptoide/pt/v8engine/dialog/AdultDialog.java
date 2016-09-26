@@ -76,7 +76,7 @@ public class AdultDialog extends DialogFragment {
       final android.content.DialogInterface.OnClickListener positiveButtonlistener) {
 
 		/*
-		return new android.app.AlertDialog.Builder(c).setMessage(c.getString(R.string.are_you_adult))
+    return new android.app.AlertDialog.Builder(c).setMessage(c.getString(R.string.are_you_adult))
 				.setPositiveButton(R.string.yes, new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(android.content.DialogInterface dialog, int which) {

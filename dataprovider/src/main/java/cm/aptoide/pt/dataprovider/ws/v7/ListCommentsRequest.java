@@ -61,7 +61,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     //
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
@@ -79,7 +80,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     String username = storeOnRequest.getUsername();
     String password = storeOnRequest.getPasswordSha1();
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());

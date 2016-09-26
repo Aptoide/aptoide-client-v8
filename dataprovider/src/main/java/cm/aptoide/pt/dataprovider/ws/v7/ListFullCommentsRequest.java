@@ -44,7 +44,8 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
     //
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());

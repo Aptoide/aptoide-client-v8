@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import java.util.HashMap;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -53,7 +53,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 
   @Override
   protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    HashMap<String, String> parameters = new HashMap<>();
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
     parameters.put("grant_type", grantType);
     parameters.put("client_id", "Aptoide");

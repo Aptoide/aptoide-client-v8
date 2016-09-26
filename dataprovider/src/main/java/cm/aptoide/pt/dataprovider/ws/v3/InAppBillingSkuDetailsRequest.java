@@ -8,9 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import java.util.HashMap;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.List;
-import java.util.Map;
 import rx.Observable;
 
 /**
@@ -18,11 +17,16 @@ import rx.Observable;
  */
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
-  private final Map<String, String> args;
+  private final HashMapNotNull<String, String> args;
+
+  public InAppBillingSkuDetailsRequest(String baseHost, HashMapNotNull<String, String> args) {
+    super(baseHost);
+    this.args = args;
+  }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
       List<String> skuList, NetworkOperatorManager operatorManager, String type) {
-    HashMap<String, String> args = new HashMap<>();
+    HashMapNotNull<String, String> args = new HashMapNotNull<>();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
@@ -47,11 +51,6 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
     }
 
     return new InAppBillingSkuDetailsRequest(BASE_HOST, args);
-  }
-
-  public InAppBillingSkuDetailsRequest(String baseHost, Map<String, String> args) {
-    super(baseHost);
-    this.args = args;
   }
 
   @Override

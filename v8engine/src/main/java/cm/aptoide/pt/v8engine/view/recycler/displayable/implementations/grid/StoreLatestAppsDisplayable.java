@@ -27,6 +27,9 @@ import lombok.Getter;
   private DateCalculator dateCalculator;
   private Date date;
 
+  public StoreLatestAppsDisplayable() {
+  }
+
   public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps,
       DateCalculator dateCalculator) {
     final List<LatestApp> latestApps = new ArrayList<>();
@@ -36,9 +39,6 @@ import lombok.Getter;
     return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(),
         storeLatestApps.getStore().getAvatar(), latestApps, dateCalculator,
         storeLatestApps.getLatestUpdate());
-  }
-
-  public StoreLatestAppsDisplayable() {
   }
 
   public String getTimeSinceLastUpdate(Context context) {

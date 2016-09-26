@@ -11,9 +11,8 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.Data;
 import rx.Observable;
 
@@ -70,7 +69,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   @Override protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
 
-    Map<String, String> map = new HashMap<>();
+    HashMapNotNull<String, String> map = new HashMapNotNull<>();
 
     map.put("success", success);
     map.put("adid", Long.toString(adId));

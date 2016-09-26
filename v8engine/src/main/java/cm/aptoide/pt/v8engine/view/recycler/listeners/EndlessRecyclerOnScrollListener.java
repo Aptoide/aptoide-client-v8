@@ -25,7 +25,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
   private boolean loading;
   private int visibleThreshold;
-      // The minimum amount of items to have below your current scroll position before load
+  // The minimum amount of items to have below your current scroll position before load
   private boolean bypassCache;
   private ErrorRequestListener errorRequestListener;
   private int total;

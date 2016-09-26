@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.layouthandler;
 
 import android.support.annotation.IdRes;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;

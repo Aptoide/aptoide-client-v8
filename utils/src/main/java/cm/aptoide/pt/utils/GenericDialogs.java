@@ -87,7 +87,7 @@ public class GenericDialogs {
   public static Observable<EResponse> createGenericOkCancelMessage(Context context, String title,
       String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-			/*
+      /*
 			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
 					.setMessage(message)
 					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
@@ -120,8 +120,8 @@ public class GenericDialogs {
     });
   }
 
-  public static Observable<EResponse> createGenericContinueCancelMessage(Context context, String title,
-      String message) {
+  public static Observable<EResponse> createGenericContinueCancelMessage(Context context,
+      String title, String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
 			/*
 			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)

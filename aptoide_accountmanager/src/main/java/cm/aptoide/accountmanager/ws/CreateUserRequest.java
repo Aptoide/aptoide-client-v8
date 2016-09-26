@@ -8,8 +8,8 @@ package cm.aptoide.accountmanager.ws;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.AptoideUtils;
-import java.util.HashMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -39,7 +39,7 @@ import rx.Observable;
   @Override
   protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
-    HashMap<String, String> parameters = new HashMap<String, String>();
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<String, String>();
 
     String passhash;
     passhash = AptoideUtils.AlgorithmU.computeSha1(password);

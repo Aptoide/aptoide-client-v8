@@ -33,8 +33,8 @@ import rx.Observable;
 
   public static GetAppRequest of(String packageName, String storeName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext())
-    );
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
@@ -48,7 +48,8 @@ import rx.Observable;
 
   public static GetAppRequest of(long appId) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
@@ -61,7 +62,8 @@ import rx.Observable;
 
   public static GetAppRequest ofMd5(String md5) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
@@ -74,7 +76,8 @@ import rx.Observable;
 
   public static GetAppRequest of(long appId, String storeName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 

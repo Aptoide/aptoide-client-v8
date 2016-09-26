@@ -38,7 +38,8 @@ import rx.Observable;
 
   public static GetStoreWidgetsRequest ofAction(String url) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     V7Url v7Url = new V7Url(url).remove("getStoreWidgets");
     Long storeId = v7Url.getStoreId();
