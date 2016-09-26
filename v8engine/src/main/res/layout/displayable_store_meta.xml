@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout style="?attr/backgroundCard"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    style="?attr/backgroundCard"
     >
 
   <RelativeLayout
@@ -18,6 +19,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="@dimen/row_store_vertical_delimiter"
+        android:layout_marginStart="@dimen/row_store_vertical_delimiter"
         android:layout_marginTop="@dimen/row_store_vertical_delimiter"
         android:scaleType="fitCenter"
         />
@@ -26,7 +28,9 @@
         android:id="@+id/subscribe_button_layout"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/row_store_vertical_delimiter"
         android:layout_marginRight="@dimen/row_store_vertical_delimiter"
         android:layout_marginTop="@dimen/row_store_vertical_delimiter"
         android:background="@drawable/rounded_corners_white"
@@ -63,6 +67,7 @@
         android:layout_toEndOf="@id/store_avatar_storehome"
         android:layout_toLeftOf="@+id/subscribe_button_layout"
         android:layout_toRightOf="@id/store_avatar_storehome"
+        android:layout_toStartOf="@id/subscribe_button_layout"
         android:padding="@dimen/row_store_vertical_delimiter"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -83,8 +88,8 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:padding="@dimen/row_store_vertical_delimiter"
-        android:text="In this store you can download free Android apps using the Aptoide client for download and etc ipsus lorem ipsus lorem ipsus lorem ipsus"
         android:textSize="12sp"
+        tools:text="In this store you can download free Android apps using the Aptoide client for download and etc ipsus lorem ipsus lorem ipsus lorem ipsus"
         />
 
   </RelativeLayout>
@@ -99,8 +104,10 @@
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
+        android:layout_marginEnd="@dimen/row_store_vertical_half_delimiter"
         android:layout_marginLeft="@dimen/row_store_vertical_delimiter"
         android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginStart="@dimen/row_store_vertical_delimiter"
         android:layout_marginTop="@dimen/row_store_vertical_delimiter"
         android:layout_weight="10"
         android:orientation="vertical"
@@ -119,8 +126,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
-          android:text="69.531"
           android:textSize="14sp"
+          tools:text="69.531"
           />
     </LinearLayout>
 
@@ -128,8 +135,10 @@
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
+        android:layout_marginEnd="@dimen/row_store_vertical_half_delimiter"
         android:layout_marginLeft="@dimen/row_store_vertical_half_delimiter"
         android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginStart="@dimen/row_store_vertical_half_delimiter"
         android:layout_marginTop="@dimen/row_store_vertical_delimiter"
         android:layout_weight="10"
         android:orientation="vertical"
@@ -148,8 +157,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
-          android:text="175.829"
           android:textSize="14sp"
+          tools:text="175.829"
           />
     </LinearLayout>
 
@@ -157,8 +166,10 @@
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/row_store_vertical_delimiter"
+        android:layout_marginEnd="@dimen/row_store_vertical_half_delimiter"
         android:layout_marginLeft="@dimen/row_store_vertical_half_delimiter"
         android:layout_marginRight="@dimen/row_store_vertical_half_delimiter"
+        android:layout_marginStart="@dimen/row_store_vertical_half_delimiter"
         android:layout_marginTop="@dimen/row_store_vertical_delimiter"
         android:layout_weight="12"
         android:orientation="vertical"
@@ -177,8 +188,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
-          android:text="719.218.997"
           android:textSize="14sp"
+          tools:text="719.218.997"
           />
     </LinearLayout>
 
