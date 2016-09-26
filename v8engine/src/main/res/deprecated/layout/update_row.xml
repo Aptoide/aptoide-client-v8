@@ -4,23 +4,24 @@
   ~ Modified by Neurophobic Animal on 08/07/2016.
   -->
 
-<FrameLayout style="@style/focusableRowBackground"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    style="@style/focusableRowBackground"
     >
 
   <RelativeLayout
       android:id="@+id/updateRowRelativeLayout"
-      style="?attr/backgroundCard"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      style="?attr/backgroundCard"
       >
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/updateButtonLayout"
+        android:layout_toStartOf="@id/updateButtonLayout"
         >
 
       <ImageView
@@ -34,6 +35,7 @@
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
+          android:layout_toEndOf="@+id/icon"
           android:layout_toRightOf="@+id/icon"
           android:orientation="vertical"
           >
@@ -42,11 +44,12 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             />
 
@@ -63,6 +66,7 @@
               android:layout_gravity="bottom"
               android:layout_marginBottom="3.5dp"
               android:layout_marginLeft="7dp"
+              android:layout_marginStart="7dp"
               android:src="@drawable/ic_appview_version"
               />
 
@@ -70,11 +74,12 @@
               android:id="@+id/app_installed_version"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:layout_marginEnd="5dp"
               android:layout_marginLeft="5dp"
               android:layout_marginRight="5dp"
+              android:layout_marginStart="5dp"
               android:ellipsize="end"
               android:maxLines="1"
-              android:singleLine="true"
               android:textAppearance="?android:attr/textAppearanceSmall"
               />
 
@@ -91,8 +96,10 @@
               android:layout_height="10dp"
               android:layout_gravity="bottom|left"
               android:layout_marginBottom="3.5dp"
+              android:layout_marginEnd="1dp"
               android:layout_marginLeft="5dp"
               android:layout_marginRight="1dp"
+              android:layout_marginStart="5dp"
               android:src="@drawable/ic_update_version"
               />
 
@@ -100,11 +107,12 @@
               android:id="@+id/app_update_version"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:layout_marginEnd="5dp"
               android:layout_marginLeft="5dp"
               android:layout_marginRight="5dp"
+              android:layout_marginStart="5dp"
               android:ellipsize="end"
               android:maxLines="1"
-              android:singleLine="true"
               android:textAppearance="?android:attr/textAppearanceSmall"
               />
 
@@ -115,11 +123,12 @@
 
     <LinearLayout
         android:id="@+id/updateButtonLayout"
-        style="@style/focusableRowBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
+        style="@style/focusableRowBackground"
         >
 
       <View
@@ -161,16 +170,16 @@
             />
 
         <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyle"
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/progress_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="10dp"
             android:visibility="gone"
             tools:visibility="visible"
+            style="?android:attr/progressBarStyle"
             />
       </LinearLayout>
 
