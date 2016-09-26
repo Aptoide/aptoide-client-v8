@@ -25,11 +25,11 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
   private LoaderLayoutHandler loaderLayoutHandler;
   // Just a convenient reuse option.
   protected ErrorRequestListener errorRequestListener = e -> finishLoading(e);
-  @Getter private boolean created = false;
+  @Getter private boolean create = true;
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    load(!created, false, savedInstanceState);
+    load(create, false, savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -50,14 +50,14 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.bindViews(view);
     }
-    if (created) {
+    if (!create) {
       finishLoading();
     }
   }
 
   @Override public void onStop() {
     super.onStop();
-    created = true;
+    create = false;
   }
 
   @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
@@ -78,5 +78,5 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     }
   }
 
-  public abstract void load(boolean created, boolean refresh, Bundle savedInstanceState);
+  public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
 }

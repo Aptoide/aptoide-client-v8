@@ -114,6 +114,9 @@ public class AppViewFragment extends GridRecyclerFragment
 
   // FIXME restoreInstanteState doesn't work in this case
   private final Bundle memoryArgs = new Bundle();
+  private final String key_appId = "appId";
+  private final String key_packageName = "packageName";
+  private final String key_md5sum = "md5sum";
   //private static final String TAG = AppViewFragment.class.getName();
   //
   // vars
@@ -131,7 +134,6 @@ public class AppViewFragment extends GridRecyclerFragment
   private MinimalAd minimalAd;
   // Stored to postpone ads logic
   private Installer installManager;
-
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
   private DownloadServiceHelper downloadManager;
@@ -141,23 +143,17 @@ public class AppViewFragment extends GridRecyclerFragment
   private AdRepository adRepository;
   private boolean sponsored;
   private List<GetAdsResponse.Ad> suggestedAds;
-
   // buy app vars
   private String storeName;
   private float priceValue;
   private String currency;
   private double taxRate;
-
   private AppViewInstallDisplayable installDisplayable;
   private String md5;
   private PermissionManager permissionManager;
   private Menu menu;
   private String appName;
   private String wUrl;
-
-  private final String key_appId = "appId";
-  private final String key_packageName = "packageName";
-  private final String key_md5sum = "md5sum";
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
@@ -409,7 +405,7 @@ public class AppViewFragment extends GridRecyclerFragment
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
 
     if (subscription != null) {
       subscription.unsubscribe();
@@ -417,7 +413,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, created, sponsored, storeName)
+      subscription = appRepository.getApp(appId, create, sponsored, storeName)
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))

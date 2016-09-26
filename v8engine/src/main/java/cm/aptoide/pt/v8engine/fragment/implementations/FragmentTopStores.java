@@ -44,8 +44,8 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
     return displayables;
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
-    super.load(created, refresh, savedInstanceState);
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     fetchStores();
   }
 

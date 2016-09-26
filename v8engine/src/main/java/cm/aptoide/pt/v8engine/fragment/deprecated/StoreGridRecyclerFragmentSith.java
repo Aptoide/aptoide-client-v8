@@ -53,7 +53,7 @@ import java.util.List;
     return d;
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
 
   }
 
