@@ -143,7 +143,7 @@ public abstract class V8Engine extends DataProvider {
         } else {
           generateAptoideUUID().subscribe(success -> addDefaultStore());
         }
-        //			    SecurePreferences.setFirstRun(false);    //jdandrade - Disabled this line so i could run first run wizard.
+        SecurePreferences.setFirstRun(false);
       }).subscribe();
     }
 
