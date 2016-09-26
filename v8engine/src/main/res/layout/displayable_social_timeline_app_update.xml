@@ -95,8 +95,10 @@
           android:layout_width="80dp"
           android:layout_height="80dp"
           android:layout_marginBottom="12dp"
+          android:layout_marginEnd="13.3dp"
           android:layout_marginLeft="12dp"
           android:layout_marginRight="13.3dp"
+          android:layout_marginStart="12dp"
           android:layout_marginTop="9.3dp"
           android:paddingTop="3dp"
           android:scaleType="fitCenter"
@@ -111,6 +113,7 @@
           android:layout_alignTop="@+id/displayable_social_timeline_app_update_icon"
           android:layout_marginEnd="16dp"
           android:layout_marginRight="15.1dp"
+          android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
           android:layout_toRightOf="@+id/displayable_social_timeline_app_update_icon"
           android:ellipsize="end"
           android:lines="1"
@@ -128,6 +131,7 @@
           android:layout_marginEnd="16dp"
           android:layout_marginRight="15.1dp"
           android:layout_marginTop="4.3dp"
+          android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
           android:layout_toRightOf="@+id/displayable_social_timeline_app_update_icon"
           android:background="@android:color/transparent"
           android:clickable="false"
@@ -147,6 +151,7 @@
           android:layout_below="@id/displayable_social_timeline_app_update"
           android:layout_marginEnd="16dp"
           android:layout_marginRight="12dp"
+          android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
           android:layout_toRightOf="@+id/displayable_social_timeline_app_update_icon"
           android:ellipsize="end"
           android:gravity="bottom"
@@ -160,11 +165,12 @@
           android:id="@+id/displayable_social_timeline_app_update_button"
           android:layout_width="match_parent"
           android:layout_height="30dp"
+          android:layout_alignParentEnd="true"
           android:layout_alignParentRight="true"
           android:layout_alignStart="@+id/displayable_social_timeline_app_update_name"
           android:layout_below="@+id/displayable_social_timeline_app_update_icon"
           android:layout_marginBottom="5dp"
-          android:layout_marginEnd="16dp"
+          android:layout_marginEnd="12dp"
           android:layout_marginRight="12dp"
           android:background="@android:color/transparent"
           android:clickable="false"
@@ -173,7 +179,7 @@
           android:gravity="center_vertical"
           android:text="@string/displayable_social_timeline_app_update_button"
           android:textColor="@color/appstimeline_grey"
-          tools:text="Get app Clash Royale"
+          tools:text="Update Clash Royale"
           style="@style/Widget.Aptoide.Card.Button"
           />
 
@@ -182,6 +188,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_below="@id/displayable_social_timeline_app_update_button"
+          android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
           android:layout_toRightOf="@id/displayable_social_timeline_app_update_icon"
           android:text="@string/displayable_social_timeline_app_update_error"
           android:textColor="@color/red_700"
@@ -190,71 +197,6 @@
           tools:visibility="visible"
           />
 
-      <!--<LinearLayout-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="wrap_content"-->
-      <!--android:layout_alignTop="@id/displayable_social_timeline_app_update_icon"-->
-      <!--android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"-->
-      <!--android:layout_toRightOf="@id/displayable_social_timeline_app_update_icon"-->
-      <!--android:layout_marginLeft="14.3dp"-->
-      <!--android:orientation="vertical"-->
-      <!--&gt;-->
-
-      <!--<TextView-->
-      <!--android:id="@+id/displayable_social_timeline_app_update_name"-->
-      <!--style="@style/Widget.Aptoide.Card.Title.Large"-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="wrap_content"-->
-      <!--android:layout_marginEnd="16dp"-->
-      <!--android:layout_marginRight="12dp"-->
-      <!--android:ellipsize="end"-->
-      <!--android:lines="1"-->
-      <!--android:text="@string/displayable_social_timeline_app_update_name"-->
-      <!--tools:text="App Snapchat"-->
-      <!--/>-->
-
-      <!--<TextView-->
-      <!--android:id="@+id/displayable_social_timeline_app_update"-->
-      <!--style="@style/Widget.Aptoide.Card.Title.Large"-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="wrap_content"-->
-      <!--android:layout_marginEnd="16dp"-->
-      <!--android:layout_marginRight="12dp"-->
-      <!--android:ellipsize="end"-->
-      <!--android:lines="1"-->
-      <!--android:text="@string/displayable_social_timeline_app_has_update"-->
-      <!--tools:text="has an update"-->
-      <!--/>-->
-
-
-      <!--<TextView-->
-      <!--android:id="@+id/displayable_social_timeline_app_update_error"-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="match_parent"-->
-      <!--android:text="@string/displayable_social_timeline_app_update_error"-->
-      <!--android:textColor="@color/red_700"-->
-      <!--android:visibility="gone"-->
-      <!--tools:text="Update Error"-->
-      <!--tools:visibility="gone"-->
-      <!--/>-->
-
-      <!--<Button-->
-      <!--android:id="@+id/displayable_social_timeline_app_update_button"-->
-      <!--style="@style/Widget.Aptoide.Card.Button"-->
-      <!--android:layout_marginBottom="16dp"-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="30dp"-->
-      <!--android:textColor="@color/appstimeline_grey"-->
-      <!--android:layout_marginEnd="16dp"-->
-      <!--android:layout_marginRight="12dp"-->
-      <!--android:drawableLeft="@drawable/timeline_update_app"-->
-      <!--android:drawableStart="@drawable/timeline_update_app"-->
-      <!--android:gravity="center_vertical"-->
-      <!--android:text="@string/displayable_social_timeline_app_update_button"-->
-      <!--tools:text="Update application"-->
-      <!--/>-->
-
-      <!--</LinearLayout>-->
     </RelativeLayout>
 
     <View
