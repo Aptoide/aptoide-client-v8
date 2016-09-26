@@ -25,6 +25,7 @@
       android:layout_width="120dp"
       android:layout_height="match_parent"
       android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
       android:orientation="vertical"
       tools:background="@android:color/transparent"
       >
@@ -71,6 +72,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
       android:layout_toStartOf="@id/app_name_layout"
       tools:background="@android:color/transparent"
       >
@@ -90,9 +92,11 @@
         android:lines="1"
         android:ellipsize="end"
         android:drawableLeft="@drawable/ic_appview_version"
+        android:drawableStart="@drawable/ic_appview_version"
         android:drawablePadding="4dp"
         tools:text="1.00.258.985lsndakljndanalnalndalnad7"
         tools:drawableRight="@drawable/ic_badge_trusted"
+        android:drawableEnd="@drawable/ic_badge_trusted"
         />
 
     <!--

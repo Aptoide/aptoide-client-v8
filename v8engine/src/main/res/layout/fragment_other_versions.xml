@@ -91,6 +91,17 @@
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         >
 
+      <!--
+      android:theme="?attr/toolbarTheme"
+      -->
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          app:layout_collapseMode="pin"
+          app:layout_scrollFlags="scroll|enterAlways"
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          />
       <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -122,6 +133,7 @@
             android:layout_height="@dimen/other_version_header_app_image_size"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginBottom="@dimen/appview_header_bottom_margin"
             android:layout_marginEnd="@dimen/appview_header_bottom_margin"
             android:layout_marginLeft="@dimen/appview_header_bottom_margin"
@@ -140,6 +152,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="118dp"
             android:layout_toRightOf="@id/app_icon"
+            android:layout_toEndOf="@id/app_icon"
             android:lines="1"
             android:text="@string/other_versions_on_different_stores"
             android:textSize="@dimen/text_size_medium"
@@ -148,18 +161,6 @@
             />
 
       </RelativeLayout>
-
-      <!--
-      android:theme="?attr/toolbarTheme"
-      -->
-      <android.support.v7.widget.Toolbar
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          app:layout_collapseMode="pin"
-          app:layout_scrollFlags="scroll|enterAlways"
-          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-          />
 
     </android.support.design.widget.CollapsingToolbarLayout>
 
