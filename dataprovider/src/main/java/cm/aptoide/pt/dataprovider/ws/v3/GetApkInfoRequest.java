@@ -20,15 +20,15 @@ import rx.Observable;
  */
 public class GetApkInfoRequest extends V3<GetApkInfoJson> {
 
-	private Map<String,String> args;
+	private HashMapNotNull<String,String> args;
 
-	protected GetApkInfoRequest(Map<String,String> args) {
+	protected GetApkInfoRequest(HashMapNotNull<String,String> args) {
 		super(BASE_HOST);
 		this.args = args;
 	}
 
 	public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager, boolean fromSponsored, String storeName) {
-		Map<String,String> args = new HashMapNotNull<>();
+		HashMapNotNull<String,String> args = new HashMapNotNull<>();
 		args.put("identif", "id:" + appId);
 		args.put("repo", storeName);
 		args.put("mode", "json");
@@ -41,8 +41,8 @@ public class GetApkInfoRequest extends V3<GetApkInfoJson> {
 		return new GetApkInfoRequest(args);
 	}
 
-	private static void addOptions(Map<String,String> args, NetworkOperatorManager operatorRepository) {
-		Map<String, String> options = new HashMap<>();
+	private static void addOptions(HashMapNotNull<String,String> args, NetworkOperatorManager operatorRepository) {
+		HashMapNotNull<String, String> options = new HashMapNotNull<>();
 		options.put("cmtlimit", "5");
 		options.put("payinfo", "true");
 		options.put("q", Api.Q);

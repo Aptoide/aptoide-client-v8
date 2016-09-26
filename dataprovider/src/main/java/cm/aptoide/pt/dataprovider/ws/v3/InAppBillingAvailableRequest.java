@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +18,10 @@ import rx.Observable;
  */
 public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
-	private Map<String,String> args;
+	private HashMapNotNull<String,String> args;
 
 	public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
-		final Map<String,String> args = new HashMap<>();
+		final HashMapNotNull<String,String> args = new HashMapNotNull<>();
 		args.put("mode", "json");
 		args.put("apiversion", String.valueOf(apiVersion));
 		args.put("reqtype", "iabavailable");
@@ -29,7 +30,7 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
 		return new InAppBillingAvailableRequest(BASE_HOST, args);
 	}
 
-	public InAppBillingAvailableRequest(String baseHost, Map<String,String> args) {
+	public InAppBillingAvailableRequest(String baseHost, HashMapNotNull<String,String> args) {
 		super(baseHost);
 		this.args = args;
 	}

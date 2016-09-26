@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.Map;
 
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
@@ -41,10 +42,10 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
 		@POST("getAds")
 		@FormUrlEncoded
-		Observable<GetAdsResponse> getAds(@FieldMap Map<String,String> arg);
+		Observable<GetAdsResponse> getAds(@FieldMap HashMapNotNull<String,String> arg);
 
 		@POST("registerAdReferer")
 		@FormUrlEncoded
-		Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap Map<String,String> arg);
+		Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap HashMapNotNull<String,String> arg);
 	}
 }

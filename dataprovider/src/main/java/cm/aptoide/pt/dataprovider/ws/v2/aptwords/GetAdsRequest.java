@@ -112,7 +112,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 	@Override
 	protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
-		Map<String,String> parameters = new HashMapNotNull<>();
+		HashMapNotNull<String,String> parameters = new HashMapNotNull<>();
 
 		parameters.put("q", Api.Q);
 		parameters.put("lang", Api.LANG);

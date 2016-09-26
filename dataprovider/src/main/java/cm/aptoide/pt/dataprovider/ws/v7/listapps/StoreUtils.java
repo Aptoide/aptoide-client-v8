@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.support.annotation.Nullable;
 
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -60,9 +61,9 @@ public class StoreUtils {
 		return storesNames;
 	}
 
-	public static Map<String,List<String>> getSubscribedStoresAuthMap() {
+	public static HashMapNotNull<String,List<String>> getSubscribedStoresAuthMap() {
 		@Cleanup Realm realm = DeprecatedDatabase.get();
-		Map<String,List<String>> storesAuthMap = new HashMap<>();
+		HashMapNotNull<String,List<String>> storesAuthMap = new HashMapNotNull<>();
 		RealmResults<cm.aptoide.pt.database.realm.Store> stores = DeprecatedDatabase.StoreQ.getAll(realm);
 		for (cm.aptoide.pt.database.realm.Store store : stores) {
 			if (store.getPasswordSha1() != null) {

@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
 
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,15 +23,15 @@ import rx.Observable;
  */
 public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
 
-	private Map<String,String> args;
+	private HashMapNotNull<String,String> args;
 
-	protected PushNotificationsRequest(Map<String,String> args) {
+	protected PushNotificationsRequest(HashMapNotNull<String,String> args) {
 		super(BASE_HOST);
 		this.args = args;
 	}
 
 	public static PushNotificationsRequest of() {
-		HashMap<String,String> args = new HashMap<>();
+		HashMapNotNull<String,String> args = new HashMapNotNull<>();
 
 		String oemid = DataProvider.getConfiguration().getExtraId();
 		if (!TextUtils.isEmpty(oemid)) {

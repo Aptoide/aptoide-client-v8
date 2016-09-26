@@ -13,6 +13,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.flurry.android.FlurryAgent;
@@ -50,6 +51,7 @@ import io.realm.Realm;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -82,6 +84,9 @@ public abstract class V8Engine extends DataProvider {
       }
 
       DataproviderUtils.checkUpdates();
+    }, e-> {
+      Logger.e(TAG, e);
+      //CrashReports.logException(e);
     });
   }
 
@@ -115,6 +120,8 @@ public abstract class V8Engine extends DataProvider {
     // super
     //
     super.onCreate();
+
+    RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
 
     DeprecatedDatabase.initialize(this);
     Database.initialize(this);
