@@ -117,17 +117,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    if (refreshed) {
-      GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
-        if (getAdsResponse.getAds().size() > 0) {
-          addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));
-        }
-      });
-    }
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
