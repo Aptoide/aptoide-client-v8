@@ -6,17 +6,17 @@
 package cm.aptoide.pt.v8engine.interfaces;
 
 import android.os.Bundle;
+import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
 
 /**
  * Created by neuro on 04-05-2016.
  */
 public interface LoadInterface {
   /**
-   * @param created flags that the fragment is already created, ie. only it's view is being
-   * restored.
+   * @param create flags that the fragment is being created for the first time. Will be set to false on {@link BaseLoaderFragment#onStop()}.
    * @param refresh flags that the fragment should refresh it's state, reload data from network and
-   * refresh fragment state.
+   * refresh its state.
    * @param savedInstanceState savedInstanceState bundle.
    */
-  void load(boolean created, boolean refresh, Bundle savedInstanceState);
+  void load(boolean create, boolean refresh, Bundle savedInstanceState);
 }

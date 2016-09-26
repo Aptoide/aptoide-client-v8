@@ -44,5 +44,5 @@ public abstract class AptoideBaseLoaderActivity extends AptoideBaseActivity
 
   @IdRes protected abstract int getViewToShowAfterLoadingId();
 
-  public abstract void load(boolean created, boolean refresh, Bundle savedInstanceState);
+  public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
 }

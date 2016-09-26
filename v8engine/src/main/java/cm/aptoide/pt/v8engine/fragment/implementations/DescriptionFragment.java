@@ -64,7 +64,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     return R.id.data_container;
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (hasAppId) {
       GetAppRequest.of(appId, storeName).execute(getApp -> {
         setupAppDescription(getApp);

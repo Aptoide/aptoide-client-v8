@@ -80,8 +80,8 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + created);
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "Other versions should refresh? " + create);
 
     fetchOtherVersions();
 

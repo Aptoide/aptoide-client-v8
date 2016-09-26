@@ -70,7 +70,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     downloadFactory = new DownloadFactory();
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     fetchUpdates();
     fetchInstalled();
   }
