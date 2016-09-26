@@ -35,7 +35,7 @@
         android:layout_height="@dimen/navdrawer_profile_image_size"
         android:layout_gravity="center_vertical"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_people_mockup"
+        android:src="@drawable/ic_user_icon"
         app:maskDrawable="@drawable/circle_mask"
         />
 

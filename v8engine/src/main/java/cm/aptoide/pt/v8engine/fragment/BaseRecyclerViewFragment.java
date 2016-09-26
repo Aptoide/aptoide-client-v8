@@ -38,8 +38,8 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     }
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
-    if (created) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    if (create) {
       clearDisplayables();
     } else {
       setDisplayables(new LinkedList<>(displayables));

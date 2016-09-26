@@ -1101,7 +1101,6 @@ public class AptoideUtils {
 
     static {
       mStoreIconSizes = new HashMap<>();
-      mStoreIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "600x600");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "450x450");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "300x300");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_HIGH, "225x225");
@@ -1191,7 +1190,7 @@ public class AptoideUtils {
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
             return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
           } else {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
           }
         case ICONS_SIZE_TYPE:
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {

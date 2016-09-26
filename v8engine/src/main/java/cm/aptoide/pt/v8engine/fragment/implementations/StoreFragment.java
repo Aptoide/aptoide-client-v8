@@ -120,8 +120,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return R.id.app_bar_layout;
   }
 
-  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
-    if (created) {
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    if (create) {
       GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
         this.getStore = getStore;
         setupViewPager();
@@ -139,7 +139,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         } else {
           finishLoading(throwable);
         }
-      }, created);
+      }, create);
     } else {
       setupViewPager();
     }
