@@ -12,6 +12,7 @@ import android.os.Build;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
@@ -48,6 +49,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + newVersion
         + "]");
     migrate(db);
+
+    SecurePreferences.setWizardAvailable(true);
   }
 
   @Override public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -120,7 +123,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     }
 
     ManagerPreferences.setNeedsDbMigration(false);
-    Logger.w(TAG, "Migrating database finished with success.");
+    Logger.w(TAG, "Migrating database finished.");
   }
 
   private void logException(Exception ex) {

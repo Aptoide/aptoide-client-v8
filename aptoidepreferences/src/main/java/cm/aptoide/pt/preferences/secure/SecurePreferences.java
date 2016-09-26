@@ -67,6 +67,18 @@ public class SecurePreferences {
         .apply();
   }
 
+  public static boolean isWizardAvailable() {
+    return SecurePreferencesImplementation.getInstance()
+        .getBoolean(SecureKeys.WIZARD_AVAILABLE, true);
+  }
+
+  public static void setWizardAvailable(boolean available) {
+    SecurePreferencesImplementation.getInstance()
+        .edit()
+        .putBoolean(SecureKeys.WIZARD_AVAILABLE, available)
+        .apply();
+  }
+
   public static int getAdultContentPin() {
     return SecurePreferencesImplementation.getInstance().getInt(SecureKeys.ADULT_CONTENT_PIN, -1);
   }

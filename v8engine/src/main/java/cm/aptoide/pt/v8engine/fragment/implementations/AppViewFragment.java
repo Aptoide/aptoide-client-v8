@@ -155,9 +155,9 @@ public class AppViewFragment extends GridRecyclerFragment
   private String appName;
   private String wUrl;
 
-  private final String key_appId="appId";
-  private final String key_packageName="packageName";
-  private final String key_md5sum="md5sum";
+  private final String key_appId = "appId";
+  private final String key_packageName = "packageName";
+  private final String key_md5sum = "md5sum";
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
@@ -433,10 +433,12 @@ public class AppViewFragment extends GridRecyclerFragment
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(getApp -> {
             setupAppView(getApp);
-          }, throwable -> {finishLoading(throwable);
-            CrashReports.logString(key_appId,String.valueOf(appId));
-            CrashReports.logString(key_packageName,String.valueOf(packageName));
-            CrashReports.logString(key_md5sum,md5);});
+          }, throwable -> {
+            finishLoading(throwable);
+            CrashReports.logString(key_appId, String.valueOf(appId));
+            CrashReports.logString(key_packageName, String.valueOf(packageName));
+            CrashReports.logString(key_md5sum, md5);
+          });
     } else {
       Logger.d(TAG, "loading app info using app package name");
       subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
@@ -445,10 +447,12 @@ public class AppViewFragment extends GridRecyclerFragment
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(getApp -> {
             setupAppView(getApp);
-          }, throwable -> {finishLoading(throwable);
-            CrashReports.logString(key_appId,String.valueOf(appId));
-            CrashReports.logString(key_packageName,String.valueOf(packageName));
-            CrashReports.logString(key_md5sum,md5);});
+          }, throwable -> {
+            finishLoading(throwable);
+            CrashReports.logString(key_appId, String.valueOf(appId));
+            CrashReports.logString(key_packageName, String.valueOf(packageName));
+            CrashReports.logString(key_md5sum, md5);
+          });
     }
   }
 
@@ -728,7 +732,7 @@ public class AppViewFragment extends GridRecyclerFragment
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
       // un-comment the following lines to give app icon a fading effect when user expands / collapses the action bar
       /*
-			appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+      appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
 				@Override
 				public void onStateChanged(AppBarLayout appBarLayout, State state) {

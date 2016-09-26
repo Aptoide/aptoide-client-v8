@@ -175,7 +175,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userEmail.setText(AptoideAccountManager.getUserName());
       userUsername.setText(AptoideAccountManager.getUserInfo().getNickName());
       if (URLUtil.isValidUrl(AptoideAccountManager.getUserInfo().getUserAvatar())) {
-        ImageLoader.load(AptoideAccountManager.getUserInfo().getUserAvatar(), userAvatar);
+        ImageLoader.load(AptoideAccountManager.getUserInfo().getUserAvatar(),
+            R.drawable.ic_user_icon, userAvatar);
       } else {
         userAvatar.setImageResource(R.drawable.ic_user_icon);
       }

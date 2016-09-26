@@ -21,6 +21,10 @@ public class UpdatesAccessor implements Accessor {
     return database.getAll(Update.class);
   }
 
+  public Observable<Update> get(String packageName) {
+    return database.get(Update.class, Update.PACKAGE_NAME, packageName);
+  }
+
   public Observable<List<Update>> getUpdates() {
     return Observable.fromCallable(() -> Database.get())
         .flatMap(realm -> realm.where(Update.class)

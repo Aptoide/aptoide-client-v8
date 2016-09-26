@@ -77,7 +77,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
             new DownloadInstallationProvider(downloadManager)), new DownloadFactory(),
             downloadManager).execute();
       }
-      if (SecurePreferences.isFirstRun()) {
+      if (SecurePreferences.isWizardAvailable()) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         pushFragmentV4(new BaseWizardViewerFragment());
         SecurePreferences.setFirstRun(false);

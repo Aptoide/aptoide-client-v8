@@ -97,9 +97,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
-              listSearchAppsSuccessRequestListener, errorRequestListener, created);
+              listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-      endlessRecyclerOnScrollListener.onLoadMore(created);
+      endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     }
@@ -115,17 +115,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     query = args.getString(BundleCons.QUERY);
     storeName = args.getString(BundleCons.STORE_NAME);
     addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    if (refreshed) {
-      GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
-        if (getAdsResponse.getAds().size() > 0) {
-          addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));
-        }
-      });
-    }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

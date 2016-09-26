@@ -21,6 +21,7 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -44,12 +45,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     String action = intent.getAction();
     String packageName = intent.getData().getEncodedSchemeSpecificPart();
 
-    repository.getNotConfirmedRollback(packageName)
-        .first()
-        .filter(rollback -> shouldConfirmRollback(rollback, action))
-        .subscribe(rollback -> {
-          repository.confirmRollback(rollback);
-        }, throwable -> throwable.printStackTrace());
+    confirmAction(packageName, action);
 
     if (!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
         Intent.EXTRA_REPLACING, false)) {
@@ -140,6 +136,8 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   private void databaseOnPackageAdded(String packageName) {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
+    checkAndLogNullPackageIngo(packageInfo);
+
     DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
     //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
@@ -156,6 +154,9 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     }
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+
+    checkAndLogNullPackageIngo(packageInfo);
+
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
         DeprecatedDatabase.delete(update, realm);
@@ -165,6 +166,12 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
     //confirmAction(packageName, Rollback.Action.UPDATE);
+  }
+
+  private void checkAndLogNullPackageIngo(PackageInfo packageInfo) {
+    if (packageInfo == null) {
+      CrashReports.logException(new IllegalArgumentException("PackageName null!"));
+    }
   }
 
   private void databaseOnPackageRemoved(String packageName) {
@@ -183,10 +190,12 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     //}
   }
 
-  private void confirmAction(String packageName, Rollback.Action action) {
-    Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, action);
-    if (rollback != null) {
-      rollback.confirm(realm);
-    }
+  private void confirmAction(String packageName, String action) {
+    repository.getNotConfirmedRollback(packageName)
+        .first()
+        .filter(rollback -> shouldConfirmRollback(rollback, action))
+        .subscribe(rollback -> {
+          repository.confirmRollback(rollback);
+        }, throwable -> throwable.printStackTrace());
   }
 }

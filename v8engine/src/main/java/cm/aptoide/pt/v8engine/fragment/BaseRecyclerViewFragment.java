@@ -79,10 +79,12 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   protected abstract RecyclerView.LayoutManager createLayoutManager();
 
   public void addDisplayable(int position, Displayable displayable) {
+    this.displayables.add(position, displayable);
     adapter.addDisplayable(position, displayable);
   }
 
   public void addDisplayable(Displayable displayable) {
+    this.displayables.add(displayable);
     adapter.addDisplayable(displayable);
     finishLoading();
   }
