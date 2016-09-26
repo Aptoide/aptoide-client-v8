@@ -75,7 +75,7 @@ import rx.subscriptions.CompositeSubscription;
 
       subscriptions.add(RxView.clicks(resumeDownloadButton)
           .flatMap(click -> displayable.downloadStatus()
-              .filter(status -> status == Download.PAUSED)
+              .filter(status -> status == Download.PAUSED || status == Download.ERROR)
               .flatMap(status -> displayable.resumeDownload((PermissionRequest) getContext())))
           .retry()
           .subscribe(success -> {
