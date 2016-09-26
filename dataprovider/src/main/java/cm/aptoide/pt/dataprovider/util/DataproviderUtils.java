@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -124,8 +125,17 @@ public class DataproviderUtils {
     }
 
     // FIXME: 29-07-2016 neuro so wrong...
-    public static void knockImpression(MinimalAd minimalAd) {
-      knockCpd(minimalAd);
+    public static void knockImpression(GetAdsResponse.Ad ad) {
+      if (isImpressionUrlPresent(ad)) {
+        knock(ad.getPartner().getData().getImpressionUrl());
+      }
+    }
+
+    private static boolean isImpressionUrlPresent(GetAdsResponse.Ad ad) {
+      return ad != null
+          && ad.getPartner() != null
+          && ad.getPartner().getData() != null
+          && ad.getPartner().getData().getImpressionUrl() != null;
     }
   }
 }
