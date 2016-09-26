@@ -13,17 +13,14 @@ import lombok.EqualsAndHashCode;
 /**
  * TODO
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class GetStore extends BaseV7Response {
+@Data @EqualsAndHashCode(callSuper = true) public class GetStore extends BaseV7Response {
 
-	private Nodes nodes;
+  private Nodes nodes;
 
-	@Data
-	public static class Nodes {
+  @Data public static class Nodes {
 
-		private GetStoreMeta meta;
-		private GetStoreTabs tabs;
-		private GetStoreWidgets widgets;
-	}
+    private GetStoreMeta meta;
+    private GetStoreTabs tabs;
+    private GetStoreWidgets widgets;
+  }
 }

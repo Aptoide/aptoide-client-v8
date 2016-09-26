@@ -10,7 +10,7 @@ package cm.aptoide.pt.v8engine.payment.exception;
  */
 public class PaymentCancellationException extends PaymentException {
 
-	public PaymentCancellationException(String message) {
-		super(message);
-	}
+  public PaymentCancellationException(String message) {
+    super(message);
+  }
 }

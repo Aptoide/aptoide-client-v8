@@ -7,44 +7,38 @@ package cm.aptoide.pt.model.v3;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * Created by marcelobenites on 8/12/16.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class InAppBillingPurchasesResponse extends BaseV3Response {
+@Data @EqualsAndHashCode(callSuper = true) public class InAppBillingPurchasesResponse
+    extends BaseV3Response {
 
-	@JsonProperty("publisher_response")
-	private PurchaseInformation purchaseInformation;
+  @JsonProperty("publisher_response") private PurchaseInformation purchaseInformation;
 
-	@Data
-	public static class PurchaseInformation {
+  @Data public static class PurchaseInformation {
 
-		@JsonProperty("INAPP_PURCHASE_ITEM_LIST")
-		private List<String> skuList;
+    @JsonProperty("INAPP_PURCHASE_ITEM_LIST") private List<String> skuList;
 
-		@JsonProperty("INAPP_PURCHASE_DATA_LIST")
-		private List<InAppBillingPurchase> purchaseList;
+    @JsonProperty("INAPP_PURCHASE_DATA_LIST") private List<InAppBillingPurchase> purchaseList;
 
-		@JsonProperty("INAAP_DATA_SIGNATURE_LIST")
-		private List<String> signatureList;
-	}
+    @JsonProperty("INAAP_DATA_SIGNATURE_LIST") private List<String> signatureList;
+  }
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@Data
-	public static class InAppBillingPurchase {
-		@JsonProperty("orderId") private int orderId;
-		@JsonProperty("packageName") private String packageName;
-		@JsonProperty("productId") private String productId;
-		@JsonProperty("purchaseTime") private long purchaseTime;
-		@JsonProperty("purchaseToken") private String purchaseToken;
-		@JsonProperty("developerPayload") private String developerPayload;
-	}
-
+  // Order must be kept here because the resulting JSON String is going to be encrypted using a
+  // public key and the resulting signature must match a signature generated on server side.
+  @JsonPropertyOrder({
+      "orderId", "packageName", "productId", "purchaseTime", "purchaseToken", "developerPayload"
+  }) @JsonInclude(JsonInclude.Include.NON_NULL) @Data public static class InAppBillingPurchase {
+    @JsonProperty("orderId") private int orderId;
+    @JsonProperty("packageName") private String packageName;
+    @JsonProperty("productId") private String productId;
+    @JsonProperty("purchaseTime") private long purchaseTime;
+    @JsonProperty("purchaseToken") private String purchaseToken;
+    @JsonProperty("developerPayload") private String developerPayload;
+  }
 }

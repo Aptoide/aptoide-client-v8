@@ -10,6 +10,5 @@ package cm.aptoide.pt.model.v7.timeline;
  */
 public interface TimelineCard {
 
-	String getCardId();
-	
+  String getCardId();
 }

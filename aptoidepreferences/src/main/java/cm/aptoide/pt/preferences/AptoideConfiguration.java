@@ -12,52 +12,51 @@ import android.support.annotation.DrawableRes;
  */
 public interface AptoideConfiguration {
 
-	String getAppId();
+  String getAppId();
 
-	// Cache
-	String getCachePath();
+  // Cache
+  String getCachePath();
 
-	String getApkCachePath();
+  String getApkCachePath();
 
-	String getImagesCachePath();
+  String getImagesCachePath();
 
-	// Account
-	String getAccountType();
+  // Account
+  String getAccountType();
 
-	String getAutoUpdateUrl();
+  String getAutoUpdateUrl();
 
-	// Market
-	String getMarketName();
+  // Market
+  String getMarketName();
 
-	@DrawableRes
-	int getIcon();
+  @DrawableRes int getIcon();
 
-	String getDefaultStore();
+  String getDefaultStore();
 
-	// Providers
-	String getUpdatesSyncAdapterAuthority();
+  // Providers
+  String getUpdatesSyncAdapterAuthority();
 
-	String getSearchAuthority();
+  String getSearchAuthority();
 
-	String getAutoUpdatesSyncAdapterAuthority();
+  String getAutoUpdatesSyncAdapterAuthority();
 
-	// Authorities
-	String getTimelineActivitySyncAdapterAuthority();
+  // Authorities
+  String getTimelineActivitySyncAdapterAuthority();
 
-	String getTimeLinePostsSyncAdapterAuthority();
+  String getTimeLinePostsSyncAdapterAuthority();
 
-	// Classes
-	Class<?> getPushNotificationReceiverClass();
+  // Classes
+  Class<?> getPushNotificationReceiverClass();
 
-	// Partners
+  // Partners
 
-	/**
-	 * @return partner id. null for vanilla.
-	 */
-	String getPartnerId();
+  /**
+   * @return partner id. null for vanilla.
+   */
+  String getPartnerId();
 
-	//OEM extra id
-	String getExtraId();
+  //OEM extra id
+  String getExtraId();
 
-	boolean isAlwaysUpdate();
+  boolean isAlwaysUpdate();
 }

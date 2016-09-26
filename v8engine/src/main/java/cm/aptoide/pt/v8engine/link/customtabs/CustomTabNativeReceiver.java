@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Created by jdandrade on 06/09/16.
  */
-public class CustomTabNativeReceiver extends BroadcastReceiver{
+public class CustomTabNativeReceiver extends BroadcastReceiver {
   private static final String MOCKUP_URL = "http://www.example.com";
   private static final String REFERER_ATTRIBUTE = "Referer";
   private static final String REFERER_VALUE = "http://m.aptoide.com";

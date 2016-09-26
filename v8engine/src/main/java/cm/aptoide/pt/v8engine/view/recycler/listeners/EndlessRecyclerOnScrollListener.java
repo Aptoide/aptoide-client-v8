@@ -17,86 +17,93 @@ import rx.functions.Action1;
 
 public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
-	public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
+  public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
 
-	private final BaseAdapter adapter;
-	private final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
-	private final Action1 successRequestListener;
+  private final BaseAdapter adapter;
+  private final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
+  private final Action1 successRequestListener;
 
-	private boolean loading;
-	private int visibleThreshold; // The minimum amount of items to have below your current scroll position before load
-	private boolean bypassCache;
-	private ErrorRequestListener errorRequestListener;
-	private int total;
-	private int offset;
-	private boolean stableData = false;
+  private boolean loading;
+  private int visibleThreshold;
+      // The minimum amount of items to have below your current scroll position before load
+  private boolean bypassCache;
+  private ErrorRequestListener errorRequestListener;
+  private int total;
+  private int offset;
+  private boolean stableData = false;
 
-	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
-			extends
-			Endless> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, boolean bypassCache) {
-		this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
-	}
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener) {
+    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, false);
+  }
 
-	public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter, V7<T, ?
-			extends
-			Endless> v7request, Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache) {
-		this.adapter = baseAdapter;
-		this.v7request = v7request;
-		this.successRequestListener = successRequestListener;
-		this.errorRequestListener = errorRequestListener;
-		this.visibleThreshold = visibleThreshold;
-		this.bypassCache = bypassCache;
-	}
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener, boolean bypassCache) {
+    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
+  }
 
-	@Override
-	public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-		super.onScrolled(recyclerView, dx, dy);
-		if (shouldLoadMore((LinearLayoutManager) recyclerView.getLayoutManager())) {
-			// End has been reached, load more items
-			onLoadMore(bypassCache);
-		}
-	}
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache) {
+    this.adapter = baseAdapter;
+    this.v7request = v7request;
+    this.successRequestListener = successRequestListener;
+    this.errorRequestListener = errorRequestListener;
+    this.visibleThreshold = visibleThreshold;
+    this.bypassCache = bypassCache;
+  }
 
-	private boolean shouldLoadMore(LinearLayoutManager linearLayoutManager) {
-		int totalItemCount = linearLayoutManager.getItemCount();
-		int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+  @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    super.onScrolled(recyclerView, dx, dy);
+    if (shouldLoadMore((LinearLayoutManager) recyclerView.getLayoutManager())) {
+      // End has been reached, load more items
+      onLoadMore(bypassCache);
+    }
+  }
+
+  private boolean shouldLoadMore(LinearLayoutManager linearLayoutManager) {
+    int totalItemCount = linearLayoutManager.getItemCount();
+    int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
     boolean hasMoreElements = (stableData) ? offset < total : offset <= total;
-		boolean isOverLastPosition = (lastVisibleItemPosition >= (totalItemCount - 1));
-		boolean isOverVisibleThreshold = ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
+    boolean isOverLastPosition = (lastVisibleItemPosition >= (totalItemCount - 1));
+    boolean isOverVisibleThreshold =
+        ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
 
-		return !loading && (hasMoreElements || offset == 0) && (isOverLastPosition || isOverVisibleThreshold);
-	}
+    return !loading && (hasMoreElements || offset == 0) && (isOverLastPosition
+        || isOverVisibleThreshold);
+  }
 
-	// Protected against in the constructor, hopefully..
-	@SuppressWarnings("unchecked")
-	public void onLoadMore(boolean bypassCache) {
-		loading = true;
-		adapter.addDisplayable(new ProgressBarDisplayable());
+  // Protected against in the constructor, hopefully..
+  @SuppressWarnings("unchecked") public void onLoadMore(boolean bypassCache) {
+    loading = true;
+    adapter.addDisplayable(new ProgressBarDisplayable());
 
-		v7request.execute(response -> {
-			if (adapter.getItemCount() > 0) {
-				adapter.popDisplayable();
-			}
+    v7request.execute(response -> {
+      if (adapter.getItemCount() > 0) {
+        adapter.popDisplayable();
+      }
 
-			if (response.hasData()) {
+      if (response.hasData()) {
 
-				stableData= response.hasStableTotal();
-				if(stableData) {
-					total = response.getTotal();
-					offset = response.getNextSize();
-				}else {
-					total += response.getTotal();
-					offset += response.getNextSize();
-				}
-				v7request.getBody().setOffset(offset);
-			}
+        stableData = response.hasStableTotal();
+        if (stableData) {
+          total = response.getTotal();
+          offset = response.getNextSize();
+        } else {
+          total += response.getTotal();
+          offset += response.getNextSize();
+        }
+        v7request.getBody().setOffset(offset);
+      }
 
-			// FIXME: 17/08/16 sithengineer use response.getList() instead
+      // FIXME: 17/08/16 sithengineer use response.getList() instead
 
-			successRequestListener.call(response);
+      successRequestListener.call(response);
 
-			loading = false;
-		}, errorRequestListener, bypassCache);
-	}
+      loading = false;
+    }, errorRequestListener, bypassCache);
+  }
 }

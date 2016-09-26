@@ -15,20 +15,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridAppListDisplayable extends DisplayablePojo<App> {
 
-	public GridAppListDisplayable() {
-	}
+  public GridAppListDisplayable() {
+  }
 
-	public GridAppListDisplayable(App pojo) {
-		super(pojo);
-	}
+  public GridAppListDisplayable(App pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APPS_GROUP_LIST;
-	}
+  @Override public Type getType() {
+    return Type.APPS_GROUP_LIST;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_list_app;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_list_app;
+  }
 }

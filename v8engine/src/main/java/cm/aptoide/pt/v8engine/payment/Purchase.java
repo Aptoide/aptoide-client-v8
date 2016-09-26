@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.IOException;
 
 /**
@@ -14,8 +12,7 @@ import java.io.IOException;
  */
 public interface Purchase {
 
-	public String getData() throws IOException;
+  public String getData() throws IOException;
 
-	public String getSignature();
-
+  public String getSignature();
 }

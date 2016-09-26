@@ -5,179 +5,187 @@
 
 package cm.aptoide.pt.model.v7;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.List;
-
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * Created by neuro on 22-04-2016.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class GetAppMeta extends BaseV7Response {
+@Data @EqualsAndHashCode(callSuper = true) public class GetAppMeta extends BaseV7Response {
 
-	private App data;
+  private App data;
 
-	@Data
-	public static class App {
+  @Data public static class App {
 
-		private long id;
-		private String name;
-		@JsonProperty("package") private String packageName;
-		private long size;
-		private String icon;
-		private String graphic;
-		private String added;
-		private String modified;
-		private Developer developer;
-		private Store store;
-		private GetAppMetaFile file;
-		private Media media;
-		private Urls urls;
-		private Stats stats;
-		private Obb obb;
-		private GetApkInfoJson.Payment payment;
-	}
+    private long id;
+    private String name;
+    @JsonProperty("package") private String packageName;
+    private long size;
+    private String icon;
+    private String graphic;
+    private String added;
+    private String modified;
+    private Developer developer;
+    private Store store;
+    private GetAppMetaFile file;
+    private Media media;
+    private Urls urls;
+    private Stats stats;
+    private Obb obb;
+    private Pay pay;
 
-	@Data
-	public static class Developer {
+    public boolean isPaid() {
+      return (pay != null && pay.getPrice() != null && pay.getPrice().floatValue() > 0.0f);
+    }
+  }
 
-		private String name;
-		private String website;
-		private String email;
-		private String privacy;
-	}
+  @Data public static class Pay {
 
-	@Data
-	@EqualsAndHashCode(callSuper = true)
-	public static class GetAppMetaFile extends File {
+    private int productId;
+    private List<PaymentService> paymentServices;
+    private Number price;
+    private String currency;
+    private String symbol;
+    private String status;
 
-		private GetAppMetaFile.Signature signature;
-		private GetAppMetaFile.Hardware hardware;
-		private Malware malware;
-		private GetAppMetaFile.Flags flags;
-		private List<String> usedFeatures;
-		private List<String> usedPermissions;
+    public boolean isPaid() {
+      return status.equalsIgnoreCase("OK");
+    }
 
-		public boolean isGoodApp() {
-			return this.flags != null && flags.review != null && flags.review.equalsIgnoreCase(Flags.GOOD);
-		}
+    public void setPaid() {
+      status = "OK";
+    }
 
-		@Data
-		public static class Signature {
+    public String getPriceDescription() {
+      return symbol + " " + price;
+    }
+  }
 
-			private String sha1;
-			private String owner;
-		}
+  @Data public static class Developer {
 
-		@Data
-		public static class Hardware {
+    private String name;
+    private String website;
+    private String email;
+    private String privacy;
+  }
 
-			private int sdk;
-			private String screen;
-			private int gles;
-			private List<String> cpus;
-			/**
-			 * Second array contains only two values: First value is the screen, second value is
-			 * the
-			 * density
-			 */
-			private List<List<Integer>> densities;
-		}
+  @Data @EqualsAndHashCode(callSuper = true) public static class GetAppMetaFile extends File {
 
-		@Data
-		public static class Flags {
+    private GetAppMetaFile.Signature signature;
+    private GetAppMetaFile.Hardware hardware;
+    private Malware malware;
+    private GetAppMetaFile.Flags flags;
+    private List<String> usedFeatures;
+    private List<String> usedPermissions;
 
-			public static final String GOOD = "GOOD";
-			/**
-			 * When there's a review, there are no votes
-			 * <p>
-			 * flags: { review": "GOOD" },
-			 */
-			public String review;
-			private List<GetAppMetaFile.Flags.Vote> votes;
+    public boolean isGoodApp() {
+      return this.flags != null && flags.review != null && flags.review.equalsIgnoreCase(
+          Flags.GOOD);
+    }
 
-			@Data
-			public static class Vote {
+    @Data public static class Signature {
 
-				/**
-				 * type can be:
-				 * <p>
-				 * FAKE, FREEZE, GOOD, LICENSE, VIRUS
-				 */
-				private GetAppMetaFile.Flags.Vote.Type type;
-				private int count;
+      private String sha1;
+      private String owner;
+    }
 
-				public enum Type {
-					FAKE, FREEZE, GOOD, LICENSE, VIRUS
-				}
-			}
-		}
-	}
+    @Data public static class Hardware {
 
-	@Data
-	public static class Media {
+      private int sdk;
+      private String screen;
+      private int gles;
+      private List<String> cpus;
+      /**
+       * Second array contains only two values: First value is the screen, second value is
+       * the
+       * density
+       */
+      private List<List<Integer>> densities;
+    }
 
-		private List<String> keywords;
-		private String description;
-		private String news;
-		private List<Media.Screenshot> screenshots;
-		private List<Media.Video> videos;
+    @Data public static class Flags {
 
-		@Data
-		public static class Video {
+      public static final String GOOD = "GOOD";
+      /**
+       * When there's a review, there are no votes
+       * <p>
+       * flags: { review": "GOOD" },
+       */
+      public String review;
+      private List<GetAppMetaFile.Flags.Vote> votes;
 
-			private String type;
-			private String url;
-			private String thumbnail;
-		}
+      @Data public static class Vote {
 
-		@Data
-		public static class Screenshot {
+        /**
+         * type can be:
+         * <p>
+         * FAKE, FREEZE, GOOD, LICENSE, VIRUS
+         */
+        private GetAppMetaFile.Flags.Vote.Type type;
+        private int count;
 
-			private String url;
-			private int height;
-			private int width;
+        public enum Type {
+          FAKE, FREEZE, GOOD, LICENSE, VIRUS
+        }
+      }
+    }
+  }
 
-			public String getOrientation() {
-				return height > width ? "portrait" : "landscape";
-			}
-		}
-	}
+  @Data public static class Media {
 
-	@Data
-	public static class Urls {
+    private List<String> keywords;
+    private String description;
+    private String news;
+    private List<Media.Screenshot> screenshots;
+    private List<Media.Video> videos;
 
-		private String w;
-		private String m;
-	}
+    @Data public static class Video {
 
-	@Data
-	public static class Stats {
+      private String type;
+      private String url;
+      private String thumbnail;
+    }
 
-		private Stats.Rating rating;
-		private int downloads;
-		private int pdownloads;
+    @Data public static class Screenshot {
 
-		@Data
-		public static class Rating {
+      private String url;
+      private int height;
+      private int width;
 
-			private float avg;
-			private int total;
-			private List<Stats.Rating.Vote> votes;
+      public String getOrientation() {
+        return height > width ? "portrait" : "landscape";
+      }
+    }
+  }
 
-			@Data
-			public static class Vote {
+  @Data public static class Urls {
 
-				private int value;
-				private int count;
-			}
-		}
-	}
+    private String w;
+    private String m;
+  }
+
+  @Data public static class Stats {
+
+    private Stats.Rating rating;
+    private int downloads;
+    private int pdownloads;
+
+    @Data public static class Rating {
+
+      private float avg;
+      private int total;
+      private List<Stats.Rating.Vote> votes;
+
+      @Data public static class Vote {
+
+        private int value;
+        private int count;
+      }
+    }
+  }
 }

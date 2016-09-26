@@ -17,6 +17,8 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Data;
 import rx.Observable;
 
@@ -25,66 +27,68 @@ import rx.Observable;
  */
 public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.DefaultResponse> {
 
-	private long adId;
-	private long appId;
-	private String tracker;
-	private String success;
+  private long adId;
+  private long appId;
+  private String tracker;
+  private String success;
 
-	private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success) {
-		super(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
-		this.adId = adId;
-		this.appId = appId;
-		this.success = (success ? "1" : "0");
+  private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success) {
+    super(new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()));
+    this.adId = adId;
+    this.appId = appId;
+    this.success = (success ? "1" : "0");
 
-		extractAndSetTracker(clickUrl);
-	}
+    extractAndSetTracker(clickUrl);
+  }
 
-	public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success) {
-		return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
-	}
+  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl,
+      boolean success) {
+    return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
+  }
 
-	public static RegisterAdRefererRequest of(GetAdsResponse.Ad ad, boolean success) {
-		long appId = ad.getData().getId();
-		long adId = ad.getInfo().getAdId();
-		String clickUrl = DataproviderUtils.AdNetworksUtils.parseMacros(ad.getPartner().getData().getClickUrl());
+  public static RegisterAdRefererRequest of(GetAdsResponse.Ad ad, boolean success) {
+    long appId = ad.getData().getId();
+    long adId = ad.getInfo().getAdId();
+    String clickUrl =
+        DataproviderUtils.AdNetworksUtils.parseMacros(ad.getPartner().getData().getClickUrl());
 
-		return of(adId, appId, clickUrl, success);
-	}
+    return of(adId, appId, clickUrl, success);
+  }
 
-	public void execute() {
-		super.execute(defaultResponse -> {
-			// Does nothing
-		}, e -> {
-			// As well :)
-		});
-	}
+  public void execute() {
+    super.execute(defaultResponse -> {
+      // Does nothing
+    }, e -> {
+      // As well :)
+    });
+  }
 
-	private void extractAndSetTracker(String clickUrl) {
-		int i = clickUrl.indexOf("//");
+  private void extractAndSetTracker(String clickUrl) {
+    int i = clickUrl.indexOf("//");
 
-		int last = clickUrl.indexOf("/", i + 2);
+    int last = clickUrl.indexOf("/", i + 2);
 
-		tracker = clickUrl.substring(0, last);
-	}
+    tracker = clickUrl.substring(0, last);
+  }
 
-	@Override
-	protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+  @Override protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
 
 		HashMapNotNull<String,String> map = new HashMapNotNull<>();
 
-		map.put("success", success);
-		map.put("adid", Long.toString(adId));
-		map.put("appid", Long.toString(appId));
-		map.put("q", Api.Q);
-		map.put("androidversion", Build.VERSION.RELEASE);
-		map.put("tracker", tracker);
+    map.put("success", success);
+    map.put("adid", Long.toString(adId));
+    map.put("appid", Long.toString(appId));
+    map.put("q", Api.Q);
+    map.put("androidversion", Build.VERSION.RELEASE);
+    map.put("tracker", tracker);
 
-		return interfaces.load(map);
-	}
+    return interfaces.load(map);
+  }
 
-	@Data
-	public static class DefaultResponse {
+  @Data public static class DefaultResponse {
 
-		String status;
-	}
+    String status;
+  }
 }

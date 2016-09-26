@@ -15,24 +15,22 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
 
-	public AppViewSuggestedAppDisplayable() {
-	}
+  public AppViewSuggestedAppDisplayable() {
+  }
 
-	public AppViewSuggestedAppDisplayable(MinimalAd minimalAd) {
-		super(minimalAd);
-	}
+  public AppViewSuggestedAppDisplayable(MinimalAd minimalAd) {
+    super(minimalAd);
+  }
 
-	public AppViewSuggestedAppDisplayable(MinimalAd minimalAd, boolean fixedPerLineCount) {
-		super(minimalAd, fixedPerLineCount);
-	}
+  public AppViewSuggestedAppDisplayable(MinimalAd minimalAd, boolean fixedPerLineCount) {
+    super(minimalAd, fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_VIEW_SUGGESTED_APP;
-	}
+  @Override public Type getType() {
+    return Type.APP_VIEW_SUGGESTED_APP;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_app_view_suggested_app;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_suggested_app;
+  }
 }

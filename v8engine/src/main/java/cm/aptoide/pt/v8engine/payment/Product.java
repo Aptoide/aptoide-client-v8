@@ -5,20 +5,18 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.os.Parcelable;
-
 /**
  * Created by marcelobenites on 8/16/16.
  */
 public interface Product {
 
-	int getId();
+  int getId();
 
-	String getIcon();
+  String getIcon();
 
-	String getTitle();
+  String getTitle();
 
-	String getDescription();
+  String getDescription();
 
-	String getPriceDescription();
+  String getPriceDescription();
 }

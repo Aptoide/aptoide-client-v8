@@ -10,7 +10,7 @@ package cm.aptoide.pt.dataprovider.exception;
  */
 public class NoNetworkConnectionException extends IllegalStateException {
 
-	public NoNetworkConnectionException(Throwable n) {
-		super(n);
-	}
+  public NoNetworkConnectionException(Throwable n) {
+    super(n);
+  }
 }

@@ -101,6 +101,7 @@ public class AptoideUtils {
         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
         return info.versionCode;
       } catch (PackageManager.NameNotFoundException e) {
+        CrashReports.logException(e);
         return -1;
       }
     }
@@ -123,6 +124,7 @@ public class AptoideUtils {
       try {
         myversionCode = manager.getPackageInfo(context.getPackageName(), 0).versionCode;
       } catch (PackageManager.NameNotFoundException ignore) {
+        CrashReports.logException(ignore);
       }
 
       String filters =
@@ -162,6 +164,7 @@ public class AptoideUtils {
         return md.digest();
       } catch (NoSuchAlgorithmException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       }
 
       return new byte[0];
@@ -172,6 +175,7 @@ public class AptoideUtils {
         return convToHex(computeSha1(text.getBytes("iso-8859-1")));
       } catch (UnsupportedEncodingException e) {
         Logger.e(TAG, "computeSha1(String)", e);
+        CrashReports.logException(e);
       }
       return "";
     }
@@ -188,8 +192,10 @@ public class AptoideUtils {
         e.printStackTrace();
       } catch (UnsupportedEncodingException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       } catch (InvalidKeyException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       }
       return "";
     }
@@ -243,6 +249,7 @@ public class AptoideUtils {
         is.close();
       } catch (Exception e) {
         e.printStackTrace();
+        CrashReports.logException(e);
         return null;
       }
 
@@ -452,6 +459,7 @@ public class AptoideUtils {
         v1.setDrawingCacheEnabled(false);
       } catch (Exception e) {
         Logger.e("FeedBackActivity-screenshot", "Exception: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       }
 
@@ -465,9 +473,11 @@ public class AptoideUtils {
         fout.close();
       } catch (FileNotFoundException e) {
         Logger.e("FeedBackActivity-screenshot", "FileNotFoundException: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       } catch (IOException e) {
         Logger.e("FeedBackActivity-screenshot", "IOException: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       }
       return imageFile;
@@ -480,6 +490,7 @@ public class AptoideUtils {
         try {
           return valueOf(screen);
         } catch (Exception e) {
+          CrashReports.logException(e);
           return notfound;
         }
       }
@@ -608,17 +619,15 @@ public class AptoideUtils {
         final String displayLanguage = Locale.getDefault().getDisplayLanguage();
         Logger.e("UnknownFormatConversion",
             "String: " + resourceEntryName + " Locale: " + displayLanguage);
-        //// TODO: 18-05-2016 neuro uncomment
-        //			Crashlytics.log(3, "UnknownFormatConversion", "String: " + resourceEntryName + " Locale:
-        // " +
-        // displayLanguage);
+        CrashReports.logMessage(3, "UnknownFormatConversion",
+            "String: " + resourceEntryName + " Locale: " + displayLanguage);
         result = resources.getString(resId);
       }
       return result;
     }
 
     public static String commaSeparatedValues(List<?> list) {
-      String s = new String();
+      String s = "";
 
       if (list.size() > 0) {
         s = list.get(0).toString();
@@ -683,6 +692,7 @@ public class AptoideUtils {
             .getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
       } catch (PackageManager.NameNotFoundException e) {
         e.printStackTrace();
+        CrashReports.logException(e);
       }
       return null;
     }
@@ -748,6 +758,7 @@ public class AptoideUtils {
         process = Runtime.getRuntime().exec("logcat -d");
       } catch (IOException e) {
         Logger.e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
+        CrashReports.logException(e);
         return null;
       }
       FileOutputStream outputStream;
@@ -774,6 +785,7 @@ public class AptoideUtils {
         }
         outputStream.write(log.toString().getBytes());
       } catch (IOException e) {
+        CrashReports.logException(e);
         return logsFile;
       }
 
@@ -804,6 +816,7 @@ public class AptoideUtils {
               }
             }
           } catch (Exception e) {
+            CrashReports.logException(e);
             Logger.printException(e);
           }
         }
@@ -821,14 +834,42 @@ public class AptoideUtils {
             hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
       }
     }
+
+    public static void clearApplicationData(Context context) {
+      File cache = context.getCacheDir();
+      File appDir = new File(cache.getParent());
+      if (appDir.exists()) {
+        String[] children = appDir.list();
+        for (String s : children) {
+          if (!s.equals("lib")) {
+            deleteDir(new File(appDir, s));
+          }
+        }
+      }
+    }
+
+    public static boolean deleteDir(File dir) {
+      if (dir != null && dir.isDirectory()) {
+        String[] children = dir.list();
+        for (String child : children) {
+          boolean success = deleteDir(new File(dir, child));
+          if (!success) {
+            return false;
+          }
+        }
+      }
+
+      return dir != null && dir.delete();
+    }
   }
 
   public static final class ThreadU {
 
     public static void runOnIoThread(Runnable runnable) {
-      Observable.just(null)
-          .observeOn(Schedulers.io())
-          .subscribe(o -> runnable.run(), Logger::printException);
+      Observable.just(null).observeOn(Schedulers.io()).subscribe(o -> runnable.run(), e -> {
+        Logger.printException(e);
+        CrashReports.logException(e);
+      });
     }
 
     public static void runOnUiThread(Runnable runnable) {
@@ -843,6 +884,7 @@ public class AptoideUtils {
       try {
         Thread.sleep(l);
       } catch (InterruptedException e) {
+        CrashReports.logException(e);
         e.printStackTrace();
       }
     }
@@ -1059,7 +1101,6 @@ public class AptoideUtils {
 
     static {
       mStoreIconSizes = new HashMap<>();
-      mStoreIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "450x450");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "300x300");
       mStoreIconSizes.put(DisplayMetrics.DENSITY_HIGH, "225x225");
@@ -1069,7 +1110,7 @@ public class AptoideUtils {
 
     static {
       mIconSizes = new HashMap<>();
-      mIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "");
+      mIconSizes.put(DisplayMetrics.DENSITY_XXXHIGH, "384x384");
       mIconSizes.put(DisplayMetrics.DENSITY_XXHIGH, "288x288");
       mIconSizes.put(DisplayMetrics.DENSITY_XHIGH, "192x192");
       mIconSizes.put(DisplayMetrics.DENSITY_HIGH, "144x144");
@@ -1149,7 +1190,7 @@ public class AptoideUtils {
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
             return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
           } else {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
           }
         case ICONS_SIZE_TYPE:
           if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
@@ -1173,7 +1214,6 @@ public class AptoideUtils {
 
       return size + "x" + ScreenU.getDensityDpi();
     }
-
 
     private static String parseScreenshotUrl(String screenshotUrl, String orientation) {
       String sizeString = generateSizeStringScreenshotsdd(orientation);
@@ -1205,9 +1245,8 @@ public class AptoideUtils {
         }
       } catch (Exception e) {
         Logger.printException(e);
-        // FIXME uncomment the following lines
-        //Crashlytics.setString("imageUrl", imageUrl);
-        //Crashlytics.logException(e);
+        CrashReports.logString("imageUrl", imageUrl);
+        CrashReports.logException(e);
       }
 
       return screen;
@@ -1238,10 +1277,14 @@ public class AptoideUtils {
       }
 
       String iconRes = mStoreIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
-      iconRes = (iconRes != null ? iconRes : getDefaultSize(STORE_ICONS_SIZE_TYPE));
+      iconRes = (TextUtils.isEmpty(iconRes) ? getDefaultSize(STORE_ICONS_SIZE_TYPE) : iconRes);
 
-      String[] splittedUrl = splitUrlExtension(url);
-      return splittedUrl[0] + "_" + iconRes + "." + splittedUrl[1];
+      if (TextUtils.isEmpty(iconRes)) {
+        return url;
+      } else {
+        String[] splittedUrl = splitUrlExtension(url);
+        return splittedUrl[0] + "_" + iconRes + "." + splittedUrl[1];
+      }
     }
 
     private static String generateSizeString() {
@@ -1292,12 +1335,13 @@ public class AptoideUtils {
         if (iconUrl.contains("_icon")) {
           String sizeString = IconSizeU.generateSizeString();
           if (sizeString != null && !sizeString.isEmpty()) {
-            String[] splittedUrl = splitUrlExtension(iconUrl);;
+            String[] splittedUrl = splitUrlExtension(iconUrl);
             iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
           }
         }
       } catch (Exception e) {
         Logger.printException(e);
+        CrashReports.logException(e);
       }
       return iconUrl;
     }

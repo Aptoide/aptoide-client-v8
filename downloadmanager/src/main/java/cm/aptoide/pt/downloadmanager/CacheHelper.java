@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.downloadmanager;
 
+import android.text.format.DateUtils;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -19,8 +20,7 @@ import lombok.AllArgsConstructor;
 /**
  * Created by trinkes on 7/7/16.
  */
-@AllArgsConstructor
-public class CacheHelper implements CacheManager {
+@AllArgsConstructor public class CacheHelper implements CacheManager {
 
   private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();
@@ -30,10 +30,13 @@ public class CacheHelper implements CacheManager {
   public void cleanCache() {
     long maxCacheSize = dirSettings.getMaxCacheSize() * VALUE_TO_CONVERT_MB_TO_BYTES;
     String cacheDirPath = dirSettings.getDownloadDir();
+    long now = System.currentTimeMillis();
 
     downloadAccessor.getAllSorted(Sort.ASCENDING).first().map(downloads -> {
       int i = 0;
-      while (i < downloads.size() - 1 && FileUtils.dirSize(new File(cacheDirPath)) > maxCacheSize) {
+      while (i < downloads.size() - 1
+          && FileUtils.dirSize(new File(cacheDirPath)) > maxCacheSize
+          && (now - downloads.get(i).getTimeStamp()) > DateUtils.HOUR_IN_MILLIS) {
 
         Download download = downloads.get(i);
         for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
@@ -45,7 +48,9 @@ public class CacheHelper implements CacheManager {
       return i;
     }).subscribe(numberDeletedFiles -> {
       if (numberDeletedFiles > 0) {
-        Logger.d(TAG, "Cache cleaned");
+        Logger.d(TAG, "Cache cleaned: " + numberDeletedFiles);
+      } else {
+        Logger.d(TAG, "Cache not cleaned");
       }
     }, throwable -> throwable.printStackTrace());
   }

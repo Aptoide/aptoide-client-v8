@@ -68,7 +68,7 @@
     <item name="android:minHeight">0dp</item>
     <item name="android:minWidth">0dp</item>
     <item name="android:drawablePadding">16dp</item>
-    <item name="android:drawableStart">@drawable/timeline_arrow_get_app</item>
+    <item name="android:drawableStart">@drawable/timeline_arrow_get_app_dark</item>
   </style>
 
   <style name="Widget.Aptoide.Card.Subtitle" parent="Base.TextAppearance.AppCompat.Caption">

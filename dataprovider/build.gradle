@@ -44,9 +44,6 @@ android {
   // Websockets
   useLibrary 'org.apache.http.legacy'
 
-  dexOptions {
-    incremental true
-  }
 }
 
 dependencies {

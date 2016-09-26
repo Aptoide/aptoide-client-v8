@@ -44,115 +44,121 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
-	private List<Displayable> updatesDisplayablesList = new LinkedList<>();
-	private List<Displayable> installedDisplayablesList = new LinkedList<>();
-	private Subscription installedSubscription;
-	private Subscription updatesSubscription;
-	private Installer installManager;
-	private DownloadFactory downloadFactory;
-	private DownloadServiceHelper downloadManager;
+  private List<Displayable> updatesDisplayablesList = new LinkedList<>();
+  private List<Displayable> installedDisplayablesList = new LinkedList<>();
+  private Subscription installedSubscription;
+  private Subscription updatesSubscription;
+  private Installer installManager;
+  private DownloadFactory downloadFactory;
+  private DownloadServiceHelper downloadManager;
 
-	public static UpdatesFragment newInstance() {
-		UpdatesFragment fragment = new UpdatesFragment();
-		return fragment;
-	}
+  public static UpdatesFragment newInstance() {
+    UpdatesFragment fragment = new UpdatesFragment();
+    return fragment;
+  }
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		PermissionManager permissionManager = new PermissionManager();
-		downloadManager = new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-		installManager = new RollbackInstallManager(
-				new InstallManager(permissionManager, getContext().getPackageManager(),
-						new DownloadInstallationProvider(downloadManager)),
-				RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
-				new DownloadInstallationProvider(downloadManager));
-		downloadFactory = new DownloadFactory();
-	}
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    PermissionManager permissionManager = new PermissionManager();
+    downloadManager =
+        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+    installManager = new RollbackInstallManager(
+        new InstallManager(permissionManager, getContext().getPackageManager(),
+            new DownloadInstallationProvider(downloadManager)),
+        RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
+        new DownloadInstallationProvider(downloadManager));
+    downloadFactory = new DownloadFactory();
+  }
 
-	@Override
-	public void load(boolean refresh, Bundle savedInstanceState) {
-		fetchUpdates();
-		fetchInstalled();
-	}
+  @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
+    fetchUpdates();
+    fetchInstalled();
+  }
 
-	@Override
-	public void reload() {
-		super.reload();
-		DataproviderUtils.checkUpdates(listAppsUpdates -> {
-			if (listAppsUpdates.getList().size() == 0) {
-				finishLoading();
-				ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
-			}
-			if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
-				ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
-			}
-		});
-	}
+  @Override public void reload() {
+    super.reload();
 
-	private void fetchUpdates() {
-		if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-			updatesSubscription = DeprecatedDatabase.UpdatesQ.getAll(realm, false)
-					.asObservable()
-					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(updates -> {
+    if (DeprecatedDatabase.StoreQ.getAll(realm).size() == 0) {
+      ShowMessage.asSnack(getView(), R.string.add_store);
+      finishLoading();
+    } else {
+      DataproviderUtils.checkUpdates(listAppsUpdates -> {
+        if (listAppsUpdates.getList().size() == 0) {
+          finishLoading();
+          ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
+        }
+        if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
+          ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
+        }
+      });
+    }
+  }
 
-						if (updates.size() == updatesDisplayablesList.size() - 1) {
-							finishLoading();
-						} else {
-							updatesDisplayablesList.clear();
+  private void fetchUpdates() {
+    if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
+      updatesSubscription = DeprecatedDatabase.UpdatesQ.getAllSorted(realm, false)
+          .asObservable()
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(updates -> {
 
-							if (updates.size() > 0) {
-								updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-										AptoideUtils.StringU.getResString(R.string.updates)));
+            if (updates.size() == updatesDisplayablesList.size() - 1) {
+              finishLoading();
+            } else {
+              updatesDisplayablesList.clear();
 
-								for (Update update : updates) {
-									updatesDisplayablesList.add(
-											UpdateDisplayable.create(update, installManager, downloadFactory,
-													downloadManager));
-								}
-							}
+              if (updates.size() > 0) {
+                updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
+                    AptoideUtils.StringU.getResString(R.string.updates)));
 
-							setDisplayables();
-						}
-					}, Throwable::printStackTrace);
-		}
-	}
+                for (Update update : updates) {
+                  updatesDisplayablesList.add(
+                      UpdateDisplayable.create(update, installManager, downloadFactory,
+                          downloadManager));
+                }
+              }
 
-	private void fetchInstalled() {
-		if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
-			RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAll(realm);
-			installedSubscription = realmResults.asObservable()
-					.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-					.subscribe(installeds -> {
-						installedDisplayablesList.clear();
+              setDisplayables();
+            }
+          }, Throwable::printStackTrace);
+    }
+  }
 
-						installedDisplayablesList.add(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(AptoideUtils.StringU
-								.getResString(R.string.installed_tab))));
+  private void fetchInstalled() {
+    if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
+      RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAllSorted(realm);
+      installedSubscription = realmResults.asObservable()
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(installeds -> {
+            installedDisplayablesList.clear();
 
-						RealmResults<Installed> all = realmResults;
-						for (int i = all.size() - 1; i >= 0; i--) {
-							if (!DeprecatedDatabase.UpdatesQ.contains(all.get(i).getPackageName(), false, realm)) {
-								if (!all.get(i).isSystemApp()) {
-									installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
-								}
-							}
-						}
+            installedDisplayablesList.add(new StoreGridHeaderDisplayable(
+                new GetStoreWidgets.WSWidget().setTitle(
+                    AptoideUtils.StringU.getResString(R.string.installed_tab))));
 
-						setDisplayables();
-					}, Throwable::printStackTrace);
-			if (realmResults.size() == 0) {
-				finishLoading();
-			}
-			finishLoading();
-		}
-	}
+            RealmResults<Installed> all = realmResults;
+            for (int i = 0; i < all.size(); i++) {
+              if (!DeprecatedDatabase.UpdatesQ.contains(all.get(i).getPackageName(), false,
+                  realm)) {
+                if (!all.get(i).isSystemApp()) {
+                  installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
+                }
+              }
+            }
 
-	private void setDisplayables() {
-		LinkedList<Displayable> displayables = new LinkedList<>();
-		displayables.addAll(updatesDisplayablesList);
-		displayables.addAll(installedDisplayablesList);
-		setDisplayables(displayables);
-	}
+            setDisplayables();
+          }, Throwable::printStackTrace);
+      if (realmResults.size() == 0) {
+        finishLoading();
+      }
+      finishLoading();
+    }
+  }
+
+  private void setDisplayables() {
+    LinkedList<Displayable> displayables = new LinkedList<>();
+    displayables.addAll(updatesDisplayablesList);
+    displayables.addAll(installedDisplayablesList);
+    setDisplayables(displayables);
+  }
 }

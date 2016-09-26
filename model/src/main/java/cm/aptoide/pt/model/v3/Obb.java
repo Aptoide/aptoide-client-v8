@@ -14,8 +14,8 @@ package cm.aptoide.pt.model.v3;
  */
 public class Obb {
 
-    public String filename;
-    public Number filesize;
-    public String md5sum;
-    public String path;
+  public String filename;
+  public Number filesize;
+  public String md5sum;
+  public String path;
 }

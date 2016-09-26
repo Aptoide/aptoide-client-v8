@@ -6,21 +6,19 @@
 package cm.aptoide.pt.model.v7;
 
 import java.util.List;
-
 import lombok.Data;
 
 /**
  * Created by neuro on 27-04-2016.
  */
-@Data
-public class Datalist<T> {
+@Data public class Datalist<T> {
 
-	private int total;
-	private int count;
-	private int offset;
-	private Integer limit;
-	private int next;
-	private int hidden;
-	private boolean loaded;
-	private List<T> list;
+  private int total;
+  private int count;
+  private int offset;
+  private Integer limit;
+  private int next;
+  private int hidden;
+  private boolean loaded;
+  private List<T> list;
 }

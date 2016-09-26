@@ -11,47 +11,45 @@ import lombok.experimental.Accessors;
 /**
  * Created by neuro on 10-05-2016.
  */
-@Data
-@Accessors(chain = true)
-public class Event {
+@Data @Accessors(chain = true) public class Event {
 
-	private Type type; // API, v3
-	private Name name; // listApps, getStore, getStoreWidgets, getApkComments
-	private String action;
-	private GetStoreWidgets.WSWidget.Data data;
+  private Type type; // API, v3
+  private Name name; // listApps, getStore, getStoreWidgets, getApkComments
+  private String action;
+  private GetStoreWidgets.WSWidget.Data data;
 
-	public enum Type {
-		API,
-		CLIENT,
-		v3
-	}
+  public enum Type {
+    API,
+    CLIENT,
+    v3
+  }
 
-	public enum Name {
-		// Api
-		listApps,
-		listStores,
-		getStore,
-		getStoreWidgets,
-		//getReviews,
-		//getApkComments,
-		getUserTimeline,
-		listReviews,
+  public enum Name {
+    // Api
+    listApps,
+    listStores,
+    getStore,
+    getStoreWidgets,
+    //getReviews,
+    //getApkComments,
+    getUserTimeline,
+    listReviews,
 
-		// Client
-		myStores,
-		myUpdates,
-		myExcludedUpdates,
-		myScheduledDownloads,
-		myRollbacks,
-		getAds,
-		myDownloads,
+    // Client
+    myStores,
+    myUpdates,
+    myExcludedUpdates,
+    myScheduledDownloads,
+    myRollbacks,
+    getAds,
+    myDownloads,
 
-		// Displays
-		facebook,
-		twitch,
-		youtube,
+    // Displays
+    facebook,
+    twitch,
+    youtube,
 
-		// v3
-		getReviews
-	}
+    // v3
+    getReviews
+  }
 }

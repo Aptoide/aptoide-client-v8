@@ -19,42 +19,42 @@ import retrofit2.Converter;
  */
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
-	public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-	}
+  public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
+      String baseHost) {
+    super(body, httpClient, converterFactory, baseHost);
+  }
 
-	protected static StoreCredentials getStore(Long storeId) {
-		@Cleanup Realm realm = DeprecatedDatabase.get();
+  protected static StoreCredentials getStore(Long storeId) {
+    @Cleanup Realm realm = DeprecatedDatabase.get();
 
-		if (storeId != null) {
-			Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
-			if (store != null) {
-				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-			}
-		}
-		return new StoreCredentials();
-	}
+    if (storeId != null) {
+      Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
+      if (store != null) {
+        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
+      }
+    }
+    return new StoreCredentials();
+  }
 
-	protected static StoreCredentials getStore(String storeName) {
-		@Cleanup Realm realm = DeprecatedDatabase.get();
-		if (storeName != null) {
-			Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
-			if (store != null) {
-				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-			}
-		}
-		return new StoreCredentials();
-	}
+  protected static StoreCredentials getStore(String storeName) {
+    @Cleanup Realm realm = DeprecatedDatabase.get();
+    if (storeName != null) {
+      Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
+      if (store != null) {
+        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
+      }
+    }
+    return new StoreCredentials();
+  }
 
-	@AllArgsConstructor
-	public static class StoreCredentials {
+  @AllArgsConstructor public static class StoreCredentials {
 
-		@Getter private final String username;
-		@Getter private final String passwordSha1;
+    @Getter private final String username;
+    @Getter private final String passwordSha1;
 
-		public StoreCredentials() {
-			username = null;
-			passwordSha1 = null;
-		}
-	}
+    public StoreCredentials() {
+      username = null;
+      passwordSha1 = null;
+    }
+  }
 }

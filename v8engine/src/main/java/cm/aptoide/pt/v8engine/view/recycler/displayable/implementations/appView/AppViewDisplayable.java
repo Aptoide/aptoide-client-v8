@@ -14,35 +14,34 @@ import rx.functions.Action0;
 /**
  * Created by sithengineer on 04/05/16.
  */
-@Ignore
-abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
+@Ignore abstract class AppViewDisplayable extends DisplayablePojo<GetApp> {
 
-	@Setter private Action0 onResumeAction;
-	@Setter private Action0 onPauseAction;
-	public AppViewDisplayable() {
+  @Setter private Action0 onResumeAction;
+  @Setter private Action0 onPauseAction;
 
-	}
+  public AppViewDisplayable() {
 
-	public AppViewDisplayable(GetApp getApp) {
-		super(getApp);
-	}
+  }
 
-	public AppViewDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-		super(getApp, fixedPerLineCount);
-	}
+  public AppViewDisplayable(GetApp getApp) {
+    super(getApp);
+  }
 
-	@Override public void onResume() {
-		super.onResume();
-		if (onResumeAction != null) {
-			onResumeAction.call();
-		}
-	}
+  public AppViewDisplayable(GetApp getApp, boolean fixedPerLineCount) {
+    super(getApp, fixedPerLineCount);
+  }
 
-	@Override public void onPause() {
-		if (onPauseAction != null) {
-			onPauseAction.call();
-		}
-		super.onPause();
-	}
+  @Override public void onResume() {
+    super.onResume();
+    if (onResumeAction != null) {
+      onResumeAction.call();
+    }
+  }
 
+  @Override public void onPause() {
+    if (onPauseAction != null) {
+      onPauseAction.call();
+    }
+    super.onPause();
+  }
 }

@@ -13,22 +13,21 @@ import rx.Observable;
  */
 public class PaymentAccessor implements Accessor {
 
-	private final Database database;
+  private final Database database;
 
-	protected PaymentAccessor(Database database) {
-		this.database = database;
-	}
+  protected PaymentAccessor(Database database) {
+    this.database = database;
+  }
 
-	public Observable<PaymentConfirmation> getPaymentConfirmation(int productId) {
-		return database.get(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
-	}
+  public Observable<PaymentConfirmation> getPaymentConfirmation(int productId) {
+    return database.get(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
+  }
 
-	public void delete(int productId) {
-		database.delete(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
-	}
+  public void delete(int productId) {
+    database.delete(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
+  }
 
-	public void save(PaymentConfirmation paymentConfirmation) {
-		database.save(paymentConfirmation);
-	}
-
+  public void save(PaymentConfirmation paymentConfirmation) {
+    database.save(paymentConfirmation);
+  }
 }

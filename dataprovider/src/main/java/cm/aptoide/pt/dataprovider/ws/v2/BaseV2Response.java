@@ -10,8 +10,7 @@ import lombok.Data;
 /**
  * Base response for v2 webservices.
  */
-@Data
-public class BaseV2Response {
+@Data public class BaseV2Response {
 
-	private String status;
+  private String status;
 }

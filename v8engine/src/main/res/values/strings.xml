@@ -4,7 +4,8 @@
   -->
 
 <resources>
-  <string name="app_name">Aptoide V8 Beta</string>
+  <string name="app_name">Aptoide V8</string>
+
 
   <string name="dark">Dark</string>
   <string name="light">Light</string>
@@ -30,6 +31,8 @@
   <string name="button_header_more">more</string>
   <string name="search">Search</string>
 
+
+  <string name="up_to_date">Up to date</string>
   <string name="update">Update</string>
   <string name="uninstall">Uninstall</string>
   <string name="downgrade">Downgrade</string>
@@ -145,7 +148,7 @@
   <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
 
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Apps Feed</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
   <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
 
   <!-- WIZARD PAGE 3 -->
@@ -195,6 +198,7 @@
   <string name="updates">Updates</string>
   <string name="social_timeline">Social Timeline</string>
   <string name="downloads">Downloads</string>
+  <string name="apps_timeline"><b>Apps Timeline</b></string>
   <string name="latest_reviews">Latest Reviews</string>
   <string name="latest_comments">Latest Comments</string>
   <string name="action">Action</string>
@@ -281,5 +285,11 @@
   <!--Download fragment-->
   <string name="fragment_download_no_connection">No apps downloaded</string>
   <string name="fragment_download_no_connection_subtitle">New apps will appear here as soon as you start downloading them!</string>
+  <string name="newer_version_available">Newer version available</string>
+
+  <string name="add_store">Add store</string>
+  <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
+
+  <string name="displayable_social_timeline_similar_to">similar to %1$s</string>
 
 </resources>

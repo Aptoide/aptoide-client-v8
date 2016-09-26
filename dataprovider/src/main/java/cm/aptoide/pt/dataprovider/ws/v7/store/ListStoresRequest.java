@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.text.TextUtils;
-
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
@@ -29,54 +28,56 @@ import rx.Observable;
  */
 public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
-	public static final String STORT_BY_DOWNLOADS = "downloads7d";
-	private String url;
+  public static final String STORT_BY_DOWNLOADS = "downloads7d";
+  private String url;
 
-	private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-		this.url = url;
-	}
+  private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
+      Body body, String baseHost) {
+    super(body, httpClient, converterFactory, baseHost);
+    this.url = url;
+  }
 
-	public ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-	}
+  public ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body,
+      String baseHost) {
+    super(body, httpClient, converterFactory, baseHost);
+  }
 
-	public static ListStoresRequest ofTopStores(int offset, int limit) {
-		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+  public static ListStoresRequest ofTopStores(int offset, int limit) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
-		final Body baseBody = new Body();
-		baseBody.setOffset(offset);
-		baseBody.limit = limit;
-		return new ListStoresRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body) decorator.decorate(baseBody),
-				BASE_HOST);
-	}
+    final Body baseBody = new Body();
+    baseBody.setOffset(offset);
+    baseBody.limit = limit;
+    return new ListStoresRequest(OkHttpClientFactory.getSingletonClient(),
+        WebService.getDefaultConverter(), (Body) decorator.decorate(baseBody), BASE_HOST);
+  }
 
-	public static ListStoresRequest ofAction(String url) {
-		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+  public static ListStoresRequest ofAction(String url) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
 
-		return new ListStoresRequest(url.replace("listStores", ""), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), (Body)
-				decorator.decorate(new
-				Body
-				()),
-				BASE_HOST);
-	}
+    return new ListStoresRequest(url.replace("listStores", ""),
+        OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
+        (Body) decorator.decorate(new Body()), BASE_HOST);
+  }
 
-	@Override
-	protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		if (TextUtils.isEmpty(url)) {
-			return interfaces.listTopStores(STORT_BY_DOWNLOADS, 10, body, bypassCache);
-		} else {
-			return interfaces.listStores(url, body, bypassCache);
-		}
-	}
+  @Override
+  protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+    if (TextUtils.isEmpty(url)) {
+      return interfaces.listTopStores(STORT_BY_DOWNLOADS, 10, body, bypassCache);
+    } else {
+      return interfaces.listStores(url, body, bypassCache);
+    }
+  }
 
-	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBody implements Endless {
+  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
+      implements Endless {
 
-		@Getter private Integer limit;
-		@Getter @Setter private int offset;
+    @Getter private Integer limit;
+    @Getter @Setter private int offset;
 
-		public Body() {
-		}
-	}
+    public Body() {
+    }
+  }
 }

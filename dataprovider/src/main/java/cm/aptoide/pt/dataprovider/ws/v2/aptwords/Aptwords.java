@@ -5,13 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import java.util.Map;
-
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.http.FieldMap;
@@ -24,21 +22,22 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-	private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
-	protected final IdsRepository idsRepository;
+  private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
+  protected final IdsRepository idsRepository;
 
-	public Aptwords(IdsRepository idsRepository) {
-		super(Interfaces.class, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_URL);
-		this.idsRepository = idsRepository;
-	}
+  public Aptwords(IdsRepository idsRepository) {
+    super(Interfaces.class, OkHttpClientFactory.getSingletonClient(),
+        WebService.getDefaultConverter(), BASE_URL);
+    this.idsRepository = idsRepository;
+  }
 
-	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory, IdsRepository idsRepository) {
-		super(Interfaces.class, httpClient, factory, BASE_URL);
-		this.idsRepository = idsRepository;
-	}
+  protected Aptwords(OkHttpClient httpClient, Converter.Factory factory,
+      IdsRepository idsRepository) {
+    super(Interfaces.class, httpClient, factory, BASE_URL);
+    this.idsRepository = idsRepository;
+  }
 
-
-	interface Interfaces {
+  interface Interfaces {
 
 		@POST("getAds")
 		@FormUrlEncoded

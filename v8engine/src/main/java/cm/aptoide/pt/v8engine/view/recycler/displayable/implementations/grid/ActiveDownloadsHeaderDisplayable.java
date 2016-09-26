@@ -11,25 +11,23 @@ import lombok.Getter;
  */
 public class ActiveDownloadsHeaderDisplayable extends Displayable {
 
-	private static final String TAG = ActiveDownloadsHeaderDisplayable.class.getSimpleName();
-	@Getter private String label;
-	@Getter private DownloadServiceHelper downloadManager;
+  private static final String TAG = ActiveDownloadsHeaderDisplayable.class.getSimpleName();
+  @Getter private String label;
+  @Getter private DownloadServiceHelper downloadManager;
 
-	public ActiveDownloadsHeaderDisplayable() {
-	}
+  public ActiveDownloadsHeaderDisplayable() {
+  }
 
-	public ActiveDownloadsHeaderDisplayable(String label, DownloadServiceHelper downloadManager) {
-		this.label = label;
-		this.downloadManager = downloadManager;
-	}
+  public ActiveDownloadsHeaderDisplayable(String label, DownloadServiceHelper downloadManager) {
+    this.label = label;
+    this.downloadManager = downloadManager;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.ACTIVE_DOWNLOAD_HEADER;
-	}
+  @Override public Type getType() {
+    return Type.ACTIVE_DOWNLOAD_HEADER;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.active_downloads_header_row;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.active_downloads_header_row;
+  }
 }

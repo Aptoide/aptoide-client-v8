@@ -10,37 +10,37 @@ package cm.aptoide.pt.dataprovider.util.referrer;
  */
 public class SimpleTimedFuture<T> {
 
-	private T value;
-	private int DELAY;
+  private T value;
+  private int DELAY;
 
-	public T get(int timeOutMillis) {
-		int counter = 0;
-		try {
-			while (!isDone()) {
-				DELAY = 100;
-				Thread.sleep(DELAY);
-				if (++counter * DELAY > timeOutMillis) {
-					throw new InterruptedException("TimeOut reached! " + timeOutMillis);
-				}
-			}
+  public T get(int timeOutMillis) {
+    int counter = 0;
+    try {
+      while (!isDone()) {
+        DELAY = 100;
+        Thread.sleep(DELAY);
+        if (++counter * DELAY > timeOutMillis) {
+          throw new InterruptedException("TimeOut reached! " + timeOutMillis);
+        }
+      }
 
-			return value;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+      return value;
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	public boolean isDone() {
-		return value != null;
-	}
+  public boolean isDone() {
+    return value != null;
+  }
 
-	public T get() {
-		return this.get(5000);
-	}
+  public T get() {
+    return this.get(5000);
+  }
 
-	public void set(T value) {
-		this.value = value;
-	}
+  public void set(T value) {
+    this.value = value;
+  }
 }

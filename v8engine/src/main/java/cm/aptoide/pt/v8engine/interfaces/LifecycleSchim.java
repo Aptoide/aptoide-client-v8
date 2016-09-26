@@ -16,15 +16,15 @@ import android.support.annotation.Nullable;
  */
 public interface LifecycleSchim {
 
-	void onResume();
+  void onResume();
 
-	void onPause();
+  void onPause();
 
-	void onViewCreated();
+  void onViewCreated();
 
-	void onDestroyView();
+  void onDestroyView();
 
-	void onSaveInstanceState(Bundle outState);
+  void onSaveInstanceState(Bundle outState);
 
-	void onViewStateRestored(@Nullable Bundle savedInstanceState);
+  void onViewStateRestored(@Nullable Bundle savedInstanceState);
 }

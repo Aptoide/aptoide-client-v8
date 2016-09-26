@@ -14,33 +14,29 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 public class EmptyDisplayable extends Displayable {
 
-	private int spanSize = 1;
+  private int spanSize = 1;
 
-	public EmptyDisplayable() {
-	}
+  public EmptyDisplayable() {
+  }
 
-	public EmptyDisplayable(int spanSize) {
-		this.spanSize = spanSize;
-	}
+  public EmptyDisplayable(int spanSize) {
+    this.spanSize = spanSize;
+  }
 
-	@Override
-	public Type getType() {
-		return Type._EMPTY;
-	}
+  @Override public Type getType() {
+    return Type._EMPTY;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_empty;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_empty;
+  }
 
-	@Override
-	public int getDefaultPerLineCount() {
-		// Stub
-		return 1;
-	}
+  @Override public int getDefaultPerLineCount() {
+    // Stub
+    return 1;
+  }
 
-	@Override
-	public int getSpanSize() {
-		return spanSize;
-	}
+  @Override public int getSpanSize() {
+    return spanSize;
+  }
 }

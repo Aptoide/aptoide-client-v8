@@ -43,11 +43,18 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
-import io.fabric.sdk.android.Fabric;
+import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import com.flurry.android.FlurryAgent;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import io.realm.Realm;
+import java.util.Collections;
+import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
@@ -143,6 +150,7 @@ public abstract class V8Engine extends DataProvider {
     }
 
     if (SecurePreferences.isFirstRun()) {
+      PreferenceManager.setDefaultValues(this, R.xml.settings, false);
       loadInstalledApps().doOnNext(o -> {
         if (AptoideAccountManager.isLoggedIn()) {
           if (!SecurePreferences.isUserDataLoaded()) {
@@ -169,13 +177,14 @@ public abstract class V8Engine extends DataProvider {
       Logger.w(TAG, "application has debug flag active");
     }
 
-    setupCrashlytics();
+    CrashReports.setup(getContext());
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
     AptoideDownloadManager.getInstance()
-            .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface, downloadAccessor, new CacheHelper(downloadAccessor,
-                    settingsInterface));
+        .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
+            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
+            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient());
 
     // setupCurrentActivityListener();
 
@@ -197,13 +206,6 @@ public abstract class V8Engine extends DataProvider {
         () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
   }
-
-  private void setupCrashlytics() {
-    Crashlytics crashlyticsKit = new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(!BuildConfig.FABRIC_CONFIGURED).build()).build();
-    Fabric.with(this, crashlyticsKit);
-  }
-
   //
   // Strict Mode
   //
@@ -231,7 +233,7 @@ public abstract class V8Engine extends DataProvider {
           (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
       for (PackageInfo packageInfo : installedApps) {
-        Installed installed = new Installed(packageInfo, getPackageManager());
+        Installed installed = new Installed(packageInfo);
         DeprecatedDatabase.save(installed, realm);
       }
       return null;

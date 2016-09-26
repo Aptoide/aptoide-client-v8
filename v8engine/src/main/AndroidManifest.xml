@@ -3,13 +3,13 @@
   ~ Modified by SithEngineer on 08/08/2016.
   -->
 
-<manifest package="cm.aptoide.pt.v8engine"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cm.aptoide.pt.v8engine">
 
   <permission
-      android:label="Make internal payments"
       android:name="cm.aptoide.pt.permission.BILLING"
+      android:label="Make internal payments"
       android:protectionLevel="normal"/>
 
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -29,6 +29,13 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <data android:scheme="amp${LOCALYTICS_APP_KEY}"/>
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
       </intent-filter>
     </activity>
 
@@ -69,6 +76,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
 
+        <data android:scheme="aptoide"/>
         <data android:scheme="aptoiderepo"/>
         <data android:scheme="aptoidexml"/>
         <data android:scheme="aptoideinstall"/>
@@ -159,11 +167,6 @@
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
       </intent-filter>
     </receiver>
-
-    <provider
-        android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
-        android:authorities="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
-        android:exported="false"/>
 
     <meta-data
         android:name="LOCALYTICS_APP_KEY"

@@ -77,7 +77,7 @@
         android:summary="@string/show_all_updates"
         android:title="@string/setting_allUpdates_filtering"/>
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="updatesFilterKey"
         android:summary="@string/updates_filter_summary"
         android:title="@string/updates_filter_setting_title"/>
@@ -105,18 +105,20 @@
         android:summary="@string/settings_maxFileCache_sum"
         android:title="@string/settings_maxFileCache_title"/>
   </PreferenceCategory>
-  <!--
   <PreferenceCategory
       android:key="changetheme"
       android:title="@string/change_theme">
-    <ListPreference
-        android:defaultValue="light"
-        android:entries="@array/theme_names"
-        android:entryValues="@array/themes"
-        android:key="theme"
-        android:title="@string/theme"/>
+
+    <Preference
+        android:key="soon"
+        android:title="@string/change_theme_soon"/>
+    <!--<ListPreference-->
+        <!--android:defaultValue="light"-->
+        <!--android:entries="@array/theme_names"-->
+        <!--android:entryValues="@array/themes"-->
+        <!--android:key="theme"-->
+        <!--android:title="@string/theme"/>-->
   </PreferenceCategory>
-  -->
   <PreferenceCategory android:title="@string/root">
     <CheckBoxPreference
         android:key="allowRoot"

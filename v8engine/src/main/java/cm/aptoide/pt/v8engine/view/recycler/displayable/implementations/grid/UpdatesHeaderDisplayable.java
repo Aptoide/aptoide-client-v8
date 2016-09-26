@@ -11,24 +11,22 @@ import lombok.Getter;
  */
 public class UpdatesHeaderDisplayable extends Displayable {
 
-	@Getter private String label;
-	@Getter private Installer installManager;
+  @Getter private String label;
+  @Getter private Installer installManager;
 
-	public UpdatesHeaderDisplayable() {
-	}
+  public UpdatesHeaderDisplayable() {
+  }
 
-	public UpdatesHeaderDisplayable(Installer installManager, String label) {
-		this.installManager = installManager;
-		this.label = label;
-	}
+  public UpdatesHeaderDisplayable(Installer installManager, String label) {
+    this.installManager = installManager;
+    this.label = label;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.UPDATES_HEADER;
-	}
+  @Override public Type getType() {
+    return Type.UPDATES_HEADER;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.updates_header_row;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.updates_header_row;
+  }
 }

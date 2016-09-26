@@ -17,25 +17,24 @@ import lombok.Getter;
  */
 public class CommentsReadMoreDisplayable extends DisplayablePojo<Review> {
 
-	@Getter private RateAndReviewsFragment.CommentAdder commentAdder;
-	@Getter private int next;
+  @Getter private RateAndReviewsFragment.CommentAdder commentAdder;
+  @Getter private int next;
 
-	public CommentsReadMoreDisplayable() {
-	}
+  public CommentsReadMoreDisplayable() {
+  }
 
-	public CommentsReadMoreDisplayable(Review review, int next, RateAndReviewsFragment.CommentAdder commentAdder) {
-		super(review);
-		this.commentAdder = commentAdder;
-		this.next = next;
-	}
+  public CommentsReadMoreDisplayable(Review review, int next,
+      RateAndReviewsFragment.CommentAdder commentAdder) {
+    super(review);
+    this.commentAdder = commentAdder;
+    this.next = next;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.READ_MORE_COMMENTS;
-	}
+  @Override public Type getType() {
+    return Type.READ_MORE_COMMENTS;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.comments_read_more_layout;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.comments_read_more_layout;
+  }
 }

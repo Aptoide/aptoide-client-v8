@@ -12,5 +12,5 @@ import rx.functions.Action1;
  */
 public interface SuccessRequestListener<T> extends Action1<T> {
 
-	void call(T t);
+  void call(T t);
 }

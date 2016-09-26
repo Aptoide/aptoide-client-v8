@@ -10,7 +10,7 @@ package cm.aptoide.pt.v8engine.repository.exception;
  */
 public class RepositoryItemNotFoundException extends Exception {
 
-	public RepositoryItemNotFoundException(String detailMessage) {
-		super(detailMessage);
-	}
+  public RepositoryItemNotFoundException(String detailMessage) {
+    super(detailMessage);
+  }
 }

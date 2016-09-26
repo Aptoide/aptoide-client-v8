@@ -10,12 +10,11 @@ package cm.aptoide.pt.dataprovider.ws.v7;
  */
 public interface Endless {
 
-	int DEFAULT_LIMIT = 10;
+  int DEFAULT_LIMIT = 10;
 
-	int getOffset();
+  int getOffset();
 
-	void setOffset(int offset);
+  void setOffset(int offset);
 
-	Integer getLimit();
-
+  Integer getLimit();
 }

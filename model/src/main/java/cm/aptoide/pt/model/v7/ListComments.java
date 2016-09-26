@@ -10,6 +10,5 @@ import lombok.Data;
 /**
  * Created by sithengineer on 20/07/16.
  */
-@Data
-public class ListComments extends BaseV7EndlessDatalistResponse<Comment> {
+@Data public class ListComments extends BaseV7EndlessDatalistResponse<Comment> {
 }

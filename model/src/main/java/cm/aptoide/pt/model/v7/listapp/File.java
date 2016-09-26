@@ -11,14 +11,13 @@ import lombok.Data;
 /**
  * Class used on an App item TODO: Incomplete
  */
-@Data
-public class File {
+@Data public class File {
 
-	private String vername;
-	private int vercode;
-	private String md5sum;
-	private String path;
-	private String pathAlt;
-	private long filesize;
-	private Malware malware;
+  private String vername;
+  private int vercode;
+  private String md5sum;
+  private String path;
+  private String pathAlt;
+  private long filesize;
+  private Malware malware;
 }

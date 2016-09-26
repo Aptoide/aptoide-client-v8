@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.receivers;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.UriMatcher;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,13 +17,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-
+import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.v8engine.MainActivityFragment;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.xml.XmlAppHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
+import io.realm.Realm;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,403 +43,465 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.xml.XmlAppHandler;
-import io.realm.Realm;
 import lombok.Cleanup;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * Created by neuro on 10-08-2016.
  */
 public class DeepLinkIntentReceiver extends AppCompatActivity {
+  public static final String AUTHORITY = "cm.aptoide.pt";
+  public static final int DEEPLINK_ID = 1;
+  public static final String DEEP_LINK = "deeplink";
+  private static final String TAG = DeepLinkIntentReceiver.class.getSimpleName();
+  private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-	private ArrayList<String> server;
-	private HashMap<String,String> app;
-	private String TMP_MYAPP_FILE;
-	private Class startClass = MainActivityFragment.class;
-	private AsyncTask<String,Void,Void> asyncTask;
+  static {
+    sURIMatcher.addURI(AUTHORITY, DEEP_LINK, DEEPLINK_ID);
+  }
 
-	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+  private ArrayList<String> server;
+  private HashMap<String, String> app;
+  private String TMP_MYAPP_FILE;
+  private Class startClass = MainActivityFragment.class;
+  private AsyncTask<String, Void, Void> asyncTask;
 
-		TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
-		String uri = getIntent().getDataString();
-		// TODO: 10-08-2016 jdandrade
-		Analytics.ApplicationLaunch.website(uri);
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		if (uri.startsWith("aptoiderepo")) {
+    TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
+    String uri = getIntent().getDataString();
+    Analytics.ApplicationLaunch.website(uri);
 
-			ArrayList<String> repo = new ArrayList<>();
-			repo.add(uri.substring(14));
-			startWithRepo(repo);
-		} else if (uri.startsWith("aptoidexml")) {
+    if (uri.startsWith("aptoiderepo")) {
 
-			String repo = uri.substring(13);
-			parseXmlString(repo);
-			Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-			i.putExtra(DeepLinksTargets.NEW_REPO, repo);
-			startActivity(i);
-		} else if (uri.startsWith("aptoidesearch://")) {
-			startFromPackageName(uri.split("aptoidesearch://")[1]);
-		} else if (uri.startsWith("aptoidevoicesearch://")) {
-			aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-		} else if (uri.startsWith("market")) {
-			String params = uri.split("&")[0];
-			String param = params.split("=")[1];
-			if (param.contains("pname:")) {
-				param = param.substring(6);
-			} else if (param.contains("pub:")) {
-				param = param.substring(4);
-			}
-			startFromPackageName(param);
-		} else if (uri.startsWith("http://market.android.com/details?id=")) {
-			String param = uri.split("=")[1];
-			startFromPackageName(param);
-		} else if (uri.startsWith("https://market.android.com/details?id=")) {
-			String param = uri.split("=")[1];
-			startFromPackageName(param);
-		} else if (uri.startsWith("https://play.google.com/store/apps/details?id=")) {
-			String params = uri.split("&")[0];
-			String param = params.split("=")[1];
-			if (param.contains("pname:")) {
-				param = param.substring(6);
-			} else if (param.contains("pub:")) {
-				param = param.substring(4);
-			}
-			startFromPackageName(param);
-		} else if (uri.contains("aptword://")) {
+      ArrayList<String> repo = new ArrayList<>();
+      repo.add(uri.substring(14));
+      startWithRepo(repo);
+    } else if (uri.startsWith("aptoidexml")) {
 
-			// TODO: 12-08-2016 neuro aptword Seems discontinued???
-			String param = uri.substring("aptword://".length());
+      String repo = uri.substring(13);
+      parseXmlString(repo);
+      Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
+      i.putExtra(DeepLinksTargets.NEW_REPO, repo);
+      startActivity(i);
+    } else if (uri.startsWith("aptoidesearch://")) {
+      startFromPackageName(uri.split("aptoidesearch://")[1]);
+    } else if (uri.startsWith("aptoidevoicesearch://")) {
+      aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
+    } else if (uri.startsWith("market")) {
+      String params = uri.split("&")[0];
+      String param = params.split("=")[1];
+      if (param.contains("pname:")) {
+        param = param.substring(6);
+      } else if (param.contains("pub:")) {
+        param = param.substring(4);
+      }
+      startFromPackageName(param);
+    } else if (uri.startsWith("http://market.android.com/details?id=")) {
+      String param = uri.split("=")[1];
+      startFromPackageName(param);
+    } else if (uri.startsWith("https://market.android.com/details?id=")) {
+      String param = uri.split("=")[1];
+      startFromPackageName(param);
+    } else if (uri.startsWith("https://play.google.com/store/apps/details?id=")) {
+      String params = uri.split("&")[0];
+      String param = params.split("=")[1];
+      if (param.contains("pname:")) {
+        param = param.substring(6);
+      } else if (param.contains("pub:")) {
+        param = param.substring(4);
+      }
+      startFromPackageName(param);
+    } else if (uri.contains("aptword://")) {
 
-			if (!TextUtils.isEmpty(param)) {
+      // TODO: 12-08-2016 neuro aptword Seems discontinued???
+      String param = uri.substring("aptword://".length());
 
-				param = param.replaceAll("\\*", "_").replaceAll("\\+", "/");
+      if (!TextUtils.isEmpty(param)) {
 
-				String json = new String(Base64.decode(param.getBytes(), 0));
+        param = param.replaceAll("\\*", "_").replaceAll("\\+", "/");
 
-				Log.d("AptoideAptWord", json);
+        String json = new String(Base64.decode(param.getBytes(), 0));
 
-				GetAdsResponse.Ad ad = null;
-				try {
-					ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
-				} catch (IOException e) {
-					Logger.printException(e);
-				}
+        Log.d("AptoideAptWord", json);
 
-				if (ad != null) {
-					Intent i = new Intent(this, startClass);
-					i.putExtra(DeepLinksTargets.FROM_AD, MinimalAd.from(ad));
-					startActivity(i);
-				} else {
-					finish();
-				}
-			}
-		} else if (uri.contains("imgs.aptoide.com")) {
+        GetAdsResponse.Ad ad = null;
+        try {
+          ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
+        } catch (IOException e) {
+          CrashReports.logException(e);
+          Logger.printException(e);
+        }
 
-			String[] strings = uri.split("-");
-			long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
+        if (ad != null) {
+          Intent i = new Intent(this, startClass);
+          i.putExtra(DeepLinksTargets.FROM_AD, MinimalAd.from(ad));
+          startActivity(i);
+        } else {
+          finish();
+        }
+      }
+    } else if (uri.contains("imgs.aptoide.com")) {
 
-			startFromAppView(id);
-		} else if (uri.startsWith("http://webservices.aptoide.com")) {
-			/** refactored to remove org.apache libs */
-			Map<String,String> params = null;
+      String[] strings = uri.split("-");
+      long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
 
-			try {
-				params = AptoideUtils.StringU.splitQuery(URI.create(uri));
-			} catch (UnsupportedEncodingException e) {
-				Logger.printException(e);
-			}
+      startFromAppView(id);
+    } else if (uri.startsWith("http://webservices.aptoide.com")) {
+      /** refactored to remove org.apache libs */
+      Map<String, String> params = null;
 
-			if (params != null) {
-				String uid = null;
-				for (Map.Entry<String,String> entry : params.entrySet()) {
-					if (entry.getKey().equals("uid")) {
-						uid = entry.getValue();
-					}
-				}
+      try {
+        params = AptoideUtils.StringU.splitQuery(URI.create(uri));
+      } catch (UnsupportedEncodingException e) {
+        CrashReports.logException(e);
+        Logger.printException(e);
+      }
 
-				if (uid != null) {
-					try {
-						long id = Long.parseLong(uid);
-						startFromAppView(id);
-					} catch (NumberFormatException e) {
-						Logger.printException(e);
-						ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
-					}
-				}
-			}
+      if (params != null) {
+        String uid = null;
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+          if (entry.getKey().equals("uid")) {
+            uid = entry.getValue();
+          }
+        }
 
-			finish();
-		} else if (uri.startsWith("file://")) {
+        if (uid != null) {
+          try {
+            long id = Long.parseLong(uid);
+            startFromAppView(id);
+          } catch (NumberFormatException e) {
+            CrashReports.logException(e);
+            Logger.printException(e);
+            ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
+          }
+        }
+      }
 
-			downloadMyApp();
-		} else if (uri.startsWith("aptoideinstall://")) {
+      finish();
+    } else if (uri.startsWith("file://")) {
 
-			try {
-				long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
-				startFromAppView(id);
-			} catch (NumberFormatException e) {
-				Logger.printException(e);
-				finish();
-			}
-		} else {
-			finish();
-		}
-	}
+      downloadMyApp();
+    } else if (uri.startsWith("aptoideinstall://")) {
+      parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
+    } else if (uri.startsWith("aptoide://")) {
+      Uri parse = Uri.parse(uri);
+      switch (sURIMatcher.match(parse)) {
+        case DEEPLINK_ID:
+          startGenericDeepLink(parse);
+          break;
+      }
+      finish();
+    } else {
+      finish();
+    }
+  }
 
-	public void startFromAppView(long id) {
-		Intent i = new Intent(this, startClass);
+  private void startGenericDeepLink(Uri parse) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.GENERIC_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.URI, parse);
+    startActivity(intent);
+  }
 
-		i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-		i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
+  private void parseAptoideInstallUri(String substring) {
+    substring = substring.replace("\"", "");
+    String[] split = substring.split("&");
+    String repo = null;
+    String packageName = null;
+    boolean showPopup = false;
+    for (String property : split) {
+      if (property.toLowerCase().contains("package")) {
+        packageName = property.split("=")[1];
+      } else if (property.toLowerCase().contains("store")) {
+        repo = property.split("=")[1];
+      } else if (property.toLowerCase().contains("show_install_popup")) {
+        showPopup = property.split("=")[1].equals("true");
+      } else {
+        //old version only with app id
+        try {
+          long id = Long.parseLong(substring);
+          startFromAppView(id);
+          return;
+        } catch (NumberFormatException e) {
+          CrashReports.logException(e);
+          Logger.printException(e);
+        }
+      }
+    }
+    if (!TextUtils.isEmpty(packageName)) {
+      startFromAppview(repo, packageName, showPopup);
+    } else {
+      Log.e(TAG,
+          "Package name is mandatory, it should be in uri. Ex: aptoideinstall://package=cm.aptoide.pt&store=apps&show_install_popup=true");
+    }
+  }
 
-		startActivity(i);
-	}
+  private void startFromAppview(String repo, String packageName, boolean showPopup) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+    intent.putExtra(DeepLinksKeys.STORENAME_KEY, repo);
+    intent.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
+    startActivity(intent);
+  }
 
-	public void startFromAppView(String packageName) {
-		Intent i = new Intent(this, startClass);
+  public void startFromAppView(long id) {
+    Intent i = new Intent(this, startClass);
 
-		i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-		i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
 
-		startActivity(i);
-	}
+    startActivity(i);
+  }
 
-	public void startFromSearch(String query) {
-		Intent i = new Intent(this, startClass);
+  public void startFromAppView(String packageName) {
+    Intent i = new Intent(this, startClass);
 
-		i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
-		i.putExtra(SearchManager.QUERY, query);
+    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
 
-		startActivity(i);
-	}
+    startActivity(i);
+  }
 
-	public void aptoidevoiceSearch(String param) {
-		// TODO: voiceSearch was used by a foreign app, dunno if still used.
-		//        Cursor c = new AptoideDatabase(Aptoide.getDb()).getSearchResults(param, StoreActivity.Sort.DOWNLOADS);
-		//
-		//        ArrayList<String> namelist = new ArrayList<String>();
-		//        ArrayList<Long> idlist = new ArrayList<Long>();
-		//
-		//        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-		//            namelist.add(c.getString(c.getColumnIndex("name")));
-		//            idlist.add(c.getLong(c.getColumnIndex("_id")));
-		//        }
-		//
-		//        Intent i = new Intent();
-		//        i.putStringArrayListExtra("namelist", namelist);
-		//        i.putExtra("idlist", AptoideUtils.longListToLongArray(idlist));
-		//
-		//        setResult(UNKONWN_FLAG, i);
-		finish();
-	}
+  public void startFromSearch(String query) {
+    Intent i = new Intent(this, startClass);
 
-	private void parseXmlString(String file) {
+    i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
+    i.putExtra(SearchManager.QUERY, query);
 
-		try {
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-			SAXParser sp = spf.newSAXParser();
-			XMLReader xr = sp.getXMLReader();
-			XmlAppHandler handler = new XmlAppHandler();
-			xr.setContentHandler(handler);
+    startActivity(i);
+  }
 
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(file));
-			xr.parse(is);
-			server = handler.getServers();
-			app = handler.getApp();
-		} catch (IOException | SAXException | ParserConfigurationException e) {
-			Logger.printException(e);
-		}
-	}
+  public void aptoidevoiceSearch(String param) {
+    // TODO: voiceSearch was used by a foreign app, dunno if still used.
+    //        Cursor c = new AptoideDatabase(Aptoide.getDb()).getSearchResults(param, StoreActivity.Sort.DOWNLOADS);
+    //
+    //        ArrayList<String> namelist = new ArrayList<String>();
+    //        ArrayList<Long> idlist = new ArrayList<Long>();
+    //
+    //        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+    //            namelist.add(c.getString(c.getColumnIndex("name")));
+    //            idlist.add(c.getLong(c.getColumnIndex("_id")));
+    //        }
+    //
+    //        Intent i = new Intent();
+    //        i.putStringArrayListExtra("namelist", namelist);
+    //        i.putExtra("idlist", AptoideUtils.longListToLongArray(idlist));
+    //
+    //        setResult(UNKONWN_FLAG, i);
+    finish();
+  }
 
-	public void startWithRepo(ArrayList<String> repo) {
-		Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-		i.putExtra(DeepLinksTargets.NEW_REPO, repo);
-		startActivity(i);
+  private void parseXmlString(String file) {
 
-		// TODO: 10-08-2016 jdandrade
-		Analytics.ApplicationLaunch.newRepo();
-	}
+    try {
+      SAXParserFactory spf = SAXParserFactory.newInstance();
+      SAXParser sp = spf.newSAXParser();
+      XMLReader xr = sp.getXMLReader();
+      XmlAppHandler handler = new XmlAppHandler();
+      xr.setContentHandler(handler);
 
-	public void startFromPackageName(String packageName) {
-		@Cleanup Realm realm = DeprecatedDatabase.get();
+      InputSource is = new InputSource();
+      is.setCharacterStream(new StringReader(file));
+      xr.parse(is);
+      server = handler.getServers();
+      app = handler.getApp();
+    } catch (IOException | SAXException | ParserConfigurationException e) {
+      CrashReports.logException(e);
+      Logger.printException(e);
+    }
+  }
 
-		Intent i;
-		if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
-			startFromAppView(packageName);
-		} else {
-			startFromSearch(packageName);
-		}
-	}
+  public void startWithRepo(ArrayList<String> repo) {
+    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
+    i.putExtra(DeepLinksTargets.NEW_REPO, repo);
+    startActivity(i);
 
-	@Override
-	public void startActivity(Intent intent) {
-		super.startActivity(intent);
-		finish();
-	}
+    // TODO: 10-08-2016 jdandrade
+    Analytics.ApplicationLaunch.newRepo();
+  }
 
-	private void downloadMyApp() {
-		asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
-	}
+  public void startFromPackageName(String packageName) {
+    @Cleanup Realm realm = DeprecatedDatabase.get();
 
-	private void downloadMyappFile(String myappUri) throws Exception {
-		try {
-			URL url = new URL(myappUri);
-			URLConnection connection;
-			if (!myappUri.startsWith("file://")) {
-				connection = url.openConnection();
-				connection.setReadTimeout(5000);
-				connection.setConnectTimeout(5000);
-			} else {
-				connection = url.openConnection();
-			}
+    Intent i;
+    if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
+      startFromAppView(packageName);
+    } else {
+      startFromSearch(packageName);
+    }
+  }
 
-			BufferedInputStream getit = new BufferedInputStream(connection.getInputStream(), 1024);
+  @Override public void startActivity(Intent intent) {
+    super.startActivity(intent);
+    finish();
+  }
 
-			File file_teste = new File(TMP_MYAPP_FILE);
-			if (file_teste.exists()) {
-				file_teste.delete();
-			}
+  private void downloadMyApp() {
+    asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
+  }
 
-			FileOutputStream saveit = new FileOutputStream(TMP_MYAPP_FILE);
-			BufferedOutputStream bout = new BufferedOutputStream(saveit, 1024);
-			byte data[] = new byte[1024];
+  private void downloadMyappFile(String myappUri) throws Exception {
+    try {
+      URL url = new URL(myappUri);
+      URLConnection connection;
+      if (!myappUri.startsWith("file://")) {
+        connection = url.openConnection();
+        connection.setReadTimeout(5000);
+        connection.setConnectTimeout(5000);
+      } else {
+        connection = url.openConnection();
+      }
 
-			int readed = getit.read(data, 0, 1024);
-			while (readed != -1) {
-				bout.write(data, 0, readed);
-				readed = getit.read(data, 0, 1024);
-			}
+      BufferedInputStream getit = new BufferedInputStream(connection.getInputStream(), 1024);
 
-			bout.close();
-			getit.close();
-			saveit.close();
-		} catch (Exception e) {
-			Logger.printException(e);
-		}
-	}
+      File file_teste = new File(TMP_MYAPP_FILE);
+      if (file_teste.exists()) {
+        file_teste.delete();
+      }
 
-	private void parseXmlMyapp(String file) throws Exception {
+      FileOutputStream saveit = new FileOutputStream(TMP_MYAPP_FILE);
+      BufferedOutputStream bout = new BufferedOutputStream(saveit, 1024);
+      byte data[] = new byte[1024];
 
-		try {
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-			SAXParser sp = spf.newSAXParser();
-			XmlAppHandler handler = new XmlAppHandler();
-			sp.parse(new File(file), handler);
-			server = handler.getServers();
-			app = handler.getApp();
-		} catch (IOException | SAXException | ParserConfigurationException e) {
-			Logger.printException(e);
-		}
-	}
+      int readed = getit.read(data, 0, 1024);
+      while (readed != -1) {
+        bout.write(data, 0, readed);
+        readed = getit.read(data, 0, 1024);
+      }
 
-	private void proceed() {
-		if (server != null) {
-			startWithRepo(server);
-		} else {
-			ShowMessage.asToast(this, getString(R.string.error_occured));
-			finish();
-		}
-	}
+      bout.close();
+      getit.close();
+      saveit.close();
+    } catch (Exception e) {
+      CrashReports.logException(e);
+      Logger.printException(e);
+    }
+  }
 
-	public static class DeepLinksTargets {
+  private void parseXmlMyapp(String file) throws Exception {
 
-		public static final String NEW_REPO = "newrepo";
-		public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
-		public static final String FROM_TIMELINE = "fromTimeline";
-		public static final String NEW_UPDATES = "new_updates";
-		public static final String FROM_AD = "fromAd";
-		public static final String APP_VIEW_FRAGMENT = "appViewFragment";
-		public static final String SEARCH_FRAGMENT = "searchFragment";
-	}
+    try {
+      SAXParserFactory spf = SAXParserFactory.newInstance();
+      SAXParser sp = spf.newSAXParser();
+      XmlAppHandler handler = new XmlAppHandler();
+      sp.parse(new File(file), handler);
+      server = handler.getServers();
+      app = handler.getApp();
+    } catch (IOException | SAXException | ParserConfigurationException e) {
+      CrashReports.logException(e);
+      Logger.printException(e);
+    }
+  }
 
-	public static class DeepLinksKeys {
+  private void proceed() {
+    if (server != null) {
+      startWithRepo(server);
+    } else {
+      ShowMessage.asToast(this, getString(R.string.error_occured));
+      finish();
+    }
+  }
 
-		public static final String APP_ID_KEY = "appId";
-		public static final String PACKAGE_NAME_KEY = "packageName";
-	}
+  public static class DeepLinksTargets {
 
-	class MyAppDownloader extends AsyncTask<String,Void,Void> {
+    public static final String NEW_REPO = "newrepo";
+    public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
+    public static final String FROM_TIMELINE = "fromTimeline";
+    public static final String NEW_UPDATES = "new_updates";
+    public static final String FROM_AD = "fromAd";
+    public static final String APP_VIEW_FRAGMENT = "appViewFragment";
+    public static final String SEARCH_FRAGMENT = "searchFragment";
+    public static final String GENERIC_DEEPLINK = "generic_deeplink";
+  }
 
-		ProgressDialog pd;
+  public static class DeepLinksKeys {
 
-		@Override
-		protected Void doInBackground(String... params) {
+    public static final String APP_ID_KEY = "appId";
+    public static final String PACKAGE_NAME_KEY = "packageName";
+    public static final String STORENAME_KEY = "storeName";
+    public static final String SHOW_AUTO_INSTALL_POPUP = "show_auto_install_popup";
+    public static final String URI = "uri";
 
-			try {
-				downloadMyappFile(params[0]);
-				parseXmlMyapp(TMP_MYAPP_FILE);
-			} catch (Exception e) {
-				Logger.printException(e);
-			}
+    //deep link query parameters
+    public static final String ACTION = "action";
+    public static final String TYPE = "type";
+    public static final String NAME = "name";
+    public static final String LAYOUT = "layout";
+    public static final String TITLE = "title";
+    public static final String STORE_THEME = "storetheme";
+  }
 
-			return null;
-		}
+  class MyAppDownloader extends AsyncTask<String, Void, Void> {
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			pd = new ProgressDialog(DeepLinkIntentReceiver.this);
-			pd.show();
-			pd.setCancelable(false);
-			pd.setMessage(getString(R.string.please_wait));
-		}
+    ProgressDialog pd;
 
-		@Override
-		protected void onPostExecute(Void aVoid) {
-			super.onPostExecute(aVoid);
-			if (pd.isShowing() && !isFinishing()) {
-				pd.dismiss();
-			}
+    @Override protected Void doInBackground(String... params) {
 
-			if (app != null && !app.isEmpty()) {
+      try {
+        downloadMyappFile(params[0]);
+        parseXmlMyapp(TMP_MYAPP_FILE);
+      } catch (Exception e) {
+        CrashReports.logException(e);
+        Logger.printException(e);
+      }
 
-				/** never worked... */
-				//                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this);
-				//                final AlertDialog installAppDialog = dialogBuilder.create();
-				////                installAppDialog.setTitle(ApplicationAptoide.MARKETNAME);
-				//                installAppDialog.setIcon(android.R.drawable.ic_menu_more);
-				//                installAppDialog.setCancelable(false);
-				//
-				//
-				//                installAppDialog.setMessage(getString(R.string.installapp_alrt) + app.get("name") + "?");
-				//
-				//                installAppDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
-				//                    @Override
-				//                    public void onClick(DialogInterface arg0, int arg1) {
-				////                        Download download = new Download();
-				////                        Log.d("Aptoide-IntentReceiver", "getapk id: " + id);
-				////                        download.setId(id);
-				////                        ((Start)getApplicationContext()).installApp(0);
-				//
-				//                        Toast toast = ShowMessage.asToast();(IntentReceiver.this, getString(R.strings;
-				//                        toast.show();
-				//                    }
-				//                });
-				//
-				//                installAppDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), neutralListener);
-				//                installAppDialog.setOnDismissListener(IntentReceiver.this);
-				//                installAppDialog.show();
+      return null;
+    }
 
-			} else {
-				proceed();
-			}
-		}
-	}
+    @Override protected void onPreExecute() {
+      super.onPreExecute();
+      pd = new ProgressDialog(DeepLinkIntentReceiver.this);
+      pd.show();
+      pd.setCancelable(false);
+      pd.setMessage(getString(R.string.please_wait));
+    }
+
+    @Override protected void onPostExecute(Void aVoid) {
+      super.onPostExecute(aVoid);
+      if (pd.isShowing() && !isFinishing()) {
+        pd.dismiss();
+      }
+
+      if (app != null && !app.isEmpty()) {
+
+        /** never worked... */
+        //                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this);
+        //                final AlertDialog installAppDialog = dialogBuilder.create();
+        ////                installAppDialog.setTitle(ApplicationAptoide.MARKETNAME);
+        //                installAppDialog.setIcon(android.R.drawable.ic_menu_more);
+        //                installAppDialog.setCancelable(false);
+        //
+        //
+        //                installAppDialog.setMessage(getString(R.string.installapp_alrt) + app.get("name") + "?");
+        //
+        //                installAppDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
+        //                    @Override
+        //                    public void onClick(DialogInterface arg0, int arg1) {
+        ////                        Download download = new Download();
+        ////                        Log.d("Aptoide-IntentReceiver", "getapk id: " + id);
+        ////                        download.setId(id);
+        ////                        ((Start)getApplicationContext()).installApp(0);
+        //
+        //                        Toast toast = ShowMessage.asToast();(IntentReceiver.this, getString(R.strings;
+        //                        toast.show();
+        //                    }
+        //                });
+        //
+        //                installAppDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), neutralListener);
+        //                installAppDialog.setOnDismissListener(IntentReceiver.this);
+        //                installAppDialog.show();
+
+      } else {
+        proceed();
+      }
+    }
+  }
 }

@@ -11,5 +11,5 @@ import okhttp3.Request;
  * Created by sithengineer on 27/04/16.
  */
 public interface KeyAlgorithm {
-	String getKeyFrom(Request request);
+  String getKeyFrom(Request request);
 }

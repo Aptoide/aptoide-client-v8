@@ -6,7 +6,6 @@
 package cm.aptoide.pt.actions;
 
 import java.lang.ref.WeakReference;
-
 import rx.functions.Action1;
 
 /**
@@ -14,9 +13,9 @@ import rx.functions.Action1;
  */
 public abstract class Action1WithWeakRef<T, W> implements Action1<T> {
 
-	protected WeakReference<W> weakReference;
+  protected WeakReference<W> weakReference;
 
-	public Action1WithWeakRef(W ref) {
-		weakReference = new WeakReference<>(ref);
-	}
+  public Action1WithWeakRef(W ref) {
+    weakReference = new WeakReference<>(ref);
+  }
 }

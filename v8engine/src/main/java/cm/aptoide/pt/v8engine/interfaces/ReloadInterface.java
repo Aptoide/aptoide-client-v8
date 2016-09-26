@@ -9,5 +9,5 @@ package cm.aptoide.pt.v8engine.interfaces;
  * Created by neuro on 04-05-2016.
  */
 public interface ReloadInterface extends LoadInterface {
-	void reload();
+  void reload();
 }

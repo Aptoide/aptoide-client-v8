@@ -2,19 +2,12 @@
  * Copyright (c) 2016.
  * Modified by SithEngineer on 24/08/2016.
  */
-
 apply plugin: 'com.android.library'
-apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
+
 retrolambda {
   jvmArgs '-noverify'
   //defaultMethods true
-}
-
-crashlytics {
-  enableNdk true
-  androidNdkOut 'src/main/obj'
-  androidNdkLibsOut 'src/main/libs'
 }
 
 Properties localProperties = new Properties()
@@ -30,7 +23,6 @@ android {
 
   defaultConfig {
     minSdkVersion 15
-    configureFabric delegate, localProperties.FABRIC_API_KEY
     consumerProguardFiles "proguard-rules.txt"
   }
 
@@ -49,6 +41,8 @@ android {
       configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
       configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
           localProperties.SIXPACK_PASSWORD
+      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
 
     debug {
@@ -59,6 +53,8 @@ android {
       configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
       configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
           localProperties.SIXPACK_PASSWORD
+      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
   }
 
@@ -73,9 +69,6 @@ android {
     }
   }
 
-  dexOptions {
-    incremental true
-  }
 }
 
 void configureSixpackCredentials(androidDelegate, user, password) {
@@ -86,10 +79,6 @@ void configureSixpackCredentials(androidDelegate, user, password) {
     androidDelegate.buildConfigField "String", "SIXPACK_USER", "\"" + user.toString() + "\""
     androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + password.toString() + "\""
   }
-}
-
-void configureFabric(androidDelegate, key) {
-  androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
 }
 
 void configureFlurry(androidDelegate, key) {
@@ -177,6 +166,8 @@ dependencies {
   // If you want pre-written Activities and Fragments you can subclass as providers
   compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
 
+  compile 'eu.chainfire:libsuperuser:1.0.0.+'
+
   //    Apagar
   compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
   compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
@@ -191,17 +182,6 @@ dependencies {
   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
   testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
 
-  // Crashlytics Kit
-  compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
-    transitive = true
-  }
-  /*
-  // NDK Kit
-  compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
-      transitive = true
-  }
-  */
-
   // paypal SDK
   compile("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
@@ -209,6 +189,9 @@ dependencies {
 
   // Localytics sdk
   compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
+  //Only used by localytics
+  compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
+  compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
 
   // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"

@@ -13,6 +13,7 @@ import android.view.View;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.CrashReports;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -50,10 +51,15 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
     final View googleSignIn = activity.findViewById(R.id.g_sign_in_button);
     final int connectionResult =
         GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
-    final Collection<Integer> badResults =
-        Arrays.asList(ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_DISABLED);
+
+    //final Collection<Integer> badResults =
+    //    Arrays.asList(ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_DISABLED, ConnectionResult.SERVICE_DISABLED);
+    //GoogleLoginUtils.gmsAvailable =
+    //    BuildConfig.GMS_CONFIGURED && !badResults.contains(connectionResult);
+
     GoogleLoginUtils.gmsAvailable =
-        BuildConfig.GMS_CONFIGURED && !badResults.contains(connectionResult);
+        BuildConfig.GMS_CONFIGURED && connectionResult == ConnectionResult.SUCCESS;
+
     if (!gmsAvailable) {
       googleSignIn.setVisibility(View.GONE);
       return;
@@ -149,6 +155,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
           result.startResolutionForResult(activity, REQUEST_RESOLVE_ERROR);
         }
       } catch (IntentSender.SendIntentException e) {
+        CrashReports.logException(e);
         // There was an error with the resolution intent. Try again.
         FragmentActivity activity = (FragmentActivity) activityReference.get();
         if (activity != null) {

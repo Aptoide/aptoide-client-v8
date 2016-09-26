@@ -5,12 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import java.util.HashMap;
-import java.util.Map;
-
-import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -35,8 +31,9 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
 		this.args = args;
 	}
 
-	@Override
-	protected Observable<InAppBillingAvailableResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.getInAppBillingAvailable(args);
-	}
+  @Override
+  protected Observable<InAppBillingAvailableResponse> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    return interfaces.getInAppBillingAvailable(args);
+  }
 }

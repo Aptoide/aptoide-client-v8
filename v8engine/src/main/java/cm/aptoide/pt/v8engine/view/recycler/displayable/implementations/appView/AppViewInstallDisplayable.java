@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -31,100 +32,104 @@ import rx.Observable;
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
-	private static final String TAG = AppViewInstallDisplayable.class.getName();
+  private static final String TAG = AppViewInstallDisplayable.class.getName();
 
-	@Getter private boolean shouldInstall;
-	@Getter private MinimalAd minimalAd;
+  @Getter private boolean shouldInstall;
+  @Getter private MinimalAd minimalAd;
 
-	private RollbackRepository rollbackRepository;
-	private Installer installManager;
+  private RollbackRepository rollbackRepository;
+  private Installer installManager;
 
-	private long appId;
-	private String packageName;
-	private InstalledAccessor installedAccessor;
+  private long appId;
+  private String packageName;
+  private InstalledAccessor installedAccessor;
+  private Button installButton;
 
-	public AppViewInstallDisplayable() {
-		super();
-	}
+  public AppViewInstallDisplayable() {
+    super();
+  }
 
-	public AppViewInstallDisplayable(Installer installManager, GetApp getApp, MinimalAd minimalAd,
-			boolean shouldInstall,
-			InstalledAccessor installedAccessor) {
-		super(getApp);
-		this.installManager = installManager;
-		this.appId = getApp.getNodes().getMeta().getData().getId();
-		this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
-		this.minimalAd = minimalAd;
-		this.shouldInstall = shouldInstall;
-		this.rollbackRepository =
-				new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
-		this.installedAccessor = installedAccessor;
-	}
+  public AppViewInstallDisplayable(Installer installManager, GetApp getApp, MinimalAd minimalAd,
+      boolean shouldInstall, InstalledAccessor installedAccessor) {
+    super(getApp);
+    this.installManager = installManager;
+    this.appId = getApp.getNodes().getMeta().getData().getId();
+    this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
+    this.minimalAd = minimalAd;
+    this.shouldInstall = shouldInstall;
+    this.rollbackRepository =
+        new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+    this.installedAccessor = installedAccessor;
+  }
 
-	public static AppViewInstallDisplayable newInstance(GetApp getApp, Installer installManager,
-			MinimalAd minimalAd, boolean shouldInstall, InstalledAccessor installedAccessor) {
-		return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-				installedAccessor);
-	}
+  public static AppViewInstallDisplayable newInstance(GetApp getApp, Installer installManager,
+      MinimalAd minimalAd, boolean shouldInstall, InstalledAccessor installedAccessor) {
+    return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
+        installedAccessor);
+  }
 
-	public void buyApp(Context context, GetAppMeta.App app) {
-		Fragment fragment = ((FragmentShower) context).getLastV4();
-		if (Payments.class.isAssignableFrom(fragment.getClass())) {
-			((Payments) fragment).buyApp(app);
-		}
-	}
+  public void buyApp(Context context, GetAppMeta.App app) {
+    Fragment fragment = ((FragmentShower) context).getLastV4();
+    if (Payments.class.isAssignableFrom(fragment.getClass())) {
+      ((Payments) fragment).buyApp(app);
+    }
+  }
 
-	public Observable<Void> update(Context context) {
-		return installManager.update(context, (PermissionRequest) context, appId);
-	}
+  public Observable<Void> update(Context context) {
+    return installManager.update(context, (PermissionRequest) context, appId);
+  }
 
-	public Observable<Void> install(Context context) {
-		return installManager.install(context, (PermissionRequest) context, appId);
-	}
+  public Observable<Void> install(Context context) {
+    return installManager.install(context, (PermissionRequest) context, appId);
+  }
 
-	public Observable<Void> uninstall(Context context) {
-		return installManager.uninstall(context, packageName);
-	}
+  public Observable<Void> uninstall(Context context) {
+    return installManager.uninstall(context, packageName);
+  }
 
-	public Observable<Void> downgrade(Context context) {
-		return installManager.downgrade(context, (PermissionRequest) context, appId);
-	}
+  public Observable<Void> downgrade(Context context) {
+    return installManager.downgrade(context, (PermissionRequest) context, appId);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_VIEW_INSTALL;
-	}
+  public void startInstallationProcess() {
+    if (installButton != null) {
+      installButton.performClick();
+    }
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_app_view_install;
-	}
+  public void setInstallButton(Button installButton) {
+    this.installButton = installButton;
+  }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		Logger.i(TAG, "onResume");
-	}
+  @Override public Type getType() {
+    return Type.APP_VIEW_INSTALL;
+  }
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		Logger.i(TAG, "onPause");
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_install;
+  }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		Logger.i(TAG, "onSaveInstanceState");
-	}
+  @Override public void onResume() {
+    super.onResume();
+    Logger.i(TAG, "onResume");
+  }
 
-	@Override
-	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-		super.onViewStateRestored(savedInstanceState);
-		Logger.i(TAG, "onViewStateRestored");
-	}
+  @Override public void onPause() {
+    super.onPause();
+    Logger.i(TAG, "onPause");
+  }
 
-	public InstalledAccessor getInstalledAccessor() {
-		return installedAccessor;
-	}
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    Logger.i(TAG, "onSaveInstanceState");
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    Logger.i(TAG, "onViewStateRestored");
+  }
+
+  public InstalledAccessor getInstalledAccessor() {
+    return installedAccessor;
+  }
 }

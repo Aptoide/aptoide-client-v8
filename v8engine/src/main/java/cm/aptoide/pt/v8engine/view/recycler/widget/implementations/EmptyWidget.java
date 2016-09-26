@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
 
 import android.view.View;
-
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -17,30 +16,25 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
  */
 // using this instead of the previous method
 // can also return a list of Displayable classes
-@Displayables({EmptyDisplayable.class})
-public class EmptyWidget extends Widget {
+@Displayables({ EmptyDisplayable.class }) public class EmptyWidget extends Widget {
 
-	public EmptyWidget(View view) {
-		super(view);
-	}
+  public EmptyWidget(View view) {
+    super(view);
+  }
 
-	@Override
-	protected void assignViews(View itemView) {
-		// TODO
-	}
+  @Override protected void assignViews(View itemView) {
+    // TODO
+  }
 
-	@Override
-	public void bindView(Displayable displayable) {
-		// TODO
-	}
+  @Override public void bindView(Displayable displayable) {
+    // TODO
+  }
 
-	@Override
-	public void onViewAttached() {
+  @Override public void onViewAttached() {
 
-	}
+  }
 
-	@Override
-	public void onViewDetached() {
+  @Override public void onViewDetached() {
 
-	}
+  }
 }

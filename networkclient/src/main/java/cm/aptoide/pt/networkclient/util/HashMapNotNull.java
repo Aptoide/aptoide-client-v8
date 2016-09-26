@@ -12,8 +12,7 @@ import java.util.HashMap;
  */
 public class HashMapNotNull<K, V> extends HashMap<K, V> {
 
-	@Override
-	public V put(K key, V value) {
-		return value != null ? super.put(key, value) : value;
-	}
+  @Override public V put(K key, V value) {
+    return value != null ? super.put(key, value) : value;
+  }
 }

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.support.annotation.LayoutRes;
-
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
@@ -17,28 +16,25 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class AppBrickDisplayable extends DisplayablePojo<App> {
 
-	public AppBrickDisplayable() {
-	}
+  public AppBrickDisplayable() {
+  }
 
-	public AppBrickDisplayable(App pojo) {
-		super(pojo);
-	}
+  public AppBrickDisplayable(App pojo) {
+    super(pojo);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APP_BRICK;
-	}
+  @Override public Type getType() {
+    return Type.APP_BRICK;
+  }
 
 	/*
-	@Override
+  @Override
 	public boolean isFixedPerLineCount() {
 		return true;
 	}
 	*/
 
-	@LayoutRes
-	@Override
-	public int getViewLayout() {
-		return R.layout.brick_app_item;
-	}
+  @LayoutRes @Override public int getViewLayout() {
+    return R.layout.brick_app_item;
+  }
 }

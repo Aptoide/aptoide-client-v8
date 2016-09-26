@@ -15,6 +15,7 @@ import android.support.annotation.WorkerThread;
 import android.widget.ImageView;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.DecodeFormat;
@@ -73,7 +74,7 @@ public class ImageLoader {
   }
 
   public static void loadWithCircleTransformAndPlaceHolderAvatarSize(String url,
-      @DrawableRes ImageView imageView, @DrawableRes int placeHolderDrawableId) {
+      ImageView imageView, @DrawableRes int placeHolderDrawableId) {
     loadWithCircleTransformAndPlaceHolder(AptoideUtils.IconSizeU.generateStringAvatar(url),
         imageView, placeHolderDrawableId);
   }
@@ -134,8 +135,10 @@ public class ImageLoader {
           into(-1, -1). // full size
           get();
     } catch (InterruptedException e) {
+      CrashReports.logException(e);
       e.printStackTrace();
     } catch (ExecutionException e) {
+      CrashReports.logException(e);
       e.printStackTrace();
     }
     return null;

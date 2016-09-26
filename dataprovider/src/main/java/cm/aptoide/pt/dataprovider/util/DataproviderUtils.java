@@ -7,13 +7,6 @@ package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-
-import java.io.IOException;
-import java.util.Date;
-
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
@@ -25,7 +18,11 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import io.realm.Realm;
+import java.io.IOException;
+import java.util.Date;
 import lombok.Cleanup;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,93 +35,97 @@ import okhttp3.Response;
  */
 public class DataproviderUtils {
 
-	private static final String TAG = DataproviderUtils.class.getName();
+  private static final String TAG = DataproviderUtils.class.getName();
 
-	public static void checkUpdates() {
-		checkUpdates(null);
-	}
+  public static void checkUpdates() {
+    checkUpdates(null);
+  }
 
-	public static void checkUpdates(@Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
-		ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
-			@Cleanup Realm realm = DeprecatedDatabase.get();
-			for (App app : listAppsUpdates.getList()) {
-				Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);
-				if (update == null || !update.isExcluded()) {
-					DeprecatedDatabase.save(new Update(app), realm);
-				}
-			}
+  public static void checkUpdates(
+      @Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
+    @Cleanup Realm realm1 = DeprecatedDatabase.get();
+    if (DeprecatedDatabase.StoreQ.getAll(realm1).size() == 0) {
+      return;
+    }
 
-			if (successRequestListener != null) {
-				successRequestListener.call(listAppsUpdates);
-			}
-		}, Throwable::printStackTrace, true);
-	}
+    ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
+      @Cleanup Realm realm = DeprecatedDatabase.get();
+      for (App app : listAppsUpdates.getList()) {
+        Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);
+        if (update == null || !update.isExcluded()) {
+          DeprecatedDatabase.save(new Update(app), realm);
+        }
+      }
 
-	/**
-	 * Execute a simple request (knock at the door) to the given URL.
-	 *
-	 * @param url
-	 */
-	public static void knock(String url) {
-		if (url == null) {
-			return;
-		}
+      if (successRequestListener != null) {
+        successRequestListener.call(listAppsUpdates);
+      }
+    }, Throwable::printStackTrace, true);
+  }
 
-		OkHttpClient client = new OkHttpClient();
+  /**
+   * Execute a simple request (knock at the door) to the given URL.
+   */
+  public static void knock(String url) {
+    if (url == null) {
+      return;
+    }
 
-		Request click = new Request.Builder().url(url).build();
+    OkHttpClient client = new OkHttpClient();
 
-		client.newCall(click).enqueue(new Callback() {
-			@Override
-			public void onFailure(Call call, IOException e) {
+    Request click = new Request.Builder().url(url).build();
 
-			}
+    client.newCall(click).enqueue(new Callback() {
+      @Override public void onFailure(Call call, IOException e) {
 
-			@Override
-			public void onResponse(Call call, Response response) throws IOException {
-				response.body().close();
-			}
-		});
-	}
+      }
 
-	public static class AdNetworksUtils {
+      @Override public void onResponse(Call call, Response response) throws IOException {
+        response.body().close();
+      }
+    });
+  }
 
-		public static String parseMacros(@NonNull String clickUrl) {
+  public static class AdNetworksUtils {
 
-			IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    public static String parseMacros(@NonNull String clickUrl) {
 
-			if (idsRepository.getAndroidId() != null) {
-				clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
-			}
-			clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getAptoideClientUUID());
-			clickUrl = clickUrl.replace("[USER_AAID]", idsRepository.getAdvertisingId());
-			clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
+      IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
 
-			return clickUrl;
-		}
+      if (idsRepository.getAndroidId() != null) {
+        clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
+      }
+      clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getAptoideClientUUID());
+      clickUrl = clickUrl.replace("[USER_AAID]", idsRepository.getAdvertisingId());
+      clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
 
-		public static boolean isGooglePlayServicesAvailable() {
-			return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
-		}
+      return clickUrl;
+    }
 
-		public static void knockCpc(MinimalAd minimalAd) {
-			// TODO: 28-07-2016 Baikova clicked on ad.
-			knock(minimalAd.getCpcUrl());
-		}
+    public static boolean isGooglePlayServicesAvailable() {
+      return GoogleApiAvailability.getInstance()
+          .isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
+    }
 
-		public static void knockCpd(MinimalAd minimalAd) {
-			// TODO: 28-07-2016 Baikova clicked on download button.
-			knock(minimalAd.getCpdUrl());
-		}
+    public static void knockCpc(MinimalAd minimalAd) {
+      // TODO: 28-07-2016 Baikova clicked on ad.
+      knock(minimalAd.getCpcUrl());
+    }
 
-		public static void knockCpi(StoredMinimalAd minimalAd) {
-			// TODO: 28-07-2016 Baikova ad installed.
-			knock(minimalAd.getCpiUrl());
-		}
+    public static void knockCpd(MinimalAd minimalAd) {
+      // TODO: 28-07-2016 Baikova clicked on download button.
+      knock(minimalAd.getCpdUrl());
+    }
 
-		// FIXME: 29-07-2016 neuro so wrong...
-		public static void knockImpression(MinimalAd minimalAd) {
-			knockCpd(minimalAd);
-		}
-	}
+    public static void knockCpi(StoredMinimalAd minimalAd) {
+      // TODO: 28-07-2016 Baikova ad installed.
+      knock(minimalAd.getCpiUrl());
+    }
+
+    // FIXME: 29-07-2016 neuro so wrong...
+    public static void knockImpression(MinimalAd minimalAd) {
+      knockCpd(minimalAd);
+    }
+  }
 }

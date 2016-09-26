@@ -23,71 +23,69 @@ import rx.functions.Action0;
  */
 public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
 
-	private Installer installManager;
-	private DownloadServiceHelper downloadManager;
-	@Setter private Action0 onResumeAction;
-	@Setter private Action0 onPauseAction;
+  private Installer installManager;
+  private DownloadServiceHelper downloadManager;
+  @Setter private Action0 onResumeAction;
+  @Setter private Action0 onPauseAction;
 
-	public CompletedDownloadDisplayable() {
-		super();
-	}
+  public CompletedDownloadDisplayable() {
+    super();
+  }
 
-	public CompletedDownloadDisplayable(Download pojo, Installer installManager,
-			DownloadServiceHelper downloadManager) {
-		super(pojo);
-		this.installManager = installManager;
-		this.downloadManager = downloadManager;
-	}
+  public CompletedDownloadDisplayable(Download pojo, Installer installManager,
+      DownloadServiceHelper downloadManager) {
+    super(pojo);
+    this.installManager = installManager;
+    this.downloadManager = downloadManager;
+  }
 
-	public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
+    super(pojo, fixedPerLineCount);
+  }
 
-	@Override public void onResume() {
-		super.onResume();
-		if (onResumeAction != null) {
-			onResumeAction.call();
-		}
-	}
+  @Override public void onResume() {
+    super.onResume();
+    if (onResumeAction != null) {
+      onResumeAction.call();
+    }
+  }
 
-	@Override public void onPause() {
-		if (onPauseAction != null) {
-			onResumeAction.call();
-		}
-		super.onPause();
-	}
+  @Override public void onPause() {
+    if (onPauseAction != null) {
+      onResumeAction.call();
+    }
+    super.onPause();
+  }
 
-	@Override
-	public Type getType() {
-		return Type.COMPLETED_DOWNLOAD;
-	}
+  @Override public Type getType() {
+    return Type.COMPLETED_DOWNLOAD;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.completed_donwload_row_layout;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.completed_donwload_row_layout;
+  }
 
-	public void removeDownload() {
-		downloadManager.removeDownload(getPojo().getAppId());
-	}
+  public void removeDownload() {
+    downloadManager.removeDownload(getPojo().getAppId());
+  }
 
-	public Observable<Integer> downloadStatus() {
-		return downloadManager.getDownload(getPojo().getAppId())
-				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
-				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
-	}
+  public Observable<Integer> downloadStatus() {
+    return downloadManager.getDownload(getPojo().getAppId())
+        .map(storedDownload -> storedDownload.getOverallDownloadStatus())
+        .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
+  }
 
-	public Observable<Download> resumeDownload(PermissionRequest permissionRequest) {
-		return downloadManager.startDownload(permissionRequest, getPojo());
-	}
+  public Observable<Download> resumeDownload(PermissionRequest permissionRequest) {
+    return downloadManager.startDownload(permissionRequest, getPojo());
+  }
 
-	public Observable<Void> installOrOpenDownload(Context context) {
-		return installManager.isInstalled(getPojo().getAppId()).flatMap(installed -> {
-			if (installed) {
-				AptoideUtils.SystemU.openApp(getPojo().getFilesToDownload().get(0).getPackageName());
-				return Observable.empty();
-			}
-			return installManager.install(context, (PermissionRequest) context, getPojo().getAppId());
-		});
-	}
+  public Observable<Void> installOrOpenDownload(Context context) {
+    return installManager.isInstalled(getPojo().getAppId()).flatMap(installed -> {
+      if (installed) {
+        AptoideUtils.SystemU.openApp(getPojo().getFilesToDownload().get(0).getPackageName());
+        return Observable.empty();
+      }
+      return installManager.install(context, (PermissionRequest) context, getPojo().getAppId());
+    });
+  }
 }

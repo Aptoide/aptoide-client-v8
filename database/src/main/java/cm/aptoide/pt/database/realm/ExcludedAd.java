@@ -14,15 +14,15 @@ import io.realm.annotations.Required;
  */
 public class ExcludedAd extends RealmObject {
 
-	public static final String PACKAGE_NAME = "packageName";
+  public static final String PACKAGE_NAME = "packageName";
 
-	@PrimaryKey @Required private String packageName;
+  @PrimaryKey @Required private String packageName;
 
-	public String getPackageName() {
-		return packageName;
-	}
+  public String getPackageName() {
+    return packageName;
+  }
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
 }

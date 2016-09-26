@@ -7,9 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v2;
 
 import lombok.Data;
 
-@Data
-public class ErrorResponse {
+@Data public class ErrorResponse {
 
-	private String error;
-	private String errorDescription;
+  private String error;
+  private String errorDescription;
 }

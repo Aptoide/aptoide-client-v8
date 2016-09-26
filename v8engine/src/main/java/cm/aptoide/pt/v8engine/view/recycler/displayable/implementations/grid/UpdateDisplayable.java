@@ -25,78 +25,73 @@ import rx.functions.Action0;
 /**
  * Created by neuro on 17-05-2016.
  */
-@AllArgsConstructor
-public class UpdateDisplayable extends Displayable {
+@AllArgsConstructor public class UpdateDisplayable extends Displayable {
 
-	@Getter private String packageName;
-	@Getter private long appId;
-	@Getter private String label;
-	@Getter private String icon;
-	@Getter private int versionCode;
-	@Getter private String md5;
-	@Getter private String apkPath;
-	@Getter private String alternativeApkPath;
-	@Getter private String updateVersionName;
-	// Obb
-	@Getter private String mainObbName;
-	@Getter private String mainObbPath;
-	@Getter private String mainObbMd5;
-	@Getter private String patchObbName;
-	@Getter private String patchObbPath;
-	@Getter private String patchObbMd5;
+  @Getter private String packageName;
+  @Getter private long appId;
+  @Getter private String label;
+  @Getter private String icon;
+  @Getter private int versionCode;
+  @Getter private String md5;
+  @Getter private String apkPath;
+  @Getter private String alternativeApkPath;
+  @Getter private String updateVersionName;
+  // Obb
+  @Getter private String mainObbName;
+  @Getter private String mainObbPath;
+  @Getter private String mainObbMd5;
+  @Getter private String patchObbName;
+  @Getter private String patchObbPath;
+  @Getter private String patchObbMd5;
 
-	@Getter private Installer installManager;
-	private Download download;
-	@Getter private DownloadServiceHelper downloadManager;
-	@Setter private Action0 pauseAction;
-	@Setter private Action0 resumeAction;
+  @Getter private Installer installManager;
+  private Download download;
+  @Getter private DownloadServiceHelper downloadManager;
+  @Setter private Action0 pauseAction;
+  @Setter private Action0 resumeAction;
 
-	public UpdateDisplayable() {
-	}
+  public UpdateDisplayable() {
+  }
 
-	public static UpdateDisplayable create(Update update, Installer installManager,
-			DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
+  public static UpdateDisplayable create(Update update, Installer installManager,
+      DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
 
-		return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
-				update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
-				update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
-				update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
-				update.getPatchObbPath(), update.getPatchObbMd5(), installManager,
-				downloadFactory.create(update), downloadManager, null, null);
-	}
+    return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
+        update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
+        update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
+        update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
+        update.getPatchObbPath(), update.getPatchObbMd5(), installManager,
+        downloadFactory.create(update), downloadManager, null, null);
+  }
 
-	public Observable<Void> downloadAndInstall(Context context) {
-		Analytics.Updates.update();
+  public Observable<Void> downloadAndInstall(Context context) {
+    Analytics.Updates.update();
 
-		return downloadManager.startDownload((PermissionRequest) context, download)
-				.first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-				.concatMap(downloadCompleted -> installManager.update(context, (PermissionRequest) context,
-						download.getAppId()));
-	}
+    return downloadManager.startDownload((PermissionRequest) context, download)
+        .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .concatMap(downloadCompleted -> installManager.update(context, (PermissionRequest) context,
+            download.getAppId()));
+  }
 
-	@Override
-	public Type getType() {
-		return Type.UPDATE;
-	}
+  @Override public Type getType() {
+    return Type.UPDATE;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.update_row;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.update_row;
+  }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (resumeAction != null) {
-			resumeAction.call();
-		}
-	}
+  @Override public void onResume() {
+    super.onResume();
+    if (resumeAction != null) {
+      resumeAction.call();
+    }
+  }
 
-	@Override
-	public void onPause() {
-		if (pauseAction != null) {
-			pauseAction.call();
-		}
-		super.onPause();
-	}
+  @Override public void onPause() {
+    if (pauseAction != null) {
+      pauseAction.call();
+    }
+    super.onPause();
+  }
 }

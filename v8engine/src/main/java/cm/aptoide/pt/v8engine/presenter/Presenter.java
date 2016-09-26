@@ -12,9 +12,9 @@ import android.os.Bundle;
  */
 public interface Presenter {
 
-	public void present();
+  public void present();
 
-	void saveState(Bundle state);
+  void saveState(Bundle state);
 
-	void restoreState(Bundle state);
+  void restoreState(Bundle state);
 }

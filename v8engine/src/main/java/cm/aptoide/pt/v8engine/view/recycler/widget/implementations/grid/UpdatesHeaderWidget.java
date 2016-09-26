@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 /**
@@ -39,6 +40,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   private static final String TAG = UpdatesHeaderWidget.class.getSimpleName();
   private TextView title;
   private Button more;
+  private Subscription subscription;
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
@@ -54,31 +56,38 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setText(R.string.update_all);
     more.setVisibility(View.VISIBLE);
     more.setOnClickListener((view) -> {
-      DownloadServiceHelper downloadManager =
-          new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-      final DownloadAccessor accessor = AccessorFactory.getAccessorFor(Download.class);
-      UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
-      updatesAccessor.getUpdates()
-          .first()
-          .observeOn(Schedulers.io())
-          .map(updates -> {
-            List<Download> downloadList = new ArrayList<>(updates.size());
-            for (Update update : updates) {
-              downloadList.add(new DownloadFactory().create(update));
-            }
-            return downloadList;
-          })
-          .flatMapIterable(downloads -> downloads)
-          .map(download -> downloadManager.startDownload(accessor, (PermissionRequest) getContext(),
-              download))
-          .toList()
-          .flatMap(observables -> Observable.merge(observables))
-          .filter(downloading -> downloading.getOverallDownloadStatus() == Download.COMPLETED)
-          .flatMap(downloading -> displayable.getInstallManager()
-              .install(UpdatesHeaderWidget.this.getContext(),
-                  (PermissionRequest) UpdatesHeaderWidget.this.getContext(),
-                  downloading.getAppId()))
-          .subscribe(aVoid -> Logger.d(TAG, "Update task completed"), Throwable::printStackTrace);
+      ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
+        DownloadServiceHelper downloadManager =
+            new DownloadServiceHelper(AptoideDownloadManager.getInstance(),
+                new PermissionManager());
+        final DownloadAccessor accessor = AccessorFactory.getAccessorFor(Download.class);
+        UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
+        subscription =
+            updatesAccessor.getUpdates()
+                .first()
+                .observeOn(Schedulers.io())
+                .map(updates -> {
+
+                  List<Download> downloadList = new ArrayList<>(updates.size());
+                  for (Update update : updates) {
+                    downloadList.add(new DownloadFactory().create(update));
+                  }
+                  return downloadList;
+                })
+                .flatMapIterable(downloads -> downloads)
+                .map(download -> downloadManager.startDownload(accessor,
+                    (PermissionRequest) getContext(), download))
+                .toList()
+                .flatMap(observables -> Observable.merge(observables))
+                .filter(downloading -> downloading.getOverallDownloadStatus() == Download.COMPLETED)
+                .flatMap(downloading -> displayable.getInstallManager()
+                    .install(UpdatesHeaderWidget.this.getContext(),
+                        (PermissionRequest) UpdatesHeaderWidget.this.getContext(),
+                        downloading.getAppId()))
+                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                    throwable -> throwable.printStackTrace());
+      }, () -> {
+      });
 
       Intent intent = new Intent();
       intent.setAction(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT);
@@ -93,6 +102,8 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   }
 
   @Override public void onViewDetached() {
-
+    if (subscription != null) {
+      subscription.unsubscribe();
+    }
   }
 }

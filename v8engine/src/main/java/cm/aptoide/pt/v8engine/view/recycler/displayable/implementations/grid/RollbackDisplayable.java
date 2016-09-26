@@ -15,8 +15,6 @@ import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
-import io.realm.Realm;
-import lombok.Getter;
 import rx.Observable;
 
 /**
@@ -24,50 +22,50 @@ import rx.Observable;
  */
 public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
-	private Installer installManager;
+  private Installer installManager;
 
-	public RollbackDisplayable() { }
+  public RollbackDisplayable() {
+  }
 
-	public RollbackDisplayable(Installer installManager, Rollback pojo) {
-		this(installManager, pojo, false);
-	}
+  public RollbackDisplayable(Installer installManager, Rollback pojo) {
+    this(installManager, pojo, false);
+  }
 
-	public RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-		this.installManager = installManager;
-	}
+  public RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
+    super(pojo, fixedPerLineCount);
+    this.installManager = installManager;
+  }
 
-	public Download getDownloadFromPojo() {
-		return new DownloadFactory().create(getPojo());
-	}
+  public Download getDownloadFromPojo() {
+    return new DownloadFactory().create(getPojo());
+  }
 
-	@Override
-	public Type getType() {
-		return Type.ROLLBACK;
-	}
+  @Override public Type getType() {
+    return Type.ROLLBACK;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.rollback_row;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.rollback_row;
+  }
 
-	public void install(FragmentShower context) {
-		openAppview(context);
-	}
+  public void install(FragmentShower context) {
+    openAppview(context);
+  }
 
-	public Observable<Void> uninstall(Context context, Download appDownload) {
-		return installManager.uninstall(context, appDownload.getFilesToDownload().get(0).getPackageName());
-	}
+  public Observable<Void> uninstall(Context context, Download appDownload) {
+    return installManager.uninstall(context,
+        appDownload.getFilesToDownload().get(0).getPackageName());
+  }
 
-	public void downgrade(FragmentShower context) {
-		openAppview(context);
-	}
+  public void downgrade(FragmentShower context) {
+    openAppview(context);
+  }
 
-	public void update(FragmentShower context) {
-		openAppview(context);
-	}
+  public void update(FragmentShower context) {
+    openAppview(context);
+  }
 
-	public void openAppview(FragmentShower fragmentShower) {
-		fragmentShower.pushFragmentV4(AppViewFragment.newInstance(getPojo().getMd5()));
-	}
+  public void openAppview(FragmentShower fragmentShower) {
+    fragmentShower.pushFragmentV4(AppViewFragment.newInstance(getPojo().getMd5()));
+  }
 }

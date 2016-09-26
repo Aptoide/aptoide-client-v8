@@ -15,14 +15,14 @@
 
   <RelativeLayout
       android:id="@+id/row_app_download_indicator"
-      style="?attr/backgroundCard"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="2dp"
       android:layout_marginLeft="5dp"
       android:layout_marginRight="5dp"
       android:layout_marginTop="2dp"
       android:padding="5dp"
+      style="?attr/backgroundCard"
       >
 
 
@@ -30,6 +30,7 @@
         android:id="@+id/app_icon"
         android:layout_width="72dp"
         android:layout_height="72dp"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:contentDescription="@null"
@@ -41,10 +42,14 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/app_icon"
         android:layout_toLeftOf="@+id/resume_download"
         android:layout_toRightOf="@+id/app_icon"
+        android:layout_toStartOf="@+id/resume_download"
         android:orientation="vertical"
         >
 
@@ -54,7 +59,6 @@
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
-          android:singleLine="true"
           android:text=""
           android:textAppearance="?android:attr/textAppearanceMedium"
           />
@@ -72,7 +76,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:singleLine="true"
             />
 
         <TextView
@@ -80,8 +83,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
-            android:layout_toLeftOf="@+id/progress"
+            android:layout_marginStart="3dp"
+            android:layout_toEndOf="@id/speed"
+            android:layout_toLeftOf="@id/progress"
             android:layout_toRightOf="@+id/speed"
+            android:layout_toStartOf="@+id/progress"
             android:ellipsize="end"
             android:maxLines="1"
             />
@@ -90,8 +96,9 @@
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             />
       </RelativeLayout>
 
@@ -100,9 +107,8 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:ellipsize="end"
-          android:gravity="left|center"
+          android:gravity="start|center"
           android:maxLines="1"
-          android:singleLine="true"
           android:visibility="gone"
           />
 
@@ -113,8 +119,8 @@
         android:layout_width="34dp"
         android:layout_height="34dp"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/view"
-        android:background="@drawable/play"
+        android:layout_toStartOf="@+id/view"
+        android:background="@drawable/media_play"
         />
     <View
         android:id="@+id/view"
@@ -122,7 +128,7 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_margin="12dp"
-        android:layout_toLeftOf="@+id/pause_cancel_button"
+        android:layout_toStartOf="@+id/pause_cancel_button"
         android:background="?attr/separatorColor"
         />
 
@@ -131,6 +137,7 @@
         android:id="@+id/pause_cancel_button"
         android:layout_width="34dp"
         android:layout_height="34dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"

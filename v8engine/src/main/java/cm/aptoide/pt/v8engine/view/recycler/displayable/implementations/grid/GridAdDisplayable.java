@@ -14,14 +14,12 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  * Created by neuro on 20-06-2016.
  */
 public class GridAdDisplayable extends DisplayablePojo<GetAdsResponse.Ad> {
-	
-	@Override
-	public Type getType() {
-		return Type.ADS;
-	}
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_sponsored;
-	}
+  @Override public Type getType() {
+    return Type.ADS;
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_sponsored;
+  }
 }

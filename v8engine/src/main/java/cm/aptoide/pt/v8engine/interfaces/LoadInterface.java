@@ -11,6 +11,12 @@ import android.os.Bundle;
  * Created by neuro on 04-05-2016.
  */
 public interface LoadInterface {
-
-	void load(boolean refresh, Bundle savedInstanceState);
+  /**
+   * @param created flags that the fragment is already created, ie. only it's view is being
+   * restored.
+   * @param refresh flags that the fragment should refresh it's state, reload data from network and
+   * refresh fragment state.
+   * @param savedInstanceState savedInstanceState bundle.
+   */
+  void load(boolean created, boolean refresh, Bundle savedInstanceState);
 }

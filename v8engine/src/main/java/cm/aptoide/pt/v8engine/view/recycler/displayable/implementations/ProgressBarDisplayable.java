@@ -14,20 +14,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 public class ProgressBarDisplayable extends Displayable {
 
-	public ProgressBarDisplayable() {
-	}
+  public ProgressBarDisplayable() {
+  }
 
-	public ProgressBarDisplayable(boolean fixedPerLineCount) {
-		super(fixedPerLineCount);
-	}
+  public ProgressBarDisplayable(boolean fixedPerLineCount) {
+    super(fixedPerLineCount);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.PROGRESS_DISPLAYABLE;
-	}
+  @Override public Type getType() {
+    return Type.PROGRESS_DISPLAYABLE;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.row_progress_bar;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.row_progress_bar;
+  }
 }

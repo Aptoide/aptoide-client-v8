@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.CrashReports;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -85,6 +86,7 @@ class FacebookLoginUtils {
         bundle.putString(LOCATION, object.getJSONObject(LOCATION).getString("name"));
       }
     } catch (JSONException | MalformedURLException e) {
+      CrashReports.logException(e);
       e.printStackTrace();
     }
     return bundle;

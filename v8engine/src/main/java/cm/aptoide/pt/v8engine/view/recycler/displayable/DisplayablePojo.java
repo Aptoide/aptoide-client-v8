@@ -13,26 +13,23 @@ import lombok.experimental.Accessors;
 /**
  * Created by neuro on 14-04-2016.
  */
-@Ignore
-@Accessors(chain = true)
-public abstract class DisplayablePojo<T> extends Displayable {
+@Ignore @Accessors(chain = true) public abstract class DisplayablePojo<T> extends Displayable {
 
-	//private static final float REFERENCE_WIDTH_DPI = 360;
-	@Getter @Setter private T pojo;
+  //private static final float REFERENCE_WIDTH_DPI = 360;
+  @Getter @Setter private T pojo;
 
-	/**
-	 * Needed for reflective {@link Class#newInstance()}.
-	 */
-	public DisplayablePojo() {
-	}
+  /**
+   * Needed for reflective {@link Class#newInstance()}.
+   */
+  public DisplayablePojo() {
+  }
 
-	public DisplayablePojo(T pojo) {
-		this.pojo = pojo;
+  public DisplayablePojo(T pojo) {
+    this.pojo = pojo;
+  }
 
-	}
-
-	public DisplayablePojo(T pojo, boolean fixedPerLineCount) {
-		super(fixedPerLineCount);
-		this.pojo = pojo;
-	}
+  public DisplayablePojo(T pojo, boolean fixedPerLineCount) {
+    super(fixedPerLineCount);
+    this.pojo = pojo;
+  }
 }

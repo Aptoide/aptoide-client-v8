@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -14,13 +13,12 @@ import cm.aptoide.pt.v8engine.R;
  */
 public class WizardPageTwoFragment extends Fragment {
 
-    public static Fragment newInstance() {
-        return new WizardPageTwoFragment();
-    }
+  public static Fragment newInstance() {
+    return new WizardPageTwoFragment();
+  }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.wizard_page_two, null);
-    }
-
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.wizard_page_two, null);
+  }
 }

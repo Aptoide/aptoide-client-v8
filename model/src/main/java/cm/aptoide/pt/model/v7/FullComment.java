@@ -11,13 +11,12 @@ import lombok.Data;
  * Created by sithengineer on 02/08/16.
  */
 public class FullComment {
-	//	private GetAppMeta.App data;
+  //	private GetAppMeta.App data;
 
-	private AppData data;
+  private AppData data;
 
-	@Data
-	public static class AppData {
+  @Data public static class AppData {
 
-		private GetAppMeta.App app;
-	}
+    private GetAppMeta.App app;
+  }
 }

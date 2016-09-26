@@ -12,11 +12,10 @@ import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundExcepti
  */
 public class PurchaseErrorCodeFactory extends ErrorCodeFactory {
 
-	@Override
-	public int create(Throwable throwable) {
-		if (throwable instanceof RepositoryItemNotFoundException) {
-			return BillingBinder.RESULT_ITEM_NOT_OWNED;
-		}
-		return super.create(throwable);
-	}
+  @Override public int create(Throwable throwable) {
+    if (throwable instanceof RepositoryItemNotFoundException) {
+      return BillingBinder.RESULT_ITEM_NOT_OWNED;
+    }
+    return super.create(throwable);
+  }
 }

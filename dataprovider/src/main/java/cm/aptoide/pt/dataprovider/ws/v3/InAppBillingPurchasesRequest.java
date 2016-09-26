@@ -6,13 +6,9 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
-
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import java.util.HashMap;
-import java.util.Map;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -44,9 +40,9 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
 		this.args = args;
 	}
 
-	@Override
-	protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.getInAppBillingPurchases(args);
-	}
-
+  @Override
+  protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    return interfaces.getInAppBillingPurchases(args);
+  }
 }

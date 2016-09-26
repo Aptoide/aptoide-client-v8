@@ -11,6 +11,8 @@ import java.util.Map;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v3.BaseV3Response;
+import java.util.HashMap;
+import java.util.Map;
 import rx.Observable;
 
 /**
@@ -36,8 +38,8 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
 		this.args = args;
 	}
 
-	@Override
-	protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.deleteInAppBillingPurchase(args);
-	}
+  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    return interfaces.deleteInAppBillingPurchase(args);
+  }
 }

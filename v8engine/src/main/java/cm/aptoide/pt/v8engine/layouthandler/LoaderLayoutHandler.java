@@ -6,12 +6,13 @@
 package cm.aptoide.pt.v8engine.layouthandler;
 
 import android.support.annotation.IdRes;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import rx.Observable;
@@ -24,76 +25,79 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class LoaderLayoutHandler {
 
-	protected final LoadInterface loadInterface;
-	@IdRes private final int viewToShowAfterLoadingId;
+  protected final LoadInterface loadInterface;
+  @IdRes private final int viewToShowAfterLoadingId;
 
-	protected View viewToShowAfterLoading;
-	protected ProgressBar progressBar;
-	protected View genericErrorView;
-	protected View noNetworkConnectionView;
-	protected View retryErrorView;
-	protected View retryNoNetworkView;
+  protected View viewToShowAfterLoading;
+  protected ProgressBar progressBar;
+  protected View genericErrorView;
+  protected View noNetworkConnectionView;
+  protected View retryErrorView;
+  protected View retryNoNetworkView;
 
-	public LoaderLayoutHandler(int viewToShowAfterLoadingId, LoadInterface loadInterface) {
-		this.viewToShowAfterLoadingId = viewToShowAfterLoadingId;
-		this.loadInterface = loadInterface;
-	}
+  public LoaderLayoutHandler(int viewToShowAfterLoadingId, LoadInterface loadInterface) {
+    this.viewToShowAfterLoadingId = viewToShowAfterLoadingId;
+    this.loadInterface = loadInterface;
+  }
 
-	@SuppressWarnings("unchecked")
-	public void bindViews(View view) {
-		viewToShowAfterLoading = view.findViewById(viewToShowAfterLoadingId);
-		viewToShowAfterLoading.setVisibility(View.GONE);
-		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-		progressBar.setVisibility(View.VISIBLE);
-		genericErrorView = view.findViewById(R.id.generic_error);
-		noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
-		retryErrorView = genericErrorView.findViewById(R.id.retry);
-		retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
-	}
+  @SuppressWarnings("unchecked") public void bindViews(View view) {
+    viewToShowAfterLoading = view.findViewById(viewToShowAfterLoadingId);
+    viewToShowAfterLoading.setVisibility(View.GONE);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    progressBar.setVisibility(View.VISIBLE);
+    genericErrorView = view.findViewById(R.id.generic_error);
+    noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
+    retryErrorView = genericErrorView.findViewById(R.id.retry);
+    retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
+  }
 
-	public void finishLoading(Throwable throwable) {
-		Logger.printException(throwable);
+  public void finishLoading(Throwable throwable) {
+    Logger.printException(throwable);
+    CrashReports.logException(throwable);
 
-		AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
-	}
+    AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
+  }
 
-	protected void onFinishLoading(Throwable throwable) {
-		progressBar.setVisibility(View.GONE);
-		viewToShowAfterLoading.setVisibility(View.GONE);
+  protected void onFinishLoading(Throwable throwable) {
+    progressBar.setVisibility(View.GONE);
+    viewToShowAfterLoading.setVisibility(View.GONE);
 
-		if (ErrorUtils.isNoNetworkConnection(throwable)) {
-			genericErrorView.setVisibility(View.GONE);
-			noNetworkConnectionView.setVisibility(View.VISIBLE);
-			retryNoNetworkView.setOnClickListener(view -> {
-				restoreState();
-				loadInterface.load(true, null);
-			});
-		} else {
-			noNetworkConnectionView.setVisibility(View.GONE);
-			genericErrorView.setVisibility(View.VISIBLE);
-			retryErrorView.setOnClickListener(view -> {
-				restoreState();
-				loadInterface.load(true, null);
-			});
-		}
-	}
+    if (ErrorUtils.isNoNetworkConnection(throwable)) {
+      genericErrorView.setVisibility(View.GONE);
+      noNetworkConnectionView.setVisibility(View.VISIBLE);
+      retryNoNetworkView.setOnClickListener(view -> {
+        restoreState();
+        loadInterface.load(true, false, null);
+      });
+    } else {
+      noNetworkConnectionView.setVisibility(View.GONE);
+      genericErrorView.setVisibility(View.VISIBLE);
+      retryErrorView.setOnClickListener(view -> {
+        restoreState();
+        loadInterface.load(true, false, null);
+      });
+    }
+  }
 
-	public void finishLoading() {
-		Observable.fromCallable(() -> {
-			onFinishLoading();
-			return null;
-		}).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
-		}, Logger::printException);
-	}
+  public void finishLoading() {
+    Observable.fromCallable(() -> {
+      onFinishLoading();
+      return null;
+    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
+    }, e -> {
+      Logger.printException(e);
+      CrashReports.logException(e);
+    });
+  }
 
-	protected void onFinishLoading() {
-		progressBar.setVisibility(View.GONE);
-		viewToShowAfterLoading.setVisibility(View.VISIBLE);
-	}
+  protected void onFinishLoading() {
+    progressBar.setVisibility(View.GONE);
+    viewToShowAfterLoading.setVisibility(View.VISIBLE);
+  }
 
-	protected void restoreState() {
-		genericErrorView.setVisibility(View.GONE);
-		noNetworkConnectionView.setVisibility(View.GONE);
-		progressBar.setVisibility(View.VISIBLE);
-	}
+  protected void restoreState() {
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkConnectionView.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+  }
 }

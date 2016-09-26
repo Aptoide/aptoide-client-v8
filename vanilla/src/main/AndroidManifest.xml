@@ -4,9 +4,20 @@
   ~ Modified by SithEngineer on 27/06/2016.
   -->
 
-<manifest package="cm.aptoide.pt"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cm.aptoide.pt">
+
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+  <uses-permission
+      android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+  <permission
+      android:name="${currentApplicationId}.permission.C2D_MESSAGE"
+      android:protectionLevel="signature"/>
+  <uses-permission
+      android:name="${currentApplicationId}.permission.C2D_MESSAGE"/>
 
   <application
       android:name=".Aptoide"
@@ -17,6 +28,10 @@
       android:theme="@style/AptoideThemeDefault"
       tools:replace="theme"
       >
+
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="${fabricApiKey}" />
 
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
@@ -32,9 +47,44 @@
     </service>
 
     <provider
-        android:exported="true"
+        android:name="cm.aptoide.pt.v8engine.toolbox.ToolboxContentProvider"
         android:authorities="${toolboxProviderAuthority}"
-        android:name="cm.aptoide.pt.v8engine.toolbox.ToolboxContentProvider"/>
+        android:exported="true"
+        />
+
+    <provider
+        android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+        android:authorities="${suggestionProviderAuthority}"
+        android:exported="false"
+        />
+
+    <receiver
+        android:name="com.google.android.gms.gcm.GcmReceiver"
+        android:exported="true"
+        android:permission="com.google.android.c2dm.permission.SEND">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+        <category android:name="${currentApplicationId}"/>
+      </intent-filter>
+    </receiver>
+
+    <service
+        android:name="com.localytics.android.GcmListenerService"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+      </intent-filter>
+    </service>
+
+    <activity android:name="com.localytics.android.PushTrackingActivity"/>
+
+    <service
+        android:name="com.localytics.android.InstanceIDListenerService"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.android.gms.iid.InstanceID"/>
+      </intent-filter>
+    </service>
   </application>
 
 </manifest>

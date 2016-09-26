@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 
@@ -17,31 +16,31 @@ import cm.aptoide.pt.v8engine.R;
  */
 public class WizardPageThreeFragment extends Fragment {
 
-    public static Fragment newInstance() {
-        return new WizardPageThreeFragment();
-    }
+  public static Fragment newInstance() {
+    return new WizardPageThreeFragment();
+  }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.wizard_page_three, null);
-        setUpListeners(view);
-        return view;
-    }
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.wizard_page_three, null);
+    setUpListeners(view);
+    return view;
+  }
 
-    public void setUpListeners(View view) {
-        final Button registerButton = (Button) view.findViewById(R.id.registerButton);
-        final TextView loginLink = (TextView) view.findViewById(R.id.login_link);
+  public void setUpListeners(View view) {
+    final Button registerButton = (Button) view.findViewById(R.id.registerButton);
+    final TextView loginLink = (TextView) view.findViewById(R.id.login_link);
 
-        registerButton.setTransformationMethod(null);
+    registerButton.setTransformationMethod(null);
 
-        registerButton.setOnClickListener(view1 -> {
-            AptoideAccountManager.openAccountManager(getContext(), true, false);
-            getActivity().onBackPressed();
-        });
+    registerButton.setOnClickListener(view1 -> {
+      AptoideAccountManager.openAccountManager(getContext(), true, false);
+      getActivity().onBackPressed();
+    });
 
-        loginLink.setOnClickListener(view1 -> {
-            AptoideAccountManager.openAccountManager(getContext(), true, false);
-            getActivity().onBackPressed();
-        });
-    }
+    loginLink.setOnClickListener(view1 -> {
+      AptoideAccountManager.openAccountManager(getContext(), true, false);
+      getActivity().onBackPressed();
+    });
+  }
 }

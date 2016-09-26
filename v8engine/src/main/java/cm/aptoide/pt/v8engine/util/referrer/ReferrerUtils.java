@@ -19,12 +19,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -34,189 +28,223 @@ import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import lombok.Cleanup;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 20-06-2016.
  */
 public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
 
-	private static final String TAG = ReferrerUtils.class.getSimpleName();
+  private static final String TAG = ReferrerUtils.class.getSimpleName();
 
-	public static void extractReferrer(MinimalAd minimalAd, final int retries, boolean broadcastReferrer) {
+  public static void extractReferrer(MinimalAd minimalAd, final int retries,
+      boolean broadcastReferrer) {
 
-		String packageName = minimalAd.getPackageName();
-		long networkId = minimalAd.getNetworkId();
-		String clickUrl = minimalAd.getClickUrl();
+    String packageName = minimalAd.getPackageName();
+    long networkId = minimalAd.getNetworkId();
+    String clickUrl = minimalAd.getClickUrl();
 
-		if (!AptoideUtils.ThreadU.isUiThread()) {
-			throw new RuntimeException("ExtractReferrer must be run on UI thread!");
-		}
+    if (clickUrl == null) {
+      Logger.d("ExtractReferrer", "No click_url for packageName " + packageName);
+      return;
+    }
 
-		final Context context = DataProvider.getContext();
+    if (!AptoideUtils.ThreadU.isUiThread()) {
+      throw new RuntimeException("ExtractReferrer must be run on UI thread!");
+    }
 
-		try {
-			Logger.d("ExtractReferrer", "Called for: " + clickUrl + " with packageName " + packageName);
+    final Context context = DataProvider.getContext();
 
-			final String[] internalClickUrl = {clickUrl};
-			final SimpleTimedFuture<String> clickUrlFuture = new SimpleTimedFuture<>();
+    try {
+      Logger.d("ExtractReferrer", "Called for: " + clickUrl + " with packageName " + packageName);
 
-			WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-			WindowManager.LayoutParams params;
-			params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager
-					.LayoutParams.TYPE_SYSTEM_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.TRANSLUCENT);
+      final String[] internalClickUrl = { clickUrl };
+      final SimpleTimedFuture<String> clickUrlFuture = new SimpleTimedFuture<>();
 
-			params.gravity = Gravity.TOP | Gravity.LEFT;
-			params.x = 0;
-			params.y = 0;
-			params.width = 0;
-			params.height = 0;
+      WindowManager windowManager =
+          (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+      WindowManager.LayoutParams params;
+      params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
+          WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+          WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.TRANSLUCENT);
 
-			LinearLayout view = new LinearLayout(context);
-			view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+      params.gravity = Gravity.TOP | Gravity.LEFT;
+      params.x = 0;
+      params.y = 0;
+      params.width = 0;
+      params.height = 0;
 
-			AptoideUtils.ThreadU.runOnIoThread(() -> {
-				internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl);
-				clickUrlFuture.set(internalClickUrl[0]);
-				Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
-			});
-			clickUrlFuture.get();
-			WebView wv = new WebView(context);
-			wv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-			view.addView(wv);
-			wv.getSettings().setJavaScriptEnabled(true);
-			wv.setWebViewClient(new WebViewClient() {
+      LinearLayout view = new LinearLayout(context);
+      view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+          RelativeLayout.LayoutParams.MATCH_PARENT));
 
-				Future<Void> future;
+      AptoideUtils.ThreadU.runOnIoThread(() -> {
+        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl);
+        clickUrlFuture.set(internalClickUrl[0]);
+        Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
+      });
+      clickUrlFuture.get();
+      WebView wv = new WebView(context);
+      wv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+          LinearLayout.LayoutParams.MATCH_PARENT));
+      view.addView(wv);
+      wv.getSettings().setJavaScriptEnabled(true);
+      wv.setWebViewClient(new WebViewClient() {
 
-				@Override
-				public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
+        Future<Void> future;
 
-					if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") ||
-							clickUrl.startsWith("http://play.google.com")) {
-						Logger.d("ExtractReferrer", "Clickurl landed on market");
-						final String referrer = getReferrer(clickUrl);
-						//                        if (simpleFuture != null) {
-						//                            simpleFuture.set(referrer);
-						//                        }
-						Logger.d("ExtractReferrer", "Referrer successfully extracted");
+        @Override public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
 
-						if (broadcastReferrer) {
-							broadcastReferrer(packageName, referrer);
-						} else {
-							@Cleanup Realm realm = DeprecatedDatabase.get();
-							DeprecatedDatabase.save(new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(), minimalAd.getAdId()), realm);
-						}
+          if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") ||
+              clickUrl.startsWith("http://play.google.com")) {
+            Logger.d("ExtractReferrer", "Clickurl landed on market");
+            final String referrer = getReferrer(clickUrl);
+            //                        if (simpleFuture != null) {
+            //                            simpleFuture.set(referrer);
+            //                        }
+            Logger.d("ExtractReferrer", "Referrer successfully extracted");
 
-						future.cancel(false);
-						postponeReferrerExtraction(minimalAd, 0, true);
+            if (broadcastReferrer) {
+              broadcastReferrer(packageName, referrer);
+            } else {
+              @Cleanup Realm realm = DeprecatedDatabase.get();
+              DeprecatedDatabase.save(
+                  new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
+                      minimalAd.getAdId()), realm);
+            }
 
-						return true;
-					}
+            future.cancel(false);
+            postponeReferrerExtraction(minimalAd, 0, true);
 
-					return false;
-				}
+            return true;
+          }
 
-				@Override
-				public void onPageStarted(WebView view, String url, Bitmap favicon) {
-					super.onPageStarted(view, url, favicon);
+          return false;
+        }
 
-					if (future == null) {
-						future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries);
-					}
-				}
+        @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
+          super.onPageStarted(view, url, favicon);
 
-				private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta, int retries) {
-					return postponeReferrerExtraction(minimalAd, delta, false, retries);
-				}
+          if (future == null) {
+            future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries);
+          }
+        }
 
-				private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta, boolean success) {
-					return postponeReferrerExtraction(minimalAd, delta, success, 0);
-				}
+        private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
+            int retries) {
+          return postponeReferrerExtraction(minimalAd, delta, false, retries);
+        }
 
-				private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta, final boolean success, final int retries) {
-					Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
+        private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
+            boolean success) {
+          return postponeReferrerExtraction(minimalAd, delta, success, 0);
+        }
 
-					Callable<Void> callable = () -> {
-						Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
+        private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
+            final boolean success, final int retries) {
+          Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
-						RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(), minimalAd.getClickUrl(), success).execute();
+          Callable<Void> callable = () -> {
+            Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
-						Log.d("ExtractReferrer", "Retries left: " + retries);
+            RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
+                minimalAd.getClickUrl(), success).execute();
 
-						if (!success) {
-							excludedNetworks.add(packageName, networkId);
+            Log.d("ExtractReferrer", "Retries left: " + retries);
 
-							try {
+            if (!success) {
+              excludedNetworks.add(packageName, networkId);
 
-								if (retries > 0) {
-									GetAdsRequest.ofSecondTry(packageName)
-											.execute(getAdsResponse -> extractReferrer(minimalAd, retries - 1, broadcastReferrer));
-								} else {
-									// A lista de excluded networks deve ser limpa a cada "ronda"
-									excludedNetworks.remove(packageName);
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							// TODO: 28-07-2016 Baikova Failed to extract referrer.
-						} else {
-							// A lista de excluded networks deve ser limpa a cada "ronda"
-							// TODO: 28-07-2016 Baikova referrer successfully extracted.
-							excludedNetworks.remove(packageName);
-						}
+              try {
 
-						return null;
-					};
+                if (retries > 0) {
+                  GetAdsRequest.ofSecondTry(packageName)
+                      .observe()
+                      .filter(ReferrerUtils::hasAds)
+                      .observeOn(AndroidSchedulers.mainThread())
+                      .subscribe(getAdsResponse -> extractReferrer(
+                          MinimalAd.from(getAdsResponse.getAds().get(0)), retries - 1,
+                          broadcastReferrer), CrashReports::logException);
+                } else {
+                  // A lista de excluded networks deve ser limpa a cada "ronda"
+                  excludedNetworks.remove(packageName);
+                }
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+              // TODO: 28-07-2016 Baikova Failed to extract referrer.
+            } else {
+              // A lista de excluded networks deve ser limpa a cada "ronda"
+              // TODO: 28-07-2016 Baikova referrer successfully extracted.
+              excludedNetworks.remove(packageName);
+            }
 
-					return executorService.schedule(callable, delta, TimeUnit.SECONDS);
-				}
-			});
+            return null;
+          };
 
-			wv.loadUrl(internalClickUrl[0]);
+          return executorService.schedule(callable, delta, TimeUnit.SECONDS);
+        }
+      });
 
-			// TODO: 28-07-2016 Baikova Opened click_url
+      wv.loadUrl(internalClickUrl[0]);
 
-			windowManager.addView(view, params);
-		} catch (Exception e) {
-			// TODO: 09-06-2016 neuro
-			//            Crashlytics.logException(e);
-		}
-	}
+      // TODO: 28-07-2016 Baikova Opened click_url
 
-	private static String getReferrer(String uriAsString) {
+      windowManager.addView(view, params);
+    } catch (Exception e) {
+      // TODO: 09-06-2016 neuro
+      CrashReports.logException(e);
+    }
+  }
 
-//		URI uri = URI.create(uriAsString);
-//		List<NameValuePair> params = URLEncodedUtils.parse(uri, "UTF-8");
-//
-//		String referrer = null;
-//		for (NameValuePair param : params) {
-//
-//			if (param.getName().equals("referrer")) {
-//				referrer = param.getValue();
-//			}
-//		}
-//		return referrer;
+  private static Boolean hasAds(GetAdsResponse getAdsResponse) {
+    return getAdsResponse != null
+        && getAdsResponse.getAds() != null
+        && getAdsResponse.getAds().size() > 0
+        && getAdsResponse.getAds().get(0) != null;
+  }
 
-		Uri uri = Uri.parse(uriAsString);
-		String referrer = uri.getQueryParameter("referrer");
-		if(!TextUtils.isEmpty(referrer)) {
-			Logger.v(TAG, "Found referrer: " + referrer);
-		}
-		return referrer;
-	}
+  private static String getReferrer(String uriAsString) {
 
-	public static void broadcastReferrer(String packageName, String referrer) {
-		Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
-		i.setPackage(packageName);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-			i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-		}
-		i.putExtra("referrer", referrer);
-		DataProvider.getContext().sendBroadcast(i);
-		Logger.d("InstalledBroadcastReceiver", "Sent broadcast to " + packageName + " with referrer " + referrer);
-		// TODO: 28-07-2016 Baikova referrer broadcasted.
-	}
+    //		URI uri = URI.create(uriAsString);
+    //		List<NameValuePair> params = URLEncodedUtils.parse(uri, "UTF-8");
+    //
+    //		String referrer = null;
+    //		for (NameValuePair param : params) {
+    //
+    //			if (param.getName().equals("referrer")) {
+    //				referrer = param.getValue();
+    //			}
+    //		}
+    //		return referrer;
+
+    Uri uri = Uri.parse(uriAsString);
+    String referrer = uri.getQueryParameter("referrer");
+    if (!TextUtils.isEmpty(referrer)) {
+      Logger.v(TAG, "Found referrer: " + referrer);
+    }
+    return referrer;
+  }
+
+  public static void broadcastReferrer(String packageName, String referrer) {
+    Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
+    i.setPackage(packageName);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+      i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+    }
+    i.putExtra("referrer", referrer);
+    DataProvider.getContext().sendBroadcast(i);
+    Logger.d("InstalledBroadcastReceiver",
+        "Sent broadcast to " + packageName + " with referrer " + referrer);
+    // TODO: 28-07-2016 Baikova referrer broadcasted.
+  }
 }

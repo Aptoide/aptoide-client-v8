@@ -6,11 +6,11 @@
   -->
 
 <FrameLayout
-    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
+    style="@style/AppViewWidget"
     >
   <!-- progress bar while installing -->
   <RelativeLayout
@@ -29,6 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:checked="true"
         android:text="@string/share_on_timeline"
@@ -39,12 +40,13 @@
 
     <ProgressBar
         android:id="@+id/download_progress"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/share_in_timeline"
         android:layout_toLeftOf="@+id/actionContainer"
+        android:layout_toStartOf="@id/actionContainer"
         android:indeterminate="false"
+        style="?android:attr/progressBarStyleHorizontal"
         />
 
     <TextView
@@ -53,9 +55,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/share_in_timeline"
         android:layout_toLeftOf="@+id/actionContainer"
+        android:layout_toStartOf="@id/actionContainer"
         android:ellipsize="end"
         android:maxLines="1"
-        android:singleLine="true"
         android:textColor="@color/default_color"
         tools:text="80%"
         />
@@ -65,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         >
@@ -78,7 +81,7 @@
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
           android:padding="4dp"
-          android:src="@drawable/close"
+          android:src="@drawable/cross"
           />
 
       <ImageView
@@ -90,7 +93,7 @@
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
           android:padding="15dp"
-          android:src="@drawable/pause"
+          android:src="@drawable/media_pause"
           />
 
       <ImageView
@@ -102,7 +105,7 @@
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
           android:padding="15dp"
-          android:src="@drawable/play"
+          android:src="@drawable/media_play"
           android:visibility="gone"
           tools:visibility="visible"
           />
@@ -122,7 +125,6 @@
 
     <Button
         android:id="@+id/action_btn"
-        style="?attr/customButton"
         android:layout_width="160dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
@@ -133,12 +135,14 @@
         android:text="@string/install"
         android:textAllCaps="true"
         android:textSize="14.7sp"
+        style="?attr/customButton"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_toLeftOf="@id/action_btn"
         android:layout_toStartOf="@id/action_btn"
         android:gravity="center_vertical"
@@ -163,9 +167,9 @@
           layout="@layout/separator_vertical"
           android:layout_width="1dp"
           android:layout_height="match_parent"
-          android:layout_marginEnd="13.7dp"
+          android:layout_marginEnd="14dp"
           android:layout_marginLeft="4dp"
-          android:layout_marginRight="13.7dp"
+          android:layout_marginRight="14dp"
           android:layout_marginStart="4dp"
           />
 
@@ -174,7 +178,9 @@
           android:layout_height="match_parent"
           android:layout_marginEnd="10dp"
           android:layout_marginRight="10dp"
+          android:gravity="center_vertical"
           android:orientation="vertical"
+          tools:background="@color/red"
           >
 
         <LinearLayout
@@ -183,8 +189,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="invisible"
-            tools:visibility="visible"
+            android:visibility="gone"
             >
 
           <TextView
@@ -195,19 +200,19 @@
               android:lines="1"
               android:paddingEnd="4dp"
               android:paddingRight="4dp"
-              android:singleLine="true"
               android:text="@string/appview_latest_version_text"
-              android:textColor="?android:attr/textColorSecondary"
+              android:textColor="@color/app_view_gray"
               android:textSize="@dimen/text_size_small"
               android:textStyle="bold"
               />
 
           <ImageView
               android:id="@+id/latest_available_icon"
-              android:layout_width="20dp"
-              android:layout_height="20dp"
+              android:layout_width="15dp"
+              android:layout_height="15dp"
               android:src="@drawable/ic_latest_version"
-              android:tint="@color/green_tint_default"
+              android:visibility="invisible"
+              tools:visibility="visible"
               />
 
         </LinearLayout>
@@ -215,7 +220,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:orientation="horizontal"
             >
 
@@ -237,12 +242,27 @@
               android:maxLines="1"
               android:maxWidth="70dp"
               android:textColor="@color/almost_black"
-              android:textSize="11.6sp"
+              android:textSize="@dimen/text_size_medium_small"
               android:textStyle="bold"
-              tools:text="1.07.6"
+              tools:text="6.3.3b1"
               />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/not_latest_available_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/newer_version_available"
+            android:textColor="@color/lighter_custom_gray"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            />
 
       </LinearLayout>
 
