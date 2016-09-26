@@ -23,7 +23,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_img_no_apps_downloaded"
+        android:src="@drawable/error3"
         />
 
     <TextView
