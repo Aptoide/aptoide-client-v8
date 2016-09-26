@@ -10,7 +10,6 @@ import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import java.util.HashMap;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;

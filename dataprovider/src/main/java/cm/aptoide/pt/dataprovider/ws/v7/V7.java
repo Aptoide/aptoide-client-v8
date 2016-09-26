@@ -71,6 +71,29 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
     this.body = body;
   }
 
+  protected static StoreCredentialsApp getStoreOnRequest(String storeName) {
+    @Cleanup Realm realm = DeprecatedDatabase.get();
+    if (storeName != null) {
+      Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
+      if (store != null) {
+        return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
+      }
+    }
+    return new StoreCredentialsApp();
+  }
+
+  protected static StoreCredentialsApp getStoreOnRequest(Long storeId) {
+    @Cleanup Realm realm = DeprecatedDatabase.get();
+
+    if (storeId != null) {
+      Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
+      if (store != null) {
+        return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
+      }
+    }
+    return new StoreCredentialsApp();
+  }
+
   @Override public Observable<U> observe(boolean bypassCache) {
     return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
   }
@@ -130,40 +153,6 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
       }
       return Observable.error(throwable);
     });
-  }
-
-  protected static StoreCredentialsApp getStoreOnRequest(String storeName) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    if (storeName != null) {
-      Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
-      if (store != null) {
-        return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
-      }
-    }
-    return new StoreCredentialsApp();
-  }
-
-  protected static StoreCredentialsApp getStoreOnRequest(Long storeId) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-
-    if (storeId != null) {
-      Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
-      if (store != null) {
-        return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
-      }
-    }
-    return new StoreCredentialsApp();
-  }
-
-  @AllArgsConstructor public static class StoreCredentialsApp {
-
-    @Getter private final String username;
-    @Getter private final String passwordSha1;
-
-    public StoreCredentialsApp() {
-      username = null;
-      passwordSha1 = null;
-    }
   }
 
   public interface Interfaces {
@@ -247,5 +236,16 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(
         @Body SetReviewRatingRequest.Body body,
         @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+  }
+
+  @AllArgsConstructor public static class StoreCredentialsApp {
+
+    @Getter private final String username;
+    @Getter private final String passwordSha1;
+
+    public StoreCredentialsApp() {
+      username = null;
+      passwordSha1 = null;
+    }
   }
 }

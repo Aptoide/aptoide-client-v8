@@ -15,9 +15,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data @EqualsAndHashCode(callSuper = true) public class PaidApp extends BaseV3Response {
 
-  @JsonProperty("payment") private Payment payment;
-
   @JsonProperty("apk") public Path path;
+  @JsonProperty("payment") private Payment payment;
 
   public boolean isPaid() {
     return (payment != null

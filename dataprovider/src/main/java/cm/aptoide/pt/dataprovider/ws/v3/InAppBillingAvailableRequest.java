@@ -14,22 +14,22 @@ import rx.Observable;
  */
 public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
-	private HashMapNotNull<String,String> args;
+  private HashMapNotNull<String, String> args;
 
-	public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
-		final HashMapNotNull<String,String> args = new HashMapNotNull<>();
-		args.put("mode", "json");
-		args.put("apiversion", String.valueOf(apiVersion));
-		args.put("reqtype", "iabavailable");
-		args.put("package", packageName);
-		args.put("purchasetype", type);
-		return new InAppBillingAvailableRequest(BASE_HOST, args);
-	}
+  public InAppBillingAvailableRequest(String baseHost, HashMapNotNull<String, String> args) {
+    super(baseHost);
+    this.args = args;
+  }
 
-	public InAppBillingAvailableRequest(String baseHost, HashMapNotNull<String,String> args) {
-		super(baseHost);
-		this.args = args;
-	}
+  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
+    final HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    args.put("mode", "json");
+    args.put("apiversion", String.valueOf(apiVersion));
+    args.put("reqtype", "iabavailable");
+    args.put("package", packageName);
+    args.put("purchasetype", type);
+    return new InAppBillingAvailableRequest(BASE_HOST, args);
+  }
 
   @Override
   protected Observable<InAppBillingAvailableResponse> loadDataFromNetwork(Interfaces interfaces,

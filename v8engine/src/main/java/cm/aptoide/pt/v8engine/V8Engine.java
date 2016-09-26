@@ -12,17 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.flurry.android.FlurryAgent;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
-import java.util.Collections;
-import java.util.List;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -49,6 +38,7 @@ import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -91,7 +81,7 @@ public abstract class V8Engine extends DataProvider {
       }
 
       DataproviderUtils.checkUpdates();
-    }, e-> {
+    }, e -> {
       Logger.e(TAG, e);
       //CrashReports.logException(e);
     });

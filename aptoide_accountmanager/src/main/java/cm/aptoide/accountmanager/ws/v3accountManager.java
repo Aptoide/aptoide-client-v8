@@ -16,7 +16,6 @@ import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
-import java.util.HashMap;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

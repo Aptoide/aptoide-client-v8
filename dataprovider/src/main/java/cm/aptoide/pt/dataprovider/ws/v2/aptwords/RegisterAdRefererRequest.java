@@ -6,19 +6,13 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import android.os.Build;
-
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import java.util.HashMap;
-import java.util.Map;
-
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.Data;
 import rx.Observable;
 
@@ -75,7 +69,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   @Override protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
 
-		HashMapNotNull<String,String> map = new HashMapNotNull<>();
+    HashMapNotNull<String, String> map = new HashMapNotNull<>();
 
     map.put("success", success);
     map.put("adid", Long.toString(adId));

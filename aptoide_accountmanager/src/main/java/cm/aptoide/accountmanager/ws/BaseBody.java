@@ -6,7 +6,6 @@
 package cm.aptoide.accountmanager.ws;
 
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import java.util.HashMap;
 
 /**
  * Created by neuro on 18-05-2016.

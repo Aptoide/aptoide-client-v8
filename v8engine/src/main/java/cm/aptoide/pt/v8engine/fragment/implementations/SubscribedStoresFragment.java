@@ -45,7 +45,7 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
       }
     });
     /*RxView.clicks(addStoreButton).subscribe(view ->{
-			new AddStoreDialog().show(((FragmentActivity) getContext())
+      new AddStoreDialog().show(((FragmentActivity) getContext())
 					.getSupportFragmentManager(), "addStoreDialog");
 		});*/
 

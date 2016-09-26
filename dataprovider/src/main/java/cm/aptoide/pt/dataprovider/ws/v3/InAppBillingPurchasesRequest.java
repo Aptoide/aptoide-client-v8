@@ -16,29 +16,30 @@ import rx.Observable;
  */
 public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesResponse> {
 
-	private HashMapNotNull<String,String> args;
+  private HashMapNotNull<String, String> args;
 
-	public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type) {
-		HashMapNotNull<String,String> args = getBaseArgs(apiVersion, packageName, type);
-		return new InAppBillingPurchasesRequest(BASE_HOST, args);
-	}
+  private InAppBillingPurchasesRequest(String baseHost, HashMapNotNull<String, String> args) {
+    super(baseHost);
+    this.args = args;
+  }
 
-	@NonNull
-	private static HashMapNotNull<String,String> getBaseArgs(int apiVersion, String packageName, String type) {
-		HashMapNotNull<String, String> args = new HashMapNotNull<String, String>();
-		args.put("mode","json");
-		args.put("package", packageName);
-		args.put("apiversion", String.valueOf(apiVersion));
-		args.put("reqtype", "iabpurchases");
-		args.put("access_token", AptoideAccountManager.getAccessToken());
-		args.put("purchasetype",type);
-		return args;
-	}
+  public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type) {
+    HashMapNotNull<String, String> args = getBaseArgs(apiVersion, packageName, type);
+    return new InAppBillingPurchasesRequest(BASE_HOST, args);
+  }
 
-	private InAppBillingPurchasesRequest(String baseHost, HashMapNotNull<String,String> args) {
-		super(baseHost);
-		this.args = args;
-	}
+  @NonNull
+  private static HashMapNotNull<String, String> getBaseArgs(int apiVersion, String packageName,
+      String type) {
+    HashMapNotNull<String, String> args = new HashMapNotNull<String, String>();
+    args.put("mode", "json");
+    args.put("package", packageName);
+    args.put("apiversion", String.valueOf(apiVersion));
+    args.put("reqtype", "iabpurchases");
+    args.put("access_token", AptoideAccountManager.getAccessToken());
+    args.put("purchasetype", type);
+    return args;
+  }
 
   @Override
   protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Interfaces interfaces,

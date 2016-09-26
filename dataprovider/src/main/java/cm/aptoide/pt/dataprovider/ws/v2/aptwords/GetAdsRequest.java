@@ -20,7 +20,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -115,7 +114,7 @@ import rx.Observable;
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
 
-		HashMapNotNull<String,String> parameters = new HashMapNotNull<>();
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
     parameters.put("q", Api.Q);
     parameters.put("lang", Api.LANG);

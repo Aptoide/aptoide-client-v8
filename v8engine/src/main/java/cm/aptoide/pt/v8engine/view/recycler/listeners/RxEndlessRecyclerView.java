@@ -9,11 +9,11 @@ import rx.Observable;
  */
 public final class RxEndlessRecyclerView {
 
-  public static Observable<Void> loadMore(RecyclerView recyclerView, BaseAdapter adapter) {
-    return Observable.create(new EndlessRecyclerViewLoadMoreOnSubscribe(recyclerView, adapter));
-  }
-
   private RxEndlessRecyclerView() {
     new AssertionError("No instances!");
+  }
+
+  public static Observable<Void> loadMore(RecyclerView recyclerView, BaseAdapter adapter) {
+    return Observable.create(new EndlessRecyclerViewLoadMoreOnSubscribe(recyclerView, adapter));
   }
 }

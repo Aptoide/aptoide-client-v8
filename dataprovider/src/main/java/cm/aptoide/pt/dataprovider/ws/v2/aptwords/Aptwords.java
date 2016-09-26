@@ -39,12 +39,11 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
   interface Interfaces {
 
-		@POST("getAds")
-		@FormUrlEncoded
-		Observable<GetAdsResponse> getAds(@FieldMap HashMapNotNull<String,String> arg);
+    @POST("getAds") @FormUrlEncoded Observable<GetAdsResponse> getAds(
+        @FieldMap HashMapNotNull<String, String> arg);
 
-		@POST("registerAdReferer")
-		@FormUrlEncoded
-		Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap HashMapNotNull<String,String> arg);
-	}
+    @POST("registerAdReferer") @FormUrlEncoded
+    Observable<RegisterAdRefererRequest.DefaultResponse> load(
+        @FieldMap HashMapNotNull<String, String> arg);
+  }
 }

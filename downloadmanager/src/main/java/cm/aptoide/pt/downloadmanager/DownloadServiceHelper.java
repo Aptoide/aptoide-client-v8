@@ -74,7 +74,7 @@ public class DownloadServiceHelper {
                   AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
             } else {
               throwable.printStackTrace();
-              Log.d("lou",throwable.toString());
+              Log.d("lou", throwable.toString());
               CrashReports.logException(throwable);
             }
           });

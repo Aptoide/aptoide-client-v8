@@ -14,7 +14,6 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
-import java.util.HashMap;
 import java.util.Locale;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

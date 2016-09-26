@@ -31,7 +31,6 @@ import lombok.AllArgsConstructor;
       baseBody.setQ(Api.Q);
     }
 
-		return baseBody;
-	}
-
+    return baseBody;
+  }
 }

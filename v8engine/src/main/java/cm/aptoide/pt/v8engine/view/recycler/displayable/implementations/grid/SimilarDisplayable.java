@@ -42,6 +42,9 @@ import lombok.Getter;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
 
+  public SimilarDisplayable() {
+  }
+
   public static Displayable from(Similar similar, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
     final List<String> similarAppsNames = new ArrayList<>();
@@ -55,9 +58,6 @@ import lombok.Getter;
         similar.getAb().getConversion().getUrl(), similarAppsNames,
         similar.getRecommendedApp().getUpdated(), similar.getTimestamp(), dateCalculator,
         spannableFactory);
-  }
-
-  public SimilarDisplayable() {
   }
 
   public String getTitle(Context context) {

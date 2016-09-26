@@ -13,7 +13,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
@@ -22,7 +21,6 @@ import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseLoaderActivity;
 import cm.aptoide.pt.v8engine.analytics.StaticScreenNames;
 import com.astuetz.PagerSlidingTabStrip;
-import rx.Observable;
 
 public class MainActivity extends AptoideBaseLoaderActivity {
 

@@ -16,8 +16,7 @@ import lombok.EqualsAndHashCode;
 
   private final Similar similar;
 
-  @JsonCreator
-  public SimilarTimelineItem(@JsonProperty("data") Similar similar) {
+  @JsonCreator public SimilarTimelineItem(@JsonProperty("data") Similar similar) {
     this.similar = similar;
   }
 

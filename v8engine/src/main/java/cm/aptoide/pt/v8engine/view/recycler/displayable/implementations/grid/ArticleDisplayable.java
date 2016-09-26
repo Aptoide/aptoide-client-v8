@@ -44,8 +44,12 @@ import rx.schedulers.Schedulers;
   private SpannableFactory spannableFactory;
   private AccessorFactory accessorFactory;
 
+  public ArticleDisplayable() {
+  }
+
   public static ArticleDisplayable from(Article article, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory, AccessorFactory accessorFactory) {
+      SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
+      AccessorFactory accessorFactory) {
     //String appName = null;
     long appId = 0;
     //if (article.getApps() != null && article.getApps().size() > 0) {
@@ -58,9 +62,6 @@ import rx.schedulers.Schedulers;
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
         article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, article.getApps(),
         article.getDate(), dateCalculator, spannableFactory, accessorFactory);
-  }
-
-  public ArticleDisplayable() {
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {

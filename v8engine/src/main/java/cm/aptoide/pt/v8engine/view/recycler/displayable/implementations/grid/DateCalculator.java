@@ -26,13 +26,6 @@ public class DateCalculator {
   private static String mTimestampLabelYearsAgo;
   private static String[] weekdays = new DateFormatSymbols().getWeekdays(); // get day names
 
-  public String getTimeSinceDate(Context context, Date date) {
-    if (date == null) {
-      return "";
-    }
-    return getTimeDiffAll(context, date.getTime());
-  }
-
   public DateCalculator() {
     mTimestampLabelYesterday = V8Engine.getContext()
         .getResources()
@@ -73,6 +66,25 @@ public class DateCalculator {
     mTimestampLabelYearsAgo = V8Engine.getContext()
         .getResources()
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_years_ago);
+  }
+
+  private static boolean isYesterday(long date) {
+
+    final Calendar currentDate = Calendar.getInstance();
+    currentDate.setTimeInMillis(date);
+
+    final Calendar yesterdayDate = Calendar.getInstance();
+    yesterdayDate.add(Calendar.DATE, -1);
+
+    return yesterdayDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)
+        && yesterdayDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR);
+  }
+
+  public String getTimeSinceDate(Context context, Date date) {
+    if (date == null) {
+      return "";
+    }
+    return getTimeDiffAll(context, date.getTime());
   }
 
   private String getTimeDiffAll(Context context, long time) {
@@ -134,17 +146,5 @@ public class DateCalculator {
     } else {
       return DateUtils.formatDateTime(context, timedate, DateUtils.FORMAT_NUMERIC_DATE);
     }
-  }
-
-  private static boolean isYesterday(long date) {
-
-    final Calendar currentDate = Calendar.getInstance();
-    currentDate.setTimeInMillis(date);
-
-    final Calendar yesterdayDate = Calendar.getInstance();
-    yesterdayDate.add(Calendar.DATE, -1);
-
-    return yesterdayDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)
-        && yesterdayDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR);
   }
 }

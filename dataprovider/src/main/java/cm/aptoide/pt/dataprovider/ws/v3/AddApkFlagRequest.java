@@ -15,15 +15,15 @@ import rx.Observable;
  */
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
-	private HashMapNotNull<String,String> args;
+  private HashMapNotNull<String, String> args;
 
-	protected AddApkFlagRequest(HashMapNotNull<String,String> args) {
-		super(BASE_HOST);
-		this.args = args;
-	}
+  protected AddApkFlagRequest(HashMapNotNull<String, String> args) {
+    super(BASE_HOST);
+    this.args = args;
+  }
 
-	public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag) {
-		HashMapNotNull<String,String> args = new HashMapNotNull<>();
+  public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag) {
+    HashMapNotNull<String, String> args = new HashMapNotNull<>();
 
     args.put("repo", storeName);
     args.put("md5sum", appMd5sum);

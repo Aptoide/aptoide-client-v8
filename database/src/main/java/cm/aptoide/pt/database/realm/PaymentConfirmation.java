@@ -58,34 +58,6 @@ public class PaymentConfirmation extends RealmObject {
     this.priceDescription = priceDescription;
   }
 
-  public void setApiVersion(int apiVersion) {
-    this.apiVersion = apiVersion;
-  }
-
-  public void setSku(String sku) {
-    this.sku = sku;
-  }
-
-  public void setPackageName(String packageName) {
-    this.packageName = packageName;
-  }
-
-  public void setDeveloperPayload(String developerPayload) {
-    this.developerPayload = developerPayload;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public void setAppId(long appId) {
-    this.appId = appId;
-  }
-
-  public void setStoreName(String storeName) {
-    this.storeName = storeName;
-  }
-
   public String getPaymentConfirmationId() {
     return paymentConfirmationId;
   }
@@ -106,28 +78,56 @@ public class PaymentConfirmation extends RealmObject {
     return apiVersion;
   }
 
+  public void setApiVersion(int apiVersion) {
+    this.apiVersion = apiVersion;
+  }
+
   public String getSku() {
     return sku;
+  }
+
+  public void setSku(String sku) {
+    this.sku = sku;
   }
 
   public String getPackageName() {
     return packageName;
   }
 
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+
   public String getDeveloperPayload() {
     return developerPayload;
+  }
+
+  public void setDeveloperPayload(String developerPayload) {
+    this.developerPayload = developerPayload;
   }
 
   public String getType() {
     return type;
   }
 
+  public void setType(String type) {
+    this.type = type;
+  }
+
   public long getAppId() {
     return appId;
   }
 
+  public void setAppId(long appId) {
+    this.appId = appId;
+  }
+
   public String getStoreName() {
     return storeName;
+  }
+
+  public void setStoreName(String storeName) {
+    this.storeName = storeName;
   }
 
   public String getCurrency() {

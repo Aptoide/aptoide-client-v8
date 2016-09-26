@@ -65,7 +65,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     tvStoreName.setText(pojo.getStore().getName());
     tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(getContext(), pojo.getAdded().getTime()));
     /*try {
-			storeTheme = pojo.getStore().getAppearance().getTheme();
+      storeTheme = pojo.getStore().getAppearance().getTheme();
 		} catch (NullPointerException e) {
 			storeTheme = "none";
 		}*/

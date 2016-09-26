@@ -21,10 +21,10 @@ import lombok.Getter;
     implements TimelineCard {
 
   @Getter private final String cardId;
-  @Getter @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date timestamp;
   @Getter private final App recommendedApp;
   @Getter private final List<App> similarApps;
   @Getter private final Ab ab;
+  @Getter @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date timestamp;
 
   @JsonCreator public Recommendation(@JsonProperty("uid") String cardId,
       @JsonProperty("timestamp") Date timestamp, @JsonProperty("app") App recommendedApp,

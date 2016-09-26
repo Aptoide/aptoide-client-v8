@@ -44,7 +44,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
   public static ListStoresRequest ofTopStores(int offset, int limit) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
@@ -55,7 +56,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
   public static ListStoresRequest ofAction(String url) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     return new ListStoresRequest(url.replace("listStores", ""),
         OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),

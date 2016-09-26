@@ -19,32 +19,39 @@ import rx.Observable;
  */
 public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
-	private HashMapNotNull<String,String> args;
+  private HashMapNotNull<String, String> args;
 
-	private CheckProductPaymentRequest(String baseHost, HashMapNotNull<String,String> args) {
-		super(baseHost);
-		this.args = args;
-	}
+  private CheckProductPaymentRequest(String baseHost, HashMapNotNull<String, String> args) {
+    super(baseHost);
+    this.args = args;
+  }
 
-	public static CheckProductPaymentRequest ofInAppBilling(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency, NetworkOperatorManager operatorManager, int apiVersion, String developerPayload) {
-		final HashMapNotNull<String,String> args = new HashMapNotNull<>();
-		addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency, operatorManager, args);
-		args.put("reqtype", "iabpurchasestatus");
-		args.put("apiversion", String.valueOf(apiVersion));
-		args.put("developerPayload", developerPayload);
-		return new CheckProductPaymentRequest(BASE_HOST, args);
-	}
+  public static CheckProductPaymentRequest ofInAppBilling(String paymentConfirmationId,
+      int paymentId, int productId, double price, double taxRate, String currency,
+      NetworkOperatorManager operatorManager, int apiVersion, String developerPayload) {
+    final HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
+        operatorManager, args);
+    args.put("reqtype", "iabpurchasestatus");
+    args.put("apiversion", String.valueOf(apiVersion));
+    args.put("developerPayload", developerPayload);
+    return new CheckProductPaymentRequest(BASE_HOST, args);
+  }
 
-	public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String
-			currency, NetworkOperatorManager operatorManager, String storeName) {
-		final HashMapNotNull<String,String> args = new HashMapNotNull<>();
-		addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency, operatorManager, args);
-		args.put("reqtype", "apkpurchasestatus");
-		args.put("repo", storeName);
-		return new CheckProductPaymentRequest(BASE_HOST, args);
-	}
+  public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId,
+      int productId, double price, double taxRate, String currency,
+      NetworkOperatorManager operatorManager, String storeName) {
+    final HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
+        operatorManager, args);
+    args.put("reqtype", "apkpurchasestatus");
+    args.put("repo", storeName);
+    return new CheckProductPaymentRequest(BASE_HOST, args);
+  }
 
-	private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency, NetworkOperatorManager operatorManager, HashMapNotNull<String,String> args) {
+  private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,
+      double price, double taxRate, String currency, NetworkOperatorManager operatorManager,
+      HashMapNotNull<String, String> args) {
 
     args.put("mode", "json");
     args.put("payreqtype", "rest");

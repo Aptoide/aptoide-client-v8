@@ -10,8 +10,6 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import java.util.HashMap;
-import java.util.Map;
 import rx.Observable;
 
 /**
@@ -19,19 +17,20 @@ import rx.Observable;
  */
 public class GetApkInfoRequest extends V3<PaidApp> {
 
-	private HashMapNotNull<String,String> args;
+  private HashMapNotNull<String, String> args;
 
-	protected GetApkInfoRequest(HashMapNotNull<String,String> args) {
-		super(BASE_HOST);
-		this.args = args;
-	}
+  protected GetApkInfoRequest(HashMapNotNull<String, String> args) {
+    super(BASE_HOST);
+    this.args = args;
+  }
 
-	public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager, boolean fromSponsored, String storeName) {
-		HashMapNotNull<String,String> args = new HashMapNotNull<>();
-		args.put("identif", "id:" + appId);
-		args.put("repo", storeName);
-		args.put("mode", "json");
-		args.put("access_token", AptoideAccountManager.getAccessToken());
+  public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,
+      boolean fromSponsored, String storeName) {
+    HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    args.put("identif", "id:" + appId);
+    args.put("repo", storeName);
+    args.put("mode", "json");
+    args.put("access_token", AptoideAccountManager.getAccessToken());
 
     if (fromSponsored) {
       args.put("adview", "1");
@@ -40,12 +39,13 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     return new GetApkInfoRequest(args);
   }
 
-	private static void addOptions(HashMapNotNull<String,String> args, NetworkOperatorManager operatorRepository) {
-		HashMapNotNull<String, String> options = new HashMapNotNull<>();
-		options.put("cmtlimit", "5");
-		options.put("payinfo", "true");
-		options.put("q", Api.Q);
-		options.put("lang", Api.LANG);
+  private static void addOptions(HashMapNotNull<String, String> args,
+      NetworkOperatorManager operatorRepository) {
+    HashMapNotNull<String, String> options = new HashMapNotNull<>();
+    options.put("cmtlimit", "5");
+    options.put("payinfo", "true");
+    options.put("q", Api.Q);
+    options.put("lang", Api.LANG);
 
     if (operatorRepository.isSimStateReady()) {
       options.put("mcc", operatorRepository.getMobileCountryCode());
