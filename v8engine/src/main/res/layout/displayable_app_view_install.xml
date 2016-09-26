@@ -6,11 +6,11 @@
   -->
 
 <FrameLayout
-    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
+    style="@style/AppViewWidget"
     >
   <!-- progress bar while installing -->
   <RelativeLayout
@@ -29,6 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:checked="true"
         android:text="@string/share_on_timeline"
@@ -39,12 +40,13 @@
 
     <ProgressBar
         android:id="@+id/download_progress"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/share_in_timeline"
         android:layout_toLeftOf="@+id/actionContainer"
+        android:layout_toStartOf="@id/actionContainer"
         android:indeterminate="false"
+        style="?android:attr/progressBarStyleHorizontal"
         />
 
     <TextView
@@ -53,9 +55,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/share_in_timeline"
         android:layout_toLeftOf="@+id/actionContainer"
+        android:layout_toStartOf="@id/actionContainer"
         android:ellipsize="end"
         android:maxLines="1"
-        android:singleLine="true"
         android:textColor="@color/default_color"
         tools:text="80%"
         />
@@ -65,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         >
@@ -122,7 +125,6 @@
 
     <Button
         android:id="@+id/action_btn"
-        style="?attr/customButton"
         android:layout_width="160dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
@@ -133,12 +135,14 @@
         android:text="@string/install"
         android:textAllCaps="true"
         android:textSize="14.7sp"
+        style="?attr/customButton"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_toLeftOf="@id/action_btn"
         android:layout_toStartOf="@id/action_btn"
         android:gravity="center_vertical"
@@ -174,8 +178,8 @@
           android:layout_height="match_parent"
           android:layout_marginEnd="10dp"
           android:layout_marginRight="10dp"
-          android:orientation="vertical"
           android:gravity="center_vertical"
+          android:orientation="vertical"
           tools:background="@color/red"
           >
 
@@ -196,7 +200,6 @@
               android:lines="1"
               android:paddingEnd="4dp"
               android:paddingRight="4dp"
-              android:singleLine="true"
               android:text="@string/appview_latest_version_text"
               android:textColor="@color/app_view_gray"
               android:textSize="@dimen/text_size_small"
