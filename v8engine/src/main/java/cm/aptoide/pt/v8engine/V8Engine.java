@@ -133,6 +133,7 @@ public abstract class V8Engine extends DataProvider {
     }
 
     if (SecurePreferences.isFirstRun()) {
+      PreferenceManager.setDefaultValues(this, R.xml.settings, false);
       loadInstalledApps().doOnNext(o -> {
         if (AptoideAccountManager.isLoggedIn()) {
           if (!SecurePreferences.isUserDataLoaded()) {
