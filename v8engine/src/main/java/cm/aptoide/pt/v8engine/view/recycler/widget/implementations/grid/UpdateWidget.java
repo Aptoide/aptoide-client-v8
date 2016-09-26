@@ -80,7 +80,7 @@ import rx.subscriptions.CompositeSubscription;
     }
 
     subscriptions.add(accessor.get(packageName)
-        .first()
+        .first().observeOn(AndroidSchedulers.mainThread())
         .subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
             throwable -> throwable.printStackTrace()));
     displayable.setPauseAction(this::onViewDetached);
