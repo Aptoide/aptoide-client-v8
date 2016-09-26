@@ -57,10 +57,6 @@ public class PackageRepository {
         .doOnNext(packageInfos -> setCachedInstalledPackages(packageInfos));
   }
 
-  private void setCachedInstalledPackages(List<PackageInfo> packageInfos) {
-    memoryCache = packageInfos;
-  }
-
   private Observable<List<PackageInfo>> getCachedInstalledPackages() {
     return Observable.fromCallable(() -> {
       if (memoryCache != null) {
@@ -68,6 +64,10 @@ public class PackageRepository {
       }
       throw new IllegalStateException("No cached packages available!");
     });
+  }
+
+  private void setCachedInstalledPackages(List<PackageInfo> packageInfos) {
+    memoryCache = packageInfos;
   }
 
   private Observable<List<PackageInfo>> getPackageManagerInstalledPackages() {

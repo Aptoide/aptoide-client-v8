@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -141,8 +140,7 @@ public abstract class SupportV4BaseFragment extends RxFragment
     }
   }
 
-  @Override
-  public void setUserVisibleHint(boolean isVisibleToUser){
+  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
       CrashReports.ScreenUtils.getInstance().addScreenToHistory(getClass().getSimpleName());

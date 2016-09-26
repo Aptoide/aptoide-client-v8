@@ -54,8 +54,7 @@ import rx.schedulers.Schedulers;
   public static ListAppsUpdatesRequest of() {
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-    BaseBodyDecorator decorator =
-        new BaseBodyDecorator(idsRepository);
+    BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository);
 
     return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(),
         WebService.getDefaultConverter(), (Body) decorator.decorate(

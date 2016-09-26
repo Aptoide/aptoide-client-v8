@@ -26,9 +26,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 public class CustomTabsHelper {
 
   private static final String CHROME_PACKAGE = "com.android.chrome";
+  private static CustomTabsHelper customTabsHelper;
   private CustomTabsServiceConnection ctConnection;
   private CustomTabsSession customTabsSession;
-  private static CustomTabsHelper customTabsHelper;
 
   private CustomTabsHelper() {
     if (customTabsHelper != null) {

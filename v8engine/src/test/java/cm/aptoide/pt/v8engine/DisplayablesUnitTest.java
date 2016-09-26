@@ -14,9 +14,8 @@ import org.junit.Test;
 //@Config(constants = BuildConfig.class, sdk = 16)
 public class DisplayablesUnitTest {
 
-	@Test
-	public void getDisplayable() throws Exception {
-		/*
+  @Test public void getDisplayable() throws Exception {
+    /*
 		EmptyDisplayable emptyDisplayable = new EmptyDisplayable();
 		DisplayableImp impl1 = new DisplayableImp();
 		DisplayableImp2 impl2 = new DisplayableImp2();
@@ -28,5 +27,5 @@ public class DisplayablesUnitTest {
 		assertEquals(impl2.getClass(), DisplayableLoader.INSTANCE.newDisplayable(impl2.getType())
 		.getClass());
 		*/
-	}
+  }
 }

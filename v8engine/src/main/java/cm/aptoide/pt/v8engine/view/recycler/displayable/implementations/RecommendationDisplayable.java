@@ -43,6 +43,9 @@ import lombok.Getter;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
 
+  public RecommendationDisplayable() {
+  }
+
   public static Displayable from(Recommendation recommendation, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
     final List<String> similarAppsNames = new ArrayList<>();
@@ -57,9 +60,6 @@ import lombok.Getter;
         recommendation.getAb().getConversion().getUrl(), similarAppsNames,
         recommendation.getRecommendedApp().getUpdated(), recommendation.getTimestamp(),
         dateCalculator, spannableFactory);
-  }
-
-  public RecommendationDisplayable() {
   }
 
   public String getTitle(Context context) {

@@ -31,6 +31,9 @@ import lombok.Getter;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
 
+  public FeatureDisplayable() {
+  }
+
   public static FeatureDisplayable from(Feature feature, DateCalculator dateCalculator,
       SpannableFactory spannableFactory) {
     String appName = null;
@@ -42,9 +45,6 @@ import lombok.Getter;
     return new FeatureDisplayable(R.mipmap.ic_launcher,
         R.string.fragment_social_timeline_aptoide_team, feature.getThumbnailUrl(), feature.getUrl(),
         appId, appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
-  }
-
-  public FeatureDisplayable() {
   }
 
   public int getMarginWidth(Context context, int orientation) {

@@ -34,11 +34,10 @@ public class PayPalPayment implements Payment {
   private final LocalBroadcastManager broadcastManager;
   private final PayPalConfiguration configuration;
   private final PayPalConverter converter;
-
+  private final Product product;
   private PaymentConfirmationReceiver receiver;
   private PaymentConfirmationListener listener;
   private boolean processing;
-  private final Product product;
   private String methodLabel;
 
   public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,

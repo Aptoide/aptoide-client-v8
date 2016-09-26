@@ -22,8 +22,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Created by trinkes on 4/19/16.

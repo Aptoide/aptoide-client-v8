@@ -1,6 +1,5 @@
 package cm.aptoide.pt.actions;
 
-import android.accounts.NetworkErrorException;
 import cm.aptoide.pt.logger.Logger;
 import lombok.AllArgsConstructor;
 import rx.Observable;
@@ -20,6 +19,6 @@ import rx.Subscriber;
         subscriber.onNext(null);
         subscriber.onCompleted();
       }
-    }, () -> Logger.d(getClass().getSimpleName(),"Permission denied to download file"));
+    }, () -> Logger.d(getClass().getSimpleName(), "Permission denied to download file"));
   }
 }

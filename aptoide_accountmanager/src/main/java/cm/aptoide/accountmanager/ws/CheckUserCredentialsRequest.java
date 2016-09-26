@@ -12,8 +12,8 @@ import cm.aptoide.accountmanager.util.Filters;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
-import java.util.HashMap;
 import java.util.Locale;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -72,7 +72,7 @@ import rx.Observable;
   @Override
   protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    HashMap<String, String> parameters = new HashMap<>();
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
     parameters.put("access_token", token);
     parameters.put("mode", "json");

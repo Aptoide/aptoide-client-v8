@@ -9,7 +9,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import java.util.Map;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.http.FieldMap;
@@ -40,9 +40,10 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
   interface Interfaces {
 
     @POST("getAds") @FormUrlEncoded Observable<GetAdsResponse> getAds(
-        @FieldMap Map<String, String> arg);
+        @FieldMap HashMapNotNull<String, String> arg);
 
     @POST("registerAdReferer") @FormUrlEncoded
-    Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap Map<String, String> arg);
+    Observable<RegisterAdRefererRequest.DefaultResponse> load(
+        @FieldMap HashMapNotNull<String, String> arg);
   }
 }

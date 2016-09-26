@@ -56,7 +56,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     String password = storeOnRequest.getPasswordSha1();
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
@@ -66,7 +67,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
         (Body) decorator.decorate(new Body(refresh)), BASE_HOST);
   }
@@ -81,7 +83,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews,
       int maxComments) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh());
@@ -95,7 +98,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
       int maxReviews) {
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
 
     Body body = new Body(storeName, packageName, maxReviews, 0,
         ManagerPreferences.getAndResetForceServerRefresh());

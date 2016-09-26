@@ -95,7 +95,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
           } catch (InterruptedException e) {
-            CrashReports.logString("ReviewID",String.valueOf(reviewId));
+            CrashReports.logString("ReviewID", String.valueOf(reviewId));
             CrashReports.logException(e);
             e.printStackTrace();
           }

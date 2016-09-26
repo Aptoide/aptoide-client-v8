@@ -106,7 +106,8 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override protected void assignViews(View itemView) {
     downloadProgressLayout = (RelativeLayout) itemView.findViewById(R.id.download_progress_layout);
-    installAndLatestVersionLayout = (RelativeLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
+    installAndLatestVersionLayout =
+        (RelativeLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
     shareInTimeline = (CheckBox) itemView.findViewById(R.id.share_in_timeline);
     downloadProgress = (ProgressBar) itemView.findViewById(R.id.download_progress);
     textProgress = (TextView) itemView.findViewById(R.id.text_progress);
@@ -361,39 +362,41 @@ import rx.subscriptions.CompositeSubscription;
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
-        showMessageOKCancel(getContext().getResources().getString(R.string.downgrade_warning_dialog), new SimpleSubscriber<GenericDialogs.EResponse>() {
+        showMessageOKCancel(
+            getContext().getResources().getString(R.string.downgrade_warning_dialog),
+            new SimpleSubscriber<GenericDialogs.EResponse>() {
 
-          @Override public void onNext(GenericDialogs.EResponse eResponse) {
-            super.onNext(eResponse);
-            if (eResponse == GenericDialogs.EResponse.YES) {
+              @Override public void onNext(GenericDialogs.EResponse eResponse) {
+                super.onNext(eResponse);
+                if (eResponse == GenericDialogs.EResponse.YES) {
 
-              ShowMessage.asSnack(view, R.string.downgrading_msg);
-              DownloadFactory factory = new DownloadFactory();
-              Download appDownload = factory.create(app);
-              downloadServiceHelper.startDownload(permissionRequest, appDownload)
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe(download -> {
-                    setupDownloadControls(app, appDownload, displayable);
-                    manageDownload(download, displayable, app);
+                  ShowMessage.asSnack(view, R.string.downgrading_msg);
+                  DownloadFactory factory = new DownloadFactory();
+                  Download appDownload = factory.create(app);
+                  downloadServiceHelper.startDownload(permissionRequest, appDownload)
+                      .observeOn(AndroidSchedulers.mainThread())
+                      .subscribe(download -> {
+                        setupDownloadControls(app, appDownload, displayable);
+                        manageDownload(download, displayable, app);
                 /*if (!setupDownloadControlsRunned) {
                   // TODO: 09/09/16 refactor this
                   setupDownloadControls(app, appDownload, displayable);
                 }*/
 
-                if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-                  //final String packageName = app.getPackageName();
-                  //final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
+                        if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+                          //final String packageName = app.getPackageName();
+                          //final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
 
-                  displayable.downgrade(getContext()).subscribe(aVoid -> {
-                  }, throwable -> throwable.printStackTrace());
+                          displayable.downgrade(getContext()).subscribe(aVoid -> {
+                          }, throwable -> throwable.printStackTrace());
+                        }
+                      });
+                  Analytics.Rollback.downgradeDialogContinue();
+                } else {
+                  Analytics.Rollback.downgradeDialogCancel();
                 }
-              });
-              Analytics.Rollback.downgradeDialogContinue();
-            } else {
-              Analytics.Rollback.downgradeDialogCancel();
-            }
-          }
-        });
+              }
+            });
       }, () -> {
         ShowMessage.asSnack(view, R.string.needs_permission_to_fs);
       });
@@ -402,7 +405,8 @@ import rx.subscriptions.CompositeSubscription;
 
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message).subscribe(subscriber);
+    GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message)
+        .subscribe(subscriber);
   }
 
   public View.OnClickListener installOrUpgradeListener(GetAppMeta.App app,

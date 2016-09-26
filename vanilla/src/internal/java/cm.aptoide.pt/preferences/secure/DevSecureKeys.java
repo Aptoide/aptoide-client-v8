@@ -5,5 +5,5 @@ package cm.aptoide.pt.preferences.secure;
  */
 public class DevSecureKeys {
 
-	public static final String LAST_RUN_VERSION_CODE = "lastRunVersionCode";
+  public static final String LAST_RUN_VERSION_CODE = "lastRunVersionCode";
 }

@@ -23,14 +23,13 @@ import java.security.MessageDigest;
  */
 public final class SecurityUtils {
 
-  private static final String TAG = SecurityUtils.class.getName();
-
   public static final int VALID_APP_SIGNATURE = 0;
   public static final int INVALID_APP_SIGNATURE = 1;
   public static final String APTOIDE_STORE_APP_ID = "cm.aptoide.pt";
   public static final String PLAY_STORE_APP_ID = "com.android.vending";
   public static final String AMAZON_STORE_APP_ID = "com.amazon.mShop.android";
   public static final String XIAOMI_STORE_APP_ID = "com.xiaomi.market";
+  private static final String TAG = SecurityUtils.class.getName();
   // point a string obfuscator tool - like DexGuard has - to here
   private static final String APP_SIGNATURE = "mKfMdjy9CFoKhOJqec3POh4yPFI=";
 

@@ -5,23 +5,20 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.v8engine.link.Link;
-import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.link.Link;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +44,9 @@ import rx.schedulers.Schedulers;
   private SpannableFactory spannableFactory;
   private AccessorFactory accessorFactory;
 
+  public VideoDisplayable() {
+  }
+
   public static VideoDisplayable from(Video video, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       AccessorFactory accessorFactory) {
@@ -57,9 +57,6 @@ import rx.schedulers.Schedulers;
             video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
         video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, video.getApps(),
         video.getDate(), dateCalculator, spannableFactory, accessorFactory);
-  }
-
-  public VideoDisplayable() {
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {

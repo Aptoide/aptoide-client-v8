@@ -15,15 +15,14 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import lombok.Cleanup;
 
 /**
@@ -60,9 +59,9 @@ public class StoreUtils {
     return storesNames;
   }
 
-  public static Map<String, List<String>> getSubscribedStoresAuthMap() {
+  public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap() {
     @Cleanup Realm realm = DeprecatedDatabase.get();
-    Map<String, List<String>> storesAuthMap = new HashMap<>();
+    HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
     RealmResults<cm.aptoide.pt.database.realm.Store> stores =
         DeprecatedDatabase.StoreQ.getAll(realm);
     for (cm.aptoide.pt.database.realm.Store store : stores) {
