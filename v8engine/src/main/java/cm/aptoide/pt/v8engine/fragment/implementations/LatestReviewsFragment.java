@@ -75,24 +75,26 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
 
   @Override public void load(boolean created, boolean refresh, Bundle savedInstanceState) {
     super.load(created, refresh, savedInstanceState);
-
-    ListFullReviewsRequest listFullReviewsRequest =
-        ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0);
-    Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
-      List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
-      displayables = new LinkedList<>();
-      for (final FullReview review : reviews) {
-        displayables.add(new RowReviewDisplayable(review));
-      }
-      addDisplayables(displayables);
-    };
-
-    recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
-            listFullReviewsAction, errorRequestListener, true);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(created);
+    if (created) {
+      ListFullReviewsRequest listFullReviewsRequest =
+          ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0);
+      Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
+        List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
+        displayables = new LinkedList<>();
+        for (final FullReview review : reviews) {
+          displayables.add(new RowReviewDisplayable(review));
+        }
+        addDisplayables(displayables);
+      };
+      recyclerView.clearOnScrollListeners();
+      endlessRecyclerOnScrollListener =
+          new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
+              listFullReviewsAction, errorRequestListener, true);
+      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      endlessRecyclerOnScrollListener.onLoadMore(created);
+    } else {
+      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    }
   }
 
   @Override public void bindViews(View view) {
