@@ -74,7 +74,7 @@ public class ImageLoader {
   }
 
   public static void loadWithCircleTransformAndPlaceHolderAvatarSize(String url,
-      @DrawableRes ImageView imageView, @DrawableRes int placeHolderDrawableId) {
+      ImageView imageView, @DrawableRes int placeHolderDrawableId) {
     loadWithCircleTransformAndPlaceHolder(AptoideUtils.IconSizeU.generateStringAvatar(url),
         imageView, placeHolderDrawableId);
   }
