@@ -45,11 +45,10 @@ public abstract class SupportV4BaseFragment extends RxFragment
   }
 
   @Override public void onDestroyView() {
+    super.onDestroyView();
 
     realm.close();
     realm = null;
-
-    super.onDestroyView();
   }
 
   @Override public void onDestroy() {
