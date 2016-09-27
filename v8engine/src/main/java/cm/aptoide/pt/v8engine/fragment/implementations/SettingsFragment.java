@@ -25,7 +25,6 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -215,8 +214,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
           }
         });
 
-    disableSocialTimeline();
-
     Preference hwSpecs = findPreference(SettingsConstants.HARDWARE_SPECS);
 
     //findPreference(SettingsConstants.THEME).setOnPreferenceChangeListener(new Preference
@@ -333,79 +330,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (isSetingPIN) {
       DialogSetAdultpin(mp).show();
     }
-  }
-
-  public void disableSocialTimeline() {
-    /*
-    if (SecurePreferences.isTimelineActive()) {
-			findPreference(SettingsConstants.DISABLE_TIMELINE).setOnPreferenceClickListener(new Preference
-					.OnPreferenceClickListener() {
-
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-//                    FlurryAgent.logEvent("Settings_Disabled_Social_Timeline");
-					final ProgressDialog pd;
-
-					pd = new ProgressDialog(context);
-					pd.setMessage(getString(R.string.please_wait));
-					pd.asSnack();
-
-					ShowMessage.asSnack(getView(), "TO DO");
-					// TODO implement this call to the server
-
-//					ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-//					request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEINACTIVE);
-//
-//					manager.execute(request, new RequestListener<GenericResponseV2>() {
-//						@Override
-//						public void onRequestFailure(SpiceException spiceException) {
-//							pd.dismiss();
-//						}
-//
-//						@Override
-//						public void onRequestSuccess(GenericResponseV2 responseV2) {
-//							if (responseV2.getStatus().equals("OK")) {
-//								pd.dismiss();
-//								manager.removeDataFromCache(GetUserSettingsJson.class, "timeline-status");
-//								PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().remove
-// (Preferences.TIMELINE_ACEPTED_BOOL).remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL).commit();
-//								((PreferenceScreen) findPreference("root")).removePreference(findPreference
-// ("socialtimeline"));
-//								Account account = AccountManager.get(SettingsActivity.this).getAccountsByType(Aptoide
-// .getConfiguration().getAccountType())[0];
-//
-//								String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration()
-// .getTimelineActivitySyncAdapterAuthority();
-//
-//								String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration()
-// .getTimeLinePostsSyncAdapterAuthority();
-//
-//								ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority,
-// false);
-//								if (Build.VERSION.SDK_INT >= 8)
-//									ContentResolver.removePeriodicSync(account, timelineActivitySyncAdapterAuthority,
-// new Bundle());
-//
-//								ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority,
-// false);
-//								if (Build.VERSION.SDK_INT >= 8)
-//									ContentResolver.removePeriodicSync(account, timeLinePostsSyncAdapterAuthority, new
-// Bundle());
-//
-//							}
-//						}
-//					});
-					return false;
-				}
-			});
-		} else {
-			((PreferenceScreen) findPreference(SettingsConstants.ROOT)).removePreference(findPreference
-					(SettingsConstants.SOCIAL_TIMELINE));
-		}
-		*/
-
-    ((PreferenceScreen) findPreference(SettingsConstants.ROOT)).removePreference(
-        findPreference(SettingsConstants.SOCIAL_TIMELINE));
   }
 
   private void redrawSizes(Double[] size) {

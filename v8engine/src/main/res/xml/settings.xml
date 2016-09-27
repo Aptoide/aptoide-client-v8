@@ -126,18 +126,6 @@
   </PreferenceCategory>
 
   <PreferenceCategory
-      android:key="socialtimeline"
-      android:title="@string/social_timeline">
-    <Preference
-        android:key="disablesocialtimeline"
-        android:title="@string/disable_social_timeline"/>
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="socialtimelinenotifications"
-        android:summary="@string/social_timeline_notifications_sum2"
-        android:title="@string/social_timeline_notifications"/>
-  </PreferenceCategory>
-  <PreferenceCategory
       android:key="about"
       android:title="@string/about_us">
     <Preference
