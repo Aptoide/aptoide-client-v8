@@ -1096,6 +1096,7 @@ public class AptoideUtils {
     static final private int baseLineAvatar = 150;
     static final private int baseLineXNotification = 320;
     static final private int baseLineYNotification = 180;
+    private static final String AVATAR_STRING = "_avatar";
     private static int baseLineScreenshotLand = 256;
     private static int baseLineScreenshotPort = 96;
 
@@ -1155,6 +1156,14 @@ public class AptoideUtils {
         } else {
           return "72x120";
         }
+      }
+    }
+
+    private static String getUserAvatarIconSize() {
+      if (ScreenU.getDensityDpi() <= DisplayMetrics.DENSITY_HIGH) {
+        return "50x50";
+      } else {
+        return "150x150";
       }
     }
 
@@ -1305,7 +1314,7 @@ public class AptoideUtils {
       //return size + "x" + size;
 
       String[] splittedUrl = splitUrlExtension(url);
-      return splittedUrl[0] + "_" + size + "x" + size + "." + splittedUrl[1];
+      return splittedUrl[0] + "_" + getUserAvatarIconSize() + "." + splittedUrl[1];
     }
 
     private static String parseScreenshots(String orient) {
