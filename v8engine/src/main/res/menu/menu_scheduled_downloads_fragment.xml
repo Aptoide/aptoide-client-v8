@@ -13,6 +13,11 @@
       app:showAsAction="ifRoom"/>
 
   <item
+      android:id="@+id/menu_remove"
+      android:title="@string/schDown_removeselected"
+      app:showAsAction="never"/>
+
+  <item
       android:id="@+id/menu_select_all"
       android:title="@string/menu_select_all"
       app:showAsAction="never"/>

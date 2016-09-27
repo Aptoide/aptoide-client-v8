@@ -175,6 +175,18 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
       return true;
     }
 
+    if (itemId == R.id.menu_remove) {
+      BaseAdapter adapter = getAdapter();
+      for (int i = 0; i < adapter.getItemCount(); ++i) {
+        ScheduledDownloadDisplayable displayable =
+            (ScheduledDownloadDisplayable) adapter.getDisplayable(i);
+        if (displayable.isSelected()) {
+          displayable.removeFromDatabase();
+        }
+      }
+      return true;
+    }
+
     if (itemId == R.id.menu_select_all) {
       BaseAdapter adapter = getAdapter();
       for (int i = 0; i < adapter.getItemCount(); ++i) {
