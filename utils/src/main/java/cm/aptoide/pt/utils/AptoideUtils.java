@@ -1270,7 +1270,7 @@ public class AptoideUtils {
       int sizeX = (int) (baseLineXNotification * densityMultiplier);
       int sizeY = (int) (baseLineYNotification * densityMultiplier);
 
-      //Log.d("Aptoide-IconSize", "Size is " + size);
+      //Logger.d("Aptoide-IconSize", "Size is " + size);
 
       //return sizeX + "x" + sizeY;
       String[] splittedUrl = splitUrlExtension(url);
@@ -1309,7 +1309,7 @@ public class AptoideUtils {
 
       int size = Math.round(baseLineAvatar * densityMultiplier);
 
-      //Log.d("Aptoide-IconSize", "Size is " + size);
+      //Logger.d("Aptoide-IconSize", "Size is " + size);
 
       //return size + "x" + size;
 

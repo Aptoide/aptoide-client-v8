@@ -12,7 +12,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -159,7 +159,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
                 minimalAd.getClickUrl(), success).execute();
 
-            Log.d("ExtractReferrer", "Retries left: " + retries);
+            Logger.d("ExtractReferrer", "Retries left: " + retries);
 
             if (!success) {
               excludedNetworks.add(packageName, networkId);

@@ -51,7 +51,7 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 
     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				/*Log.d("lou",dy+"");
+				/*Logger.d("lou",dy+"");
 				if (dy > 0 && addStoreButton.getTranslationY() > 0 && addStoreButton.isShown()) {
 					addStoreButton.setTranslationY(addStoreButton.getTranslationY()+dy);
 				}*/

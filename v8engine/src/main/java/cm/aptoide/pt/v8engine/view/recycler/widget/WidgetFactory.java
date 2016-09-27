@@ -43,7 +43,7 @@ public class WidgetFactory {
     //long nanoTime = System.nanoTime();
     View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
     Widget w = DisplayableType.newWidget(view, viewType);
-    //Log.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
+    //Logger.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
     return w;
   }
 
