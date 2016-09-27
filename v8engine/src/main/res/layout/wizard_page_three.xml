@@ -71,6 +71,7 @@
   </LinearLayout>
 
   <LinearLayout
+      android:id="@+id/login_register_layout"
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="fill_parent"
