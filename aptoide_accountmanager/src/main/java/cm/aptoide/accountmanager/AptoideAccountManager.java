@@ -557,7 +557,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           callback.onRegisterSuccess(bundle);
           genericPleaseWaitDialog.dismiss();
         }
-      }, true);
+      }, e -> genericPleaseWaitDialog.dismiss(), true);
     } else {
       genericPleaseWaitDialog.dismiss();
     }
