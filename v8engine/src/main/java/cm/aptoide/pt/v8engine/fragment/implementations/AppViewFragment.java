@@ -112,8 +112,6 @@ public class AppViewFragment extends GridRecyclerFragment
   private static final String BAR_EXPANDED = "BAR_EXPANDED";
   private static final int PAY_APP_REQUEST_CODE = 12;
 
-  // FIXME restoreInstanteState doesn't work in this case
-  private final Bundle memoryArgs = new Bundle();
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_md5sum = "md5sum";
@@ -527,12 +525,6 @@ public class AppViewFragment extends GridRecyclerFragment
 
   @Override public void onResume() {
     super.onResume();
-    if (memoryArgs.containsKey(BAR_EXPANDED)
-        && header != null
-        && header.getAppBarLayout() != null) {
-      boolean isExpanded = memoryArgs.getBoolean(BAR_EXPANDED);
-      header.getAppBarLayout().setExpanded(isExpanded);
-    }
 
     // restore download bar status
     // TODO: 04/08/16 sithengineer restore download bar status
@@ -540,13 +532,6 @@ public class AppViewFragment extends GridRecyclerFragment
 
   @Override public void onPause() {
     super.onPause();
-
-    // save header status
-    if (header != null && header.getAppBarLayout() != null) {
-      boolean animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
-      memoryArgs.putBoolean(BAR_EXPANDED, animationsEnabled ? header.getAppIcon().getAlpha() > 0.9f
-          : header.getAppIcon().getVisibility() == View.VISIBLE);
-    }
 
     // save download bar status
     // TODO: 04/08/16 sithengineer save download bar status
