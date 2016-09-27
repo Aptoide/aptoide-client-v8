@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
@@ -18,7 +17,6 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
@@ -145,19 +143,7 @@ import rx.Observable;
 
       // Impression click for those networks who need it
       for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
-
-        if (ad.getPartner() != null) {
-          try {
-            String impressionUrlString = ad.getPartner().getData().getImpressionUrl();
-
-            impressionUrlString =
-                DataproviderUtils.AdNetworksUtils.parseMacros(impressionUrlString);
-
-            DataproviderUtils.AdNetworksUtils.knockImpression(MinimalAd.from(ad));
-          } catch (Exception ignored) {
-            CrashReports.logException(ignored);
-          }
-        }
+        DataproviderUtils.AdNetworksUtils.knockImpression(ad);
       }
     });
 

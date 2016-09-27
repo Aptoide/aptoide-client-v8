@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.BuildConfig;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
@@ -67,7 +68,9 @@ public class SecurePreferencesImplementation implements SharedPreferences {
       }
       SecurePreferencesImplementation.sKey = SecurePreferencesImplementation.decode(value);
     } catch (Exception e) {
-      Log.e(TAG, "Error init:" + e.getMessage());
+      if(BuildConfig.DEBUG){
+        Log.e(TAG, "Error init:" + e.getMessage());
+      }
       throw new IllegalStateException(e);
     }
   }
@@ -180,7 +183,9 @@ public class SecurePreferencesImplementation implements SharedPreferences {
           new SecretKeySpec(SecurePreferencesImplementation.sKey, AES_KEY_ALG));
       return SecurePreferencesImplementation.encode(cipher.doFinal(cleartext.getBytes("UTF-8")));
     } catch (Exception e) {
-      Log.w(TAG, "encrypt", e);
+      if(BuildConfig.DEBUG) {
+        Log.w(TAG, "encrypt", e);
+      }
       return null;
     }
   }
@@ -196,7 +201,9 @@ public class SecurePreferencesImplementation implements SharedPreferences {
       return new String(cipher.doFinal(SecurePreferencesImplementation.decode(ciphertext)),
           "UTF-8");
     } catch (Exception e) {
-      Log.w(TAG, "decrypt", e);
+      if(BuildConfig.DEBUG) {
+        Log.w(TAG, "decrypt", e);
+      }
       return null;
     }
   }

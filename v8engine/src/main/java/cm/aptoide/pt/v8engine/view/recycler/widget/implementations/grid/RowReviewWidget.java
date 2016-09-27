@@ -68,7 +68,8 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
 
     //rating.setText(AptoideUtils.StringUtils.getRoundedValueFromDouble(appItem.rating));
     rating.setText(String.format(Locale.getDefault(), "%d", (long) review.getStats().getRating()));
-    ImageLoader.load(review.getUser().getAvatar(), avatar);
+    ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
+        avatar, R.drawable.layer_1);
 
     //        ReviewViewHolder holder = (ReviewViewHolder) viewHolder;
     //		final ReviewRowItem appItem = (ReviewRowItem) displayable;
