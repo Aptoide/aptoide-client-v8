@@ -29,7 +29,7 @@ import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -124,7 +124,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     int pin = SecurePreferences.getAdultContentPin();
     final Preference mp = findPreference("Maturepin");
     if (pin != -1) {
-      Log.d("PINTEST", "PinBuild");
+      Logger.d("PINTEST", "PinBuild");
       mp.setTitle(R.string.remove_mature_pin_title);
       mp.setSummary(R.string.remove_mature_pin_summary);
     }

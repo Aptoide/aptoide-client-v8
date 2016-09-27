@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Type;
@@ -70,12 +70,12 @@ public enum DisplayableLoader {
               displayableHashMap.put(d.getType(), (Class<? extends Displayable>) displayableClass);
             } catch (Exception e) {
               CrashReports.logException(e);
-              Log.e(TAG, "", e);
+              Logger.e(TAG, "", e);
             }
           }
         } catch (Exception e) {
           CrashReports.logException(e);
-          Log.e(TAG, "", e);
+          Logger.e(TAG, "", e);
         } finally {
           if (dexFile != null) {
             dexFile.close();
@@ -84,12 +84,12 @@ public enum DisplayableLoader {
       }
     } catch (Exception e) {
       CrashReports.logException(e);
-      Log.e(TAG, "", e);
+      Logger.e(TAG, "", e);
     }
 
     //		nanos -= System.nanoTime();
     //		nanos *= -1;
-    //		Log.v(TAG, String.format("loadWidgets() took %d millis", nanos / 1000000));
+    //		Logger.v(TAG, String.format("loadWidgets() took %d millis", nanos / 1000000));
 
     if (displayableHashMap.size() == 0) {
       throw new IllegalStateException("Unable to load Displayables");
@@ -98,7 +98,7 @@ public enum DisplayableLoader {
     displayableLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the
     // total, or 2
 
-    Log.w(TAG, "Loaded Displayables");
+    Logger.w(TAG, "Loaded Displayables");
   }
 
   @Nullable public Displayable newDisplayable(@NonNull Type type) {

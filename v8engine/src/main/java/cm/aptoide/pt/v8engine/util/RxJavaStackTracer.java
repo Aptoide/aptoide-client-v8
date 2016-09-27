@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.util;
 
+import cm.aptoide.pt.utils.BaseException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.exceptions.Exceptions;
@@ -54,7 +55,12 @@ public class RxJavaStackTracer extends RxJavaObservableExecutionHook {
         }
 
         @Override public void onError(Throwable throwable) {
-          child.onError(new TracedException(throwable, trace));
+          if(BaseException.class.isAssignableFrom(throwable.getClass())) {
+            // it's a known error. don't handle it here
+            child.onError(throwable);
+          }else {
+            child.onError(new TracedException(throwable, trace));
+          }
         }
 
         @Override public void onNext(T t) {

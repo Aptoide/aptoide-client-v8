@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
@@ -129,7 +129,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
         String json = new String(Base64.decode(param.getBytes(), 0));
 
-        Log.d("AptoideAptWord", json);
+        Logger.d("AptoideAptWord", json);
 
         GetAdsResponse.Ad ad = null;
         try {
@@ -238,7 +238,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     if (!TextUtils.isEmpty(packageName)) {
       startFromAppview(repo, packageName, showPopup);
     } else {
-      Log.e(TAG,
+      Logger.e(TAG,
           "Package name is mandatory, it should be in uri. Ex: aptoideinstall://package=cm.aptoide.pt&store=apps&show_install_popup=true");
     }
   }
@@ -486,7 +486,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         //                    @Override
         //                    public void onClick(DialogInterface arg0, int arg1) {
         ////                        Download download = new Download();
-        ////                        Log.d("Aptoide-IntentReceiver", "getapk id: " + id);
+        ////                        Logger.d("Aptoide-IntentReceiver", "getapk id: " + id);
         ////                        download.setId(id);
         ////                        ((Start)getApplicationContext()).installApp(0);
         //

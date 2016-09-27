@@ -27,7 +27,7 @@ import rx.Observable;
  */
 public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator {
 
-  private FloatingActionButton addStoreButton;
+  //private FloatingActionButton addStoreButton;
 
   public static SubscribedStoresFragment newInstance() {
     SubscribedStoresFragment fragment = new SubscribedStoresFragment();
@@ -37,13 +37,13 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
   @Override public void setupViews() {
     super.setupViews();
 
-    addStoreButton.setOnClickListener(new View.OnClickListener() {
-
-      public void onClick(View v) {
-        new AddStoreDialog().show(((FragmentActivity) getContext()).getSupportFragmentManager(),
-            "addStoreDialog");
-      }
-    });
+    //addStoreButton.setOnClickListener(new View.OnClickListener() {
+    //
+    //  public void onClick(View v) {
+    //    new AddStoreDialog().show(((FragmentActivity) getContext()).getSupportFragmentManager(),
+    //        "addStoreDialog");
+    //  }
+    //});
     /*RxView.clicks(addStoreButton).subscribe(view ->{
       new AddStoreDialog().show(((FragmentActivity) getContext())
 					.getSupportFragmentManager(), "addStoreDialog");
@@ -51,8 +51,8 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 
     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				/*Log.d("lou",dy+"");
-				if (dy > 0 && addStoreButton.getTranslationY() > 0 && addStoreButton.isShown()) {
+        /*Log.d("lou",dy+"");
+        if (dy > 0 && addStoreButton.getTranslationY() > 0 && addStoreButton.isShown()) {
 					addStoreButton.setTranslationY(addStoreButton.getTranslationY()+dy);
 				}*/
       }
@@ -85,6 +85,6 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    addStoreButton = (FloatingActionButton) view.findViewById(R.id.fabAddStore);
+    //addStoreButton = (FloatingActionButton) view.findViewById(R.id.fabAddStore);
   }
 }

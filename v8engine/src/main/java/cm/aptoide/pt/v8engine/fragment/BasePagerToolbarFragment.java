@@ -5,9 +5,12 @@
 
 package cm.aptoide.pt.v8engine.fragment;
 
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.view.custom.AptoideViewPager;
 
 /**
@@ -16,6 +19,7 @@ import cm.aptoide.pt.v8engine.view.custom.AptoideViewPager;
 public abstract class BasePagerToolbarFragment extends BaseLoaderToolbarFragment {
 
   protected AptoideViewPager mViewPager;
+  protected FloatingActionButton floatingActionButton;
 
   @Override public void onDestroyView() {
     super.onDestroyView();
@@ -26,6 +30,7 @@ public abstract class BasePagerToolbarFragment extends BaseLoaderToolbarFragment
     super.bindViews(view);
 
     mViewPager = (AptoideViewPager) view.findViewById(R.id.pager);
+    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAddStore);
   }
 
   protected void setupViewPager() {

@@ -9,7 +9,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -88,6 +91,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
     }
+
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
@@ -148,9 +152,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override protected void setupViewPager() {
     super.setupViewPager();
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
+
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setViewPager(mViewPager);
     }
+    floatingActionButton.setOnClickListener(v -> new AddStoreDialog().show(
+        ((FragmentActivity) getContext()).getSupportFragmentManager(), "addStoreDialog"));
 
     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -162,6 +169,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
         StorePagerAdapter adapter = (StorePagerAdapter) mViewPager.getAdapter();
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
+        }
+
+        if (Integer.valueOf(position).equals(adapter.getEventNamePosition(Event.Name.myStores))) {
+          floatingActionButton.show();
+        } else if (floatingActionButton.getVisibility() == View.VISIBLE) {
+          floatingActionButton.hide();
         }
       }
 
