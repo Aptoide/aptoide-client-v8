@@ -136,7 +136,9 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   private void databaseOnPackageAdded(String packageName) {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    checkAndLogNullPackageInfo(packageInfo);
+    if (checkAndLogNullPackageInfo(packageInfo)) {
+      return;
+    }
 
     DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
@@ -155,7 +157,9 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    checkAndLogNullPackageInfo(packageInfo);
+    if (checkAndLogNullPackageInfo(packageInfo)) {
+      return;
+    }
 
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
@@ -168,9 +172,16 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     //confirmAction(packageName, Rollback.Action.UPDATE);
   }
 
-  private void checkAndLogNullPackageInfo(PackageInfo packageInfo) {
+  /**
+   * @param packageInfo packageInfo.
+   * @return true if packageInfo is null, false otherwise.
+   */
+  private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo) {
     if (packageInfo == null) {
       CrashReports.logException(new IllegalArgumentException("PackageName null!"));
+      return true;
+    } else {
+      return false;
     }
   }
 
