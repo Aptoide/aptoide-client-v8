@@ -7,7 +7,7 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -110,7 +110,7 @@ public class RequestCache {
       try {
         diskLruCache.remove(keyAlgorithm.getKeyFrom(request));
       } catch (Exception e) {
-        Log.e(TAG, "", e);
+        Logger.e(TAG, "", e);
       }
     }
   }
@@ -150,7 +150,7 @@ public class RequestCache {
         return cachedResponse;
       }
     } catch (Exception ex) {
-      Log.e(TAG, "", ex);
+      Logger.e(TAG, "", ex);
       if (editor != null) {
         editor.abortUnlessCommitted();
       }
@@ -179,7 +179,7 @@ public class RequestCache {
       synchronized (diskCacheLock) {
         final String reqKey = keyAlgorithm.getKeyFrom(request);
         if (reqKey == null) {
-          Log.w(TAG, "Key algorithm returned a null key for request");
+          Logger.w(TAG, "Key algorithm returned a null key for request");
           return null;
         }
 
@@ -207,7 +207,7 @@ public class RequestCache {
 
       return response;
     } catch (Exception ex) {
-      Log.e(TAG, "", ex);
+      Logger.e(TAG, "", ex);
     } finally {
       if (snapshot != null) {
         snapshot.close();
@@ -221,7 +221,7 @@ public class RequestCache {
       try {
         diskLruCache.delete();
       } catch (IOException ex) {
-        Log.e(TAG, "", ex);
+        Logger.e(TAG, "", ex);
       }
     }
   }
