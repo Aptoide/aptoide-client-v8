@@ -10,7 +10,7 @@
     android:visibility="gone"
     tools:visibility="visible"
     >
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
@@ -18,41 +18,49 @@
 
     <ImageView
         android:id="@+id/error_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_width="219.3dp"
+        android:layout_height="234dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:src="@drawable/error3"
         />
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22.7dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginStart="44dp"
+        android:gravity="center_horizontal"
+        >
     <TextView
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/error_image"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:padding="10dp"
         android:text="@string/fragment_download_no_connection"
         style="?android:textAppearanceMedium"
+        android:textColor="?attr/customColor"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:textSize="17.4sp"
+        tools:targetApi="jelly_bean"
         />
 
     <TextView
         android:id="@+id/error_text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/error_image"
-        android:layout_alignLeft="@+id/error_image"
-        android:layout_alignRight="@+id/error_image"
-        android:layout_alignStart="@id/error_image"
         android:layout_below="@+id/error_text"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
         android:text="@string/fragment_download_no_connection_subtitle"
         style="?android:textAppearanceMedium"
+        android:fontFamily="sans-serif"
+        android:textSize="17.4sp"
+        tools:targetApi="jelly_bean"
         />
-
-  </RelativeLayout>
+    </RelativeLayout>
+  </LinearLayout>
 </ScrollView>

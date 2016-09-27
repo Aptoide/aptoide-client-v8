@@ -58,6 +58,8 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   }
 
   @Override public void onDestroyView() {
+    super.onDestroyView();
+
     // Lifecycle interface
     if (adapter != null) {
       adapter.onDestroyView();
@@ -65,8 +67,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
 
     recyclerView = null;
     adapter = null;
-
-    super.onDestroyView();
   }
 
   @Override public void bindViews(View view) {

@@ -17,8 +17,6 @@ public class SettingsConstants {
   public static final CharSequence CLEAR_RANK = "clearapk";
   public static final CharSequence MAX_FILE_CACHE = "maxFileCache";
   public static final CharSequence ROOT = "root";
-  public static final CharSequence SOCIAL_TIMELINE = "socialtimeline";
-  public static final CharSequence DISABLE_TIMELINE = "disablesocialtimeline";
   public static final CharSequence HARDWARE_SPECS = "hwspecs";
   public static final CharSequence FILTER_APPS = "hwspecsChkBox";
   public static final CharSequence THEME = "theme";
