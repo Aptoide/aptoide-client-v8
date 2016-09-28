@@ -165,6 +165,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                     }
                   }
                 }
+              }, throwable -> {
+                throwable.printStackTrace();
+                CrashReports.logException(throwable);
               });
 
           //FlurryAgent.logEvent("Auto_Update_Clicked_On_Yes_Button"); TODO include

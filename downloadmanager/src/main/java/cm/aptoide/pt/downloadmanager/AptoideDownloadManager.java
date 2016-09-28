@@ -274,6 +274,9 @@ public class AptoideDownloadManager {
 
   public void removeDownload(long appId) {
     downloadAccessor.get(appId).map(download -> {
+      if (download == null) {
+        Observable.error(new DownloadNotFoundException());
+      }
       for (int i = 0; i < download.getFilesToDownload().size(); i++) {
         final FileToDownload fileToDownload = download.getFilesToDownload().get(i);
         FileDownloader.getImpl()
