@@ -161,7 +161,7 @@ public class DisplayablesFactory {
           displayables.add(appDisplayablePojo);
         }
 
-        displayables.add(new FooterDisplayable(wsWidget));
+        displayables.add(new FooterDisplayable(wsWidget, wsWidget.getTag()));
       }
     } else if (Layout.LIST.equals(wsWidget.getData().getLayout())) {
       if (apps.size() > 0) {
