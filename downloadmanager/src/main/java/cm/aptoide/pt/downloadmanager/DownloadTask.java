@@ -27,13 +27,13 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 5/13/16.
  */
-public class DownloadTask extends FileDownloadLargeFileListener {
+class DownloadTask extends FileDownloadLargeFileListener {
 
-  public static final int INTERVAL = 1000;    //interval between progress updates
-  public static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
-  public static final int FILE_NOTFOUND_HTTP_ERROR = 404;
+  private static final int INTERVAL = 1000;    //interval between progress updates
+  private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
+  private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
   private static final String TAG = DownloadTask.class.getSimpleName();
-  final Download download;
+  private final Download download;
   private final long appId;
   private final DownloadAccessor downloadAccessor;
   private final FileUtils fileUtils;
@@ -45,7 +45,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
   @Setter boolean isSerial = true;
   private ConnectableObservable<Download> observable;
 
-  public DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils) {
+  DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils) {
     this.download = download;
     this.appId = download.getAppId();
     this.downloadAccessor = downloadAccessor;
@@ -76,7 +76,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
         .publish();
   }
 
-  @NonNull static String getFilePathFromFileType(FileToDownload fileToDownload) {
+  @NonNull private static String getFilePathFromFileType(FileToDownload fileToDownload) {
     String path;
     switch (fileToDownload.getFileType()) {
       case FileToDownload.APK:
@@ -98,7 +98,7 @@ public class DownloadTask extends FileDownloadLargeFileListener {
    *
    * @return new current progress
    */
-  @NonNull public Download updateProgress() {
+  @NonNull private Download updateProgress() {
     if (download.getOverallProgress() >= AptoideDownloadManager.PROGRESS_MAX_VALUE
         || download.getOverallDownloadStatus() != Download.PROGRESS) {
       return download;

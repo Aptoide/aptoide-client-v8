@@ -7,7 +7,6 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -74,7 +73,6 @@ public class DownloadServiceHelper {
                   AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
             } else {
               throwable.printStackTrace();
-              Log.d("lou", throwable.toString());
               CrashReports.logException(throwable);
             }
           });

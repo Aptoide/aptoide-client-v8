@@ -52,6 +52,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     });
 
     isSelected.setChecked(displayable.isSelected());
+    itemView.setOnClickListener(v -> isSelected.setChecked(!isSelected.isChecked()));
 
     displayable.setProgressBarIsInstalling(progressBarIsInstalling);
     displayable.setIsSelected(isSelected);

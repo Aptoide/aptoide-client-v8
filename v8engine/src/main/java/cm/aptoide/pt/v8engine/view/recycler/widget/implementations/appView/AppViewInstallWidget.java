@@ -94,8 +94,6 @@ import rx.subscriptions.CompositeSubscription;
   private PermissionRequest permissionRequest;
   private CompositeSubscription subscriptions;
   private boolean isUpdate;
-  private boolean setupDownloadControlsRunned = false;
-  private boolean resumeButtonWasClicked = false;
 
   //private Subscription subscribe;
   //private long appID;
@@ -281,6 +279,8 @@ import rx.subscriptions.CompositeSubscription;
             setupDownloadControls(app, download, displayable);
             downloadServiceHelper.getDownload(app.getId())
                 .observeOn(AndroidSchedulers.mainThread())
+                .takeUntil(onGoingDownload -> shouldContinueListenDownload(
+                    onGoingDownload.getOverallDownloadStatus()))
                 .subscribe(onGoingDownload -> {
                   manageDownload(onGoingDownload, displayable, app);
                 }, err -> {
@@ -315,6 +315,13 @@ import rx.subscriptions.CompositeSubscription;
     //		}, err -> {
     //			Logger.e(TAG, err);
     //		});
+  }
+
+  private boolean shouldContinueListenDownload(int downloadStatus) {
+    return downloadStatus != Download.PROGRESS
+        && downloadStatus != Download.INVALID_STATUS
+        && downloadStatus != Download.PENDING
+        && downloadStatus != Download.IN_QUEUE;
   }
 
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
@@ -375,8 +382,9 @@ import rx.subscriptions.CompositeSubscription;
                   Download appDownload = factory.create(app);
                   downloadServiceHelper.startDownload(permissionRequest, appDownload)
                       .observeOn(AndroidSchedulers.mainThread())
+                      .takeUntil(onGoingDownload -> shouldContinueListenDownload(
+                          onGoingDownload.getOverallDownloadStatus()))
                       .subscribe(download -> {
-                        setupDownloadControls(app, appDownload, displayable);
                         manageDownload(download, displayable, app);
                 /*if (!setupDownloadControlsRunned) {
                   // TODO: 09/09/16 refactor this
@@ -391,6 +399,7 @@ import rx.subscriptions.CompositeSubscription;
                           }, throwable -> throwable.printStackTrace());
                         }
                       });
+                  setupDownloadControls(app, appDownload, displayable);
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -426,13 +435,10 @@ import rx.subscriptions.CompositeSubscription;
 
       downloadServiceHelper.startDownload(permissionRequest, appDownload)
           .observeOn(AndroidSchedulers.mainThread())
+          .takeUntil(onGoingDownload -> shouldContinueListenDownload(
+              onGoingDownload.getOverallDownloadStatus()))
           .subscribe(download -> {
             manageDownload(download, displayable, app);
-            if (!setupDownloadControlsRunned) {
-              // TODO: 09/09/16 refactor this
-              ShowMessage.asSnack(v, installOrUpgradeMsg);
-              setupDownloadControls(app, appDownload, displayable);
-            }
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
@@ -440,6 +446,8 @@ import rx.subscriptions.CompositeSubscription;
 
             Logger.e(TAG, err);
           });
+      ShowMessage.asSnack(v, installOrUpgradeMsg);
+      setupDownloadControls(app, appDownload, displayable);
     };
 
     findTrustedVersion(app, appVersions);
@@ -536,12 +544,9 @@ import rx.subscriptions.CompositeSubscription;
 
   private void setupDownloadControls(GetAppMeta.App app, Download download,
       AppViewInstallDisplayable displayable) {
-    setupDownloadControlsRunned = true;
     long appId = app.getId();
 
     actionCancel.setOnClickListener(view -> {
-      setupDownloadControlsRunned = false;
-      resumeButtonWasClicked = false;
       downloadServiceHelper.removeDownload(appId);
       setDownloadBarVisible(false);
     });
@@ -550,20 +555,21 @@ import rx.subscriptions.CompositeSubscription;
       downloadServiceHelper.pauseDownload(appId);
       actionResume.setVisibility(View.VISIBLE);
       actionPause.setVisibility(View.GONE);
-      resumeButtonWasClicked = false;
     });
 
     actionResume.setOnClickListener(view -> {
       downloadServiceHelper.startDownload(permissionRequest, download)
           .observeOn(AndroidSchedulers.mainThread())
+          //the first state will be "onPause" and we don't wanna listen it
+          .skip(1)
+          .takeUntil(onGoingDownload -> shouldContinueListenDownload(
+              onGoingDownload.getOverallDownloadStatus()))
           .subscribe(onGoingDownload -> {
-            manageDownload(onGoingDownload, displayable, app);
-            if (!resumeButtonWasClicked) {
-              // TODO: 09/09/16 refactor me
+            if (actionPause.getVisibility() != View.VISIBLE) {
               actionResume.setVisibility(View.GONE);
               actionPause.setVisibility(View.VISIBLE);
-              resumeButtonWasClicked = true;
             }
+            manageDownload(onGoingDownload, displayable, app);
           }, err -> {
             Logger.e(TAG, err);
           });

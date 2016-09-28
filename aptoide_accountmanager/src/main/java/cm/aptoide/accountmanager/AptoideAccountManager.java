@@ -7,6 +7,7 @@ package cm.aptoide.accountmanager;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -558,6 +559,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           callback.onRegisterSuccess(bundle);
           genericPleaseWaitDialog.dismiss();
         }
+      }, e -> {
+        if (e instanceof NetworkErrorException) {
+          callback.onRegisterFail(R.string.unknown_error);
+        }
+        genericPleaseWaitDialog.dismiss();
+        e.printStackTrace();
       }, true);
     } else {
       genericPleaseWaitDialog.dismiss();
