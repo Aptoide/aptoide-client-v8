@@ -126,7 +126,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create) {
+    if (create || getStore == null) {
       GetStoreRequest.of(storeName, storeContext)
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
