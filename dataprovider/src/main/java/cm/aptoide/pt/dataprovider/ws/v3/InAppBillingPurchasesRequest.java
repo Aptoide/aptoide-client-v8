@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.utils.AptoideUtils;
 import rx.Observable;
 
 /**
@@ -28,6 +29,7 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
       String accessToken) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
+    args.put("aptvercode", String.valueOf(AptoideUtils.Core.getVerCode()));
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabpurchases");

@@ -38,6 +38,7 @@ import lombok.EqualsAndHashCode;
     @JsonProperty("packageName") private String packageName;
     @JsonProperty("productId") private String productId;
     @JsonProperty("purchaseTime") private long purchaseTime;
+    @JsonProperty("purchaseState") private int purchaseState;
     @JsonProperty("purchaseToken") private String purchaseToken;
     @JsonProperty("developerPayload") private String developerPayload;
   }
