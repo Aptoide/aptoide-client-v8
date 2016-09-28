@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/navdrawer_chosen_account_height"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/aptoide_orange"
     android:orientation="vertical"
     >
@@ -28,16 +29,15 @@
       android:paddingTop="@dimen/keyline_1"
       >
 
-
     <cm.aptoide.pt.v8engine.view.custom.BezelImageView
-        android:id="@+id/profile_image"
-        android:layout_width="@dimen/navdrawer_profile_image_size"
-        android:layout_height="@dimen/navdrawer_profile_image_size"
-        android:layout_gravity="center_vertical"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_user_icon"
-        app:maskDrawable="@drawable/circle_mask"
-        />
+      app:maskDrawable="@drawable/circle_mask"
+      android:id="@+id/profile_image"
+      android:layout_width="@dimen/navdrawer_profile_image_size"
+      android:layout_height="@dimen/navdrawer_profile_image_size"
+      android:layout_gravity="center_vertical"
+      android:scaleType="centerCrop"
+      android:src="@drawable/ic_user_icon"
+      />
 
     <TextView
         android:id="@+id/profile_email_text"
@@ -52,6 +52,8 @@
         android:text="Aptoider@hotmail.com"
         android:textColor="@color/navdrawer_body_text_2_inverse"
         android:textSize="@dimen/text_size_medium"
+        android:visibility="gone"
+        tools:visibility="visible"
         />
 
     <TextView
@@ -66,6 +68,8 @@
         android:text="Aptoider"
         android:textColor="@color/navdrawer_body_text_1_inverse"
         android:textSize="@dimen/text_size_large"
+        android:visibility="gone"
+        tools:visibility="visible"
         />
 
   </RelativeLayout>

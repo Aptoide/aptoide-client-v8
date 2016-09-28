@@ -32,16 +32,16 @@ class AccountManagerPreferences {
     SecurePreferences.remove(SecureKeys.REFRESH_TOKEN);
   }
 
-  static String getUserName() {
-    return SecurePreferences.getString(SecureKeys.USER_NAME);
+  static String getUserEmail() {
+    return SecurePreferences.getString(SecureKeys.USER_EMAIL);
   }
 
   static void setUserName(String userName) {
-    SecurePreferences.putString(SecureKeys.USER_NAME, userName);
+    SecurePreferences.putString(SecureKeys.USER_EMAIL, userName);
   }
 
   static void removeUserName() {
-    SecurePreferences.remove(SecureKeys.USER_NAME);
+    SecurePreferences.remove(SecureKeys.USER_EMAIL);
   }
 
   static String getQueueName() {
