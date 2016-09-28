@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
@@ -53,5 +55,10 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
     if (progressBarIsInstalling != null) {
       progressBarIsInstalling.setVisibility(isDownloading ? View.VISIBLE : View.GONE);
     }
+  }
+
+  public void removeFromDatabase() {
+    ((ScheduledAccessor) AccessorFactory.getAccessorFor(Scheduled.class)).delete(
+        getPojo().getAppId());
   }
 }

@@ -136,8 +136,8 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
   private void fetchExcludedUpdates() {
     subscription = DeprecatedDatabase.UpdatesQ.getAll(realm, true)
         .asObservable()
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(excludedUpdates -> {
 
           if (excludedUpdates == null || excludedUpdates.isEmpty()) {

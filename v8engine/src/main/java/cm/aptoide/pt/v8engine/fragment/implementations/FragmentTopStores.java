@@ -14,6 +14,7 @@ import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
+import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -29,7 +30,7 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
   private int offset = 0;
   private SuccessRequestListener<ListStores> listener =
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
-          .subscribeOn(Schedulers.computation())
+          .subscribeOn(Schedulers.computation()).compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(this::addDisplayables);
 
   public static FragmentTopStores newInstance() {
