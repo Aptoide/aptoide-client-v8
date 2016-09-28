@@ -26,6 +26,30 @@ public class Logger {
     }
   }
 
+  public static void v(String tag, String msg) {
+    if (DBG) {
+      Log.v(tag, msg);
+    }
+  }
+
+  public static void v(String tag, String msg, Throwable tr) {
+    if (DBG) {
+      Log.v(tag, msg, tr);
+    }
+  }
+
+  public static void d(String tag, String msg) {
+    if (DBG) {
+      Log.d(tag, msg);
+    }
+  }
+
+  public static void d(String tag, String msg, Throwable tr) {
+    if (DBG) {
+      Log.d(tag, msg, tr);
+    }
+  }
+
   public static void i(Object object, String msg) {
     i(object.getClass().getSimpleName(), msg);
   }
@@ -52,12 +76,6 @@ public class Logger {
     }
   }
 
-  public static void d(String TAG, String msg) {
-    if (DBG) {
-      Log.d(TAG, msg);
-    }
-  }
-
   public static void e(String TAG, String msg) {
     if (DBG) {
       Log.e(TAG, msg);
@@ -73,18 +91,6 @@ public class Logger {
   public static void e(String TAG, String msg, Throwable tr) {
     if (DBG) {
       Log.e(TAG, msg, tr);
-    }
-  }
-
-  public static void v(String TAG, String msg) {
-    if (DBG) {
-      Log.v(TAG, msg);
-    }
-  }
-
-  public static void v(String TAG, String msg, Throwable tr) {
-    if (DBG) {
-      Log.v(TAG, msg, tr);
     }
   }
 }

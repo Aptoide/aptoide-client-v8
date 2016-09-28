@@ -143,6 +143,7 @@ public abstract class V8Engine extends DataProvider {
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
       loadInstalledApps().doOnNext(o -> {
         if (AptoideAccountManager.isLoggedIn()) {
+
           if (!SecurePreferences.isUserDataLoaded()) {
             loadUserData();
             SecurePreferences.setUserDataLoaded();
@@ -152,6 +153,15 @@ public abstract class V8Engine extends DataProvider {
         }
         SecurePreferences.setFirstRun(false);
       }).subscribe();
+
+      // load picture, name and email
+      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(
+          userData -> {
+            Logger.v(TAG, "hello " + userData.getUsername());
+          }, e -> {
+            Logger.e(TAG, e);
+          }
+      );
     }
 
     final int appSignature = SecurityUtils.checkAppSignature(this);

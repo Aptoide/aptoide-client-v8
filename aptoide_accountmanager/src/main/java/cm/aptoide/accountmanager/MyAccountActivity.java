@@ -27,11 +27,11 @@ public class MyAccountActivity extends BaseActivity {
     bindViews();
     setupToolbar();
     AptoideAccountManager.setupLogout(this, mLogout);
-    mUsernameTextview.setText(AptoideAccountManager.getUserName());
+    mUsernameTextview.setText(AptoideAccountManager.getUserEmail());
 
     findViewById(R.id.btn_user_name).setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        Snackbar.make(v, AptoideAccountManager.getUserName(), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(v, AptoideAccountManager.getUserEmail(), Snackbar.LENGTH_LONG).show();
       }
     });
 

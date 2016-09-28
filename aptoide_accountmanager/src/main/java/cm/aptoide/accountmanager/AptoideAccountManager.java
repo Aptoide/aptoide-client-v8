@@ -45,6 +45,7 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
+import io.fabric.sdk.android.services.common.Crash;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import javax.security.auth.login.LoginException;
@@ -60,7 +61,7 @@ import rx.schedulers.Schedulers;
  * Bundle)}</li>
  * <li>{@link #openAccountManager(Context, Bundle, boolean)}</li> <li>{@link
  * #getAccessToken()}</li>
- * <li>{@link #getUserName()}</li> <li>{@link #onActivityResult(Activity, int, int, Intent)}</li>
+ * <li>{@link #getUserEmail()}</li> <li>{@link #onActivityResult(Activity, int, int, Intent)}</li>
  * <li>{@link #getUserInfo()}</li> <li>{@link #updateMatureSwitch(boolean)}</li> <li>{@link
  * #invalidateAccessToken(Context)}</li> <li>{@link #invalidateAccessTokenSync(Context)}</li>
  * <li>{@link #ACCOUNT_REMOVED_BROADCAST_KEY}</li>
@@ -253,7 +254,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (userAccount == null) {
       Account[] accounts = accountManager.getAccounts();
       for (final Account account : accounts) {
-        if (TextUtils.equals(account.name, AptoideAccountManager.getUserName()) && TextUtils.equals(
+        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail()) && TextUtils.equals(
             account.type, Constants.ACCOUNT_TYPE)) {
           userAccount = account;
           break;
@@ -277,12 +278,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   /**
-   * Get the userName of current logged user
+   * Get the userEmail of current logged user
    *
-   * @return A string with the userName
+   * @return A string with the userEmail
    */
-  public static String getUserName() {
-    String userName = AccountManagerPreferences.getUserName();
+  public static String getUserEmail() {
+    String userName = AccountManagerPreferences.getUserEmail();
     if (userName == null || TextUtils.isEmpty(userName)) {
       AccountManager accountManager =
           AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
@@ -376,7 +377,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @param checkUserCredentialsJson Object returned by webservice(CheckUserCredentialsRequest)
    * with the user info
    */
-  static void saveUserInfo(CheckUserCredentialsJson checkUserCredentialsJson) {
+  private static void saveUserInfo(CheckUserCredentialsJson checkUserCredentialsJson) {
     Logger.d(TAG, "saveUserInfo() called with: " + "checkUserCredentialsJson = [" +
         checkUserCredentialsJson + "]");
     if (checkUserCredentialsJson.getStatus().equals("OK")) {
@@ -419,8 +420,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   public static UserInfo getUserInfo() {
     UserInfo userInfo = new UserInfo();
-    userInfo.setNickName(AccountManagerPreferences.getUserNickName());
-    userInfo.setUserName(AccountManagerPreferences.getUserName());
+    userInfo.setUserName(AccountManagerPreferences.getUserNickName());
+    userInfo.setUserEmail(AccountManagerPreferences.getUserEmail());
     userInfo.setQueueName(AccountManagerPreferences.getQueueName());
     userInfo.setUserAvatar(AccountManagerPreferences.getUserAvatar());
     userInfo.setUserRepo(AccountManagerPreferences.getUserRepo());
@@ -655,6 +656,21 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
   }
 
+  public static Observable<CheckUserCredentialsJson> refreshAndSaveUserInfoData() {
+    return refreshUserInfoData().doOnNext(AptoideAccountManager::saveUserInfo);
+  }
+
+  public static Observable<CheckUserCredentialsJson > refreshUserInfoData() {
+    return CheckUserCredentialsRequest.of(getAccessToken())
+        .observe()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .doOnError(e -> {
+          Logger.e(TAG, e);
+          CrashReports.logException(e);
+        });
+  }
+
   private void removeLocalAccount() {
     AccountManager manager =
         android.accounts.AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
@@ -732,11 +748,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
-      CheckUserCredentialsRequest.of(accessToken)
-          .observe()
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribeOn(Schedulers.io())
-          .subscribe(AptoideAccountManager::saveUserInfo);
+      refreshAndSaveUserInfoData().subscribe(
+          userData -> {
+
+          }, e -> {
+            Logger.e(TAG, e);
+          }
+      );
       toReturn = true;
     }
     return toReturn;

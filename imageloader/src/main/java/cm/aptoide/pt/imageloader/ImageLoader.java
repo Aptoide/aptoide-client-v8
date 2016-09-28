@@ -73,6 +73,13 @@ public class ImageLoader {
     Glide.with(Application.getContext()).load(drawableId).into(imageView);
   }
 
+  /**
+   * Mutates URL to append "_50x50" to load an avatar image from an image URL.
+   *
+   * @param url original image URL
+   * @param imageView destination container for the image
+   * @param placeHolderDrawableId placeholder while the image is loading or when is not loaded
+   */
   public static void loadWithCircleTransformAndPlaceHolderAvatarSize(String url,
       ImageView imageView, @DrawableRes int placeHolderDrawableId) {
     loadWithCircleTransformAndPlaceHolder(AptoideUtils.IconSizeU.generateStringAvatar(url),

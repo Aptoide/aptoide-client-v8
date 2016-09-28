@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.util.UserInfo;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -164,27 +165,46 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void setUserDataOnHeader() {
-    TextView userEmail =
-        (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_email_text);
-    TextView userUsername =
-        (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_name_text);
-    ImageView userAvatar =
-        (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_image);
+    View baseHeaderView = mNavigationView.getHeaderView(0);
+    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
     if (AptoideAccountManager.isLoggedIn()) {
-      userEmail.setText(AptoideAccountManager.getUserName());
-      userUsername.setText(AptoideAccountManager.getUserInfo().getNickName());
-      if (URLUtil.isValidUrl(AptoideAccountManager.getUserInfo().getUserAvatar())) {
-        ImageLoader.load(AptoideAccountManager.getUserInfo().getUserAvatar(),
-            R.drawable.ic_user_icon, userAvatar);
-      } else {
-        userAvatar.setImageResource(R.drawable.ic_user_icon);
-      }
-    } else {
-      userEmail.setText("");
-      userUsername.setText("");
-      userAvatar.setImageResource(R.drawable.ic_user_icon);
+
+      userEmail.setVisibility(View.VISIBLE);
+      userUsername.setVisibility(View.VISIBLE);
+
+      UserInfo userInfo = AptoideAccountManager.getUserInfo();
+      userEmail.setText(userInfo.getUserEmail());
+      userUsername.setText(userInfo.getUserName());
+
+      ImageLoader.loadWithCircleTransformAndPlaceHolder(
+          userInfo.getUserAvatar(),
+          userAvatarImage,
+          R.drawable.ic_user_icon
+      );
+
+      //String userAvatarUri = userInfo.getUserAvatar();
+      //if (URLUtil.isValidUrl(userAvatarUri)) {
+      //  ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(
+      //      userAvatarUri,
+      //      userAvatarImage,
+      //      R.drawable.ic_user_icon
+      //  );
+      //} else {
+      //  userAvatarImage.setImageResource(R.drawable.ic_user_icon);
+      //}
+
+      return;
     }
+
+    userEmail.setText("");
+    userUsername.setText("");
+
+    userEmail.setVisibility(View.GONE);
+    userUsername.setVisibility(View.GONE);
+    userAvatarImage.setImageResource(R.drawable.ic_user_icon);
   }
 
   //	@Override

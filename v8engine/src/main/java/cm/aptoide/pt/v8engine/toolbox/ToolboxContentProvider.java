@@ -117,7 +117,7 @@ public class ToolboxContentProvider extends ContentProvider {
           final UserInfo userName = AptoideAccountManager.getUserInfo();
           if (userName != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "loginName" }, 1);
-            userRepoCursor.addRow(new Object[] { userName.getUserName() });
+            userRepoCursor.addRow(new Object[] { userName.getUserEmail() });
             return userRepoCursor;
           }
           throw new IllegalStateException("User not logged in.");
