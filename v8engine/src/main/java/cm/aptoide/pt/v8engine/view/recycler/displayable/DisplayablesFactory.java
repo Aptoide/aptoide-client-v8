@@ -22,6 +22,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
@@ -149,15 +150,14 @@ public class DisplayablesFactory {
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
         if (useBigBrick) {
-          displayables.add(DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(0))
+          displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag())
               .setDefaultPerLineCount(1));
 
           nrAppBricks++;
         }
 
         for (int i = (useBigBrick ? 1 : 0); i < nrAppBricks; i++) {
-          Displayable appDisplayablePojo =
-              DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(i));
+          Displayable appDisplayablePojo = new AppBrickDisplayable(apps.get(i), wsWidget.getTag());
           displayables.add(appDisplayablePojo);
         }
 
