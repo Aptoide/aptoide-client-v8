@@ -177,15 +177,15 @@ android {
         output.outputFile = new File(output.outputFile.parent, newName)
       }
 
-      variant.productFlavors.each { flavor ->
-        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
-            VersionCodeFileUpdateTask
-        versionUpdate.versionPropertiesFile =
-            project.file("../../aptoideProperties/version.properties")
-        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
-        versionUpdate.versionCode = variant.mergedFlavor.versionCode
-        variant.assemble.dependsOn versionUpdate
-      }
+//      variant.productFlavors.each { flavor ->
+//        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
+//            VersionCodeFileUpdateTask
+//        versionUpdate.versionPropertiesFile =
+//            project.file("../../aptoideProperties/version.properties")
+//        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
+//        versionUpdate.versionCode = variant.mergedFlavor.versionCode
+//        variant.assemble.dependsOn versionUpdate
+//      }
     }
   }
 
@@ -220,29 +220,29 @@ dependencies {
   compile "com.android.support:multidex:${MULTIDEX_VERSION}"
 }
 
-class VersionCodeFileUpdateTask extends DefaultTask {
-
-  @InputFile
-  File versionPropertiesFile
-
-  @Input
-  String versionPropertyKey
-
-  @Input
-  Integer versionCode
-
-  @TaskAction
-  def updateVersionCodeFile() {
-    if (versionPropertiesFile.canRead()) {
-      Properties versionProperties = new Properties()
-      versionProperties.load(new FileInputStream(versionPropertiesFile))
-      versionProperties[versionPropertyKey] = versionCode.toString()
-      versionProperties.store(versionPropertiesFile.newWriter(), null)
-    } else {
-      throw new GradleException("Could not read version.properties!")
-    }
-  }
-}
+//class VersionCodeFileUpdateTask extends DefaultTask {
+//
+//  @InputFile
+//  File versionPropertiesFile
+//
+//  @Input
+//  String versionPropertyKey
+//
+//  @Input
+//  Integer versionCode
+//
+//  @TaskAction
+//  def updateVersionCodeFile() {
+//    if (versionPropertiesFile.canRead()) {
+//      Properties versionProperties = new Properties()
+//      versionProperties.load(new FileInputStream(versionPropertiesFile))
+//      versionProperties[versionPropertyKey] = versionCode.toString()
+//      versionProperties.store(versionPropertiesFile.newWriter(), null)
+//    } else {
+//      throw new GradleException("Could not read version.properties!")
+//    }
+//  }
+//}
 
 Integer getNextVersionCode(String versionPropertiesFilePath, String versionPropertyKey) {
   File versionPropertiesFile = project.file(versionPropertiesFilePath);
