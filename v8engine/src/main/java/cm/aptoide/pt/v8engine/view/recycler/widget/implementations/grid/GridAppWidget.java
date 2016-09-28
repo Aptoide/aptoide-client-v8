@@ -72,7 +72,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
     itemView.setOnClickListener(v -> {
       // FIXME
-      Analytics.AppViewViewedFrom.addStepToList(displayable.getWidgetGroupTag());
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(
           AppViewFragment.newInstance(appId, pojo.getStore().getAppearance().getTheme(),
               tvStoreName.getText().toString()));
