@@ -64,7 +64,7 @@ public class DisplayablesFactory {
             break;
 
           case ADS:
-            Displayable ads = getAds(wsWidget.getViewObject());
+            Displayable ads = getAds(wsWidget);
             if (ads != null) {
               // Header hammered
               LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
@@ -72,7 +72,7 @@ public class DisplayablesFactory {
                   new Event().setName(Event.Name.getAds)));
               wsWidget.setActions(actions);
               StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                  new StoreGridHeaderDisplayable(wsWidget);
+                  new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
               displayables.add(storeGridHeaderDisplayable);
 
               displayables.add(ads);
@@ -108,15 +108,14 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static Displayable getAds(Object viewObject) {
-    GetAdsResponse getAdsResponse = (GetAdsResponse) viewObject;
-    if (viewObject != null) {
+  private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
+    GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
+    if (wsWidget.getViewObject() != null) {
       List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
       List<Displayable> tmp = new ArrayList<>(ads.size());
       for (GetAdsResponse.Ad ad : ads) {
 
-        GridAdDisplayable diplayable = (GridAdDisplayable) DisplayableType.newDisplayable(Type.ADS);
-        diplayable.setPojo(ad);
+        GridAdDisplayable diplayable = new GridAdDisplayable(ad, wsWidget.getTag());
         tmp.add(diplayable);
       }
       return new DisplayableGroup(tmp);
