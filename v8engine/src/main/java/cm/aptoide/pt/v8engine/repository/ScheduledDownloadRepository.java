@@ -40,4 +40,9 @@ public class ScheduledDownloadRepository implements Repository {
   public Observable<Scheduled> setInstalling(Scheduled scheduled) {
     return scheduledAccessor.setInstalling(scheduled);
   }
+
+  public boolean hasScheduleDownloads() {
+    return scheduledAccessor.hasScheduleDownloads();
+  }
+
 }

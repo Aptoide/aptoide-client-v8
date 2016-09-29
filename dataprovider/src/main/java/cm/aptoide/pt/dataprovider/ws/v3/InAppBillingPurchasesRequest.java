@@ -7,8 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -16,22 +16,18 @@ import rx.Observable;
  */
 public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesResponse> {
 
-  private HashMapNotNull<String, String> args;
-
-  private InAppBillingPurchasesRequest(String baseHost, HashMapNotNull<String, String> args) {
-    super(baseHost);
-    this.args = args;
+  private InAppBillingPurchasesRequest(String baseHost, BaseBody baseBody) {
+    super(baseHost, baseBody);
   }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type) {
-    HashMapNotNull<String, String> args = getBaseArgs(apiVersion, packageName, type);
+    BaseBody args = getBaseArgs(apiVersion, packageName, type);
     return new InAppBillingPurchasesRequest(BASE_HOST, args);
   }
 
-  @NonNull
-  private static HashMapNotNull<String, String> getBaseArgs(int apiVersion, String packageName,
+  @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName,
       String type) {
-    HashMapNotNull<String, String> args = new HashMapNotNull<String, String>();
+    BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
@@ -44,6 +40,6 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
   @Override
   protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getInAppBillingPurchases(args);
+    return interfaces.getInAppBillingPurchases(map);
   }
 }

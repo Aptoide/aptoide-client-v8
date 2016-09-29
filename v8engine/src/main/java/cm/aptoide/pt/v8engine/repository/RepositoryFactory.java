@@ -10,7 +10,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.database.realm.Updates;
 import io.realm.RealmObject;
 
 /**
@@ -23,7 +22,7 @@ public final class RepositoryFactory {
       return (A) new ScheduledDownloadRepository(AccessorFactory.getAccessorFor(Scheduled.class));
     } else if (clazz.equals(Rollback.class)) {
       return (A) new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
-    } else if (clazz.equals(Updates.class)) {
+    } else if (clazz.equals(Update.class)) {
       return (A) new UpdateRepository(AccessorFactory.getAccessorFor(Update.class));
     } else if (clazz.equals(Installed.class)) {
       return (A) new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));

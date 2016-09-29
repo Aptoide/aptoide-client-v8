@@ -52,12 +52,21 @@ import lombok.Getter;
     for (App similarApp : recommendation.getSimilarApps()) {
       similarAppsNames.add(similarApp.getName());
     }
+
+    String abTestingURL = null;
+
+    if (recommendation.getAb() != null
+        && recommendation.getAb().getConversion() != null
+        && recommendation.getAb().getConversion().getUrl() != null) {
+      abTestingURL = recommendation.getAb().getConversion().getUrl();
+    }
+
     return new RecommendationDisplayable(R.mipmap.ic_launcher,
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         recommendation.getRecommendedApp().getId(),
         recommendation.getRecommendedApp().getPackageName(),
         recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(),
-        recommendation.getAb().getConversion().getUrl(), similarAppsNames,
+        abTestingURL, similarAppsNames,
         recommendation.getRecommendedApp().getUpdated(), recommendation.getTimestamp(),
         dateCalculator, spannableFactory);
   }

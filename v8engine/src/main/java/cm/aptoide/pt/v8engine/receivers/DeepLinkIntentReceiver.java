@@ -57,12 +57,15 @@ import org.xml.sax.XMLReader;
 public class DeepLinkIntentReceiver extends AppCompatActivity {
   public static final String AUTHORITY = "cm.aptoide.pt";
   public static final int DEEPLINK_ID = 1;
+  public static final int SCHEDULE_DOWNLOADS_ID = 2;
   public static final String DEEP_LINK = "deeplink";
+  public static final String SCHEDULE_DOWNLOADS = "schedule_downloads";
   private static final String TAG = DeepLinkIntentReceiver.class.getSimpleName();
   private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
   static {
     sURIMatcher.addURI(AUTHORITY, DEEP_LINK, DEEPLINK_ID);
+    sURIMatcher.addURI(AUTHORITY, SCHEDULE_DOWNLOADS, SCHEDULE_DOWNLOADS_ID);
   }
 
   private ArrayList<String> server;
@@ -196,11 +199,21 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         case DEEPLINK_ID:
           startGenericDeepLink(parse);
           break;
+        case SCHEDULE_DOWNLOADS_ID:
+          startScheduleDownloads(parse);
+          break;
       }
       finish();
     } else {
       finish();
     }
+  }
+
+  private void startScheduleDownloads(Uri parse) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.SCHEDULE_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.URI, parse);
+    startActivity(intent);
   }
 
   private void startGenericDeepLink(Uri parse) {
@@ -420,6 +433,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String APP_VIEW_FRAGMENT = "appViewFragment";
     public static final String SEARCH_FRAGMENT = "searchFragment";
     public static final String GENERIC_DEEPLINK = "generic_deeplink";
+    public static final String SCHEDULE_DEEPLINK = "schedule_downloads";
   }
 
   public static class DeepLinksKeys {
@@ -429,6 +443,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String STORENAME_KEY = "storeName";
     public static final String SHOW_AUTO_INSTALL_POPUP = "show_auto_install_popup";
     public static final String URI = "uri";
+    public static final String OPEN_MODE = "openMode";
 
     //deep link query parameters
     public static final String ACTION = "action";

@@ -6,8 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -15,15 +15,12 @@ import rx.Observable;
  */
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
-  private HashMapNotNull<String, String> args;
-
-  protected AddApkFlagRequest(HashMapNotNull<String, String> args) {
-    super(BASE_HOST);
-    this.args = args;
+  protected AddApkFlagRequest(BaseBody baseBody) {
+    super(BASE_HOST, baseBody);
   }
 
   public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag) {
-    HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    BaseBody args = new BaseBody();
 
     args.put("repo", storeName);
     args.put("md5sum", appMd5sum);
@@ -36,6 +33,6 @@ public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
   @Override protected Observable<GenericResponseV2> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.addApkFlag(args, bypassCache);
+    return interfaces.addApkFlag(map, bypassCache);
   }
 }

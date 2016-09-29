@@ -6,9 +6,9 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.List;
 import rx.Observable;
 
@@ -17,16 +17,13 @@ import rx.Observable;
  */
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
-  private final HashMapNotNull<String, String> args;
-
-  public InAppBillingSkuDetailsRequest(String baseHost, HashMapNotNull<String, String> args) {
-    super(baseHost);
-    this.args = args;
+  public InAppBillingSkuDetailsRequest(String baseHost, BaseBody baseBody) {
+    super(baseHost, baseBody);
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
       List<String> skuList, NetworkOperatorManager operatorManager, String type) {
-    HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
@@ -56,6 +53,6 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
   @Override
   protected Observable<InAppBillingSkuDetailsResponse> loadDataFromNetwork(V3.Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getInAppBillingSkuDetails(args);
+    return interfaces.getInAppBillingSkuDetails(map);
   }
 }

@@ -6,11 +6,9 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.view.custom.AptoideViewPager;
 
 /**
@@ -23,6 +21,7 @@ public abstract class BasePagerToolbarFragment extends BaseLoaderToolbarFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    mViewPager.clearOnPageChangeListeners();
     mViewPager = null;
   }
 
