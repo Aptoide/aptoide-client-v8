@@ -61,11 +61,12 @@ import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
+import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -222,10 +223,8 @@ public class AppViewFragment extends GridRecyclerFragment
     DownloadInstallationProvider installationProvider =
         new DownloadInstallationProvider(downloadManager);
 
-    installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            installationProvider), RepositoryFactory.getRepositoryFor(Rollback.class),
-        new RollbackActionFactory(), installationProvider);
+    installManager =
+        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(

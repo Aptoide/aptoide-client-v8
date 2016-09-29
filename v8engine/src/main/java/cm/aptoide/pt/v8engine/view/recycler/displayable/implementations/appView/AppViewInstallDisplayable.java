@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.Button;
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -76,11 +75,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public Observable<Void> update(Context context) {
-    return installManager.update(context, (PermissionRequest) context, appId);
+    return installManager.update(context, appId);
   }
 
   public Observable<Void> install(Context context) {
-    return installManager.install(context, (PermissionRequest) context, appId);
+    return installManager.install(context, appId);
   }
 
   public Observable<Void> uninstall(Context context) {
@@ -88,7 +87,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public Observable<Void> downgrade(Context context) {
-    return installManager.downgrade(context, (PermissionRequest) context, appId);
+    return installManager.downgrade(context, appId);
   }
 
   public void startInstallationProcess() {

@@ -26,11 +26,12 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
+import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
@@ -113,11 +114,8 @@ public class RollbackFragment extends GridRecyclerFragment {
         new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
     DownloadInstallationProvider installationProvider =
         new DownloadInstallationProvider(downloadManager);
-    installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            installationProvider),
-        new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class)),
-        new RollbackActionFactory(), installationProvider);
+    installManager =
+        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
   }
 
   @UiThread private void fetchRollbacks() {

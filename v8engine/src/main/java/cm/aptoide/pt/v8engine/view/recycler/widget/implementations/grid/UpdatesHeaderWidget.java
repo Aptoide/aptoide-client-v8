@@ -81,9 +81,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                 .flatMap(observables -> Observable.merge(observables))
                 .filter(downloading -> downloading.getOverallDownloadStatus() == Download.COMPLETED)
                 .flatMap(downloading -> displayable.getInstallManager()
-                    .update(UpdatesHeaderWidget.this.getContext(),
-                        (PermissionRequest) UpdatesHeaderWidget.this.getContext(),
-                        downloading.getAppId()))
+                    .update(UpdatesHeaderWidget.this.getContext(), downloading.getAppId()))
                 .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
                     throwable -> throwable.printStackTrace());
       }, () -> {

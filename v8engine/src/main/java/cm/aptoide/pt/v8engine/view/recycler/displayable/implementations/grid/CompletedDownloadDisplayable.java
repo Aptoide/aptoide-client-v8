@@ -85,7 +85,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
         AptoideUtils.SystemU.openApp(getPojo().getFilesToDownload().get(0).getPackageName());
         return Observable.empty();
       }
-      return installManager.install(context, (PermissionRequest) context, getPojo().getAppId());
+      return installManager.install(context, getPojo().getAppId());
     });
   }
 }

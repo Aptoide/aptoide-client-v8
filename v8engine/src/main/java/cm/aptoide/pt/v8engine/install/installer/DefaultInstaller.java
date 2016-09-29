@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by Marcelo Benites on 29/09/2016.
  */
 
-package cm.aptoide.pt.v8engine.install;
+package cm.aptoide.pt.v8engine.install.installer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +12,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
 import java.io.File;
@@ -30,26 +29,27 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 7/18/16.
  */
-@AllArgsConstructor public class InstallManager implements Installer {
+public class DefaultInstaller extends Installer {
 
-  private static final String TAG = InstallManager.class.getSimpleName();
+  private static final String TAG = DefaultInstaller.class.getSimpleName();
 
-  private final PermissionManager permissionManager;
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
-  private final InstallationProvider installationProvider;
+
+  public DefaultInstaller(PackageManager packageManager,
+      InstallationProvider installationProvider) {
+    super(installationProvider);
+    this.packageManager = packageManager;
+  }
 
   @Override public Observable<Boolean> isInstalled(long installationId) {
-    return installationProvider.getInstallation(installationId)
+    return getInstallation(installationId)
         .map(installation -> isInstalled(installation.getPackageName(),
             installation.getVersionCode()))
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Observable<Void> install(Context context, PermissionRequest permissionRequest,
-      long installationId) {
-    return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .ignoreElements()
-        .concatWith(installationProvider.getInstallation(installationId)
+  @Override public Observable<Void> install(Context context, long installationId) {
+    return getInstallation(installationId)
             .observeOn(Schedulers.computation())
             .flatMap(installation -> {
               if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
@@ -63,20 +63,18 @@ import rx.schedulers.Schedulers;
                         installation.getPackageName()));
               }
             })
-            .doOnError(CrashReports::logException));
+            .doOnError(CrashReports::logException);
   }
 
-  @Override public Observable<Void> update(Context context, PermissionRequest permissionRequest,
-      long installationId) {
-    return install(context, permissionRequest, installationId);
+  @Override public Observable<Void> update(Context context, long installationId) {
+    return install(context, installationId);
   }
 
-  @Override public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest,
-      long installationId) {
-    return installationProvider.getInstallation(installationId)
+  @Override public Observable<Void> downgrade(Context context, long installationId) {
+    return getInstallation(installationId)
         .first()
         .concatMap(installation -> uninstall(context, installation.getPackageName()))
-        .concatWith(install(context, permissionRequest, installationId));
+        .concatWith(install(context, installationId));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {
@@ -93,14 +91,10 @@ import rx.schedulers.Schedulers;
   }
 
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {
-    final IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-    intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-    intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
       startInstallIntent(context, file);
       return null;
-    }).ignoreElements().concatWith(packageIntent(context, intentFilter, packageName));
+    }).ignoreElements().concatWith(packageIntent(context, getInstallFilter(), packageName));
   }
 
   private void startInstallIntent(Context context, File file) {
@@ -170,14 +164,6 @@ import rx.schedulers.Schedulers;
       CrashReports.logException(e);
       throw new InstallationException(e);
     }
-  }
-
-  @NonNull private Observable<Void> packageIntent(Context context, IntentFilter intentFilter,
-      String packageName) {
-    return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-        .first(intent -> intent.getData().toString().contains(packageName))
-        .map(
-            intent -> null);
   }
 
   private boolean isInstalled(String packageName, int versionCode) {

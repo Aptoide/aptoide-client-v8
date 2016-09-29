@@ -34,7 +34,8 @@ import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragmen
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -74,9 +75,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         final PermissionManager permissionManager = new PermissionManager();
         final DownloadServiceHelper downloadManager =
             new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-        new AutoUpdate(this, new InstallManager(permissionManager, getPackageManager(),
-            new DownloadInstallationProvider(downloadManager)), new DownloadFactory(),
-            downloadManager).execute();
+        new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
+            new DownloadFactory(), downloadManager).execute();
       }
       if (SecurePreferences.isWizardAvailable()) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

@@ -64,7 +64,7 @@ import rx.Observable;
   }
 
   public Observable<Void> install(Context context) {
-    return installManager.update(context, (PermissionRequest) context, download.getAppId());
+    return installManager.update(context, download.getAppId());
   }
 
   public Observable<Download> download(PermissionRequest permissionRequest) {

@@ -20,11 +20,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
+import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -62,11 +63,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     PermissionManager permissionManager = new PermissionManager();
     downloadManager =
         new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-    installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            new DownloadInstallationProvider(downloadManager)),
-        RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
-        new DownloadInstallationProvider(downloadManager));
+    installManager =
+        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
     downloadFactory = new DownloadFactory();
   }
 

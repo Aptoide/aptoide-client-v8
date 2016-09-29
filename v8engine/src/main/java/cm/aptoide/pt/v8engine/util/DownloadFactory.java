@@ -18,6 +18,7 @@ import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
@@ -39,6 +40,8 @@ public class DownloadFactory {
     download.setAppId(appToDownload.getId());
     download.setIcon(appToDownload.getIcon());
     download.setAppName(appToDownload.getName());
+    download.setPackageName(appToDownload.getPackageName());
+    download.setVersionCode(appToDownload.getFile().getVercode());
 
     download.setFilesToDownload(
         createFileList(appToDownload.getId(), appToDownload.getPackageName(),
@@ -59,6 +62,8 @@ public class DownloadFactory {
     download.setAppId(app.getId());
     download.setIcon(app.getIcon());
     download.setAppName(app.getName());
+    download.setPackageName(app.getPackageName());
+    download.setVersionCode(app.getFile().getVercode());
 
     if (paidApp.getPayment().getAmount() > 0.0f && paidApp.getPayment().isPaid()) {
       download.setFilesToDownload(
@@ -77,6 +82,8 @@ public class DownloadFactory {
     download.setAppId(updateDisplayable.getAppId());
     download.setIcon(updateDisplayable.getIcon());
     download.setAppName(updateDisplayable.getLabel());
+    download.setPackageName(updateDisplayable.getPackageName());
+    download.setVersionCode(updateDisplayable.getVersionCode());
     download.setFilesToDownload(
         createFileList(updateDisplayable.getAppId(), updateDisplayable.getPackageName(),
             updateDisplayable.getApkPath(), updateDisplayable.getAlternativeApkPath(),
@@ -96,6 +103,8 @@ public class DownloadFactory {
     download.setAppId(appToDownload.getId());
     download.setIcon(appToDownload.getIcon());
     download.setAppName(appToDownload.getName());
+    download.setPackageName(appToDownload.getPackageName());
+    download.setVersionCode(appToDownload.getFile().getVercode());
     download.setFilesToDownload(
         createFileList(appToDownload.getId(), appToDownload.getPackageName(),
             appToDownload.getFile().getPath(), appToDownload.getFile().getMd5sum(),
@@ -111,6 +120,8 @@ public class DownloadFactory {
     download.setAppId(update.getAppId());
     download.setIcon(update.getIcon());
     download.setAppName(update.getLabel());
+    download.setPackageName(update.getPackageName());
+    download.setVersionCode(update.getVersionCode());
     download.setFilesToDownload(
         createFileList(update.getAppId(), update.getPackageName(), update.getApkPath(),
             update.getAlternativeApkPath(), update.getMd5(), update.getMainObbPath(),
@@ -128,6 +139,8 @@ public class DownloadFactory {
     }
     download.setIcon(rollback.getIcon());
     download.setAppName(rollback.getAppName());
+    download.setPackageName(rollback.getPackageName());
+    download.setVersionCode(rollback.getVersionCode());
     download.setFilesToDownload(
         createFileList(rollback.getAppId(), rollback.getPackageName(), rollback.getApkPath(),
             rollback.getAlternativeApkPath(), rollback.getMd5(), rollback.getMainObbPath(),
@@ -212,6 +225,8 @@ public class DownloadFactory {
     int appId = 1;
     download.setAppName(Application.getConfiguration().getMarketName());
     download.setAppId(appId);
+    download.setVersionCode(autoUpdateInfo.vercode);
+    download.setPackageName(autoUpdateInfo.packageName);
     download.setFilesToDownload(
         createFileList(appId, null, autoUpdateInfo.path, autoUpdateInfo.md5, null, null,
             autoUpdateInfo.vercode));
@@ -222,6 +237,8 @@ public class DownloadFactory {
     Download download = new Download();
     int appId = 1;
     download.setAppName(scheduled.getName());
+    download.setPackageName(scheduled.getPackageName());
+    download.setVersionCode(scheduled.getVerCode());
     download.setAppId(scheduled.getAppId());
     download.setFilesToDownload(
         createFileList(appId, scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(),

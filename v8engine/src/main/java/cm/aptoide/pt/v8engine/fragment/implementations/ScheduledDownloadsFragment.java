@@ -28,11 +28,12 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
+import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -281,11 +282,10 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     DownloadServiceHelper downloadManager =
         new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
 
-    Installer installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            new DownloadInstallationProvider(downloadManager)),
-        RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
-        new DownloadInstallationProvider(downloadManager));
+    final DownloadInstallationProvider installationProvider =
+        new DownloadInstallationProvider(downloadManager);
+    Installer installManager =
+        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
 
     PermissionRequest permissionRequest = ((PermissionRequest) getContext());
     DownloadServiceHelper downloadServiceHelper =
@@ -320,7 +320,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   private Observable<Void> installAndRemoveFromList(Installer installManager, Context context,
       long appId) {
     Logger.v(TAG, "installing app with id " + appId);
-    return installManager.install(context, (PermissionRequest) context, appId)
+    return installManager.install(context, appId)
         .doOnError(err -> Logger.e(TAG, err))
         .doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId))
         .doOnUnsubscribe(() -> Logger.d(TAG,

@@ -47,6 +47,8 @@ public class Download extends RealmObject {
   private String Icon;
   @SuppressWarnings({ "all" }) private long timeStamp;
   private int downloadSpeed;
+  private String packageName;
+  private int versionCode;
 
   public Download() {
   }
@@ -161,6 +163,22 @@ public class Download extends RealmObject {
 
   public void setDownloadSpeed(int speed) {
     this.downloadSpeed = speed;
+  }
+
+  public int getVersionCode() {
+    return versionCode;
+  }
+
+  public void setVersionCode(int versionCode) {
+    this.versionCode = versionCode;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
   }
 
   @IntDef({

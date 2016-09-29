@@ -21,7 +21,8 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import java.io.File;
 import java.io.IOException;
@@ -40,15 +41,15 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private final String url = Application.getConfiguration().getAutoUpdateUrl();
 
   private AptoideBaseActivity activity;
-  private InstallManager installManager;
+  private Installer defaultInstaller;
   private DownloadFactory downloadFactory;
   private DownloadServiceHelper downloadManager;
   private ProgressDialog dialog;
 
-  public AutoUpdate(AptoideBaseActivity activity, InstallManager installManager,
+  public AutoUpdate(AptoideBaseActivity activity, Installer defaultInstaller,
       DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
     this.activity = activity;
-    this.installManager = installManager;
+    this.defaultInstaller = defaultInstaller;
     this.downloadFactory = downloadFactory;
     this.downloadManager = downloadManager;
   }
@@ -147,7 +148,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                       File apk = new File(downloadedFile.getFilePath());
                       String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
                       if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-                        installManager.install(activity, activity, download.getAppId())
+                        defaultInstaller.install(activity, download.getAppId())
                             .toBlocking()
                             .subscribe();
                       } else {
@@ -186,6 +187,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
     public String md5;
     public int vercode;
+    public String packageName;
+    public int appId;
     public String path;
     public int minsdk = 0;
     public int minAptoideVercode = 0;
@@ -222,6 +225,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
       } else if (localName.equals("minAptVercode")) {
         info.minAptoideVercode = Integer.parseInt(sb.toString());
       }
+      info.packageName = activity.getPackageName();
     }
 
     @Override public void characters(char[] ch, int start, int length) throws SAXException {
