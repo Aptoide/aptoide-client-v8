@@ -10,17 +10,21 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import lombok.Getter;
 
 /**
  * Created by neuro on 09-05-2016.
  */
-public class GridAppGraphicDisplayable extends DisplayablePojo<App> {
+public class AppBrickListDisplayable extends DisplayablePojo<App> {
 
-  public GridAppGraphicDisplayable() {
+  @Getter private String tag;
+
+  public AppBrickListDisplayable() {
   }
 
-  public GridAppGraphicDisplayable(App pojo) {
+  public AppBrickListDisplayable(App pojo, String tag) {
     super(pojo);
+    this.tag = tag;
   }
 
   @Override public Type getType() {

@@ -44,7 +44,7 @@ import java.util.List;
       Event event = displayable.getPojo().getActions().get(0).getEvent();
       FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
           StoreGridRecyclerFragment.newInstance(event,
-              Translator.translate(displayable.getPojo().getTitle())));
+              Translator.translate(displayable.getPojo().getTitle()), null, displayable.getTag()));
     });
   }
 

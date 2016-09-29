@@ -176,14 +176,14 @@ import java.util.Locale;
           commentAdder.collapseComments();
           loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
           Logger.d(TAG, "comment to review added");
-          ShowMessage.asSnack(flagHelfull, R.string.comment_submitted);
+          ShowMessage.asSnack(getContext(), R.string.comment_submitted);
         } else {
-          ShowMessage.asSnack(flagHelfull, R.string.error_occured);
+          ShowMessage.asSnack(getContext(), R.string.error_occured);
         }
       }, e -> {
         dialog.dismiss();
         Logger.e(TAG, e);
-        ShowMessage.asSnack(flagHelfull, R.string.error_occured);
+        ShowMessage.asSnack(getContext(), R.string.error_occured);
       });
     });
 

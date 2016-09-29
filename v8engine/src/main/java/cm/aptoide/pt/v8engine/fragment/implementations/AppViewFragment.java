@@ -771,6 +771,7 @@ public class AppViewFragment extends GridRecyclerFragment
           app.getFile().getMalware().getRank().name());
       Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(),
           app.getDeveloper().getName(), app.getFile().getMalware().getRank().name());
+      Analytics.SourceViewedApplication.view(app.getPackageName());
 
       final Malware malware = app.getFile().getMalware();
       badge.setOnClickListener(v -> {

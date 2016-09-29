@@ -6,9 +6,7 @@
 package cm.aptoide.pt.logger;
 
 import android.util.Log;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.BuildConfig;
-import java.io.EOFException;
 
 /**
  * Aptoide default logger.
