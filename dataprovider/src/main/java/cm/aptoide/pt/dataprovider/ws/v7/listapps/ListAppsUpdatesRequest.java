@@ -159,7 +159,7 @@ import rx.schedulers.Schedulers;
     }
 
     private void setNotApkTags() {
-      if (ManagerPreferences.getUpdatesFilterKey()) {
+      if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
         this.notApkTags = "alpha,beta";
       }
     }

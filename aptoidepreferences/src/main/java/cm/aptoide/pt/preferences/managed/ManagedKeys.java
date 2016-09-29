@@ -8,7 +8,7 @@ package cm.aptoide.pt.preferences.managed;
 /**
  * Created by neuro on 21-04-2016.
  */
-class ManagedKeys {
+public class ManagedKeys {
 
   public static final String HWSPECS_FILTER = "hwspecsChkBox";
   public static final String MATURE_CHECK_BOX = "matureChkBox";
@@ -23,6 +23,6 @@ class ManagedKeys {
   public static final String FORCE_SERVER_REFRESH_FLAG = "forceServerRefreshFlag";
   public static final String PREF_NEEDS_DB_MIGRATION = "needsDbMigration";
   public static final String PREF_SHOW_UPDATE_NOTIFICATION = "showUpdatesNotification";
-  public static final String UPDATES_FILTER_KEY = "updatesFilterKey";
+  public static final String UPDATES_FILTER_ALPHA_BETA_KEY = "updatesFilterAlphaBetaKey";
   public static final String SCHEDULE_DOWNLOAD_SETTING = "schDwnBox";
 }
