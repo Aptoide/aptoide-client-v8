@@ -31,7 +31,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -52,6 +51,7 @@ import cm.aptoide.pt.v8engine.util.SettingsConstants;
 import io.realm.Realm;
 import java.io.File;
 import java.text.DecimalFormat;
+import lombok.Cleanup;
 
 /**
  * Created by fabio on 26-10-2015.
@@ -66,7 +66,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private final String aptoide_path = null;
   private final String icon_path = aptoide_path + "icons/";
   protected Toolbar toolbar;
-  protected Realm realm;
   private boolean unlocked = false;
   private Context context;
 
@@ -94,6 +93,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     // TODO
     if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
+      @Cleanup Realm realm = DeprecatedDatabase.get();
       DeprecatedDatabase.dropTable(Update.class, realm);
       DataproviderUtils.checkUpdates();
     }
@@ -423,20 +423,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     } else {
       DialogSetAdultpin(mp).show();// Without Pin
     }
-  }
-
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-
-    realm = DeprecatedDatabase.get();
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    realm.close();
-    realm = null;
   }
 
   public class DeleteDir extends AsyncTask<File, Void, Void> {
