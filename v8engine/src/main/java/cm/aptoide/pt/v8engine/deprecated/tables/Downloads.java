@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.Realm;
@@ -17,8 +18,8 @@ import java.util.List;
 
 public class Downloads {
 
-  private static final String PATH_TO_OLD_DOWNLOADS = "path1";
-  private static final String PATH_TO_NEW_DOWNLOADS = "path2";
+  private static final String PATH_TO_OLD_DOWNLOADS = "/.aptoide/apks";
+  private static final String PATH_TO_NEW_DOWNLOADS = "/.aptoide/apks";
   private static final long MAX_SIZE_CACHE = 200 * 1024 * 1024; // 200 MB
 
   /**
@@ -41,7 +42,7 @@ public class Downloads {
 
     File[] files = oldPathToDownloads.listFiles();
     // sort files having most recent first
-    // does some un-necessary auto-boxing to compare 2 longs... Java, what else.
+    // does some un-necessary auto-boxing to compare 2 longs
     Arrays.sort(files, (f1, f2) -> Long.valueOf(f1.lastModified()).compareTo(f2.lastModified()));
     long cacheSum = 0;
     for (File downloadFile : files) {
@@ -52,23 +53,25 @@ public class Downloads {
         if ((MAX_SIZE_CACHE > (cacheSum + fileSize)) && downloadFile.renameTo(
             new File(newPathToDownloads, downloadFile.getName()))) {
           cacheSum += fileSize;
-          saveDbEntry(downloadFile);
+          saveDbEntry(downloadFile, realm);
         } else {
           // cache has filled, delete file
-          downloadFile.deleteOnExit();
+          if(!downloadFile.delete()){
+            downloadFile.deleteOnExit();
+          }
         }
       }
     }
   }
 
-  private void saveDbEntry(File downloadFile) {
+  private void saveDbEntry(File downloadFile, Realm realm) {
 
     String downloadFileMd5 = AptoideUtils.AlgorithmU.computeMd5(downloadFile);
 
     FileToDownload fileToDownload = new FileToDownload();
 
     fileToDownload.setFileName(downloadFile.getName());
-    fileToDownload.setFileType(FileToDownload.GENERIC);
+    //fileToDownload.setFileType(FileToDownload.GENERIC);
     fileToDownload.setPath(downloadFile.getPath());
     fileToDownload.setMd5(downloadFileMd5);
 
@@ -82,5 +85,7 @@ public class Downloads {
     downloadEntry.setIcon(null);
     downloadEntry.setOverallDownloadStatus(Download.COMPLETED);
     downloadEntry.setOverallProgress(100);
+
+    realm.copyToRealmOrUpdate(downloadEntry);
   }
 }
