@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.SparseArray;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -863,6 +864,7 @@ public class Analytics {
     public static final String APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY = "App_Viewed_Open_From";
     public static final int NUMBER_OF_STEPS_TO_RECORD = 5;
     private static ArrayList<String> STEPS = new ArrayList<>();
+    private static String lastStep;
 
     public static void appViewOpenFrom(String packageName, String developerName,
         String trustedBadge) {
@@ -902,16 +904,22 @@ public class Analytics {
 
       Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
 
-      boolean flag = STEPS.size() >= NUMBER_OF_STEPS_TO_RECORD ? removeLeastRecentlyAddedElement()
-          : STEPS.add(step);
-      if (!flag) {
-        addStepToList(step);
+      if (STEPS.size() >= NUMBER_OF_STEPS_TO_RECORD) {
+        removeLeastRecentlyAddedElement(step);
+      } else {
+        STEPS.add(step);
       }
+      lastStep = step;
     }
 
-    private static boolean removeLeastRecentlyAddedElement() {
+    private static boolean removeLeastRecentlyAddedElement(String step) {
       STEPS.remove(STEPS.size() - 1);
+      addStepToList(step);
       return false;
+    }
+
+    static String getLastStep() {
+      return lastStep;
     }
   }
 
@@ -985,11 +993,39 @@ public class Analytics {
 
   public static class File {
 
-    public static final String EVENT_NAME = "Download_99percent";
-    public static final String ATTRIBUTE = "APK";
+    private static final String EVENT_NAME = "Download_99percent";
+    private static final String ATTRIBUTE = "APK";
 
     public static void moveFile(String moveType) {
       track(EVENT_NAME, ATTRIBUTE, moveType, FLURRY);
+    }
+  }
+
+  public static class SourceViewedApplication {
+    private static final String PARTIAL_EVENT_NAME = "_Viewed_Application";
+    private static final String PACKAGE_NAME = "Package Name";
+
+    public static void view(String packageName) {
+      String lastStep = Analytics.AppViewViewedFrom.getLastStep();
+      track(lastStep.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
+    }
+  }
+
+  public static class SourceDownloadComplete {
+    private static final String PARTIAL_EVENT_NAME = "_Download_Complete";
+    private static final String PACKAGE_NAME = "Package Name";
+    private static HashMap<Long, String> applicationsInstallClicked = new HashMap<>();
+
+    public static void installClicked(long id) {
+      String lastStep = Analytics.AppViewViewedFrom.getLastStep();
+      applicationsInstallClicked.put(id, lastStep);
+    }
+
+    public static void downloadComplete(long id, String packageName) {
+      if (applicationsInstallClicked.containsKey(id)) {
+        String value = applicationsInstallClicked.get(id);
+        track(value.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
+      }
     }
   }
 }
