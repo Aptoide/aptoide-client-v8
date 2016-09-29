@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v3.PaidApp;
@@ -17,16 +18,13 @@ import rx.Observable;
  */
 public class GetApkInfoRequest extends V3<PaidApp> {
 
-  private HashMapNotNull<String, String> args;
-
-  protected GetApkInfoRequest(HashMapNotNull<String, String> args) {
-    super(BASE_HOST);
-    this.args = args;
+  protected GetApkInfoRequest(BaseBody map) {
+    super(BASE_HOST, map);
   }
 
   public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,
       boolean fromSponsored, String storeName) {
-    HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);
     args.put("repo", storeName);
     args.put("mode", "json");
@@ -66,6 +64,6 @@ public class GetApkInfoRequest extends V3<PaidApp> {
 
   @Override
   protected Observable<PaidApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getApkInfo(args, bypassCache);
+    return interfaces.getApkInfo(map, bypassCache);
   }
 }
