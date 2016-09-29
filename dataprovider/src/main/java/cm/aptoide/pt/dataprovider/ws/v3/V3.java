@@ -22,7 +22,6 @@ import cm.aptoide.pt.model.v3.PaymentResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
 import retrofit2.adapter.rxjava.HttpException;
@@ -103,35 +102,29 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   interface Interfaces {
 
     @POST("getPushNotifications") @FormUrlEncoded
-    Observable<GetPushNotificationsResponse> getPushNotifications(
-        @FieldMap HashMapNotNull<String, String> arg,
+    Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
         @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
-        @FieldMap HashMapNotNull<String, String> arg,
+        @FieldMap BaseBody arg,
         @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(
-        @FieldMap HashMapNotNull<String, String> args,
+    @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
         @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("processInAppBilling") @FormUrlEncoded
-    Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(
-        @FieldMap HashMapNotNull<String, String> args);
+    Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(@FieldMap BaseBody args);
 
     @POST("processInAppBilling") @FormUrlEncoded
-    Observable<InAppBillingSkuDetailsResponse> getInAppBillingSkuDetails(
-        @FieldMap HashMapNotNull<String, String> args);
+    Observable<InAppBillingSkuDetailsResponse> getInAppBillingSkuDetails(@FieldMap BaseBody args);
 
     @POST("processInAppBilling") @FormUrlEncoded
-    Observable<InAppBillingPurchasesResponse> getInAppBillingPurchases(
-        @FieldMap HashMapNotNull<String, String> args);
+    Observable<InAppBillingPurchasesResponse> getInAppBillingPurchases(@FieldMap BaseBody args);
 
     @POST("processInAppBilling") @FormUrlEncoded
-    Observable<BaseV3Response> deleteInAppBillingPurchase(
-        @FieldMap HashMapNotNull<String, String> args);
+    Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
     @POST("checkProductPayment") @FormUrlEncoded Observable<PaymentResponse> checkProductPayment(
-        @FieldMap HashMapNotNull<String, String> args);
+        @FieldMap BaseBody args);
   }
 }

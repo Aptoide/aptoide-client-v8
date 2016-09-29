@@ -6,9 +6,9 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.PaymentResponse;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.Locale;
 import rx.Observable;
 
@@ -19,17 +19,14 @@ import rx.Observable;
  */
 public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
-  private HashMapNotNull<String, String> args;
-
-  private CheckProductPaymentRequest(String baseHost, HashMapNotNull<String, String> args) {
-    super(baseHost);
-    this.args = args;
+  private CheckProductPaymentRequest(String baseHost, BaseBody baseBody) {
+    super(baseHost, baseBody);
   }
 
   public static CheckProductPaymentRequest ofInAppBilling(String paymentConfirmationId,
       int paymentId, int productId, double price, double taxRate, String currency,
       NetworkOperatorManager operatorManager, int apiVersion, String developerPayload) {
-    final HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    final BaseBody args = new BaseBody();
     addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
         operatorManager, args);
     args.put("reqtype", "iabpurchasestatus");
@@ -41,7 +38,7 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
   public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId,
       int productId, double price, double taxRate, String currency,
       NetworkOperatorManager operatorManager, String storeName) {
-    final HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    final BaseBody args = new BaseBody();
     addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
         operatorManager, args);
     args.put("reqtype", "apkpurchasestatus");
@@ -51,7 +48,7 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
   private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,
       double price, double taxRate, String currency, NetworkOperatorManager operatorManager,
-      HashMapNotNull<String, String> args) {
+      BaseBody args) {
 
     args.put("mode", "json");
     args.put("payreqtype", "rest");
@@ -70,6 +67,6 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
   @Override protected Observable<PaymentResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.checkProductPayment(args);
+    return interfaces.checkProductPayment(map);
   }
 }

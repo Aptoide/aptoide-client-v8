@@ -10,7 +10,6 @@ import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -18,8 +17,8 @@ import rx.Observable;
  */
 public class GetApkInfoRequest extends V3<PaidApp> {
 
-  protected GetApkInfoRequest(BaseBody map) {
-    super(BASE_HOST, map);
+  protected GetApkInfoRequest(BaseBody baseBody) {
+    super(BASE_HOST, baseBody);
   }
 
   public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,
@@ -37,9 +36,9 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     return new GetApkInfoRequest(args);
   }
 
-  private static void addOptions(HashMapNotNull<String, String> args,
+  private static void addOptions(BaseBody args,
       NetworkOperatorManager operatorRepository) {
-    HashMapNotNull<String, String> options = new HashMapNotNull<>();
+    BaseBody options = new BaseBody();
     options.put("cmtlimit", "5");
     options.put("payinfo", "true");
     options.put("q", Api.Q);

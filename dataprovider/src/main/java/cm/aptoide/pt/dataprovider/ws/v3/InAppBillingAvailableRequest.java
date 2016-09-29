@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import rx.Observable;
 
 /**
@@ -14,15 +14,12 @@ import rx.Observable;
  */
 public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
-  private HashMapNotNull<String, String> args;
-
-  public InAppBillingAvailableRequest(String baseHost, HashMapNotNull<String, String> args) {
-    super(baseHost);
-    this.args = args;
+  public InAppBillingAvailableRequest(String baseHost, BaseBody baseBody) {
+    super(baseHost, baseBody);
   }
 
   public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
-    final HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    final BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabavailable");
@@ -34,6 +31,6 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
   @Override
   protected Observable<InAppBillingAvailableResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getInAppBillingAvailable(args);
+    return interfaces.getInAppBillingAvailable(map);
   }
 }

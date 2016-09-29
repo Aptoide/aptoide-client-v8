@@ -7,9 +7,9 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.BuildConfig;
+import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import rx.Observable;
@@ -19,15 +19,12 @@ import rx.Observable;
  */
 public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
 
-  private HashMapNotNull<String, String> args;
-
-  protected PushNotificationsRequest(HashMapNotNull<String, String> args) {
-    super(BASE_HOST);
-    this.args = args;
+  protected PushNotificationsRequest(BaseBody baseBody) {
+    super(BASE_HOST, baseBody);
   }
 
   public static PushNotificationsRequest of() {
-    HashMapNotNull<String, String> args = new HashMapNotNull<>();
+    BaseBody args = new BaseBody();
 
     String oemid = DataProvider.getConfiguration().getExtraId();
     if (!TextUtils.isEmpty(oemid)) {
@@ -50,6 +47,6 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
   @Override
   protected Observable<GetPushNotificationsResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getPushNotifications(args, bypassCache);
+    return interfaces.getPushNotifications(map, bypassCache);
   }
 }
