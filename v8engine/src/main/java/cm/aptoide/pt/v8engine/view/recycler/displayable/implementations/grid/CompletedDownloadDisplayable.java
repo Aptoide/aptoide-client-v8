@@ -66,11 +66,11 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
   }
 
   public void removeDownload() {
-    downloadManager.removeDownload(getPojo().getAppId());
+    downloadManager.removeDownload(getPojo().getMd5());
   }
 
   public Observable<Integer> downloadStatus() {
-    return downloadManager.getDownload(getPojo().getAppId())
+    return downloadManager.getDownload(getPojo().getMd5())
         .map(storedDownload -> storedDownload.getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
   }
@@ -80,12 +80,12 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
   }
 
   public Observable<Void> installOrOpenDownload(Context context) {
-    return installManager.isInstalled(getPojo().getAppId()).flatMap(installed -> {
+    return installManager.isInstalled(getPojo().getMd5()).flatMap(installed -> {
       if (installed) {
         AptoideUtils.SystemU.openApp(getPojo().getFilesToDownload().get(0).getPackageName());
         return Observable.empty();
       }
-      return installManager.install(context, (PermissionRequest) context, getPojo().getAppId());
+      return installManager.install(context, (PermissionRequest) context, getPojo().getMd5());
     });
   }
 }

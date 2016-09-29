@@ -42,7 +42,7 @@ import lombok.AllArgsConstructor;
         for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
           FileUtils.removeFile(fileToDownload.getFilePath());
         }
-        downloadAccessor.delete(download.getAppId());
+        downloadAccessor.delete(download.getMd5());
         i++;
       }
       return i;

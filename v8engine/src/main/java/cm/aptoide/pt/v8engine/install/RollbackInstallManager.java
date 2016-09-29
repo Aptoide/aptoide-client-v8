@@ -20,22 +20,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private final RollbackInstallationFactory rollbackProvider;
   private final InstallationProvider installationProvider;
 
-  @Override public Observable<Boolean> isInstalled(long installationId) {
-    return installManager.isInstalled(installationId);
-  }
-
-  @Override public Observable<Void> install(Context context, PermissionRequest permissionRequest,
-      long installationId) {
-    return installationProvider.getInstallation(installationId)
-        .flatMap(
-            installation -> rollbackProvider.createRollback(installation, Rollback.Action.INSTALL))
-        .map(rollback -> {
-          repository.save(rollback);
-          return rollback;
-        })
-        // TODO: 9/9/16 trinkes remove
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(rollback -> installManager.install(context, permissionRequest, installationId));
+  @Override public Observable<Boolean> isInstalled(String md5) {
+    return installManager.isInstalled(md5);
   }
 
   @Override public Observable<Void> install(Context context, PermissionRequest permissionRequest,
@@ -52,23 +38,23 @@ import rx.android.schedulers.AndroidSchedulers;
         .flatMap(rollback -> installManager.install(context, permissionRequest, md5));
   }
 
-  @Override public Observable<Void> update(Context context, PermissionRequest permissionRequest,
-      long installationId) {
+  @Override
+  public Observable<Void> update(Context context, PermissionRequest permissionRequest, String md5) {
 
-    return installationProvider.getInstallation(installationId)
+    return installationProvider.getInstallation(md5)
         .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
             Rollback.Action.UPDATE, installation.getIcon()))
         .observeOn(AndroidSchedulers.mainThread())
-        .concatWith(installManager.update(context, permissionRequest, installationId));
+        .concatWith(installManager.update(context, permissionRequest, md5));
   }
 
   @Override public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest,
-      long installationId) {
-    return installationProvider.getInstallation(installationId)
+      String md5) {
+    return installationProvider.getInstallation(md5)
         .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
             Rollback.Action.DOWNGRADE, installation.getIcon()))
         .observeOn(AndroidSchedulers.mainThread())
-        .concatWith(installManager.downgrade(context, permissionRequest, installationId));
+        .concatWith(installManager.downgrade(context, permissionRequest, md5));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {

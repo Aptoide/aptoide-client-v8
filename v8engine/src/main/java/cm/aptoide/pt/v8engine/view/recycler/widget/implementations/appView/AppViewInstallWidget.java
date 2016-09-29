@@ -265,7 +265,8 @@ import rx.subscriptions.CompositeSubscription;
 
   public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    downloadServiceHelper.getDownload(app.getId())
+    String md5 = app.getFile().getMd5sum();
+    downloadServiceHelper.getDownload(md5)
         .firstOrDefault(null)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(download -> {
@@ -277,7 +278,7 @@ import rx.subscriptions.CompositeSubscription;
               downloadStatus == Download.PAUSED)) {
             setDownloadBarVisible(true);
             setupDownloadControls(app, download, displayable);
-            downloadServiceHelper.getDownload(app.getId())
+            downloadServiceHelper.getDownload(md5)
                 .observeOn(AndroidSchedulers.mainThread())
                 .takeUntil(onGoingDownload -> shouldContinueListenDownload(
                     onGoingDownload.getOverallDownloadStatus()))
@@ -544,15 +545,15 @@ import rx.subscriptions.CompositeSubscription;
 
   private void setupDownloadControls(GetAppMeta.App app, Download download,
       AppViewInstallDisplayable displayable) {
-    long appId = app.getId();
+    String md5 = app.getFile().getMd5sum();
 
     actionCancel.setOnClickListener(view -> {
-      downloadServiceHelper.removeDownload(appId);
+      downloadServiceHelper.removeDownload(md5);
       setDownloadBarVisible(false);
     });
 
     actionPause.setOnClickListener(view -> {
-      downloadServiceHelper.pauseDownload(appId);
+      downloadServiceHelper.pauseDownload(md5);
       actionResume.setVisibility(View.VISIBLE);
       actionPause.setVisibility(View.GONE);
     });

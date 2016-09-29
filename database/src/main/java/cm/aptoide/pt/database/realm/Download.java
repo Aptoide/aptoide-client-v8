@@ -7,6 +7,7 @@ package cm.aptoide.pt.database.realm;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
+import android.support.annotation.IntRange;
 import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -42,9 +43,8 @@ public class Download extends RealmObject {
   public static String TAG = Download.class.getSimpleName();
   RealmList<FileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
-  int overallProgress = 0;
-  @PrimaryKey private long appId;
-  private String md5;
+  @IntRange(from = 0, to = 100) int overallProgress = 0;
+  @PrimaryKey private String md5;
   private String appName;
   private String Icon;
   @SuppressWarnings({ "all" }) private long timeStamp;
@@ -139,14 +139,6 @@ public class Download extends RealmObject {
 
   public void setOverallProgress(int overallProgress) {
     this.overallProgress = overallProgress;
-  }
-
-  public long getAppId() {
-    return appId;
-  }
-
-  public void setAppId(long appId) {
-    this.appId = appId;
   }
 
   public String getIcon() {

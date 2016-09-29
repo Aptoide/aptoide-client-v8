@@ -11,7 +11,6 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -118,7 +117,7 @@ public abstract class V8Engine extends DataProvider {
     //
     super.onCreate();
 
-    if(BuildConfig.DEBUG){
+    if (BuildConfig.DEBUG) {
       RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     }
 
@@ -157,13 +156,11 @@ public abstract class V8Engine extends DataProvider {
       }).subscribe();
 
       // load picture, name and email
-      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(
-          userData -> {
-            Logger.v(TAG, "hello " + userData.getUsername());
-          }, e -> {
-            Logger.e(TAG, e);
-          }
-      );
+      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
+        Logger.v(TAG, "hello " + userData.getUsername());
+      }, e -> {
+        Logger.e(TAG, e);
+      });
     }
 
     final int appSignature = SecurityUtils.checkAppSignature(this);

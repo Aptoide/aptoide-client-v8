@@ -12,4 +12,10 @@ import cm.aptoide.pt.utils.BaseException;
  */
 public class DownloadNotFoundException extends BaseException {
 
+  public DownloadNotFoundException() { }
+
+  public DownloadNotFoundException(String msg) {
+    super(msg);
+  }
+
 }

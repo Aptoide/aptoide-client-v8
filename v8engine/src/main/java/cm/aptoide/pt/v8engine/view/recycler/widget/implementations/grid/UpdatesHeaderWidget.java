@@ -83,7 +83,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                 .flatMap(downloading -> displayable.getInstallManager()
                     .install(UpdatesHeaderWidget.this.getContext(),
                         (PermissionRequest) UpdatesHeaderWidget.this.getContext(),
-                        downloading.getAppId()))
+                        downloading.getMd5()))
                 .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
                     throwable -> throwable.printStackTrace());
       }, () -> {

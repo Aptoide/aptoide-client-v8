@@ -9,19 +9,13 @@ import rx.Observable;
  */
 public interface Installer {
 
-  Observable<Boolean> isInstalled(long installationId);
+  Observable<Boolean> isInstalled(String md5);
 
-  Observable<Void> install(Context context, PermissionRequest permissionRequest,
-      long installationId);
+  Observable<Void> install(Context context, PermissionRequest permissionRequest, String md5);
 
-  Observable<Void> install(Context context, PermissionRequest permissionRequest,
-      String md5);
+  Observable<Void> update(Context context, PermissionRequest permissionRequest, String md5);
 
-  Observable<Void> update(Context context, PermissionRequest permissionRequest,
-      long installationId);
-
-  Observable<Void> downgrade(Context context, PermissionRequest permissionRequest,
-      long installationId);
+  Observable<Void> downgrade(Context context, PermissionRequest permissionRequest, String md5);
 
   Observable<Void> uninstall(Context context, String packageName);
 }

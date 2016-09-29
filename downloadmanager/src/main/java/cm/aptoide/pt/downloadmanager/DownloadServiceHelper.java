@@ -46,10 +46,10 @@ public class DownloadServiceHelper {
   /**
    * Pause a download
    *
-   * @param appId appId of the download to stop
+   * @param md5 md5 sum of the download to stop
    */
-  public void pauseDownload(long appId) {
-    startDownloadService(appId, AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE);
+  public void pauseDownload(String md5) {
+    startDownloadService(md5, AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE);
   }
 
   /**
@@ -63,13 +63,13 @@ public class DownloadServiceHelper {
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
         .flatMap(success -> Observable.fromCallable(() -> {
-          getDownload(download.getAppId()).first().subscribe(storedDownload -> {
-            startDownloadService(download.getAppId(),
+          getDownload(download.getMd5()).first().subscribe(storedDownload -> {
+            startDownloadService(download.getMd5(),
                 AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
           }, throwable -> {
             if (throwable instanceof DownloadNotFoundException) {
               downloadAccessor.save(download);
-              startDownloadService(download.getAppId(),
+              startDownloadService(download.getMd5(),
                   AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
             } else {
               throwable.printStackTrace();
@@ -77,7 +77,7 @@ public class DownloadServiceHelper {
             }
           });
           return download;
-        }).flatMap(aDownload -> getDownload(download.getAppId())));
+        }).flatMap(aDownload -> getDownload(download.getMd5())));
   }
 
   public Observable<Download> startDownload(PermissionRequest permissionRequest,
@@ -86,10 +86,10 @@ public class DownloadServiceHelper {
         download).doOnError(CrashReports::logException);
   }
 
-  private void startDownloadService(long appId, String action) {
+  private void startDownloadService(String md5, String action) {
     Observable.fromCallable(() -> {
       Intent intent = new Intent(Application.getContext(), DownloadService.class);
-      intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, appId);
+      intent.putExtra(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
       intent.setAction(action);
       Application.getContext().startService(intent);
       return null;
@@ -118,16 +118,6 @@ public class DownloadServiceHelper {
   /**
    * This method finds the download with the appId
    *
-   * @param appId appId to the app
-   * @return an observable with the download
-   */
-  public Observable<Download> getDownload(long appId) {
-    return aptoideDownloadManager.getDownload(appId);
-  }
-
-  /**
-   * This method finds the download with the appId
-   *
    * @param md5 md5 sum of the app file
    * @return an observable with the download
    */
@@ -135,7 +125,7 @@ public class DownloadServiceHelper {
     return aptoideDownloadManager.getDownload(md5);
   }
 
-  public void removeDownload(long appId) {
-    aptoideDownloadManager.removeDownload(appId);
+  public void removeDownload(String md5) {
+    aptoideDownloadManager.removeDownload(md5);
   }
 }
