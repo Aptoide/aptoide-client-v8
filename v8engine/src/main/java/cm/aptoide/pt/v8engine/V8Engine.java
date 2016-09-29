@@ -38,7 +38,6 @@ import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
-import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -48,7 +47,6 @@ import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -65,20 +63,26 @@ public abstract class V8Engine extends DataProvider {
 
     AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
       @Cleanup Realm realm = DeprecatedDatabase.get();
-      for (Subscription subscription : subscriptions) {
-        Store store = new Store();
 
-        store.setDownloads(Long.parseLong(subscription.getDownloads()));
-        store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
-            : subscription.getAvatar());
-        store.setStoreId(subscription.getId().longValue());
-        store.setStoreName(subscription.getName());
-        store.setTheme(subscription.getTheme());
+      if (subscriptions.size() > 0) {
+        for (Subscription subscription : subscriptions) {
+          Store store = new Store();
 
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(store);
-        realm.commitTransaction();
+          store.setDownloads(Long.parseLong(subscription.getDownloads()));
+          store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
+              : subscription.getAvatar());
+          store.setStoreId(subscription.getId().longValue());
+          store.setStoreName(subscription.getName());
+          store.setTheme(subscription.getTheme());
+
+          realm.beginTransaction();
+          realm.copyToRealmOrUpdate(store);
+          realm.commitTransaction();
+        }
+      } else {
+        addDefaultStore();
       }
+
 
       DataproviderUtils.checkUpdates();
     }, e -> {
@@ -107,6 +111,11 @@ public abstract class V8Engine extends DataProvider {
   public static RefWatcher getRefWatcher(Context context) {
     V8Engine app = (V8Engine) context.getApplicationContext();
     return app.refWatcher;
+  }
+
+  private static void addDefaultStore() {
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
+        getStoreMeta -> DataproviderUtils.checkUpdates(), null);
   }
 
   @Override public void onCreate() {
@@ -200,19 +209,14 @@ public abstract class V8Engine extends DataProvider {
 
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
+  //
+  // Strict Mode
+  //
 
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
         () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
-  }
-  //
-  // Strict Mode
-  //
-
-  private void addDefaultStore() {
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
-        getStoreMeta -> DataproviderUtils.checkUpdates(), null);
   }
 
   //
