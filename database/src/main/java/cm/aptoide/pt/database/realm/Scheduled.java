@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor public class Scheduled extends RealmObject {
 
-  public static final String APP_ID = "appId";
+  //public static final String APP_ID = "appId";
   public static final String NAME = "name";
   public static final String VERSION_NAME = "versionName";
   public static final String ICON = "icon";
@@ -25,12 +25,12 @@ import lombok.AllArgsConstructor;
   public static final String VER_CODE = "verCode";
   public static final String IS_DOWNLOADING = "isDownloading";
 
-  @PrimaryKey private long appId;
+  //@PrimaryKey private long appId;
   private String name;
   private String versionName;
   private String icon;
   private String path;
-  private String md5;
+  @PrimaryKey private String md5;
   private int verCode;
   private String packageName;
   private String storeName;
@@ -78,19 +78,24 @@ import lombok.AllArgsConstructor;
       }
     }
 
-    return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon(),
+    //return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon(),
+    //    app.getFile().getPath(), app.getFile().getMd5sum(), app.getFile().getVercode(),
+    //    app.getPackageName(), app.getStore().getName(), app.getFile().getPathAlt(), mainObbName,
+    //    mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false);
+
+    return new Scheduled(app.getName(), app.getFile().getVername(), app.getIcon(),
         app.getFile().getPath(), app.getFile().getMd5sum(), app.getFile().getVercode(),
         app.getPackageName(), app.getStore().getName(), app.getFile().getPathAlt(), mainObbName,
         mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false);
   }
 
-  public long getAppId() {
-    return appId;
-  }
-
-  public void setAppId(long appId) {
-    this.appId = appId;
-  }
+  //public long getAppId() {
+  //  return appId;
+  //}
+  //
+  //public void setAppId(long appId) {
+  //  this.appId = appId;
+  //}
 
   public String getName() {
     return name;

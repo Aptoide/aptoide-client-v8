@@ -125,6 +125,16 @@ public class DownloadServiceHelper {
     return aptoideDownloadManager.getDownload(appId);
   }
 
+  /**
+   * This method finds the download with the appId
+   *
+   * @param md5 md5 sum of the app file
+   * @return an observable with the download
+   */
+  public Observable<Download> getDownload(String md5) {
+    return aptoideDownloadManager.getDownload(md5);
+  }
+
   public void removeDownload(long appId) {
     aptoideDownloadManager.removeDownload(appId);
   }

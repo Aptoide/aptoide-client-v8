@@ -28,4 +28,13 @@ import rx.Observable;
       return Observable.error(new InstallationException("Installation file not available."));
     });
   }
+
+  @Override public Observable<RollbackInstallation> getInstallation(String md5) {
+    return downloadManager.getDownload(md5).first().flatMap(download -> {
+      if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+        return Observable.just(new DownloadInstallationAdapter(download));
+      }
+      return Observable.error(new InstallationException("Installation file not available."));
+    });
+  }
 }

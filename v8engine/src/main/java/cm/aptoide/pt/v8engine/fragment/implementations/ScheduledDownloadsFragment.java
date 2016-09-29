@@ -266,15 +266,15 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         })
         .filter(downloadItem -> downloadItem.getOverallDownloadStatus() == Download.COMPLETED)
         .flatMap(downloadItem -> installAndRemoveFromList(installManager, context,
-            downloadItem.getAppId()).map(aVoid -> downloadItem));
+            downloadItem.getMd5()).map(aVoid -> downloadItem));
   }
 
   private Observable<Void> installAndRemoveFromList(Installer installManager, Context context,
-      long appId) {
-    Logger.v(TAG, "installing app with id " + appId);
-    return installManager.install(context, (PermissionRequest) context, appId)
+      String md5) {
+    Logger.v(TAG, "installing app with id " + md5);
+    return installManager.install(context, (PermissionRequest) context, md5)
         .doOnError(err -> Logger.e(TAG, err))
-        .doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId))
+        .doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(md5))
         .doOnUnsubscribe(() -> Logger.d(TAG,
             "Scheduled Downloads do on unsubscribed called for install manager"));
   }

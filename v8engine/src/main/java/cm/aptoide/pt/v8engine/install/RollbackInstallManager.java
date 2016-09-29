@@ -38,6 +38,20 @@ import rx.android.schedulers.AndroidSchedulers;
         .flatMap(rollback -> installManager.install(context, permissionRequest, installationId));
   }
 
+  @Override public Observable<Void> install(Context context, PermissionRequest permissionRequest,
+      String md5) {
+    return installationProvider.getInstallation(md5)
+        .flatMap(
+            installation -> rollbackProvider.createRollback(installation, Rollback.Action.INSTALL))
+        .map(rollback -> {
+          repository.save(rollback);
+          return rollback;
+        })
+        // TODO: 9/9/16 trinkes remove
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(rollback -> installManager.install(context, permissionRequest, md5));
+  }
+
   @Override public Observable<Void> update(Context context, PermissionRequest permissionRequest,
       long installationId) {
 

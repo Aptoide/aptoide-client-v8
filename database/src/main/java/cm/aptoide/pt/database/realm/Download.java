@@ -22,6 +22,7 @@ import java.util.List;
 public class Download extends RealmObject {
 
   public static final String DOWNLOAD_ID = "appId";
+  public static final String MD5 = "md5";
   public static final int INVALID_STATUS = 0;
   public static final int COMPLETED = 1;
   public static final int BLOCK_COMPLETE = 2;
@@ -43,6 +44,7 @@ public class Download extends RealmObject {
   @DownloadState int overallDownloadStatus = 0;
   int overallProgress = 0;
   @PrimaryKey private long appId;
+  private String md5;
   private String appName;
   private String Icon;
   @SuppressWarnings({ "all" }) private long timeStamp;
@@ -161,6 +163,14 @@ public class Download extends RealmObject {
 
   public void setDownloadSpeed(int speed) {
     this.downloadSpeed = speed;
+  }
+
+  public String getMd5() {
+    return md5;
+  }
+
+  public void setMd5(String md5) {
+    this.md5 = md5;
   }
 
   @IntDef({

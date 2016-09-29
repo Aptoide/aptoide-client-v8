@@ -28,6 +28,10 @@ public class DownloadAccessor implements Accessor {
     return database.get(Download.class, Download.DOWNLOAD_ID, downloadId);
   }
 
+  public Observable<Download> get(String md5) {
+    return database.get(Download.class, Download.MD5, md5);
+  }
+
   public void delete(long downloadId) {
     Observable.fromCallable(() -> {
       database.delete(Download.class, Download.DOWNLOAD_ID, downloadId);

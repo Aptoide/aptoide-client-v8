@@ -152,6 +152,24 @@ public class AptoideDownloadManager {
     }).takeUntil(storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
   }
 
+  /**
+   * Observe changes to a download. This observable never completes it will emmit items whenever
+   * the
+   * download state changes.
+   *
+   * @return observable for download state changes.
+   */
+  public Observable<Download> getDownload(String md5) {
+    return downloadAccessor.get(md5).flatMap(download -> {
+      if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED
+          && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING)) {
+        return Observable.error(new DownloadNotFoundException());
+      } else {
+        return Observable.just(download);
+      }
+    }).takeUntil(storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
+  }
+
   public Observable<Download> getCurrentDownload() {
     return getDownloads().flatMapIterable(downloads -> downloads)
         .filter(downloads -> downloads.getOverallDownloadStatus() == Download.PROGRESS);

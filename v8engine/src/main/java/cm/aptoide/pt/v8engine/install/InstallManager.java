@@ -65,6 +65,27 @@ import rx.schedulers.Schedulers;
             .doOnError(CrashReports::logException));
   }
 
+  @Override public Observable<Void> install(Context context, PermissionRequest permissionRequest,
+      String md5) {
+    return permissionManager.requestExternalStoragePermission(permissionRequest)
+        .ignoreElements()
+        .concatWith(installationProvider.getInstallation(md5)
+            .observeOn(Schedulers.computation())
+            .flatMap(installation -> {
+              if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
+                return Observable.just(null);
+              } else {
+                return systemInstall(context, installation.getFile()).onErrorResumeNext(
+                    Observable.fromCallable(
+                        () -> rootInstall(installation.getFile(), installation.getPackageName(),
+                            installation.getVersionCode())))
+                    .onErrorResumeNext(defaultInstall(context, installation.getFile(),
+                        installation.getPackageName()));
+              }
+            })
+            .doOnError(CrashReports::logException));
+  }
+
   @Override public Observable<Void> update(Context context, PermissionRequest permissionRequest,
       long installationId) {
     return install(context, permissionRequest, installationId);

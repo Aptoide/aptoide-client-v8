@@ -14,6 +14,9 @@ public interface Installer {
   Observable<Void> install(Context context, PermissionRequest permissionRequest,
       long installationId);
 
+  Observable<Void> install(Context context, PermissionRequest permissionRequest,
+      String md5);
+
   Observable<Void> update(Context context, PermissionRequest permissionRequest,
       long installationId);
 

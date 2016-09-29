@@ -57,6 +57,7 @@ public class DownloadFactory {
 
     Download download = new Download();
     download.setAppId(app.getId());
+    download.setMd5(app.getFile().getMd5sum());
     download.setIcon(app.getIcon());
     download.setAppName(app.getName());
 
@@ -222,7 +223,8 @@ public class DownloadFactory {
     Download download = new Download();
     int appId = 1;
     download.setAppName(scheduled.getName());
-    download.setAppId(scheduled.getAppId());
+    //download.setAppId(scheduled.getAppId());
+    download.setMd5(scheduled.getMd5());
     download.setFilesToDownload(
         createFileList(appId, scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(),
             scheduled.getObb(), scheduled.getAlternativeApkPath(), scheduled.getVerCode()));
