@@ -72,4 +72,9 @@ public class ScheduledAccessor implements Accessor {
       return scheduled;
     });
   }
+
+  public boolean hasScheduleDownloads() {
+    @Cleanup Realm realm = Database.get();
+    return realm.where(Scheduled.class).findAll().size() != 0;
+  }
 }
