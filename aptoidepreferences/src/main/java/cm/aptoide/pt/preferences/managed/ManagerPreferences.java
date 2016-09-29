@@ -40,6 +40,10 @@ public class ManagerPreferences {
     return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
   }
 
+  public static boolean isScheduleDownloadsEnable() {
+    return Preferences.get().getBoolean(ManagedKeys.SCHEDULE_DOWNLOAD_SETTING, true);
+  }
+
   public static boolean getGeneralDownloadsMobile() {
     return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
   }
