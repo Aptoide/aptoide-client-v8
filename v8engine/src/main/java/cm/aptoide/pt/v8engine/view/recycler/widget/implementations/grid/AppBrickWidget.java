@@ -36,6 +36,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     ImageLoader.load(displayable.getPojo().getGraphic(), R.drawable.placeholder_705x345, graphic);
 
     itemView.setOnClickListener(v -> {
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(
           AppViewFragment.newInstance(displayable.getPojo().getId()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),

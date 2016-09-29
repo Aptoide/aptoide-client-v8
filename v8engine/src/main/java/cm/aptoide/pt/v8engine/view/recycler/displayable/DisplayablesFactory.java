@@ -22,6 +22,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
@@ -64,7 +65,7 @@ public class DisplayablesFactory {
             break;
 
           case ADS:
-            Displayable ads = getAds(wsWidget.getViewObject());
+            Displayable ads = getAds(wsWidget);
             if (ads != null) {
               // Header hammered
               LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
@@ -72,7 +73,7 @@ public class DisplayablesFactory {
                   new Event().setName(Event.Name.getAds)));
               wsWidget.setActions(actions);
               StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                  new StoreGridHeaderDisplayable(wsWidget);
+                  new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
               displayables.add(storeGridHeaderDisplayable);
 
               displayables.add(ads);
@@ -108,15 +109,14 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static Displayable getAds(Object viewObject) {
-    GetAdsResponse getAdsResponse = (GetAdsResponse) viewObject;
-    if (viewObject != null) {
+  private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
+    GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
+    if (wsWidget.getViewObject() != null) {
       List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
       List<Displayable> tmp = new ArrayList<>(ads.size());
       for (GetAdsResponse.Ad ad : ads) {
 
-        GridAdDisplayable diplayable = (GridAdDisplayable) DisplayableType.newDisplayable(Type.ADS);
-        diplayable.setPojo(ad);
+        GridAdDisplayable diplayable = new GridAdDisplayable(ad, wsWidget.getTag());
         tmp.add(diplayable);
       }
       return new DisplayableGroup(tmp);
@@ -150,19 +150,18 @@ public class DisplayablesFactory {
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
         if (useBigBrick) {
-          displayables.add(DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(0))
+          displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag())
               .setDefaultPerLineCount(1));
 
           nrAppBricks++;
         }
 
         for (int i = (useBigBrick ? 1 : 0); i < nrAppBricks; i++) {
-          Displayable appDisplayablePojo =
-              DisplayableType.newDisplayable(Type.APP_BRICK, apps.get(i));
+          Displayable appDisplayablePojo = new AppBrickDisplayable(apps.get(i), wsWidget.getTag());
           displayables.add(appDisplayablePojo);
         }
 
-        displayables.add(new FooterDisplayable(wsWidget));
+        displayables.add(new FooterDisplayable(wsWidget, wsWidget.getTag()));
       }
     } else if (Layout.LIST.equals(wsWidget.getData().getLayout())) {
       if (apps.size() > 0) {

@@ -36,6 +36,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -174,7 +176,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
       displayables = new LinkedList<>();
       for (GetAdsResponse.Ad ad : list) {
-        displayables.add(DisplayableType.newDisplayable(Type.ADS, ad));
+        displayables.add(new GridAdDisplayable(ad, tag));
       }
 
       addDisplayables(displayables);
@@ -196,7 +198,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           case GRAPHIC:
             for (App app : list) {
               app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP_GRAPHIC, app));
+              displayables.add(new AppBrickListDisplayable(app, tag));
             }
             break;
           default:

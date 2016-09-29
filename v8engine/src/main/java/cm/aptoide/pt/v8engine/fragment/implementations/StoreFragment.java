@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
@@ -39,6 +38,8 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import com.astuetz.PagerSlidingTabStrip;
+import com.trello.rxlifecycle.FragmentEvent;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 06-05-2016.
@@ -125,25 +126,29 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create) {
-      GetStoreRequest.of(storeName, storeContext).execute((getStore) -> {
-        this.getStore = getStore;
-        setupViewPager();
-      }, (throwable) -> {
-        if (throwable instanceof AptoideWsV7Exception) {
-          BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
+    if (create || getStore == null) {
+      GetStoreRequest.of(storeName, storeContext)
+          .observe(refresh)
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe((getStore) -> {
+            this.getStore = getStore;
+            setupViewPager();
+          }, (throwable) -> {
+            if (throwable instanceof AptoideWsV7Exception) {
+              BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
 
-          if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())
-              || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
-              baseResponse.getError().getCode())) {
-            DialogFragment dialogFragment =
-                PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName);
-            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
-          }
-        } else {
-          finishLoading(throwable);
-        }
-      }, create);
+              if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())
+                  || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
+                  baseResponse.getError().getCode())) {
+                DialogFragment dialogFragment =
+                    PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName);
+                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+              }
+            } else {
+              finishLoading(throwable);
+            }
+          });
     } else {
       setupViewPager();
     }

@@ -19,14 +19,14 @@ import lombok.Getter;
  */
 public class GridAppDisplayable extends DisplayablePojo<App> {
 
-  @Getter private String widgetGroupTag;
+  @Getter private String tag;
 
   public GridAppDisplayable() {
   }
 
-  public GridAppDisplayable(App pojo, String widgetGroupTag) {
+  public GridAppDisplayable(App pojo, String tag) {
     super(pojo);
-    this.widgetGroupTag = widgetGroupTag;
+    this.tag = tag;
   }
 
   @Override public Type getType() {

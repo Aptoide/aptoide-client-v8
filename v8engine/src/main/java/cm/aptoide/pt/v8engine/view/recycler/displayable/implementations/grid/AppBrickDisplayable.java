@@ -10,17 +10,21 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import lombok.Getter;
 
 /**
  * Created by neuro on 09-05-2016.
  */
 public class AppBrickDisplayable extends DisplayablePojo<App> {
 
+  @Getter private String tag;
+
   public AppBrickDisplayable() {
   }
 
-  public AppBrickDisplayable(App pojo) {
+  public AppBrickDisplayable(App pojo, String tag) {
     super(pojo);
+    this.tag = tag;
   }
 
   @Override public Type getType() {

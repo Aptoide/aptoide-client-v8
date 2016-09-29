@@ -15,13 +15,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppGraphicDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by neuro on 09-05-2016.
  */
-public class AppBrickListWidget extends Widget<GridAppGraphicDisplayable> {
+public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
 
   private TextView name;
   private ImageView graphic;
@@ -37,13 +37,14 @@ public class AppBrickListWidget extends Widget<GridAppGraphicDisplayable> {
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
   }
 
-  @Override public void bindView(GridAppGraphicDisplayable displayable) {
+  @Override public void bindView(AppBrickListDisplayable displayable) {
     App app = displayable.getPojo();
 
     ImageLoader.load(app.getGraphic(), R.drawable.placeholder_705x345, graphic);
     name.setText(app.getName());
     ratingBar.setRating(app.getStats().getRating().getAvg());
     itemView.setOnClickListener(v -> {
+      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(app.getId()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           app.getPackageName(), false);

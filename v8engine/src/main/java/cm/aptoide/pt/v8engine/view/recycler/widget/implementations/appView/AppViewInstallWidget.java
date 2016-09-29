@@ -429,6 +429,7 @@ import rx.subscriptions.CompositeSubscription;
 
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
+        Analytics.SourceDownloadComplete.installClicked(app.getId());
       }
 
       DownloadFactory factory = new DownloadFactory();
@@ -510,7 +511,7 @@ import rx.subscriptions.CompositeSubscription;
 
       case Download.COMPLETED: {
         Analytics.DownloadComplete.downloadComplete(app);
-
+        Analytics.SourceDownloadComplete.downloadComplete(app.getId(), app.getPackageName());
         setDownloadBarVisible(false);
 
         Observable<Void> install;
