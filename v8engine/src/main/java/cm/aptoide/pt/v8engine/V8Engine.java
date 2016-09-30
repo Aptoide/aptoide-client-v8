@@ -121,6 +121,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   @Override public void onCreate() {
+    CrashReports.setup(this);
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
 
@@ -189,8 +190,6 @@ public abstract class V8Engine extends DataProvider {
     if (SecurityUtils.checkDebuggable(this)) {
       Logger.w(TAG, "application has debug flag active");
     }
-
-    CrashReports.setup(getContext());
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();

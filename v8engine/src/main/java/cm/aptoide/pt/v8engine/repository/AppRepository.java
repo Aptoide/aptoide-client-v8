@@ -29,7 +29,11 @@ import rx.Observable;
       String storeName) {
     return GetAppRequest.of(appId, storeName).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
-        return addPayment(sponsored, response, refresh);
+        if (response.getNodes().getMeta().getData().isPaid()) {
+          return addPayment(sponsored, response, refresh);
+        } else {
+          return Observable.just(response);
+        }
       } else {
         return Observable.error(
             new RepositoryItemNotFoundException("No app found for app id " + appId));

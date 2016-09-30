@@ -59,7 +59,7 @@
           android:ellipsize="end"
           android:padding="10dp"
           android:singleLine="true"
-          android:text="@string/subscribe"
+          android:text="@string/follow"
           />
 
     </RelativeLayout>

@@ -44,6 +44,8 @@ import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -862,6 +864,56 @@ public class AptoideUtils {
 
       return dir != null && dir.delete();
     }
+
+    /**
+     * from v7
+     */
+    public static boolean hasRoot() {
+      boolean retval;
+      Process suProcess;
+
+      try {
+        suProcess = Runtime.getRuntime().exec("su");
+
+        DataOutputStream os = new DataOutputStream(suProcess.getOutputStream());
+        DataInputStream osRes = new DataInputStream(suProcess.getInputStream());
+
+        // Getting the id of the current user to check if this is root
+        os.writeBytes("id\n");
+        os.flush();
+
+        String currUid = osRes.readLine();
+        boolean exitSu;
+        if (null == currUid) {
+          retval = false;
+          exitSu = false;
+          Logger.d("ROOT", "Can't get root access or denied by user");
+        } else if (currUid.contains("uid=0")) {
+          retval = true;
+          exitSu = true;
+          Logger.d("ROOT", "Root access granted");
+        } else {
+          retval = false;
+          exitSu = true;
+          Logger.d("ROOT", "Root access rejected: " + currUid);
+        }
+
+        if (exitSu) {
+          os.writeBytes("exit\n");
+          os.flush();
+        }
+      } catch (Exception e) {
+        // Can't get root !
+        // Probably broken pipe exception on trying to write to output stream (os) after su failed, meaning that the device is not rooted
+
+        retval = false;
+        Logger.d("ROOT",
+            "Root access rejected [" + e.getClass().getName() + "] : " + e.getMessage());
+      }
+
+      return retval;
+    }
+
   }
 
   public static final class ThreadU {
