@@ -50,7 +50,8 @@ public class Downloads {
         // move file and create a Download table entry for this file
         long fileSize = downloadFile.length();
 
-        if ((MAX_SIZE_CACHE > (cacheSum + fileSize)) && downloadFile.renameTo(
+        // only migrate APKs
+        if ((MAX_SIZE_CACHE > (cacheSum + fileSize)) && downloadFile.getName().endsWith(".apk") && downloadFile.renameTo(
             new File(newPathToDownloads, downloadFile.getName()))) {
           cacheSum += fileSize;
           saveDbEntry(downloadFile, realm);
@@ -71,7 +72,7 @@ public class Downloads {
     FileToDownload fileToDownload = new FileToDownload();
 
     fileToDownload.setFileName(downloadFile.getName());
-    //fileToDownload.setFileType(FileToDownload.GENERIC);
+    fileToDownload.setFileType(FileToDownload.APK);
     fileToDownload.setPath(downloadFile.getPath());
     fileToDownload.setMd5(downloadFileMd5);
 
