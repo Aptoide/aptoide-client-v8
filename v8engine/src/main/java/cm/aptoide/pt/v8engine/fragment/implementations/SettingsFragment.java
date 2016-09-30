@@ -27,7 +27,6 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
-import cm.aptoide.pt.logger.Logger;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -35,6 +34,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -175,24 +175,21 @@ public class SettingsFragment extends PreferenceFragmentCompat
           }
         });
 
-    findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(
-        new Preference.OnPreferenceClickListener() {
-          @Override public boolean onPreferenceClick(Preference preference) {
-            final CheckBoxPreference cb = (CheckBoxPreference) preference;
-            boolean filterApps = false;
+    findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
+      final CheckBoxPreference cb = (CheckBoxPreference) preference;
+      boolean filterApps = false;
 
-            if (cb.isChecked()) {
-              cb.setChecked(true);
-              filterApps = true;
-            } else {
-              cb.setChecked(false);
-            }
+      if (cb.isChecked()) {
+        cb.setChecked(true);
+        filterApps = true;
+      } else {
+        cb.setChecked(false);
+      }
 
-            ManagerPreferences.setHWSpecsFilter(filterApps);
+      ManagerPreferences.setHWSpecsFilter(filterApps);
 
-            return true;
-          }
-        });
+      return true;
+    });
 
     findPreference(SettingsConstants.SHOW_ALL_UPDATES).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
@@ -371,11 +368,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Dialog dialogSetAdultPin(final Preference mp) {
     isSetingPIN = true;
 
-    return AdultDialog.setAdultPinDialog(
-        getActivity(),
-        mp,
-        (v, which) -> isSetingPIN = false
-    );
+    return AdultDialog.setAdultPinDialog(getActivity(), mp, (v, which) -> isSetingPIN = false);
   }
 
   private void maturePinSetRemoveClick() {

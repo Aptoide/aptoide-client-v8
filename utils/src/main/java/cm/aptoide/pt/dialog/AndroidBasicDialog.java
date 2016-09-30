@@ -141,7 +141,9 @@ public class AndroidBasicDialog {
 
   public void show() {
     getCreatedDialog();
-    alertDialog.show();
+    if(!alertDialog.isShowing()){
+      alertDialog.show();
+    }
   }
 
   public void setOnCancelListener(Action0 action) {

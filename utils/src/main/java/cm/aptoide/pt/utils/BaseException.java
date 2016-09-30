@@ -3,7 +3,7 @@ package cm.aptoide.pt.utils;
 /**
  * created by SithEngineer
  */
-public abstract class BaseException extends Exception {
+public abstract class BaseException extends RuntimeException {
   public BaseException() {}
 
   public BaseException(String detailMessage) {
