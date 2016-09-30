@@ -38,7 +38,6 @@ import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
-import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -48,7 +47,6 @@ import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -121,6 +119,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   @Override public void onCreate() {
+    CrashReports.setup(this);
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
 
@@ -187,8 +186,6 @@ public abstract class V8Engine extends DataProvider {
     if (SecurityUtils.checkDebuggable(this)) {
       Logger.w(TAG, "application has debug flag active");
     }
-
-    CrashReports.setup(getContext());
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
