@@ -35,6 +35,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
