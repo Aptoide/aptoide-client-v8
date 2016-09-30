@@ -7,6 +7,7 @@ package cm.aptoide.pt.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -25,29 +26,50 @@ public class AndroidBasicDialog {
   private AlertDialog.Builder builder;
   private AlertDialog alertDialog;
 
-  private TextView title;
-  private TextView message;
+  private View view;
   private Button positive;
   private Button negative;
 
-  private AndroidBasicDialog(Context context) {
+  private TextView title;
+  private TextView message;
+
+  private AndroidBasicDialog(Context context, @LayoutRes int dialogLayout) {
     this.builder = new AlertDialog.Builder(context);
-    View view = LayoutInflater.from(context).inflate(R.layout.dialog_basic, null);
+    this.view = LayoutInflater.from(context).inflate(dialogLayout, null, false);
     builder.setView(view);
-    bindView(view);
+    bindView();
+  }
+
+  private AndroidBasicDialog(Context context, View dialogLayout) {
+    this.view = dialogLayout;
+    this.builder = new AlertDialog.Builder(context);
+    builder.setView(dialogLayout);
+    bindView();
   }
 
   public static AndroidBasicDialog build(Context context) {
-    AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context);
+    AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context, R.layout.dialog_basic);
     androidBasicDialog.getCreatedDialog();
     return androidBasicDialog;
   }
 
-  private void bindView(View view) {
-    title = (TextView) view.findViewById(R.id.title);
-    message = (TextView) view.findViewById(R.id.message);
+  public static AndroidBasicDialog build(Context context, @LayoutRes int dialogLayout) {
+    AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context, dialogLayout);
+    androidBasicDialog.getCreatedDialog();
+    return androidBasicDialog;
+  }
+
+  public static AndroidBasicDialog build(Context context, View dialogLayout) {
+    AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context, dialogLayout);
+    androidBasicDialog.getCreatedDialog();
+    return androidBasicDialog;
+  }
+
+  private void bindView() {
     positive = (Button) view.findViewById(R.id.positive_button);
     negative = (Button) view.findViewById(R.id.negative_button);
+    title = (TextView) view.findViewById(R.id.title);
+    message = (TextView) view.findViewById(R.id.message);
   }
 
   public AndroidBasicDialog setPositiveButton(@StringRes int title, View.OnClickListener listener) {
@@ -79,26 +101,34 @@ public class AndroidBasicDialog {
   }
 
   public AndroidBasicDialog setMessage(@StringRes int message) {
-    this.message.setText(message);
-    this.message.setVisibility(View.VISIBLE);
+    if(this.message!=null) {
+      this.message.setText(message);
+      this.message.setVisibility(View.VISIBLE);
+    }
     return this;
   }
 
   public AndroidBasicDialog setMessage(String message) {
-    this.message.setText(message);
-    this.message.setVisibility(View.VISIBLE);
+    if(this.message!=null) {
+      this.message.setText(message);
+      this.message.setVisibility(View.VISIBLE);
+    }
     return this;
   }
 
   public AndroidBasicDialog setTitle(@StringRes int title) {
-    this.title.setText(title);
-    this.title.setVisibility(View.VISIBLE);
+    if(this.title!=null) {
+      this.title.setText(title);
+      this.title.setVisibility(View.VISIBLE);
+    }
     return this;
   }
 
   public AndroidBasicDialog setTitle(String title) {
-    this.title.setText(title);
-    this.title.setVisibility(View.VISIBLE);
+    if(this.title!=null) {
+      this.title.setText(title);
+      this.title.setVisibility(View.VISIBLE);
+    }
     return this;
   }
 

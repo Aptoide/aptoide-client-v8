@@ -26,18 +26,15 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -339,7 +336,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     if (isSetingPIN) {
-      DialogSetAdultpin(mp).show();
+      dialogSetAdultPin(mp).show();
     }
   }
 
@@ -371,48 +368,25 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private Dialog DialogSetAdultpin(final Preference mp) {
+  private Dialog dialogSetAdultPin(final Preference mp) {
     isSetingPIN = true;
-    final View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_requestpin, null);
-    AlertDialog.Builder builder =
-        new AlertDialog.Builder(getActivity()).setMessage(R.string.asksetadultpinmessage).setView(v)
 
-            .setPositiveButton(R.string.setpin, new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialog, int which) {
-                String input = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
-                if (!TextUtils.isEmpty(input)) {
-                  SecurePreferences.setAdultContentPin(Integer.valueOf(input));
-                  mp.setTitle(R.string.remove_mature_pin_title);
-                  mp.setSummary(R.string.remove_mature_pin_summary);
-                }
-                isSetingPIN = false;
-              }
-            }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-          @Override public void onClick(DialogInterface dialog, int which) {
-            isSetingPIN = false;
-          }
-        });
-
-    AlertDialog alertDialog = builder.create();
-
-    alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-      @Override public void onDismiss(DialogInterface dialog) {
-        isSetingPIN = false;
-      }
-    });
-
-    return alertDialog;
+    return AdultDialog.setAdultPinDialog(
+        getActivity(),
+        mp,
+        (v, which) -> isSetingPIN = false
+    );
   }
 
   private void maturePinSetRemoveClick() {
 
     int pin = SecurePreferences.getAdultContentPin();
-    final Preference mp = findPreference(SettingsConstants.ADULT_PIN);
+    final Preference adultPinPreference = findPreference(SettingsConstants.ADULT_PIN);
     if (pin != -1) {
       // With Pin
-      AdultDialog.dialogRequestMaturepin(getActivity(), new DialogInterface.OnClickListener() {
+      AdultDialog.buildMaturePinInputDialog(getActivity(), new DialogInterface.OnClickListener() {
         @Override public void onClick(DialogInterface dialog, int which) {
-          if (which == -1) {
+          if (which == Dialog.BUTTON_POSITIVE) {
             SecurePreferences.setAdultContentPin(-1);
             final Preference mp = findPreference(SettingsConstants.ADULT_PIN);
             mp.setTitle(R.string.set_mature_pin_title);
@@ -421,7 +395,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         }
       }).show();
     } else {
-      DialogSetAdultpin(mp).show();// Without Pin
+      dialogSetAdultPin(adultPinPreference).show();// Without Pin
     }
   }
 
