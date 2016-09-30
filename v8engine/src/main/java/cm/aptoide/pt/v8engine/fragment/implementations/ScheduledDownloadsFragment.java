@@ -206,7 +206,6 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
             ((ScheduledDownloadDisplayable) adapter.getDisplayable(i));
         if (displayable.isSelected()) {
           scheduledList.add(displayable.getPojo());
-          displayable.updateUi(true);
         }
       }
 
