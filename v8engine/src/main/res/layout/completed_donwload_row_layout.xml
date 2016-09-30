@@ -116,18 +116,21 @@
 
     <ImageView
         android:id="@+id/resume_download"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
+        android:layout_margin="5dp"
         android:layout_toStartOf="@+id/view"
-        android:background="@drawable/media_play"
+        android:padding="5dp"
+        android:scaleType="center"
+        android:src="@drawable/media_play"
         />
     <View
         android:id="@+id/view"
         android:layout_width="1dip"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_margin="12dp"
+        android:layout_margin="5dp"
         android:layout_toStartOf="@+id/pause_cancel_button"
         android:background="?attr/separatorColor"
         />
@@ -135,16 +138,18 @@
     <!--android:background="?attr/icCancelDrawable"-->
     <ImageView
         android:id="@+id/pause_cancel_button"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:background="?attr/icCancelDrawable"
+        android:layout_margin="5dp"
         android:contentDescription="@null"
         android:foreground="?attr/selectableItemBackground"
-        android:padding="15dp"
+        android:padding="5dp"
+        android:scaleType="center"
+        android:src="?attr/icCancelDrawable"
         />
   </RelativeLayout>
 
