@@ -64,20 +64,26 @@ public abstract class V8Engine extends DataProvider {
 
     AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
       @Cleanup Realm realm = DeprecatedDatabase.get();
-      for (Subscription subscription : subscriptions) {
-        Store store = new Store();
 
-        store.setDownloads(Long.parseLong(subscription.getDownloads()));
-        store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
-            : subscription.getAvatar());
-        store.setStoreId(subscription.getId().longValue());
-        store.setStoreName(subscription.getName());
-        store.setTheme(subscription.getTheme());
+      if (subscriptions.size() > 0) {
+        for (Subscription subscription : subscriptions) {
+          Store store = new Store();
 
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(store);
-        realm.commitTransaction();
+          store.setDownloads(Long.parseLong(subscription.getDownloads()));
+          store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
+              : subscription.getAvatar());
+          store.setStoreId(subscription.getId().longValue());
+          store.setStoreName(subscription.getName());
+          store.setTheme(subscription.getTheme());
+
+          realm.beginTransaction();
+          realm.copyToRealmOrUpdate(store);
+          realm.commitTransaction();
+        }
+      } else {
+        addDefaultStore();
       }
+
 
       DataproviderUtils.checkUpdates();
     }, e -> {
@@ -108,6 +114,11 @@ public abstract class V8Engine extends DataProvider {
     return app.refWatcher;
   }
 
+  private static void addDefaultStore() {
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
+        getStoreMeta -> DataproviderUtils.checkUpdates(), null);
+  }
+
   @Override public void onCreate() {
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
@@ -117,9 +128,9 @@ public abstract class V8Engine extends DataProvider {
     //
     super.onCreate();
 
-    if (BuildConfig.DEBUG) {
-      RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
-    }
+    //if(BuildConfig.DEBUG){
+    //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
+    //}
 
     DeprecatedDatabase.initialize(this);
     Database.initialize(this);
@@ -199,19 +210,14 @@ public abstract class V8Engine extends DataProvider {
 
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
+  //
+  // Strict Mode
+  //
 
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
         () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
-  }
-  //
-  // Strict Mode
-  //
-
-  private void addDefaultStore() {
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
-        getStoreMeta -> DataproviderUtils.checkUpdates(), null);
   }
 
   //

@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
@@ -112,8 +113,21 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
       newUpdatesDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
       genericDeepLink(intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SCHEDULE_DEEPLINK)) {
+      scheduleDownloadsDeepLink(
+          intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else {
       Analytics.ApplicationLaunch.launcher();
+    }
+  }
+
+  private void scheduleDownloadsDeepLink(Uri uri) {
+    if (uri != null) {
+      String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
+      if (!TextUtils.isEmpty(openMode)) {
+        pushFragmentV4(ScheduledDownloadsFragment.newInstance(
+            ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
+      }
     }
   }
 

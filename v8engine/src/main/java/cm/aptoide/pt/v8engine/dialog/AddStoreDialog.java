@@ -28,13 +28,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.FragmentTopStores;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 
-/**
- * Created with IntelliJ IDEA. User: rmateus Date: 18-10-2013 Time: 17:27 To change this template
- * use File | Settings |
- * File Templates.
- */
-
-// // TODO: 19-05-2016 neuro IMPORTS TODOS MARADOS!
 public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
@@ -70,6 +63,7 @@ public class AddStoreDialog extends DialogFragment {
           ((EditText) view.findViewById(R.id.edit_store_uri)).getText().toString();
       if (givenStoreName.length() > 0) {
         AddStoreDialog.this.storeName = givenStoreName;
+        AptoideUtils.SystemU.hideKeyboard(getActivity());
         getStore(givenStoreName);
         showLoadingDialog();
       }
@@ -104,14 +98,14 @@ public class AddStoreDialog extends DialogFragment {
         if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
           DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
               .this, PRIVATE_STORE_REQUEST_CODE, storeName);
-          dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+          dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
         } else {
-          ShowMessage.asSnack(getView(), error.getDescription());
+          ShowMessage.asSnack(getActivity(), error.getDescription());
         }
         dismissLoadingDialog();
       } else {
         dismissLoadingDialog();
-        Toast.makeText(V8Engine.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+        ShowMessage.asSnack(getActivity(), R.string.error_occured);
       }
     }, storeName);
   }

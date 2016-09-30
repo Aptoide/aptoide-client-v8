@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -159,19 +160,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 
     if (pagerSlidingTabStrip != null) {
-      pagerSlidingTabStrip.setViewPager(mViewPager);
+      pagerSlidingTabStrip.setViewPager(viewPager);
     }
-    floatingActionButton.setOnClickListener(v -> new AddStoreDialog().show(
-        ((FragmentActivity) getContext()).getSupportFragmentManager(), "addStoreDialog"));
 
-    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+    floatingActionButton.setOnClickListener(
+        v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog")
+    );
 
-      }
-
+    viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
-        StorePagerAdapter adapter = (StorePagerAdapter) mViewPager.getAdapter();
+        StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
         }
@@ -181,10 +180,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
         } else if (floatingActionButton.getVisibility() == View.VISIBLE) {
           floatingActionButton.hide();
         }
-      }
-
-      @Override public void onPageScrollStateChanged(int state) {
-
       }
     });
 

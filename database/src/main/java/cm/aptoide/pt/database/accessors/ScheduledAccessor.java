@@ -59,17 +59,8 @@ public class ScheduledAccessor implements Accessor {
     });
   }
 
-  //public Observable<Scheduled> setInstalling(Scheduled scheduled) {
-  //  return Observable.fromCallable(() -> {
-  //    scheduled.setDownloading(true);
-  //
-  //    @Cleanup Realm realm = Database.get();
-  //    realm.beginTransaction();
-  //    Scheduled dbScheduled =
-  //        realm.where(Scheduled.class).equalTo(Scheduled.MD5, scheduled.getMd5()).findFirst();
-  //    dbScheduled.setDownloading(true);
-  //    realm.commitTransaction();
-  //    return scheduled;
-  //  });
-  //}
+  public boolean hasScheduleDownloads() {
+    @Cleanup Realm realm = Database.get();
+    return realm.where(Scheduled.class).findAll().size() != 0;
+  }
 }

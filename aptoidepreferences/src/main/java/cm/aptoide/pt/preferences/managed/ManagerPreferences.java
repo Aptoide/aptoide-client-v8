@@ -24,8 +24,8 @@ public class ManagerPreferences {
   /**
    * @return true when updates should hide alpha and beta versions.
    */
-  public static boolean getUpdatesFilterKey() {
-    return Preferences.get().getBoolean(ManagedKeys.UPDATES_FILTER_KEY, false);
+  public static boolean getUpdatesFilterAlphaBetaKey() {
+    return Preferences.get().getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, false);
   }
 
   public static int getLastPushNotificationId() {
@@ -38,6 +38,10 @@ public class ManagerPreferences {
 
   public static boolean getGeneralDownloadsWifi() {
     return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
+  }
+
+  public static boolean isScheduleDownloadsEnable() {
+    return Preferences.get().getBoolean(ManagedKeys.SCHEDULE_DOWNLOAD_SETTING, true);
   }
 
   public static boolean getGeneralDownloadsMobile() {

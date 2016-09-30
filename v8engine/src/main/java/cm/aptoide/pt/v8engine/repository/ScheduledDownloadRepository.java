@@ -32,4 +32,9 @@ public class ScheduledDownloadRepository implements Repository {
   public Observable<List<Scheduled>> setInstalling(List<Scheduled> scheduledList) {
     return scheduledAccessor.setInstalling(scheduledList);
   }
+
+  public boolean hasScheduleDownloads() {
+    return scheduledAccessor.hasScheduleDownloads();
+  }
+
 }
