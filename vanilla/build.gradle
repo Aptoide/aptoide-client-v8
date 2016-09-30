@@ -91,7 +91,7 @@ android {
       //applicationId "${APPLICATION_ID}.intern"
 
       versionName "8.0.0." + getDate()
-      versionCode getNextVersionCode("../../aptoideProperties/version.properties",
+      versionCode getVersionCode("../../aptoideProperties/version.properties",
           "INTERNAL_VERSION_CODE")
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
@@ -108,7 +108,7 @@ android {
       //applicationId "${APPLICATION_ID}.dev"
 
       versionName "8.0.0." + getDate()
-      versionCode getNextVersionCode("../../aptoideProperties/version.properties",
+      versionCode getVersionCode("../../aptoideProperties/version.properties",
           "DEV_VERSION_CODE")
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
@@ -120,7 +120,7 @@ android {
     }
 
     prod {
-      Integer value = getNextVersionCode("../../aptoideProperties/version.properties",
+      Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "PROD_VERSION_CODE")
       versionCode value
       versionName "8.0.0." + value
@@ -244,13 +244,13 @@ dependencies {
 //  }
 //}
 
-Integer getNextVersionCode(String versionPropertiesFilePath, String versionPropertyKey) {
+Integer getVersionCode(String versionPropertiesFilePath, String versionPropertyKey) {
   File versionPropertiesFile = project.file(versionPropertiesFilePath);
   if (versionPropertiesFile.canRead()) {
     Properties versionProperties = new Properties()
     versionProperties.load(new FileInputStream(versionPropertiesFile))
 
-    return versionProperties[versionPropertyKey].toInteger() + 1
+    return versionProperties[versionPropertyKey].toInteger()
   } else {
     throw new GradleException("Could not read version.properties!")
   }
