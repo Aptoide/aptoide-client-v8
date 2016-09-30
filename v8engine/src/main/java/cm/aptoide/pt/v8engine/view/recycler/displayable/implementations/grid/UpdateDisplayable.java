@@ -18,9 +18,7 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import rx.Observable;
-import rx.functions.Action0;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -47,8 +45,6 @@ import rx.functions.Action0;
   @Getter private Installer installManager;
   private Download download;
   @Getter private DownloadServiceHelper downloadManager;
-  @Setter private Action0 pauseAction;
-  @Setter private Action0 resumeAction;
 
   public UpdateDisplayable() {
   }
@@ -61,7 +57,7 @@ import rx.functions.Action0;
         update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), installManager,
-        downloadFactory.create(update), downloadManager, null, null);
+        downloadFactory.create(update), downloadManager);
   }
 
   public Observable<Void> downloadAndInstall(Context context) {
@@ -79,19 +75,5 @@ import rx.functions.Action0;
 
   @Override public int getViewLayout() {
     return R.layout.update_row;
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    if (resumeAction != null) {
-      resumeAction.call();
-    }
-  }
-
-  @Override public void onPause() {
-    if (pauseAction != null) {
-      pauseAction.call();
-    }
-    super.onPause();
   }
 }
