@@ -97,7 +97,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       if (bar != null) {
         ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-        bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreAlphaColor())));
+        bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
       }
     }
   }
