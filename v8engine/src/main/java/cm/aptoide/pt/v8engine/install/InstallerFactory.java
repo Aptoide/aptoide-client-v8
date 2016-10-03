@@ -12,7 +12,6 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.v8engine.install.installer.BackgroundInstaller;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
@@ -33,23 +32,18 @@ public class InstallerFactory {
     switch (type) {
       case DEFAULT:
         return getDefaultInstaller(context);
+      case BACKGROUND_ROLLBACK:
       case ROLLBACK:
         return getRollbackInstaller(context);
-      case BACKGROUND_ROLLBACK:
-        final BackgroundInstaller backgroundInstaller =
-            new BackgroundInstaller(getInstallationProvider(), context,
-                getRollbackInstaller(context));
-        backgroundInstaller.startBackgroundService();
-        return backgroundInstaller;
       default:
         throw new IllegalArgumentException("Installer not supported: " + type);
     }
   }
 
   @NonNull protected RollbackInstaller getRollbackInstaller(Context context) {
-    return new RollbackInstaller(getInstallationProvider(), getDefaultInstaller(context),
+    return new RollbackInstaller(getDefaultInstaller(context),
         new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class)),
-        new RollbackFactory());
+        new RollbackFactory(), getInstallationProvider());
   }
 
   @NonNull private DownloadInstallationProvider getInstallationProvider() {

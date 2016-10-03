@@ -29,27 +29,22 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 7/18/16.
  */
-public class DefaultInstaller extends Installer {
+@AllArgsConstructor public class DefaultInstaller implements Installer {
 
   private static final String TAG = DefaultInstaller.class.getSimpleName();
 
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
-
-  public DefaultInstaller(PackageManager packageManager,
-      InstallationProvider installationProvider) {
-    super(installationProvider);
-    this.packageManager = packageManager;
-  }
+  private final InstallationProvider installationProvider;
 
   @Override public Observable<Boolean> isInstalled(long installationId) {
-    return getInstallation(installationId)
+    return installationProvider.getInstallation(installationId)
         .map(installation -> isInstalled(installation.getPackageName(),
             installation.getVersionCode()))
         .onErrorReturn(throwable -> false);
   }
 
   @Override public Observable<Void> install(Context context, long installationId) {
-    return getInstallation(installationId)
+    return installationProvider.getInstallation(installationId)
             .observeOn(Schedulers.computation())
             .flatMap(installation -> {
               if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
@@ -71,7 +66,7 @@ public class DefaultInstaller extends Installer {
   }
 
   @Override public Observable<Void> downgrade(Context context, long installationId) {
-    return getInstallation(installationId)
+    return installationProvider.getInstallation(installationId)
         .first()
         .concatMap(installation -> uninstall(context, installation.getPackageName()))
         .concatWith(install(context, installationId));
@@ -91,10 +86,14 @@ public class DefaultInstaller extends Installer {
   }
 
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+    intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+    intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
       startInstallIntent(context, file);
       return null;
-    }).ignoreElements().concatWith(packageIntent(context, getInstallFilter(), packageName));
+    }).ignoreElements().concatWith(packageIntent(context, intentFilter, packageName));
   }
 
   private void startInstallIntent(Context context, File file) {
@@ -164,6 +163,13 @@ public class DefaultInstaller extends Installer {
       CrashReports.logException(e);
       throw new InstallationException(e);
     }
+  }
+
+  @NonNull private Observable<Void> packageIntent(Context context, IntentFilter intentFilter,
+      String packageName) {
+    return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
+        .first(intent -> intent.getData().toString().contains(packageName)).<Void>map(
+            intent -> null);
   }
 
   private boolean isInstalled(String packageName, int versionCode) {

@@ -54,7 +54,7 @@ public class AptoideDownloadManager {
   private boolean isPausing = false;
   @Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface
       downloadNotificationActionsInterface;
-  @Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
+  @Getter private DownloadSettingsInterface settingsInterface;
   private DownloadAccessor downloadAccessor;
   private CacheManager cacheHelper;
   private FileUtils fileUtils;
@@ -70,7 +70,7 @@ public class AptoideDownloadManager {
     return instance;
   }
 
-  void initDownloadService(Context context) {
+  public void initDownloadService(Context context) {
     AptoideDownloadManager.context = context;
     createDownloadDirs();
   }

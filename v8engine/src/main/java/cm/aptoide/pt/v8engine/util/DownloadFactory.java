@@ -12,13 +12,11 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
@@ -29,7 +27,7 @@ import java.util.Random;
  */
 public class DownloadFactory {
 
-  public Download create(GetAppMeta.App appToDownload) throws IllegalArgumentException {
+  public Download create(GetAppMeta.App appToDownload, int downloadAction) throws IllegalArgumentException {
     final GetAppMeta.GetAppMetaFile file = appToDownload.getFile();
 
     validateApp(appToDownload.getId(), appToDownload.getObb(), appToDownload.getPackageName(),
@@ -40,6 +38,7 @@ public class DownloadFactory {
     download.setAppId(appToDownload.getId());
     download.setIcon(appToDownload.getIcon());
     download.setAppName(appToDownload.getName());
+    download.setAction(downloadAction);
     download.setPackageName(appToDownload.getPackageName());
     download.setVersionCode(appToDownload.getFile().getVercode());
 
@@ -52,28 +51,6 @@ public class DownloadFactory {
     return download;
   }
 
-  public Download create(GetAppMeta.App app, PaidApp paidApp) throws IllegalArgumentException {
-    final GetAppMeta.GetAppMetaFile file = app.getFile();
-
-    validateApp(app.getId(), app.getObb(), app.getPackageName(), app.getName(),
-        file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
-
-    Download download = new Download();
-    download.setAppId(app.getId());
-    download.setIcon(app.getIcon());
-    download.setAppName(app.getName());
-    download.setPackageName(app.getPackageName());
-    download.setVersionCode(app.getFile().getVercode());
-
-    if (paidApp.getPayment().getAmount() > 0.0f && paidApp.getPayment().isPaid()) {
-      download.setFilesToDownload(
-          createFileList(app.getId(), app.getPackageName(), paidApp.getPath().getStringPath(),
-              app.getFile().getMd5sum(), app.getObb(), app.getFile().getPathAlt(),
-              app.getFile().getVercode()));
-    }
-    return download;
-  }
-
   public Download create(UpdateDisplayable updateDisplayable) {
     validateApp(updateDisplayable.getAppId(), null, updateDisplayable.getPackageName(),
         updateDisplayable.getLabel(), updateDisplayable.getApkPath(),
@@ -82,6 +59,7 @@ public class DownloadFactory {
     download.setAppId(updateDisplayable.getAppId());
     download.setIcon(updateDisplayable.getIcon());
     download.setAppName(updateDisplayable.getLabel());
+    download.setAction(Download.ACTION_UPDATE);
     download.setPackageName(updateDisplayable.getPackageName());
     download.setVersionCode(updateDisplayable.getVersionCode());
     download.setFilesToDownload(
@@ -94,7 +72,7 @@ public class DownloadFactory {
     return download;
   }
 
-  public Download create(App appToDownload) {
+  public Download create(App appToDownload, int downloadAction) {
     final File file = appToDownload.getFile();
     validateApp(appToDownload.getId(), appToDownload.getObb(), appToDownload.getPackageName(),
         appToDownload.getName(), file != null ? file.getPath() : null,
@@ -102,6 +80,7 @@ public class DownloadFactory {
     Download download = new Download();
     download.setAppId(appToDownload.getId());
     download.setIcon(appToDownload.getIcon());
+    download.setAction(downloadAction);
     download.setAppName(appToDownload.getName());
     download.setPackageName(appToDownload.getPackageName());
     download.setVersionCode(appToDownload.getFile().getVercode());
@@ -120,6 +99,7 @@ public class DownloadFactory {
     download.setAppId(update.getAppId());
     download.setIcon(update.getIcon());
     download.setAppName(update.getLabel());
+    download.setAction(Download.ACTION_UPDATE);
     download.setPackageName(update.getPackageName());
     download.setVersionCode(update.getVersionCode());
     download.setFilesToDownload(
@@ -141,6 +121,19 @@ public class DownloadFactory {
     download.setAppName(rollback.getAppName());
     download.setPackageName(rollback.getPackageName());
     download.setVersionCode(rollback.getVersionCode());
+
+    switch (Rollback.Action.valueOf(rollback.getAction())) {
+      case INSTALL:
+        download.setAction(Download.ACTION_INSTALL);
+        break;
+      case DOWNGRADE:
+        download.setAction(Download.ACTION_DOWNGRADE);
+        break;
+      case UPDATE:
+        download.setAction(Download.ACTION_UPDATE);
+        break;
+    }
+
     download.setFilesToDownload(
         createFileList(rollback.getAppId(), rollback.getPackageName(), rollback.getApkPath(),
             rollback.getAlternativeApkPath(), rollback.getMd5(), rollback.getMainObbPath(),
@@ -227,6 +220,7 @@ public class DownloadFactory {
     download.setAppId(appId);
     download.setVersionCode(autoUpdateInfo.vercode);
     download.setPackageName(autoUpdateInfo.packageName);
+    download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
         createFileList(appId, null, autoUpdateInfo.path, autoUpdateInfo.md5, null, null,
             autoUpdateInfo.vercode));
@@ -240,6 +234,7 @@ public class DownloadFactory {
     download.setPackageName(scheduled.getPackageName());
     download.setVersionCode(scheduled.getVerCode());
     download.setAppId(scheduled.getAppId());
+    download.setAction(Download.ACTION_INSTALL);
     download.setFilesToDownload(
         createFileList(appId, scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(),
             scheduled.getObb(), scheduled.getAlternativeApkPath(), scheduled.getVerCode()));

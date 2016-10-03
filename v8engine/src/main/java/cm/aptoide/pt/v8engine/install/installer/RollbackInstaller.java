@@ -19,27 +19,19 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by trinkes on 9/8/16.
  */
 
-public class RollbackInstaller extends Installer {
+@AllArgsConstructor public class RollbackInstaller implements Installer {
 
   private final DefaultInstaller defaultInstaller;
   private final RollbackRepository repository;
   private final RollbackFactory rollbackFactory;
-
-  public RollbackInstaller(InstallationProvider installationProvider,
-      DefaultInstaller defaultInstaller, RollbackRepository repository,
-      RollbackFactory rollbackFactory) {
-    super(installationProvider);
-    this.defaultInstaller = defaultInstaller;
-    this.repository = repository;
-    this.rollbackFactory = rollbackFactory;
-  }
+  private final InstallationProvider installationProvider;
 
   @Override public Observable<Boolean> isInstalled(long installationId) {
     return defaultInstaller.isInstalled(installationId);
   }
 
   @Override public Observable<Void> install(Context context, long installationId) {
-    return getInstallation(installationId)
+    return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
         .flatMap(
             installation -> rollbackFactory.createRollback(installation, Rollback.Action.INSTALL))
@@ -54,7 +46,7 @@ public class RollbackInstaller extends Installer {
 
   @Override public Observable<Void> update(Context context, long installationId) {
 
-    return getInstallation(installationId)
+    return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
         .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
             Rollback.Action.UPDATE, installation.getIcon()))
@@ -63,7 +55,7 @@ public class RollbackInstaller extends Installer {
   }
 
   @Override public Observable<Void> downgrade(Context context, long installationId) {
-    return getInstallation(installationId)
+    return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
         .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
             Rollback.Action.DOWNGRADE, installation.getIcon()))

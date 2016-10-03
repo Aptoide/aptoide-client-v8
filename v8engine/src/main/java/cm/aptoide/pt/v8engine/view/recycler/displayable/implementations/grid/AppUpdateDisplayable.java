@@ -55,7 +55,7 @@ import rx.Observable;
     return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(),
         appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
         spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
-        downloadFactory.create(appUpdate), downloadManager, installManager, dateCalculator,
+        downloadFactory.create(appUpdate, Download.ACTION_UPDATE), downloadManager, installManager, dateCalculator,
         appUpdate.getId());
   }
 

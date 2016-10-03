@@ -21,6 +21,10 @@ import java.util.List;
  */
 public class Download extends RealmObject {
 
+  public static final int ACTION_INSTALL = 0;
+  public static final int ACTION_UPDATE = 1;
+  public static final int ACTION_DOWNGRADE = 2;
+
   public static final String DOWNLOAD_ID = "appId";
   public static final int INVALID_STATUS = 0;
   public static final int COMPLETED = 1;
@@ -49,6 +53,7 @@ public class Download extends RealmObject {
   private int downloadSpeed;
   private String packageName;
   private int versionCode;
+  private int action;
 
   public Download() {
   }
@@ -179,6 +184,14 @@ public class Download extends RealmObject {
 
   public void setPackageName(String packageName) {
     this.packageName = packageName;
+  }
+
+  public int getAction() {
+    return action;
+  }
+
+  public void setAction(int action) {
+    this.action = action;
   }
 
   @IntDef({

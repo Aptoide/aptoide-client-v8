@@ -379,7 +379,7 @@ import rx.subscriptions.CompositeSubscription;
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
                   DownloadFactory factory = new DownloadFactory();
-                  Download appDownload = factory.create(app);
+                  Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
                   downloadServiceHelper.startDownload(permissionRequest, appDownload)
                       .observeOn(AndroidSchedulers.mainThread())
                       .takeUntil(onGoingDownload -> shouldContinueListenDownload(
@@ -424,6 +424,7 @@ import rx.subscriptions.CompositeSubscription;
     final Context context = getContext();
     @StringRes final int installOrUpgradeMsg =
         this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
+    int downloadAction = isUpdate? Download.ACTION_UPDATE: Download.ACTION_INSTALL;
     final View.OnClickListener installHandler = v -> {
 
       if (installOrUpgradeMsg == R.string.installing_msg) {
@@ -432,7 +433,7 @@ import rx.subscriptions.CompositeSubscription;
       }
 
       DownloadFactory factory = new DownloadFactory();
-      Download appDownload = factory.create(app);
+      Download appDownload = factory.create(app, downloadAction);
 
       downloadServiceHelper.startDownload(permissionRequest, appDownload)
           .observeOn(AndroidSchedulers.mainThread())
