@@ -122,8 +122,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
             future.cancel(false);
             postponeReferrerExtraction(minimalAd, 0, true);
-
-            return true;
           }
 
           return false;
