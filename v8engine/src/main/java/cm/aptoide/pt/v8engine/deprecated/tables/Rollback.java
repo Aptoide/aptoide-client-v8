@@ -56,6 +56,11 @@ public class Rollback extends BaseTable {
   @Override public RealmObject convert(Cursor cursor) {
 
     String oldActionAsString = cursor.getString(cursor.getColumnIndex(COLUMN_ACTION));
+    int oldActionMergeCharPosition = oldActionAsString.lastIndexOf('|');
+    if( oldActionMergeCharPosition > -1) {
+      // this must be done to extract the referrer from the old Rollback.Action field
+      oldActionAsString = oldActionAsString.substring(0, oldActionMergeCharPosition);
+    }
     OldActions oldAction = OldActions.valueOf(oldActionAsString);
     if(oldAction.migrate) {
 
