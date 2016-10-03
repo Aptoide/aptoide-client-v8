@@ -227,8 +227,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override public void onDetach() {
-    getContext().unregisterReceiver(receiver);
-    receiver = null;
     super.onDetach();
   }
 
@@ -299,6 +297,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         updatesBadge.hide(true);
       }
     }
+  }
+
+  @Override public void onDestroyView() {
+    getContext().unregisterReceiver(receiver);
+    receiver = null;
+    super.onDestroyView();
   }
 
   @Override public boolean isDrawerOpened() {
