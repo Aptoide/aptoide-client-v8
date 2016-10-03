@@ -141,8 +141,8 @@ public class AptoideDownloadManager {
    *
    * @return observable for download state changes.
    */
-  public Observable<Download> getDownload(long appId) {
-    return downloadAccessor.get(appId).flatMap(download -> {
+  public Observable<Download> getDownload(String md5) {
+    return downloadAccessor.get(md5).flatMap(download -> {
       if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED
           && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING)) {
         return Observable.error(new DownloadNotFoundException());
@@ -182,19 +182,6 @@ public class AptoideDownloadManager {
           downloadAccessor.save(downloads);
           Logger.d(TAG, "Downloads paused");
         }, Throwable::printStackTrace);
-  }
-
-  @Deprecated private Observable<Integer> getDownloadStatus(long appId) {
-    return getDownload(appId).map(download -> {
-      if (download != null) {
-        if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-          return getStateIfFileExists(download);
-        }
-        return download.getOverallDownloadStatus();
-      } else {
-        return Download.NOT_DOWNLOADED;
-      }
-    });
   }
 
   private Observable<Integer> getDownloadStatus(String md5) {

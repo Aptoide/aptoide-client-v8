@@ -27,12 +27,12 @@ public class ScheduledAccessor implements Accessor {
     return database.getAll(Scheduled.class);
   }
 
-  public Observable<Scheduled> get(long appId) {
-    return database.get(Scheduled.class, Scheduled.APP_ID, appId);
+  public Observable<Scheduled> get(String md5) {
+    return database.get(Scheduled.class, Scheduled.APP_ID, md5);
   }
 
-  public void delete(long appId) {
-    database.delete(Scheduled.class, Scheduled.APP_ID, appId);
+  public void delete(String md5) {
+    database.delete(Scheduled.class, Scheduled.APP_ID, md5);
   }
 
   public Observable<List<Scheduled>> setInstalling(List<Scheduled> scheduledList) {

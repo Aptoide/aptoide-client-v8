@@ -40,9 +40,9 @@ public class NotificationEventReceiver extends BroadcastReceiver {
           break;
         case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD:
           if (intent.hasExtra(AptoideDownloadManager.FILE_MD5_EXTRA)) {
-            long appid = intent.getLongExtra(AptoideDownloadManager.FILE_MD5_EXTRA, -1);
-            if (appid > 0) {
-              downloadManager.getDownload(appid)
+            String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
+            if (!TextUtils.isEmpty(md5)) {
+              downloadManager.getDownload(md5)
                   .subscribe(download -> downloadManager.startDownload(download),
                       throwable -> throwable.printStackTrace());
             }
