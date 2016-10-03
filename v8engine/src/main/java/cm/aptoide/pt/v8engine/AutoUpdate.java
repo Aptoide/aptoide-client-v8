@@ -147,7 +147,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                       File apk = new File(downloadedFile.getFilePath());
                       String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
                       if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-                        installManager.install(activity, activity, download.getAppId())
+                        installManager.install(activity, activity, download.getMd5())
                             .toBlocking()
                             .subscribe();
                       } else {

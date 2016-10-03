@@ -30,7 +30,7 @@ import rx.schedulers.Schedulers;
  */
 public class AptoideDownloadManager {
 
-  public static final String APP_ID_EXTRA = "APTOIDE_APPID_EXTRA";
+  public static final String FILE_MD5_EXTRA = "APTOIDE_APPID_EXTRA";
   public static final String DOWNLOADMANAGER_ACTION_PAUSE =
       "cm.aptoide.downloadmanager.action.pause";
   public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
@@ -90,7 +90,7 @@ public class AptoideDownloadManager {
    * message.
    */
   public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-    return getDownloadStatus(download.getAppId()).flatMap(status -> {
+    return getDownloadStatus(download.getMd5()).flatMap(status -> {
       if (status == Download.COMPLETED) {
         return Observable.just(download);
       } else {
@@ -99,7 +99,7 @@ public class AptoideDownloadManager {
           return null;
         }).subscribeOn(Schedulers.computation()).subscribe(o -> {
         }, Throwable::printStackTrace);
-        return getDownload(download.getAppId());
+        return getDownload(download.getMd5());
       }
     });
   }
@@ -115,8 +115,8 @@ public class AptoideDownloadManager {
     startNextDownload();
   }
 
-  public void pauseDownload(long appId) {
-    downloadAccessor.get(appId).first().map(download -> {
+  public void pauseDownload(String md5) {
+    downloadAccessor.get(md5).first().map(download -> {
       download.setOverallDownloadStatus(Download.PAUSED);
       downloadAccessor.save(download);
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
@@ -124,10 +124,10 @@ public class AptoideDownloadManager {
       }
       return download;
     }).subscribe(download -> {
-      Logger.d(TAG, "Download with " + appId + " paused");
+      Logger.d(TAG, "Download with " + md5 + " paused");
     }, throwable -> {
       if (throwable instanceof DownloadNotFoundException) {
-        Logger.d(TAG, "there are no download to pause with the id: " + appId);
+        Logger.d(TAG, "there are no download to pause with the md5: " + md5);
       } else {
         throwable.printStackTrace();
       }
@@ -184,8 +184,21 @@ public class AptoideDownloadManager {
         }, Throwable::printStackTrace);
   }
 
-  private Observable<Integer> getDownloadStatus(long appId) {
+  @Deprecated private Observable<Integer> getDownloadStatus(long appId) {
     return getDownload(appId).map(download -> {
+      if (download != null) {
+        if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+          return getStateIfFileExists(download);
+        }
+        return download.getOverallDownloadStatus();
+      } else {
+        return Download.NOT_DOWNLOADED;
+      }
+    });
+  }
+
+  private Observable<Integer> getDownloadStatus(String md5) {
+    return getDownload(md5).map(download -> {
       if (download != null) {
         if (download.getOverallDownloadStatus() == Download.COMPLETED) {
           return getStateIfFileExists(download);
@@ -230,7 +243,7 @@ public class AptoideDownloadManager {
     return downloadStatus;
   }
 
-  void currentDownloadFinished(long appId) {
+  void currentDownloadFinished() {
     startNextDownload();
   }
 
@@ -240,7 +253,7 @@ public class AptoideDownloadManager {
       getNextDownload().first().subscribe(download -> {
         if (download != null) {
           new DownloadTask(downloadAccessor, download, fileUtils).startDownload();
-          Logger.d(TAG, "Download with id " + download.getAppId() + " started");
+          Logger.d(TAG, "Download with md5 " + download.getMd5() + " started");
         } else {
           isDownloading = false;
           cacheHelper.cleanCache();
@@ -272,8 +285,8 @@ public class AptoideDownloadManager {
     });
   }
 
-  public void removeDownload(long appId) {
-    downloadAccessor.get(appId).map(download -> {
+  public void removeDownload(String md5) {
+    downloadAccessor.get(md5).map(download -> {
       if (download == null) {
         Observable.error(new DownloadNotFoundException());
       }
@@ -285,7 +298,7 @@ public class AptoideDownloadManager {
       return download;
     }).first(download -> download.getOverallDownloadStatus() != Download.PROGRESS).map(download -> {
       deleteDownloadFiles(download);
-      deleteDownloadFromDb(download.getAppId());
+      deleteDownloadFromDb(download.getMd5());
       return download;
     }).subscribe(aVoid -> {
     }, throwable -> {
@@ -299,8 +312,8 @@ public class AptoideDownloadManager {
     });
   }
 
-  private void deleteDownloadFromDb(long downloadId) {
-    downloadAccessor.delete(downloadId);
+  private void deleteDownloadFromDb(String md5) {
+    downloadAccessor.delete(md5);
   }
 
   private void deleteDownloadFiles(Download download) {

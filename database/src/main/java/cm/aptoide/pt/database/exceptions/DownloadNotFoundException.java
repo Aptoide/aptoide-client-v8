@@ -10,4 +10,10 @@ package cm.aptoide.pt.database.exceptions;
  */
 public class DownloadNotFoundException extends Exception {
 
+  public DownloadNotFoundException() { }
+
+  public DownloadNotFoundException(String msg) {
+    super(msg);
+  }
+
 }

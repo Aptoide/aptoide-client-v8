@@ -45,7 +45,7 @@ import lombok.AllArgsConstructor;
             FileUtils.removeFile(fileToDownload.getFilePath());
           }
         }
-        downloadAccessor.delete(download.getAppId());
+        downloadAccessor.delete(download.getMd5());
         i++;
       }
       return i;

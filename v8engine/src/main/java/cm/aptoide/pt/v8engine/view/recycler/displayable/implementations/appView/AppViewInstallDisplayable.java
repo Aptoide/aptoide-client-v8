@@ -40,7 +40,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private RollbackRepository rollbackRepository;
   private Installer installManager;
 
-  private long appId;
+  private String md5;
   private String packageName;
   private InstalledAccessor installedAccessor;
   private Button installButton;
@@ -53,7 +53,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       boolean shouldInstall, InstalledAccessor installedAccessor) {
     super(getApp);
     this.installManager = installManager;
-    this.appId = getApp.getNodes().getMeta().getData().getId();
+    this.md5 = getApp.getNodes().getMeta().getData().getFile().getMd5sum();
     this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
@@ -76,11 +76,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public Observable<Void> update(Context context) {
-    return installManager.update(context, (PermissionRequest) context, appId);
+    return installManager.update(context, (PermissionRequest) context, md5);
   }
 
   public Observable<Void> install(Context context) {
-    return installManager.install(context, (PermissionRequest) context, appId);
+    return installManager.install(context, (PermissionRequest) context, md5);
   }
 
   public Observable<Void> uninstall(Context context) {
@@ -88,7 +88,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public Observable<Void> downgrade(Context context) {
-    return installManager.downgrade(context, (PermissionRequest) context, appId);
+    return installManager.downgrade(context, (PermissionRequest) context, md5);
   }
 
   public void startInstallationProcess() {

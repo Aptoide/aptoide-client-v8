@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -179,7 +180,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
   private int getDownloadFromListById(Download download, List<Download> oldDownloadsList) {
     for (int i = 0; i < oldDownloadsList.size(); i++) {
-      if ((oldDownloadsList.get(i).getAppId() == download.getAppId())) {
+      if (TextUtils.equals(oldDownloadsList.get(i).getMd5(), download.getMd5())) {
         return i;
       }
     }

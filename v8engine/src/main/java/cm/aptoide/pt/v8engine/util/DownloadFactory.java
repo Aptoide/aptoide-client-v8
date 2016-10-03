@@ -18,10 +18,10 @@ import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.IdUtils;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
-import java.util.Random;
 
 /**
  * Created by marcelobenites on 6/29/16.
@@ -36,15 +36,14 @@ public class DownloadFactory {
         file != null ? file.getPathAlt() : null);
 
     Download download = new Download();
-    download.setAppId(appToDownload.getId());
+    download.setMd5(appToDownload.getFile().getMd5sum());
     download.setIcon(appToDownload.getIcon());
     download.setAppName(appToDownload.getName());
 
     download.setFilesToDownload(
-        createFileList(appToDownload.getId(), appToDownload.getPackageName(),
-            appToDownload.getFile().getPath(), appToDownload.getFile().getMd5sum(),
-            appToDownload.getObb(), appToDownload.getFile().getPathAlt(),
-            appToDownload.getFile().getVercode()));
+        createFileList(appToDownload.getPackageName(), appToDownload.getFile().getPath(),
+            appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
+            appToDownload.getFile().getPathAlt(), appToDownload.getFile().getVercode()));
 
     return download;
   }
@@ -56,13 +55,13 @@ public class DownloadFactory {
         file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
 
     Download download = new Download();
-    download.setAppId(app.getId());
+    download.setMd5(app.getFile().getMd5sum());
     download.setIcon(app.getIcon());
     download.setAppName(app.getName());
 
     if (paidApp.getPayment().getAmount() > 0.0f && paidApp.getPayment().isPaid()) {
       download.setFilesToDownload(
-          createFileList(app.getId(), app.getPackageName(), paidApp.getPath().getStringPath(),
+          createFileList(app.getPackageName(), paidApp.getPath().getStringPath(),
               app.getFile().getMd5sum(), app.getObb(), app.getFile().getPathAlt(),
               app.getFile().getVercode()));
     }
@@ -74,16 +73,16 @@ public class DownloadFactory {
         updateDisplayable.getLabel(), updateDisplayable.getApkPath(),
         updateDisplayable.getAlternativeApkPath());
     Download download = new Download();
-    download.setAppId(updateDisplayable.getAppId());
+    download.setMd5(updateDisplayable.getMd5());
     download.setIcon(updateDisplayable.getIcon());
     download.setAppName(updateDisplayable.getLabel());
     download.setFilesToDownload(
-        createFileList(updateDisplayable.getAppId(), updateDisplayable.getPackageName(),
-            updateDisplayable.getApkPath(), updateDisplayable.getAlternativeApkPath(),
-            updateDisplayable.getMd5(), updateDisplayable.getMainObbPath(),
-            updateDisplayable.getMainObbMd5(), updateDisplayable.getPatchObbPath(),
-            updateDisplayable.getPatchObbMd5(), updateDisplayable.getVersionCode(),
-            updateDisplayable.getMainObbName(), updateDisplayable.getPatchObbName()));
+        createFileList(updateDisplayable.getPackageName(), updateDisplayable.getApkPath(),
+            updateDisplayable.getAlternativeApkPath(), updateDisplayable.getMd5(),
+            updateDisplayable.getMainObbPath(), updateDisplayable.getMainObbMd5(),
+            updateDisplayable.getPatchObbPath(), updateDisplayable.getPatchObbMd5(),
+            updateDisplayable.getVersionCode(), updateDisplayable.getMainObbName(),
+            updateDisplayable.getPatchObbName()));
     return download;
   }
 
@@ -93,14 +92,13 @@ public class DownloadFactory {
         appToDownload.getName(), file != null ? file.getPath() : null,
         file != null ? file.getPathAlt() : null);
     Download download = new Download();
-    download.setAppId(appToDownload.getId());
+    download.setMd5(appToDownload.getFile().getMd5sum());
     download.setIcon(appToDownload.getIcon());
     download.setAppName(appToDownload.getName());
     download.setFilesToDownload(
-        createFileList(appToDownload.getId(), appToDownload.getPackageName(),
-            appToDownload.getFile().getPath(), appToDownload.getFile().getMd5sum(),
-            appToDownload.getObb(), appToDownload.getFile().getPathAlt(),
-            appToDownload.getFile().getVercode()));
+        createFileList(appToDownload.getPackageName(), appToDownload.getFile().getPath(),
+            appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
+            appToDownload.getFile().getPathAlt(), appToDownload.getFile().getVercode()));
     return download;
   }
 
@@ -108,31 +106,30 @@ public class DownloadFactory {
     validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
         update.getApkPath(), update.getAlternativeApkPath());
     Download download = new Download();
-    download.setAppId(update.getAppId());
+    download.setMd5(update.getMd5());
     download.setIcon(update.getIcon());
     download.setAppName(update.getLabel());
     download.setFilesToDownload(
-        createFileList(update.getAppId(), update.getPackageName(), update.getApkPath(),
-            update.getAlternativeApkPath(), update.getMd5(), update.getMainObbPath(),
-            update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
-            update.getVersionCode(), update.getMainObbName(), update.getPatchObbName()));
+        createFileList(update.getPackageName(), update.getApkPath(), update.getAlternativeApkPath(),
+            update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(),
+            update.getPatchObbPath(), update.getPatchObbMd5(), update.getVersionCode(),
+            update.getMainObbName(), update.getPatchObbName()));
     return download;
   }
 
   public Download create(Rollback rollback) {
     Download download = new Download();
     if (rollback.getAppId() <= 0) {
-      download.setAppId(new Random(System.currentTimeMillis()).nextLong());
+      download.setMd5(IdUtils.randomString());
     } else {
-      download.setAppId(rollback.getAppId());
+      download.setMd5(rollback.getMd5());
     }
     download.setIcon(rollback.getIcon());
     download.setAppName(rollback.getAppName());
-    download.setFilesToDownload(
-        createFileList(rollback.getAppId(), rollback.getPackageName(), rollback.getApkPath(),
-            rollback.getAlternativeApkPath(), rollback.getMd5(), rollback.getMainObbPath(),
-            rollback.getMainObbMd5(), rollback.getPatchObbPath(), rollback.getPatchObbMd5(),
-            rollback.getVersionCode(), rollback.getMainObbName(), rollback.getPatchObbName()));
+    download.setFilesToDownload(createFileList(rollback.getPackageName(), rollback.getApkPath(),
+        rollback.getAlternativeApkPath(), rollback.getMd5(), rollback.getMainObbPath(),
+        rollback.getMainObbMd5(), rollback.getPatchObbPath(), rollback.getPatchObbMd5(),
+        rollback.getVersionCode(), rollback.getMainObbName(), rollback.getPatchObbName()));
     return download;
   }
 
@@ -168,7 +165,7 @@ public class DownloadFactory {
   //  }
   //}
 
-  private RealmList<FileToDownload> createFileList(long appId, String packageName, String filePath,
+  private RealmList<FileToDownload> createFileList(String packageName, String filePath,
       String fileMd5, Obb appObb, @Nullable String altPathToApk, int versionCode) {
 
     String mainObbPath = null;
@@ -194,29 +191,28 @@ public class DownloadFactory {
       }
     }
 
-    return createFileList(appId, packageName, filePath, altPathToApk, fileMd5, mainObbPath,
-        mainObbMd5, patchObbPath, patchObbMd5, versionCode, mainObbName, patchObbName);
+    return createFileList(packageName, filePath, altPathToApk, fileMd5, mainObbPath, mainObbMd5,
+        patchObbPath, patchObbMd5, versionCode, mainObbName, patchObbName);
   }
 
-  private RealmList<FileToDownload> createFileList(long appId, String packageName, String filePath,
+  private RealmList<FileToDownload> createFileList(String packageName, String filePath,
       @Nullable String altPathToApk, String fileMd5, String mainObbPath, String mainObbMd5,
       String patchObbPath, String patchObbMd5, int versionCode, String mainObbName,
       String patchObbName) {
 
     final RealmList<FileToDownload> downloads = new RealmList<>();
 
-    downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, appId, fileMd5, null,
+    downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, fileMd5, null,
         FileToDownload.APK, packageName, versionCode));
 
     if (mainObbPath != null) {
-      downloads.add(
-          FileToDownload.createFileToDownload(mainObbPath, null, appId, mainObbMd5, mainObbName,
-              FileToDownload.OBB, packageName, versionCode));
+      downloads.add(FileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
+          FileToDownload.OBB, packageName, versionCode));
     }
 
     if (patchObbPath != null) {
       downloads.add(
-          FileToDownload.createFileToDownload(patchObbPath, null, appId, patchObbMd5, patchObbName,
+          FileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
               FileToDownload.OBB, packageName, versionCode));
     }
 
@@ -225,22 +221,21 @@ public class DownloadFactory {
 
   public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
     Download download = new Download();
-    int appId = 1;
     download.setAppName(Application.getConfiguration().getMarketName());
-    download.setAppId(appId);
+    download.setMd5(autoUpdateInfo.md5);
     download.setFilesToDownload(
-        createFileList(appId, null, autoUpdateInfo.path, autoUpdateInfo.md5, null, null,
+        createFileList(null, autoUpdateInfo.path, autoUpdateInfo.md5, null, null,
             autoUpdateInfo.vercode));
     return download;
   }
 
   public Download create(Scheduled scheduled) {
     Download download = new Download();
-    int appId = 1;
     download.setAppName(scheduled.getName());
-    download.setAppId(scheduled.getAppId());
+    //download.setAppId(scheduled.getAppId());
+    download.setMd5(scheduled.getMd5());
     download.setFilesToDownload(
-        createFileList(appId, scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(),
+        createFileList(scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(),
             scheduled.getObb(), scheduled.getAlternativeApkPath(), scheduled.getVerCode()));
     return download;
   }

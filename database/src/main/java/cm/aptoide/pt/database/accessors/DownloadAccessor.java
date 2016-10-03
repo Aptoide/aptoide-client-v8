@@ -28,9 +28,21 @@ public class DownloadAccessor implements Accessor {
     return database.get(Download.class, Download.DOWNLOAD_ID, downloadId);
   }
 
-  public void delete(long downloadId) {
+  public Observable<Download> get(String md5) {
+    return database.get(Download.class, Download.MD5, md5);
+  }
+
+  @Deprecated public void delete(long downloadId) {
     Observable.fromCallable(() -> {
       database.delete(Download.class, Download.DOWNLOAD_ID, downloadId);
+      return null;
+    }).subscribeOn(RealmSchedulers.getScheduler()).subscribe(o -> {
+    }, throwable -> throwable.printStackTrace());
+  }
+
+  public void delete(String md5) {
+    Observable.fromCallable(() -> {
+      database.delete(Download.class, Download.MD5, md5);
       return null;
     }).subscribeOn(RealmSchedulers.getScheduler()).subscribe(o -> {
     }, throwable -> throwable.printStackTrace());
