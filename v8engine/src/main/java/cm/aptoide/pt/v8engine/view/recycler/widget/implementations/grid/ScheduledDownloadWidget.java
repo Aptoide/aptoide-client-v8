@@ -10,12 +10,18 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * created by SithEngineer
@@ -28,6 +34,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   private TextView appVersion;
   private CheckBox isSelected;
   private ProgressBar progressBarIsInstalling;
+  private CompositeSubscription subscriptions;
 
   public ScheduledDownloadWidget(View itemView) {
     super(itemView);
@@ -42,6 +49,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   }
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
+    if (subscriptions == null || subscriptions.isUnsubscribed()) {
+      subscriptions = new CompositeSubscription();
+    }
+
     Scheduled scheduled = displayable.getPojo();
     ImageLoader.load(scheduled.getIcon(), appIcon);
     appName.setText(scheduled.getName());
@@ -54,17 +65,46 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     isSelected.setChecked(displayable.isSelected());
     itemView.setOnClickListener(v -> isSelected.setChecked(!isSelected.isChecked()));
 
-    displayable.setProgressBarIsInstalling(progressBarIsInstalling);
-    displayable.setIsSelected(isSelected);
+    handleLoaderLogic(displayable);
+  }
 
-    displayable.updateUi(scheduled.isDownloading());
+  private void handleLoaderLogic(ScheduledDownloadDisplayable displayable) {
+    PermissionManager permissionManager = new PermissionManager();
+    DownloadServiceHelper downloadServiceHelper =
+        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+
+    //DownloadAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Download.class);
+    subscriptions.add(downloadServiceHelper.getAllDownloads()
+        .flatMapIterable(downloads -> downloads)
+        .filter(download -> isCurrentScheduled(displayable, download))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(this::changeLoaderStatus));
+  }
+
+  private boolean isCurrentScheduled(ScheduledDownloadDisplayable displayable, Download download) {
+    return download.getAppId() == displayable.getPojo().getAppId();
+  }
+
+  private void changeLoaderStatus(Download download) {
+    if (download.getOverallDownloadStatus() == Download.PROGRESS
+        || download.getOverallDownloadStatus() == Download.IN_QUEUE) {
+      if (progressBarIsInstalling.getVisibility() != View.VISIBLE) {
+        progressBarIsInstalling.setVisibility(View.VISIBLE);
+      }
+    } else {
+      if (progressBarIsInstalling.getVisibility() == View.VISIBLE
+          || download.getOverallDownloadStatus() == Download.PAUSED) {
+        progressBarIsInstalling.setVisibility(View.GONE);
+      }
+    }
   }
 
   @Override public void onViewAttached() {
-
   }
 
   @Override public void onViewDetached() {
-
+    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+      subscriptions.unsubscribe();
+    }
   }
 }

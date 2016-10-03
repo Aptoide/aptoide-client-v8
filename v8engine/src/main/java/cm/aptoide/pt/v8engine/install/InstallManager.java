@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
@@ -116,6 +117,10 @@ import rx.schedulers.Schedulers;
 
   private Void rootInstall(File file, String packageName, int versionCode)
       throws InstallationException {
+    if (!AptoideUtils.SystemU.hasRoot()) {
+      throw new InstallationException("No root permissions");
+    }
+
     try {
       //if (Shell.SU.available()) {
 
@@ -123,22 +128,22 @@ import rx.schedulers.Schedulers;
       Shell.Interactive interactiveShell = shellBuilder.useSU().setWatchdogTimeout(10) // seconds
           .addCommand("pm install -r " + file.getAbsolutePath(), 0,
               (commandCode, exitCode, output) -> {
+                CrashReports.logException(new Exception("install -r exitCode: " + exitCode));
                 if (exitCode == 0) {
                   Logger.v(TAG, "app successfully installed using root");
-                  return;
-                }
-
-                Logger.e(TAG, "Error using su to install package " + packageName);
-                for (String s : output) {
-                  Logger.e(TAG, "su command result: " + s);
+                } else {
+                  Logger.e(TAG, "Error using su to install package " + packageName);
+                  for (String s : output) {
+                    Logger.e(TAG, "su command result: " + s);
+                  }
                 }
               }).open();
 
       interactiveShell.waitForIdle();
 
-      if (!isInstalled(packageName, versionCode)) {
-        throw new RuntimeException("Could not verify installation.");
-      }
+      //if (!isInstalled(packageName, versionCode)) {
+      //  throw new RuntimeException("Could not verify installation.");
+      //}
 
       // app sucessfully installed using root
       return null;
@@ -170,7 +175,8 @@ import rx.schedulers.Schedulers;
   @NonNull private Observable<Void> packageIntent(Context context, IntentFilter intentFilter,
       String packageName) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-        .first(intent -> intent.getData().toString().contains(packageName)).<Void>map(
+        .first(intent -> intent.getData().toString().contains(packageName))
+        .map(
             intent -> null);
   }
 

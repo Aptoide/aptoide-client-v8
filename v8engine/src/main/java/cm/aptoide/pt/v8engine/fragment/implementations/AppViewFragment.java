@@ -740,7 +740,7 @@ public class AppViewFragment extends GridRecyclerFragment
 			});
 			*/
 
-      fileSize.setText(AptoideUtils.StringU.formatBits(app.getSize()));
+      fileSize.setText(AptoideUtils.StringU.formatBytes(app.getSize()));
 
       downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
 

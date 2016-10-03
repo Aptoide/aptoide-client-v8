@@ -5,6 +5,7 @@
     android:layout_height="42dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     >
 
   <Button

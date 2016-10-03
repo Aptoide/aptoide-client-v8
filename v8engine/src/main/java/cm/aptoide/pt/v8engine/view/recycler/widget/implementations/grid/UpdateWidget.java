@@ -85,8 +85,6 @@ import rx.subscriptions.CompositeSubscription;
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
             throwable -> throwable.printStackTrace()));
-    displayable.setPauseAction(this::onViewDetached);
-    displayable.setResumeAction(this::onViewAttached);
     labelTextView.setText(updateDisplayable.getLabel());
     updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
     ImageLoader.load(updateDisplayable.getIcon(), iconImageView);

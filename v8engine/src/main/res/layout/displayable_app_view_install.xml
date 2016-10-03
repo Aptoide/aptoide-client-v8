@@ -62,6 +62,7 @@
         tools:text="80%"
         />
 
+    <!--action: cancel pause resume-->
     <LinearLayout
         android:id="@+id/actionContainer"
         android:layout_width="wrap_content"
@@ -74,37 +75,40 @@
 
       <ImageView
           android:id="@+id/ic_action_cancel"
-          android:layout_width="33dp"
-          android:layout_height="33dp"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
           android:layout_gravity="center"
-          android:layout_margin="4dp"
+          android:layout_margin="5dp"
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
-          android:padding="4dp"
+          android:padding="5dp"
+          android:scaleType="center"
           android:src="@drawable/cross"
           />
 
       <ImageView
           android:id="@+id/ic_action_pause"
-          android:layout_width="55dp"
-          android:layout_height="55dp"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
           android:layout_gravity="center"
-          android:layout_margin="4dp"
+          android:layout_margin="5dp"
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
-          android:padding="15dp"
+          android:padding="5dp"
+          android:scaleType="center"
           android:src="@drawable/media_pause"
           />
 
       <ImageView
           android:id="@+id/ic_action_resume"
-          android:layout_width="55dp"
-          android:layout_height="55dp"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
           android:layout_gravity="center"
-          android:layout_margin="4dp"
+          android:layout_margin="5dp"
           android:background="?attr/selectableItemBackground"
           android:contentDescription="@null"
-          android:padding="15dp"
+          android:padding="5dp"
+          android:scaleType="center"
           android:src="@drawable/media_play"
           android:visibility="gone"
           tools:visibility="visible"
