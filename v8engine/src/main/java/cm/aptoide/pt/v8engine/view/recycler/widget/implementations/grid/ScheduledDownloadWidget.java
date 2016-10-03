@@ -5,6 +5,23 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -82,7 +99,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   private boolean isCurrentScheduled(ScheduledDownloadDisplayable displayable, Download download) {
-    return download.getAppId() == displayable.getPojo().getAppId();
+    return TextUtils.equals(download.getMd5(), displayable.getPojo().getMd5());
   }
 
   private void changeLoaderStatus(Download download) {

@@ -129,9 +129,9 @@ public abstract class V8Engine extends DataProvider {
     //
     super.onCreate();
 
-    //if(BuildConfig.DEBUG){
-    //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
-    //}
+    if (BuildConfig.DEBUG) {
+      RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
+    }
 
     DeprecatedDatabase.initialize(this);
     Database.initialize(this);
