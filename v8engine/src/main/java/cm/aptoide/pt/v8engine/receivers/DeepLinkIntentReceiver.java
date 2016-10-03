@@ -16,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
@@ -239,7 +238,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       } else {
         //old version only with app id
         try {
-          long id = Long.parseLong(substring);
+          long id = Long.parseLong(split[0]);
           startFromAppView(id);
           return;
         } catch (NumberFormatException e) {
