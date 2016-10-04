@@ -109,19 +109,21 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               clickUrl.startsWith("http://play.google.com")) {
             Logger.d("ExtractReferrer", "Clickurl landed on market");
             final String referrer = getReferrer(clickUrl);
-            Logger.d("ExtractReferrer", "Referrer successfully extracted");
+            if (!TextUtils.isEmpty(referrer)) {
+              Logger.d("ExtractReferrer", "Referrer successfully extracted");
 
-            if (broadcastReferrer) {
-              broadcastReferrer(packageName, referrer);
-            } else {
-              @Cleanup Realm realm = DeprecatedDatabase.get();
-              DeprecatedDatabase.save(
-                  new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
-                      minimalAd.getAdId()), realm);
+              if (broadcastReferrer) {
+                broadcastReferrer(packageName, referrer);
+              } else {
+                @Cleanup Realm realm = DeprecatedDatabase.get();
+                DeprecatedDatabase.save(
+                    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
+                        minimalAd.getAdId()), realm);
+              }
+
+              future.cancel(false);
+              postponeReferrerExtraction(minimalAd, 0, true);
             }
-
-            future.cancel(false);
-            postponeReferrerExtraction(minimalAd, 0, true);
           }
 
           return false;
