@@ -33,51 +33,42 @@ import rx.android.schedulers.AndroidSchedulers;
   @Override public Observable<Void> install(Context context, long installationId) {
     return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
-        .flatMap(
-            installation -> rollbackFactory.createRollback(installation, Rollback.Action.INSTALL))
-        .map(rollback -> {
-          repository.save(rollback);
-          return rollback;
-        })
-        // TODO: 9/9/16 trinkes remove
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(rollback -> defaultInstaller.install(context, installationId));
+        .flatMap(installation -> saveRollback(installation, Rollback.Action.INSTALL))
+        .flatMap(success -> defaultInstaller.install(context, installationId));
   }
 
   @Override public Observable<Void> update(Context context, long installationId) {
-
     return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
-        .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
-            Rollback.Action.UPDATE, installation.getIcon()))
-        .observeOn(AndroidSchedulers.mainThread())
-        .concatWith(defaultInstaller.update(context, installationId));
+        .flatMap(installation -> saveRollback(installation.getPackageName(), Rollback.Action.UPDATE, installation.getIcon()))
+        .flatMap(success -> defaultInstaller.update(context, installationId));
   }
 
   @Override public Observable<Void> downgrade(Context context, long installationId) {
     return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
-        .concatMap(installation -> getRollbackObservable(installation.getPackageName(),
-            Rollback.Action.DOWNGRADE, installation.getIcon()))
-        .observeOn(AndroidSchedulers.mainThread())
-        .concatWith(defaultInstaller.downgrade(context, installationId));
+        .flatMap(installation -> saveRollback(installation.getPackageName(), Rollback.Action.DOWNGRADE, installation.getIcon()))
+        .flatMap(success -> defaultInstaller.downgrade(context, installationId));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {
-    return rollbackFactory.createRollback(context, packageName, Rollback.Action.UNINSTALL, null)
-        .map(rollback -> {
-          repository.save(rollback);
-          return rollback;
-        })
-        .concatMap(rollback -> defaultInstaller.uninstall(context, packageName));
+    return saveRollback(packageName, Rollback.Action.UNINSTALL, null)
+        .flatMap(rollback -> defaultInstaller.uninstall(context, packageName));
   }
 
-  private Observable<Void> getRollbackObservable(String packageName, Rollback.Action action,
+  private Observable<Void> saveRollback(String packageName, Rollback.Action action,
       String icon) {
     return rollbackFactory.createRollback(Application.getContext(), packageName, action, icon)
         .map(rollback -> {
           repository.save(rollback);
           return null;
         });
+  }
+
+  private Observable<Void> saveRollback(RollbackInstallation installation, Rollback.Action action) {
+    return Observable.fromCallable(() -> {
+      repository.save(rollbackFactory.createRollback(installation, action));
+      return null;
+    });
   }
 }

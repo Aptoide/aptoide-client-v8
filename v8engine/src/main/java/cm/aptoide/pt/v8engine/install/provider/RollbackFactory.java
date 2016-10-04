@@ -23,12 +23,6 @@ import rx.schedulers.Schedulers;
  */
 @AllArgsConstructor public class RollbackFactory {
 
-  public Observable<Rollback> createRollback(RollbackInstallation installation,
-      Rollback.Action action) {
-    return Observable.fromCallable(() -> createRollbackItem(installation, action))
-        .subscribeOn(Schedulers.computation());
-  }
-
   /**
    * @param context used to get app info context.getPackageManager().getPackageInfo()
    */
@@ -62,7 +56,7 @@ import rx.schedulers.Schedulers;
   }
 
   @NonNull
-  private Rollback createRollbackItem(RollbackInstallation installation, Rollback.Action action) {
+  public Rollback createRollback(RollbackInstallation installation, Rollback.Action action) {
     Rollback rollback = new Rollback();
     rollback.setAction(action.name());
     rollback.setAppName(installation.getAppName());
