@@ -7,6 +7,7 @@ package cm.aptoide.pt.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
@@ -86,6 +87,10 @@ public class AndroidBasicDialog {
     return this;
   }
 
+  public AndroidBasicDialog setPositiveButton(@StringRes int title) {
+    return setPositiveButton(title, v -> alertDialog.dismiss());
+  }
+
   public AndroidBasicDialog setNegativeButton(@StringRes int title, View.OnClickListener listener) {
     negative.setVisibility(View.VISIBLE);
     negative.setOnClickListener(listener);
@@ -149,6 +154,11 @@ public class AndroidBasicDialog {
       action.call();
       dialog.dismiss();
     });
+  }
+
+  public AndroidBasicDialog setIcon(@DrawableRes int icon) {
+    alertDialog.setIcon(icon);
+    return this;
   }
 
   public Dialog getCreatedDialog() {
