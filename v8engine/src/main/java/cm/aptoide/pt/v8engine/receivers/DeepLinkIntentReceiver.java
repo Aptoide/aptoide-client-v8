@@ -16,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
@@ -132,7 +131,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
         String json = new String(Base64.decode(param.getBytes(), 0));
 
-        Log.d("AptoideAptWord", json);
+        Logger.d("AptoideAptWord", json);
 
         GetAdsResponse.Ad ad = null;
         try {
@@ -239,7 +238,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       } else {
         //old version only with app id
         try {
-          long id = Long.parseLong(substring);
+          long id = Long.parseLong(split[0]);
           startFromAppView(id);
           return;
         } catch (NumberFormatException e) {
@@ -251,7 +250,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     if (!TextUtils.isEmpty(packageName)) {
       startFromAppview(repo, packageName, showPopup);
     } else {
-      Log.e(TAG,
+      Logger.e(TAG,
           "Package name is mandatory, it should be in uri. Ex: aptoideinstall://package=cm.aptoide.pt&store=apps&show_install_popup=true");
     }
   }
