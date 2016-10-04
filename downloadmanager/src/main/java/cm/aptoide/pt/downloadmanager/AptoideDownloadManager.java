@@ -90,15 +90,11 @@ public class AptoideDownloadManager {
    * message.
    */
   public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-    return getDownloadStatus(download.getAppId()).flatMap(status -> {
+    return getDownloadStatus(download.getAppId()).first().flatMap(status -> {
       if (status == Download.COMPLETED) {
         return Observable.just(download);
       } else {
-        Observable.fromCallable(() -> {
-          startNewDownload(download);
-          return null;
-        }).subscribeOn(Schedulers.computation()).subscribe(o -> {
-        }, Throwable::printStackTrace);
+        startNewDownload(download);
         return getDownload(download.getAppId());
       }
     });
