@@ -8,14 +8,17 @@ package cm.aptoide.pt.v8engine.install;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.installer.InstallService;
-import java.util.List;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 9/29/16.
@@ -34,93 +37,105 @@ public class BackgroundInstaller {
     this.downloadAccessor = downloadAccessor;
   }
 
-  public void pauseAll() {
+  public void pauseAllDownloads() {
     aptoideDownloadManager.pauseAllDownloads();
   }
 
-  public void pause(int installationId) {
+  public void pauseDownload(int installationId) {
     aptoideDownloadManager.pauseDownload(installationId);
   }
 
-  public Observable<Progress<Download>> getCurrent() {
-    return aptoideDownloadManager.getCurrentDownload().map(download -> convertToProgress(download));
-  }
-
-  public Observable<List<Progress<Download>>> getAll() {
-    return aptoideDownloadManager.getDownloads()
-        .flatMap(downloads -> Observable.just(downloads)
-            .flatMapIterable(downloadList -> downloadList)
-            .map(download -> convertToProgress(download))
-            .toList());
-  }
-
-  public Observable<Progress<Download>> get(long installationId) {
-    return aptoideDownloadManager.getDownload(installationId)
-        .map(download -> convertToProgress(download));
-  }
-
-  public void remove(long installationId) {
+  public void removeDownload(long installationId) {
     aptoideDownloadManager.removeDownload(installationId);
-  }
-
-  public Observable<Boolean> isInstalled(long installationId) {
-    return installer.isInstalled(installationId);
   }
 
   public Observable<Void> uninstall(Context context, String packageName) {
     return installer.uninstall(context, packageName);
   }
 
-  public Observable<Progress<Download>> install(Context context, Download download) {
-    return get(download.getAppId()).first()
-        .flatMap(installation -> installInBackground(context, installation.getRequest()))
-        .onErrorResumeNext(
-            throwable -> createInstallationAndInstallInBackground(context, download, throwable))
-        .flatMap(progress -> awaitInstallation(context, progress));
+  public Observable<Progress<Download>> getInstallations() {
+    return aptoideDownloadManager.getDownloads()
+        .observeOn(Schedulers.io())
+        .flatMapIterable(downloadList -> downloadList)
+        .map(download -> convertToProgress(download));
   }
 
-  private Observable<Progress<Download>> awaitInstallation(Context context,
-      Progress<Download> progress) {
-    if (progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED) {
-      progress.setIndeterminate(true);
-      return awaitInstallationIntent(context, progress.getRequest().getAppId()).doOnNext(
-          installed -> progress.setDone(true)).map(success -> progress).startWith(progress);
-    }
-    return Observable.just(progress);
+  public Observable<Progress<Download>> getCurrentInstallation() {
+    return getInstallations().filter(progress -> isInstalling(progress));
+  }
+
+  public Observable<Progress<Download>> getInstallation(long installationId) {
+    return aptoideDownloadManager.getDownload(installationId)
+        .map(download -> convertToProgress(download));
+  }
+
+  public boolean isInstalling(Progress<Download> progress) {
+    return isDownloading(progress) || !progress.isDone() && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED;
+  }
+
+  public boolean isDownloading(Progress<Download> progress) {
+    return progress.getRequest().getOverallDownloadStatus() != Download.PROGRESS
+        || progress.getRequest().getOverallDownloadStatus() != Download.IN_QUEUE
+        || progress.getRequest().getOverallDownloadStatus() != Download.PENDING;
+  }
+
+  public Observable<Progress<Download>> install(Context context, Download download) {
+    return getInstallation(download.getAppId()).first()
+        .retryWhen(errors -> createDownloadAndRetry(errors, download))
+        .flatMap(progress -> installInBackground(context, progress));
+  }
+
+  private Observable<Throwable> createDownloadAndRetry(Observable<? extends Throwable> errors,
+      Download download) {
+    return errors.flatMap(throwable -> {
+      if (throwable instanceof DownloadNotFoundException) {
+        downloadAccessor.save(download);
+        return Observable.just(throwable);
+      } else {
+        return Observable.error(throwable);
+      }
+    });
   }
 
   private Progress<Download> convertToProgress(Download currentDownload) {
-    return new Progress<>(currentDownload, false, 100, currentDownload.getOverallProgress(),
-        currentDownload.getDownloadSpeed(), false);
-  }
-
-  private Observable<Progress<Download>> createInstallationAndInstallInBackground(Context context,
-      Download download, Throwable throwable) {
-    if (throwable instanceof DownloadNotFoundException) {
-      downloadAccessor.save(download);
-      return installInBackground(context, download);
-    } else {
-      return Observable.error(throwable);
+    if (currentDownload.getOverallDownloadStatus() != Download.ERROR) {
+      return new Progress<>(currentDownload, currentDownload.getOverallDownloadStatus() == Download.COMPLETED,
+          AptoideDownloadManager.PROGRESS_MAX_VALUE, currentDownload.getOverallProgress(),
+          currentDownload.getDownloadSpeed(), false);
     }
+    throw new IllegalStateException("Download " + currentDownload.getPackageName() + " error.");
   }
 
-  private Observable<Void> awaitInstallationIntent(Context context, long installationId) {
-    return Observable.create(
-        new BroadcastRegisterOnSubscribe(context, new IntentFilter(InstallService.ACTION_INSTALL_FINISHED), null, null))
-        .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(intent.getAction()))
-        .first(intent -> intent.getLongExtra(InstallService.EXTRA_INSTALLATION_ID, -1) == installationId).<Void>map(intent -> null);
+  private Observable<Progress<Download>> installInBackground(Context context, Progress<Download> progress) {
+    return getInstallation(progress.getRequest().getAppId())
+        .mergeWith(startBackgroundInstallationAndWait(context, progress));
   }
 
-  private Observable<Progress<Download>> installInBackground(Context context, Download download) {
-    startBackgroundInstallation(context, download);
-    return aptoideDownloadManager.getDownload(download.getAppId())
-        .map(currentDownload -> convertToProgress(currentDownload));
+  @NonNull
+  private Observable<Progress<Download>> startBackgroundInstallationAndWait(Context context,
+      Progress<Download> progress) {
+    return waitBackgroundInstallationResult(context, progress.getRequest().getAppId())
+    .doOnSubscribe(() -> startBackgroundInstallation(context, progress.getRequest().getAppId()))
+
+    .map(success -> {
+      progress.setDone(true);
+      return progress;
+    });
   }
 
-  private void startBackgroundInstallation(Context context, Download download) {
+  private Observable<Void> waitBackgroundInstallationResult(Context context, long installationId) {
+    return Observable.create(new BroadcastRegisterOnSubscribe(context,
+        new IntentFilter(InstallService.ACTION_INSTALL_FINISHED), null, null))
+        .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
+            intent.getAction()))
+        .first(intent -> intent.getLongExtra(InstallService.EXTRA_INSTALLATION_ID, -1)
+            == installationId).<Void>map(intent -> null);
+  }
+
+  private void startBackgroundInstallation(Context context, long installationId) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_ID, download.getAppId());
+    intent.putExtra(InstallService.EXTRA_INSTALLATION_ID, installationId);
     context.startService(intent);
   }
 }
