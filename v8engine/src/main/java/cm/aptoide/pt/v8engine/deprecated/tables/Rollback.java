@@ -54,24 +54,66 @@ public class Rollback extends BaseTable {
   }
 
   @Override public RealmObject convert(Cursor cursor) {
-    cm.aptoide.pt.database.realm.Rollback realmObject = new cm.aptoide.pt.database.realm.Rollback();
 
-    realmObject.setAppName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-    realmObject.setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICONPATH)));
-    realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERSION)));
-    realmObject.setAction(cursor.getString(cursor.getColumnIndex(COLUMN_ACTION)));
-    realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_APKID)));
-    realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
+    String oldActionAsString = cursor.getString(cursor.getColumnIndex(COLUMN_ACTION));
+    int oldActionMergeCharPosition = oldActionAsString.lastIndexOf('|');
+    if( oldActionMergeCharPosition > -1) {
+      // this must be done to extract the referrer from the old Rollback.Action field
+      oldActionAsString = oldActionAsString.substring(0, oldActionMergeCharPosition);
+    }
+    OldActions oldAction = OldActions.valueOf(oldActionAsString);
+    if(oldAction.migrate) {
 
-    String timestamp = cursor.getString(cursor.getColumnIndex(COLUMN_TIMESTAMP));
-    if (!TextUtils.isEmpty(timestamp)) {
-      realmObject.setTimestamp(Long.parseLong(timestamp) * 1000);
+      cm.aptoide.pt.database.realm.Rollback realmObject = new cm.aptoide.pt.database.realm.Rollback();
+
+      realmObject.setConfirmed(true);
+      realmObject.setAction(oldAction.newAction.name());
+
+      realmObject.setAppName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+      realmObject.setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICONPATH)));
+      realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERSION)));
+      realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_APKID)));
+      realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
+
+      String timestamp = cursor.getString(cursor.getColumnIndex(COLUMN_TIMESTAMP));
+      if (!TextUtils.isEmpty(timestamp)) {
+        realmObject.setTimestamp(Long.parseLong(timestamp) * 1000);
+      }
+
+      realmObject.setConfirmed(cursor.getInt(cursor.getColumnIndex(COLUMN_CONFIRMED)) == 1);
+
+      // ??  = cursor.getString(cursor.getColumnIndex(COLUMN_PREVIOUS_VERSION));
+
+      return realmObject;
     }
 
-    realmObject.setConfirmed(cursor.getInt(cursor.getColumnIndex(COLUMN_CONFIRMED)) == 1);
-
-    // ??  = cursor.getString(cursor.getColumnIndex(COLUMN_PREVIOUS_VERSION));
-
-    return realmObject;
+    return null;
   }
+
+  private enum OldActions {
+    INSTALLING("Installing"),
+    UNINSTALLING("Uninstalling"),
+    UPDATING("Updating"),
+    DOWNGRADING("Downgrading"),
+    INSTALLED("Installed", cm.aptoide.pt.database.realm.Rollback.Action.INSTALL),
+    UNINSTALLED("Uninstalled", cm.aptoide.pt.database.realm.Rollback.Action.UNINSTALL),
+    UPDATED("Updated", cm.aptoide.pt.database.realm.Rollback.Action.UPDATE),
+    DOWNGRADED("Downgraded", cm.aptoide.pt.database.realm.Rollback.Action.DOWNGRADE);
+
+    public String action;
+    public cm.aptoide.pt.database.realm.Rollback.Action newAction;
+    public boolean migrate;
+
+    OldActions(String action, cm.aptoide.pt.database.realm.Rollback.Action newAction){
+      this.action = action;
+      this.newAction = newAction;
+      this.migrate = true;
+    }
+
+    OldActions(String action) {
+      this.action = action;
+      this.migrate = false;
+    }
+  }
+
 }
