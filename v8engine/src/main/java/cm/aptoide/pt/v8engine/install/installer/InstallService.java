@@ -12,18 +12,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.NotificationEventReceiver;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.MainActivityFragment;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.BackgroundInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.install.Progress;
+import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.util.Locale;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -37,6 +40,10 @@ public class InstallService extends Service {
 
   public static final String TAG = "InstallService";
 
+  public static final String ACTION_OPEN_DOWNLOAD_MANAGER = "OPEN_DOWNLOAD_MANAGER";
+  public static final String ACTION_OPEN_APP_VIEW = "OPEN_APP_VIEW";
+  public static final String ACTION_STOP_INSTALL = "STOP_INSTALL";
+  public static final String ACTION_STOP_ALL_INSTALLS = "STOP_ALL_INSTALLS";
   public static final String ACTION_START_INSTALL = "START_INSTALL";
   public static final String ACTION_INSTALL_FINISHED = "INSTALL_FINISHED";
   public static final String EXTRA_INSTALLATION_ID = "INSTALLATION_ID";
@@ -68,15 +75,33 @@ public class InstallService extends Service {
       long installationId = intent.getLongExtra(EXTRA_INSTALLATION_ID, -1);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         subscriptions.add(
-            downloadAndInstall(this, installationId).subscribe(
-                hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop(throwable)));
+            downloadAndInstall(this, installationId).subscribe(hasNext -> treatNext(hasNext),
+                throwable -> removeNotificationAndStop()));
+      } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
+        subscriptions.add(stopDownload(installationId).subscribe(hasNext -> treatNext(hasNext),
+            throwable -> removeNotificationAndStop()));
+      } else if (ACTION_OPEN_APP_VIEW.equals(intent.getAction())) {
+        openAppView(installationId);
+      } else if (ACTION_OPEN_DOWNLOAD_MANAGER.equals(intent.getAction())) {
+        openDownloadManager();
+      } else if (ACTION_STOP_ALL_INSTALLS.equals(intent.getAction())) {
+        stopAllDownloads();
       }
     } else {
       subscriptions.add(
           downloadAndInstallCurrentDownload(this).subscribe(hasNext -> treatNext(hasNext),
-              throwable -> removeNotificationAndStop(throwable)));
+              throwable -> removeNotificationAndStop()));
     }
     return START_STICKY;
+  }
+
+  private Observable<Boolean> stopDownload(long installationId) {
+    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(installationId));
+  }
+
+  private void stopAllDownloads() {
+    downloadManager.pauseAllDownloads();
+    removeNotificationAndStop();
   }
 
   @Override public void onDestroy() {
@@ -90,7 +115,7 @@ public class InstallService extends Service {
 
   private void treatNext(boolean hasNext) {
     if (!hasNext) {
-      removeNotificationAndStop(new IllegalStateException("No pending downloads. Stop service."));
+      removeNotificationAndStop();
     }
   }
 
@@ -112,11 +137,11 @@ public class InstallService extends Service {
 
   private Observable<Boolean> hasNextDownload() {
     return downloadManager.getCurrentDownloads()
+        .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
   }
 
-  private void removeNotificationAndStop(Throwable throwable) {
-    throwable.printStackTrace();
+  private void removeNotificationAndStop() {
     stopForeground(true);
     stopSelf();
   }
@@ -152,78 +177,98 @@ public class InstallService extends Service {
 
     subscriptions.add(backgroundInstaller.getCurrentInstallation().subscribe(progress -> {
       if (!progress.isIndeterminate()) {
-        Bundle bundle = new Bundle();
-        bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, progress.getRequest().getAppId());
 
-        bundle = new Bundle();
-        bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, progress.getRequest().getAppId());
+        int requestCode = progress.getRequest().getFilesToDownload().get(0).getDownloadId();
+        long appId = progress.getRequest().getAppId();
 
-        PendingIntent pOpenAppsManager = getPendingIntent(
-            createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_OPEN, null),
-            progress.getRequest());
-        PendingIntent pNotificationClick = getPendingIntent(
-            createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION,
-                bundle), progress.getRequest());
-        PendingIntent pauseIntent = getPendingIntent(
-            createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE, bundle),
-            progress.getRequest());
-
-        NotificationCompat.Builder builder =
-            new NotificationCompat.Builder(AptoideDownloadManager.getContext());
-
-        if (progress.getRequest().getOverallDownloadStatus() == Download.PAUSED) {
-
-        } else {
-
-        }
+        NotificationCompat.Action downloadManagerAction =
+            getDownloadManagerAction(requestCode, appId);
+        PendingIntent appViewPendingIntent =
+            getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, appId);
+        NotificationCompat.Action pauseAction = getPauseAction(requestCode, appId);
 
         if (notification == null) {
-          notification = buildStandardNotification(progress, pOpenAppsManager, pNotificationClick,
-              builder).build();
+          notification =
+              buildNotification(progress, pauseAction, downloadManagerAction, appViewPendingIntent);
         } else {
           long oldWhen = notification.when;
-          notification = buildStandardNotification(progress, pOpenAppsManager, pNotificationClick,
-              builder).build();
+          notification =
+              buildNotification(progress, pauseAction, downloadManagerAction, appViewPendingIntent);
           notification.when = oldWhen;
         }
+
         startForeground(NOTIFICATION_ID, notification);
       }
-    }, throwable -> removeNotificationAndStop(throwable)));
+    }, throwable -> removeNotificationAndStop()));
   }
 
-  private NotificationCompat.Builder buildStandardNotification(Progress<Download> progress,
-      PendingIntent pOpenAppsManager, PendingIntent pNotificationClick,
-      NotificationCompat.Builder builder) {
-    builder.setSmallIcon(AptoideDownloadManager.getInstance().getSettingsInterface().getMainIcon())
-        .setContentTitle(String.format(Locale.ENGLISH, AptoideDownloadManager.getContext()
-                .getResources()
-                .getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
+  @NonNull private NotificationCompat.Action getPauseAction(int requestCode, long appId) {
+    Bundle appIdExtras = new Bundle();
+    appIdExtras.putLong(AptoideDownloadManager.APP_ID_EXTRA, appId);
+    return getAction(cm.aptoide.pt.downloadmanager.R.drawable.media_pause,
+        getString(cm.aptoide.pt.downloadmanager.R.string.pause_download), requestCode,
+        ACTION_STOP_INSTALL, appId);
+  }
+
+  @NonNull private NotificationCompat.Action getDownloadManagerAction(int requestCode, long appId) {
+    Bundle appIdExtras = new Bundle();
+    appIdExtras.putLong(AptoideDownloadManager.APP_ID_EXTRA, appId);
+    return getAction(R.drawable.ic_manager, getString(R.string.open_apps_manager), requestCode,
+        ACTION_OPEN_DOWNLOAD_MANAGER, appId);
+  }
+
+  private Notification buildNotification(Progress<Download> progress,
+      NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
+      PendingIntent contentIntent) {
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    builder.setSmallIcon(android.R.drawable.stat_sys_download)
+        .setContentTitle(String.format(Locale.ENGLISH,
+            getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
             Application.getConfiguration().getMarketName()))
         .setContentText(new StringBuilder().append(progress.getRequest().getAppName())
             .append(" - ")
-            .append(progress.getRequest().getStatusName(AptoideDownloadManager.getContext())))
-        .setContentIntent(pNotificationClick)
+            .append(progress.getRequest().getStatusName(this)))
+        .setContentIntent(contentIntent)
         .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE,
             progress.getRequest().getOverallProgress(), progress.isIndeterminate())
-        .addAction(AptoideDownloadManager.getInstance().getSettingsInterface().getButton1Icon(),
-            AptoideDownloadManager.getInstance()
-                .getSettingsInterface()
-                .getButton1Text(AptoideDownloadManager.getContext()), pOpenAppsManager);
-    return builder;
+        .addAction(pauseAction)
+        .addAction(openDownloadManager);
+    return builder.build();
   }
 
-  private PendingIntent getPendingIntent(Intent intent, Download download) {
-    return PendingIntent.getBroadcast(AptoideDownloadManager.getContext(),
-        download.getFilesToDownload().get(0).getDownloadId(), intent, 0);
+  private NotificationCompat.Action getAction(int icon, String title, int requestCode,
+      String action, long appId) {
+    return new NotificationCompat.Action(icon, title, getPendingIntent(requestCode, action, appId));
   }
 
-  private Intent createNotificationIntent(String intentAction, @Nullable Bundle bundle) {
-    Intent intent =
-        new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-    intent.setAction(intentAction);
-    if (bundle != null) {
+  private PendingIntent getPendingIntent(int requestCode, String action, long appId) {
+    Intent intent = new Intent(this, InstallService.class);
+    if (appId != -1) {
+      final Bundle bundle = new Bundle();
+      bundle.putLong(EXTRA_INSTALLATION_ID, appId);
       intent.putExtras(bundle);
     }
+    return PendingIntent.getService(this, requestCode, intent.setAction(action),
+        PendingIntent.FLAG_ONE_SHOT);
+  }
+
+  private void openDownloadManager() {
+    Intent intent = createDeeplinkingIntent();
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION, true);
+    startActivity(intent);
+  }
+
+  private void openAppView(long appId) {
+    Intent intent = createDeeplinkingIntent();
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
+    startActivity(intent);
+  }
+
+  @NonNull private Intent createDeeplinkingIntent() {
+    Intent intent = new Intent();
+    intent.setClass(Application.getContext(), MainActivityFragment.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
   }
 }

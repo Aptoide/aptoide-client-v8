@@ -37,15 +37,20 @@ public class BackgroundInstaller {
     this.downloadAccessor = downloadAccessor;
   }
 
-  public void pauseAllDownloads() {
-    aptoideDownloadManager.pauseAllDownloads();
+  public void stopInstallation(Context context, long installationId) {
+    Intent intent = new Intent(context, InstallService.class);
+    intent.setAction(InstallService.ACTION_STOP_INSTALL);
+    intent.putExtra(InstallService.EXTRA_INSTALLATION_ID, installationId);
+    context.startService(intent);
   }
 
-  public void pauseDownload(int installationId) {
-    aptoideDownloadManager.pauseDownload(installationId);
+  private void stopAllInstallations(Context context) {
+    Intent intent = new Intent(context, InstallService.class);
+    intent.setAction(InstallService.ACTION_STOP_ALL_INSTALLS);
+    context.startService(intent);
   }
 
-  public void removeDownload(long installationId) {
+  public void removeInstallationFile(long installationId) {
     aptoideDownloadManager.removeDownload(installationId);
   }
 
@@ -116,7 +121,6 @@ public class BackgroundInstaller {
       Progress<Download> progress) {
     return waitBackgroundInstallationResult(context, progress.getRequest().getAppId())
     .doOnSubscribe(() -> startBackgroundInstallation(context, progress.getRequest().getAppId()))
-
     .map(success -> {
       progress.setDone(true);
       return progress;
