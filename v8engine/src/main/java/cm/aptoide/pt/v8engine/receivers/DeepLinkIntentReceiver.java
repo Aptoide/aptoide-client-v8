@@ -250,7 +250,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     if (!TextUtils.isEmpty(packageName)) {
       startFromAppview(repo, packageName, showPopup);
     } else {
-      Log.e(TAG,
+      Logger.e(TAG,
           "Package name is mandatory, it should be in uri. Ex: aptoideinstall://package=cm.aptoide.pt&store=apps&show_install_popup=true");
     }
   }
