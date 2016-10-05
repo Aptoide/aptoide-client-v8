@@ -33,7 +33,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -62,11 +61,8 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -74,7 +70,6 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -224,7 +219,7 @@ public class AppViewFragment extends GridRecyclerFragment
         new DownloadInstallationProvider(downloadManager);
 
     installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(

@@ -13,7 +13,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -21,12 +20,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
@@ -66,7 +60,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     downloadManager =
         new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
     installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
 
     oldDownloadsList = new ArrayList<>();
   }

@@ -19,7 +19,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -29,11 +28,8 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -285,7 +281,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     final DownloadInstallationProvider installationProvider =
         new DownloadInstallationProvider(downloadManager);
     Installer installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
 
     PermissionRequest permissionRequest = ((PermissionRequest) getContext());
     DownloadServiceHelper downloadServiceHelper =

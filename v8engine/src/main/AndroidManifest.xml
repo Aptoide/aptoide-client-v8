@@ -201,7 +201,7 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".install.installer.InstallService"/>
+    <service android:name=".InstallService"/>
 
   </application>
 

@@ -1,22 +1,20 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 30/09/2016.
+ * Modified by Marcelo Benites on 04/10/2016.
  */
 
-package cm.aptoide.pt.v8engine.install;
+package cm.aptoide.pt.v8engine;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.v8engine.install.installer.InstallService;
+import cm.aptoide.pt.v8engine.install.Installer;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -24,13 +22,13 @@ import rx.schedulers.Schedulers;
  * Created by marcelobenites on 9/29/16.
  */
 
-public class BackgroundInstaller {
+public class InstallManager {
 
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
   private DownloadAccessor downloadAccessor;
 
-  public BackgroundInstaller(AptoideDownloadManager aptoideDownloadManager, Installer installer,
+  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
       DownloadAccessor downloadAccessor) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;

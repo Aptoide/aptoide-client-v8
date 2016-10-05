@@ -7,13 +7,11 @@ package cm.aptoide.pt.v8engine.install.installer;
 
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import lombok.AllArgsConstructor;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by trinkes on 9/8/16.
@@ -40,25 +38,25 @@ import rx.android.schedulers.AndroidSchedulers;
   @Override public Observable<Void> update(Context context, long installationId) {
     return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
-        .flatMap(installation -> saveRollback(installation.getPackageName(), Rollback.Action.UPDATE, installation.getIcon()))
+        .flatMap(installation -> saveRollback(context, installation.getPackageName(), Rollback.Action.UPDATE, installation.getIcon()))
         .flatMap(success -> defaultInstaller.update(context, installationId));
   }
 
   @Override public Observable<Void> downgrade(Context context, long installationId) {
     return installationProvider.getInstallation(installationId)
         .cast(RollbackInstallation.class)
-        .flatMap(installation -> saveRollback(installation.getPackageName(), Rollback.Action.DOWNGRADE, installation.getIcon()))
+        .flatMap(installation -> saveRollback(context, installation.getPackageName(), Rollback.Action.DOWNGRADE, installation.getIcon()))
         .flatMap(success -> defaultInstaller.downgrade(context, installationId));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {
-    return saveRollback(packageName, Rollback.Action.UNINSTALL, null)
+    return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null)
         .flatMap(rollback -> defaultInstaller.uninstall(context, packageName));
   }
 
-  private Observable<Void> saveRollback(String packageName, Rollback.Action action,
+  private Observable<Void> saveRollback(Context context, String packageName, Rollback.Action action,
       String icon) {
-    return rollbackFactory.createRollback(Application.getContext(), packageName, action, icon)
+    return rollbackFactory.createRollback(context, packageName, action, icon)
         .map(rollback -> {
           repository.save(rollback);
           return null;

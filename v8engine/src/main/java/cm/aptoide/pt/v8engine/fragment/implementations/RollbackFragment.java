@@ -27,12 +27,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
@@ -115,7 +111,7 @@ public class RollbackFragment extends GridRecyclerFragment {
     DownloadInstallationProvider installationProvider =
         new DownloadInstallationProvider(downloadManager);
     installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
   }
 
   @UiThread private void fetchRollbacks() {

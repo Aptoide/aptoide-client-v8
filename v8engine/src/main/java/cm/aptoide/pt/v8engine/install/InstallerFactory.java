@@ -26,13 +26,11 @@ public class InstallerFactory {
 
   public static final int DEFAULT = 0;
   public static final int ROLLBACK = 1;
-  public static final int BACKGROUND_ROLLBACK = 2;
 
   public Installer create(Context context, int type) {
     switch (type) {
       case DEFAULT:
         return getDefaultInstaller(context);
-      case BACKGROUND_ROLLBACK:
       case ROLLBACK:
         return getRollbackInstaller(context);
       default:
@@ -40,7 +38,7 @@ public class InstallerFactory {
     }
   }
 
-  @NonNull protected RollbackInstaller getRollbackInstaller(Context context) {
+  @NonNull private RollbackInstaller getRollbackInstaller(Context context) {
     return new RollbackInstaller(getDefaultInstaller(context),
         new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class)),
         new RollbackFactory(), getInstallationProvider());

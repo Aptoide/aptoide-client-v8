@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 29/09/2016.
+ * Modified by Marcelo Benites on 04/10/2016.
  */
 
-package cm.aptoide.pt.v8engine.install.installer;
+package cm.aptoide.pt.v8engine;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -20,12 +20,8 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.BackgroundInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.Progress;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.util.Locale;
 import rx.Observable;
@@ -56,7 +52,7 @@ public class InstallService extends Service {
 
   private Notification notification;
   private Installer installer;
-  private BackgroundInstaller backgroundInstaller;
+  private InstallManager installManager;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -64,7 +60,7 @@ public class InstallService extends Service {
     downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(this);
     installer = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
-    backgroundInstaller = new BackgroundInstaller(downloadManager, installer,
+    installManager = new InstallManager(downloadManager, installer,
         AccessorFactory.getAccessorFor(Download.class));
     subscriptions = new CompositeSubscription();
     setupNotification();
@@ -175,7 +171,7 @@ public class InstallService extends Service {
 
   private void setupNotification() {
 
-    subscriptions.add(backgroundInstaller.getCurrentInstallation().subscribe(progress -> {
+    subscriptions.add(installManager.getCurrentInstallation().subscribe(progress -> {
       if (!progress.isIndeterminate()) {
 
         int requestCode = progress.getRequest().getFilesToDownload().get(0).getDownloadId();

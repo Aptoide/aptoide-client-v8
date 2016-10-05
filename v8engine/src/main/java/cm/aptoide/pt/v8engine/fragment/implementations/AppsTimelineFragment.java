@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
@@ -30,14 +29,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -105,7 +99,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
     downloadManager =
         new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
     installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.BACKGROUND_ROLLBACK);
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)));
