@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
+import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -42,7 +43,7 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  private void stopAllInstallations(Context context) {
+  public void stopAllInstallations(Context context) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_STOP_ALL_INSTALLS);
     context.startService(intent);
@@ -61,6 +62,14 @@ public class InstallManager {
         .observeOn(Schedulers.io())
         .flatMapIterable(downloadList -> downloadList)
         .map(download -> convertToProgress(download));
+  }
+
+  public Observable<List<Progress<Download>>> getInstallationsAsList() {
+    return aptoideDownloadManager.getDownloads()
+        .observeOn(Schedulers.io())
+        .flatMap(downloadList -> Observable.from(downloadList)
+            .map(download -> convertToProgress(download))
+            .toList());
   }
 
   public Observable<Progress<Download>> getCurrentInstallation() {
@@ -132,7 +141,7 @@ public class InstallManager {
         .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
             intent.getAction()))
         .first(intent -> intent.getLongExtra(InstallService.EXTRA_INSTALLATION_ID, -1)
-            == installationId).<Void>map(intent -> null);
+            == installationId).map(intent -> null);
   }
 
   private void startBackgroundInstallation(Context context, long installationId) {
