@@ -544,36 +544,15 @@ import rx.subscriptions.CompositeSubscription;
         setDownloadBarVisible(false);
 
         Observable<Void> install;
-        if (isUpdate) {
-          subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
-              .flatMap(success -> installManager.install(getContext(),
-                  new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                      Download.ACTION_UPDATE)))
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(success -> {
-                if (actionButton.getVisibility() == View.VISIBLE) {
-                  setupActionButton(R.string.open,
-                      v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
-                }
-              }, throwable -> throwable.printStackTrace()));
+        if (!isUpdate) {
+          if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+            DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
+          }
+        }
 
-        } else {
-          subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
-              .flatMap(success -> installManager.install(getContext(),
-                  new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                      Download.ACTION_INSTALL)))
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnNext(success -> {
-                if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-                  DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
-                }
-              })
-              .subscribe(success -> {
-                if (actionButton.getVisibility() == View.VISIBLE) {
-                  setupActionButton(R.string.open,
-                      v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
-                }
-              }, throwable -> throwable.printStackTrace()));
+        if (actionButton.getVisibility() == View.VISIBLE) {
+          setupActionButton(R.string.open,
+              v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
         }
 
         //install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
