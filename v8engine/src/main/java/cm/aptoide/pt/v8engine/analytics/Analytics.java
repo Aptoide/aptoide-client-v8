@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.SparseArray;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -904,18 +903,19 @@ public class Analytics {
 
       Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
 
-      if (STEPS.size() >= NUMBER_OF_STEPS_TO_RECORD) {
-        removeLeastRecentlyAddedElement(step);
-      } else {
-        STEPS.add(step);
+      if (step != null) {
+        if (STEPS.size() >= NUMBER_OF_STEPS_TO_RECORD) {
+          removeLeastRecentlyAddedElement(step);
+        } else {
+          STEPS.add(step);
+        }
+        lastStep = step;
       }
-      lastStep = step;
     }
 
-    private static boolean removeLeastRecentlyAddedElement(String step) {
+    private static void removeLeastRecentlyAddedElement(String step) {
       STEPS.remove(STEPS.size() - 1);
       addStepToList(step);
-      return false;
     }
 
     static String getLastStep() {
