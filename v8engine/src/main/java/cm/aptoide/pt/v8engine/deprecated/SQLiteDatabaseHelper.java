@@ -39,58 +39,11 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     super(context, "aptoide.db", null, DATABASE_VERSION);
   }
 
-  private boolean restoreDbFile(SQLiteDatabase db) {
-
-    File backupDbFile = new File("/.aptoide/backup.db");
-
-    if(!backupDbFile.exists()) {
-      return false;
-    }
-
-    FileInputStream backupDbFileStream = null;
-    FileOutputStream dbFileStream = null;
-    try {
-      backupDbFileStream = new FileInputStream(backupDbFile);
-      dbFileStream = new FileOutputStream(db.getPath());
-
-      int offset;
-      byte[] buffer = new byte[1024];
-      while ((offset = backupDbFileStream.read(buffer, 0, buffer.length)) > 0) {
-        dbFileStream.write(buffer, 0, offset);
-      }
-
-      Logger.d(TAG, "DB restore successful");
-
-      return true;
-
-    } catch (Exception e) {
-
-    } finally {
-      try {
-        if(dbFileStream!=null){
-          dbFileStream.close();
-        }
-      } catch (Exception e) {
-
-      }
-      try {
-        if(backupDbFileStream!=null){
-          backupDbFileStream.close();
-        }
-      } catch (Exception e) {
-
-      }
-    }
-
-    return false;
-  }
-
   @Override public void onCreate(SQLiteDatabase db) {
     Logger.w(TAG, "onCreate() called");
+
     // do nothing here.
-    if(restoreDbFile(db)) {
-      migrate(db);
-    }
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -101,6 +54,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + newVersion
         + "]");
     migrate(db);
+
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
 
     SecurePreferences.setWizardAvailable(true);
   }
@@ -114,13 +69,15 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + newVersion
         + "]");
     migrate(db);
+
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
   /**
    * migrate from whole SQLite db from V7 to V8 Realm db
    */
   private void migrate(SQLiteDatabase db) {
-    if (!ManagerPreferences.needsDbMigration()) {
+    if (!ManagerPreferences.needsSqliteDbMigration()) {
       return;
     }
     Logger.w(TAG, "Migrating database started....");
@@ -173,8 +130,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     if (agregateExceptions != null) {
       CrashReports.logException(agregateExceptions);
     }
-
-    ManagerPreferences.setNeedsDbMigration(false);
     Logger.w(TAG, "Migrating database finished.");
   }
 

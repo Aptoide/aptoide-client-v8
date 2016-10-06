@@ -31,7 +31,7 @@ public class Update extends RealmObject {
   public static final String UPDATE_VERSION_CODE = "updateVersionCode";
   public static final String EXCLUDED = "excluded";
 
-  private String packageName;
+  @PrimaryKey private String packageName;
   private long appId;
   private String label;
   private String icon;
