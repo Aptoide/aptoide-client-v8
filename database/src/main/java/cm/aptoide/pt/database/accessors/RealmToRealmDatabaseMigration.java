@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
@@ -42,19 +43,12 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     // DynamicRealm exposes an editable schema
     RealmSchema schema = realm.getSchema();
 
-    //  Migrate to version 1:
+    //  Migrate from version 0 (<=8075) to version 1 (8076):
     //    ~ PK in Download changed from a long called "id" to a String called "md5"
     //    + boolean "isDownloading" in Scheduled
     //    - long appId in FileToDownload
     //    ~ set "md5" as PK in FileToDownload
-    if (oldVersion == 8075 || oldVersion == 8063) {
-      schema.get("Download")
-          .addField("md5", String.class, FieldAttribute.PRIMARY_KEY)
-          .removeField("id");
-
-      schema.get("FileToDownload")
-          .addField("md5", String.class, FieldAttribute.PRIMARY_KEY)
-          .removeField("appId");
+    if (oldVersion <= 8075) {
 
       schema.get("Scheduled")
           .removeField("appId");
@@ -63,6 +57,17 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .setNullable("md5", true)
           .removeField("fileSize")
           .removeField("trustedBadge");
+
+      realm.delete("Download");
+      realm.delete("FileToDownload");
+
+      schema.get("FileToDownload")
+          .removeField("appId")
+          .addPrimaryKey("md5");
+
+      schema.get("Download")
+          .removeField("appId")
+          .addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 
       oldVersion++;
     }

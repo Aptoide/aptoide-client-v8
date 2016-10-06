@@ -18,6 +18,7 @@ public class FileToDownload extends RealmObject {
   public static final int APK = 0;
   public static final int OBB = 1;
   public static final int GENERIC = 2;
+
   @PrimaryKey private String md5;
   private int downloadId;
   //private long appId;

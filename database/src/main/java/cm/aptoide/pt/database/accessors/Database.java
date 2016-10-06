@@ -29,7 +29,8 @@ public final class Database {
   private static final String TAG = Database.class.getSimpleName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
-  public static final int SCHEMA_VERSION = 8076;
+  public static final int SCHEMA_VERSION = 8076; // if you bump this value, also add changes to the
+  // migration script
   private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
   private static boolean isInitialized = false;
