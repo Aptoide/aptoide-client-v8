@@ -55,8 +55,8 @@ import rx.subscriptions.CompositeSubscription;
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
     }
-    subscriptions.add(
-        RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
+    subscriptions.add(RxView.clicks(pauseCancelButton)
+        .subscribe(click -> displayable.pauseInstall(getContext())));
     subscriptions.add(displayable.getDownload()
         .observeOn(Schedulers.computation())
         .distinctUntilChanged()

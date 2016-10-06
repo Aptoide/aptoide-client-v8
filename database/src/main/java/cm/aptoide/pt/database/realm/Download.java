@@ -13,8 +13,6 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by sithengineer on 17/05/16.
@@ -40,8 +38,6 @@ public class Download extends RealmObject {
   public static final int RETRY = 11;
   public static final int NOT_DOWNLOADED = 12;
   public static final int IN_QUEUE = 13;
-  public static final int ASCENDING = 1;
-  public static final int DESCENDING = -1;
   public static String TAG = Download.class.getSimpleName();
   RealmList<FileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
@@ -56,19 +52,6 @@ public class Download extends RealmObject {
   private int action;
 
   public Download() {
-  }
-
-  /**
-   * This method sorts the downloads by time stamp
-   *
-   * @param downloads list of downloads to sort
-   * @param sortOrder 1 if should be sorted ASCENDING, -1 if DESCENDING
-   */
-  public static List<Download> sortDownloads(List<Download> downloads,
-      @DownloadSort int sortOrder) {
-    Collections.sort(downloads,
-        (lhs, rhs) -> Long.valueOf(lhs.getTimeStamp()).compareTo(rhs.getTimeStamp()) * sortOrder);
-    return downloads;
   }
 
   public long getTimeStamp() {
@@ -203,12 +186,5 @@ public class Download extends RealmObject {
 
   public @interface DownloadState {
 
-  }
-
-  @IntDef({
-      ASCENDING, DESCENDING
-  }) @Retention(RetentionPolicy.SOURCE)
-
-  public @interface DownloadSort {
   }
 }

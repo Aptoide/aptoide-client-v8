@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
@@ -12,9 +14,9 @@ import rx.functions.Action0;
 /**
  * Created by trinkes on 7/18/16.
  */
-public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
+public class ActiveDownloadDisplayable extends DisplayablePojo<Progress<Download>> {
 
-  private DownloadServiceHelper downloadManager;
+  private InstallManager installManager;
   @Setter private Action0 onResumeAction;
   @Setter private Action0 onPauseAction;
 
@@ -22,12 +24,12 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
     super();
   }
 
-  public ActiveDownloadDisplayable(Download pojo, DownloadServiceHelper downloadManager) {
+  public ActiveDownloadDisplayable(Progress<Download> pojo, InstallManager installManager) {
     super(pojo);
-    this.downloadManager = downloadManager;
+    this.installManager = installManager;
   }
 
-  public ActiveDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
+  public ActiveDownloadDisplayable(Progress<Download> pojo, boolean fixedPerLineCount) {
     super(pojo, fixedPerLineCount);
   }
 
@@ -53,11 +55,12 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
     return R.layout.active_donwload_row_layout;
   }
 
-  public void pauseInstall() {
-    downloadManager.pauseDownload(getPojo().getAppId());
+  public void pauseInstall(Context context) {
+    installManager.stopInstallation(context, getPojo().getRequest().getAppId());
   }
 
   public Observable<Download> getDownload() {
-    return downloadManager.getDownload(getPojo().getAppId());
+    return installManager.getInstallation(getPojo().getRequest().getAppId())
+        .map(downloadProgress -> downloadProgress.getRequest());
   }
 }
