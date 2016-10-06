@@ -25,7 +25,6 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.util.Locale;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -125,10 +124,17 @@ public class InstallService extends Service {
     return downloadManager.getDownload(installId)
         .first()
         .flatMap(download -> downloadManager.startDownload(download))
+        .doOnNext(download -> stopOnDownloadError(download.getOverallDownloadStatus()))
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .flatMap(download -> stopForegroundAndInstall(context, download, true))
         .doOnNext(download -> sendBackgroundInstallFinishedBroadcast(installId))
         .flatMap(completed -> hasNextDownload());
+  }
+
+  private void stopOnDownloadError(int downloadStatus) {
+    if (downloadStatus == Download.ERROR) {
+      removeNotificationAndStop();
+    }
   }
 
   private Observable<Boolean> hasNextDownload() {
@@ -163,7 +169,6 @@ public class InstallService extends Service {
   }
 
   private void setupNotification() {
-
     subscriptions.add(installManager.getCurrentInstallation().subscribe(progress -> {
       if (!progress.isIndeterminate()) {
 

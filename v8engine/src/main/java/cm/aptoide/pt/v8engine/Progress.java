@@ -11,22 +11,26 @@ package cm.aptoide.pt.v8engine;
 
 public class Progress<T> {
 
+  public static final int INACTIVE = 0;
+  public static final int DONE = 1;
+  public static final int ACTIVE = 2;
+  public static final int ERROR = 4;
   private final T request;
   private final int max;
 
   private boolean indeterminate;
   private int current;
   private int speed;
-  private boolean done;
+  private int state;
 
-  public Progress(T request, boolean indeterminate, int max, int initialProgress,
-      int initialSpeed, boolean done) {
+  public Progress(T request, boolean indeterminate, int max, int initialProgress, int initialSpeed,
+      int state) {
     this.request = request;
     this.indeterminate = indeterminate;
     this.max = max;
     this.current = initialProgress;
     this.speed = initialSpeed;
-    this.done = done;
+    this.state = state;
   }
 
   public T getRequest() {
@@ -61,11 +65,11 @@ public class Progress<T> {
     this.current = current;
   }
 
-  public void setDone(boolean done) {
-    this.done = done;
+  public void setState(int state) {
+    this.state = state;
   }
 
-  public boolean isDone() {
-    return done;
+  public int getState() {
+    return state;
   }
 }
