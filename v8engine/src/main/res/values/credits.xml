@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 02/06/2016.
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="credits">
+    \tAptoide Team:\n\n
+    \t\t <a href="http://www.aptoide.com/page/about">http://www.aptoide.com/page/about</a> \n\n
+
+    \tSource code &amp; contributions:\n\n
+    \t\t <a href="https://github.com/aptoide">https://github.com/aptoide</a> \n\n
+
+    \tThank you to our Translators Team:\n\n
+
+        Arabic: Ahmed Teailab | Ali\n
+    Asturian: Enol P.\n
+    Burmese: Nyein Chan\n
+    Central Khmer: Sreang Sreng\n
+    Chinese (Hong Kong): ivanniu\n
+    Dutch: Nathan Follens\n
+    Estonian: Kristjan Räts\n
+    Filipino:Melvin Melchor A. Leal\n
+    Finnish: Sami “6sto” Kuusisto\n
+    French: Dominique Baume | Ldm Public\n
+    Georgian: Sandro Kakabadze\n
+    German: Alexander Dommnich | Kevin Pang\n
+    Hebrew: Yaron Shahrabani\n
+    Hindi: AMAR SINGH\n
+    Indonesian: Asep Muhajir\n
+    Italian: Elisa Bruno\n
+    Japanese: Nana Wakasugi | naofum\n
+    Korean: KevinPark\n
+    Kurdish: Rasti K5\n
+    Lao: Vilaphonh Chanthalavong\n
+    Lithuanian: Ruta Sipkauskaite | Tadas Preisegolavicius\n
+    Malay: Tan Say Lee\n
+    Portuguese: Tomé Mendes\n
+    Portuguese (Brazil): Ligia de Paula Santos\n
+    Russian: Sergey Kudelin | Dmitry\n
+    Simplified Chinese: ivanniu | YFdyh000\n
+    Spanish: Ana Barrera | Guillermo Mas Coll\n
+    Thai: Duangkarn\n
+    Turkish: Nataliia\n
+    Ukrainian: Nataliia\n
+    Vietnamese: Nguyen Minh Tri\n
+
+ 	</string>
+
+</resources>
+
+    <!--
+     * Copyright (C) 2009  Roberto Jacinto
+     * roberto.jacinto@caixamagica.pt
+     *
+     * This program is free software; you can redistribute it and/or
+     * modify it under the terms of the GNU General Public License
+     * as published by the Free Software Foundation; either version 2
+     * of the License, or (at your option) any later version.
+     *
+     * This program is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     * GNU General Public License for more details.
+     *
+     * You should have received a copy of the GNU General Public License
+     * along with this program; if not, write to the Free Software
+     * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+    -->
