@@ -39,8 +39,6 @@ public class Rollback extends RealmObject {
   private String icon;
   private String md5;
   private String appName;
-  //	private String previousVersionName;
-  //	private String storeName;
   private int versionCode;
   private String versionName;
 

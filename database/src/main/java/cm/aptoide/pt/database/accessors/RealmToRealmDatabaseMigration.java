@@ -9,13 +9,18 @@ import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
+import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 import java.util.Locale;
 
 /**
  * Created by sithengineer on 12/05/16.
  *
- * This code is responsible to migrate Realm versions in between
+ * This code is responsible to migrate between Realm schemas.
+ *
+ * <a href=https://github.com/realm/realm-java/blob/master/examples/migrationExample/src/main/java/io/realm/examples/realmmigrationexample/model/Migration.java>
+ * For clarification see a migration example.
+ * </a>
  */
 class RealmToRealmDatabaseMigration implements RealmMigration {
 
@@ -27,6 +32,13 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
         String.format(Locale.ROOT, "realm database migration from version %d to %d", oldVersion,
             newVersion));
 
+    // During a migration, a DynamicRealm is exposed. A DynamicRealm is an untyped variant of a normal Realm, but
+    // with the same object creation and query capabilities.
+    // A DynamicRealm uses Strings instead of Class references because the Classes might not even exist or have been
+    // renamed.
+
+    // Access the Realm schema in order to create, modify or delete classes and their fields.
+
     // DynamicRealm exposes an editable schema
     RealmSchema schema = realm.getSchema();
 
@@ -35,17 +47,22 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     //    + boolean "isDownloading" in Scheduled
     //    - long appId in FileToDownload
     //    ~ set "md5" as PK in FileToDownload
-    if (oldVersion == 1) {
+    if (oldVersion == 8075 || oldVersion == 8063) {
       schema.get("Download")
           .addField("md5", String.class, FieldAttribute.PRIMARY_KEY)
           .removeField("id");
 
       schema.get("FileToDownload")
-          .addPrimaryKey("md5")
+          .addField("md5", String.class, FieldAttribute.PRIMARY_KEY)
           .removeField("appId");
 
       schema.get("Scheduled")
-          .addField("isDownloading", boolean.class);
+          .removeField("appId");
+
+      schema.get("Rollback")
+          .setNullable("md5", true)
+          .removeField("fileSize")
+          .removeField("trustedBadge");
 
       oldVersion++;
     }

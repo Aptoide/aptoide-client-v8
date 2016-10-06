@@ -230,7 +230,6 @@ public abstract class V8Engine extends DataProvider {
     return Observable.fromCallable(() -> {
       @Cleanup Realm realm = DeprecatedDatabase.get();
       DeprecatedDatabase.dropTable(Installed.class, realm);
-      // FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
       Logger.d(TAG, "Found " + installedApps.size() + " user installed apps.");
