@@ -20,8 +20,8 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
     this.download = download;
   }
 
-  @Override public long getId() {
-    return download.getAppId();
+  @Override public String getId() {
+    return download.getMd5();
   }
 
   @Override public String getPackageName() {

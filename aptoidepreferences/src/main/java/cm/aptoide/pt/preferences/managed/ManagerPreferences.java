@@ -95,15 +95,15 @@ public class ManagerPreferences {
     Preferences.get().edit().putBoolean(ManagedKeys.FORCE_SERVER_REFRESH_FLAG, state).apply();
   }
 
-  public static boolean needsDbMigration() {
+  public static boolean needsSqliteDbMigration() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, true);
+        .getBoolean(ManagedKeys.PREF_NEEDS_SQLITE_DB_MIGRATION, false);
   }
 
-  public static void setNeedsDbMigration(boolean migrationNeeded) {
+  public static void setNeedsSqliteDbMigration(boolean migrationNeeded) {
     Preferences.get()
         .edit()
-        .putBoolean(ManagedKeys.PREF_NEEDS_DB_MIGRATION, migrationNeeded)
+        .putBoolean(ManagedKeys.PREF_NEEDS_SQLITE_DB_MIGRATION, migrationNeeded)
         .apply();
   }
 

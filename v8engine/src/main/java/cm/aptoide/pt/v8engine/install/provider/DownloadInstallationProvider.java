@@ -20,8 +20,8 @@ import rx.Observable;
 
   private final DownloadServiceHelper downloadManager;
 
-  @Override public Observable<RollbackInstallation> getInstallation(long id) {
-    return downloadManager.getDownload(id).first().flatMap(download -> {
+  @Override public Observable<RollbackInstallation> getInstallation(String md5) {
+    return downloadManager.getDownload(md5).first().flatMap(download -> {
       if (download.getOverallDownloadStatus() == Download.COMPLETED) {
         return Observable.just(new DownloadInstallationAdapter(download));
       }

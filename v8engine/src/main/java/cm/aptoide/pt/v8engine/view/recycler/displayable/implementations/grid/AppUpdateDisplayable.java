@@ -60,11 +60,11 @@ import rx.Observable;
   }
 
   public Observable<Boolean> isInstalled() {
-    return installManager.isInstalled(download.getAppId());
+    return installManager.isInstalled(download.getMd5());
   }
 
   public Observable<Void> install(Context context) {
-    return installManager.update(context, (PermissionRequest) context, download.getAppId());
+    return installManager.update(context, (PermissionRequest) context, download.getMd5());
   }
 
   public Observable<Download> download(PermissionRequest permissionRequest) {
@@ -72,7 +72,7 @@ import rx.Observable;
   }
 
   public Observable<Integer> downloadStatus() {
-    return downloadManager.getDownload(download.getAppId())
+    return downloadManager.getDownload(download.getMd5())
         .map(storedDownload -> storedDownload.getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
   }

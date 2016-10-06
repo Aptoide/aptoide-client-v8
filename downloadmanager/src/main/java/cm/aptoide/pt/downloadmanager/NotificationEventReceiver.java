@@ -8,6 +8,7 @@ package cm.aptoide.pt.downloadmanager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 /**
  * Created by trinkes on 6/23/16.
@@ -23,10 +24,10 @@ public class NotificationEventReceiver extends BroadcastReceiver {
       AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
       switch (action) {
         case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE:
-          if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
-            long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
-            if (appid > 0) {
-              downloadManager.pauseDownload(appid);
+          if (intent.hasExtra(AptoideDownloadManager.FILE_MD5_EXTRA)) {
+            String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
+            if (!TextUtils.isEmpty(md5)) {
+              downloadManager.pauseDownload(md5);
             } else {
               downloadManager.pauseAllDownloads();
             }
@@ -38,10 +39,10 @@ public class NotificationEventReceiver extends BroadcastReceiver {
           }
           break;
         case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD:
-          if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
-            long appid = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, -1);
-            if (appid > 0) {
-              downloadManager.getDownload(appid)
+          if (intent.hasExtra(AptoideDownloadManager.FILE_MD5_EXTRA)) {
+            String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
+            if (!TextUtils.isEmpty(md5)) {
+              downloadManager.getDownload(md5)
                   .subscribe(download -> downloadManager.startDownload(download),
                       throwable -> throwable.printStackTrace());
             }
@@ -49,9 +50,10 @@ public class NotificationEventReceiver extends BroadcastReceiver {
           break;
         case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION:
           if (downloadManager.getDownloadNotificationActionsInterface() != null) {
-            if (intent.hasExtra(AptoideDownloadManager.APP_ID_EXTRA)) {
+            if (intent.hasExtra(AptoideDownloadManager.FILE_MD5_EXTRA)) {
               downloadManager.getDownloadNotificationActionsInterface()
-                  .notificationPressed(intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0));
+                  .notificationPressed(
+                      intent.getLongExtra(AptoideDownloadManager.FILE_MD5_EXTRA, 0));
             }
             break;
           }

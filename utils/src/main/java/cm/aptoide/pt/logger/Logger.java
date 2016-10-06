@@ -13,7 +13,7 @@ import cm.aptoide.pt.utils.BuildConfig;
  */
 public class Logger {
 
-  public static final boolean DBG = BuildConfig.DEBUG;
+  private static final boolean DBG = BuildConfig.DEBUG;
 
   /**
    * Prints the stacktrace

@@ -54,10 +54,10 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
   }
 
   public void pauseInstall() {
-    downloadManager.pauseDownload(getPojo().getAppId());
+    downloadManager.pauseDownload(getPojo().getMd5());
   }
 
   public Observable<Download> getDownload() {
-    return downloadManager.getDownload(getPojo().getAppId());
+    return downloadManager.getDownload(getPojo().getMd5());
   }
 }

@@ -12,8 +12,6 @@ import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by sithengineer on 12/05/16.
- *
- * TODO check with dataprovider and models...
  */
 
 public class Update extends RealmObject {

@@ -13,9 +13,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
+import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.CrashReports;
 import java.util.Locale;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
@@ -38,24 +41,27 @@ public class DownloadService extends Service {
   private Subscription stopMechanismSubscription;
 
   private void pauseDownloads(Intent intent) {
-    long appId = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0);
-    if (appId > 0) {
-      downloadManager.pauseDownload(appId);
+    String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
+    if (!TextUtils.isEmpty(md5)) {
+      downloadManager.pauseDownload(md5);
     } else {
       downloadManager.pauseAllDownloads();
     }
   }
 
-  private void startDownload(long appId) {
-    if (appId > 0) {
-      subscriptions.add(downloadManager.getDownload(appId).first().subscribe(download -> {
+  private void startDownload(String md5) throws DownloadNotFoundException {
+    if (!TextUtils.isEmpty(md5)) {
+      subscriptions.add(downloadManager.getDownload(md5).first().subscribe(download -> {
         downloadManager.startDownload(download)
             .first()
             .subscribe(downloadFromRealm -> Logger.d(TAG,
-                "startDownload called with: appId = [" + appId + "]"), Throwable::printStackTrace);
+                "startDownload called with: md5 = [" + md5 + "]"), Throwable::printStackTrace);
         setupNotifications();
       }));
+      return;
     }
+
+    throw new DownloadNotFoundException("Unable to start a download without an md5");
   }
 
   @Override public void onCreate() {
@@ -72,8 +78,13 @@ public class DownloadService extends Service {
       if (action != null) {
         switch (action) {
           case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD:
-            long appId = intent.getLongExtra(AptoideDownloadManager.APP_ID_EXTRA, 0);
-            startDownload(appId);
+            String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
+            try {
+              startDownload(md5);
+            }catch (DownloadNotFoundException e) {
+              Logger.e(TAG, e);
+              CrashReports.logException(e);
+            }
             break;
           case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE:
             pauseDownloads(intent);
@@ -82,7 +93,12 @@ public class DownloadService extends Service {
     } else {
       downloadManager.getCurrentDownload().first().subscribe(download -> {
         if (download != null) {
-          startDownload(download.getAppId());
+          try {
+            startDownload(download.getMd5());
+          }catch (DownloadNotFoundException e) {
+            Logger.e(TAG, e);
+            CrashReports.logException(e);
+          }
         }
       }, Throwable::printStackTrace);
     }
@@ -118,13 +134,13 @@ public class DownloadService extends Service {
 
       downloadManager.getCurrentDownload().subscribe(download -> {
         Bundle bundle = new Bundle();
-        bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
+        bundle.putString(AptoideDownloadManager.FILE_MD5_EXTRA, download.getMd5());
         notificationClickIntent =
             createNotificationIntent(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION,
                 bundle);
 
         bundle = new Bundle();
-        bundle.putLong(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
+        bundle.putString(AptoideDownloadManager.FILE_MD5_EXTRA, download.getMd5());
 
         PendingIntent pOpenAppsManager = getPendingIntent(openAppsManagerIntent, download);
         PendingIntent pNotificationClick = getPendingIntent(notificationClickIntent, download);

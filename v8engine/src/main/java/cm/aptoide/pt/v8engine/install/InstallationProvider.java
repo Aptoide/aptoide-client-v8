@@ -12,5 +12,9 @@ import rx.Observable;
  */
 public interface InstallationProvider {
 
-  Observable<RollbackInstallation> getInstallation(long id);
+  /**
+   * @param id file MD5 sum
+   * @return an {@link Observable} of {@link RollbackInstallation}
+   */
+  Observable<RollbackInstallation> getInstallation(String id);
 }

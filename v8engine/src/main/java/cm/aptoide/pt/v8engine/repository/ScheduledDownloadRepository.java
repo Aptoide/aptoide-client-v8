@@ -21,16 +21,16 @@ public class ScheduledDownloadRepository implements Repository {
     this.scheduledAccessor = scheduledAccessor;
   }
 
-  public Observable<Scheduled> getScheduledUpdate(long appId) {
-    return scheduledAccessor.get(appId);
+  public Observable<Scheduled> getScheduledUpdate(String md5) {
+    return scheduledAccessor.get(md5);
   }
 
   public Observable<List<Scheduled>> getAllScheduledDownloads() {
     return scheduledAccessor.getAll();
   }
 
-  public void deleteScheduledDownload(long appId) {
-    scheduledAccessor.delete(appId);
+  public void deleteScheduledDownload(String md5) {
+    scheduledAccessor.delete(md5);
   }
 
   public Observable<List<Scheduled>> setInstalling(List<Scheduled> scheduledList) {

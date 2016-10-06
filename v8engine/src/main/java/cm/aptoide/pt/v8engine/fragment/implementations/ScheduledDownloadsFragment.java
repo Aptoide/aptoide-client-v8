@@ -41,6 +41,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sch
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -303,26 +304,28 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   private Observable<Download> downloadAndInstall(Download download,
       PermissionRequest permissionRequest, DownloadServiceHelper downloadServiceHelper,
       Installer installManager, Context context) {
-    Logger.v(TAG, "downloading app with id " + download.getAppId());
+    Logger.v(TAG, "downloading app with md5 " + download.getMd5());
     return downloadServiceHelper.startDownload(permissionRequest, download)
         .map(downloadItem -> { // for logging purposes only
-          Logger.d(TAG,
-              String.format("scheduled download progress = %d and status = %d for app id %d",
-                  downloadItem.getOverallProgress(), downloadItem.getOverallDownloadStatus(),
-                  downloadItem.getAppId()));
+          Logger.d(TAG, String.format(Locale.ROOT,
+              "scheduled download progress = %d and status = %d for app md5 %s",
+              downloadItem.getOverallProgress(), downloadItem.getOverallDownloadStatus(),
+              downloadItem.getMd5()));
+
           return downloadItem;
         })
         .filter(downloadItem -> downloadItem.getOverallDownloadStatus() == Download.COMPLETED)
-        .flatMap(downloadItem -> installAndRemoveFromList(installManager, context,
-            downloadItem.getAppId()).map(aVoid -> downloadItem));
+        .flatMap(
+            downloadItem -> installAndRemoveFromList(installManager, context, downloadItem.getMd5())
+                .map(aVoid -> downloadItem));
   }
 
   private Observable<Void> installAndRemoveFromList(Installer installManager, Context context,
-      long appId) {
-    Logger.v(TAG, "installing app with id " + appId);
-    return installManager.install(context, (PermissionRequest) context, appId)
+      String md5) {
+    Logger.v(TAG, "installing app with md5 " + md5);
+    return installManager.install(context, (PermissionRequest) context, md5)
         .doOnError(err -> Logger.e(TAG, err))
-        .doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(appId))
+        .doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(md5))
         .doOnUnsubscribe(() -> Logger.d(TAG,
             "Scheduled Downloads do on unsubscribed called for install manager"));
   }
