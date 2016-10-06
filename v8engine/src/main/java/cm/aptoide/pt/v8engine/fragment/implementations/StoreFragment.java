@@ -99,7 +99,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    if (storeTheme != null) {
+    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
   }
