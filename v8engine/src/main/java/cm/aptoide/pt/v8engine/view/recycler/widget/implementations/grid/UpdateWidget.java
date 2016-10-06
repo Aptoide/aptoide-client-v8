@@ -17,7 +17,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -28,10 +27,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import io.realm.Realm;
-import java.util.List;
 import lombok.Cleanup;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -119,36 +116,19 @@ import rx.subscriptions.CompositeSubscription;
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));
 
-    subscriptions.add(displayable.getDownloadManager()
-        .getAllDownloads()
-        .observeOn(Schedulers.io())
-        .map(downloads -> getDownloadFromList(downloads, displayable.getAppId()))
-        .map(download -> shouldDisplayProgress(download))
+    subscriptions.add(displayable.getUpdates()
+        .filter(downloadProgress -> downloadProgress.getRequest().getAppId()
+            == displayable.getDownload().getAppId())
+        .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(shouldShow -> showProgress(shouldShow),
             throwable -> throwable.printStackTrace()));
-  }
-
-  private Download getDownloadFromList(List<Download> downloads, long appId) {
-    for (int i = 0; i < downloads.size(); i++) {
-      Download download = downloads.get(i);
-      if (download.getAppId() == appId) {
-        return download;
-      }
-    }
-    return null;
   }
 
   @Override public void onViewDetached() {
     if (subscriptions != null && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();
     }
-  }
-
-  private boolean shouldDisplayProgress(Download download) {
-    return download != null && (download.getOverallDownloadStatus() == Download.PROGRESS
-        || download.getOverallDownloadStatus() == Download.IN_QUEUE
-        || download.getOverallDownloadStatus() == Download.PENDING);
   }
 
   @UiThread private void showProgress(Boolean showProgress) {
