@@ -158,6 +158,7 @@ import rx.schedulers.Schedulers;
       // Check if package is installed first
       packageManager.getPackageInfo(packageName, 0);
       Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       context.startActivity(intent);
     } catch (PackageManager.NameNotFoundException e) {
       CrashReports.logException(e);
@@ -168,7 +169,8 @@ import rx.schedulers.Schedulers;
   @NonNull private Observable<Void> packageIntent(Context context, IntentFilter intentFilter,
       String packageName) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-        .first(intent -> intent.getData().toString().contains(packageName)).<Void>map(
+        .first(intent -> intent.getData().toString().contains(packageName))
+        .map(
             intent -> null);
   }
 
