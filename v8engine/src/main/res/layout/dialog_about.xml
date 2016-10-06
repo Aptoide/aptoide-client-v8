@@ -4,21 +4,39 @@
   ~ Modified by SithEngineer on 02/06/2016.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="bottom"
     android:orientation="vertical"
     >
 
   <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="30dp"
+      android:layout_marginStart="30dp"
+      android:layout_marginTop="20dp"
+      android:drawableLeft="@android:drawable/ic_menu_info_details"
+      android:gravity="center"
+      android:text="@string/about_us"
+      android:textSize="@dimen/text_size_large"
+      android:textStyle="bold"
+      />
+
+  <!--version name and code-->
+  <TextView
       android:id="@+id/aptoide_version"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_below="@+id/title"
       android:layout_centerHorizontal="true"
       android:layout_gravity="center_horizontal"
       android:textAppearance="?android:attr/textAppearanceMedium"
       />
 
+  <!--credits-->
   <ScrollView
       android:id="@+id/scrollview"
       android:layout_width="fill_parent"
@@ -47,6 +65,7 @@
     </LinearLayout>
   </ScrollView>
 
+  <!--site-->
   <LinearLayout
       android:id="@+id/site_layout"
       android:layout_width="wrap_content"
@@ -76,11 +95,12 @@
         />
   </LinearLayout>
 
+  <!--contact-->
   <LinearLayout
       android:id="@+id/contact_layout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
+      android:layout_above="@+id/positive_button"
       android:layout_centerHorizontal="true"
       android:layout_gravity="center_horizontal"
       android:orientation="horizontal"
@@ -103,5 +123,22 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
   </LinearLayout>
+  <Button
+      android:id="@+id/positive_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_marginRight="10dp"
+      android:background="@null"
+      android:gravity="center"
+      android:padding="20dp"
+      android:textColor="?attr/colorPrimary"
+      tools:text="yes"
+      tools:visibility="visible"
+      style="@style/TextAppearance.AppCompat.Widget.Button"
+      />
+
 
 </RelativeLayout>
