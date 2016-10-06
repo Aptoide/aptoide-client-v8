@@ -98,7 +98,7 @@ public class AptoideDownloadManager {
           startNewDownload(download);
           return null;
         }).subscribeOn(Schedulers.computation()).subscribe(o -> {
-        }, Throwable::printStackTrace);
+        }, throwable -> Logger.e(TAG, throwable));
         return getDownload(download.getAppId());
       }
     });
