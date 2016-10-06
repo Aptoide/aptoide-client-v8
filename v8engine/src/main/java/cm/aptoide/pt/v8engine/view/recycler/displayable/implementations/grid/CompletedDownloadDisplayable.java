@@ -77,7 +77,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
 
   public Observable<Progress<Download>> installOrOpenDownload(Context context) {
     return installManager.getInstallation(getPojo().getRequest().getAppId()).flatMap(installed -> {
-      if (installed.isDone()) {
+      if (installed.getState() == Progress.DONE) {
         AptoideUtils.SystemU.openApp(
             getPojo().getRequest().getFilesToDownload().get(0).getPackageName());
         return Observable.empty();

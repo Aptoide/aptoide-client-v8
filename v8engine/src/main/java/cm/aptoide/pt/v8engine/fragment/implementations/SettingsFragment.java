@@ -35,6 +35,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -303,6 +304,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_about, null);
         String versionName = "";
+        int versionCode = 0;
 
         try {
           versionName = getActivity().getPackageManager()
@@ -311,26 +313,27 @@ public class SettingsFragment extends PreferenceFragmentCompat
           Logger.printException(e);
           CrashReports.logException(e);
         }
+        try {
+          versionCode = getActivity().getPackageManager()
+              .getPackageInfo(getActivity().getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+          Logger.printException(e);
+          CrashReports.logException(e);
+        }
 
         ((TextView) view.findViewById(R.id.aptoide_version)).setText(
             getString(R.string.version) + " " +
-                versionName);
+                versionName + " (" + versionCode + ")");
+
         ((TextView) view.findViewById(R.id.credits)).setMovementMethod(
             LinkMovementMethod.getInstance());
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context).setView(view);
-        final AlertDialog aboutDialog = alertDialogBuilder.create();
-        aboutDialog.setTitle(getString(R.string.about_us));
-        aboutDialog.setIcon(android.R.drawable.ic_menu_info_details);
-        aboutDialog.setCancelable(false);
-        aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok),
-            new Dialog.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                //                        FlurryAgent.logEvent("Setting_Opened_About_Us_Dialog");
-                dialog.cancel();
-              }
-            });
-        aboutDialog.show();
+        AndroidBasicDialog.build(getContext(), view)
+            .setPositiveButton(android.R.string.ok)
+            .setMessage(R.string.about_us)
+            .setTitle(getString(R.string.about_us))
+            .setIcon(android.R.drawable.ic_menu_info_details)
+            .show();
 
         return true;
       }
@@ -372,11 +375,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Dialog dialogSetAdultPin(final Preference mp) {
     isSetingPIN = true;
 
-    return AdultDialog.setAdultPinDialog(
-        getActivity(),
-        mp,
-        (v, which) -> isSetingPIN = false
-    );
+    return AdultDialog.setAdultPinDialog(getActivity(), mp, (v, which) -> isSetingPIN = false);
   }
 
   private void maturePinSetRemoveClick() {

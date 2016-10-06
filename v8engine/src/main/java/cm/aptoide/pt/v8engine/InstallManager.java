@@ -83,14 +83,12 @@ public class InstallManager {
 
   public boolean isInstalling(Progress<Download> progress) {
     return isDownloading(progress)
-        || !progress.isDone()
-        && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED;
+        || (progress.getState() != Progress.DONE
+        && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED);
   }
 
   public boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING;
+    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS;
   }
 
   public Observable<Progress<Download>> install(Context context, Download download) {
@@ -112,28 +110,29 @@ public class InstallManager {
   }
 
   private Progress<Download> convertToProgress(Download currentDownload) {
-    if (currentDownload.getOverallDownloadStatus() != Download.ERROR) {
-      return new Progress<>(currentDownload, currentDownload.getOverallDownloadStatus() == Download.COMPLETED,
-          AptoideDownloadManager.PROGRESS_MAX_VALUE, currentDownload.getOverallProgress(),
-          currentDownload.getDownloadSpeed(), false);
-    }
-    throw new IllegalStateException("Download " + currentDownload.getPackageName() + " error.");
+    return new Progress<>(currentDownload,
+        currentDownload.getOverallDownloadStatus() == Download.COMPLETED,
+        AptoideDownloadManager.PROGRESS_MAX_VALUE, currentDownload.getOverallProgress(),
+        currentDownload.getDownloadSpeed(),
+        convertToProgressStatus(currentDownload.getOverallDownloadStatus()));
   }
 
-  private Observable<Progress<Download>> installInBackground(Context context, Progress<Download> progress) {
-    return getInstallation(progress.getRequest().getAppId())
-        .mergeWith(startBackgroundInstallationAndWait(context, progress));
+  private Observable<Progress<Download>> installInBackground(Context context,
+      Progress<Download> progress) {
+    return getInstallation(progress.getRequest().getAppId()).mergeWith(
+        startBackgroundInstallationAndWait(context, progress));
   }
 
   @NonNull
   private Observable<Progress<Download>> startBackgroundInstallationAndWait(Context context,
       Progress<Download> progress) {
-    return waitBackgroundInstallationResult(context, progress.getRequest().getAppId())
-    .doOnSubscribe(() -> startBackgroundInstallation(context, progress.getRequest().getAppId()))
-    .map(success -> {
-      progress.setDone(true);
-      return progress;
-    });
+    return waitBackgroundInstallationResult(context,
+        progress.getRequest().getAppId()).doOnSubscribe(
+        () -> startBackgroundInstallation(context, progress.getRequest().getAppId()))
+        .map(success -> {
+          progress.setState(Progress.DONE);
+          return progress;
+        });
   }
 
   private Observable<Void> waitBackgroundInstallationResult(Context context, long installationId) {
@@ -150,5 +149,35 @@ public class InstallManager {
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_ID, installationId);
     context.startService(intent);
+  }
+
+  private int convertToProgressStatus(int overallDownloadStatus) {
+    int progressStatus;
+    switch (overallDownloadStatus) {
+      case Download.COMPLETED:
+      case Download.PROGRESS:
+      case Download.PENDING:
+      case Download.IN_QUEUE:
+      case Download.INVALID_STATUS:
+        progressStatus = Progress.ACTIVE;
+        break;
+      case Download.PAUSED:
+        progressStatus = Progress.INACTIVE;
+        break;
+      case Download.WARN:
+      case Download.BLOCK_COMPLETE:
+      case Download.CONNECTED:
+      case Download.RETRY:
+      case Download.STARTED:
+      case Download.NOT_DOWNLOADED:
+      case Download.ERROR:
+      case Download.FILE_MISSING:
+        progressStatus = Progress.ERROR;
+        break;
+      default:
+        progressStatus = Progress.INACTIVE;
+        break;
+    }
+    return progressStatus;
   }
 }

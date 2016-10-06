@@ -115,7 +115,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     activeDisplayablesList.clear();
     completedDisplayablesList.clear();
     for (final Progress<Download> progress : progressList) {
-      if (installManager.isDownloading(progress)) {
+      if (isDownloading(progress)) {
         activeDisplayablesList.add(new ActiveDownloadDisplayable(progress, installManager));
       } else {
         completedDisplayablesList.add(new CompletedDownloadDisplayable(progress, installManager));
@@ -132,6 +132,12 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
           new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active),
               installManager));
     }
+  }
+
+  private boolean isDownloading(Progress<Download> progress) {
+    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
+        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   /**
