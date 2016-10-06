@@ -300,6 +300,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_about, null);
         String versionName = "";
+        int versionCode = 0;
 
         try {
           versionName = getActivity().getPackageManager()
@@ -308,10 +309,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
           Logger.printException(e);
           CrashReports.logException(e);
         }
+        try {
+          versionCode = getActivity().getPackageManager()
+              .getPackageInfo(getActivity().getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+          Logger.printException(e);
+          CrashReports.logException(e);
+        }
 
         ((TextView) view.findViewById(R.id.aptoide_version)).setText(
             getString(R.string.version) + " " +
-                versionName);
+                versionName + " (" + versionCode + ")");
+
         ((TextView) view.findViewById(R.id.credits)).setMovementMethod(
             LinkMovementMethod.getInstance());
 

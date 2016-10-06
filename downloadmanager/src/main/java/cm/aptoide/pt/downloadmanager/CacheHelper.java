@@ -40,7 +40,10 @@ import lombok.AllArgsConstructor;
 
         Download download = downloads.get(i);
         for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-          FileUtils.removeFile(fileToDownload.getFilePath());
+          if (!(fileToDownload.getFileType() == FileToDownload.OBB
+              && download.getOverallDownloadStatus() == Download.COMPLETED)) {
+            FileUtils.removeFile(fileToDownload.getFilePath());
+          }
         }
         downloadAccessor.delete(download.getAppId());
         i++;
