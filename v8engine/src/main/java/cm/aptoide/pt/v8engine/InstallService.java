@@ -162,13 +162,6 @@ public class InstallService extends Service {
     }
   }
 
-  private void setupStopSelfMechanism() {
-    subscriptions.add(downloadManager.getCurrentDownloads()
-        .observeOn(Schedulers.computation())
-        .filter(downloads -> downloads == null || downloads.size() <= 0)
-        .subscribe(downloads -> stopSelf(), Throwable::printStackTrace));
-  }
-
   private void setupNotification() {
 
     subscriptions.add(installManager.getCurrentInstallation().subscribe(progress -> {
