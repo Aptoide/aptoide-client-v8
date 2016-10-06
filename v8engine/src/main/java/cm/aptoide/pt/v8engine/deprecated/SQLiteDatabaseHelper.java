@@ -21,6 +21,9 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 import cm.aptoide.pt.v8engine.deprecated.tables.Updates;
 import io.realm.Realm;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
  * Created by sithengineer on 24/08/16.
@@ -28,7 +31,7 @@ import io.realm.Realm;
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 43;
+  private static final int DATABASE_VERSION = 44;
 
   private Throwable agregateExceptions;
 
@@ -36,9 +39,58 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     super(context, "aptoide.db", null, DATABASE_VERSION);
   }
 
+  private boolean restoreDbFile(SQLiteDatabase db) {
+
+    File backupDbFile = new File("/.aptoide/backup.db");
+
+    if(!backupDbFile.exists()) {
+      return false;
+    }
+
+    FileInputStream backupDbFileStream = null;
+    FileOutputStream dbFileStream = null;
+    try {
+      backupDbFileStream = new FileInputStream(backupDbFile);
+      dbFileStream = new FileOutputStream(db.getPath());
+
+      int offset;
+      byte[] buffer = new byte[1024];
+      while ((offset = backupDbFileStream.read(buffer, 0, buffer.length)) > 0) {
+        dbFileStream.write(buffer, 0, offset);
+      }
+
+      Logger.d(TAG, "DB restore successful");
+
+      return true;
+
+    } catch (Exception e) {
+
+    } finally {
+      try {
+        if(dbFileStream!=null){
+          dbFileStream.close();
+        }
+      } catch (Exception e) {
+
+      }
+      try {
+        if(backupDbFileStream!=null){
+          backupDbFileStream.close();
+        }
+      } catch (Exception e) {
+
+      }
+    }
+
+    return false;
+  }
+
   @Override public void onCreate(SQLiteDatabase db) {
     Logger.w(TAG, "onCreate() called");
     // do nothing here.
+    if(restoreDbFile(db)) {
+      migrate(db);
+    }
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -109,8 +161,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     }
 
     try {
-      new Updates().migrate(db,
-          realm); // despite the migration, this data should be recreated upon app startup
+      new Updates().migrate(db, realm);
+      // despite the migration, this data should be recreated upon app startup
     } catch (Exception ex) {
       logException(ex);
     }

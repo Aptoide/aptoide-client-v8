@@ -41,6 +41,7 @@ public class Download extends RealmObject {
   public static final int ASCENDING = 1;
   public static final int DESCENDING = -1;
   public static String TAG = Download.class.getSimpleName();
+
   RealmList<FileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
   @IntRange(from = 0, to = 100) int overallProgress = 0;

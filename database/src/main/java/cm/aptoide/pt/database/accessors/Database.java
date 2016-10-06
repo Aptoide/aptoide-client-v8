@@ -29,6 +29,7 @@ public final class Database {
   private static final String TAG = Database.class.getSimpleName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
+  public static final int SCHEMA_VERSION = 8077;
   private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
   private static boolean isInitialized = false;
@@ -61,16 +62,14 @@ public final class Database {
     RealmConfiguration realmConfig;
     if (BuildConfig.DEBUG) {
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-          // Must be bumped when the schema changes
-          .schemaVersion(BuildConfig.VERSION_CODE).deleteRealmIfMigrationNeeded().build();
+          .schemaVersion(SCHEMA_VERSION)
+          .migration(MIGRATION)
+          .build();
     } else {
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-          //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer use DB encryption for a safer ride
-          // Must be bumped when the schema changes
-          .schemaVersion(BuildConfig.VERSION_CODE)
-          // Migration to run instead of throwing an exception
-          //.migration(MIGRATION)
-          .deleteRealmIfMigrationNeeded() // FIXME: 30/08/16 sithengineer use migration script when new DB migrations are needed
+          //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
+          .schemaVersion(SCHEMA_VERSION)
+          .migration(MIGRATION)
           .build();
     }
 

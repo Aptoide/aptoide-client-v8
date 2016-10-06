@@ -38,19 +38,19 @@ public class ScheduledAccessor implements Accessor {
   public Observable<List<Scheduled>> setInstalling(List<Scheduled> scheduledList) {
     return Observable.fromCallable(() -> {
 
-      Long[] ids = new Long[scheduledList.size()];
+      String[] md5s = new String[scheduledList.size()];
       Scheduled s;
       for (int i = 0; i < scheduledList.size(); ++i) {
         s = scheduledList.get(i);
         s.setDownloading(true);
-        ids[i] = s.getAppId();
+        md5s[i] = s.getMd5();
       }
 
       @Cleanup Realm realm = Database.get();
       realm.beginTransaction();
       realm.insertOrUpdate(scheduledList);
       RealmResults<Scheduled> results =
-          realm.where(Scheduled.class).in(Scheduled.APP_ID, ids).findAll();
+          realm.where(Scheduled.class).in(Scheduled.MD5, md5s).findAll();
       for (Scheduled dbScheduled : results) {
         dbScheduled.setDownloading(true);
       }
@@ -66,7 +66,7 @@ public class ScheduledAccessor implements Accessor {
       @Cleanup Realm realm = Database.get();
       realm.beginTransaction();
       Scheduled dbScheduled =
-          realm.where(Scheduled.class).equalTo(Scheduled.APP_ID, scheduled.getAppId()).findFirst();
+          realm.where(Scheduled.class).equalTo(Scheduled.MD5, scheduled.getMd5()).findFirst();
       dbScheduled.setDownloading(true);
       realm.commitTransaction();
       return scheduled;

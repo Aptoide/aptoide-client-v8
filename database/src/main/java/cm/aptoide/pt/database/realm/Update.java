@@ -12,8 +12,6 @@ import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by sithengineer on 12/05/16.
- *
- * TODO check with dataprovider and models...
  */
 
 public class Update extends RealmObject {
@@ -33,7 +31,7 @@ public class Update extends RealmObject {
   public static final String UPDATE_VERSION_CODE = "updateVersionCode";
   public static final String EXCLUDED = "excluded";
 
-  @PrimaryKey private String packageName;
+  private String packageName;
   private long appId;
   private String label;
   private String icon;
