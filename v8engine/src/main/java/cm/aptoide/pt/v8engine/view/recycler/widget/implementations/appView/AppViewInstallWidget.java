@@ -396,10 +396,7 @@ import rx.subscriptions.CompositeSubscription;
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
 
                   subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
-                      .flatMap(success -> installManager.install(getContext(),
-                          new DownloadFactory().create(
-                              displayable.getPojo().getNodes().getMeta().getData(),
-                              Download.ACTION_DOWNGRADE)))
+                      .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(progress -> {
                         manageDownload(progress.getRequest(), displayable, app);
