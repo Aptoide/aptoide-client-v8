@@ -24,5 +24,6 @@ public class ManagedKeys {
   public static final String PREF_NEEDS_SQLITE_DB_MIGRATION = "needsSqliteDbMigration";
   public static final String PREF_SHOW_UPDATE_NOTIFICATION = "showUpdatesNotification";
   public static final String UPDATES_FILTER_ALPHA_BETA_KEY = "updatesFilterAlphaBetaKey";
+  public static final String UPDATES_SYSTEM_APPS_KEY = "updatesSystemAppsKey";
   public static final String SCHEDULE_DOWNLOAD_SETTING = "schDwnBox";
 }

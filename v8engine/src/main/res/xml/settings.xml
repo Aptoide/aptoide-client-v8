@@ -81,6 +81,11 @@
         android:key="updatesFilterAlphaBetaKey"
         android:summary="@string/updates_filter_summary"
         android:title="@string/updates_filter_setting_title"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="updatesSystemAppsKey"
+        android:summary="@string/include_system_apps_summary"
+        android:title="@string/include_system_apps_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory android:title="@string/setting_schdwntitle">

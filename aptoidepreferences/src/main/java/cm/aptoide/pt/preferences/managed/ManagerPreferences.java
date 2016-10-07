@@ -28,6 +28,13 @@ public class ManagerPreferences {
     return Preferences.get().getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, false);
   }
 
+  /**
+   * @return true when updates should include system apps
+   */
+  public static boolean getUpdatesSystemAppsKey() {
+    return Preferences.get().getBoolean(ManagedKeys.UPDATES_SYSTEM_APPS_KEY, false);
+  }
+
   public static int getLastPushNotificationId() {
     return Preferences.get().getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
   }
