@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
@@ -53,10 +52,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    PermissionManager permissionManager = new PermissionManager();
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class));
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Update.class));
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

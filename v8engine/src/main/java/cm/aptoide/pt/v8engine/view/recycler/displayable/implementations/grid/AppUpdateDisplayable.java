@@ -10,12 +10,15 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -41,40 +44,32 @@ import rx.Observable;
   private String appName;
   @Getter private String packageName;
   private Download download;
-  private DownloadServiceHelper downloadManager;
-  private Installer installManager;
   private DateCalculator dateCalculator;
   private long appId;
+  private InstallManager installManager;
+  private PermissionManager permissionManager;
 
   public AppUpdateDisplayable() {
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
-      DownloadFactory downloadFactory, DownloadServiceHelper downloadManager,
-      Installer installManager, DateCalculator dateCalculator) {
+      DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
+      PermissionManager permissionManager) {
     return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(),
         appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
         spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
-        downloadFactory.create(appUpdate, Download.ACTION_UPDATE), downloadManager, installManager, dateCalculator,
-        appUpdate.getId());
+        downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
+        appUpdate.getId(), installManager, permissionManager);
   }
 
-  public Observable<Boolean> isInstalled() {
-    return installManager.isInstalled(download.getAppId());
+  public Observable<Progress<Download>> update(Context context) {
+    return installManager.install(context, download);
   }
 
-  public Observable<Void> install(Context context) {
-    return installManager.update(context, download.getAppId());
-  }
-
-  public Observable<Download> download(PermissionRequest permissionRequest) {
-    return downloadManager.startDownload(permissionRequest, download);
-  }
-
-  public Observable<Integer> downloadStatus() {
-    return downloadManager.getDownload(download.getAppId())
-        .map(storedDownload -> storedDownload.getOverallDownloadStatus())
-        .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
+  public Observable<Progress<Download>> updateProgress() {
+    return installManager.getInstallations()
+        .filter(
+            downloadProgress -> downloadProgress.getRequest().getAppId() == download.getAppId());
   }
 
   public int getMarginWidth(Context context, int orientation) {
@@ -142,5 +137,17 @@ import rx.Observable;
 
   public long getAppId() {
     return appId;
+  }
+
+  public Observable<Void> requestPermission(Context context) {
+    return permissionManager.requestExternalStoragePermission(((PermissionRequest) context));
+  }
+
+  public boolean isInstalling(Progress<Download> downloadProgress) {
+    return installManager.isInstalling(downloadProgress);
+  }
+
+  public boolean isDownloading(Progress<Download> downloadProgress) {
+    return installManager.isDownloading(downloadProgress);
   }
 }

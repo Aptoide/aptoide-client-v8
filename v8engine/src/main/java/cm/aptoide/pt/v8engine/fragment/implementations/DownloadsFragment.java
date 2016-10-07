@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -54,7 +55,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     super.onCreate(savedInstanceState);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class));
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Update.class));
 
     oldDownloadsList = new ArrayList<>();
     subscriptions = new CompositeSubscription();

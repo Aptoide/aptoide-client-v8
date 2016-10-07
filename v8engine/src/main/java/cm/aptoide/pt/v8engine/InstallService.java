@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
@@ -60,7 +61,8 @@ public class InstallService extends Service {
     downloadManager.initDownloadService(this);
     installer = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer,
-        AccessorFactory.getAccessorFor(Download.class));
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
     subscriptions = new CompositeSubscription();
     setupNotification();
   }

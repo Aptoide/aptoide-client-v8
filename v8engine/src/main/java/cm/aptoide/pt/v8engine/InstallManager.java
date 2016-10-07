@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -28,12 +29,14 @@ public class InstallManager {
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
   private DownloadAccessor downloadAccessor;
+  private InstalledAccessor installedAccessor;
 
   public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      DownloadAccessor downloadAccessor) {
+      DownloadAccessor downloadAccessor, InstalledAccessor installedDatabase) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.downloadAccessor = downloadAccessor;
+    this.installedAccessor = installedDatabase;
   }
 
   public void stopInstallation(Context context, long installationId) {
@@ -61,14 +64,14 @@ public class InstallManager {
     return aptoideDownloadManager.getDownloads()
         .observeOn(Schedulers.io())
         .flatMapIterable(downloadList -> downloadList)
-        .map(download -> convertToProgress(download));
+        .flatMap(download -> convertToProgress(download));
   }
 
   public Observable<List<Progress<Download>>> getInstallationsAsList() {
     return aptoideDownloadManager.getDownloads()
         .observeOn(Schedulers.io())
         .flatMap(downloadList -> Observable.from(downloadList)
-            .map(download -> convertToProgress(download))
+            .flatMap(download -> convertToProgress(download))
             .toList());
   }
 
@@ -78,12 +81,11 @@ public class InstallManager {
 
   public Observable<Progress<Download>> getInstallation(long installationId) {
     return aptoideDownloadManager.getDownload(installationId)
-        .map(download -> convertToProgress(download));
+        .flatMap(download -> convertToProgress(download));
   }
 
   public boolean isInstalling(Progress<Download> progress) {
-    return isDownloading(progress)
-        || (progress.getState() != Progress.DONE
+    return isDownloading(progress) || (progress.getState() != Progress.DONE
         && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED);
   }
 
@@ -109,12 +111,11 @@ public class InstallManager {
     });
   }
 
-  private Progress<Download> convertToProgress(Download currentDownload) {
-    return new Progress<>(currentDownload,
+  private Observable<Progress<Download>> convertToProgress(Download currentDownload) {
+    return convertToProgressStatus(currentDownload).map(status -> new Progress<>(currentDownload,
         currentDownload.getOverallDownloadStatus() == Download.COMPLETED,
         AptoideDownloadManager.PROGRESS_MAX_VALUE, currentDownload.getOverallProgress(),
-        currentDownload.getDownloadSpeed(),
-        convertToProgressStatus(currentDownload.getOverallDownloadStatus()));
+        currentDownload.getDownloadSpeed(), status));
   }
 
   private Observable<Progress<Download>> installInBackground(Context context,
@@ -141,7 +142,8 @@ public class InstallManager {
         .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
             intent.getAction()))
         .first(intent -> intent.getLongExtra(InstallService.EXTRA_INSTALLATION_ID, -1)
-            == installationId).map(intent -> null);
+            == installationId)
+        .map(intent -> null);
   }
 
   private void startBackgroundInstallation(Context context, long installationId) {
@@ -151,33 +153,42 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  private int convertToProgressStatus(int overallDownloadStatus) {
-    int progressStatus;
-    switch (overallDownloadStatus) {
-      case Download.COMPLETED:
-      case Download.PROGRESS:
-      case Download.PENDING:
-      case Download.IN_QUEUE:
-      case Download.INVALID_STATUS:
-        progressStatus = Progress.ACTIVE;
-        break;
-      case Download.PAUSED:
-        progressStatus = Progress.INACTIVE;
-        break;
-      case Download.WARN:
-      case Download.BLOCK_COMPLETE:
-      case Download.CONNECTED:
-      case Download.RETRY:
-      case Download.STARTED:
-      case Download.NOT_DOWNLOADED:
-      case Download.ERROR:
-      case Download.FILE_MISSING:
-        progressStatus = Progress.ERROR;
-        break;
-      default:
-        progressStatus = Progress.INACTIVE;
-        break;
-    }
-    return progressStatus;
+  private Observable<Integer> convertToProgressStatus(Download download) {
+    return installedAccessor.get(download.getPackageName())
+        .map(installed -> installed.getVersionCode() == download.getVersionCode())
+        .map(isInstalled -> {
+
+          if (isInstalled) {
+            return Progress.DONE;
+          }
+
+          final int progressStatus;
+          switch (download.getOverallDownloadStatus()) {
+            case Download.COMPLETED:
+            case Download.PROGRESS:
+            case Download.PENDING:
+            case Download.IN_QUEUE:
+            case Download.INVALID_STATUS:
+              progressStatus = Progress.ACTIVE;
+              break;
+            case Download.PAUSED:
+              progressStatus = Progress.INACTIVE;
+              break;
+            case Download.WARN:
+            case Download.BLOCK_COMPLETE:
+            case Download.CONNECTED:
+            case Download.RETRY:
+            case Download.STARTED:
+            case Download.NOT_DOWNLOADED:
+            case Download.ERROR:
+            case Download.FILE_MISSING:
+              progressStatus = Progress.ERROR;
+              break;
+            default:
+              progressStatus = Progress.INACTIVE;
+              break;
+          }
+          return progressStatus;
+        });
   }
 }
