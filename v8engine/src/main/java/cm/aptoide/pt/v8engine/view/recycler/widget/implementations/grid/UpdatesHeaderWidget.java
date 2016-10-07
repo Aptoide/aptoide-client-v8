@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdatesAccessor;
@@ -48,19 +49,22 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setText(R.string.update_all);
     more.setVisibility(View.VISIBLE);
     more.setOnClickListener((view) -> {
-      ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
-        UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
-        subscription = updatesAccessor.getUpdates()
-            .first()
-            .observeOn(Schedulers.io())
-            .flatMapIterable(updates -> updates)
-            .map(update -> new DownloadFactory().create(update))
-            .flatMap(downloading -> displayable.getInstallManager()
-                .install(UpdatesHeaderWidget.this.getContext(), downloading))
-            .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
-                throwable -> throwable.printStackTrace());
-      }, () -> {
-      });
+      PermissionManager permissionManager = new PermissionManager();
+      UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
+
+      subscription =
+          permissionManager.requestExternalStoragePermission((PermissionRequest) getContext())
+              .flatMap(success -> permissionManager.requestDownloadAccess(
+                  (PermissionRequest) getContext()))
+              .flatMap(success -> updatesAccessor.getUpdates())
+              .first()
+              .observeOn(Schedulers.io())
+              .flatMapIterable(updates -> updates)
+              .map(update -> new DownloadFactory().create(update))
+              .flatMap(downloading -> displayable.install(UpdatesHeaderWidget.this.getContext(),
+                  downloading))
+              .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                  throwable -> throwable.printStackTrace());
 
       Intent intent = new Intent();
       intent.setAction(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT);

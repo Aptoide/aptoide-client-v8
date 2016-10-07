@@ -40,7 +40,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
-  public static final String TAG = "worker";
+  private static final String TAG = DownloadsFragment.class.getSimpleName();
   private List<Displayable> activeDisplayablesList = new LinkedList<>();
   private List<Displayable> completedDisplayablesList = new LinkedList<>();
   private CompositeSubscription subscriptions;
@@ -59,28 +59,26 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         AccessorFactory.getAccessorFor(Installed.class));
 
     oldDownloadsList = new ArrayList<>();
-    subscriptions = new CompositeSubscription();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    if (create) {
-      subscriptions.add(installManager.getInstallationsAsList()
-          .observeOn(Schedulers.computation())
-          .first()
-          .map(downloads -> sortDownloads(downloads))
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(downloads -> updateUi(downloads), Throwable::printStackTrace));
+    subscriptions = new CompositeSubscription();
+    installManager.getInstallationsAsList()
+        .observeOn(Schedulers.computation())
+        .first()
+        .map(downloads -> sortDownloads(downloads))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(downloads -> updateUi(downloads), Throwable::printStackTrace);
 
-      subscriptions.add(installManager.getInstallationsAsList()
-          .sample(250, TimeUnit.MILLISECONDS)
-          .filter(downloads -> (shouldUpdateList(downloads, oldDownloadsList)))
-          .map(downloads -> oldDownloadsList = downloads)
-          .map(downloads -> sortDownloads(downloads))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(downloads -> updateUi(downloads)));
-    }
+    installManager.getInstallationsAsList()
+        .sample(250, TimeUnit.MILLISECONDS)
+        .filter(downloads -> shouldUpdateList(downloads, oldDownloadsList))
+        .map(downloads -> oldDownloadsList = downloads)
+        .map(downloads -> sortDownloads(downloads))
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(downloads -> updateUi(downloads));
   }
 
   private List<Progress<Download>> sortDownloads(List<Progress<Download>> progressList) {

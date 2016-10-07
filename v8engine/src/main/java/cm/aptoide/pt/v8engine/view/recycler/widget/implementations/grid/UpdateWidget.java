@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -111,7 +112,8 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void onViewAttached() {
     subscriptions.add(RxView.clicks(updateButtonLayout)
-        .flatMap(click -> displayable.downloadAndInstall(getContext()))
+        .flatMap(
+            click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));

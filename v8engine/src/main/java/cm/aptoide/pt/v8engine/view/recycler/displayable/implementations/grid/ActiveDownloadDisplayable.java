@@ -7,9 +7,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
-import lombok.Setter;
 import rx.Observable;
-import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/18/16.
@@ -17,8 +15,6 @@ import rx.functions.Action0;
 public class ActiveDownloadDisplayable extends DisplayablePojo<Progress<Download>> {
 
   private InstallManager installManager;
-  @Setter private Action0 onResumeAction;
-  @Setter private Action0 onPauseAction;
 
   public ActiveDownloadDisplayable() {
     super();
@@ -35,20 +31,6 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Progress<Download
 
   @Override public Type getType() {
     return Type.ACTIVE_DOWNLOAD;
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    if (onResumeAction != null) {
-      onResumeAction.call();
-    }
-  }
-
-  @Override public void onPause() {
-    if (onPauseAction != null) {
-      onPauseAction.call();
-    }
-    super.onPause();
   }
 
   @Override public int getViewLayout() {

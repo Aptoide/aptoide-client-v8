@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.model.v7.Type;
@@ -59,10 +61,13 @@ import rx.Scheduler;
         installManager);
   }
 
-  public Observable<Progress<Download>> downloadAndInstall(Context context) {
+  public Observable<Progress<Download>> downloadAndInstall(Context context,
+      PermissionRequest permissionRequest) {
     Analytics.Updates.update();
-
-    return installManager.install(context, download);
+    PermissionManager permissionManager = new PermissionManager();
+    return permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+        .flatMap(success -> installManager.install(context, download));
   }
 
   @Override public Type getType() {

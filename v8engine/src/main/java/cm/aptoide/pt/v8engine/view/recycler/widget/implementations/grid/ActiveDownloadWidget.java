@@ -47,8 +47,6 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     this.displayable = displayable;
-    displayable.setOnPauseAction(() -> onViewDetached());
-    displayable.setOnResumeAction(() -> onViewAttached());
   }
 
   @Override public void onViewAttached() {

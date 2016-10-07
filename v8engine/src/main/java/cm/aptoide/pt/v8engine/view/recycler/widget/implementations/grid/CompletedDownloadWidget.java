@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.Progress;
@@ -57,8 +58,6 @@ import rx.subscriptions.CompositeSubscription;
       ImageLoader.load(downloadProgress.getRequest().getIcon(), appIcon);
     }
     status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
-    displayable.setOnResumeAction(() -> onViewAttached());
-    displayable.setOnPauseAction(() -> onViewDetached());
   }
 
   @Override public void onViewAttached() {
@@ -68,7 +67,8 @@ import rx.subscriptions.CompositeSubscription;
       subscriptions.add(RxView.clicks(itemView)
           .flatMap(click -> displayable.downloadStatus()
               .filter(status -> status == Download.COMPLETED)
-              .flatMap(status -> displayable.installOrOpenDownload(getContext())))
+              .flatMap(status -> displayable.installOrOpenDownload(getContext(),
+                  (PermissionRequest) getContext())))
           .retry()
           .subscribe(success -> {
           }, throwable -> throwable.printStackTrace()));
@@ -76,7 +76,8 @@ import rx.subscriptions.CompositeSubscription;
       subscriptions.add(RxView.clicks(resumeDownloadButton)
           .flatMap(click -> displayable.downloadStatus()
               .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-              .flatMap(status -> displayable.resumeDownload(getContext())))
+              .flatMap(status -> displayable.resumeDownload(getContext(),
+                  (PermissionRequest) getContext())))
           .retry()
           .subscribe(success -> {
           }, throwable -> throwable.printStackTrace()));
