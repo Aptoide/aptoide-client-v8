@@ -54,6 +54,7 @@ public class Download extends RealmObject {
   private String packageName;
   private int versionCode;
   private int action;
+  private boolean scheduled;
 
   public Download() {
   }
@@ -192,6 +193,10 @@ public class Download extends RealmObject {
 
   public void setAction(int action) {
     this.action = action;
+  }
+
+  public void setScheduled(boolean scheduled) {
+    this.scheduled = scheduled;
   }
 
   @IntDef({

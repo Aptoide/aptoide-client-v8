@@ -27,7 +27,8 @@ import java.util.Random;
  */
 public class DownloadFactory {
 
-  public Download create(GetAppMeta.App appToDownload, int downloadAction) throws IllegalArgumentException {
+  public Download create(GetAppMeta.App appToDownload, int downloadAction)
+      throws IllegalArgumentException {
     final GetAppMeta.GetAppMetaFile file = appToDownload.getFile();
 
     validateApp(appToDownload.getId(), appToDownload.getObb(), appToDownload.getPackageName(),
@@ -215,7 +216,7 @@ public class DownloadFactory {
 
   public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
     Download download = new Download();
-    int appId = 1;
+    int appId = autoUpdateInfo.appId;
     download.setAppName(Application.getConfiguration().getMarketName());
     download.setAppId(appId);
     download.setVersionCode(autoUpdateInfo.vercode);
@@ -229,15 +230,28 @@ public class DownloadFactory {
 
   public Download create(Scheduled scheduled) {
     Download download = new Download();
-    int appId = 1;
     download.setAppName(scheduled.getName());
     download.setPackageName(scheduled.getPackageName());
     download.setVersionCode(scheduled.getVerCode());
     download.setAppId(scheduled.getAppId());
-    download.setAction(Download.ACTION_INSTALL);
+
+    switch (scheduled.getAppAction()) {
+      case DOWNGRADE:
+        download.setAction(Download.ACTION_DOWNGRADE);
+        break;
+      case UPDATE:
+        download.setAction(Download.ACTION_UPDATE);
+        break;
+      case INSTALL:
+      case OPEN:
+      default:
+        download.setAction(Download.ACTION_INSTALL);
+    }
+    download.setScheduled(true);
     download.setFilesToDownload(
-        createFileList(appId, scheduled.getPackageName(), scheduled.getPath(), scheduled.getMd5(),
-            scheduled.getObb(), scheduled.getAlternativeApkPath(), scheduled.getVerCode()));
+        createFileList(scheduled.getAppId(), scheduled.getPackageName(), scheduled.getPath(),
+            scheduled.getMd5(), scheduled.getObb(), scheduled.getAlternativeApkPath(),
+            scheduled.getVerCode()));
     return download;
   }
 }
