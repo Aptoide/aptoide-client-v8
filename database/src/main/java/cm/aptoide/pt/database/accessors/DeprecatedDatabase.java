@@ -32,7 +32,7 @@ import io.realm.RealmResults;
   private static final String TAG = DeprecatedDatabase.class.getSimpleName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
-  public static final int SCHEMA_VERSION = 8076;
+  public static final int SCHEMA_VERSION = Database.SCHEMA_VERSION;
   private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
   private static boolean isInitialized = false;
