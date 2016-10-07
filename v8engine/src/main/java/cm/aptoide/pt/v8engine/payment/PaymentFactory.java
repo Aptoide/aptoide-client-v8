@@ -10,8 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.v8engine.BuildConfig;
-import cm.aptoide.pt.v8engine.payment.paypal.PayPalConverter;
-import cm.aptoide.pt.v8engine.payment.paypal.PayPalPayment;
+import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalConverter;
+import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
 /**
