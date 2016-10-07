@@ -5,15 +5,14 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
@@ -24,7 +23,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -32,12 +30,10 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
-  private static final int INSTALLED = 100;
   private TextView appName;
   private TextView appVersion;
   private ImageView appIcon;
   private TextView appUpdate;
-
   private TextView updateButton;
   private CompositeSubscription subscriptions;
   private TextView errorText;
@@ -77,11 +73,15 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     appUpdate.setText(displayable.getHasUpdateText(getContext()));
     appVersion.setText(displayable.getVersionText(getContext()));
     setCardviewMargin(displayable);
-
+    updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
+        0);
+    updateButton.setText(displayable.getUpdateAppText(getContext()));
+    updateButton.setEnabled(true);
     ImageLoader.load(displayable.getAppIconUrl(), appIcon);
     ImageLoader.loadWithShadowCircleTransform(displayable.getStoreIconUrl(), storeImage);
     storeName.setText(displayable.getStoreName());
     updateDate.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    errorText.setVisibility(View.GONE);
   }
 
   private void setCardviewMargin(AppUpdateDisplayable displayable) {
@@ -107,46 +107,28 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
             StoreFragment.newInstance(displayable.getStoreName()));
       }));
 
-      subscriptions.add(displayable.downloadStatus()
-          .flatMap(completedToPause())
+      subscriptions.add(displayable.updateProgress()
           .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(status -> updateDownloadStatus(displayable, status),
-              throwable -> showDownloadError(displayable, throwable)));
+          .subscribe(downloadProgress -> updateInstallProgress(displayable, downloadProgress),
+              throwable -> showDownloadError(displayable)));
 
       subscriptions.add(RxView.clicks(appIcon).subscribe(click -> {
         ((FragmentShower) getContext()).pushFragmentV4(
             AppViewFragment.newInstance(displayable.getAppId()));
       }));
 
-      subscriptions.add(RxView.clicks(updateButton)
-          .flatMap(click -> {
-            Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
-                Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-                Analytics.AppsTimeline.UPDATE_APP);
-            return displayable.downloadStatus().first().flatMap(status -> {
-              if (status == Download.COMPLETED) {
-                return displayable.install(getContext()).map(success -> Download.COMPLETED);
-              }
-              return displayable.download((PermissionRequest) getContext())
-                  .map(download -> download.getOverallDownloadStatus())
-                  .flatMap(downloadStatus -> {
-                    if (downloadStatus == Download.COMPLETED) {
-                      updateDownloadStatus(displayable, downloadStatus);
-                      return displayable.install(getContext()).map(success -> Download.COMPLETED);
-                    }
-                    return Observable.just(downloadStatus);
-                  });
-            });
-          })
-          .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
-            showDownloadError(displayable, error);
-            Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
-            return Observable.just(null);
-          }))
-          .distinctUntilChanged()
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(status -> updateDownloadStatus(displayable, status),
-              throwable -> throwable.printStackTrace()));
+      subscriptions.add(RxView.clicks(updateButton).flatMap(click -> {
+        Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
+            Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+            Analytics.AppsTimeline.UPDATE_APP);
+        return displayable.requestPermission(getContext())
+            .flatMap(success -> displayable.update(getContext()));
+      }).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
+        showDownloadError(displayable);
+        Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
+        return Observable.just(null);
+      })).observeOn(AndroidSchedulers.mainThread()).subscribe(downloadProgress -> {
+      }, throwable -> showDownloadError(displayable)));
     }
   }
 
@@ -157,63 +139,49 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     }
   }
 
-  private Void showDownloadError(AppUpdateDisplayable displayable, Throwable throwable) {
+  private Void showDownloadError(AppUpdateDisplayable displayable) {
     errorText.setText(displayable.getUpdateErrorText(getContext()));
     errorText.setVisibility(View.VISIBLE);
-    updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app, 0, 0, 0);
+    updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
+        0);
     updateButton.setText(displayable.getUpdateAppText(getContext()));
     updateButton.setEnabled(true);
     return null;
   }
 
-  private void updateDownloadStatus(AppUpdateDisplayable displayable,
-      @Download.DownloadState int status) {
+  private void updateInstallProgress(AppUpdateDisplayable displayable,
+      Progress<Download> downloadProgress) {
     errorText.setVisibility(View.GONE);
-    switch (status) {
-      case Download.COMPLETED:
+
+    switch (downloadProgress.getState()) {
+      case Progress.DONE:
         updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         updateButton.setText(displayable.getCompletedText(getContext()));
         updateButton.setEnabled(false);
         break;
-      case Download.PROGRESS:
-      case Download.PENDING:
-      case Download.IN_QUEUE:
-        updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        updateButton.setText(displayable.getUpdatingText(getContext()));
-        updateButton.setEnabled(false);
+      case Progress.ACTIVE:
+        if (displayable.isInstalling(downloadProgress) && !displayable.isDownloading(
+            downloadProgress)) {
+          updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark,
+              0, 0, 0);
+          updateButton.setText(displayable.getUpdateAppText(getContext()));
+          updateButton.setEnabled(true);
+        } else {
+          updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+          updateButton.setText(displayable.getUpdatingText(getContext()));
+          updateButton.setEnabled(false);
+        }
         break;
-      case Download.WARN:
-      case Download.BLOCK_COMPLETE:
-      case Download.CONNECTED:
-      case Download.RETRY:
-      case Download.STARTED:
-      case Download.ERROR:
-      case Download.FILE_MISSING:
-        showDownloadError(displayable, null);
+      case Progress.ERROR:
+        showDownloadError(displayable);
         break;
-      case Download.INVALID_STATUS:
-      case Download.PAUSED:
-      case Download.NOT_DOWNLOADED:
+      case Progress.INACTIVE:
       default:
-        updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app, 0, 0,
-            0);
+        updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0,
+            0, 0);
         updateButton.setText(displayable.getUpdateAppText(getContext()));
         updateButton.setEnabled(true);
         break;
     }
-  }
-
-  @NonNull private Func1<Integer, Observable<Integer>> completedToPause() {
-    return status -> {
-      if (status == Download.COMPLETED) {
-        return displayable.isInstalled().map(installed -> {
-          if (installed) {
-            return Download.COMPLETED;
-          }
-          return Download.PAUSED;
-        });
-      }
-      return Observable.just(status);
-    };
   }
 }

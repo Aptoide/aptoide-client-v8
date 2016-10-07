@@ -12,10 +12,10 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
@@ -25,6 +25,7 @@ import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -64,7 +65,6 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
   public static final int SEARCH_LIMIT = 20;
   private static final String ACTION_KEY = "ACTION";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
-  private DownloadServiceHelper downloadManager;
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
   private LinksHandlerFactory linksHandlerFactory;
@@ -76,8 +76,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
   private TimelineRepository timelineRepository;
   private PackageRepository packageRepository;
   private List<String> packages;
-  private Installer installManager;
+  private Installer installer;
   private AccessorFactory accessorFactory;
+  private InstallManager installManager;
+  private PermissionManager permissionManager;
 
   public static AppsTimelineFragment newInstance(String action) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -95,15 +97,15 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
     downloadFactory = new DownloadFactory();
     linksHandlerFactory = new LinksHandlerFactory();
     packageRepository = new PackageRepository(getContext().getPackageManager());
-    final PermissionManager permissionManager = new PermissionManager();
-    downloadManager =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-    installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    permissionManager = new PermissionManager();
+    installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)));
     accessorFactory = new AccessorFactory();
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -198,7 +200,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
         .flatMap(datalist -> Observable.just(datalist)
             .flatMapIterable(dataList -> dataList.getList())
             .map(card -> cardToDisplayable(card, dateCalculator, spannableFactory, downloadFactory,
-                downloadManager, linksHandlerFactory, accessorFactory))
+                linksHandlerFactory, accessorFactory))
             .toList()
             .map(list -> createDisplayableDataList(datalist, list)));
   }
@@ -295,8 +297,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
   @NonNull private Displayable cardToDisplayable(TimelineCard card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-      DownloadServiceHelper downloadManager, LinksHandlerFactory linksHandlerFactory,
-      AccessorFactory accessorFactory) {
+      LinksHandlerFactory linksHandlerFactory, AccessorFactory accessorFactory) {
     if (card instanceof Article) {
       return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
           linksHandlerFactory, accessorFactory);
@@ -309,7 +310,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
       return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          downloadManager, installManager, dateCalculator);
+          dateCalculator, installManager, permissionManager);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator,
           spannableFactory);

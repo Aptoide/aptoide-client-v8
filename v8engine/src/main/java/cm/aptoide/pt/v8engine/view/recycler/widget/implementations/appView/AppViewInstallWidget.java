@@ -27,6 +27,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -138,7 +139,8 @@ import rx.subscriptions.CompositeSubscription;
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer,
-        AccessorFactory.getAccessorFor(Download.class));
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Update.class));
 
     minimalAd = displayable.getMinimalAd();
     GetApp getApp = displayable.getPojo();
@@ -438,7 +440,7 @@ import rx.subscriptions.CompositeSubscription;
     final Context context = getContext();
     @StringRes final int installOrUpgradeMsg =
         this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
-    int downloadAction = isUpdate? Download.ACTION_UPDATE: Download.ACTION_INSTALL;
+    int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
     final View.OnClickListener installHandler = v -> {
 
       if (installOrUpgradeMsg == R.string.installing_msg) {
@@ -551,8 +553,7 @@ import rx.subscriptions.CompositeSubscription;
         }
 
         if (actionButton.getVisibility() == View.VISIBLE) {
-          setupActionButton(R.string.open,
-              v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
+          setupActionButton(R.string.open, v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
         }
 
         //install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
