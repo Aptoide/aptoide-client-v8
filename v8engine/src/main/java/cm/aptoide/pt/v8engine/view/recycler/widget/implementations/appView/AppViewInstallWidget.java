@@ -27,6 +27,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -140,7 +141,7 @@ import rx.subscriptions.CompositeSubscription;
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer,
         AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Update.class));
+        AccessorFactory.getAccessorFor(Installed.class));
 
     minimalAd = displayable.getMinimalAd();
     GetApp getApp = displayable.getPojo();

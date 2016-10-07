@@ -55,7 +55,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
         AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Update.class));
+        AccessorFactory.getAccessorFor(Installed.class));
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
