@@ -235,7 +235,7 @@ public class DownloadFactory {
     download.setVersionCode(scheduled.getVerCode());
     download.setAppId(scheduled.getAppId());
 
-    switch (scheduled.getAppAction()) {
+    switch (scheduled.getAppActionAsEnum()) {
       case DOWNGRADE:
         download.setAction(Download.ACTION_DOWNGRADE);
         break;

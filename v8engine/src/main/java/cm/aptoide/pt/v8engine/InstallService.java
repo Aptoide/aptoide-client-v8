@@ -16,7 +16,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -152,6 +154,13 @@ public class InstallService extends Service {
 
   private void sendBackgroundInstallFinishedBroadcast(long installId) {
     sendBroadcast(new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_ID, installId));
+    removeFromScheduled(installId);
+  }
+
+  private void removeFromScheduled(long appId) {
+    ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+    scheduledAccessor.delete(appId);
+    Logger.d(TAG, "Removing schedulled download with appId " + appId);
   }
 
   private Observable<Void> stopForegroundAndInstall(Context context, Download download,

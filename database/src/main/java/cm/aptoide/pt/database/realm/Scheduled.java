@@ -108,12 +108,20 @@ import lombok.AllArgsConstructor;
     return versionName;
   }
 
-  public AppAction getAppAction() {
-    return AppAction.valueOf(appAction);
-  }
-
   public void setVersionName(String versionName) {
     this.versionName = versionName;
+  }
+
+  public String getAppAction() {
+    return appAction;
+  }
+
+  public void setAppAction(String appAction) {
+    this.appAction = appAction;
+  }
+
+  public AppAction getAppActionAsEnum() {
+    return AppAction.valueOf(appAction);
   }
 
   public String getIcon() {
