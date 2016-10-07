@@ -155,7 +155,7 @@ public class InstallManager {
 
   private Observable<Integer> convertToProgressStatus(Download download) {
     return installedAccessor.get(download.getPackageName())
-        .map(installed -> installed.getVersionCode() == download.getVersionCode())
+        .map(installed -> installed != null && installed.getVersionCode() == download.getVersionCode())
         .map(isInstalled -> {
 
           if (isInstalled) {
