@@ -12,6 +12,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -34,7 +35,7 @@ import rx.subscriptions.CompositeSubscription;
   private ImageView resumeDownloadButton;
   private ImageView cancelDownloadButton;
   private CompositeSubscription subscriptions;
-  private Download download;
+  private Progress<Download> downloadProgress;
   private CompletedDownloadDisplayable displayable;
 
   public CompletedDownloadWidget(View itemView) {
@@ -51,14 +52,12 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
     this.displayable = displayable;
-    download = displayable.getPojo();
-    appName.setText(download.getAppName());
-    if (!TextUtils.isEmpty(download.getIcon())) {
-      ImageLoader.load(download.getIcon(), appIcon);
+    downloadProgress = displayable.getPojo();
+    appName.setText(downloadProgress.getRequest().getAppName());
+    if (!TextUtils.isEmpty(downloadProgress.getRequest().getIcon())) {
+      ImageLoader.load(downloadProgress.getRequest().getIcon(), appIcon);
     }
-    status.setText(download.getStatusName(itemView.getContext()));
-    displayable.setOnResumeAction(() -> onViewAttached());
-    displayable.setOnPauseAction(() -> onViewDetached());
+    status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
   }
 
   @Override public void onViewAttached() {
@@ -68,7 +67,8 @@ import rx.subscriptions.CompositeSubscription;
       subscriptions.add(RxView.clicks(itemView)
           .flatMap(click -> displayable.downloadStatus()
               .filter(status -> status == Download.COMPLETED)
-              .flatMap(status -> displayable.installOrOpenDownload(getContext())))
+              .flatMap(status -> displayable.installOrOpenDownload(getContext(),
+                  (PermissionRequest) getContext())))
           .retry()
           .subscribe(success -> {
           }, throwable -> throwable.printStackTrace()));
@@ -76,7 +76,8 @@ import rx.subscriptions.CompositeSubscription;
       subscriptions.add(RxView.clicks(resumeDownloadButton)
           .flatMap(click -> displayable.downloadStatus()
               .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-              .flatMap(status -> displayable.resumeDownload((PermissionRequest) getContext())))
+              .flatMap(status -> displayable.resumeDownload(getContext(),
+                  (PermissionRequest) getContext())))
           .retry()
           .subscribe(success -> {
           }, throwable -> throwable.printStackTrace()));

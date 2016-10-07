@@ -7,20 +7,20 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
@@ -43,9 +43,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private List<Displayable> installedDisplayablesList = new LinkedList<>();
   private Subscription installedSubscription;
   private Subscription updatesSubscription;
-  private Installer installManager;
-  private DownloadFactory downloadFactory;
-  private DownloadServiceHelper downloadManager;
+  private InstallManager installManager;
 
   public static UpdatesFragment newInstance() {
     UpdatesFragment fragment = new UpdatesFragment();
@@ -54,12 +52,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    PermissionManager permissionManager = new PermissionManager();
-    downloadManager =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-    installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    downloadFactory = new DownloadFactory();
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -105,8 +101,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
                 for (Update update : updates) {
                   updatesDisplayablesList.add(
-                      UpdateDisplayable.create(update, installManager, downloadFactory,
-                          downloadManager));
+                      UpdateDisplayable.create(update, installManager, new DownloadFactory()));
                 }
               }
 

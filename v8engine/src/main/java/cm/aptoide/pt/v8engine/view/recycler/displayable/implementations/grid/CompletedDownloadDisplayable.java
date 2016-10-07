@@ -6,55 +6,35 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
-import lombok.Setter;
 import rx.Observable;
-import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/15/16.
  */
-public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
+public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Download>> {
 
-  private Installer installManager;
-  private DownloadServiceHelper downloadManager;
-  @Setter private Action0 onResumeAction;
-  @Setter private Action0 onPauseAction;
+  private InstallManager installManager;
 
   public CompletedDownloadDisplayable() {
     super();
   }
 
-  public CompletedDownloadDisplayable(Download pojo, Installer installManager,
-      DownloadServiceHelper downloadManager) {
+  public CompletedDownloadDisplayable(Progress<Download> pojo, InstallManager installManager) {
     super(pojo);
     this.installManager = installManager;
-    this.downloadManager = downloadManager;
   }
 
-  public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
+  public CompletedDownloadDisplayable(Progress<Download> pojo, boolean fixedPerLineCount) {
     super(pojo, fixedPerLineCount);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    if (onResumeAction != null) {
-      onResumeAction.call();
-    }
-  }
-
-  @Override public void onPause() {
-    if (onPauseAction != null) {
-      onResumeAction.call();
-    }
-    super.onPause();
   }
 
   @Override public Type getType() {
@@ -66,26 +46,32 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
   }
 
   public void removeDownload() {
-    downloadManager.removeDownload(getPojo().getAppId());
+    installManager.removeInstallationFile(getPojo().getRequest().getAppId());
   }
 
   public Observable<Integer> downloadStatus() {
-    return downloadManager.getDownload(getPojo().getAppId())
-        .map(storedDownload -> storedDownload.getOverallDownloadStatus())
+    return installManager.getInstallation(getPojo().getRequest().getAppId())
+        .map(installationProgress -> installationProgress.getRequest().getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
   }
 
-  public Observable<Download> resumeDownload(PermissionRequest permissionRequest) {
-    return downloadManager.startDownload(permissionRequest, getPojo());
+  public Observable<Progress<Download>> resumeDownload(Context context,
+      PermissionRequest permissionRequest) {
+    PermissionManager permissionManager = new PermissionManager();
+    return permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+        .flatMap(success -> installManager.install(context, getPojo().getRequest()));
   }
 
-  public Observable<Void> installOrOpenDownload(Context context) {
-    return installManager.isInstalled(getPojo().getAppId()).flatMap(installed -> {
-      if (installed) {
-        AptoideUtils.SystemU.openApp(getPojo().getFilesToDownload().get(0).getPackageName());
+  public Observable<Progress<Download>> installOrOpenDownload(Context context,
+      PermissionRequest permissionRequest) {
+    return installManager.getInstallation(getPojo().getRequest().getAppId()).flatMap(installed -> {
+      if (installed.getState() == Progress.DONE) {
+        AptoideUtils.SystemU.openApp(
+            getPojo().getRequest().getFilesToDownload().get(0).getPackageName());
         return Observable.empty();
       }
-      return installManager.install(context, getPojo().getAppId());
+      return resumeDownload(context, permissionRequest);
     });
   }
 }

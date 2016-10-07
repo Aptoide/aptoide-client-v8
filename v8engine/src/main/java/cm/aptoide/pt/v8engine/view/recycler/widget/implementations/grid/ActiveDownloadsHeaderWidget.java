@@ -28,7 +28,7 @@ public class ActiveDownloadsHeaderWidget extends Widget<ActiveDownloadsHeaderDis
     title.setText(displayable.getLabel());
     more.setText(R.string.pause_all_downloads);
     more.setVisibility(View.VISIBLE);
-    more.setOnClickListener(view -> displayable.getDownloadManager().pauseAllDownloads());
+    more.setOnClickListener(view -> displayable.pauseAllDownloads(getContext()));
   }
 
   @Override public void onViewAttached() {
