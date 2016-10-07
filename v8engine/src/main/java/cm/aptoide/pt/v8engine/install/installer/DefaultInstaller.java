@@ -68,8 +68,8 @@ import rx.schedulers.Schedulers;
   @Override public Observable<Void> downgrade(Context context, long installationId) {
     return installationProvider.getInstallation(installationId)
         .first()
-        .concatMap(installation -> uninstall(context, installation.getPackageName()))
-        .concatWith(install(context, installationId));
+        .flatMap(installation -> uninstall(context, installation.getPackageName()))
+        .flatMap(success -> install(context, installationId));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {
@@ -80,9 +80,7 @@ import rx.schedulers.Schedulers;
     return Observable.<Void>fromCallable(() -> {
       startUninstallIntent(context, packageName, uri);
       return null;
-    }).ignoreElements()
-        .concatWith(packageIntent(context, intentFilter, packageName))
-        .subscribeOn(Schedulers.computation());
+    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {
@@ -93,7 +91,7 @@ import rx.schedulers.Schedulers;
     return Observable.<Void>fromCallable(() -> {
       startInstallIntent(context, file);
       return null;
-    }).ignoreElements().concatWith(packageIntent(context, intentFilter, packageName));
+    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
   private void startInstallIntent(Context context, File file) {
@@ -158,6 +156,7 @@ import rx.schedulers.Schedulers;
       // Check if package is installed first
       packageManager.getPackageInfo(packageName, 0);
       Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       context.startActivity(intent);
     } catch (PackageManager.NameNotFoundException e) {
       CrashReports.logException(e);
@@ -165,10 +164,11 @@ import rx.schedulers.Schedulers;
     }
   }
 
-  @NonNull private Observable<Void> packageIntent(Context context, IntentFilter intentFilter,
+  @NonNull private Observable<Void> waitPackageIntent(Context context, IntentFilter intentFilter,
       String packageName) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-        .first(intent -> intent.getData().toString().contains(packageName)).<Void>map(
+        .first(intent -> intent.getData().toString().contains(packageName))
+        .map(
             intent -> null);
   }
 
