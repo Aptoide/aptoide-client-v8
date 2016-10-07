@@ -21,7 +21,7 @@ public class Logger {
    * @param e exception to log.
    */
   public static void printException(Throwable e) {
-    if (DBG && e != null) {
+    if (e != null) {
       e.printStackTrace();
     }
   }
@@ -65,32 +65,22 @@ public class Logger {
   }
 
   public static void w(String TAG, String msg) {
-    if (DBG) {
-      Log.w(TAG, msg);
-    }
+    Log.w(TAG, msg);
   }
 
   public static void w(String TAG, String msg, Throwable tr) {
-    if (DBG) {
-      Log.w(TAG, msg, tr);
-    }
+    Log.w(TAG, msg, tr);
   }
 
   public static void e(String TAG, String msg) {
-    if (DBG) {
-      Log.e(TAG, msg);
-    }
+    Log.e(TAG, msg);
   }
 
   public static void e(String TAG, Throwable tr) {
-    if (DBG) {
-      Log.e(TAG, "", tr);
-    }
+    Log.e(TAG, "", tr);
   }
 
   public static void e(String TAG, String msg, Throwable tr) {
-    if (DBG) {
-      Log.e(TAG, msg, tr);
-    }
+    Log.e(TAG, msg, tr);
   }
 }

@@ -48,7 +48,6 @@ public final class Database {
   }
 
   public static void initialize(Context context) {
-    isInitialized = true;
     if (isInitialized) return;
 
     StringBuilder strBuilder = new StringBuilder(KEY);
@@ -79,6 +78,7 @@ public final class Database {
     }
     Realm.setDefaultConfiguration(realmConfig);
     isInitialized = true;
+    DeprecatedDatabase.isInitialized = true;
   }
 
   public static <E extends RealmObject> void save(E realmObject) {

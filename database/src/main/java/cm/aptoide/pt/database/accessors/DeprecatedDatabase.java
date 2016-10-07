@@ -35,7 +35,7 @@ import io.realm.RealmResults;
   public static final int SCHEMA_VERSION = Database.SCHEMA_VERSION;
   private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
-  private static boolean isInitialized = false;
+  public static boolean isInitialized = false;
 
   private static String extract(String str) {
     return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
@@ -43,33 +43,34 @@ import io.realm.RealmResults;
 
   public static void initialize(Context context) {
     if (isInitialized) return;
-    StringBuilder strBuilder = new StringBuilder(KEY);
-    strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
-    strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
-    strBuilder.append(extract(BuildConfig.APPLICATION_ID));
-    strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
-
-    // Beware this is the app context
-    // So always use a unique name
-    // Always use explicit modules in library projects
-    RealmConfiguration realmConfig;
-    if (BuildConfig.DEBUG) {
-      realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-          .schemaVersion(SCHEMA_VERSION)
-          .migration(MIGRATION)
-          .build();
-    } else {
-      realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-          //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
-          .schemaVersion(SCHEMA_VERSION)
-          .migration(MIGRATION)
-          .build();
-    }
-
-    if (BuildConfig.DELETE_DB) {
-      Realm.deleteRealm(realmConfig);
-    }
-    Realm.setDefaultConfiguration(realmConfig);
+    //StringBuilder strBuilder = new StringBuilder(KEY);
+    //strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
+    //strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
+    //strBuilder.append(extract(BuildConfig.APPLICATION_ID));
+    //strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
+    //
+    //// Beware this is the app context
+    //// So always use a unique name
+    //// Always use explicit modules in library projects
+    //RealmConfiguration realmConfig;
+    //if (BuildConfig.DEBUG) {
+    //  realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
+    //      .schemaVersion(SCHEMA_VERSION)
+    //      .migration(MIGRATION)
+    //      .build();
+    //} else {
+    //  realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
+    //      //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
+    //      .schemaVersion(SCHEMA_VERSION)
+    //      .migration(MIGRATION)
+    //      .build();
+    //}
+    //
+    //if (BuildConfig.DELETE_DB) {
+    //  Realm.deleteRealm(realmConfig);
+    //}
+    //Realm.setDefaultConfiguration(realmConfig);
+    Database.initialize(context);
     isInitialized = true;
   }
 
