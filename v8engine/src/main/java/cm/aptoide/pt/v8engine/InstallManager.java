@@ -93,6 +93,11 @@ public class InstallManager {
     return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS;
   }
 
+  public boolean isPending(Progress<Download> progress) {
+    return progress.getRequest().getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+  }
+
   public Observable<Progress<Download>> install(Context context, Download download) {
     return getInstallation(download.getAppId()).first()
         .retryWhen(errors -> createDownloadAndRetry(errors, download))

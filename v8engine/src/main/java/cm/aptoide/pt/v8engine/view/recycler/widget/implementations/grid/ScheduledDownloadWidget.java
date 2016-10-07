@@ -10,12 +10,23 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * created by SithEngineer
@@ -28,9 +39,12 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   private TextView appVersion;
   private CheckBox isSelected;
   private ProgressBar progressBarIsInstalling;
+  private CompositeSubscription subscriptions;
 
   public ScheduledDownloadWidget(View itemView) {
     super(itemView);
+
+    subscriptions = new CompositeSubscription();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -57,14 +71,35 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     displayable.setProgressBarIsInstalling(progressBarIsInstalling);
     displayable.setIsSelected(isSelected);
 
-    displayable.updateUi(scheduled.isDownloading());
+    isDownloading(displayable);
   }
 
+  private void isDownloading(ScheduledDownloadDisplayable displayable) {
+    AptoideDownloadManager aptoideDownloadManager = AptoideDownloadManager.getInstance();
+    aptoideDownloadManager.initDownloadService(getContext());
+    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    InstallManager installManager = new InstallManager(aptoideDownloadManager, installer,
+        AccessorFactory.getAccessorFor(Download.class), AccessorFactory.getAccessorFor(Installed.class));
+
+    Observable<Progress<Download>> installation =
+        installManager.getInstallation(displayable.getPojo().getAppId());
+
+    subscriptions.add(installation.map(
+        downloadProgress -> installManager.isInstalling(downloadProgress)
+            || installManager.isPending(downloadProgress))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe((isDownloading) -> {
+          displayable.updateUi(isDownloading);
+        }, throwable -> {
+          displayable.updateUi(false);
+          throwable.printStackTrace();
+        }));
+  }
   @Override public void onViewAttached() {
 
   }
 
   @Override public void onViewDetached() {
-
+    subscriptions.clear();
   }
 }
