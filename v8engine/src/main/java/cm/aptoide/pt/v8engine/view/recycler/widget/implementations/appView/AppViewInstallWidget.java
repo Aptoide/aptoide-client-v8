@@ -23,13 +23,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -40,12 +40,15 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
@@ -90,10 +93,12 @@ import rx.subscriptions.CompositeSubscription;
   private MinimalAd minimalAd;
 
   private App trustedVersion;
-  private DownloadServiceHelper downloadServiceHelper;
+  //private DownloadServiceHelper downloadServiceHelper;
   private PermissionRequest permissionRequest;
+  private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private boolean isUpdate;
+  private AptoideDownloadManager aptoideDownloadManager;
 
   //private Subscription subscribe;
   //private long appID;
@@ -127,8 +132,14 @@ import rx.subscriptions.CompositeSubscription;
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
     }
-    downloadServiceHelper =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+
+    aptoideDownloadManager = AptoideDownloadManager.getInstance();
+    AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
+    downloadManager.initDownloadService(getContext());
+    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(downloadManager, installer,
+        AccessorFactory.getAccessorFor(Download.class));
+
     minimalAd = displayable.getMinimalAd();
     GetApp getApp = displayable.getPojo();
     //appID = getApp.getNodes().getMeta().getData().getId();
@@ -192,8 +203,11 @@ import rx.subscriptions.CompositeSubscription;
         .subscribe(installed -> {
           if (installed != null) {
             ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-              displayable.uninstall(getContext()).subscribe(aVoid -> {
-              }, throwable -> throwable.printStackTrace());
+              subscriptions.add(
+                  new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
+                      .flatMap(success -> installManager.uninstall(getContext(), packageName))
+                      .subscribe(aVoid -> {
+                      }, throwable -> throwable.printStackTrace()));
             });
             if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
               //current installed version
@@ -265,7 +279,7 @@ import rx.subscriptions.CompositeSubscription;
 
   public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    downloadServiceHelper.getDownload(app.getId())
+    aptoideDownloadManager.getDownload(app.getId())
         .firstOrDefault(null)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(download -> {
@@ -277,7 +291,7 @@ import rx.subscriptions.CompositeSubscription;
               downloadStatus == Download.PAUSED)) {
             setDownloadBarVisible(true);
             setupDownloadControls(app, download, displayable);
-            downloadServiceHelper.getDownload(app.getId())
+            aptoideDownloadManager.getDownload(app.getId())
                 .observeOn(AndroidSchedulers.mainThread())
                 .takeUntil(onGoingDownload -> shouldContinueListenDownload(
                     onGoingDownload.getOverallDownloadStatus()))
@@ -380,25 +394,25 @@ import rx.subscriptions.CompositeSubscription;
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
                   DownloadFactory factory = new DownloadFactory();
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
-                  downloadServiceHelper.startDownload(permissionRequest, appDownload)
+
+                  subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+                      .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
-                      .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-                          onGoingDownload.getOverallDownloadStatus()))
-                      .subscribe(download -> {
-                        manageDownload(download, displayable, app);
+                      .subscribe(progress -> {
+                        manageDownload(progress.getRequest(), displayable, app);
                 /*if (!setupDownloadControlsRunned) {
                   // TODO: 09/09/16 refactor this
                   setupDownloadControls(app, appDownload, displayable);
                 }*/
 
-                        if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-                          //final String packageName = app.getPackageName();
-                          //final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-
-                          displayable.downgrade(getContext()).subscribe(aVoid -> {
-                          }, throwable -> throwable.printStackTrace());
-                        }
-                      });
+                        //if (progress.isDone()) {
+                        //  //final String packageName = app.getPackageName();
+                        //  //final FileToDownload downloadedFile = progress.getFilesToDownload().get(0);
+                        //
+                        //  displayable.downgrade(getContext()).subscribe(aVoid -> {
+                        //  }, throwable -> throwable.printStackTrace());
+                        //}
+                      }, Throwable::printStackTrace));
                   setupDownloadControls(app, appDownload, displayable);
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
@@ -435,19 +449,34 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory factory = new DownloadFactory();
       Download appDownload = factory.create(app, downloadAction);
 
-      downloadServiceHelper.startDownload(permissionRequest, appDownload)
+      subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+          .flatMap(success -> installManager.install(getContext(),
+              new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
+                  downloadAction)))
           .observeOn(AndroidSchedulers.mainThread())
-          .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-              onGoingDownload.getOverallDownloadStatus()))
-          .subscribe(download -> {
-            manageDownload(download, displayable, app);
+          .subscribe(progress -> {
+            manageDownload(progress.getRequest(), displayable, app);
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
             }
 
             Logger.e(TAG, err);
-          });
+          }));
+
+      //downloadServiceHelper.startDownload(permissionRequest, appDownload)
+      //    .observeOn(AndroidSchedulers.mainThread())
+      //    .takeUntil(onGoingDownload -> shouldContinueListenDownload(
+      //        onGoingDownload.getOverallDownloadStatus()))
+      //    .subscribe(download -> {
+      //      manageDownload(download, displayable, app);
+      //    }, err -> {
+      //      if (err instanceof SecurityException) {
+      //        ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
+      //      }
+      //
+      //      Logger.e(TAG, err);
+      //    });
       ShowMessage.asSnack(v, installOrUpgradeMsg);
       setupDownloadControls(app, appDownload, displayable);
     };
@@ -515,30 +544,35 @@ import rx.subscriptions.CompositeSubscription;
         setDownloadBarVisible(false);
 
         Observable<Void> install;
-        if (isUpdate) {
-          install = displayable.update(ctx);
-        } else {
-          install = displayable.install(ctx);
-        }
-
-        install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+        if (!isUpdate) {
           if (minimalAd != null && minimalAd.getCpdUrl() != null) {
             DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
           }
-        }).subscribe(success -> {
-          if (actionButton.getVisibility() == View.VISIBLE) {
-            setupActionButton(R.string.open,
-                v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
+        }
 
-            if (displayable.isVisible()) {
-              ((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(
-                  () -> {
-                    displayable.uninstall(ctx).subscribe(aVoid -> {
-                    }, throwable -> throwable.printStackTrace());
-                  });
-            }
-          }
-        }, throwable -> throwable.printStackTrace());
+        if (actionButton.getVisibility() == View.VISIBLE) {
+          setupActionButton(R.string.open,
+              v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
+        }
+
+        //install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+        //  if (minimalAd != null && minimalAd.getCpdUrl() != null) {
+        //    DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
+        //  }
+        //}).subscribe(success -> {
+        //  if (actionButton.getVisibility() == View.VISIBLE) {
+        //    setupActionButton(R.string.open,
+        //        v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
+        //
+        //    if (displayable.isVisible()) {
+        //      ((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(
+        //          () -> {
+        //            displayable.uninstall(ctx).subscribe(aVoid -> {
+        //            }, throwable -> throwable.printStackTrace());
+        //          });
+        //    }
+        //  }
+        //}, throwable -> throwable.printStackTrace());
         break;
       }
     }
@@ -549,32 +583,31 @@ import rx.subscriptions.CompositeSubscription;
     long appId = app.getId();
 
     actionCancel.setOnClickListener(view -> {
-      downloadServiceHelper.removeDownload(appId);
+      aptoideDownloadManager.removeDownload(appId);
       setDownloadBarVisible(false);
     });
 
     actionPause.setOnClickListener(view -> {
-      downloadServiceHelper.pauseDownload(appId);
+      aptoideDownloadManager.pauseDownload(appId);
       actionResume.setVisibility(View.VISIBLE);
       actionPause.setVisibility(View.GONE);
     });
 
     actionResume.setOnClickListener(view -> {
-      downloadServiceHelper.startDownload(permissionRequest, download)
+      subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+          .flatMap(success -> installManager.install(getContext(),
+              new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
+                  download.getAction())))
           .observeOn(AndroidSchedulers.mainThread())
-          //the first state will be "onPause" and we don't wanna listen it
-          .skip(1)
-          .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-              onGoingDownload.getOverallDownloadStatus()))
-          .subscribe(onGoingDownload -> {
+          .subscribe(progress -> {
             if (actionPause.getVisibility() != View.VISIBLE) {
               actionResume.setVisibility(View.GONE);
               actionPause.setVisibility(View.VISIBLE);
             }
-            manageDownload(onGoingDownload, displayable, app);
+            manageDownload(progress.getRequest(), displayable, app);
           }, err -> {
             Logger.e(TAG, err);
-          });
+          }));
     });
 
     setDownloadBarVisible(true);
