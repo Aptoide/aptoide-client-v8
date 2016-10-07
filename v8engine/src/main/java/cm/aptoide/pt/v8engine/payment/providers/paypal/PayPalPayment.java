@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.paypal;
+package cm.aptoide.pt.v8engine.payment.providers.paypal;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
