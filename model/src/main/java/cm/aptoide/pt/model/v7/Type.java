@@ -74,7 +74,7 @@ public enum Type {
   COMPLETED_DOWNLOAD,
 
   //Reviews Screen
-  REVIEWS_GROUP(1, true),
+  REVIEWS_GROUP(1, false),
   READ_MORE_COMMENTS(1, true),
 
   // un-used types
