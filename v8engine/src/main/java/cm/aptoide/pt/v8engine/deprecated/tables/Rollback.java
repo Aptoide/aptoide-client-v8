@@ -38,15 +38,6 @@ public class Rollback extends BaseTable {
   // @ColumnDefinition(type = SQLType.INTEGER)
   public final static String COLUMN_CONFIRMED = "confirmed";
 
-  // @ColumnDefinition(type = SQLType.TEXT)
-  public final static String COLUMN_REPO = "reponame";
-
-  // @ColumnDefinition(type = SQLType.TEXT)
-  public final static String COLUMN_IS_TRUSTED = "isTrusted";
-
-  // @ColumnDefinition(type = SQLType.TEXT)
-  public final static String COLUMN_PREVIOUS_VERSION = "previous_version";
-
   private static final String NAME = "rollbacktbl";
 
   @Override public String getTableName() {
@@ -81,8 +72,6 @@ public class Rollback extends BaseTable {
       }
 
       realmObject.setConfirmed(cursor.getInt(cursor.getColumnIndex(COLUMN_CONFIRMED)) == 1);
-
-      // ??  = cursor.getString(cursor.getColumnIndex(COLUMN_PREVIOUS_VERSION));
 
       return realmObject;
     }

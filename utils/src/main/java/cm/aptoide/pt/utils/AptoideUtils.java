@@ -646,11 +646,17 @@ public class AptoideUtils {
     public static Map<String, String> splitQuery(URI uri) throws UnsupportedEncodingException {
       Map<String, String> query_pairs = new LinkedHashMap<>();
       String query = uri.getQuery();
-      String[] pairs = query.split("&");
-      for (String pair : pairs) {
-        int idx = pair.indexOf("=");
-        query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
-            URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+      if (query != null) {
+        String[] pairs = query.split("&");
+        if (pairs != null) {
+          for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            if (idx > 0 && idx + 1 < pair.length()) {
+              query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+                  URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+            }
+          }
+        }
       }
       return query_pairs;
     }
@@ -913,7 +919,6 @@ public class AptoideUtils {
 
       return retval;
     }
-
   }
 
   public static final class ThreadU {

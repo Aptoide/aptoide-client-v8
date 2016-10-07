@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -82,7 +83,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   private boolean isCurrentScheduled(ScheduledDownloadDisplayable displayable, Download download) {
-    return download.getAppId() == displayable.getPojo().getAppId();
+    return TextUtils.equals(download.getMd5(), displayable.getPojo().getMd5());
   }
 
   private void changeLoaderStatus(Download download) {

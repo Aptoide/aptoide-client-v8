@@ -12,6 +12,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -27,6 +28,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 @Displayables({ CompletedDownloadDisplayable.class }) public class CompletedDownloadWidget
     extends Widget<CompletedDownloadDisplayable> {
+  private static final String TAG = CompletedDownloadWidget.class.getSimpleName();
 
   private TextView appName;
   private ImageView appIcon;
@@ -94,7 +96,7 @@ import rx.subscriptions.CompositeSubscription;
             } else {
               resumeDownloadButton.setVisibility(View.GONE);
             }
-          }));
+          }, throwable -> Logger.e(TAG, throwable)));
     }
   }
 

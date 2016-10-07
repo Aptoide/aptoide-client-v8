@@ -65,15 +65,15 @@ import rx.schedulers.Schedulers;
   @NonNull
   private Rollback createRollbackItem(RollbackInstallation installation, Rollback.Action action) {
     Rollback rollback = new Rollback();
+    rollback.setMd5(installation.getId());
+    //rollback.setMd5(AptoideUtils.AlgorithmU.computeMd5(installation.getFile()));
     rollback.setAction(action.name());
     rollback.setAppName(installation.getAppName());
     rollback.setPackageName(installation.getPackageName());
-    rollback.setAppId(installation.getId());
     rollback.setConfirmed(false);
     rollback.setIcon(installation.getIcon());
     rollback.setVersionCode(installation.getVersionCode());
     rollback.setTimestamp(System.currentTimeMillis());
-    rollback.setMd5(AptoideUtils.AlgorithmU.computeMd5(installation.getFile()));
     return rollback;
   }
 }

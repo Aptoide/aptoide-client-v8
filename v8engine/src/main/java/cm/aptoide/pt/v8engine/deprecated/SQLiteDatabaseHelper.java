@@ -21,6 +21,9 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 import cm.aptoide.pt.v8engine.deprecated.tables.Updates;
 import io.realm.Realm;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
  * Created by sithengineer on 24/08/16.
@@ -28,7 +31,7 @@ import io.realm.Realm;
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 43;
+  private static final int DATABASE_VERSION = 44;
 
   private Throwable agregateExceptions;
 
@@ -38,7 +41,9 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   @Override public void onCreate(SQLiteDatabase db) {
     Logger.w(TAG, "onCreate() called");
+
     // do nothing here.
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -49,6 +54,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + newVersion
         + "]");
     migrate(db);
+
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
 
     SecurePreferences.setWizardAvailable(true);
   }
@@ -62,13 +69,15 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + newVersion
         + "]");
     migrate(db);
+
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
   /**
    * migrate from whole SQLite db from V7 to V8 Realm db
    */
   private void migrate(SQLiteDatabase db) {
-    if (!ManagerPreferences.needsDbMigration()) {
+    if (!ManagerPreferences.needsSqliteDbMigration()) {
       return;
     }
     Logger.w(TAG, "Migrating database started....");
@@ -109,8 +118,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     }
 
     try {
-      new Updates().migrate(db,
-          realm); // despite the migration, this data should be recreated upon app startup
+      new Updates().migrate(db, realm);
+      // despite the migration, this data should be recreated upon app startup
     } catch (Exception ex) {
       logException(ex);
     }
@@ -121,8 +130,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     if (agregateExceptions != null) {
       CrashReports.logException(agregateExceptions);
     }
-
-    ManagerPreferences.setNeedsDbMigration(false);
     Logger.w(TAG, "Migrating database finished.");
   }
 

@@ -66,7 +66,7 @@ import rx.Observable;
     return downloadManager.startDownload((PermissionRequest) context, download)
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .concatMap(downloadCompleted -> installManager.update(context, (PermissionRequest) context,
-            download.getAppId()));
+            download.getMd5()));
   }
 
   @Override public Type getType() {

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.content.DialogInterface;
 import android.support.annotation.UiThread;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -122,17 +123,17 @@ import rx.subscriptions.CompositeSubscription;
     subscriptions.add(displayable.getDownloadManager()
         .getAllDownloads()
         .observeOn(Schedulers.io())
-        .map(downloads -> getDownloadFromList(downloads, displayable.getAppId()))
+        .map(downloads -> getDownloadFromList(downloads, displayable.getMd5()))
         .map(download -> shouldDisplayProgress(download))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(shouldShow -> showProgress(shouldShow),
             throwable -> throwable.printStackTrace()));
   }
 
-  private Download getDownloadFromList(List<Download> downloads, long appId) {
+  private Download getDownloadFromList(List<Download> downloads, String md5) {
     for (int i = 0; i < downloads.size(); i++) {
       Download download = downloads.get(i);
-      if (download.getAppId() == appId) {
+      if (TextUtils.equals(download.getMd5(), md5)) {
         return download;
       }
     }

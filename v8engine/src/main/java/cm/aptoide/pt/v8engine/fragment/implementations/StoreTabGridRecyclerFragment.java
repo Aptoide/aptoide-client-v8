@@ -182,7 +182,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       addDisplayables(displayables);
     }, e -> finishLoading());
 
-    getView().findViewById(R.id.swipe_container).setEnabled(false);
+    //getView().findViewById(R.id.swipe_container).setEnabled(false);
   }
 
   private void caseListApps(String url, boolean refresh) {

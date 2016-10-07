@@ -40,6 +40,6 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
 
   public void removeFromDatabase() {
     ((ScheduledAccessor) AccessorFactory.getAccessorFor(Scheduled.class)).delete(
-        getPojo().getAppId());
+        getPojo().getMd5());
   }
 }

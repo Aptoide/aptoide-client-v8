@@ -34,7 +34,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
   private static final String TAG = DownloadTask.class.getSimpleName();
   private final Download download;
-  private final long appId;
+  private final String md5;
   private final DownloadAccessor downloadAccessor;
   private final FileUtils fileUtils;
   /**
@@ -47,7 +47,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
 
   DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils) {
     this.download = download;
-    this.appId = download.getAppId();
+    this.md5 = download.getMd5();
     this.downloadAccessor = downloadAccessor;
     this.fileUtils = fileUtils;
 
@@ -66,7 +66,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
             if (updatedDownload.getOverallProgress() == AptoideDownloadManager.PROGRESS_MAX_VALUE
                 && download.getOverallDownloadStatus() != Download.COMPLETED) {
               setDownloadStatus(Download.COMPLETED, download);
-              AptoideDownloadManager.getInstance().currentDownloadFinished(download.getAppId());
+              AptoideDownloadManager.getInstance().currentDownloadFinished();
             }
             return true;
           } else {
@@ -111,8 +111,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
     download.setOverallProgress(
         (int) Math.floor((float) progress / download.getFilesToDownload().size()));
     saveDownloadInDb(download);
-    Logger.d(TAG,
-        "Download: " + download.getAppId() + " Progress: " + download.getOverallProgress());
+    Logger.d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
     return download;
   }
 
@@ -133,7 +132,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
             .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
             .setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
             .ready());
-        fileToDownload.setAppId(appId);
+        fileToDownload.setMd5(md5);
       }
 
       if (isSerial) {
@@ -215,7 +214,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
 
   @Override protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
     setDownloadStatus(Download.PAUSED, download, task);
-    AptoideDownloadManager.getInstance().currentDownloadFinished(download.getAppId());
+    AptoideDownloadManager.getInstance().currentDownloadFinished();
   }
 
   @Override protected void error(BaseDownloadTask task, Throwable e) {
@@ -231,17 +230,17 @@ class DownloadTask extends FileDownloadLargeFileListener {
           Intent intent =
               new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
           intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-          intent.putExtra(AptoideDownloadManager.APP_ID_EXTRA, download.getAppId());
+          intent.putExtra(AptoideDownloadManager.FILE_MD5_EXTRA, download.getMd5());
           AptoideDownloadManager.getContext().sendBroadcast(intent);
           return;
         }
       }
     } else {
-      Logger.d(TAG, "Error on download: " + download.getAppId());
+      Logger.d(TAG, "Error on download: " + download.getMd5());
       e.printStackTrace();
     }
     setDownloadStatus(Download.ERROR, download, task);
-    AptoideDownloadManager.getInstance().currentDownloadFinished(download.getAppId());
+    AptoideDownloadManager.getInstance().currentDownloadFinished();
   }
 
   @Override protected void warn(BaseDownloadTask task) {
