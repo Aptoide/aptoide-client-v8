@@ -126,7 +126,7 @@ public abstract class V8Engine extends DataProvider {
     //
     super.onCreate();
 
-    //if(BuildConfig.DEBUG){
+    //if (BuildConfig.DEBUG) {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 

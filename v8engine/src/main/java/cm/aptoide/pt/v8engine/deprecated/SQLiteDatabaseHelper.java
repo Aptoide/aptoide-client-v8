@@ -9,7 +9,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.UpdatesAccessor;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -117,12 +120,14 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       logException(ex);
     }
 
-    try {
-      new Updates().migrate(db, realm);
-      // despite the migration, this data should be recreated upon app startup
-    } catch (Exception ex) {
-      logException(ex);
-    }
+    // Updates table has changed. The new one has column label the old one doesn't.
+    // The updates are going to be obtained from ws
+    //try {
+    //  new Updates().migrate(db, realm);
+    //  // despite the migration, this data should be recreated upon app startup
+    //} catch (Exception ex) {
+    //  logException(ex);
+    //}
 
     // table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade

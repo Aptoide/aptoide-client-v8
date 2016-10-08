@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.database.accessors;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
@@ -50,8 +50,10 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     //    ~ set "md5" as PK in FileToDownload
     if (oldVersion <= 8075) {
 
+      oldVersion = 8075;
       schema.get("Scheduled")
           .removeField("appId");
+
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -68,6 +70,24 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       schema.get("Download")
           .removeField("appId")
           .addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
+
+      oldVersion++;
+    }
+
+    //  Migrate from version 1 (8076) to version 2 (8077)
+    if(oldVersion == 8076) {
+      RealmObjectSchema schemaFile = schema.get("Scheduled");
+      if(schemaFile.hasPrimaryKey()){
+        schemaFile.removePrimaryKey();
+      }
+      schemaFile.removeField("md5");
+      schemaFile.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
+
+      realm.where(Update.class.getSimpleName())
+          //.equalTo(Update.LABEL, "").or()
+          //.isNull(Update.LABEL)
+          .findAll()
+          .deleteAllFromRealm();
 
       oldVersion++;
     }

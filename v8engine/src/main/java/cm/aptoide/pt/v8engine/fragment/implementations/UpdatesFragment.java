@@ -15,8 +15,10 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -43,6 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by neuro on 16-05-2016.
  */
 public class UpdatesFragment extends GridRecyclerSwipeFragment {
+
+  private static final String TAG = UpdatesFragment.class.getName();
 
   private List<Displayable> updatesDisplayablesList = new LinkedList<>();
   private List<Displayable> installedDisplayablesList = new LinkedList<>();
@@ -120,7 +124,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
               setDisplayables();
             }
-          }, Throwable::printStackTrace);
+          }, ex -> {
+            Logger.w(TAG, "finished loading not being called in fetchUpdates");
+            Logger.printException(ex);
+            CrashReports.logException(ex);
+          });
     }
   }
 
@@ -147,7 +155,12 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             }
 
             setDisplayables();
-          }, Throwable::printStackTrace);
+          }, ex -> {
+            Logger.w(TAG, "finished loading not being called in fetchInstalled");
+            Logger.printException(ex);
+            CrashReports.logException(ex);
+          });
+
       if (realmResults.size() == 0) {
         finishLoading();
       }

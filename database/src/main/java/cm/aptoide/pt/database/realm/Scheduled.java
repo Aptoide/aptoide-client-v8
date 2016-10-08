@@ -30,7 +30,7 @@ import lombok.AllArgsConstructor;
   private String versionName;
   private String icon;
   private String path;
-  private String md5;
+  @PrimaryKey private String md5;
   private int verCode;
   private String packageName;
   private String storeName;

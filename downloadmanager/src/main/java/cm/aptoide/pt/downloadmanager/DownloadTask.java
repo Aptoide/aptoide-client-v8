@@ -132,7 +132,6 @@ class DownloadTask extends FileDownloadLargeFileListener {
             .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
             .setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
             .ready());
-        fileToDownload.setMd5(md5);
       }
 
       if (isSerial) {
