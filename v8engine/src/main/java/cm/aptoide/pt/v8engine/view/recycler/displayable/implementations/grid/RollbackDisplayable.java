@@ -31,8 +31,8 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
     this(installManager, pojo, false);
   }
 
-  public RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
+  private RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
+    super(pojo);
     this.installManager = installManager;
   }
 

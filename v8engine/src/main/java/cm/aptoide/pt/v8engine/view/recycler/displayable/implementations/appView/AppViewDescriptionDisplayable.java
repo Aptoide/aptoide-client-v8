@@ -21,10 +21,6 @@ public class AppViewDescriptionDisplayable extends AppViewDisplayable {
     super(getApp);
   }
 
-  public AppViewDescriptionDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-    super(getApp, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_DESCRIPTION;
   }

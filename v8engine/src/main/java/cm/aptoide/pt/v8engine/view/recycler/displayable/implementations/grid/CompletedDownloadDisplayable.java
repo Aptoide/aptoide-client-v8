@@ -39,10 +39,6 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
     this.downloadManager = downloadManager;
   }
 
-  public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public void onResume() {
     super.onResume();
     if (onResumeAction != null) {

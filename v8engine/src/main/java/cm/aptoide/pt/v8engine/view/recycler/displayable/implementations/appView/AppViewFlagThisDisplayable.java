@@ -21,10 +21,6 @@ public class AppViewFlagThisDisplayable extends AppViewDisplayable {
     super(getApp);
   }
 
-  public AppViewFlagThisDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-    super(getApp, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_FLAG_THIS;
   }

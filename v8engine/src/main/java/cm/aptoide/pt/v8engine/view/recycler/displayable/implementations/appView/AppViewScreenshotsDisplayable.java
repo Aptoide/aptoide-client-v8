@@ -22,10 +22,6 @@ public class AppViewScreenshotsDisplayable extends DisplayablePojo<GetAppMeta.Ap
     super(pojo);
   }
 
-  public AppViewScreenshotsDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_IMAGES;
   }

@@ -26,10 +26,6 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
     super(pojo);
   }
 
-  public ScheduledDownloadDisplayable(Scheduled pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.SCHEDULED_DOWNLOAD;
   }

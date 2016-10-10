@@ -17,10 +17,6 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetStoreMeta> {
     super(pojo);
   }
 
-  public GridStoreMetaDisplayable(GetStoreMeta pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.STORE_META;
   }

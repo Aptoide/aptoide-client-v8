@@ -34,10 +34,6 @@ import rx.subscriptions.CompositeSubscription;
   public Displayable() {
   }
 
-  public Displayable(boolean fixedPerLineCount) {
-    this.fixedPerLineCount = fixedPerLineCount;
-  }
-
   public abstract Type getType();
 
   @LayoutRes public abstract int getViewLayout();

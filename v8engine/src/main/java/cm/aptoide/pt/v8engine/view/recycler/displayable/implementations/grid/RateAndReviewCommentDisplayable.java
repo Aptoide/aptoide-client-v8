@@ -30,11 +30,6 @@ public class RateAndReviewCommentDisplayable
   }
 
   public RateAndReviewCommentDisplayable(RateAndReviewCommentDisplayable.ReviewWithAppName pojo,
-      boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
-  public RateAndReviewCommentDisplayable(RateAndReviewCommentDisplayable.ReviewWithAppName pojo,
       RateAndReviewsFragment.CommentAdder commentAdder) {
     super(pojo);
     this.commentAdder = commentAdder;

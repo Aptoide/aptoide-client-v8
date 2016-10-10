@@ -27,10 +27,6 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
     this.downloadManager = downloadManager;
   }
 
-  public ActiveDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.ACTIVE_DOWNLOAD;
   }

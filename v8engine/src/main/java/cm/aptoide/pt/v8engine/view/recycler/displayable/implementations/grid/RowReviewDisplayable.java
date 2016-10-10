@@ -23,7 +23,7 @@ public class RowReviewDisplayable extends DisplayablePojo<FullReview> {
   }
 
   public RowReviewDisplayable(FullReview pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
+    super(pojo);
   }
 
   @Override public Type getType() {

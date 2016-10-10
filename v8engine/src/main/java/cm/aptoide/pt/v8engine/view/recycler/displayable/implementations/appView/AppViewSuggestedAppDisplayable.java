@@ -22,10 +22,6 @@ public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
     super(minimalAd);
   }
 
-  public AppViewSuggestedAppDisplayable(MinimalAd minimalAd, boolean fixedPerLineCount) {
-    super(minimalAd, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_SUGGESTED_APP;
   }

@@ -21,10 +21,6 @@ import cm.aptoide.pt.v8engine.R;
     super(getApp);
   }
 
-  public AppViewOtherVersionsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-    super(getApp, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_OTHER_VERSIONS;
   }

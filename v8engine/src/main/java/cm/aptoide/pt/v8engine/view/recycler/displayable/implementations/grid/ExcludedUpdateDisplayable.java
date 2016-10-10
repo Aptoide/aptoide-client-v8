@@ -24,10 +24,6 @@ public class ExcludedUpdateDisplayable extends DisplayablePojo<Update> {
     super(pojo);
   }
 
-  public ExcludedUpdateDisplayable(Update pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.EXCLUDED_UPDATE;
   }

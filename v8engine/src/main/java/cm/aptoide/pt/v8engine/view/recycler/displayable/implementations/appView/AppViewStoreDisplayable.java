@@ -21,10 +21,6 @@ public class AppViewStoreDisplayable extends AppViewDisplayable {
     super(getApp);
   }
 
-  public AppViewStoreDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-    super(getApp, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_SUBSCRIPTION;
   }

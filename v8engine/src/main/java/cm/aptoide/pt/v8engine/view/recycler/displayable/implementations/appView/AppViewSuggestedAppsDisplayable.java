@@ -23,10 +23,6 @@ public class AppViewSuggestedAppsDisplayable extends DisplayablePojo<List<GetAds
     super(ads);
   }
 
-  public AppViewSuggestedAppsDisplayable(List<GetAdsResponse.Ad> ads, boolean fixedPerLineCount) {
-    super(ads, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_SUGGESTED_APPS;
   }

@@ -22,10 +22,6 @@ public class OtherVersionDisplayable extends DisplayablePojo<App> {
     super(pojo);
   }
 
-  public OtherVersionDisplayable(App pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.OTHER_VERSION_ROW;
   }

@@ -17,10 +17,6 @@ public class ProgressBarDisplayable extends Displayable {
   public ProgressBarDisplayable() {
   }
 
-  public ProgressBarDisplayable(boolean fixedPerLineCount) {
-    super(fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.PROGRESS_DISPLAYABLE;
   }

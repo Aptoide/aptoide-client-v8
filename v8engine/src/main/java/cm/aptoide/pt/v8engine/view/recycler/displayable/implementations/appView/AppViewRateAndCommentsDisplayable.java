@@ -21,10 +21,6 @@ public class AppViewRateAndCommentsDisplayable extends AppViewDisplayable {
     super(getApp);
   }
 
-  public AppViewRateAndCommentsDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-    super(getApp, fixedPerLineCount);
-  }
-
   @Override public Type getType() {
     return Type.APP_VIEW_RATE_AND_COMMENT;
   }
