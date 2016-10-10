@@ -41,11 +41,9 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
@@ -137,8 +135,8 @@ import rx.subscriptions.CompositeSubscription;
 
     versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
-      OtherVersionsFragment fragment =
-          OtherVersionsFragment.newInstance(currentApp.getName(), currentApp.getIcon(),
+      Fragment fragment = V8Engine.getFragmentProvider()
+          .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
       fragmentShower.pushFragmentV4(fragment);
     });
@@ -459,10 +457,10 @@ import rx.subscriptions.CompositeSubscription;
       Fragment fragment;
       if (hasTrustedVersion) {
         // go to app view of the trusted version
-        fragment = AppViewFragment.newInstance(trustedVersion.getId());
+        fragment = V8Engine.getFragmentProvider().newAppViewFragment(trustedVersion.getId());
       } else {
         // search for a trusted version
-        fragment = SearchFragment.newInstance(app.getName(), true);
+        fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
       ((FragmentShower) context).pushFragmentV4(fragment);
     };

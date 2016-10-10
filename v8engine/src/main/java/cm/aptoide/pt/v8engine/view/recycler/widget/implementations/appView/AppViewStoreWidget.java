@@ -21,7 +21,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -121,7 +120,7 @@ import lombok.Cleanup;
         String storeTheme) {
       return v -> {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            StoreFragment.newInstance(storeName, storeTheme));
+            V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
       };
     }
 

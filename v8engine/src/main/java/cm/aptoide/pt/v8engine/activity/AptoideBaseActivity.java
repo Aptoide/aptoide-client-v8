@@ -26,8 +26,8 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.SettingsFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import lombok.Getter;
@@ -296,7 +296,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
           if (eResponse == GenericDialogs.EResponse.YES) {
             if (AptoideBaseActivity.this instanceof FragmentShower) {
               ((FragmentShower) AptoideBaseActivity.this).pushFragmentV4(
-                  SettingsFragment.newInstance());
+                  V8Engine.getFragmentProvider().newSettingsFragment());
             } else {
               Logger.e(AptoideBaseActivity.class.getSimpleName(), new IllegalArgumentException(
                   "The Fragment should be an instance of the " + "Activity Context"));

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -63,7 +63,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   private View.OnClickListener seeMoreHandler(final long appId, final String storeTheme) {
     return v -> {
       ((FragmentShower) getContext()).pushFragmentV4(
-          DescriptionFragment.newInstance(appId, storeName, storeTheme));
+          V8Engine.getFragmentProvider().newDescriptionFragment(appId, storeName, storeTheme));
     };
   }
 }

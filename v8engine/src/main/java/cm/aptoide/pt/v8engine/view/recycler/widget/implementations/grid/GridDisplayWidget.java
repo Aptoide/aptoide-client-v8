@@ -17,8 +17,8 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
@@ -52,7 +52,7 @@ import lombok.Cleanup;
       Event.Name name = event.getName();
       if (StoreTabGridRecyclerFragment.validateAcceptedName(name)) {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            StoreGridRecyclerFragment.newInstance(event, pojo.getLabel(),
+            V8Engine.getFragmentProvider().newStoreGridRecyclerFragment(event, pojo.getLabel(),
                 displayable.getStoreTheme(), displayable.getTag()));
       } else {
         switch (name) {

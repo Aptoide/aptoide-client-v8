@@ -24,7 +24,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmootheScroller;
@@ -111,8 +111,8 @@ import java.util.List;
     //rateThisAppButton.setOnClickListener(rateOnClickListener);
 
     View.OnClickListener commentsOnClickListener = v -> {
-      ((FragmentShower) getContext()).pushFragmentV4(
-          RateAndReviewsFragment.newInstance(app.getId(), app.getName(), app.getStore().getName(),
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName()));
     };
     readAllButton.setOnClickListener(commentsOnClickListener);

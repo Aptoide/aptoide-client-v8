@@ -35,6 +35,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -82,13 +83,17 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         if (itemId == R.id.navigation_item_my_account) {
           AptoideAccountManager.openAccountManager(getContext());
         } else if (itemId == R.id.navigation_item_rollback) {
-          ((FragmentShower) getActivity()).pushFragmentV4(RollbackFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newRollbackFragment());
         } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-          ((FragmentShower) getActivity()).pushFragmentV4(ScheduledDownloadsFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
         } else if (itemId == R.id.navigation_item_excluded_updates) {
-          ((FragmentShower) getActivity()).pushFragmentV4(ExcludedUpdatesFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
         } else if (itemId == R.id.navigation_item_settings) {
-          ((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newSettingsFragment());
         } else if (itemId == R.id.navigation_item_facebook) {
           openFacebook();
         } else if (itemId == R.id.navigation_item_twitter) {
@@ -111,7 +116,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
     if (installedBackupApps == null) {
       FragmentUtils.replaceFragmentV4(this.getActivity(),
-          AppViewFragment.newInstance(BACKUP_APPS_PACKAGE_NAME,
+          V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
               AppViewFragment.OpenType.OPEN_ONLY));
     } else {
       Intent i =
@@ -124,8 +129,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     String downloadFolderPath = Application.getConfiguration().getCachePath();
     String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    ((FragmentShower) getActivity()).pushFragmentV4(
-        SendFeedbackFragment.newInstance(downloadFolderPath + screenshotFileName));
+    ((FragmentShower) getActivity()).pushFragmentV4(V8Engine.getFragmentProvider()
+        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
   }
 
   private void openTwitter() {
@@ -148,7 +153,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
     if (installedFacebook == null) {
       ((FragmentShower) getActivity()).pushFragmentV4(
-          SocialFragment.newInstance(socialUrl, pageTitle));
+          V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
     } else {
       Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
       getContext().startActivity(sharingIntent);

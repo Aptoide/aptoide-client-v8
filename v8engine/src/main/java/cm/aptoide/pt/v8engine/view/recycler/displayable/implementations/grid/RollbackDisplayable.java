@@ -10,7 +10,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -66,6 +66,7 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
   }
 
   public void openAppview(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(AppViewFragment.newInstance(getPojo().getMd5()));
+    fragmentShower.pushFragmentV4(
+        V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
   }
 }
