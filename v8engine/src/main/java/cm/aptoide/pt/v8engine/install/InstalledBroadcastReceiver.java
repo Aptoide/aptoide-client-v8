@@ -9,7 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
@@ -92,7 +92,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   }
 
   protected void onPackageAdded(String packageName) {
-    Log.d(TAG, "Package added: " + packageName);
+    Logger.d(TAG, "Package added: " + packageName);
 
     //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
     //if(rollback != null) {

@@ -225,7 +225,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   @Override protected void setupViewPager() {
     super.setupViewPager();
 
-    StorePagerAdapter adapter = (StorePagerAdapter) mViewPager.getAdapter();
+    StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
     int count = adapter.getCount();
     for (int i = 0; i < count; i++) {
       if (Event.Name.myUpdates.equals(adapter.getEventName(i))) {
@@ -244,7 +244,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
     if (desiredViewPagerItem != null) {
       if (adapter.containsEventName(desiredViewPagerItem)) {
-        mViewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
+        viewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
       }
     }
   }
@@ -321,11 +321,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     @Override public void onReceive(Context context, Intent intent) {
       Event.Name tabToChange = (Event.Name) intent.getSerializableExtra(SET_TAB_EVENT);
       if (tabToChange != null) {
-        StorePagerAdapter storePagerAdapter = mViewPager.getAdapter() instanceof StorePagerAdapter
-            ? ((StorePagerAdapter) mViewPager.getAdapter()) : null;
+        StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
+            ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
         if (storePagerAdapter != null) {
-          mViewPager.setCurrentItem(
-              ((StorePagerAdapter) mViewPager.getAdapter()).getEventNamePosition(tabToChange));
+          viewPager.setCurrentItem(
+              ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
         }
       }
     }

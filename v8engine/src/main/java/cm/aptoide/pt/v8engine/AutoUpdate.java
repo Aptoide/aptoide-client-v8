@@ -20,6 +20,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;

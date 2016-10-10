@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -73,7 +72,7 @@ public class Analytics {
 
       Logger.d(TAG, "Event: " + event + ", Key: " + key + ", attr: " + attr);
     } catch (Exception e) {
-      Log.d(TAG, e.getStackTrace().toString());
+      Logger.d(TAG, e.getStackTrace().toString());
     }
   }
 
@@ -92,7 +91,7 @@ public class Analytics {
         Logger.d(TAG, "Flurry Event: " + event + ", Map: " + map);
       }
     } catch (Exception e) {
-      Log.d(TAG, e.getStackTrace().toString());
+      Logger.d(TAG, e.getStackTrace().toString());
     }
   }
 

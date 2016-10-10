@@ -5,10 +5,12 @@
 
 package cm.aptoide.pt.database.exceptions;
 
+import cm.aptoide.pt.utils.BaseException;
+
 /**
  * Created by marcelobenites on 6/30/16.
  */
-public class DownloadNotFoundException extends Exception {
+public class DownloadNotFoundException extends BaseException {
 
   public DownloadNotFoundException() { }
 

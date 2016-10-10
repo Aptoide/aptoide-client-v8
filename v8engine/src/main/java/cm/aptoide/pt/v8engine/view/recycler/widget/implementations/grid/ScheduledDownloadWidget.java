@@ -11,7 +11,11 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
@@ -78,10 +82,7 @@ import rx.subscriptions.CompositeSubscription;
     isSelected.setChecked(displayable.isSelected());
     itemView.setOnClickListener(v -> isSelected.setChecked(!isSelected.isChecked()));
 
-    displayable.setProgressBarIsInstalling(progressBarIsInstalling);
-    displayable.setIsSelected(isSelected);
-
-    displayable.updateUi(scheduled.isDownloading());
+    handleLoaderLogic(displayable);
   }
 
   private void handleLoaderLogic(ScheduledDownloadDisplayable displayable) {
@@ -116,10 +117,11 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @Override public void onViewAttached() {
-
   }
 
   @Override public void onViewDetached() {
-
+    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+      subscriptions.unsubscribe();
+    }
   }
 }

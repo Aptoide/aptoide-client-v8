@@ -17,6 +17,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.v8engine.deprecated.tables.Downloads;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
@@ -104,6 +105,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     try {
       new Installed().migrate(db, realm); // X
+      // despite the migration, this data should be recreated upon app startup
     } catch (Exception ex) {
       logException(ex);
     }
@@ -126,6 +128,12 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     //} catch (Exception ex) {
     //  logException(ex);
     //}
+
+    try{
+      new Downloads().migrate(realm);
+    } catch (Exception ex) {
+      logException(ex);
+    }
 
     // table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade

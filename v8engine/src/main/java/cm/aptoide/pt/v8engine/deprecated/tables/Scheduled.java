@@ -34,8 +34,8 @@ public class Scheduled extends BaseTable {
   @Override public RealmObject convert(Cursor cursor) {
     cm.aptoide.pt.database.realm.Scheduled realmObject =
         new cm.aptoide.pt.database.realm.Scheduled();
-    realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
     realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
+    realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
     realmObject.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
     realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERSION_NAME)));
     realmObject.setStoreName(cursor.getString(cursor.getColumnIndex(COLUMN_REPO)));
