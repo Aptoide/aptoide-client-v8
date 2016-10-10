@@ -33,4 +33,8 @@ public class RowReviewDisplayable extends DisplayablePojo<FullReview> {
   @Override public int getViewLayout() {
     return R.layout.displayable_row_review;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 }

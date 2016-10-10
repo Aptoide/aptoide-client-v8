@@ -129,6 +129,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     Logger.i(TAG, "onViewStateRestored");
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
+
   public InstalledAccessor getInstalledAccessor() {
     return installedAccessor;
   }

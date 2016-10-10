@@ -45,6 +45,10 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
     super.onPause();
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
+
   @Override public int getViewLayout() {
     return R.layout.active_donwload_row_layout;
   }

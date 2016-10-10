@@ -129,4 +129,16 @@ import rx.subscriptions.CompositeSubscription;
     fixedPerLineCount = true;
     return this;
   }
+
+  protected abstract Configs getConfig();
+
+  @Getter public class Configs {
+    private final int defaultPerLineCount;
+    private final boolean fixedPerLineCount;
+
+    public Configs(int defaultPerLineCount, boolean fixedPerLineCount) {
+      this.defaultPerLineCount = defaultPerLineCount;
+      this.fixedPerLineCount = fixedPerLineCount;
+    }
+  }
 }

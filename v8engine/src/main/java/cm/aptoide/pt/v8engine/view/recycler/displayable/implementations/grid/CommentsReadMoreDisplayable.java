@@ -37,4 +37,8 @@ public class CommentsReadMoreDisplayable extends DisplayablePojo<Review> {
   @Override public int getViewLayout() {
     return R.layout.comments_read_more_layout;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

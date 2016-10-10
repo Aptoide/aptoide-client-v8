@@ -29,4 +29,8 @@ public class GridStoreDisplayable extends DisplayablePojo<Store> {
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_store;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(2, false);
+  }
 }

@@ -48,6 +48,10 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
     return R.layout.rollback_row;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
+
   public void install(FragmentShower context) {
     openAppview(context);
   }

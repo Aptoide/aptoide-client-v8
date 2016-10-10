@@ -61,7 +61,7 @@ import rx.schedulers.Schedulers;
 
   public Observable<List<Installed>> getRelatedToApplication() {
     if (relatedToAppsList != null && relatedToAppsList.size() > 0) {
-      InstalledAccessor installedAccessor = accessorFactory.getAccessorFor(Installed.class);
+      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       List<String> packageNamesList = new ArrayList<String>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
@@ -104,6 +104,10 @@ import rx.schedulers.Schedulers;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_video;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 
   public int getMarginWidth(Context context, int orientation) {

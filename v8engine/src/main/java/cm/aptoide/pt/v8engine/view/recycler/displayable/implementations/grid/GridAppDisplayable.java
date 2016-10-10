@@ -36,4 +36,8 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
   @LayoutRes @Override public int getViewLayout() {
     return R.layout.displayable_grid_app;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(3, false);
+  }
 }

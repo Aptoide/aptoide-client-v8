@@ -39,4 +39,8 @@ public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_header;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

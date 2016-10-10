@@ -140,6 +140,10 @@ import rx.Observable;
     return R.layout.displayable_social_timeline_app_update;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
+
   public long getAppId() {
     return appId;
   }

@@ -43,6 +43,10 @@ public class RateAndReviewCommentDisplayable
     return R.layout.displayable_rate_and_review;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
+
   @AllArgsConstructor @Data public static final class ReviewWithAppName {
     private final String appName;
     private final Review review;

@@ -33,4 +33,8 @@ import lombok.EqualsAndHashCode;
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_store_subscribed;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(2, false);
+  }
 }

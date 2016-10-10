@@ -33,4 +33,8 @@ public class GridAdDisplayable extends DisplayablePojo<GetAdsResponse.Ad> {
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_sponsored;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(3, false);
+  }
 }

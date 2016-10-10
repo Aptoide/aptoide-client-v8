@@ -28,4 +28,8 @@ public class FooterRowDisplayable extends DisplayablePojo<String> {
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_footer_text;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

@@ -132,4 +132,8 @@ import lombok.Getter;
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_similar;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

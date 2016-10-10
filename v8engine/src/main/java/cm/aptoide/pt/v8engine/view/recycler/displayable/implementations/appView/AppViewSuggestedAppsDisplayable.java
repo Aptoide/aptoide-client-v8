@@ -30,4 +30,8 @@ public class AppViewSuggestedAppsDisplayable extends DisplayablePojo<List<GetAds
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_suggested_apps;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

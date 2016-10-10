@@ -76,4 +76,8 @@ import rx.Observable;
   @Override public int getViewLayout() {
     return R.layout.update_row;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 }

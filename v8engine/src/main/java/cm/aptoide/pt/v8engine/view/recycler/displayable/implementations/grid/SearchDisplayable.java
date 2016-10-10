@@ -29,4 +29,8 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
   @Override public int getViewLayout() {
     return R.layout.search_app_row;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 }

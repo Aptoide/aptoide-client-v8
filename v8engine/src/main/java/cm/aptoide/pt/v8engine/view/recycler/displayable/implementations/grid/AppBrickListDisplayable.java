@@ -34,4 +34,8 @@ public class AppBrickListDisplayable extends DisplayablePojo<App> {
   @LayoutRes @Override public int getViewLayout() {
     return R.layout.brick_app_item_list;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 }

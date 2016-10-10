@@ -39,4 +39,8 @@ public class EmptyDisplayable extends Displayable {
   @Override public int getSpanSize() {
     return spanSize;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

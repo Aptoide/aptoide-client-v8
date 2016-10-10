@@ -39,4 +39,8 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_display;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(2, true);
+  }
 }

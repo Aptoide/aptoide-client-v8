@@ -29,4 +29,8 @@ public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_suggested_app;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

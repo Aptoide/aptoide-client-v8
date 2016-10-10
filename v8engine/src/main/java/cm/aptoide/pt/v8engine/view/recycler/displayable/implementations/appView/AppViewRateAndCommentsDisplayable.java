@@ -28,4 +28,8 @@ public class AppViewRateAndCommentsDisplayable extends AppViewDisplayable {
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_rate_and_comment;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

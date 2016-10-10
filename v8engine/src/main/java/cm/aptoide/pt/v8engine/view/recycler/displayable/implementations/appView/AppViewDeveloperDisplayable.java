@@ -28,4 +28,8 @@ public class AppViewDeveloperDisplayable extends AppViewDisplayable {
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_developer;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

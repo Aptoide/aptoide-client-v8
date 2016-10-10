@@ -33,4 +33,8 @@ public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget>
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_footer;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

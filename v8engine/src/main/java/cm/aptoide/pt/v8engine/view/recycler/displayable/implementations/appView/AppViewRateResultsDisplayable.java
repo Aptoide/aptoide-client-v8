@@ -28,4 +28,8 @@ public class AppViewRateResultsDisplayable extends AppViewDisplayable {
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_rate_result;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

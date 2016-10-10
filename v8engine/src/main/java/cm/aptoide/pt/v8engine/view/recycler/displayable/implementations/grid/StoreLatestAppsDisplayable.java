@@ -53,6 +53,10 @@ import lombok.Getter;
     return R.layout.displayable_social_timeline_store_latest_apps;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
+
   public int getMarginWidth(Context context, int orientation) {
     if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
       return 0;

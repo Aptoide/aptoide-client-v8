@@ -58,4 +58,8 @@ import lombok.Getter;
     throw new IllegalStateException(
         "getDefaultPerLineCount() on DisplayableGroup should not " + "be called!");
   }
+
+  @Override protected Configs getConfig() {
+    throw new IllegalStateException("getConfig() on DisplayableGroup should not " + "be called!");
+  }
 }

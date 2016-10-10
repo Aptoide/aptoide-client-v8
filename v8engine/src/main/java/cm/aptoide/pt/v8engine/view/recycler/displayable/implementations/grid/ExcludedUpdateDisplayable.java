@@ -32,6 +32,10 @@ public class ExcludedUpdateDisplayable extends DisplayablePojo<Update> {
     return R.layout.row_excluded_update;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
+
   public boolean isSelected() {
     return selected;
   }

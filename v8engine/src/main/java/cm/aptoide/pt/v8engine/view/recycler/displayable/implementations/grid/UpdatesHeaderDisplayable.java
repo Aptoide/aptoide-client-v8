@@ -29,4 +29,8 @@ public class UpdatesHeaderDisplayable extends Displayable {
   @Override public int getViewLayout() {
     return R.layout.updates_header_row;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

@@ -24,4 +24,8 @@ public class ProgressBarDisplayable extends Displayable {
   @Override public int getViewLayout() {
     return R.layout.row_progress_bar;
   }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 }

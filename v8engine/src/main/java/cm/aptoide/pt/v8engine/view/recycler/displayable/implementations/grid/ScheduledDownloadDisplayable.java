@@ -34,6 +34,10 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
     return R.layout.displayable_scheduled_download_row;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
+
   public void removeFromDatabase() {
     ((ScheduledAccessor) AccessorFactory.getAccessorFor(Scheduled.class)).delete(
         getPojo().getMd5());
