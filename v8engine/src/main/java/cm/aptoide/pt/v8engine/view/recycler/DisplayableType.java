@@ -8,13 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
@@ -118,7 +113,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Subscrib
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdatesHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.VideoWidget;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -228,46 +222,6 @@ public enum DisplayableType {
     //widget = newWidget(new View(V8Engine.getContext()));
   }
 
-  public static List<Displayable> newDisplayables(Group group) {
-    ArrayList<Displayable> displayables = new ArrayList<>(group.displayableTypes.length);
-    for (int i = 0; i < group.displayableTypes.length; i++) {
-      displayables.add(group.displayableTypes[i].newDisplayable());
-    }
-    return displayables;
-  }
-
-  public static <T> List<DisplayablePojo> newDisplayables(Group group, T pojo) {
-    ArrayList<DisplayablePojo> displayablePojos = new ArrayList<>(group.displayableTypes.length);
-
-    for (int i = 0; i < group.displayableTypes.length; i++) {
-      displayablePojos.add(
-          ((DisplayablePojo) group.displayableTypes[i].newDisplayable()).setPojo(pojo));
-    }
-    return displayablePojos;
-  }
-
-  public static Displayable newDisplayable(Type type, App app) {
-    return ((DisplayablePojo) newDisplayable(type)).setPojo(app);
-  }
-
-  public static Displayable newDisplayable(Type type, Store store) {
-    return ((DisplayablePojo) newDisplayable(type)).setPojo(store);
-  }
-
-  public static Displayable newDisplayable(Type type, GetAdsResponse.Ad ad) {
-    return ((DisplayablePojo) newDisplayable(type)).setPojo(ad);
-  }
-
-  public static Displayable newDisplayable(Type type) {
-    for (DisplayableType displayableType2 : values()) {
-      if (displayableType2.displayable.getType() == type) {
-        return displayableType2.newDisplayable();
-      }
-    }
-
-    throw new IllegalStateException(String.format("There is no displayable for '%s' type", type));
-  }
-
   public static Widget newWidget(View view, int viewType) {
     for (DisplayableType displayableType2 : values()) {
       if (displayableType2.displayable.getViewLayout() == viewType) {
@@ -318,20 +272,4 @@ public enum DisplayableType {
     }
   }
 
-  public enum Group {
-    APP_VIEW(APP_VIEW_INSTALL,
-        //				APP_VIEW_SUBSCRIPTION,
-        APP_VIEW_DESCRIPTION, APP_VIEW_SCREENSHOTS,
-        //              APP_VIEW_RATING,
-        //				APP_VIEW_RATE_RESULTS,
-        APP_VIEW_COMMENTS,
-        //				APP_VIEW_OTHER_VERSIONS,
-        APP_VIEW_DEVELOPER);
-
-    public final DisplayableType[] displayableTypes;
-
-    Group(DisplayableType... displayableTypes) {
-      this.displayableTypes = displayableTypes;
-    }
-  }
 }
