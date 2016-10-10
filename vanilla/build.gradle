@@ -1,6 +1,3 @@
-import java.util.concurrent.TimeUnit
-
-
 buildscript {
 
   repositories {
@@ -140,7 +137,6 @@ android {
       zipAlignEnabled false
       minifyEnabled false
       shrinkResources false
-      signingConfig signingConfigs.release
     }
   }
 
