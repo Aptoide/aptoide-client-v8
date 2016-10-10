@@ -177,7 +177,7 @@ public class FragmentProviderImpl implements FragmentProvider {
     return null;
   }
 
-  @Override public PreferenceFragmentCompat SettingsFragment() {
+  @Override public PreferenceFragmentCompat newSettingsFragment() {
     return null;
   }
 }

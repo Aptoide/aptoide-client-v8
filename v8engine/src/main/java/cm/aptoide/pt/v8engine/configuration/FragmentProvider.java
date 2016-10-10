@@ -93,5 +93,5 @@ public interface FragmentProvider {
 
   Fragment newSocialFragment(String socialUrl, String pageTitle);
 
-  PreferenceFragmentCompat SettingsFragment();
+  PreferenceFragmentCompat newSettingsFragment();
 }
