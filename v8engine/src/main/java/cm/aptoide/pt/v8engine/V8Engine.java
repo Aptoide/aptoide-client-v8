@@ -104,9 +104,12 @@ public abstract class V8Engine extends DataProvider {
 
   private static void clearStores() {
     @Cleanup Realm realm = DeprecatedDatabase.get();
+
     realm.beginTransaction();
     realm.delete(Store.class);
     realm.commitTransaction();
+
+    Logger.e(TAG, "cleaned stores");
 
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
   }
@@ -212,10 +215,6 @@ public abstract class V8Engine extends DataProvider {
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
-  //
-  // Strict Mode
-  //
-
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
         () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
@@ -245,6 +244,10 @@ public abstract class V8Engine extends DataProvider {
       return null;
     }).subscribeOn(Schedulers.io());
   }
+
+  //
+  // Strict Mode
+  //
 
   private void setupStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
