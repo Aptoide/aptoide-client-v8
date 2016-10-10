@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.text.Spannable;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -77,10 +76,6 @@ import lombok.Getter;
     return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, appName),
         Typeface.BOLD, appName);
-  }
-
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
   }
 
   @Override public int getViewLayout() {

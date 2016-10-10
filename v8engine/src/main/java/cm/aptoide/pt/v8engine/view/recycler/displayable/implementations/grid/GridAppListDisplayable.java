@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -20,10 +19,6 @@ public class GridAppListDisplayable extends DisplayablePojo<App> {
 
   public GridAppListDisplayable(App pojo) {
     super(pojo);
-  }
-
-  @Override public Type getType() {
-    return Type.APPS_GROUP_LIST;
   }
 
   @Override public int getViewLayout() {

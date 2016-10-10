@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -19,10 +18,6 @@ public class AppViewDescriptionDisplayable extends AppViewDisplayable {
 
   public AppViewDescriptionDisplayable(GetApp getApp) {
     super(getApp);
-  }
-
-  @Override public Type getType() {
-    return Type.APP_VIEW_DESCRIPTION;
   }
 
   @Override public int getViewLayout() {

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
@@ -24,10 +23,6 @@ public class GridAdDisplayable extends DisplayablePojo<GetAdsResponse.Ad> {
   public GridAdDisplayable(GetAdsResponse.Ad pojo, String tag) {
     super(pojo);
     this.tag = tag;
-  }
-
-  @Override public Type getType() {
-    return Type.ADS;
   }
 
   @Override public int getViewLayout() {

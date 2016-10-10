@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -19,10 +18,6 @@ public class FooterRowDisplayable extends DisplayablePojo<String> {
 
   public FooterRowDisplayable(String pojo) {
     super(pojo);
-  }
-
-  @Override public Type getType() {
-    return Type.FOOTER_ROW;
   }
 
   @Override public int getViewLayout() {

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.FullReview;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -24,10 +23,6 @@ public class RowReviewDisplayable extends DisplayablePojo<FullReview> {
 
   public RowReviewDisplayable(FullReview pojo, boolean fixedPerLineCount) {
     super(pojo);
-  }
-
-  @Override public Type getType() {
-    return Type.REVIEWS_GROUP;
   }
 
   @Override public int getViewLayout() {

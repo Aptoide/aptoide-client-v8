@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -38,10 +37,6 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
   public Download getDownloadFromPojo() {
     return new DownloadFactory().create(getPojo());
-  }
-
-  @Override public Type getType() {
-    return Type.ROLLBACK;
   }
 
   @Override public int getViewLayout() {

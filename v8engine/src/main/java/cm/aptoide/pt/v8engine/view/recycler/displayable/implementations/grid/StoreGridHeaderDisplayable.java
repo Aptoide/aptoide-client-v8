@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
@@ -30,10 +29,6 @@ public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.
     super(pojo);
     this.storeTheme = storeTheme;
     this.tag = tag;
-  }
-
-  @Override public Type getType() {
-    return Type.HEADER_ROW;
   }
 
   @Override public int getViewLayout() {

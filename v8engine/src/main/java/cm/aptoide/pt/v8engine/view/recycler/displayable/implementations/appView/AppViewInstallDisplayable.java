@@ -18,7 +18,6 @@ import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -99,10 +98,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public void setInstallButton(Button installButton) {
     this.installButton = installButton;
-  }
-
-  @Override public Type getType() {
-    return Type.APP_VIEW_INSTALL;
   }
 
   @Override public int getViewLayout() {

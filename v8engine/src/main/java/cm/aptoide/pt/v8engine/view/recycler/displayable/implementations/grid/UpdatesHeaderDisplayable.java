@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -20,10 +19,6 @@ public class UpdatesHeaderDisplayable extends Displayable {
   public UpdatesHeaderDisplayable(Installer installManager, String label) {
     this.installManager = installManager;
     this.label = label;
-  }
-
-  @Override public Type getType() {
-    return Type.UPDATES_HEADER;
   }
 
   @Override public int getViewLayout() {

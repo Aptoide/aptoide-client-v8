@@ -10,7 +10,6 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -67,10 +66,6 @@ import rx.Observable;
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .concatMap(downloadCompleted -> installManager.update(context, (PermissionRequest) context,
             download.getMd5()));
-  }
-
-  @Override public Type getType() {
-    return Type.UPDATE;
   }
 
   @Override public int getViewLayout() {

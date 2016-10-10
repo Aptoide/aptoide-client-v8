@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -43,10 +42,6 @@ import lombok.Getter;
 
   public String getTimeSinceLastUpdate(Context context) {
     return dateCalculator.getTimeSinceDate(context, date);
-  }
-
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
   }
 
   @Override public int getViewLayout() {

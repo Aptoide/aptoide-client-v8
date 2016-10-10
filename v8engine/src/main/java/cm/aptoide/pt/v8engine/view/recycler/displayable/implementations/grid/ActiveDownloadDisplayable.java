@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
@@ -25,10 +24,6 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
   public ActiveDownloadDisplayable(Download pojo, DownloadServiceHelper downloadManager) {
     super(pojo);
     this.downloadManager = downloadManager;
-  }
-
-  @Override public Type getType() {
-    return Type.ACTIVE_DOWNLOAD;
   }
 
   @Override public void onResume() {

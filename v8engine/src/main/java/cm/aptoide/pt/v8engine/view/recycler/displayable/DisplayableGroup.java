@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import cm.aptoide.pt.annotation.Ignore;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import java.util.List;
@@ -45,10 +44,6 @@ import lombok.Getter;
     }
   }
 
-  @Override public Type getType() {
-    throw new IllegalStateException("getType() on DisplayableGroup should not be called!");
-  }
-
   @Override public int getViewLayout() {
     throw new IllegalStateException(
         "getViewLayout() on DisplayableGroup should not be " + "called!");
@@ -60,6 +55,8 @@ import lombok.Getter;
   }
 
   @Override protected Configs getConfig() {
-    throw new IllegalStateException("getConfig() on DisplayableGroup should not " + "be called!");
+    // Stub
+    // Should not be used
+    return new Configs(1, true);
   }
 }

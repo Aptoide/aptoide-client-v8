@@ -24,17 +24,20 @@ import rx.subscriptions.CompositeSubscription;
 @Ignore @Accessors(chain = true) public abstract class Displayable implements LifecycleSchim {
 
   @Getter CompositeSubscription subscriptions;
-  private Boolean fixedPerLineCount;
-  private Integer defaultPerLineCount;
+  @Getter private boolean fixedPerLineCount;
+  @Getter private int defaultPerLineCount;
   @Setter @Getter private boolean isVisible = false;
 
   /**
    * Needed for reflective {@link Class#newInstance()}.
    */
   public Displayable() {
+    Configs config = getConfig();
+    fixedPerLineCount = config.isFixedPerLineCount();
+    defaultPerLineCount = config.getDefaultPerLineCount();
   }
 
-  public abstract Type getType();
+  //public abstract Type getType();
 
   @LayoutRes public abstract int getViewLayout();
 
@@ -53,23 +56,6 @@ import rx.subscriptions.CompositeSubscription;
     }
 
     return tmp != 0 ? tmp : 1;
-  }
-
-  public boolean isFixedPerLineCount() {
-    return fixedPerLineCount == null ? getType() != null && getType().isFixedPerLineCount()
-        : fixedPerLineCount;
-  }
-
-  public int getDefaultPerLineCount() {
-    if (defaultPerLineCount == null) {
-      if (getType() != null) {
-        return getType().getDefaultPerLineCount();
-      } else {
-        return 1;
-      }
-    } else {
-      return defaultPerLineCount;
-    }
   }
 
   public int getSpanSize() {

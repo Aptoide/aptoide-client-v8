@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -33,10 +32,6 @@ public class RateAndReviewCommentDisplayable
       RateAndReviewsFragment.CommentAdder commentAdder) {
     super(pojo);
     this.commentAdder = commentAdder;
-  }
-
-  @Override public Type getType() {
-    return Type.RATE_AND_REVIEW;
   }
 
   @Override public int getViewLayout() {

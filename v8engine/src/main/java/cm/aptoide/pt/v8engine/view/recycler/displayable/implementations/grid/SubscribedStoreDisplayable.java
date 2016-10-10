@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Data;
@@ -24,10 +23,6 @@ import lombok.EqualsAndHashCode;
 
   public SubscribedStoreDisplayable(Store pojo) {
     super(pojo);
-  }
-
-  @Override public Type getType() {
-    return Type.SUBSCRIBED_STORE;
   }
 
   @Override public int getViewLayout() {

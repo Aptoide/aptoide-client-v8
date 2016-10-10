@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -20,10 +19,6 @@ public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
 
   public AppViewSuggestedAppDisplayable(MinimalAd minimalAd) {
     super(minimalAd);
-  }
-
-  @Override public Type getType() {
-    return Type.APP_VIEW_SUGGESTED_APP;
   }
 
   @Override public int getViewLayout() {

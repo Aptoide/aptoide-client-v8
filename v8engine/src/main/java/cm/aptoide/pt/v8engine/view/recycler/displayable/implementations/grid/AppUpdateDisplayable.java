@@ -13,7 +13,6 @@ import android.text.Spannable;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -130,10 +129,6 @@ import rx.Observable;
 
   public String getUpdateErrorText(Context context) {
     return context.getString(R.string.displayable_social_timeline_app_update_error);
-  }
-
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
   }
 
   @Override public int getViewLayout() {

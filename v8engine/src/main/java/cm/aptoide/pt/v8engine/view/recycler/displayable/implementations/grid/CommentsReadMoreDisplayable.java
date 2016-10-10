@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -28,10 +27,6 @@ public class CommentsReadMoreDisplayable extends DisplayablePojo<Review> {
     super(review);
     this.commentAdder = commentAdder;
     this.next = next;
-  }
-
-  @Override public Type getType() {
-    return Type.READ_MORE_COMMENTS;
   }
 
   @Override public int getViewLayout() {

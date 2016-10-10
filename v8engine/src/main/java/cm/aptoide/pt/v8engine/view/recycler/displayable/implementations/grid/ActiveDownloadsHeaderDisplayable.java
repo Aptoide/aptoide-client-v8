@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
@@ -21,10 +20,6 @@ public class ActiveDownloadsHeaderDisplayable extends Displayable {
   public ActiveDownloadsHeaderDisplayable(String label, DownloadServiceHelper downloadManager) {
     this.label = label;
     this.downloadManager = downloadManager;
-  }
-
-  @Override public Type getType() {
-    return Type.ACTIVE_DOWNLOAD_HEADER;
   }
 
   @Override public int getViewLayout() {

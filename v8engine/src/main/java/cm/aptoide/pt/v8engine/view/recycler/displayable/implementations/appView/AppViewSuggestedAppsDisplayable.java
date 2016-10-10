@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import java.util.List;
@@ -21,10 +20,6 @@ public class AppViewSuggestedAppsDisplayable extends DisplayablePojo<List<GetAds
 
   public AppViewSuggestedAppsDisplayable(List<GetAdsResponse.Ad> ads) {
     super(ads);
-  }
-
-  @Override public Type getType() {
-    return Type.APP_VIEW_SUGGESTED_APPS;
   }
 
   @Override public int getViewLayout() {

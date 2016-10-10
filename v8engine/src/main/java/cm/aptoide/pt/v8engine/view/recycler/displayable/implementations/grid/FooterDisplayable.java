@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
@@ -24,10 +23,6 @@ public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget>
   public FooterDisplayable(GetStoreWidgets.WSWidget pojo, String tag) {
     super(pojo);
     this.tag = tag;
-  }
-
-  @Override public Type getType() {
-    return Type.FOOTER_ROW;
   }
 
   @Override public int getViewLayout() {

@@ -8,7 +8,6 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -115,10 +114,6 @@ import rx.schedulers.Schedulers;
     return spannableFactory.createColorSpan(
         context.getString(R.string.displayable_social_timeline_article_related_to, appName),
         ContextCompat.getColor(context, R.color.appstimeline_grey), appName);
-  }
-
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
   }
 
   @Override public int getViewLayout() {

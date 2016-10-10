@@ -29,15 +29,12 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
     this.tag = tag;
   }
 
-  @Override public Type getType() {
-    return Type.APPS_GROUP;
-  }
-
   @LayoutRes @Override public int getViewLayout() {
     return R.layout.displayable_grid_app;
   }
 
   @Override protected Configs getConfig() {
-    return new Configs(3, false);
+    return new Configs(Type.APPS_GROUP.getDefaultPerLineCount(),
+        Type.APPS_GROUP.isFixedPerLineCount());
   }
 }

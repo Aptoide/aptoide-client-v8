@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePojo;
 
@@ -24,10 +23,6 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
 
   public ScheduledDownloadDisplayable(Scheduled pojo) {
     super(pojo);
-  }
-
-  @Override public Type getType() {
-    return Type.SCHEDULED_DOWNLOAD;
   }
 
   @Override public int getViewLayout() {

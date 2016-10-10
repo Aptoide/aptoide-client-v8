@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -20,10 +19,6 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
 
   public SearchDisplayable(ListSearchApps.SearchAppsApp pojo) {
     super(pojo);
-  }
-
-  @Override public Type getType() {
-    return Type.SEARCH;
   }
 
   @Override public int getViewLayout() {
