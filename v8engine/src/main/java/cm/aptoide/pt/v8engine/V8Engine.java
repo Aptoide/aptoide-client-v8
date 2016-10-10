@@ -35,6 +35,8 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import com.flurry.android.FlurryAgent;
@@ -56,6 +58,7 @@ public abstract class V8Engine extends DataProvider {
   private static final String TAG = V8Engine.class.getName();
 
   @Getter static DownloadService downloadService;
+  @Getter private static FragmentProvider fragmentProvider;
   private RefWatcher refWatcher;
 
   public static void loadStores() {
@@ -120,6 +123,7 @@ public abstract class V8Engine extends DataProvider {
     CrashReports.setup(this);
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
+    fragmentProvider = createFragmentProvider();
 
     //
     // super
@@ -211,15 +215,19 @@ public abstract class V8Engine extends DataProvider {
   // Strict Mode
   //
 
-  Observable<String> generateAptoideUUID() {
-    return Observable.fromCallable(
-        () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
+  private FragmentProvider createFragmentProvider() {
+    return new FragmentProviderImpl();
   }
 
   //
   // Leak Canary
   //
+
+  Observable<String> generateAptoideUUID() {
+    return Observable.fromCallable(
+        () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
+  }
 
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {
