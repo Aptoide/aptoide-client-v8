@@ -14,7 +14,7 @@ import lombok.Getter;
 public abstract class Application extends android.app.Application {
 
   @Getter protected static Context context;
-  @Getter protected static AptoideConfiguration configuration;
+  @Getter protected static AptoidePreferencesConfiguration configuration;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -24,5 +24,5 @@ public abstract class Application extends android.app.Application {
     configuration = createConfiguration();
   }
 
-  protected abstract AptoideConfiguration createConfiguration();
+  protected abstract AptoidePreferencesConfiguration createConfiguration();
 }
