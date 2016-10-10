@@ -150,8 +150,7 @@ public class DisplayablesFactory {
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
         if (useBigBrick) {
-          displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag())
-              .setDefaultPerLineCount(1));
+          displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag()).setFullRow());
 
           nrAppBricks++;
         }
@@ -215,7 +214,7 @@ public class DisplayablesFactory {
       if (Event.Name.facebook.equals(name)
           || Event.Name.twitch.equals(name)
           || Event.Name.youtube.equals(name)) {
-        displayablePojo.setDefaultPerLineCount(1);
+        displayablePojo.setFullRow();
       }
       tmp.add(displayablePojo);
     }

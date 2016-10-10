@@ -25,7 +25,7 @@ import rx.subscriptions.CompositeSubscription;
 
   @Getter CompositeSubscription subscriptions;
   private Boolean fixedPerLineCount;
-  @Setter private Integer defaultPerLineCount;
+  private Integer defaultPerLineCount;
   @Setter @Getter private boolean isVisible = false;
 
   /**
@@ -126,5 +126,11 @@ import rx.subscriptions.CompositeSubscription;
    */
   public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 
+  }
+
+  public Displayable setFullRow() {
+    defaultPerLineCount = 1;
+    fixedPerLineCount = true;
+    return this;
   }
 }
