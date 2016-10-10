@@ -64,6 +64,8 @@ public interface FragmentProvider {
 
   Fragment newAppsTimelineFragment(String action);
 
+  Fragment newSubscribedStoresFragment();
+
   Fragment newSearchPagerTabFragment(String query, boolean subscribedStores);
 
   Fragment newSearchPagerTabFragment(String query, String storeName);
@@ -72,13 +74,13 @@ public interface FragmentProvider {
 
   Fragment newOtherVersionsFragment(String appName, String appImgUrl, String appPackage);
 
-  Fragment newFragment();
+  Fragment newRollbackFragment();
 
   Fragment newExcludedUpdatesFragment();
 
   Fragment newScheduledDownloadsFragment();
 
-  Fragment newFragment(ScheduledDownloadsFragment.OpenMode openMode);
+  Fragment newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode openMode);
 
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName);

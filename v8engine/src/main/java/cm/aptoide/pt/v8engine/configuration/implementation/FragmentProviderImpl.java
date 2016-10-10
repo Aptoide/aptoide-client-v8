@@ -120,6 +120,10 @@ public class FragmentProviderImpl implements FragmentProvider {
     return null;
   }
 
+  @Override public Fragment newSubscribedStoresFragment() {
+    return null;
+  }
+
   @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores) {
     return null;
   }
@@ -137,7 +141,7 @@ public class FragmentProviderImpl implements FragmentProvider {
     return null;
   }
 
-  @Override public Fragment newFragment() {
+  @Override public Fragment newRollbackFragment() {
     return null;
   }
 
@@ -149,7 +153,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return null;
   }
 
-  @Override public Fragment newFragment(ScheduledDownloadsFragment.OpenMode openMode) {
+  @Override
+  public Fragment newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode openMode) {
     return null;
   }
 
