@@ -39,6 +39,7 @@ import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -59,6 +60,7 @@ public abstract class V8Engine extends DataProvider {
 
   @Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
+  @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   private RefWatcher refWatcher;
 
   public static void loadStores() {
@@ -124,6 +126,7 @@ public abstract class V8Engine extends DataProvider {
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
     fragmentProvider = createFragmentProvider();
+    displayableWidgetMapping = createDisplayableWidgetMapping();
 
     //
     // super
@@ -211,17 +214,13 @@ public abstract class V8Engine extends DataProvider {
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
-  //
-  // Strict Mode
-  //
-
-  private FragmentProvider createFragmentProvider() {
+  protected FragmentProvider createFragmentProvider() {
     return new FragmentProviderImpl();
   }
 
-  //
-  // Leak Canary
-  //
+  protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
+    return DisplayableWidgetMapping.getInstance();
+  }
 
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
