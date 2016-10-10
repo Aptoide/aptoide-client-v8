@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.configuration.implementation;
 
 import android.support.v4.app.Fragment;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -177,7 +176,7 @@ public class FragmentProviderImpl implements FragmentProvider {
     return null;
   }
 
-  @Override public PreferenceFragmentCompat newSettingsFragment() {
+  @Override public Fragment newSettingsFragment() {
     return null;
   }
 }
