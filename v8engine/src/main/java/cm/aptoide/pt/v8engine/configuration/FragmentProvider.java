@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.configuration;
 
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -91,4 +92,6 @@ public interface FragmentProvider {
   Fragment newDescriptionFragment(long appId, String storeName, String storeTheme);
 
   Fragment newSocialFragment(String socialUrl, String pageTitle);
+
+  PreferenceFragmentCompat SettingsFragment();
 }

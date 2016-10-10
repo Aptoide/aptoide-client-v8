@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.configuration.implementation;
 
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 /**
  * Created by neuro on 10-10-2016.
  */
-
 public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newScreenshotsViewerFragment(ArrayList<String> uris, int currentItem) {
@@ -174,6 +174,10 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newSocialFragment(String socialUrl, String pageTitle) {
+    return null;
+  }
+
+  @Override public PreferenceFragmentCompat SettingsFragment() {
     return null;
   }
 }
