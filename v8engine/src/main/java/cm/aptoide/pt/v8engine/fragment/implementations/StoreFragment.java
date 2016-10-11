@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -170,8 +171,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
     floatingActionButton.setOnClickListener(
-        v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog")
-    );
+        v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
+
+    StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
+    if (viewPager.getCurrentItem() == adapter.getEventNamePosition(Event.Name.myStores)) {
+      floatingActionButton.show();
+    } else {
+      floatingActionButton.hide();
+    }
 
     viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
