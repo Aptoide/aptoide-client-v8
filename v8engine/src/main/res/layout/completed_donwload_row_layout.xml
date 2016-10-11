@@ -17,13 +17,9 @@
       android:id="@+id/row_app_download_indicator"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="2dp"
-      android:layout_marginLeft="5dp"
-      android:layout_marginRight="5dp"
-      android:layout_marginTop="2dp"
       android:padding="5dp"
       style="?attr/backgroundCard"
-      >
+      android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
 
 
     <ImageView
@@ -121,6 +117,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="5dp"
         android:layout_toStartOf="@+id/view"
+        android:layout_toLeftOf="@+id/view"
         android:padding="5dp"
         android:scaleType="center"
         android:src="@drawable/media_play"
