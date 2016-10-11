@@ -186,7 +186,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userUsername.setText(userInfo.getUserName());
 
       ImageLoader.loadWithCircleTransformAndPlaceHolder(userInfo.getUserAvatar(), userAvatarImage,
-          R.drawable.ic_user_icon);
+          R.drawable.user_account_white);
 
       //String userAvatarUri = userInfo.getUserAvatar();
       //if (URLUtil.isValidUrl(userAvatarUri)) {
@@ -207,7 +207,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
-    userAvatarImage.setImageResource(R.drawable.ic_user_icon);
   }
 
   //	@Override
