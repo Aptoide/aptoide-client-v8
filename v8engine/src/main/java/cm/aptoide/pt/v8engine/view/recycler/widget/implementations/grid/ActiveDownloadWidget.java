@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
@@ -22,6 +23,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 @Displayables({ ActiveDownloadDisplayable.class }) public class ActiveDownloadWidget
     extends Widget<ActiveDownloadDisplayable> {
+  private static final String TAG = ActiveDownloadWidget.class.getSimpleName();
 
   private TextView appName;
   private ProgressBar progressBar;
@@ -60,7 +62,7 @@ import rx.subscriptions.CompositeSubscription;
         .distinctUntilChanged()
         .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(this::updateUi));
+        .subscribe((download) -> updateUi(download), throwable -> Logger.e(TAG, throwable)));
   }
 
   @Override public void onViewDetached() {

@@ -182,7 +182,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       addDisplayables(displayables);
     }, e -> finishLoading());
 
-    getView().findViewById(R.id.swipe_container).setEnabled(false);
+    //Highlighted should have pull to refresh
+    //getView().findViewById(R.id.swipe_container).setEnabled(false);
   }
 
   private void caseListApps(String url, boolean refresh) {

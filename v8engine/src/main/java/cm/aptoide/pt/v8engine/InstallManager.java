@@ -39,10 +39,10 @@ public class InstallManager {
     this.installedAccessor = installedDatabase;
   }
 
-  public void stopInstallation(Context context, long installationId) {
+  public void stopInstallation(Context context, String md5) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_STOP_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_ID, installationId);
+    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
     context.startService(intent);
   }
 
@@ -52,8 +52,8 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  public void removeInstallationFile(long installationId) {
-    aptoideDownloadManager.removeDownload(installationId);
+  public void removeInstallationFile(String md5) {
+    aptoideDownloadManager.removeDownload(md5);
   }
 
   public Observable<Void> uninstall(Context context, String packageName) {
@@ -79,9 +79,8 @@ public class InstallManager {
     return getInstallations().filter(progress -> isInstalling(progress));
   }
 
-  public Observable<Progress<Download>> getInstallation(long installationId) {
-    return aptoideDownloadManager.getDownload(installationId)
-        .flatMap(download -> convertToProgress(download));
+  public Observable<Progress<Download>> getInstallation(String md5) {
+    return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
   }
 
   public boolean isInstalling(Progress<Download> progress) {
@@ -99,7 +98,7 @@ public class InstallManager {
   }
 
   public Observable<Progress<Download>> install(Context context, Download download) {
-    return getInstallation(download.getAppId()).first()
+    return getInstallation(download.getMd5()).first()
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
         .flatMap(progress -> installInBackground(context, progress));
   }
@@ -125,36 +124,33 @@ public class InstallManager {
 
   private Observable<Progress<Download>> installInBackground(Context context,
       Progress<Download> progress) {
-    return getInstallation(progress.getRequest().getAppId()).mergeWith(
+    return getInstallation(progress.getRequest().getMd5()).mergeWith(
         startBackgroundInstallationAndWait(context, progress));
   }
 
   @NonNull
   private Observable<Progress<Download>> startBackgroundInstallationAndWait(Context context,
       Progress<Download> progress) {
-    return waitBackgroundInstallationResult(context,
-        progress.getRequest().getAppId()).doOnSubscribe(
-        () -> startBackgroundInstallation(context, progress.getRequest().getAppId()))
-        .map(success -> {
-          progress.setState(Progress.DONE);
-          return progress;
-        });
+    return waitBackgroundInstallationResult(context, progress.getRequest().getMd5()).doOnSubscribe(
+        () -> startBackgroundInstallation(context, progress.getRequest().getMd5())).map(success -> {
+      progress.setState(Progress.DONE);
+      return progress;
+    });
   }
 
-  private Observable<Void> waitBackgroundInstallationResult(Context context, long installationId) {
+  private Observable<Void> waitBackgroundInstallationResult(Context context, String md5) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context,
         new IntentFilter(InstallService.ACTION_INSTALL_FINISHED), null, null))
         .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
             intent.getAction()))
-        .first(intent -> intent.getLongExtra(InstallService.EXTRA_INSTALLATION_ID, -1)
-            == installationId)
+        .first(intent -> md5.equals(intent.getStringExtra(InstallService.EXTRA_INSTALLATION_MD5)))
         .map(intent -> null);
   }
 
-  private void startBackgroundInstallation(Context context, long installationId) {
+  private void startBackgroundInstallation(Context context, String md5) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_ID, installationId);
+    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
     context.startService(intent);
   }
 

@@ -12,7 +12,10 @@ import java.io.File;
  */
 public interface Installation {
 
-  long getId();
+  /**
+   * @return installation MD5 sum
+   */
+  String getId();
 
   String getPackageName();
 

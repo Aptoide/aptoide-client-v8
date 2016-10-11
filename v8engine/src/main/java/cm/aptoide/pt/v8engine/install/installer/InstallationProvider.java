@@ -12,5 +12,5 @@ import rx.Observable;
  */
 public interface InstallationProvider {
 
-  Observable<? extends Installation> getInstallation(long id);
+  Observable<? extends Installation> getInstallation(String md5);
 }

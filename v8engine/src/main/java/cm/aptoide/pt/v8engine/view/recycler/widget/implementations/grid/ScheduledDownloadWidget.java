@@ -56,6 +56,10 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
+    if (subscriptions == null || subscriptions.isUnsubscribed()) {
+      subscriptions = new CompositeSubscription();
+    }
+
     Scheduled scheduled = displayable.getPojo();
     ImageLoader.load(scheduled.getIcon(), appIcon);
     appName.setText(scheduled.getName());
@@ -79,10 +83,11 @@ import rx.subscriptions.CompositeSubscription;
     aptoideDownloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     InstallManager installManager = new InstallManager(aptoideDownloadManager, installer,
-        AccessorFactory.getAccessorFor(Download.class), AccessorFactory.getAccessorFor(Installed.class));
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
 
     Observable<Progress<Download>> installation =
-        installManager.getInstallation(displayable.getPojo().getAppId());
+        installManager.getInstallation(displayable.getPojo().getMd5());
 
     subscriptions.add(installation.map(
         downloadProgress -> installManager.isInstalling(downloadProgress)
@@ -95,6 +100,7 @@ import rx.subscriptions.CompositeSubscription;
           throwable.printStackTrace();
         }));
   }
+
   @Override public void onViewAttached() {
 
   }

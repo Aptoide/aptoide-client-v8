@@ -47,7 +47,7 @@ public class DisplayablesFactory {
 
     for (GetStoreWidgets.WSWidget wsWidget : wsWidgetList) {
       // Unknows types are null
-      if (wsWidget.getType() != null) {
+      if (wsWidget.getType() != null && wsWidget.getViewObject() != null) {
         switch (wsWidget.getType()) {
 
           case APPS_GROUP:

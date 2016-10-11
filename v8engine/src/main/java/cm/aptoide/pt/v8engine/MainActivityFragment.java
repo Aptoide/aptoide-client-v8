@@ -12,12 +12,10 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
@@ -35,8 +33,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
@@ -72,11 +68,9 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     if (savedInstanceState == null) {
       startService(new Intent(this, PullingContentService.class));
       if (ManagerPreferences.isAutoUpdateEnable()) {
-        final PermissionManager permissionManager = new PermissionManager();
-        final DownloadServiceHelper downloadManager =
-            new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
+
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
-            new DownloadFactory(), downloadManager).execute();
+            new DownloadFactory(), AptoideDownloadManager.getInstance()).execute();
       }
       if (SecurePreferences.isWizardAvailable()) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -90,7 +84,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   private void handleDeepLinks(Intent intent) {
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
-      if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
+
+      if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
+        appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
+      } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
         appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
         appViewDeepLink(
@@ -137,6 +134,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   private void appViewDeepLink(long appId) {
     pushFragmentV4(AppViewFragment.newInstance(appId));
+  }
+
+  private void appViewDeepLink(String md5) {
+    pushFragmentV4(AppViewFragment.newInstance(md5));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {

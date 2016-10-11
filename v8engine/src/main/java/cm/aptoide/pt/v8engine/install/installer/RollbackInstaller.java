@@ -24,43 +24,44 @@ import rx.Observable;
   private final RollbackFactory rollbackFactory;
   private final InstallationProvider installationProvider;
 
-  @Override public Observable<Boolean> isInstalled(long installationId) {
-    return defaultInstaller.isInstalled(installationId);
+  @Override public Observable<Boolean> isInstalled(String md5) {
+    return defaultInstaller.isInstalled(md5);
   }
 
-  @Override public Observable<Void> install(Context context, long installationId) {
-    return installationProvider.getInstallation(installationId)
+  @Override public Observable<Void> install(Context context, String md5) {
+    return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .flatMap(installation -> saveRollback(installation, Rollback.Action.INSTALL))
-        .flatMap(success -> defaultInstaller.install(context, installationId));
+        .flatMap(success -> defaultInstaller.install(context, md5));
   }
 
-  @Override public Observable<Void> update(Context context, long installationId) {
-    return installationProvider.getInstallation(installationId)
+  @Override public Observable<Void> update(Context context, String md5) {
+    return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
-        .flatMap(installation -> saveRollback(context, installation.getPackageName(), Rollback.Action.UPDATE, installation.getIcon()))
-        .flatMap(success -> defaultInstaller.update(context, installationId));
+        .flatMap(installation -> saveRollback(context, installation.getPackageName(),
+            Rollback.Action.UPDATE, installation.getIcon()))
+        .flatMap(success -> defaultInstaller.update(context, md5));
   }
 
-  @Override public Observable<Void> downgrade(Context context, long installationId) {
-    return installationProvider.getInstallation(installationId)
+  @Override public Observable<Void> downgrade(Context context, String md5) {
+    return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
-        .flatMap(installation -> saveRollback(context, installation.getPackageName(), Rollback.Action.DOWNGRADE, installation.getIcon()))
-        .flatMap(success -> defaultInstaller.downgrade(context, installationId));
+        .flatMap(installation -> saveRollback(context, installation.getPackageName(),
+            Rollback.Action.DOWNGRADE, installation.getIcon()))
+        .flatMap(success -> defaultInstaller.downgrade(context, md5));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {
-    return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null)
-        .flatMap(rollback -> defaultInstaller.uninstall(context, packageName));
+    return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null).flatMap(
+        rollback -> defaultInstaller.uninstall(context, packageName));
   }
 
   private Observable<Void> saveRollback(Context context, String packageName, Rollback.Action action,
       String icon) {
-    return rollbackFactory.createRollback(context, packageName, action, icon)
-        .map(rollback -> {
-          repository.save(rollback);
-          return null;
-        });
+    return rollbackFactory.createRollback(context, packageName, action, icon).map(rollback -> {
+      repository.save(rollback);
+      return null;
+    });
   }
 
   private Observable<Void> saveRollback(RollbackInstallation installation, Rollback.Action action) {

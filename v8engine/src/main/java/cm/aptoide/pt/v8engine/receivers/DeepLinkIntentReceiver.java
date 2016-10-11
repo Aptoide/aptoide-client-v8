@@ -437,6 +437,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
   public static class DeepLinksKeys {
 
+
+    public static final String APP_MD5_KEY = "md5";
     public static final String APP_ID_KEY = "appId";
     public static final String PACKAGE_NAME_KEY = "packageName";
     public static final String STORENAME_KEY = "storeName";

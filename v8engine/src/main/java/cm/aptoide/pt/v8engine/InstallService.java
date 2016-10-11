@@ -15,11 +15,12 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
@@ -44,7 +45,7 @@ public class InstallService extends Service {
   public static final String ACTION_STOP_ALL_INSTALLS = "STOP_ALL_INSTALLS";
   public static final String ACTION_START_INSTALL = "START_INSTALL";
   public static final String ACTION_INSTALL_FINISHED = "INSTALL_FINISHED";
-  public static final String EXTRA_INSTALLATION_ID = "INSTALLATION_ID";
+  public static final String EXTRA_INSTALLATION_MD5 = "INSTALLATION_MD5";
 
   private static final int NOTIFICATION_ID = 8;
 
@@ -71,16 +72,15 @@ public class InstallService extends Service {
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
-      long installationId = intent.getLongExtra(EXTRA_INSTALLATION_ID, -1);
+      String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
-        subscriptions.add(
-            downloadAndInstall(this, installationId).subscribe(hasNext -> treatNext(hasNext),
-                throwable -> removeNotificationAndStop()));
+        subscriptions.add(downloadAndInstall(this, md5).subscribe(hasNext -> treatNext(hasNext),
+            throwable -> removeNotificationAndStop()));
       } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
-        subscriptions.add(stopDownload(installationId).subscribe(hasNext -> treatNext(hasNext),
+        subscriptions.add(stopDownload(md5).subscribe(hasNext -> treatNext(hasNext),
             throwable -> removeNotificationAndStop()));
       } else if (ACTION_OPEN_APP_VIEW.equals(intent.getAction())) {
-        openAppView(installationId);
+        openAppView(md5);
       } else if (ACTION_OPEN_DOWNLOAD_MANAGER.equals(intent.getAction())) {
         openDownloadManager();
       } else if (ACTION_STOP_ALL_INSTALLS.equals(intent.getAction())) {
@@ -94,8 +94,8 @@ public class InstallService extends Service {
     return START_STICKY;
   }
 
-  private Observable<Boolean> stopDownload(long installationId) {
-    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(installationId));
+  private Observable<Boolean> stopDownload(String md5) {
+    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(md5));
   }
 
   private void stopAllDownloads() {
@@ -121,17 +121,17 @@ public class InstallService extends Service {
   private Observable<Boolean> downloadAndInstallCurrentDownload(Context context) {
     return downloadManager.getCurrentDownload()
         .first()
-        .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getAppId()));
+        .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5()));
   }
 
-  private Observable<Boolean> downloadAndInstall(Context context, long installId) {
-    return downloadManager.getDownload(installId)
+  private Observable<Boolean> downloadAndInstall(Context context, String md5) {
+    return downloadManager.getDownload(md5)
         .first()
         .flatMap(download -> downloadManager.startDownload(download))
         .doOnNext(download -> stopOnDownloadError(download.getOverallDownloadStatus()))
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .flatMap(download -> stopForegroundAndInstall(context, download, true))
-        .doOnNext(download -> sendBackgroundInstallFinishedBroadcast(installId))
+        .flatMap(download -> stopForegroundAndInstall(context, download, true).doOnNext(
+            success -> sendBackgroundInstallFinishedBroadcast(download)))
         .flatMap(completed -> hasNextDownload());
   }
 
@@ -152,15 +152,18 @@ public class InstallService extends Service {
     stopSelf();
   }
 
-  private void sendBackgroundInstallFinishedBroadcast(long installId) {
-    sendBroadcast(new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_ID, installId));
-    removeFromScheduled(installId);
+  private void sendBackgroundInstallFinishedBroadcast(Download download) {
+    sendBroadcast(
+        new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
+    if (download.isScheduled()) {
+      removeFromScheduled(download.getMd5());
+    }
   }
 
-  private void removeFromScheduled(long appId) {
+  private void removeFromScheduled(String md5) {
     ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
-    scheduledAccessor.delete(appId);
-    Logger.d(TAG, "Removing schedulled download with appId " + appId);
+    scheduledAccessor.delete(md5);
+    Logger.d(TAG, "Removing schedulled download with appId " + md5);
   }
 
   private Observable<Void> stopForegroundAndInstall(Context context, Download download,
@@ -168,11 +171,11 @@ public class InstallService extends Service {
     stopForeground(removeNotification);
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
-        return installer.install(context, download.getAppId());
+        return installer.install(context, download.getMd5());
       case Download.ACTION_UPDATE:
-        return installer.update(context, download.getAppId());
+        return installer.update(context, download.getMd5());
       case Download.ACTION_DOWNGRADE:
-        return installer.downgrade(context, download.getAppId());
+        return installer.downgrade(context, download.getMd5());
       default:
         return Observable.error(
             new IllegalArgumentException("Invalid download action " + download.getAction()));
@@ -184,13 +187,13 @@ public class InstallService extends Service {
       if (!progress.isIndeterminate()) {
 
         int requestCode = progress.getRequest().getFilesToDownload().get(0).getDownloadId();
-        long appId = progress.getRequest().getAppId();
+        String md5 = progress.getRequest().getMd5();
 
         NotificationCompat.Action downloadManagerAction =
-            getDownloadManagerAction(requestCode, appId);
+            getDownloadManagerAction(requestCode, md5);
         PendingIntent appViewPendingIntent =
-            getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, appId);
-        NotificationCompat.Action pauseAction = getPauseAction(requestCode, appId);
+            getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, md5);
+        NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
 
         if (notification == null) {
           notification =
@@ -207,19 +210,19 @@ public class InstallService extends Service {
     }, throwable -> removeNotificationAndStop()));
   }
 
-  @NonNull private NotificationCompat.Action getPauseAction(int requestCode, long appId) {
+  @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putLong(AptoideDownloadManager.APP_ID_EXTRA, appId);
+    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(cm.aptoide.pt.downloadmanager.R.drawable.media_pause,
         getString(cm.aptoide.pt.downloadmanager.R.string.pause_download), requestCode,
-        ACTION_STOP_INSTALL, appId);
+        ACTION_STOP_INSTALL, md5);
   }
 
-  @NonNull private NotificationCompat.Action getDownloadManagerAction(int requestCode, long appId) {
+  @NonNull private NotificationCompat.Action getDownloadManagerAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putLong(AptoideDownloadManager.APP_ID_EXTRA, appId);
+    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(R.drawable.ic_manager, getString(R.string.open_apps_manager), requestCode,
-        ACTION_OPEN_DOWNLOAD_MANAGER, appId);
+        ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
 
   private Notification buildNotification(Progress<Download> progress,
@@ -242,15 +245,15 @@ public class InstallService extends Service {
   }
 
   private NotificationCompat.Action getAction(int icon, String title, int requestCode,
-      String action, long appId) {
-    return new NotificationCompat.Action(icon, title, getPendingIntent(requestCode, action, appId));
+      String action, String md5) {
+    return new NotificationCompat.Action(icon, title, getPendingIntent(requestCode, action, md5));
   }
 
-  private PendingIntent getPendingIntent(int requestCode, String action, long appId) {
+  private PendingIntent getPendingIntent(int requestCode, String action, String md5) {
     Intent intent = new Intent(this, InstallService.class);
-    if (appId != -1) {
+    if (!TextUtils.isEmpty(md5)) {
       final Bundle bundle = new Bundle();
-      bundle.putLong(EXTRA_INSTALLATION_ID, appId);
+      bundle.putString(EXTRA_INSTALLATION_MD5, md5);
       intent.putExtras(bundle);
     }
     return PendingIntent.getService(this, requestCode, intent.setAction(action),
@@ -263,10 +266,10 @@ public class InstallService extends Service {
     startActivity(intent);
   }
 
-  private void openAppView(long appId) {
+  private void openAppView(String md5) {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
     startActivity(intent);
   }
 

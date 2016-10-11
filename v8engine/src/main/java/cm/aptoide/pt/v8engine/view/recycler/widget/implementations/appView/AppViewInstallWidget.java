@@ -28,7 +28,6 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -282,7 +281,7 @@ import rx.subscriptions.CompositeSubscription;
 
   public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    aptoideDownloadManager.getDownload(app.getId())
+    aptoideDownloadManager.getDownload(app.getMd5())
         .firstOrDefault(null)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(download -> {
@@ -294,7 +293,7 @@ import rx.subscriptions.CompositeSubscription;
               downloadStatus == Download.PAUSED)) {
             setDownloadBarVisible(true);
             setupDownloadControls(app, download, displayable);
-            aptoideDownloadManager.getDownload(app.getId())
+            aptoideDownloadManager.getDownload(app.getMd5())
                 .observeOn(AndroidSchedulers.mainThread())
                 .takeUntil(onGoingDownload -> shouldContinueListenDownload(
                     onGoingDownload.getOverallDownloadStatus()))
@@ -582,15 +581,15 @@ import rx.subscriptions.CompositeSubscription;
 
   private void setupDownloadControls(GetAppMeta.App app, Download download,
       AppViewInstallDisplayable displayable) {
-    long appId = app.getId();
+    String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      aptoideDownloadManager.removeDownload(appId);
+      aptoideDownloadManager.removeDownload(md5);
       setDownloadBarVisible(false);
     });
 
     actionPause.setOnClickListener(view -> {
-      aptoideDownloadManager.pauseDownload(appId);
+      aptoideDownloadManager.pauseDownload(md5);
       actionResume.setVisibility(View.VISIBLE);
       actionPause.setVisibility(View.GONE);
     });

@@ -7,6 +7,7 @@ package cm.aptoide.pt.database.realm;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
+import android.support.annotation.IntRange;
 import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -19,11 +20,14 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class Download extends RealmObject {
 
+  public static String TAG = Download.class.getSimpleName();
+
   public static final int ACTION_INSTALL = 0;
   public static final int ACTION_UPDATE = 1;
   public static final int ACTION_DOWNGRADE = 2;
 
   public static final String DOWNLOAD_ID = "appId";
+  public static final String MD5 = "md5";
   public static final int INVALID_STATUS = 0;
   public static final int COMPLETED = 1;
   public static final int BLOCK_COMPLETE = 2;
@@ -38,14 +42,14 @@ public class Download extends RealmObject {
   public static final int RETRY = 11;
   public static final int NOT_DOWNLOADED = 12;
   public static final int IN_QUEUE = 13;
-  public static String TAG = Download.class.getSimpleName();
+
   RealmList<FileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
-  int overallProgress = 0;
-  @PrimaryKey private long appId;
+  @IntRange(from = 0, to = 100) int overallProgress = 0;
+  @PrimaryKey private String md5;
   private String appName;
   private String Icon;
-  @SuppressWarnings({ "all" }) private long timeStamp;
+  private long timeStamp;
   private int downloadSpeed;
   private String packageName;
   private int versionCode;
@@ -130,14 +134,6 @@ public class Download extends RealmObject {
     this.overallProgress = overallProgress;
   }
 
-  public long getAppId() {
-    return appId;
-  }
-
-  public void setAppId(long appId) {
-    this.appId = appId;
-  }
-
   public String getIcon() {
     return Icon;
   }
@@ -180,6 +176,18 @@ public class Download extends RealmObject {
 
   public void setScheduled(boolean scheduled) {
     this.scheduled = scheduled;
+  }
+
+  public boolean isScheduled() {
+    return scheduled;
+  }
+
+  public String getMd5() {
+    return md5;
+  }
+
+  public void setMd5(String md5) {
+    this.md5 = md5;
   }
 
   @IntDef({

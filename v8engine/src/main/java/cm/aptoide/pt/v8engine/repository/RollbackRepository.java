@@ -23,6 +23,8 @@ import rx.Observable;
 
   private RollbackAccessor accessor;
 
+  /*
+
   public Observable<Rollback> getRollback(String packageName, Rollback.Action action) {
     final Realm realm = DeprecatedDatabase.get();
     Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, action);
@@ -113,6 +115,12 @@ import rx.Observable;
     });
   }
 
+  public Observable<Rollback> getRollback(String packageName) {
+    return accessor.get(packageName);
+  }
+
+  */
+
   public Observable<Rollback> getNotConfirmedRollback(String packageName) {
     return accessor.getNotConfirmedRollback(packageName);
   }
@@ -121,11 +129,6 @@ import rx.Observable;
     rollback.setConfirmed(true);
     save(rollback);
   }
-
-  public Observable<Rollback> getRollback(String packageName) {
-    return accessor.get(packageName);
-  }
-
   public void save(Rollback rollback) {
     accessor.save(rollback);
   }

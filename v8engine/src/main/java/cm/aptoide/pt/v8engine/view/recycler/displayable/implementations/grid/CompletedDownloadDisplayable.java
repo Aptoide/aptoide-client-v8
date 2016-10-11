@@ -46,11 +46,11 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
   }
 
   public void removeDownload() {
-    installManager.removeInstallationFile(getPojo().getRequest().getAppId());
+    installManager.removeInstallationFile(getPojo().getRequest().getMd5());
   }
 
   public Observable<Integer> downloadStatus() {
-    return installManager.getInstallation(getPojo().getRequest().getAppId())
+    return installManager.getInstallation(getPojo().getRequest().getMd5())
         .map(installationProgress -> installationProgress.getRequest().getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
   }
@@ -65,7 +65,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
 
   public Observable<Progress<Download>> installOrOpenDownload(Context context,
       PermissionRequest permissionRequest) {
-    return installManager.getInstallation(getPojo().getRequest().getAppId()).flatMap(installed -> {
+    return installManager.getInstallation(getPojo().getRequest().getMd5()).flatMap(installed -> {
       if (installed.getState() == Progress.DONE) {
         AptoideUtils.SystemU.openApp(
             getPojo().getRequest().getFilesToDownload().get(0).getPackageName());

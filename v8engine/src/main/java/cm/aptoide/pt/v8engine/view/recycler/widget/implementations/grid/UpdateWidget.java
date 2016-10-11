@@ -119,8 +119,9 @@ import rx.subscriptions.CompositeSubscription;
         }, throwable -> throwable.printStackTrace()));
 
     subscriptions.add(displayable.getUpdates()
-        .filter(downloadProgress -> downloadProgress.getRequest().getAppId()
-            == displayable.getDownload().getAppId())
+        .filter(
+            downloadProgress -> downloadProgress.getRequest().getMd5() == displayable.getDownload()
+                .getMd5())
         .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(shouldShow -> showProgress(shouldShow),

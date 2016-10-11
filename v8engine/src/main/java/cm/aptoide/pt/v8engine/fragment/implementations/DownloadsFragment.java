@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
@@ -142,7 +143,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
   /**
    * this method checks if the downloads from the 2 lists are equivalents (same {@link
-   * Download#getAppId()} and {@link Download#getOverallDownloadStatus()}
+   * Download#getMd5()} and {@link Download#getOverallDownloadStatus()}
    *
    * @param progresses list of the most recent downloads list
    * @param oldDownloadsList list of the old downloads list
@@ -172,8 +173,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
       List<Progress<Download>> oldDownloadsList) {
 
     for (int i = 0; i < oldDownloadsList.size(); i++) {
-      if ((oldDownloadsList.get(i).getRequest().getAppId() == downloadProgress.getRequest()
-          .getAppId())) {
+      if (TextUtils.equals(oldDownloadsList.get(i).getRequest().getMd5(),
+          downloadProgress.getRequest().getMd5())) {
         return i;
       }
     }

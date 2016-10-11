@@ -38,11 +38,11 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Progress<Download
   }
 
   public void pauseInstall(Context context) {
-    installManager.stopInstallation(context, getPojo().getRequest().getAppId());
+    installManager.stopInstallation(context, getPojo().getRequest().getMd5());
   }
 
   public Observable<Download> getDownload() {
-    return installManager.getInstallation(getPojo().getRequest().getAppId())
+    return installManager.getInstallation(getPojo().getRequest().getMd5())
         .map(downloadProgress -> downloadProgress.getRequest());
   }
 }

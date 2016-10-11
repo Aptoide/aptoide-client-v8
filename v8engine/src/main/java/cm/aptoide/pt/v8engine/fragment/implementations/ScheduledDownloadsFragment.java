@@ -48,10 +48,11 @@ import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_D
  */
 public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
+  private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
+
   public static final String OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI =
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
   public static final String OPEN_MODE = "openMode";
-  private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
 
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
@@ -273,7 +274,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
-                downloadItem.getAppId())))
+                downloadItem.getMd5())))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(aVoid -> {
           Logger.i(TAG, "finished installing scheduled downloads");

@@ -38,7 +38,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private RollbackRepository rollbackRepository;
   //private Installer installManager;
 
-  private long appId;
+  private String md5;
   private String packageName;
   private InstalledAccessor installedAccessor;
   private Button installButton;
@@ -51,7 +51,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       boolean shouldInstall, InstalledAccessor installedAccessor) {
     super(getApp);
     //this.installManager = installManager;
-    this.appId = getApp.getNodes().getMeta().getData().getId();
+    this.md5 = getApp.getNodes().getMeta().getData().getFile().getMd5sum();
     this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;

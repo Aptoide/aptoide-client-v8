@@ -26,12 +26,12 @@ import lombok.AllArgsConstructor;
   public static final String VER_CODE = "verCode";
   public static final String IS_DOWNLOADING = "isDownloading";
 
-  @PrimaryKey private long appId;
+  //private long appId;
   private String name;
   private String versionName;
   private String icon;
   private String path;
-  private String md5;
+  @PrimaryKey private String md5;
   private int verCode;
   private String packageName;
   private String storeName;
@@ -82,18 +82,10 @@ import lombok.AllArgsConstructor;
       }
     }
 
-    return new Scheduled(app.getId(), app.getName(), app.getFile().getVername(), app.getIcon(),
+    return new Scheduled(app.getName(), app.getFile().getVername(), app.getIcon(),
         app.getFile().getPath(), app.getFile().getMd5sum(), app.getFile().getVercode(),
         app.getPackageName(), app.getStore().getName(), app.getFile().getPathAlt(), mainObbName,
         mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false, appAction.name());
-  }
-
-  public long getAppId() {
-    return appId;
-  }
-
-  public void setAppId(long appId) {
-    this.appId = appId;
   }
 
   public String getName() {

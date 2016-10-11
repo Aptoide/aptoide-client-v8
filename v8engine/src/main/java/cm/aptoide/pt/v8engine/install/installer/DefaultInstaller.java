@@ -36,15 +36,15 @@ import rx.schedulers.Schedulers;
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
 
-  @Override public Observable<Boolean> isInstalled(long installationId) {
-    return installationProvider.getInstallation(installationId)
+  @Override public Observable<Boolean> isInstalled(String md5) {
+    return installationProvider.getInstallation(md5)
         .map(installation -> isInstalled(installation.getPackageName(),
             installation.getVersionCode()))
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Observable<Void> install(Context context, long installationId) {
-    return installationProvider.getInstallation(installationId)
+  @Override public Observable<Void> install(Context context, String md5) {
+    return installationProvider.getInstallation(md5)
             .observeOn(Schedulers.computation())
             .flatMap(installation -> {
               if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
@@ -61,15 +61,15 @@ import rx.schedulers.Schedulers;
             .doOnError(CrashReports::logException);
   }
 
-  @Override public Observable<Void> update(Context context, long installationId) {
-    return install(context, installationId);
+  @Override public Observable<Void> update(Context context, String md5) {
+    return install(context, md5);
   }
 
-  @Override public Observable<Void> downgrade(Context context, long installationId) {
-    return installationProvider.getInstallation(installationId)
+  @Override public Observable<Void> downgrade(Context context, String md5) {
+    return installationProvider.getInstallation(md5)
         .first()
         .flatMap(installation -> uninstall(context, installation.getPackageName()))
-        .flatMap(success -> install(context, installationId));
+        .flatMap(success -> install(context, md5));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {

@@ -20,30 +20,30 @@ import java.util.Calendar;
 public class Rollback extends RealmObject {
 
   //	public static final String ID = "id";
+  public static final String TIMESTAMP = "timestamp";
   public static final String VERSION_NAME = "versionName";
   public static final String VERSION_CODE = "versionCode";
   public static final String PACKAGE_NAME = "packageName";
-  public static final String TIMESTAMP = "timestamp";
-  public static final String APP_NAME = "app_name";
+  public static final String APP_NAME = "appName";
   public static final String ICON = "icon";
   public static final String ACTION = "action";
-  public static final String MD5 = "md5";
   public static final String CONFIRMED = "confirmed";
-  //	public static final String REFERRER = "referrer";
+  //  public static final String REFERRER = "referrer";
+  //  public static final String MD5 = "md5";
 
   //	@PrimaryKey private int id = -1;
-  private String appName;
-  private String packageName;
-  private String icon;
-  private String versionName;
-  private int versionCode;
   @PrimaryKey private long timestamp;
   private String action;
-  @Required private String md5;
+  private String packageName;
   private boolean confirmed;
-  private String trustedBadge;
-  //	private String referrer;
+  private String icon;
+  private String md5;
+  private String appName;
+  private int versionCode;
+  private String versionName;
 
+  //	private String referrer;
+  // all this are optional
   private long appId;
   private String alternativeApkPath;
   private String apkPath;
@@ -53,41 +53,21 @@ public class Rollback extends RealmObject {
   private String patchObbName;
   private String mainObbMd5;
   private String mainObbPath;
-  private double fileSize;
-
-  // TODO: 27-05-2016 neuro Nem sei o k fazer a isto..
-  //	private String previousVersionName;
-  //	private String storeName;
 
   public Rollback() {
   }
 
   public Rollback(GetAppMeta.App app, Action action) {
-    setAction(action.name());
-    setPackageName(app.getPackageName());
-    setVersionCode(app.getFile().getVercode());
-    setAppName(app.getName());
-    setIconPath(app.getIcon());
-    setVersionName(app.getFile().getVername());
-    setTimestamp(Calendar.getInstance().getTimeInMillis());
-    setMd5(app.getFile().getMd5sum());
-    //		computeId();
-
+    this.action = action.name();
     appId = app.getId();
     appName = app.getName();
     icon = app.getIcon();
-
-    trustedBadge = app.getFile().getMalware().getRank().name();
-
     packageName = app.getPackageName();
-    //		versionCode = app.getFile().getVercode();
-    //		signature = app.get;
-    //		timestamp = app.getModified();
+    timestamp = Calendar.getInstance().getTimeInMillis();
     md5 = app.getFile().getMd5sum();
     apkPath = app.getFile().getPath();
-    fileSize = app.getFile().getFilesize();
-    versionName = app.getFile().getVername();
     alternativeApkPath = app.getFile().getPathAlt();
+    versionName = app.getFile().getVername();
     versionCode = app.getFile().getVercode();
 
     Obb obb = app.getObb();
@@ -107,20 +87,6 @@ public class Rollback extends RealmObject {
       }
     }
   }
-
-  public void confirm(Realm realm) {
-    realm.beginTransaction();
-    setConfirmed(true);
-    realm.commitTransaction();
-  }
-
-  //	public int getId() {
-  //		return id;
-  //	}
-
-  //	public void setId(int id) {
-  //		this.id = id;
-  //	}
 
   public String getPackageName() {
     return packageName;
@@ -302,14 +268,6 @@ public class Rollback extends RealmObject {
     this.mainObbPath = mainObbPath;
   }
 
-  public double getFileSize() {
-    return fileSize;
-  }
-
-  public void setFileSize(double fileSize) {
-    this.fileSize = fileSize;
-  }
-
   public String getMainObbName() {
     return mainObbName;
   }
@@ -324,10 +282,6 @@ public class Rollback extends RealmObject {
 
   public void setPatchObbName(String patchObbName) {
     this.patchObbName = patchObbName;
-  }
-
-  public String getTrustedBadge() {
-    return trustedBadge;
   }
 
   public enum Action {

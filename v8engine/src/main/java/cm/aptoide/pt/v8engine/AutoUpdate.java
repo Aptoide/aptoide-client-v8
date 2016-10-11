@@ -15,14 +15,13 @@ import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import java.io.File;
 import java.io.IOException;
@@ -41,15 +40,15 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private final String url = Application.getConfiguration().getAutoUpdateUrl();
 
   private AptoideBaseActivity activity;
-  private Installer defaultInstaller;
+  private Installer installer;
   private DownloadFactory downloadFactory;
-  private DownloadServiceHelper downloadManager;
+  private AptoideDownloadManager downloadManager;
   private ProgressDialog dialog;
 
-  public AutoUpdate(AptoideBaseActivity activity, Installer defaultInstaller,
-      DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
+  public AutoUpdate(AptoideBaseActivity activity, Installer installer,
+      DownloadFactory downloadFactory, AptoideDownloadManager downloadManager) {
     this.activity = activity;
-    this.defaultInstaller = defaultInstaller;
+    this.installer = installer;
     this.downloadFactory = downloadFactory;
     this.downloadManager = downloadManager;
   }
@@ -135,7 +134,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           dialog = new ProgressDialog(activity);
           dialog.setMessage(activity.getString(R.string.retrieving_update));
           dialog.show();
-          downloadManager.startDownload(activity, downloadFactory.create(autoUpdateInfo))
+          downloadManager.startDownload(downloadFactory.create(autoUpdateInfo))
               .subscribe(download -> {
                 if (download.getOverallDownloadStatus() == Download.COMPLETED) {
                   if (activity.is_resumed() && this.dialog.isShowing()) {
@@ -148,9 +147,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                       File apk = new File(downloadedFile.getFilePath());
                       String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
                       if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-                        defaultInstaller.install(activity, download.getAppId())
-                            .toBlocking()
-                            .subscribe();
+                        installer.install(activity, autoUpdateInfo.md5).toBlocking().subscribe();
                       } else {
                         Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
                         throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);

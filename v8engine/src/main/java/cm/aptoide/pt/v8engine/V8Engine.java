@@ -11,7 +11,6 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -38,15 +37,19 @@ import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import io.realm.Realm;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Collections;
 import java.util.List;
 import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -128,7 +131,9 @@ public abstract class V8Engine extends DataProvider {
     //
     super.onCreate();
 
-    //RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
+    //if (BuildConfig.DEBUG) {
+    //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
+    //}
 
     DeprecatedDatabase.initialize(this);
     Database.initialize(this);
@@ -144,7 +149,7 @@ public abstract class V8Engine extends DataProvider {
     if (BuildConfig.DEBUG) {
       refWatcher = LeakCanary.install(this);
       //registerActivityLifecycleCallbacks(new LeakCAnaryActivityWatcher(refWatcher));
-      Log.w(TAG, "LeakCanary installed");
+      Logger.w(TAG, "LeakCanary installed");
     } else {
       refWatcher = RefWatcher.DISABLED;
     }
@@ -165,13 +170,11 @@ public abstract class V8Engine extends DataProvider {
       }).subscribe();
 
       // load picture, name and email
-      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(
-          userData -> {
-            Logger.v(TAG, "hello " + userData.getUsername());
-          }, e -> {
-            Logger.e(TAG, e);
-          }
-      );
+      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
+        Logger.v(TAG, "hello " + userData.getUsername());
+      }, e -> {
+        Logger.e(TAG, e);
+      });
     }
 
     final int appSignature = SecurityUtils.checkAppSignature(this);
@@ -198,7 +201,7 @@ public abstract class V8Engine extends DataProvider {
 
     if (BuildConfig.DEBUG) {
       setupStrictMode();
-      Log.w(TAG, "StrictMode setup");
+      Logger.w(TAG, "StrictMode setup");
     }
 
     // this will trigger the migration if needed
@@ -208,6 +211,7 @@ public abstract class V8Engine extends DataProvider {
 
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
+
   //
   // Strict Mode
   //
@@ -226,10 +230,9 @@ public abstract class V8Engine extends DataProvider {
     return Observable.fromCallable(() -> {
       @Cleanup Realm realm = DeprecatedDatabase.get();
       DeprecatedDatabase.dropTable(Installed.class, realm);
-      // FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
 
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
-      Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
+      Logger.d(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
       Collections.sort(installedApps,
