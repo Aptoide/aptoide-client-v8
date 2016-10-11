@@ -143,8 +143,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
                   baseResponse.getError().getCode())) {
                 DialogFragment dialogFragment =
-                    PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName);
-                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                    (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
+                if (dialogFragment == null) {
+                  dialogFragment =
+                      PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
+                          true);
+                  dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                }
               }
             } else {
               finishLoading(throwable);

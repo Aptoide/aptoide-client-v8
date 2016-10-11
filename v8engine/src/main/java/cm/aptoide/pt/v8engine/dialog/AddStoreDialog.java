@@ -26,6 +26,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 
+/**
+ * Created with IntelliJ IDEA. User: rmateus Date: 18-10-2013 Time: 17:27 To change this template
+ * use File | Settings |
+ * File Templates.
+ */
+
+// // TODO: 19-05-2016 neuro IMPORTS TODOS MARADOS!
 public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
@@ -96,7 +103,7 @@ public class AddStoreDialog extends DialogFragment {
         BaseV7Response.Error error = baseResponse.getError();
         if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
           DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-              .this, PRIVATE_STORE_REQUEST_CODE, storeName);
+              .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
           dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
         } else {
           ShowMessage.asSnack(getActivity(), error.getDescription());
