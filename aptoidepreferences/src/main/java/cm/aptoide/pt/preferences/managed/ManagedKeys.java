@@ -26,4 +26,5 @@ public class ManagedKeys {
   public static final String UPDATES_FILTER_ALPHA_BETA_KEY = "updatesFilterAlphaBetaKey";
   public static final String UPDATES_SYSTEM_APPS_KEY = "updatesSystemAppsKey";
   public static final String SCHEDULE_DOWNLOAD_SETTING = "schDwnBox";
+  public static final String ALLOW_ROOT_INSTALATION = "allowRoot";
 }

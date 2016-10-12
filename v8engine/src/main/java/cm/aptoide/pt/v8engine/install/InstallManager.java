@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.CrashReports;
@@ -119,7 +120,7 @@ import rx.schedulers.Schedulers;
 
   private Void rootInstall(File file, String packageName, int versionCode)
       throws InstallationException {
-    if (!AptoideUtils.SystemU.hasRoot()) {
+    if (!AptoideUtils.SystemU.hasRoot() || !ManagerPreferences.allowRootInstallation()) {
       throw new InstallationException("No root permissions");
     }
 

@@ -118,4 +118,9 @@ public class ManagerPreferences {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.PREF_SHOW_UPDATE_NOTIFICATION, true);
   }
+
+  public static boolean allowRootInstallation() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, false);
+  }
 }
