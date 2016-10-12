@@ -584,12 +584,12 @@ import rx.subscriptions.CompositeSubscription;
     String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      aptoideDownloadManager.removeDownload(md5);
+      installManager.removeInstallationFile(getContext(), md5);
       setDownloadBarVisible(false);
     });
 
     actionPause.setOnClickListener(view -> {
-      aptoideDownloadManager.pauseDownload(md5);
+      installManager.stopInstallation(getContext(), md5);
       actionResume.setVisibility(View.VISIBLE);
       actionPause.setVisibility(View.GONE);
     });

@@ -52,7 +52,8 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  public void removeInstallationFile(String md5) {
+  public void removeInstallationFile(Context context, String md5) {
+    stopAllInstallations(context);
     aptoideDownloadManager.removeDownload(md5);
   }
 

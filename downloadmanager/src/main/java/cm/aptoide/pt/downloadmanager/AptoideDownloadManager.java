@@ -91,7 +91,7 @@ public class AptoideDownloadManager {
    * message.
    */
   public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-    return getDownloadStatus(download.getMd5()).flatMap(status -> {
+    return getDownloadStatus(download.getMd5()).first().flatMap(status -> {
       if (status == Download.COMPLETED) {
         return Observable.just(download);
       } else {

@@ -85,8 +85,8 @@ import rx.subscriptions.CompositeSubscription;
           .subscribe(success -> {
           }, throwable -> throwable.printStackTrace()));
 
-      subscriptions.add(
-          RxView.clicks(cancelDownloadButton).subscribe(click -> displayable.removeDownload()));
+      subscriptions.add(RxView.clicks(cancelDownloadButton)
+          .subscribe(click -> displayable.removeDownload(getContext())));
 
       subscriptions.add(displayable.downloadStatus()
           .observeOn(Schedulers.computation())

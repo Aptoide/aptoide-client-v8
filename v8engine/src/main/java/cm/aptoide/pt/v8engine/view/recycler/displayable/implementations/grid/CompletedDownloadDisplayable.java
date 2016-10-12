@@ -45,8 +45,8 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
     return R.layout.completed_donwload_row_layout;
   }
 
-  public void removeDownload() {
-    installManager.removeInstallationFile(getPojo().getRequest().getMd5());
+  public void removeDownload(Context context) {
+    installManager.removeInstallationFile(context, getPojo().getRequest().getMd5());
   }
 
   public Observable<Integer> downloadStatus() {
