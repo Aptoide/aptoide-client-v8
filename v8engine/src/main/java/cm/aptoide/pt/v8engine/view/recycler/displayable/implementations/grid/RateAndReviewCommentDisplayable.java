@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -30,22 +29,17 @@ public class RateAndReviewCommentDisplayable
   }
 
   public RateAndReviewCommentDisplayable(RateAndReviewCommentDisplayable.ReviewWithAppName pojo,
-      boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
-  public RateAndReviewCommentDisplayable(RateAndReviewCommentDisplayable.ReviewWithAppName pojo,
       RateAndReviewsFragment.CommentAdder commentAdder) {
     super(pojo);
     this.commentAdder = commentAdder;
   }
 
-  @Override public Type getType() {
-    return Type.RATE_AND_REVIEW;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_rate_and_review;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 
   @AllArgsConstructor @Data public static final class ReviewWithAppName {

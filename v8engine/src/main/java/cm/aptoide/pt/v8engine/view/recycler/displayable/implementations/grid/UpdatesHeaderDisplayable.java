@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -22,11 +21,11 @@ public class UpdatesHeaderDisplayable extends Displayable {
     this.label = label;
   }
 
-  @Override public Type getType() {
-    return Type.UPDATES_HEADER;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.updates_header_row;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 }

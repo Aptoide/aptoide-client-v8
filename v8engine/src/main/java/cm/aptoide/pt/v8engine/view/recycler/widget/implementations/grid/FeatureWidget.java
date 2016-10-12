@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -56,7 +56,7 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
       getAppButton.setVisibility(View.VISIBLE);
       getAppButton.setText(displayable.getAppText(getContext()));
       getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(displayable.getAppId())));
+          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
     } else {
       getAppButton.setVisibility(View.GONE);
     }

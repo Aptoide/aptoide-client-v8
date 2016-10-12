@@ -31,6 +31,7 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -247,8 +248,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
       return true;
     }
     if (itemId == R.id.menu_install) {
-      ((FragmentShower) getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
     return super.onOptionsItemSelected(item);

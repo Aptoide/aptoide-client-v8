@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -128,11 +127,11 @@ import lombok.Getter;
     return dateCalculator.getTimeSinceDate(context, timestamp);
   }
 
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_recommendation;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 }

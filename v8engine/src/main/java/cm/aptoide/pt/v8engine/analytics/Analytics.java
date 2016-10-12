@@ -9,10 +9,13 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.flurry.android.FlurryAgent;
 import com.localytics.android.Localytics;
 import java.io.IOException;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
 
@@ -37,6 +41,7 @@ public class Analytics {
   private static final int ALL = Integer.MAX_VALUE;
   private static final int LOCALYTICS = 1 << 0;
   private static final int FLURRY = 1 << 1;
+  private static final int FABRIC = 1 << 2;
   private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
   private static boolean isFirstSession;
 
@@ -92,6 +97,17 @@ public class Analytics {
       }
     } catch (Exception e) {
       Logger.d(TAG, e.getStackTrace().toString());
+    }
+  }
+
+  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
+    if (checkAcceptability(flags, FABRIC)) {
+      CustomEvent customEvent = new CustomEvent(event);
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
+      }
+      Answers.getInstance().logCustom(customEvent);
+      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
     }
   }
 
@@ -1025,6 +1041,21 @@ public class Analytics {
         String value = applicationsInstallClicked.get(id);
         track(value.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
       }
+    }
+  }
+
+  public static class RootInstall {
+
+    private static final String EVENT_NAME = "ROOT_INSTALL";
+    private static final String EXIT_CODE = "EXIT_CODE";
+    private static final String IS_INSTALLED = "IS_INSTALLED";
+
+    public static void installCompleted(int exitCode, boolean isInstalled) {
+      Map<String, String> map = new HashMap<>();
+      map.put(EXIT_CODE, String.valueOf(exitCode));
+      map.put(IS_INSTALLED, String.valueOf(isInstalled));
+
+      logFabricEvent(EVENT_NAME, map, FABRIC);
     }
   }
 }

@@ -89,7 +89,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     //  getAppButton.setVisibility(View.VISIBLE);
     //  getAppButton.setText(displayable.getAppText(getContext()));
     //  getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-    //      AppViewFragment.newInstance(displayable.getAppId())));
+    //      V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
     //}
 
     //		CustomTabsHelper.getInstance()

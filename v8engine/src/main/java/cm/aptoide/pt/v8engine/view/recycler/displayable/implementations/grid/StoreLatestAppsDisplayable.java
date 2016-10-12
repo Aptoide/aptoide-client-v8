@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -45,12 +44,12 @@ import lombok.Getter;
     return dateCalculator.getTimeSinceDate(context, date);
   }
 
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_store_latest_apps;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 
   public int getMarginWidth(Context context, int orientation) {

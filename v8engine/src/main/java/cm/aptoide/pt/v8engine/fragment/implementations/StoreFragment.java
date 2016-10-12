@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -99,7 +100,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    if (storeTheme != null) {
+    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
   }
@@ -143,8 +144,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
                   baseResponse.getError().getCode())) {
                 DialogFragment dialogFragment =
-                    PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName);
-                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                    (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
+                if (dialogFragment == null) {
+                  dialogFragment =
+                      PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
+                          true);
+                  dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                }
               }
             } else {
               finishLoading(throwable);
@@ -165,8 +171,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
     floatingActionButton.setOnClickListener(
-        v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog")
-    );
+        v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
+
+    StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
+    if (viewPager.getCurrentItem() == adapter.getEventNamePosition(Event.Name.myStores)) {
+      floatingActionButton.show();
+    } else {
+      floatingActionButton.hide();
+    }
 
     viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {

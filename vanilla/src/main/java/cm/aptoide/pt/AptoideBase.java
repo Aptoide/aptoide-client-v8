@@ -6,7 +6,7 @@
 package cm.aptoide.pt;
 
 import android.support.multidex.MultiDex;
-import cm.aptoide.pt.preferences.AptoideConfiguration;
+import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
@@ -19,7 +19,7 @@ public class AptoideBase extends V8Engine {
     super.onCreate();
   }
 
-  @Override protected AptoideConfiguration createConfiguration() {
+  @Override protected AptoidePreferencesConfiguration createConfiguration() {
     return new VanillaConfiguration();
   }
 }

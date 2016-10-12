@@ -24,14 +24,11 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.Translator;
-import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
@@ -39,6 +36,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Adu
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.ArrayList;
@@ -156,7 +154,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
       displayables = new LinkedList<>();
       for (Store store : list) {
-        displayables.add(DisplayableType.newDisplayable(Type.STORES_GROUP, store));
+        displayables.add(new GridStoreDisplayable(store));
       }
 
       addDisplayables(displayables);

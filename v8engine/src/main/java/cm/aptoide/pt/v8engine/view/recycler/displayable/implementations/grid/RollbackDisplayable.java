@@ -8,9 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -31,8 +30,8 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
     this(installManager, pojo, false);
   }
 
-  public RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
+  private RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
+    super(pojo);
     this.installManager = installManager;
   }
 
@@ -40,12 +39,12 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
     return new DownloadFactory().create(getPojo());
   }
 
-  @Override public Type getType() {
-    return Type.ROLLBACK;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.rollback_row;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 
   public void install(FragmentShower context) {
@@ -66,6 +65,7 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
   }
 
   public void openAppview(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(AppViewFragment.newInstance(getPojo().getMd5()));
+    fragmentShower.pushFragmentV4(
+        V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
   }
 }

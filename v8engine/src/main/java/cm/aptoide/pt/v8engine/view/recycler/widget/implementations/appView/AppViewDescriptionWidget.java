@@ -12,7 +12,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -44,7 +44,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      readMoreBtn.setOnClickListener(seeMoreHandler(app.getId()));
+      readMoreBtn.setOnClickListener(seeMoreHandler(app.getId(),app.getStore().getAppearance().getTheme()));
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);
@@ -60,10 +60,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
   }
 
-  private View.OnClickListener seeMoreHandler(final long appId) {
+  private View.OnClickListener seeMoreHandler(final long appId, final String storeTheme) {
     return v -> {
       ((FragmentShower) getContext()).pushFragmentV4(
-          DescriptionFragment.newInstance(appId, storeName));
+          V8Engine.getFragmentProvider().newDescriptionFragment(appId, storeName, storeTheme));
     };
   }
 }

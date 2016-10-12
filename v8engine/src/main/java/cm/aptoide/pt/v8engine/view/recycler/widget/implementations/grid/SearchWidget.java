@@ -20,9 +20,7 @@ import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
@@ -84,13 +82,13 @@ import java.util.Locale;
         String packageName = searchAppsApp.getPackageName();
 
         FragmentUtils.replaceFragmentV4(getContext(),
-            OtherVersionsFragment.newInstance(name, icon, packageName));
+            V8Engine.getFragmentProvider().newOtherVersionsFragment(name, icon, packageName));
         return true;
       });
       menuItem = popup.getMenu().findItem(R.id.go_to_store);
       menuItem.setOnMenuItemClickListener(menuItem12 -> {
         FragmentUtils.replaceFragmentV4(getContext(),
-            StoreFragment.newInstance(pojo.getStore().getName(),
+            V8Engine.getFragmentProvider().newStoreFragment(pojo.getStore().getName(),
                 pojo.getStore().getAppearance().getTheme()));
         return true;
       });
@@ -151,7 +149,8 @@ import java.util.Locale;
     }
 
     itemView.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
-        AppViewFragment.newInstance(pojo.getId(), pojo.getStore().getAppearance().getTheme(),
+        V8Engine.getFragmentProvider()
+            .newAppViewFragment(pojo.getId(), pojo.getStore().getAppearance().getTheme(),
             pojo.getStore().getName())));
   }
 

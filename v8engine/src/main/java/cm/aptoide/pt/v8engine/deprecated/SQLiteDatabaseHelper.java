@@ -122,6 +122,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       logException(ex);
     }
 
+    // Updates table has changed. The new one has column label the old one doesn't.
+    // The updates are going to be obtained from ws
     //try {
     //  new Updates().migrate(db, realm);
     //  // despite the migration, this data should be recreated upon app startup

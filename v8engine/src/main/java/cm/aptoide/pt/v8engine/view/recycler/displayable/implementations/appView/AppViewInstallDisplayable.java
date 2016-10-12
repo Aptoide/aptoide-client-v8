@@ -18,7 +18,6 @@ import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -101,10 +100,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.installButton = installButton;
   }
 
-  @Override public Type getType() {
-    return Type.APP_VIEW_INSTALL;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_install;
   }
@@ -127,6 +122,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
     Logger.i(TAG, "onViewStateRestored");
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 
   public InstalledAccessor getInstalledAccessor() {

@@ -17,7 +17,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -147,6 +147,7 @@ import java.util.Locale;
 
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
-    ((FragmentShower) getContext()).pushFragmentV4(AppViewFragment.newInstance(appId));
+    ((FragmentShower) getContext()).pushFragmentV4(
+        V8Engine.getFragmentProvider().newAppViewFragment(appId));
   }
 }

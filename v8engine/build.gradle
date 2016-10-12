@@ -75,10 +75,10 @@ void configureSixpackCredentials(androidDelegate, user, password) {
   boolean userExists = user != null
   boolean passwordExists = password != null
 
-  if (userExists && passwordExists) {
-    androidDelegate.buildConfigField "String", "SIXPACK_USER", "\"" + user.toString() + "\""
-    androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + password.toString() + "\""
-  }
+  androidDelegate.buildConfigField "String", "SIXPACK_USER",
+      "\"" + (userExists ? user.toString() : "") + "\""
+  androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD",
+      "\"" + (passwordExists ? password.toString() : "") + "\""
 }
 
 void configureFlurry(androidDelegate, key) {
@@ -95,14 +95,10 @@ void configureLocalytics(androidDelegate, key) {
 
 void configurePayPal(androidDelegate, key, environment) {
   boolean configurationExists = (key != null && environment != null)
-  if (!configurationExists || !(environment.equals("sandbox") || environment.equals("live") ||
-      environment.equals("mock"))) {
-    throw new InvalidUserDataException(
-        "Invalid PayPal configuration provided. Provide a valid key and environment (live, mock, sandbox)")
-  }
-  androidDelegate.buildConfigField "String", "PAYPAL_KEY", "\"" + key.toString() + "\""
+  androidDelegate.buildConfigField "String", "PAYPAL_KEY",
+      "\"" + (configurationExists ? key.toString() : "") + "\""
   androidDelegate.buildConfigField "String", "PAYPAL_ENVIRONMENT",
-      "\"" + environment.toString() + "\""
+      "\"" + (configurationExists ? environment.toString() : "") + "\""
 }
 
 dependencies {

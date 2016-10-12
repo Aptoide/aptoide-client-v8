@@ -12,7 +12,6 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
-import cm.aptoide.pt.logger.Logger;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -104,28 +103,27 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
         @Override public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
 
+          Logger.d("ExtractReferrer", "ClickUrl redirect: " + clickUrl);
+
           if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") ||
               clickUrl.startsWith("http://play.google.com")) {
             Logger.d("ExtractReferrer", "Clickurl landed on market");
             final String referrer = getReferrer(clickUrl);
-            //                        if (simpleFuture != null) {
-            //                            simpleFuture.set(referrer);
-            //                        }
-            Logger.d("ExtractReferrer", "Referrer successfully extracted");
+            if (!TextUtils.isEmpty(referrer)) {
+              Logger.d("ExtractReferrer", "Referrer successfully extracted");
 
-            if (broadcastReferrer) {
-              broadcastReferrer(packageName, referrer);
-            } else {
-              @Cleanup Realm realm = DeprecatedDatabase.get();
-              DeprecatedDatabase.save(
-                  new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
-                      minimalAd.getAdId()), realm);
+              if (broadcastReferrer) {
+                broadcastReferrer(packageName, referrer);
+              } else {
+                @Cleanup Realm realm = DeprecatedDatabase.get();
+                DeprecatedDatabase.save(
+                    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
+                        minimalAd.getAdId()), realm);
+              }
+
+              future.cancel(false);
+              postponeReferrerExtraction(minimalAd, 0, true);
             }
-
-            future.cancel(false);
-            postponeReferrerExtraction(minimalAd, 0, true);
-
-            return true;
           }
 
           return false;
@@ -133,6 +131,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
         @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
           super.onPageStarted(view, url, favicon);
+
+          Logger.d("ExtractReferrer", "Openened clickUrl: " + url);
 
           if (future == null) {
             future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries);
@@ -214,23 +214,12 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
   }
 
   private static String getReferrer(String uriAsString) {
-
-    //		URI uri = URI.create(uriAsString);
-    //		List<NameValuePair> params = URLEncodedUtils.parse(uri, "UTF-8");
-    //
-    //		String referrer = null;
-    //		for (NameValuePair param : params) {
-    //
-    //			if (param.getName().equals("referrer")) {
-    //				referrer = param.getValue();
-    //			}
-    //		}
-    //		return referrer;
-
     Uri uri = Uri.parse(uriAsString);
     String referrer = uri.getQueryParameter("referrer");
     if (!TextUtils.isEmpty(referrer)) {
       Logger.v(TAG, "Found referrer: " + referrer);
+    } else {
+      Logger.v(TAG, "Didn't find any referrer: " + uriAsString);
     }
     return referrer;
   }
@@ -243,7 +232,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
     }
     i.putExtra("referrer", referrer);
     DataProvider.getContext().sendBroadcast(i);
-    Logger.d("InstalledBroadcastReceiver",
+    Logger.d(TAG,
         "Sent broadcast to " + packageName + " with referrer " + referrer);
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }

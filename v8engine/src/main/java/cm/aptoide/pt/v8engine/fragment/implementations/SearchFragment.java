@@ -22,6 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -103,7 +104,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
         if (s.length() > 1) {
           FragmentUtils.replaceFragmentV4(((FragmentActivity) getContext()),
-              SearchFragment.newInstance(s, storeName));
+              V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
         }
       });
     }

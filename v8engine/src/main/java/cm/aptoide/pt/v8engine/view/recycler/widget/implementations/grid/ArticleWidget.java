@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -78,7 +78,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
       getAppButton.setVisibility(View.VISIBLE);
       getAppButton.setText(displayable.getAppText(getContext(), appName));
       getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(displayable.getAppId())));
+          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
     }
 
     //		CustomTabsHelper.getInstance()
