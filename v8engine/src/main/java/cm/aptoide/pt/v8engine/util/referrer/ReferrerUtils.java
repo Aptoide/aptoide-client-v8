@@ -32,6 +32,7 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
@@ -168,15 +169,20 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
                 if (retries > 0) {
                   GetAdsRequest.ofSecondTry(packageName)
-                      .observe()
-                      .filter(ReferrerUtils::hasAds)
+                      .observe().filter((getAdsResponse1) -> {
+                    Boolean hasAds = hasAds(getAdsResponse1);
+                    if (!hasAds) {
+                      clearExcludedNetworks(packageName);
+                    }
+                    return hasAds;
+                  })
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(getAdsResponse -> extractReferrer(
                           MinimalAd.from(getAdsResponse.getAds().get(0)), retries - 1,
                           broadcastReferrer), CrashReports::logException);
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
-                  excludedNetworks.remove(packageName);
+                  clearExcludedNetworks(packageName);
                 }
               } catch (Exception e) {
                 e.printStackTrace();
@@ -185,7 +191,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             } else {
               // A lista de excluded networks deve ser limpa a cada "ronda"
               // TODO: 28-07-2016 Baikova referrer successfully extracted.
-              excludedNetworks.remove(packageName);
+              clearExcludedNetworks(packageName);
             }
 
             return null;
@@ -204,6 +210,10 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       // TODO: 09-06-2016 neuro
       CrashReports.logException(e);
     }
+  }
+
+  private static List<Long> clearExcludedNetworks(String packageName) {
+    return excludedNetworks.remove(packageName);
   }
 
   private static Boolean hasAds(GetAdsResponse getAdsResponse) {
