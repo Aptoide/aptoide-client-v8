@@ -69,7 +69,7 @@ public class SecurePreferences {
 
   public static boolean isWizardAvailable() {
     return SecurePreferencesImplementation.getInstance()
-        .getBoolean(SecureKeys.WIZARD_AVAILABLE, true);
+        .getBoolean(SecureKeys.WIZARD_AVAILABLE, false);
   }
 
   public static void setWizardAvailable(boolean available) {
