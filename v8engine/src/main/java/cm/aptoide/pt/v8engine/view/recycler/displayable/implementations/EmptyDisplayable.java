@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
@@ -23,10 +22,6 @@ public class EmptyDisplayable extends Displayable {
     this.spanSize = spanSize;
   }
 
-  @Override public Type getType() {
-    return Type._EMPTY;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_empty;
   }
@@ -38,5 +33,9 @@ public class EmptyDisplayable extends Displayable {
 
   @Override public int getSpanSize() {
     return spanSize;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 }

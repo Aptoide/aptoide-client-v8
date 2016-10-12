@@ -14,9 +14,8 @@ import rx.Observable;
  */
 
 @AllArgsConstructor public class UpdateRepository implements Repository {
-  private UpdateAccessor accessor;
-
   private static final String TAG = UpdateRepository.class.getName();
+  private UpdateAccessor accessor;
 
   /**
    * Get all updates that should be shown to user, the excluded updates are not in the list

@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
@@ -27,14 +26,6 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
     this.downloadManager = downloadManager;
   }
 
-  public ActiveDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
-  @Override public Type getType() {
-    return Type.ACTIVE_DOWNLOAD;
-  }
-
   @Override public void onResume() {
     super.onResume();
     if (onResumeAction != null) {
@@ -47,6 +38,10 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Download> {
       onPauseAction.call();
     }
     super.onPause();
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 
   @Override public int getViewLayout() {

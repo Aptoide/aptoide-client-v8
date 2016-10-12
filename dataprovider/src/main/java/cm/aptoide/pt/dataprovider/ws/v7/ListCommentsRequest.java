@@ -6,11 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
-import android.util.Log;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -45,20 +45,20 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName) {
-    Log.d("lou", "of: A");
+    Logger.d("lou", "of: A");
     ListCommentsRequest.url = url;
     return of(reviewId, limit, storeName);
   }
 
   public static ListCommentsRequest of(long reviewId, int offset, int limit) {
-    Log.d("lou", "of: B");
+    Logger.d("lou", "of: B");
     ListCommentsRequest listCommentsRequest = of(reviewId, limit);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
 
   public static ListCommentsRequest of(long reviewId, int limit) {
-    Log.d("lou", "of: C");
+    Logger.d("lou", "of: C");
     //
     //
     //
@@ -74,7 +74,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest of(long reviewId, int limit, String storeName) {
-    Log.d("lou", "of: D");
+    Logger.d("lou", "of: D");
     //
     //
     //

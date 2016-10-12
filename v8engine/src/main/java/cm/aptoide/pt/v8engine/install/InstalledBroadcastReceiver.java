@@ -9,14 +9,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.util.Log;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -30,8 +26,6 @@ import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
-import io.fabric.sdk.android.services.common.Crash;
-import io.realm.Realm;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -86,7 +80,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   }
 
   protected void onPackageAdded(String packageName) {
-    Log.d(TAG, "Package added: " + packageName);
+    Logger.d(TAG, "Package added: " + packageName);
 
     //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
     //if(rollback != null) {
@@ -115,29 +109,29 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     //      .subscribe();
     //}
 
-    StoreMinimalAdAccessor storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-    Subscription unManagedSubscription = storeMinimalAdAccessor.get(packageName).subscribe(
-        storeMinimalAd -> {
-          if(storeMinimalAd!=null) {
-              ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
-              DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+    StoreMinimalAdAccessor storeMinimalAdAccessor =
+        AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    Subscription unManagedSubscription =
+        storeMinimalAdAccessor.get(packageName).subscribe(storeMinimalAd -> {
+          if (storeMinimalAd != null) {
+            ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
+            DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
             storeMinimalAdAccessor.remove(storeMinimalAd);
-          }
-          else {
-              GetAdsRequest.ofSecondInstall(packageName)
-                  .observe()
-                  .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .doOnNext(
-                      minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
-                  .onErrorReturn(throwable1 -> new MinimalAd())
-                  .subscribe();
+          } else {
+            GetAdsRequest.ofSecondInstall(packageName)
+                .observe()
+                .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(
+                    minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
+                        true))
+                .onErrorReturn(throwable1 -> new MinimalAd())
+                .subscribe();
           }
         }, err -> {
           Logger.e(TAG, err);
           CrashReports.logException(err);
-        }
-    );
+        });
   }
 
   protected void onPackageReplaced(String packageName) {
@@ -185,29 +179,27 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     //
     //DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
-    Subscription unManagedSubscription = updatesRepository.get(packageName).subscribe(
-        update -> {
-          if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-            Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
-          }
+    Subscription unManagedSubscription = updatesRepository.get(packageName).subscribe(update -> {
+      if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
+        Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+      }
 
-          PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
-          if (checkAndLogNullPackageInfo(packageInfo)) {
-            return;
-          }
+      PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+      if (checkAndLogNullPackageInfo(packageInfo)) {
+        return;
+      }
 
-          if (update != null) {
-            if (packageInfo.versionCode >= update.getVersionCode()) {
-              updatesRepository.remove(update);
-            }
-          }
-
-          installedRepository.insert(new Installed(packageInfo));
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+      if (update != null) {
+        if (packageInfo.versionCode >= update.getVersionCode()) {
+          updatesRepository.remove(update);
         }
-    );
+      }
+
+      installedRepository.insert(new Installed(packageInfo));
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
 
     //confirmAction(packageName, Rollback.Action.UPDATE);
   }

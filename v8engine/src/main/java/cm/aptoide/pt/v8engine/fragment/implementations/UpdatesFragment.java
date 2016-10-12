@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -21,7 +20,6 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -36,14 +34,11 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import io.realm.RealmResults;
 import java.util.LinkedList;
 import java.util.List;
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -103,25 +98,26 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     //  });
     //}
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    Subscription unManagedSubscription = storeAccessor.count().observeOn(AndroidSchedulers.mainThread()).subscribe(storeCount -> {
-      if (storeCount == 0) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
-        finishLoading();
-      } else {
-        DataproviderUtils.checkUpdates(listAppsUpdates -> {
-          if (listAppsUpdates.getList().size() == 0) {
+    Subscription unManagedSubscription =
+        storeAccessor.count().observeOn(AndroidSchedulers.mainThread()).subscribe(storeCount -> {
+          if (storeCount == 0) {
+            ShowMessage.asSnack(getView(), R.string.add_store);
             finishLoading();
-            ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
+          } else {
+            DataproviderUtils.checkUpdates(listAppsUpdates -> {
+              if (listAppsUpdates.getList().size() == 0) {
+                finishLoading();
+                ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
+              }
+              if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
+                ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
+              }
+            });
           }
-          if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
-            ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
-          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
         });
-      }
-    }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
-    });
   }
 
   private void fetchUpdates() {
@@ -229,11 +225,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           .doOnCompleted(() -> setDisplayables())
           .flatMapIterable(items -> items)
           .filter(
-              item -> updateAccessor.contains(item.getPackageName(), false).toBlocking().first()
-          )
+              item -> updateAccessor.contains(item.getPackageName(), false).toBlocking().first())
           .toList()
           .subscribe(installedApps -> {
-            for(Installed installedApp : installedApps) {
+            for (Installed installedApp : installedApps) {
               if (installedApp.isSystemApp()) {
                 installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
               }

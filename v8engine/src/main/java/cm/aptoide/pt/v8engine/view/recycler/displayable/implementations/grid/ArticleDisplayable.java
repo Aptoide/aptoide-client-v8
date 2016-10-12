@@ -8,7 +8,6 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -66,7 +65,7 @@ import rx.schedulers.Schedulers;
 
   public Observable<List<Installed>> getRelatedToApplication() {
     if (relatedToAppsList != null && relatedToAppsList.size() > 0) {
-      InstalledAccessor installedAccessor = accessorFactory.getAccessorFor(Installed.class);
+      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       List<String> packageNamesList = new ArrayList<String>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
@@ -117,11 +116,11 @@ import rx.schedulers.Schedulers;
         ContextCompat.getColor(context, R.color.appstimeline_grey), appName);
   }
 
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_article;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 }

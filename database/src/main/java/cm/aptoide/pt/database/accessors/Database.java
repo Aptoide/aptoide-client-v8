@@ -8,11 +8,9 @@ package cm.aptoide.pt.database.accessors;
 import android.content.Context;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.BuildConfig;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmMigration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -27,11 +25,10 @@ import rx.Observable;
  */
 public final class Database {
 
+  public static final int SCHEMA_VERSION = 8077; // if you bump this value, also add changes to the
   //private static final String TAG = Database.class.getName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
-  public static final int SCHEMA_VERSION = 8077; // if you bump this value, also add changes to the
-
   private static boolean isInitialized = false;
 
   //
@@ -67,9 +64,7 @@ public final class Database {
     } else {
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
-          .schemaVersion(SCHEMA_VERSION)
-          .migration(new RealmToRealmDatabaseMigration())
-          .build();
+          .schemaVersion(SCHEMA_VERSION).migration(new RealmToRealmDatabaseMigration()).build();
     }
 
     if (BuildConfig.DELETE_DB) {
@@ -105,11 +100,8 @@ public final class Database {
 
   /**
    * Use class Accessor for this operation, via AccessorFactory.
-   *
-   * @param realmObject
    */
-  @Deprecated
-  public static <E extends RealmObject> void save(E realmObject) {
+  @Deprecated public static <E extends RealmObject> void save(E realmObject) {
     Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
     realm.insertOrUpdate(realmObject);
@@ -119,11 +111,8 @@ public final class Database {
 
   /**
    * Use class Accessor for this operation, via AccessorFactory.
-   *
-   * @param realmObject
    */
-  @Deprecated
-  public static <E extends RealmObject> void save(List<E> realmObject) {
+  @Deprecated public static <E extends RealmObject> void save(List<E> realmObject) {
     @Cleanup Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
     realm.insertOrUpdate(realmObject);
@@ -132,11 +121,8 @@ public final class Database {
 
   /**
    * Use class Accessor for this operation, via AccessorFactory.
-   *
-   * @param realmObject
    */
-  @Deprecated
-  public static void delete(RealmObject realmObject) {
+  @Deprecated public static void delete(RealmObject realmObject) {
     @Cleanup Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
     realmObject.deleteFromRealm();
@@ -175,9 +161,8 @@ public final class Database {
   }
 
   public Observable<Long> count(Class clazz) {
-    return getRealm().flatMap(
-        realm -> Observable.just(realm.where(clazz).count()).unsubscribeOn(
-            RealmSchedulers.getScheduler()));
+    return getRealm().flatMap(realm -> Observable.just(realm.where(clazz).count())
+        .unsubscribeOn(RealmSchedulers.getScheduler()));
   }
 
   public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {

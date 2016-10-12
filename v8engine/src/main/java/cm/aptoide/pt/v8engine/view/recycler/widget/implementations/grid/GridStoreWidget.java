@@ -16,7 +16,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -69,8 +69,9 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     storeLayout.setBackgroundColor(StoreThemeEnum.get(store).getStoreHeaderInt());
     storeLayout.setOnClickListener(
         v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
-            StoreFragment.newInstance(gridStoreDisplayable.getPojo().getName(),
-                store.getAppearance().getTheme())));
+            V8Engine.getFragmentProvider()
+                .newStoreFragment(gridStoreDisplayable.getPojo().getName(),
+                    store.getAppearance().getTheme())));
 
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
       ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);

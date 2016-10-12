@@ -106,7 +106,7 @@ public class AndroidBasicDialog {
   }
 
   public AndroidBasicDialog setMessage(@StringRes int message) {
-    if(this.message!=null) {
+    if (this.message != null) {
       this.message.setText(message);
       this.message.setVisibility(View.VISIBLE);
     }
@@ -114,7 +114,7 @@ public class AndroidBasicDialog {
   }
 
   public AndroidBasicDialog setMessage(String message) {
-    if(this.message!=null) {
+    if (this.message != null) {
       this.message.setText(message);
       this.message.setVisibility(View.VISIBLE);
     }
@@ -122,7 +122,7 @@ public class AndroidBasicDialog {
   }
 
   public AndroidBasicDialog setTitle(@StringRes int title) {
-    if(this.title!=null) {
+    if (this.title != null) {
       this.title.setText(title);
       this.title.setVisibility(View.VISIBLE);
     }
@@ -130,7 +130,7 @@ public class AndroidBasicDialog {
   }
 
   public AndroidBasicDialog setTitle(String title) {
-    if(this.title!=null) {
+    if (this.title != null) {
       this.title.setText(title);
       this.title.setVisibility(View.VISIBLE);
     }
@@ -146,7 +146,9 @@ public class AndroidBasicDialog {
 
   public void show() {
     getCreatedDialog();
-    alertDialog.show();
+    if (!alertDialog.isShowing()) {
+      alertDialog.show();
+    }
   }
 
   public void setOnCancelListener(Action0 action) {

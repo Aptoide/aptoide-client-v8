@@ -13,11 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import com.trello.rxlifecycle.components.support.RxFragment;
-import io.realm.Realm;
 import rx.functions.Action0;
 
 /**

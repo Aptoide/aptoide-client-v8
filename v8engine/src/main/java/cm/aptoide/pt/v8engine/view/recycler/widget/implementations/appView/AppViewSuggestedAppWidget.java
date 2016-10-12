@@ -12,7 +12,7 @@ import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -45,7 +45,8 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
 
     layout.setOnClickListener(v -> {
-      ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(pojo));
+      ((FragmentShower) v.getContext()).pushFragmentV4(
+          V8Engine.getFragmentProvider().newAppViewFragment(pojo));
     });
   }
 

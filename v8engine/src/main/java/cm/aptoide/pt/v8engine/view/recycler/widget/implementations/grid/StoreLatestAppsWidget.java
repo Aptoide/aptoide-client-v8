@@ -8,9 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -99,7 +98,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
               Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
               Analytics.AppsTimeline.OPEN_APP_VIEW);
           ((FragmentShower) getContext()).pushFragmentV4(
-              AppViewFragment.newInstance(apps.get(app)));
+              V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
         }));
       }
 
@@ -108,7 +107,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.OPEN_STORE);
         ((FragmentShower) getContext()).pushFragmentV4(
-            StoreFragment.newInstance(displayable.getStoreName()));
+            V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
       }));
     }
   }

@@ -27,14 +27,11 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -50,10 +47,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
-import io.realm.Realm;
 import java.io.File;
 import java.text.DecimalFormat;
-import lombok.Cleanup;
 
 /**
  * Created by fabio on 26-10-2015.
@@ -136,7 +131,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     int pin = SecurePreferences.getAdultContentPin();
     final Preference mp = findPreference("Maturepin");
     if (pin != -1) {
-      Log.d("PINTEST", "PinBuild");
+      Logger.d("PINTEST", "PinBuild");
       mp.setTitle(R.string.remove_mature_pin_title);
       mp.setSummary(R.string.remove_mature_pin_summary);
     }
@@ -180,24 +175,21 @@ public class SettingsFragment extends PreferenceFragmentCompat
           }
         });
 
-    findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(
-        new Preference.OnPreferenceClickListener() {
-          @Override public boolean onPreferenceClick(Preference preference) {
-            final CheckBoxPreference cb = (CheckBoxPreference) preference;
-            boolean filterApps = false;
+    findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
+      final CheckBoxPreference cb = (CheckBoxPreference) preference;
+      boolean filterApps = false;
 
-            if (cb.isChecked()) {
-              cb.setChecked(true);
-              filterApps = true;
-            } else {
-              cb.setChecked(false);
-            }
+      if (cb.isChecked()) {
+        cb.setChecked(true);
+        filterApps = true;
+      } else {
+        cb.setChecked(false);
+      }
 
-            ManagerPreferences.setHWSpecsFilter(filterApps);
+      ManagerPreferences.setHWSpecsFilter(filterApps);
 
-            return true;
-          }
-        });
+      return true;
+    });
 
     findPreference(SettingsConstants.SHOW_ALL_UPDATES).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {

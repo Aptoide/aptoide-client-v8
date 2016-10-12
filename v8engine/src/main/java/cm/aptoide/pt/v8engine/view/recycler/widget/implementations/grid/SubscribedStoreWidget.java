@@ -23,7 +23,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
@@ -70,8 +70,9 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     storeLayout.setBackgroundColor(color);
     storeLayout.setOnClickListener(
         v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
-            StoreFragment.newInstance(displayable.getPojo().getStoreName(),
-                displayable.getPojo().getTheme())));
+            V8Engine.getFragmentProvider()
+                .newStoreFragment(displayable.getPojo().getStoreName(),
+                    displayable.getPojo().getTheme())));
 
     if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
       ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);

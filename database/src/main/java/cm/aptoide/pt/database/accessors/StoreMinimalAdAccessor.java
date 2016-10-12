@@ -18,6 +18,7 @@ public class StoreMinimalAdAccessor extends SimpleAccessor<StoredMinimalAd> {
   }
 
   public void remove(StoredMinimalAd storeMinimalAd) {
-    database.delete(StoredMinimalAd.class,  StoredMinimalAd.PACKAGE_NAME, storeMinimalAd.getPackageName());
+    database.delete(StoredMinimalAd.class, StoredMinimalAd.PACKAGE_NAME,
+        storeMinimalAd.getPackageName());
   }
 }

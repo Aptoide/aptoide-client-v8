@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -24,16 +23,12 @@ public class ExcludedUpdateDisplayable extends DisplayablePojo<Update> {
     super(pojo);
   }
 
-  public ExcludedUpdateDisplayable(Update pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
-  @Override public Type getType() {
-    return Type.EXCLUDED_UPDATE;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.row_excluded_update;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 
   public boolean isSelected() {

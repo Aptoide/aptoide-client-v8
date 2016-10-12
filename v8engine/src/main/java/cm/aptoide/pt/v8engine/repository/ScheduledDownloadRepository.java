@@ -44,5 +44,4 @@ public class ScheduledDownloadRepository implements Repository {
   public boolean hasScheduleDownloads() {
     return scheduledAccessor.hasScheduleDownloads();
   }
-
 }

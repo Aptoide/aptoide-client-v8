@@ -23,8 +23,7 @@
       android:layout_marginTop="2dp"
       android:padding="5dp"
       style="?attr/backgroundCard"
-      >
-
+  >
 
     <ImageView
         android:id="@+id/app_icon"
@@ -121,6 +120,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="5dp"
         android:layout_toStartOf="@+id/view"
+        android:layout_toLeftOf="@+id/view"
         android:padding="5dp"
         android:scaleType="center"
         android:src="@drawable/media_play"

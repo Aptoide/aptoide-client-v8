@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -136,12 +136,12 @@ public class WebSocketClient {
           // Now decode websocket frames.
           mParser.start(stream);
         } catch (EOFException ex) {
-          Log.d(TAG, "WebSocket EOF!", ex);
+          Logger.d(TAG, "WebSocket EOF!", ex);
           mListener.onDisconnect(0, "EOF");
           mConnected = false;
         } catch (SSLException ex) {
           // Connection reset by peer
-          Log.d(TAG, "Websocket SSL error!", ex);
+          Logger.d(TAG, "Websocket SSL error!", ex);
           mListener.onDisconnect(0, "SSL");
           mConnected = false;
         } catch (Exception ex) {
@@ -160,7 +160,7 @@ public class WebSocketClient {
             try {
               mSocket.close();
             } catch (IOException ex) {
-              Log.d(TAG, "Error while disconnecting", ex);
+              Logger.d(TAG, "Error while disconnecting", ex);
               mListener.onError(ex);
             }
             mSocket = null;

@@ -19,10 +19,6 @@ public abstract class SelectableDisplayablePojo<T> extends DisplayablePojo<T> {
     super(pojo);
   }
 
-  public SelectableDisplayablePojo(T pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   public boolean isSelected() {
     return selected;
   }

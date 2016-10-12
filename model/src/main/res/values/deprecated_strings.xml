@@ -204,7 +204,7 @@
 
   <!-- adult -->
   <string name="adult_pin_wrong">Wrong pin, try again.</string>
-  <string name="request_adult_pin">Insert the pin to unlock</string>
+  <string name="request_adult_pin">Insert pin to unlock</string>
   <string name="are_you_adult">Are you at least 21 years old?</string>
   <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
 
@@ -247,7 +247,7 @@
   <!-- Stores -->
   <string name="search_other_stores">Or search for others…</string>
   <string name="see_top_stores">See Top Stores</string>
-  <string name="subscribe">Subscribe</string>
+  <!--<string name="subscribe">Subscribe</string>-->
   <string name="unsubscribe">Unsubscribe</string>
   <string name="store_name">Store Name</string>
   <string name="insert_store_name">Insert store name:</string>

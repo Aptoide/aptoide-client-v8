@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -21,15 +20,11 @@ public class AppViewDescriptionDisplayable extends AppViewDisplayable {
     super(getApp);
   }
 
-  public AppViewDescriptionDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-    super(getApp, fixedPerLineCount);
-  }
-
-  @Override public Type getType() {
-    return Type.APP_VIEW_DESCRIPTION;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_description;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 }

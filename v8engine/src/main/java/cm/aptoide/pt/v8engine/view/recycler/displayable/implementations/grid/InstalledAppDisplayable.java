@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -22,11 +21,11 @@ public class InstalledAppDisplayable extends DisplayablePojo<Installed> {
     super(pojo);
   }
 
-  @Override public Type getType() {
-    return Type.INSTALLED;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.installed_row;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 }

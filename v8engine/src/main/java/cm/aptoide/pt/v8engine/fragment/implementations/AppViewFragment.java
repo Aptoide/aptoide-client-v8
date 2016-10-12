@@ -32,7 +32,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -93,11 +92,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import io.fabric.sdk.android.services.common.Crash;
-import io.realm.Realm;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
 import rx.Subscription;
@@ -270,16 +266,13 @@ public class AppViewFragment extends GridRecyclerFragment
     //    });
 
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    storeAccessor
-        .getAll()
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(stores -> {
-          // ??
-          adapter.notifyDataSetChanged();
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
-        });
+    storeAccessor.getAll().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
+      // ??
+      adapter.notifyDataSetChanged();
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
 
     // For install actions
     //DeprecatedDatabase.RollbackQ.getAll(realm)
@@ -289,7 +282,8 @@ public class AppViewFragment extends GridRecyclerFragment
     //      adapter.notifyDataSetChanged();
     //    });
     RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
-    rollbackAccessor.getAll().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    rollbackAccessor.getAll()
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
         }, err -> {
@@ -769,7 +763,7 @@ public class AppViewFragment extends GridRecyclerFragment
 			});
 			*/
 
-      fileSize.setText(AptoideUtils.StringU.formatBits(app.getSize()));
+      fileSize.setText(AptoideUtils.StringU.formatBytes(app.getSize()));
 
       downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
 

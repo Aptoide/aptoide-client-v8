@@ -12,6 +12,6 @@ import rx.Observable;
   private final StoreAccessor storeAccessor;
 
   public Observable<Boolean> isSubscribed(long storeId) {
-    return storeAccessor.get(storeId).map(store -> store!=null);
+    return storeAccessor.get(storeId).map(store -> store != null);
   }
 }

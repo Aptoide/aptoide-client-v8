@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
@@ -112,18 +111,13 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
       //realm.commitTransaction();
 
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-      Observable
-          .from(excludedUpdatesToRestore)
+      Observable.from(excludedUpdatesToRestore)
           .doOnNext(update -> update.setExcluded(false))
           .toList()
-          .subscribe(
-              updates -> updateAccessor.insertAll(updates),
-              err -> {
-                Logger.e(TAG, err);
-                CrashReports.logException(err);
-              }
-          );
-
+          .subscribe(updates -> updateAccessor.insertAll(updates), err -> {
+            Logger.e(TAG, err);
+            CrashReports.logException(err);
+          });
 
       return true;
     }
@@ -178,8 +172,7 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
     //    });
 
     UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    Subscription unManagedSubscription = updateAccessor
-        .getAll(true)
+    Subscription unManagedSubscription = updateAccessor.getAll(true)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(excludedUpdates -> {

@@ -30,14 +30,14 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAllSorted(Sort sort) {
-      return Observable.fromCallable(() -> Database.get())
-          .flatMap(realm -> realm.where(Installed.class)
-              .findAllSorted(Installed.NAME, sort)
-              .asObservable()
-              .unsubscribeOn(RealmSchedulers.getScheduler()))
-          .flatMap(installed -> database.copyFromRealm(installed))
-          .subscribeOn(RealmSchedulers.getScheduler())
-          .observeOn(Schedulers.io());
+    return Observable.fromCallable(() -> Database.get())
+        .flatMap(realm -> realm.where(Installed.class)
+            .findAllSorted(Installed.NAME, sort)
+            .asObservable()
+            .unsubscribeOn(RealmSchedulers.getScheduler()))
+        .flatMap(installed -> database.copyFromRealm(installed))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
   }
 
   public Observable<Installed> get(String packageName) {

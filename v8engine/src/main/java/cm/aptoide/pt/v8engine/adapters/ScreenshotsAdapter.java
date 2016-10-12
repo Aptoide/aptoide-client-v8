@@ -19,7 +19,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.ScreenshotsViewerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +127,7 @@ public class ScreenshotsAdapter
       itemView.setOnClickListener(v -> {
         // TODO improve this call
         ((FragmentShower) v.getContext()).pushFragmentV4(
-            ScreenshotsViewerFragment.newInstance(imagesUris, position));
+            V8Engine.getFragmentProvider().newScreenshotsViewerFragment(imagesUris, position));
       });
     }
 

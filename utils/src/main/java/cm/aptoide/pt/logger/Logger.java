@@ -58,9 +58,9 @@ public class Logger {
     i(clz.getSimpleName(), msg);
   }
 
-  public static void i(String TAG, String msg) {
+  public static void i(String tag, String msg) {
     if (DBG) {
-      Log.i(TAG, msg);
+      Log.i(tag, msg);
     }
   }
 

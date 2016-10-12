@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
@@ -49,9 +49,10 @@ import java.util.List;
             ? View.VISIBLE : View.GONE);
     more.setOnClickListener((view) -> {
       FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-          StoreGridRecyclerFragment.newInstance(
-              displayable.getPojo().getActions().get(0).getEvent(),
-              displayable.getPojo().getTitle(), displayable.getStoreTheme(), displayable.getTag()));
+          V8Engine.getFragmentProvider()
+              .newStoreGridRecyclerFragment(displayable.getPojo().getActions().get(0).getEvent(),
+                  displayable.getPojo().getTitle(), displayable.getStoreTheme(),
+                  displayable.getTag()));
       Analytics.AppViewViewedFrom.addStepToList(pojo.getTitle());
     });
   }

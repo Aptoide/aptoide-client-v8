@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -32,11 +31,11 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
     this.tag = tag;
   }
 
-  @Override public Type getType() {
-    return Type.DISPLAYS;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_display;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(2, true);
   }
 }

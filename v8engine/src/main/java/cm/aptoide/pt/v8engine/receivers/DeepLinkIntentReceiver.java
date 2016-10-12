@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -31,7 +30,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.xml.XmlAppHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.realm.Realm;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,7 +46,6 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import lombok.Cleanup;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -353,12 +350,12 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(packageName).subscribe(installed -> {
-      if(installed!=null) {
+      if (installed != null) {
         startFromAppView(packageName);
-      }else {
+      } else {
         startFromSearch(packageName);
       }
-    }, err ->{
+    }, err -> {
       Logger.e(TAG, err);
       CrashReports.logException(err);
     });
@@ -513,7 +510,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         //                    @Override
         //                    public void onClick(DialogInterface arg0, int arg1) {
         ////                        Download download = new Download();
-        ////                        Log.d("Aptoide-IntentReceiver", "getapk id: " + id);
+        ////                        Logger.d("Aptoide-IntentReceiver", "getapk id: " + id);
         ////                        download.setId(id);
         ////                        ((Start)getApplicationContext()).installApp(0);
         //

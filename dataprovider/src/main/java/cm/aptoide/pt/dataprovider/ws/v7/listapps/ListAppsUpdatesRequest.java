@@ -6,8 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
@@ -21,13 +19,10 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.realm.Realm;
-import io.realm.RealmResults;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -141,12 +136,14 @@ import rx.schedulers.Schedulers;
     @Getter private List<Long> storeIds;
     @Setter @Getter private String aaid;
     @Getter private String notApkTags;
+    @Getter private String notPackageTags;
 
     public Body(List<ApksData> apksData, List<Long> storeIds, String aaid) {
       this.apksData = apksData;
       this.storeIds = storeIds;
       this.aaid = aaid;
       setNotApkTags();
+      setSystemAppsUpdates();
     }
 
     public Body(Body body) {
@@ -157,11 +154,18 @@ import rx.schedulers.Schedulers;
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
       this.notApkTags = body.getNotApkTags();
+      this.notPackageTags = body.getNotPackageTags();
     }
 
     private void setNotApkTags() {
       if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
         this.notApkTags = "alpha,beta";
+      }
+    }
+
+    private void setSystemAppsUpdates() {
+      if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
+        this.notPackageTags = "system";
       }
     }
   }

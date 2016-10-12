@@ -74,10 +74,10 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
         .flatMap(realm -> realm.where(Update.class)
             .equalTo(Update.EXCLUDED, isExcluded)
             .contains(Update.PACKAGE_NAME, packageName)
-            .findFirst().asObservable()
-        )
+            .findFirst()
+            .asObservable())
         .unsubscribeOn(RealmSchedulers.getScheduler())
-        .map(update -> update!=null)
+        .map(update -> update != null)
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
   }

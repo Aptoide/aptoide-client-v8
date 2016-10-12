@@ -8,7 +8,6 @@ package cm.aptoide.accountmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
@@ -123,7 +122,7 @@ class FacebookLoginUtils {
           new GraphRequest.GraphJSONObjectCallback() {
 
             @Override public void onCompleted(JSONObject object, GraphResponse response) {
-              Log.i("LoginActivity", response.toString());
+              Logger.i("LoginActivity", response.toString());
               // Get facebook data from login
               Bundle bFacebookData = FacebookLoginUtils.getFacebookData(object);
               String userName = bFacebookData.containsKey(EMAIL) ? bFacebookData.getString(EMAIL)

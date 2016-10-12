@@ -1,6 +1,5 @@
 package cm.aptoide.pt.database.accessors;
 
-import cm.aptoide.pt.database.realm.Installed;
 import io.realm.RealmObject;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -12,16 +11,16 @@ import rx.Observable;
 
 public abstract class SimpleAccessor<T extends RealmObject> implements Accessor<T> {
 
-  private final Class clazz;
   final Database database;
+  private final Class clazz;
 
   SimpleAccessor(Database db) {
     this.database = db;
 
     Type[] types = this.getClass().getGenericInterfaces();
-    if(types!=null && types.length>0) {
+    if (types != null && types.length > 0) {
       clazz = types[0].getClass();
-    }else {
+    } else {
       clazz = null;
     }
   }
@@ -40,7 +39,7 @@ public abstract class SimpleAccessor<T extends RealmObject> implements Accessor<
   }
 
   @Override public void removeAll() {
-    if(clazz!=null) {
+    if (clazz != null) {
       database.deleteAll(clazz);
     }
   }

@@ -30,12 +30,8 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 
   /**
    * Create non-static method that uses Accessors.
-   *
-   * @param storeName
-   * @return
    */
-  @Deprecated
-  protected static StoreCredentials getStore(String storeName) {
+  @Deprecated protected static StoreCredentials getStore(String storeName) {
     //@Cleanup Realm realm = DeprecatedDatabase.get();
     //if (storeName != null) {
     //  Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
@@ -46,12 +42,12 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     //return new StoreCredentialsApp();
 
     final StoreCredentials storeCredentialsApp = new StoreCredentials();
-    if(TextUtils.isEmpty(storeName)){
+    if (TextUtils.isEmpty(storeName)) {
       return storeCredentialsApp;
     }
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.get(storeName).toBlocking().subscribe(store -> {
-      if(store!=null){
+      if (store != null) {
         storeCredentialsApp.updateWith(store);
       }
     }, err -> {
@@ -64,12 +60,8 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 
   /**
    * Create non-static method that uses Accessors.
-   *
-   * @param storeId
-   * @return
    */
-  @Deprecated
-  protected static StoreCredentials getStore(Long storeId) {
+  @Deprecated protected static StoreCredentials getStore(Long storeId) {
     //@Cleanup Realm realm = DeprecatedDatabase.get();
     //
     //if (storeId != null) {
@@ -81,13 +73,13 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     //return new StoreCredentialsApp();
 
     final StoreCredentials storeCredentialsApp = new StoreCredentials();
-    if(storeId==null){
+    if (storeId == null) {
       return storeCredentialsApp;
     }
 
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.get(storeId).toBlocking().subscribe(store -> {
-      if(store!=null){
+      if (store != null) {
         storeCredentialsApp.updateWith(store);
       }
     }, err -> {

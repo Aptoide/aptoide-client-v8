@@ -88,7 +88,7 @@ public class GenericDialogs {
       String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
       /*
-			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
+      final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
 					.setMessage(message)
 					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
 						subscriber.onNext(EResponse.YES);

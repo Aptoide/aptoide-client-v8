@@ -31,8 +31,6 @@ import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
@@ -55,8 +53,9 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
   private static final String TAG = MainActivityFragment.class.getSimpleName();
 
   @Override protected android.support.v4.app.Fragment createFragment() {
-    return HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(),
-        StoreContext.home, "default");
+    return V8Engine.getFragmentProvider()
+        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            "default");
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -125,24 +124,25 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     if (uri != null) {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
-        pushFragmentV4(ScheduledDownloadsFragment.newInstance(
-            ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
+        pushFragmentV4(V8Engine.getFragmentProvider()
+            .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
       }
     }
   }
 
   private void searchDeepLink(String query) {
-    pushFragmentV4(SearchFragment.newInstance(query));
+    pushFragmentV4(V8Engine.getFragmentProvider().newSearchFragment(query));
   }
 
   private void appViewDeepLink(long appId) {
-    pushFragmentV4(AppViewFragment.newInstance(appId));
+    pushFragmentV4(V8Engine.getFragmentProvider().newAppViewFragment(appId));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    pushFragmentV4(AppViewFragment.newInstance(packageName, storeName, openType));
+    pushFragmentV4(
+        V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
@@ -195,9 +195,11 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        pushFragmentV4(StoreGridRecyclerFragment.newInstance(event,
-            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
-            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME), "default"));
+        pushFragmentV4(V8Engine.getFragmentProvider()
+            .newStoreGridRecyclerFragment(event,
+                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
+                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
+                "default"));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

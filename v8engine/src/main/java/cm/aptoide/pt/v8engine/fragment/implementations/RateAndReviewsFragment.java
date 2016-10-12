@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -33,6 +32,7 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -43,14 +43,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
-import io.fabric.sdk.android.services.common.Crash;
-import io.realm.Realm;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import lombok.Cleanup;
 import rx.Observable;
 import rx.Subscription;
 
@@ -244,9 +241,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
     accessor.get(packageName).subscribe(installed -> {
       if (installed != null) {
-          // app installed... update text
-          installMenuItem.setTitle(R.string.open);
-        }
+        // app installed... update text
+        installMenuItem.setTitle(R.string.open);
+      }
     }, err -> {
       Logger.e(TAG, err);
       CrashReports.logException(err);
@@ -260,8 +257,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
       return true;
     }
     if (itemId == R.id.menu_install) {
-      ((FragmentShower) getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
     return super.onOptionsItemSelected(item);

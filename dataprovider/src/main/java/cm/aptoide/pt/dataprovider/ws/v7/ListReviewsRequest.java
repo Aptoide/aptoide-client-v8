@@ -45,8 +45,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   }
 
   public static ListReviewsRequest of(long storeId, int limit, int offset) {
-    final BaseRequestWithStore.StoreCredentials
-        storeOnRequest = getStore(storeId);
+    final BaseRequestWithStore.StoreCredentials storeOnRequest = getStore(storeId);
     String username = storeOnRequest.getUsername();
     String password = storeOnRequest.getPassword();
     BaseBodyDecorator decorator = new BaseBodyDecorator(

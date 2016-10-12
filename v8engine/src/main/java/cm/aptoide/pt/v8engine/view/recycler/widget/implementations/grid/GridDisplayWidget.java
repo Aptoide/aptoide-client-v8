@@ -10,9 +10,7 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
-import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -22,15 +20,13 @@ import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import io.realm.Realm;
-import lombok.Cleanup;
 
 /**
  * Created by sithengineer on 02/05/16.
@@ -59,8 +55,9 @@ import lombok.Cleanup;
       Event.Name name = event.getName();
       if (StoreTabGridRecyclerFragment.validateAcceptedName(name)) {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            StoreGridRecyclerFragment.newInstance(event, pojo.getLabel(),
-                displayable.getStoreTheme(), displayable.getTag()));
+            V8Engine.getFragmentProvider()
+                .newStoreGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
+                    displayable.getTag()));
       } else {
         switch (name) {
           case facebook:
@@ -71,17 +68,15 @@ import lombok.Cleanup;
             //    installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
             //    event.getAction()));
             InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-            installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME).subscribe(
-                installedFacebook -> {
+            installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME)
+                .subscribe(installedFacebook -> {
                   sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
                       event.getAction()));
-                },
-                err -> {
+                }, err -> {
                   Logger.e(TAG, err);
                   CrashReports.logException(err);
-                }
-            );
+                });
             break;
           case twitch:
           case youtube:

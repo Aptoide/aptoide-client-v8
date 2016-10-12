@@ -15,7 +15,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -37,21 +36,18 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
-import cm.aptoide.pt.v8engine.util.RxJavaStackTracer;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import io.realm.Realm;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Collections;
 import java.util.List;
-import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
-import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 
 /**
@@ -62,6 +58,8 @@ public abstract class V8Engine extends DataProvider {
   private static final String TAG = V8Engine.class.getName();
 
   @Getter static DownloadService downloadService;
+  @Getter private static FragmentProvider fragmentProvider;
+  @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   private RefWatcher refWatcher;
 
   public static void loadStores() {
@@ -84,7 +82,6 @@ public abstract class V8Engine extends DataProvider {
       } else {
         addDefaultStore();
       }
-
 
       DataproviderUtils.checkUpdates();
     }, e -> {
@@ -116,6 +113,8 @@ public abstract class V8Engine extends DataProvider {
     CrashReports.setup(this);
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
+    fragmentProvider = createFragmentProvider();
+    displayableWidgetMapping = createDisplayableWidgetMapping();
 
     //
     // super
@@ -202,19 +201,19 @@ public abstract class V8Engine extends DataProvider {
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
-  //
-  // Strict Mode
-  //
+  protected FragmentProvider createFragmentProvider() {
+    return new FragmentProviderImpl();
+  }
+
+  protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
+    return DisplayableWidgetMapping.getInstance();
+  }
 
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
         () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
   }
-
-  //
-  // Leak Canary
-  //
 
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {

@@ -27,10 +27,6 @@ import rx.functions.Action0;
     super(getApp);
   }
 
-  public AppViewDisplayable(GetApp getApp, boolean fixedPerLineCount) {
-    super(getApp, fixedPerLineCount);
-  }
-
   @Override public void onResume() {
     super.onResume();
     if (onResumeAction != null) {

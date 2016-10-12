@@ -46,7 +46,6 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
-import io.fabric.sdk.android.services.common.Crash;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import javax.security.auth.login.LoginException;
@@ -255,8 +254,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (userAccount == null) {
       Account[] accounts = accountManager.getAccounts();
       for (final Account account : accounts) {
-        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail()) && TextUtils.equals(
-            account.type, Constants.ACCOUNT_TYPE)) {
+        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail())
+            && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
           userAccount = account;
           break;
         }
@@ -667,7 +666,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     return refreshUserInfoData().doOnNext(AptoideAccountManager::saveUserInfo);
   }
 
-  public static Observable<CheckUserCredentialsJson > refreshUserInfoData() {
+  public static Observable<CheckUserCredentialsJson> refreshUserInfoData() {
     return CheckUserCredentialsRequest.of(getAccessToken())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
@@ -755,13 +754,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
-      refreshAndSaveUserInfoData().subscribe(
-          userData -> {
+      refreshAndSaveUserInfoData().subscribe(userData -> {
 
-          }, e -> {
-            Logger.e(TAG, e);
-          }
-      );
+      }, e -> {
+        Logger.e(TAG, e);
+      });
       toReturn = true;
     }
     return toReturn;

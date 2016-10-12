@@ -18,7 +18,6 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.SearchActivity;
-import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
 import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 
 /**
@@ -28,13 +27,13 @@ public class SearchUtils {
 
   public static void setupGlobalSearchView(Menu menu, FragmentActivity fragmentActivity) {
     setupSearchView(menu.findItem(R.id.action_search), fragmentActivity,
-        s -> SearchFragment.newInstance(s));
+        s -> V8Engine.getFragmentProvider().newSearchFragment(s));
   }
 
   public static void setupInsideStoreSearchView(Menu menu, FragmentActivity fragmentActivity,
       String storeName) {
     setupSearchView(menu.findItem(R.id.action_search), fragmentActivity,
-        s -> SearchFragment.newInstance(s, storeName));
+        s -> V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
   }
 
   public static void setupSearchView(MenuItem searchItem, FragmentActivity fragmentActivity,

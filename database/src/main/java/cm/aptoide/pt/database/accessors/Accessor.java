@@ -13,5 +13,6 @@ import java.util.List;
  */
 public interface Accessor<T extends RealmObject> {
   void insertAll(List<T> objects);
+
   void removeAll();
 }

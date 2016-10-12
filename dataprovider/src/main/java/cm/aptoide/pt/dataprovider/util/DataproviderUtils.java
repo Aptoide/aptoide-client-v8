@@ -74,15 +74,14 @@ public class DataproviderUtils {
     //  }
     //}, Throwable::printStackTrace, true);
 
-
     // v2
     ListAppsUpdatesRequest.of().observe().subscribe(listAppsUpdates -> {
 
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
 
-      for(App app : listAppsUpdates.getList()) {
+      for (App app : listAppsUpdates.getList()) {
         updateAccessor.get(app.getPackageName()).subscribe(currentAppUpdate -> {
-          if(currentAppUpdate == null || !currentAppUpdate.isExcluded()) {
+          if (currentAppUpdate == null || !currentAppUpdate.isExcluded()) {
             updateAccessor.insert(new Update(app));
           }
         }, err -> {

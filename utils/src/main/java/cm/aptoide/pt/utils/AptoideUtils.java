@@ -598,14 +598,14 @@ public class AptoideUtils {
       return String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static String formatBits(long bytes) {
+    public static String formatBytes(long bytes) {
       int unit = 1024;
       if (bytes < unit) {
         return bytes + " B";
       }
       int exp = (int) (Math.log(bytes) / Math.log(unit));
       String pre = ("KMGTPE").charAt(exp - 1) + "";
-      return String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+      return String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
     public static String getResString(@StringRes int stringResId) {
@@ -1328,7 +1328,7 @@ public class AptoideUtils {
       int sizeX = (int) (baseLineXNotification * densityMultiplier);
       int sizeY = (int) (baseLineYNotification * densityMultiplier);
 
-      //Log.d("Aptoide-IconSize", "Size is " + size);
+      //Logger.d("Aptoide-IconSize", "Size is " + size);
 
       //return sizeX + "x" + sizeY;
       String[] splittedUrl = splitUrlExtension(url);
@@ -1367,7 +1367,7 @@ public class AptoideUtils {
 
       int size = Math.round(baseLineAvatar * densityMultiplier);
 
-      //Log.d("Aptoide-IconSize", "Size is " + size);
+      //Logger.d("Aptoide-IconSize", "Size is " + size);
 
       //return size + "x" + size;
 

@@ -52,7 +52,8 @@ import lombok.AllArgsConstructor;
   //AppAction
   private String appAction;
 
-  public Scheduled() { }
+  public Scheduled() {
+  }
 
   public static Scheduled from(GetAppMeta.App app, AppAction appAction) {
 

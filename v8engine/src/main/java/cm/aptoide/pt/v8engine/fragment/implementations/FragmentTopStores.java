@@ -30,7 +30,8 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
   private int offset = 0;
   private SuccessRequestListener<ListStores> listener =
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
-          .subscribeOn(Schedulers.computation()).compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribeOn(Schedulers.computation())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(this::addDisplayables);
 
   public static FragmentTopStores newInstance() {

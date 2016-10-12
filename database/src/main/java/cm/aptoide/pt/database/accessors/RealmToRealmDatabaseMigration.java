@@ -47,8 +47,7 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     if (oldVersion <= 8075) {
 
       oldVersion = 8075;
-      schema.get("Scheduled")
-          .removeField("appId");
+      schema.get("Scheduled").removeField("appId");
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -58,9 +57,7 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       realm.delete("Download");
       realm.delete("FileToDownload");
 
-      schema.get("FileToDownload")
-          .removeField("appId")
-          .addPrimaryKey("md5");
+      schema.get("FileToDownload").removeField("appId").addPrimaryKey("md5");
 
       schema.get("Download")
           .removeField("appId")
@@ -72,9 +69,9 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     //  Migrate from version 1 (8076) to version 2 (8077)
-    if(oldVersion == 8076) {
+    if (oldVersion == 8076) {
       RealmObjectSchema scheduledSchema = schema.get("Scheduled");
-      if(scheduledSchema.hasPrimaryKey()){
+      if (scheduledSchema.hasPrimaryKey()) {
         scheduledSchema.removePrimaryKey();
       }
       scheduledSchema.removeField("md5");
@@ -83,19 +80,16 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       scheduledSchema.addPrimaryKey("packageName");
       scheduledSchema.addField("appAction", String.class);
 
-      schema.get("FileToDownload")
-          .removePrimaryKey();
+      schema.get("FileToDownload").removePrimaryKey();
 
       realm.where(Update.class.getSimpleName())
           //.equalTo(Update.LABEL, "").or()
           //.isNull(Update.LABEL)
-          .findAll()
-          .deleteAllFromRealm();
+          .findAll().deleteAllFromRealm();
 
       oldVersion++;
 
       Logger.w(TAG, "DB migrated to version " + oldVersion);
     }
-
   }
 }

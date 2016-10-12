@@ -93,29 +93,28 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     }
 
     try {
-      new Installed().migrate(db, AccessorFactory.getAccessorFor(
-          cm.aptoide.pt.database.realm.Installed.class)
-      ); // X
+      new Installed().migrate(db,
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Installed.class)); // X
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
       new Rollback().migrate(db,
-          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Rollback.class)
-      );
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Rollback.class));
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
       new Scheduled().migrate(db,
-          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Scheduled.class)
-      ); // X
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Scheduled.class)); // X
     } catch (Exception ex) {
       logException(ex);
     }
 
+    // Updates table has changed. The new one has column label the old one doesn't.
+    // The updates are going to be obtained from ws
     //try {
     //  new Updates().migrate(db, realm);
     //  // despite the migration, this data should be recreated upon app startup
