@@ -5,14 +5,19 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -22,6 +27,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 
 /**
  * Created by sithengineer on 28/06/16.
@@ -32,17 +39,20 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   private static final String APP_ID = "app_id";
   private static final String STORE_NAME = "store_name";
+  private static final String STORE_THEME = "store_theme";
   private boolean hasAppId = false;
   private long appId;
   private TextView emptyData;
   private TextView descriptionContainer;
   private String storeName;
+  private String storeTheme;
 
-  public static DescriptionFragment newInstance(long appId, String storeName) {
+  public static DescriptionFragment newInstance(long appId, String storeName, String storeTheme) {
     DescriptionFragment fragment = new DescriptionFragment();
     Bundle args = new Bundle();
     args.putLong(APP_ID, appId);
     args.putString(STORE_NAME, storeName);
+    args.putString(STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
   }
@@ -57,6 +67,10 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
     if (args.containsKey(STORE_NAME)) {
       storeName = args.getString(STORE_NAME);
+    }
+
+    if (args.containsKey(STORE_THEME)){
+      storeTheme = args.getString(STORE_THEME);
     }
   }
 
@@ -81,7 +95,10 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     super.setupToolbar();
     if (toolbar != null) {
       ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
+      if (bar != null) {
+        ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+        bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+      }
     }
   }
 

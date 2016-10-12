@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -22,15 +21,11 @@ public class AppViewScreenshotsDisplayable extends DisplayablePojo<GetAppMeta.Ap
     super(pojo);
   }
 
-  public AppViewScreenshotsDisplayable(GetAppMeta.App pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
-  @Override public Type getType() {
-    return Type.APP_VIEW_IMAGES;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_images;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 }

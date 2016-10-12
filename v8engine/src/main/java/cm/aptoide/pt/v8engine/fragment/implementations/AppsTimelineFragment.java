@@ -258,7 +258,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
   private void addLoading() {
     if (!loading) {
       this.loading = true;
-      adapter.addDisplayable(new ProgressBarDisplayable(true));
+      adapter.addDisplayable(new ProgressBarDisplayable().setFullRow());
     }
   }
 

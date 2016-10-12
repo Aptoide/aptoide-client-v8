@@ -3,7 +3,7 @@ package cm.aptoide.accountmanager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -70,7 +70,7 @@ public class MyAccountActivity extends BaseActivity {
 
   @Override protected void onResume() {
     super.onResume();
-    Log.d(TAG, "onResume: ");
+    Logger.d(TAG, "onResume: ");
   }
 
   private void setupToolbar() {

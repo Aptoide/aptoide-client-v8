@@ -18,9 +18,11 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -129,6 +131,12 @@ import rx.schedulers.Schedulers;
           .addCommand("pm install -r " + file.getAbsolutePath(), 0,
               (commandCode, exitCode, output) -> {
                 CrashReports.logException(new Exception("install -r exitCode: " + exitCode));
+                Observable.fromCallable(() -> exitCode)
+                    .observeOn(Schedulers.computation())
+                    .delay(10, TimeUnit.SECONDS)
+                    .subscribe(
+                        exitCodeToSend -> Analytics.RootInstall.installCompleted(exitCodeToSend,
+                            isInstalled(packageName, versionCode)));
                 if (exitCode == 0) {
                   Logger.v(TAG, "app successfully installed using root");
                 } else {

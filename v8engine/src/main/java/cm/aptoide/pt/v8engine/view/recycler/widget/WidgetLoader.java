@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import android.view.View;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -76,7 +76,7 @@ public enum WidgetLoader {
             }
           }
         } catch (Exception e) {
-          Log.e(TAG, "", e);
+          Logger.e(TAG, "", e);
         } finally {
           if (dexFile != null) {
             dexFile.close();
@@ -84,12 +84,12 @@ public enum WidgetLoader {
         }
       }
     } catch (Exception e) {
-      Log.e(TAG, "", e);
+      Logger.e(TAG, "", e);
     }
 
     //		nanos -= System.nanoTime();
     //		nanos *= -1;
-    //		Log.v(TAG, String.format("loadWidgets() took %d millis", nanos / 1000000));
+    //		Logger.v(TAG, String.format("loadWidgets() took %d millis", nanos / 1000000));
 
     if (widgetsHashMap.size() == 0) {
       throw new IllegalStateException("Unable to load Widgets");
@@ -98,7 +98,7 @@ public enum WidgetLoader {
     widgetLruCache = new LruCache<>(cacheSize == 0 ? 2 : cacheSize); // a quarter of the
     // total, or 2
 
-    Log.w(TAG, "Loaded Widgets");
+    Logger.w(TAG, "Loaded Widgets");
   }
 
   /**
@@ -130,7 +130,7 @@ public enum WidgetLoader {
 
     nanos -= System.nanoTime();
     nanos *= -1;
-    Log.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
+    Logger.v(TAG, String.format("newWidget(View, int) took %d millis", nanos / 1000000));
 
     return resultWidget;
   }

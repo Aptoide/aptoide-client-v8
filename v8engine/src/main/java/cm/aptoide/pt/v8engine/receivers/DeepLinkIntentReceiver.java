@@ -500,7 +500,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         //                    @Override
         //                    public void onClick(DialogInterface arg0, int arg1) {
         ////                        Download download = new Download();
-        ////                        Log.d("Aptoide-IntentReceiver", "getapk id: " + id);
+        ////                        Logger.d("Aptoide-IntentReceiver", "getapk id: " + id);
         ////                        download.setId(id);
         ////                        ((Start)getApplicationContext()).installApp(0);
         //

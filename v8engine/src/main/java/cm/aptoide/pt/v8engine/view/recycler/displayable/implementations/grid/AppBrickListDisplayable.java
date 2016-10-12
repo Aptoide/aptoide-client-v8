@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.support.annotation.LayoutRes;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -27,11 +26,11 @@ public class AppBrickListDisplayable extends DisplayablePojo<App> {
     this.tag = tag;
   }
 
-  @Override public Type getType() {
-    return Type.APPS_GROUP_GRAPHIC;
-  }
-
   @LayoutRes @Override public int getViewLayout() {
     return R.layout.brick_app_item_list;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 }

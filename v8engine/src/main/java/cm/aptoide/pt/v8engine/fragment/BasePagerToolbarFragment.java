@@ -16,25 +16,25 @@ import cm.aptoide.pt.v8engine.view.custom.AptoideViewPager;
  */
 public abstract class BasePagerToolbarFragment extends BaseLoaderToolbarFragment {
 
-  protected AptoideViewPager mViewPager;
+  protected AptoideViewPager viewPager;
   protected FloatingActionButton floatingActionButton;
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    mViewPager.clearOnPageChangeListeners();
-    mViewPager = null;
+    viewPager.clearOnPageChangeListeners();
+    viewPager = null;
   }
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
 
-    mViewPager = (AptoideViewPager) view.findViewById(R.id.pager);
+    viewPager = (AptoideViewPager) view.findViewById(R.id.pager);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAddStore);
   }
 
   protected void setupViewPager() {
     final PagerAdapter pagerAdapter = createPagerAdapter();
-    mViewPager.setAdapter(pagerAdapter);
+    viewPager.setAdapter(pagerAdapter);
   }
 
   protected abstract PagerAdapter createPagerAdapter();

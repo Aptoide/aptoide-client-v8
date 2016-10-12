@@ -140,12 +140,14 @@ import rx.schedulers.Schedulers;
     @Getter private List<Long> storeIds;
     @Setter @Getter private String aaid;
     @Getter private String notApkTags;
+    @Getter private String notPackageTags;
 
     public Body(List<ApksData> apksData, List<Long> storeIds, String aaid) {
       this.apksData = apksData;
       this.storeIds = storeIds;
       this.aaid = aaid;
       setNotApkTags();
+      setSystemAppsUpdates();
     }
 
     public Body(Body body) {
@@ -156,11 +158,18 @@ import rx.schedulers.Schedulers;
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
       this.notApkTags = body.getNotApkTags();
+      this.notPackageTags = body.getNotPackageTags();
     }
 
     private void setNotApkTags() {
       if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
         this.notApkTags = "alpha,beta";
+      }
+    }
+
+    private void setSystemAppsUpdates() {
+      if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
+        this.notPackageTags = "system";
       }
     }
   }

@@ -41,3 +41,4 @@ captures/
 signing.properties
 google-services.json
 **/crashlytics-build.properties
+projectFilesBackup/.idea/

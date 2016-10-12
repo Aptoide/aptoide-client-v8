@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.text.Spannable;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -79,11 +78,11 @@ import lombok.Getter;
         Typeface.BOLD, appName);
   }
 
-  @Override public Type getType() {
-    return Type.SOCIAL_TIMELINE;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_feature;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 }

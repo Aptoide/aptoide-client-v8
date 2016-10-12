@@ -86,7 +86,7 @@ import rx.subscriptions.CompositeSubscription;
     }
     downloadProgressTv.setText(download.getOverallProgress() + "%");
     downloadSpeedTv.setText(
-        String.valueOf(AptoideUtils.StringU.formatBits((long) download.getDownloadSpeed())));
+        String.valueOf(AptoideUtils.StringU.formatBytes((long) download.getDownloadSpeed())));
     return null;
   }
 }

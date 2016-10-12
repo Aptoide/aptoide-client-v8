@@ -9,7 +9,6 @@ import android.content.Context;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -39,10 +38,6 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
     this.downloadManager = downloadManager;
   }
 
-  public CompletedDownloadDisplayable(Download pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
   @Override public void onResume() {
     super.onResume();
     if (onResumeAction != null) {
@@ -57,8 +52,8 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Download> {
     super.onPause();
   }
 
-  @Override public Type getType() {
-    return Type.COMPLETED_DOWNLOAD;
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 
   @Override public int getViewLayout() {

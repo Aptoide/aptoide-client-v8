@@ -12,6 +12,8 @@
 
   <string name="updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
   <string name="updates_filter_setting_title">Just show me stable app version updates</string>
+  <string name="include_system_apps_title">Include system apps</string>
+  <string name="include_system_apps_summary">Checking this, you will be notified of system apps (apps that were installed by the device\'s manufacturer) updates</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
 

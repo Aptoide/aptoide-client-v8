@@ -27,9 +27,4 @@ import lombok.experimental.Accessors;
   public DisplayablePojo(T pojo) {
     this.pojo = pojo;
   }
-
-  public DisplayablePojo(T pojo, boolean fixedPerLineCount) {
-    super(fixedPerLineCount);
-    this.pojo = pojo;
-  }
 }
