@@ -86,9 +86,9 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     Logger.w(TAG, "Migrating database started....");
 
     Realm realm = DeprecatedDatabase.get();
-    realm.beginTransaction();
-    realm.deleteAll();
-    realm.commitTransaction();
+    //realm.beginTransaction();
+    //realm.deleteAll();
+    //realm.commitTransaction();
 
     try {
       new Repo().migrate(db, realm);

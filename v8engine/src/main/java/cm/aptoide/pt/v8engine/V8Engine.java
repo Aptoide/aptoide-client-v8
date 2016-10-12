@@ -248,6 +248,10 @@ public abstract class V8Engine extends DataProvider {
     }).subscribeOn(Schedulers.io());
   }
 
+  //
+  // Strict Mode
+  //
+
   private void setupStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
         .detectDiskWrites()

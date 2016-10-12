@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import java.util.ArrayList;
@@ -56,18 +57,33 @@ public abstract class BaseTable {
       }
       if (objs.size() > 0) {
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(objs);
-        realm.commitTransaction();
+        try {
+          realm.copyToRealmOrUpdate(objs);
+          realm.commitTransaction();
+        }
+        catch (Exception e) {
+          Logger.e(TAG, e);
+          CrashReports.logException(e);
+
+          if(realm.isInTransaction()){
+            realm.cancelTransaction();
+          }
+        }
       }
 
       // delete migrated table
-      // FIXME: 29/08/16 sithengineer uncomment the following lines when migration script is stable
+      // TODO: 29/08/16 sithengineer uncomment the following lines when migration script is stable
       //			db.beginTransaction();
       //			db.execSQL(DROP_TABLE_SQL + tableName);
       //			db.endTransaction();
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
-    } finally {
+    }
+    catch (Exception e) {
+      Logger.e(TAG, e);
+      //CrashReports.logException(e);
+    }
+    finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();
       }

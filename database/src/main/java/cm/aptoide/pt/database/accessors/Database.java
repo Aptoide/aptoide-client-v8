@@ -15,6 +15,8 @@ import io.realm.RealmMigration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import lombok.Cleanup;
 import rx.Observable;
@@ -29,6 +31,7 @@ public final class Database {
   private static final String TAG = Database.class.getSimpleName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
+  private static final String DB_NAME_E = "aptoide_mobile.db";
   public static final int SCHEMA_VERSION = 8077; // if you bump this value, also add changes to the
   // migration script
   private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
@@ -50,35 +53,55 @@ public final class Database {
   public static void initialize(Context context) {
     if (isInitialized) return;
 
-    StringBuilder strBuilder = new StringBuilder(KEY);
-    strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
-    strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
-    strBuilder.append(extract(BuildConfig.APPLICATION_ID));
-    strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
+    //StringBuilder strBuilder = new StringBuilder(KEY);
+    //strBuilder.append(extract(cm.aptoide.pt.model.BuildConfig.APPLICATION_ID));
+    //strBuilder.append(extract(cm.aptoide.pt.utils.BuildConfig.APPLICATION_ID));
+    //strBuilder.append(extract(BuildConfig.APPLICATION_ID));
+    //strBuilder.append(extract(cm.aptoide.pt.preferences.BuildConfig.APPLICATION_ID));
+    //byte[] key = strBuilder.toString().substring(0, 64).getBytes();
+
+    // TODO
+    // migration to an encrypted db
+    //
+    //if(isOldVersion()) {
+    //  RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
+    //      .encryptionKey(strBuilder.toString().substring(0, 64).getBytes())
+    //      .schemaVersion(SCHEMA_VERSION)
+    //      .migration(MIGRATION)
+    //      .build();
+    //  Realm instance = Realm.getInstance(realmConfig);
+    //  try {
+    //    instance.writeEncryptedCopyTo(new File(instance.getPath() + DB_NAME_E), key);
+    //  } catch (IOException e) {
+    //    e.printStackTrace();
+    //  }
+    //}
 
     // Beware this is the app context
     // So always use a unique name
     // Always use explicit modules in library projects
     RealmConfiguration realmConfig;
     if (BuildConfig.DEBUG) {
+      //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
+          //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           .schemaVersion(SCHEMA_VERSION)
           .migration(MIGRATION)
           .build();
     } else {
+      //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
+          //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-          //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
           .schemaVersion(SCHEMA_VERSION)
           .migration(MIGRATION)
           .build();
     }
 
-    if (BuildConfig.DELETE_DB) {
-      Realm.deleteRealm(realmConfig);
-    }
+    //if (BuildConfig.DELETE_DB) {
+    //  Realm.deleteRealm(realmConfig);
+    //}
     Realm.setDefaultConfiguration(realmConfig);
     isInitialized = true;
-    DeprecatedDatabase.isInitialized = true;
   }
 
   public static <E extends RealmObject> void save(E realmObject) {

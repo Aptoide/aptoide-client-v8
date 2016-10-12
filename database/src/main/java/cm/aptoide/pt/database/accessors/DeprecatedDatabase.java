@@ -70,6 +70,7 @@ import io.realm.RealmResults;
     //  Realm.deleteRealm(realmConfig);
     //}
     //Realm.setDefaultConfiguration(realmConfig);
+
     Database.initialize(context);
     isInitialized = true;
   }
