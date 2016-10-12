@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Installed;
@@ -136,7 +135,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   private void databaseOnPackageAdded(String packageName) {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    if (checkAndLogNullPackageInfo(packageInfo)) {
+    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return;
     }
 
@@ -157,7 +156,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    if (checkAndLogNullPackageInfo(packageInfo)) {
+    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return;
     }
 
@@ -174,11 +173,13 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
   /**
    * @param packageInfo packageInfo.
+   * @param packageName
    * @return true if packageInfo is null, false otherwise.
    */
-  private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo) {
+  private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {
     if (packageInfo == null) {
-      CrashReports.logException(new IllegalArgumentException("PackageName null!"));
+      CrashReports.logException(
+          new IllegalArgumentException("PackageName null for package " + packageName));
       return true;
     } else {
       return false;
