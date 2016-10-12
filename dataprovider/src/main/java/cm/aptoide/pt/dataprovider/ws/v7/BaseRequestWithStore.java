@@ -5,11 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import android.text.TextUtils;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
-import io.realm.Realm;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.CrashReports;
 import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -19,42 +21,88 @@ import retrofit2.Converter;
  */
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
+  private static final String TAG = BaseRequestWithStore.class.getName();
+
   public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  protected static StoreCredentials getStore(Long storeId) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
+  /**
+   * Create non-static method that uses Accessors.
+   */
+  @Deprecated protected static StoreCredentials getStore(String storeName) {
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //if (storeName != null) {
+    //  Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
+    //  if (store != null) {
+    //    return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
+    //  }
+    //}
+    //return new StoreCredentialsApp();
 
-    if (storeId != null) {
-      Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
-      if (store != null) {
-        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-      }
+    final StoreCredentials storeCredentialsApp = new StoreCredentials();
+    if (TextUtils.isEmpty(storeName)) {
+      return storeCredentialsApp;
     }
-    return new StoreCredentials();
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.get(storeName).toBlocking().subscribe(store -> {
+      if (store != null) {
+        storeCredentialsApp.updateWith(store);
+      }
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
+
+    return storeCredentialsApp;
   }
 
-  protected static StoreCredentials getStore(String storeName) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    if (storeName != null) {
-      Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
-      if (store != null) {
-        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-      }
+  /**
+   * Create non-static method that uses Accessors.
+   */
+  @Deprecated protected static StoreCredentials getStore(Long storeId) {
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //
+    //if (storeId != null) {
+    //  Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
+    //  if (store != null) {
+    //    return new StoreCredentialsApp(store.getUsername(), store.getPasswordSha1());
+    //  }
+    //}
+    //return new StoreCredentialsApp();
+
+    final StoreCredentials storeCredentialsApp = new StoreCredentials();
+    if (storeId == null) {
+      return storeCredentialsApp;
     }
-    return new StoreCredentials();
+
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.get(storeId).toBlocking().subscribe(store -> {
+      if (store != null) {
+        storeCredentialsApp.updateWith(store);
+      }
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
+
+    return storeCredentialsApp;
   }
 
   @AllArgsConstructor public static class StoreCredentials {
 
-    @Getter private final String username;
-    @Getter private final String passwordSha1;
+    @Getter private String username;
+    @Getter private String password;
 
     public StoreCredentials() {
       username = null;
-      passwordSha1 = null;
+      password = null;
+    }
+
+    public void updateWith(Store store) {
+      this.username = store.getUsername();
+      this.password = store.getPasswordSha1();
     }
   }
 }

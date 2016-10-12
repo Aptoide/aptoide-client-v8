@@ -55,10 +55,10 @@ public class RxJavaStackTracer extends RxJavaObservableExecutionHook {
         }
 
         @Override public void onError(Throwable throwable) {
-          if(BaseException.class.isAssignableFrom(throwable.getClass())) {
+          if (BaseException.class.isAssignableFrom(throwable.getClass())) {
             // it's a known error. don't handle it here
             child.onError(throwable);
-          }else {
+          } else {
             child.onError(new TracedException(throwable, trace));
           }
         }

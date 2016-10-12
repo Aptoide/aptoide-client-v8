@@ -11,12 +11,10 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 9/1/16.
  */
-public class PaymentAccessor implements Accessor {
-
-  private final Database database;
+public class PaymentAccessor extends SimpleAccessor<PaymentConfirmation> {
 
   protected PaymentAccessor(Database database) {
-    this.database = database;
+    super(database, PaymentConfirmation.class);
   }
 
   public Observable<PaymentConfirmation> getPaymentConfirmation(int productId) {

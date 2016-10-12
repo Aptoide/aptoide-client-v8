@@ -71,7 +71,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
         v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
             V8Engine.getFragmentProvider()
                 .newStoreFragment(gridStoreDisplayable.getPojo().getName(),
-                store.getAppearance().getTheme())));
+                    store.getAppearance().getTheme())));
 
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
       ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);

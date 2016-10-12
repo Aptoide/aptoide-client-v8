@@ -18,7 +18,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -30,12 +31,10 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
-import io.realm.Realm;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import lombok.Cleanup;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -115,10 +114,16 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer);
               } else {
-                @Cleanup Realm realm = DeprecatedDatabase.get();
-                DeprecatedDatabase.save(
+                //@Cleanup Realm realm = DeprecatedDatabase.get();
+                //DeprecatedDatabase.save(
+                //    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
+                //        minimalAd.getAdId()), realm);
+
+                StoreMinimalAdAccessor storeMinimalAdAccessor =
+                    AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+                storeMinimalAdAccessor.insert(
                     new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
-                        minimalAd.getAdId()), realm);
+                        minimalAd.getAdId()));
               }
 
               future.cancel(false);
@@ -232,8 +237,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
     }
     i.putExtra("referrer", referrer);
     DataProvider.getContext().sendBroadcast(i);
-    Logger.d(TAG,
-        "Sent broadcast to " + packageName + " with referrer " + referrer);
+    Logger.d(TAG, "Sent broadcast to " + packageName + " with referrer " + referrer);
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }
 }

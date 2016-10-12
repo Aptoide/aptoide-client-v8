@@ -30,4 +30,12 @@ import rx.Observable;
   public Observable<List<Installed>> getAll() {
     return accessor.getAll();
   }
+
+  public void insert(Installed installed) {
+    accessor.insert(installed);
+  }
+
+  public void remove(String packageName) {
+    accessor.remove(packageName);
+  }
 }

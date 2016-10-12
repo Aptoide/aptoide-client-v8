@@ -22,6 +22,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import rx.Observable;
 
+import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
+
 /**
  * Created by neuro on 04-07-2016.
  */
@@ -51,15 +53,14 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
-    final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
+    final BaseRequestWithStore.StoreCredentials storeOnRequest = getStore(storeId);
     String username = storeOnRequest.getUsername();
-    String password = storeOnRequest.getPasswordSha1();
+    String password = storeOnRequest.getPassword();
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
         username, password);
     return new ListFullReviewsRequest((Body) decorator.decorate(body), BASE_HOST);

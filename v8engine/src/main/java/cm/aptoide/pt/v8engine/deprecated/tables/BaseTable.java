@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.logger.Logger;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -31,7 +31,7 @@ public abstract class BaseTable {
     return null;
   }
 
-  public void migrate(SQLiteDatabase db, Realm realm) {
+  public void migrate(SQLiteDatabase db, Accessor accessor) {
     Cursor cursor = null;
     try {
 
@@ -54,10 +54,12 @@ public abstract class BaseTable {
         converted = convert(cursor);
         if (converted != null) objs.add(converted);
       }
-      if (objs.size() > 0) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(objs);
-        realm.commitTransaction();
+      if (objs.size() > 0 && accessor != null) {
+        accessor.insertAll(objs);
+      }
+
+      if (accessor == null) {
+        throw new RuntimeException("Accessor ir null for table " + tableName);
       }
 
       // delete migrated table

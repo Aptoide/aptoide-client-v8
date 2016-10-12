@@ -48,14 +48,15 @@ public class Rollback extends BaseTable {
 
     String oldActionAsString = cursor.getString(cursor.getColumnIndex(COLUMN_ACTION));
     int oldActionMergeCharPosition = oldActionAsString.lastIndexOf('|');
-    if( oldActionMergeCharPosition > -1) {
+    if (oldActionMergeCharPosition > -1) {
       // this must be done to extract the referrer from the old Rollback.Action field
       oldActionAsString = oldActionAsString.substring(0, oldActionMergeCharPosition);
     }
     OldActions oldAction = OldActions.valueOf(oldActionAsString);
-    if(oldAction.migrate) {
+    if (oldAction.migrate) {
 
-      cm.aptoide.pt.database.realm.Rollback realmObject = new cm.aptoide.pt.database.realm.Rollback();
+      cm.aptoide.pt.database.realm.Rollback realmObject =
+          new cm.aptoide.pt.database.realm.Rollback();
 
       realmObject.setConfirmed(true);
       realmObject.setAction(oldAction.newAction.name());
@@ -93,7 +94,7 @@ public class Rollback extends BaseTable {
     public cm.aptoide.pt.database.realm.Rollback.Action newAction;
     public boolean migrate;
 
-    OldActions(String action, cm.aptoide.pt.database.realm.Rollback.Action newAction){
+    OldActions(String action, cm.aptoide.pt.database.realm.Rollback.Action newAction) {
       this.action = action;
       this.newAction = newAction;
       this.migrate = true;
@@ -104,5 +105,4 @@ public class Rollback extends BaseTable {
       this.migrate = false;
     }
   }
-
 }

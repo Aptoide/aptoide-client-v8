@@ -13,20 +13,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import io.realm.Realm;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Cleanup;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -101,13 +102,22 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
       }
 
       // restore updates and remove them from excluded
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      realm.beginTransaction();
-      for (Update e : excludedUpdatesToRestore) {
-        e.setExcluded(false);
-      }
-      realm.copyToRealmOrUpdate(excludedUpdatesToRestore);
-      realm.commitTransaction();
+      //@Cleanup Realm realm = DeprecatedDatabase.get();
+      //realm.beginTransaction();
+      //for (Update e : excludedUpdatesToRestore) {
+      //  e.setExcluded(false);
+      //}
+      //realm.copyToRealmOrUpdate(excludedUpdatesToRestore);
+      //realm.commitTransaction();
+
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      Observable.from(excludedUpdatesToRestore)
+          .doOnNext(update -> update.setExcluded(false))
+          .toList()
+          .subscribe(updates -> updateAccessor.insertAll(updates), err -> {
+            Logger.e(TAG, err);
+            CrashReports.logException(err);
+          });
 
       return true;
     }
@@ -134,12 +144,38 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
   }
 
   private void fetchExcludedUpdates() {
-    subscription = DeprecatedDatabase.UpdatesQ.getAll(realm, true)
-        .asObservable()
+    //subscription = DeprecatedDatabase.UpdatesQ.getAll(realm, true)
+    //    .asObservable()
+    //    .observeOn(AndroidSchedulers.mainThread())
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(excludedUpdates -> {
+    //
+    //      if (excludedUpdates == null || excludedUpdates.isEmpty()) {
+    //        emptyData.setText(R.string.no_excluded_updates_msg);
+    //        emptyData.setVisibility(View.VISIBLE);
+    //        clearDisplayables();
+    //        finishLoading();
+    //      } else {
+    //        emptyData.setVisibility(View.GONE);
+    //        List<ExcludedUpdateDisplayable> displayables = new ArrayList<>();
+    //        for (Update excludedUpdate : excludedUpdates) {
+    //          displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));
+    //        }
+    //        setDisplayables(displayables);
+    //      }
+    //    }, t -> {
+    //      Logger.e(TAG, t);
+    //      emptyData.setText(R.string.no_excluded_updates_msg);
+    //      emptyData.setVisibility(View.VISIBLE);
+    //      clearDisplayables();
+    //      finishLoading();
+    //    });
+
+    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    Subscription unManagedSubscription = updateAccessor.getAll(true)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(excludedUpdates -> {
-
           if (excludedUpdates == null || excludedUpdates.isEmpty()) {
             emptyData.setText(R.string.no_excluded_updates_msg);
             emptyData.setVisibility(View.VISIBLE);

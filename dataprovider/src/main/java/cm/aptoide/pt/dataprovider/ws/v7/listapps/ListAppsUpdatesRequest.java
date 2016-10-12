@@ -6,8 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
@@ -21,13 +19,10 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.realm.Realm;
-import io.realm.RealmResults;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -75,22 +70,23 @@ import rx.schedulers.Schedulers;
     return apksDatas;
   }
 
-  private static List<ApksData> getInstalledApksDataWithoutExcluded() {
-    LinkedList<ApksData> apksDatas = new LinkedList<>();
-
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-
-    //RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
-    RealmResults<Installed> installeds = DeprecatedDatabase.InstalledQ.getAll(realm);
-    for (Installed installed : installeds) {
-      if (!DeprecatedDatabase.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
-        apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(),
-            installed.getSignature()));
-      }
-    }
-
-    return apksDatas;
-  }
+  // unused method
+  //private static List<ApksData> getInstalledApksDataWithoutExcluded() {
+  //  LinkedList<ApksData> apksDatas = new LinkedList<>();
+  //
+  //  @Cleanup Realm realm = DeprecatedDatabase.get();
+  //
+  //  //RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
+  //  RealmResults<Installed> installeds = DeprecatedDatabase.InstalledQ.getAll(realm);
+  //  for (Installed installed : installeds) {
+  //    if (!DeprecatedDatabase.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
+  //      apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(),
+  //          installed.getSignature()));
+  //    }
+  //  }
+  //
+  //  return apksDatas;
+  //}
 
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {

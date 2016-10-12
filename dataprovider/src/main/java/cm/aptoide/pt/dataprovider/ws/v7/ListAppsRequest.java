@@ -53,7 +53,7 @@ import rx.Observable;
     }
 
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPasswordSha1());
+    body.setStorePassSha1(store.getPassword());
 
     return new ListAppsRequest(v7Url.get(), (Body) decorator.decorate(body),
         WebService.getDefaultConverter(), OkHttpClientFactory.getSingletonClient(), BASE_HOST);

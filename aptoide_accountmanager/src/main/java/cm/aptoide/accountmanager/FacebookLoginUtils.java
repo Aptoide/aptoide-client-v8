@@ -8,7 +8,6 @@ package cm.aptoide.accountmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;

@@ -1,12 +1,10 @@
 package cm.aptoide.pt.v8engine.configuration.implementation;
 
 import android.support.v4.app.Fragment;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;

@@ -44,7 +44,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      readMoreBtn.setOnClickListener(seeMoreHandler(app.getId(),app.getStore().getAppearance().getTheme()));
+      readMoreBtn.setOnClickListener(
+          seeMoreHandler(app.getId(), app.getStore().getAppearance().getTheme()));
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);

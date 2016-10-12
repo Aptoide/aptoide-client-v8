@@ -106,8 +106,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
-        @FieldMap BaseBody arg,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody arg, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
         @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);

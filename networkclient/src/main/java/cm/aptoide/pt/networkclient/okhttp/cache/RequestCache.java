@@ -8,7 +8,6 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.disklrucache.DiskLruCache;

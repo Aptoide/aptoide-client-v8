@@ -36,8 +36,7 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     return new GetApkInfoRequest(args);
   }
 
-  private static void addOptions(BaseBody args,
-      NetworkOperatorManager operatorRepository) {
+  private static void addOptions(BaseBody args, NetworkOperatorManager operatorRepository) {
     BaseBody options = new BaseBody();
     options.put("cmtlimit", "5");
     options.put("payinfo", "true");

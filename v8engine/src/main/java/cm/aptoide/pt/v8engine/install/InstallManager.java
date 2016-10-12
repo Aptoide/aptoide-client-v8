@@ -184,8 +184,7 @@ import rx.schedulers.Schedulers;
       String packageName) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
         .first(intent -> intent.getData().toString().contains(packageName))
-        .map(
-            intent -> null);
+        .map(intent -> null);
   }
 
   private boolean isInstalled(String packageName, int versionCode) {

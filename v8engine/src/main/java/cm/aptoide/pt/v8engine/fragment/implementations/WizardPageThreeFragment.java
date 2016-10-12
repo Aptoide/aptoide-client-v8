@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -32,7 +31,7 @@ public class WizardPageThreeFragment extends Fragment {
     final Button registerButton = (Button) view.findViewById(R.id.registerButton);
     final TextView loginLink = (TextView) view.findViewById(R.id.login_link);
 
-    if(AptoideAccountManager.isLoggedIn()){
+    if (AptoideAccountManager.isLoggedIn()) {
       view.findViewById(R.id.login_register_layout).setVisibility(View.GONE);
       return;
     }

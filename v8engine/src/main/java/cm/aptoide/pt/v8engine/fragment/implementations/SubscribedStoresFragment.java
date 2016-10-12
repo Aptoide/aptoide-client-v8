@@ -6,26 +6,28 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import io.realm.RealmResults;
 import java.util.LinkedList;
-import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 11-05-2016.
  */
 public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator {
+
+  private static final String TAG = SubscribedStoresFragment.class.getName();
 
   //private FloatingActionButton addStoreButton;
 
@@ -61,22 +63,34 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
 
-    Observable<RealmResults<Store>> realmResultsObservable =
-        DeprecatedDatabase.StoreQ.getAll(realm).asObservable();
+    //Observable<RealmResults<Store>> realmResultsObservable =
+    //    DeprecatedDatabase.StoreQ.getAll(realm).asObservable();
+    //realmResultsObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
+    //  LinkedList<Displayable> displayables = new LinkedList<>();
+    //  for (Store store : stores) {
+    //    displayables.add(new SubscribedStoreDisplayable(store));
+    //  }
+    //  // Add the final row as a button
+    //  //displayables.add(new AddMoreStoresDisplayable());
+    //  setDisplayables(displayables);
+    //});
 
-    realmResultsObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
-
-      LinkedList<Displayable> displayables = new LinkedList<>();
-
-      for (Store store : stores) {
-        displayables.add(new SubscribedStoreDisplayable(store));
-      }
-
-      // Add the final row as a button
-      //displayables.add(new AddMoreStoresDisplayable());
-
-      setDisplayables(displayables);
-    });
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    Subscription unManagedSubscription = storeAccessor.getAll()
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(stores -> {
+          LinkedList<Displayable> displayables = new LinkedList<>();
+          for (Store store : stores) {
+            displayables.add(new SubscribedStoreDisplayable(store));
+          }
+          // Add the final row as a button
+          //displayables.add(new AddMoreStoresDisplayable());
+          setDisplayables(displayables);
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
   }
 
   @Override public int getContentViewId() {

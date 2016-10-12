@@ -54,8 +54,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   @Override protected android.support.v4.app.Fragment createFragment() {
     return V8Engine.getFragmentProvider()
-        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(),
-        StoreContext.home, "default");
+        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            "default");
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -124,8 +124,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     if (uri != null) {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
-        pushFragmentV4(V8Engine.getFragmentProvider().newScheduledDownloadsFragment(
-            ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
+        pushFragmentV4(V8Engine.getFragmentProvider()
+            .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
       }
     }
   }
@@ -195,9 +195,11 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        pushFragmentV4(V8Engine.getFragmentProvider().newStoreGridRecyclerFragment(event,
-            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
-            uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME), "default"));
+        pushFragmentV4(V8Engine.getFragmentProvider()
+            .newStoreGridRecyclerFragment(event,
+                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
+                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
+                "default"));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -26,9 +27,9 @@ public class Downloads {
    * Migrates 200MB (default cache size) of the most recent download files
    * and stores download files info in the download table.
    *
-   * @param realm Realm database instance
+   * @param downloadAccessor {@link DownloadAccessor} database accessor instance
    */
-  public void migrate(Realm realm) throws FileNotFoundException {
+  public void migrate(DownloadAccessor downloadAccessor) throws FileNotFoundException {
 
     File oldPathToDownloads = new File(PATH_TO_OLD_DOWNLOADS);
     if (!oldPathToDownloads.isDirectory()) {
@@ -54,7 +55,7 @@ public class Downloads {
         if ((MAX_SIZE_CACHE > (cacheSum + fileSize)) && downloadFile.getName().endsWith(".apk") && downloadFile.renameTo(
             new File(newPathToDownloads, downloadFile.getName()))) {
           cacheSum += fileSize;
-          saveDbEntry(downloadFile, realm);
+          saveDbEntry(downloadFile, downloadAccessor);
         } else {
           // cache has filled, delete file
           if(!downloadFile.delete()){
@@ -65,7 +66,7 @@ public class Downloads {
     }
   }
 
-  private void saveDbEntry(File downloadFile, Realm realm) {
+  private void saveDbEntry(File downloadFile, DownloadAccessor downloadAccessor) {
 
     String downloadFileMd5 = AptoideUtils.AlgorithmU.computeMd5(downloadFile);
 
@@ -87,6 +88,6 @@ public class Downloads {
     downloadEntry.setOverallDownloadStatus(Download.COMPLETED);
     downloadEntry.setOverallProgress(100);
 
-    realm.copyToRealmOrUpdate(downloadEntry);
+    downloadAccessor.insert(downloadEntry);
   }
 }

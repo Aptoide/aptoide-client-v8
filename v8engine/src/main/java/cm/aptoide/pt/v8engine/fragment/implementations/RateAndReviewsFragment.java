@@ -17,7 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -42,13 +43,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
-import io.realm.Realm;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import lombok.Cleanup;
 import rx.Observable;
 import rx.Subscription;
 
@@ -231,14 +230,24 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     inflater.inflate(R.menu.menu_install, menu);
     installMenuItem = menu.findItem(R.id.menu_install);
 
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+    ////check if the app is installed
+    //if (installed != null) {
+    //  // app installed... update text
+    //  installMenuItem.setTitle(R.string.open);
+    //}
 
-    //check if the app is installed
-    if (installed != null) {
-      // app installed... update text
-      installMenuItem.setTitle(R.string.open);
-    }
+    InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
+    accessor.get(packageName).subscribe(installed -> {
+      if (installed != null) {
+        // app installed... update text
+        installMenuItem.setTitle(R.string.open);
+      }
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

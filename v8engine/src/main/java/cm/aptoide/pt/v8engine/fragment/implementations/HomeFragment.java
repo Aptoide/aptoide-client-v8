@@ -26,13 +26,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.UserInfo;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -45,6 +50,8 @@ import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.FragmentEvent;
 import lombok.Getter;
 import lombok.Setter;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -112,17 +119,34 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openBackupApps() {
-    Installed installedBackupApps =
-        DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
-    if (installedBackupApps == null) {
-      FragmentUtils.replaceFragmentV4(this.getActivity(),
-          V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
-              AppViewFragment.OpenType.OPEN_ONLY));
-    } else {
-      Intent i =
-          getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-      startActivity(i);
-    }
+    //Installed installedBackupApps =
+    //    DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
+    //if (installedBackupApps == null) {
+    //  FragmentUtils.replaceFragmentV4(this.getActivity(),
+    //      V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
+    //          AppViewFragment.OpenType.OPEN_ONLY));
+    //} else {
+    //  Intent i =
+    //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
+    //  startActivity(i);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    Subscription unManagedSubscription = installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installed -> {
+          if (installed == null) {
+            FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()
+                .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
+          } else {
+            Intent i = getContext().getPackageManager()
+                .getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
+            startActivity(i);
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
   }
 
   private void startFeedbackFragment() {
@@ -140,24 +164,53 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openFacebook() {
-    Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
-    openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
-        getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
-            AptoideUtils.SocialLinksU.getFacebookPageURL(
-                installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-                APTOIDE_FACEBOOK_LINK)));
+    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
+    //openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
+    //    getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
+    //        AptoideUtils.SocialLinksU.getFacebookPageURL(
+    //            installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+    //            APTOIDE_FACEBOOK_LINK)));
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    Subscription unManagedSubscription = installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installedFacebook -> {
+          openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
+              getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
+                  AptoideUtils.SocialLinksU.getFacebookPageURL(
+                      installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+                      APTOIDE_FACEBOOK_LINK)));
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
       Uri uriToOpenApp) {
-    Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    if (installedFacebook == null) {
-      ((FragmentShower) getActivity()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
-    } else {
-      Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
-      getContext().startActivity(sharingIntent);
-    }
+    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+    //if (installedFacebook == null) {
+    //  ((FragmentShower) getActivity()).pushFragmentV4(
+    //      V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+    //} else {
+    //  Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
+    //  getContext().startActivity(sharingIntent);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    Subscription unManagedSubscription = installedAccessor.get(packageName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installedFacebook -> {
+          if (installedFacebook == null) {
+            ((FragmentShower) getActivity()).pushFragmentV4(
+                V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+          } else {
+            Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
+            getContext().startActivity(sharingIntent);
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
   }
 
   @Override public void bindViews(View view) {
@@ -239,11 +292,22 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       }
     }
 
-    DeprecatedDatabase.UpdatesQ.getAll(realm, false)
-        .asObservable()
+    //DeprecatedDatabase.UpdatesQ.getAll(realm, false)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(updates -> {
+    //      refreshUpdatesBadge(updates.size());
+    //    });
+
+    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    Subscription unManagedSubscription = updateAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(updates -> {
           refreshUpdatesBadge(updates.size());
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
         });
 
     if (desiredViewPagerItem != null) {

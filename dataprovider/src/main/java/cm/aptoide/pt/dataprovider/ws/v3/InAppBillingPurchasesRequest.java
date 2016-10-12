@@ -25,8 +25,7 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
     return new InAppBillingPurchasesRequest(BASE_HOST, args);
   }
 
-  @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName,
-      String type) {
+  @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName, String type) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);

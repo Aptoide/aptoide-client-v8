@@ -6,11 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -22,6 +22,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rx.Observable;
+
+import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
 
 /**
  * Created by sithengineer on 20/07/16.
@@ -76,9 +78,9 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     //
     //
     //
-    final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeName);
+    final BaseRequestWithStore.StoreCredentials storeOnRequest = getStore(storeName);
     String username = storeOnRequest.getUsername();
-    String password = storeOnRequest.getPasswordSha1();
+    String password = storeOnRequest.getPassword();
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));

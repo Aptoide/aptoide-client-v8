@@ -5,19 +5,15 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -69,7 +65,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       storeName = args.getString(STORE_NAME);
     }
 
-    if (args.containsKey(STORE_THEME)){
+    if (args.containsKey(STORE_THEME)) {
       storeTheme = args.getString(STORE_THEME);
     }
   }
@@ -97,7 +93,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       if (bar != null) {
         ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-        bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+        bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
+            .getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
       }
     }
   }

@@ -31,9 +31,9 @@ public class DownloadFactory {
   public Download create(GetAppMeta.App appToDownload) throws IllegalArgumentException {
     final GetAppMeta.GetAppMetaFile file = appToDownload.getFile();
 
-    validateApp(appToDownload.getFile().getMd5sum(), appToDownload.getObb(), appToDownload.getPackageName(),
-        appToDownload.getName(), file != null ? file.getPath() : null,
-        file != null ? file.getPathAlt() : null);
+    validateApp(appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
+        appToDownload.getPackageName(), appToDownload.getName(),
+        file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
 
     Download download = new Download();
     download.setMd5(appToDownload.getFile().getMd5sum());
@@ -88,9 +88,9 @@ public class DownloadFactory {
 
   public Download create(App appToDownload) {
     final File file = appToDownload.getFile();
-    validateApp(appToDownload.getFile().getMd5sum(), appToDownload.getObb(), appToDownload.getPackageName(),
-        appToDownload.getName(), file != null ? file.getPath() : null,
-        file != null ? file.getPathAlt() : null);
+    validateApp(appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
+        appToDownload.getPackageName(), appToDownload.getName(),
+        file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
     Download download = new Download();
     download.setMd5(appToDownload.getFile().getMd5sum());
     download.setIcon(appToDownload.getIcon());

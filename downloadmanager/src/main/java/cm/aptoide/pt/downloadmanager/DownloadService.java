@@ -81,7 +81,7 @@ public class DownloadService extends Service {
             String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
             try {
               startDownload(md5);
-            }catch (DownloadNotFoundException e) {
+            } catch (DownloadNotFoundException e) {
               Logger.e(TAG, e);
               CrashReports.logException(e);
             }
@@ -95,7 +95,7 @@ public class DownloadService extends Service {
         if (download != null) {
           try {
             startDownload(download.getMd5());
-          }catch (DownloadNotFoundException e) {
+          } catch (DownloadNotFoundException e) {
             Logger.e(TAG, e);
             CrashReports.logException(e);
           }
