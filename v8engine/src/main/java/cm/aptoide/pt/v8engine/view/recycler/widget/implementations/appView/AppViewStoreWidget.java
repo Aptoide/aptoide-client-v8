@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -22,6 +23,7 @@ import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -31,6 +33,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import io.realm.Realm;
 import java.util.Locale;
 import lombok.Cleanup;
+import rx.Subscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -96,23 +99,44 @@ import lombok.Cleanup;
     storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),
         store.getAppearance().getTheme()));
 
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    boolean subscribed = DeprecatedDatabase.StoreQ.get(store.getId(), realm) != null;
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //boolean subscribed = DeprecatedDatabase.StoreQ.get(store.getId(), realm) != null;
+    //
+    //if (subscribed) {
+    //  //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
+    //  //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
+    //  followButton.setText(R.string.followed);
+    //  followButton.setOnClickListener(
+    //      new Listeners().newOpenStoreListener(itemView, store.getName(),
+    //          store.getAppearance().getTheme()));
+    //} else {
+    //  //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
+    //  //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
+    //  followButton.setText(R.string.appview_follow_store_button_text);
+    //  followButton.setOnClickListener(
+    //      new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+    //}
 
-    if (subscribed) {
-      //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
-      //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
-      followButton.setText(R.string.followed);
-      followButton.setOnClickListener(
-          new Listeners().newOpenStoreListener(itemView, store.getName(),
-              store.getAppearance().getTheme()));
-    } else {
-      //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
-      //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-      followButton.setText(R.string.appview_follow_store_button_text);
-      followButton.setOnClickListener(
-          new Listeners().newSubscribeStoreListener(itemView, store.getName()));
-    }
+    StoreRepository storeRepository = new StoreRepository(AccessorFactory.getAccessorFor(
+        cm.aptoide.pt.database.realm.Store.class)
+    );
+    Subscription unManagedSubscription = storeRepository.isSubscribed(store.getId()).subscribe(
+        isSubscribed -> {
+      if (isSubscribed) {
+        //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
+        //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
+        followButton.setText(R.string.followed);
+        followButton.setOnClickListener(
+            new Listeners().newOpenStoreListener(itemView, store.getName(),
+                store.getAppearance().getTheme()));
+      } else {
+        //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
+        //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
+        followButton.setText(R.string.appview_follow_store_button_text);
+        followButton.setOnClickListener(
+            new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+      }
+    });
   }
 
   private static class Listeners {

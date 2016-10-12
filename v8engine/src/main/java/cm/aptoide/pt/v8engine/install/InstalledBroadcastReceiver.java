@@ -12,8 +12,11 @@ import android.content.pm.PackageInfo;
 import android.util.Log;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -23,9 +26,13 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import io.fabric.sdk.android.services.common.Crash;
 import io.realm.Realm;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -34,13 +41,14 @@ import rx.android.schedulers.AndroidSchedulers;
 public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
   private static final String TAG = "InstalledReceiver";
-  private Realm realm;
   private RollbackRepository repository;
+  private InstalledRepository installedRepository;
+  private UpdateRepository updatesRepository;
 
   @Override public void onReceive(Context context, Intent intent) {
-    loadRealm();
-
     repository = new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+    installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
+    updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class));
 
     String action = intent.getAction();
     String packageName = intent.getData().getEncodedSchemeSpecificPart();
@@ -58,14 +66,12 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
         onPackageAdded(packageName);
         break;
       case Intent.ACTION_PACKAGE_REPLACED:
-        onPackageReplaced(packageName, context);
+        onPackageReplaced(packageName);
         break;
       case Intent.ACTION_PACKAGE_REMOVED:
         onPackageRemoved(packageName);
         break;
     }
-
-    closeRealm();
   }
 
   private boolean shouldConfirmRollback(Rollback rollback, String action) {
@@ -77,18 +83,6 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
         Intent.ACTION_PACKAGE_REPLACED))
         || (rollback.getAction().equals(Rollback.Action.DOWNGRADE.name()) && action.equals(
         Intent.ACTION_PACKAGE_ADDED)));
-  }
-
-  private void loadRealm() {
-    if (realm == null) {
-      realm = DeprecatedDatabase.get();
-    }
-  }
-
-  private void closeRealm() {
-    if (realm != null) {
-      realm.close();
-    }
   }
 
   protected void onPackageAdded(String packageName) {
@@ -105,27 +99,50 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
-    StoredMinimalAd storedMinimalAd = DeprecatedDatabase.ReferrerQ.get(packageName, realm);
-    if (storedMinimalAd != null) {
-      ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer());
-      DataproviderUtils.AdNetworksUtils.knockCpi(storedMinimalAd);
-      DeprecatedDatabase.delete(storedMinimalAd, realm);
-    } else {
-      GetAdsRequest.ofSecondInstall(packageName)
-          .observe()
-          .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
-          .observeOn(AndroidSchedulers.mainThread())
-          .doOnNext(
-              minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
-          .onErrorReturn(throwable1 -> new MinimalAd())
-          .subscribe();
-    }
+    //StoredMinimalAd storedMinimalAd = DeprecatedDatabase.ReferrerQ.get(packageName, realm);
+    //if (storedMinimalAd != null) {
+    //  ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer());
+    //  DataproviderUtils.AdNetworksUtils.knockCpi(storedMinimalAd);
+    //  DeprecatedDatabase.delete(storedMinimalAd, realm);
+    //} else {
+    //  GetAdsRequest.ofSecondInstall(packageName)
+    //      .observe()
+    //      .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+    //      .observeOn(AndroidSchedulers.mainThread())
+    //      .doOnNext(
+    //          minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
+    //      .onErrorReturn(throwable1 -> new MinimalAd())
+    //      .subscribe();
+    //}
+
+    StoreMinimalAdAccessor storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    Subscription unManagedSubscription = storeMinimalAdAccessor.get(packageName).subscribe(
+        storeMinimalAd -> {
+          if(storeMinimalAd!=null) {
+              ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
+              DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+            storeMinimalAdAccessor.remove(storeMinimalAd);
+          }
+          else {
+              GetAdsRequest.ofSecondInstall(packageName)
+                  .observe()
+                  .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .doOnNext(
+                      minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
+                  .onErrorReturn(throwable1 -> new MinimalAd())
+                  .subscribe();
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        }
+    );
   }
 
-  protected void onPackageReplaced(String packageName, Context context) {
+  protected void onPackageReplaced(String packageName) {
     Logger.d(TAG, "Packaged replaced: " + packageName);
-
-    databaseOnPackageReplaced(packageName, context);
+    databaseOnPackageReplaced(packageName);
   }
 
   protected void onPackageRemoved(String packageName) {
@@ -140,7 +157,8 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
       return;
     }
 
-    DeprecatedDatabase.save(new Installed(packageInfo), realm);
+    //DeprecatedDatabase.save(new Installed(packageInfo), realm);
+    installedRepository.insert(new Installed(packageInfo));
 
     //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
     //if (rollback != null) {
@@ -148,26 +166,48 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
     //}
   }
 
-  private void databaseOnPackageReplaced(String packageName, Context context) {
-    Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
+  private void databaseOnPackageReplaced(String packageName) {
+    //Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
+    //if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
+    //  Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+    //}
+    //
+    //PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    //if (checkAndLogNullPackageInfo(packageInfo)) {
+    //  return;
+    //}
+    //
+    //if (update != null) {
+    //  if (packageInfo.versionCode >= update.getVersionCode()) {
+    //    DeprecatedDatabase.delete(update, realm);
+    //  }
+    //}
+    //
+    //DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
-    if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
-    }
+    Subscription unManagedSubscription = updatesRepository.get(packageName).subscribe(
+        update -> {
+          if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
+            Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+          }
 
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+          PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+          if (checkAndLogNullPackageInfo(packageInfo)) {
+            return;
+          }
 
-    if (checkAndLogNullPackageInfo(packageInfo)) {
-      return;
-    }
+          if (update != null) {
+            if (packageInfo.versionCode >= update.getVersionCode()) {
+              updatesRepository.remove(update);
+            }
+          }
 
-    if (update != null) {
-      if (packageInfo.versionCode >= update.getVersionCode()) {
-        DeprecatedDatabase.delete(update, realm);
-      }
-    }
-
-    DeprecatedDatabase.save(new Installed(packageInfo), realm);
+          installedRepository.insert(new Installed(packageInfo));
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        }
+    );
 
     //confirmAction(packageName, Rollback.Action.UPDATE);
   }
@@ -186,8 +226,11 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   }
 
   private void databaseOnPackageRemoved(String packageName) {
-    DeprecatedDatabase.InstalledQ.delete(packageName, realm);
-    DeprecatedDatabase.UpdatesQ.delete(packageName, realm);
+    //DeprecatedDatabase.InstalledQ.delete(packageName, realm);
+    //DeprecatedDatabase.UpdatesQ.delete(packageName, realm);
+
+    installedRepository.remove(packageName);
+    updatesRepository.remove(packageName);
 
     //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.DOWNGRADE);
     //if (rollback != null) {

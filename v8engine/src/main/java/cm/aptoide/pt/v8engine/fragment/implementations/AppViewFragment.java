@@ -30,11 +30,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.RollbackAccessor;
+import cm.aptoide.pt.database.accessors.ScheduledAccessor;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -88,6 +93,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
+import io.fabric.sdk.android.services.common.Crash;
 import io.realm.Realm;
 import java.util.LinkedList;
 import java.util.List;
@@ -253,22 +259,42 @@ public class AppViewFragment extends GridRecyclerFragment
 
   private void setupObservables(GetApp getApp) {
     // For stores subscription
-    DeprecatedDatabase.StoreQ.getAll(realm)
-        .asObservable()
+    //DeprecatedDatabase.StoreQ.getAll( realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(stores -> {
+    //      if (DeprecatedDatabase.StoreQ.get(
+    //          getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
+    //        adapter.notifyDataSetChanged();
+    //      }
+    //    });
+
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor
+        .getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(stores -> {
-          if (DeprecatedDatabase.StoreQ.get(
-              getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
-            adapter.notifyDataSetChanged();
-          }
+          // ??
+          adapter.notifyDataSetChanged();
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
         });
 
     // For install actions
-    DeprecatedDatabase.RollbackQ.getAll(realm)
-        .asObservable()
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //DeprecatedDatabase.RollbackQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(rollbacks -> {
+    //      adapter.notifyDataSetChanged();
+    //    });
+    RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    rollbackAccessor.getAll().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
         });
 
     // TODO: 27-05-2016 neuro install actions, not present in v7
@@ -372,10 +398,13 @@ public class AppViewFragment extends GridRecyclerFragment
       shareApp(appName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      realm.beginTransaction();
-      realm.copyToRealmOrUpdate(scheduled);
-      realm.commitTransaction();
+      //@Cleanup Realm realm = DeprecatedDatabase.get();
+      //realm.beginTransaction();
+      //realm.copyToRealmOrUpdate(scheduled);
+      //realm.commitTransaction();
+
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      scheduledAccessor.insert(scheduled);
 
       String str = this.getString(R.string.added_to_scheduled);
       ShowMessage.asSnack(this.getView(), str);
@@ -457,7 +486,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
     // useful data for the schedule updates menu option
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    scheduled = Scheduled.from(app);
+    scheduled = Scheduled.from(app, AppAction.INSTALL);
 
     header.setup(getApp);
     setupDisplayables(getApp);

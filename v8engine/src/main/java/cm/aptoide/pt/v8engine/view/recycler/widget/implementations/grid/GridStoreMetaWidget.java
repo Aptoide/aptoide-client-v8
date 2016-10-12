@@ -14,7 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.CircleTransform;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -66,10 +69,15 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
-    @Cleanup Realm realm = DeprecatedDatabase.get();
     GetStoreMeta getStoreMeta = displayable.getPojo();
+
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //subscribedBool = DeprecatedDatabase.StoreQ.get(getStoreMeta.getData().getId(), realm) != null;
+
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    subscribedBool = storeAccessor.get(getStoreMeta.getData().getId()).toBlocking().first() != null;
+
     this.theme = StoreThemeEnum.get(getStoreMeta.getData().getAppearance().getTheme());
-    subscribedBool = DeprecatedDatabase.StoreQ.get(getStoreMeta.getData().getId(), realm) != null;
 
     final Context context = itemView.getContext();
     if (TextUtils.isEmpty(getStoreMeta.getData().getAvatar())) {
@@ -117,11 +125,15 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
           subscribedBool = false;
-          @Cleanup Realm realm = DeprecatedDatabase.get();
           if (AptoideAccountManager.isLoggedIn()) {
             AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
           }
-          DeprecatedDatabase.StoreQ.delete(getStoreMeta.getData().getId(), realm);
+
+          //@Cleanup Realm realm = DeprecatedDatabase.get();
+          //DeprecatedDatabase.StoreQ.delete(getStoreMeta.getData().getId(), realm);
+          StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+          storeAccessor.remove(getStoreMeta.getData().getId());
+
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
                   getStoreMeta.getData().getName()));

@@ -13,7 +13,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.UpdatesAccessor;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -61,9 +61,9 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
             new DownloadServiceHelper(AptoideDownloadManager.getInstance(),
                 new PermissionManager());
         final DownloadAccessor accessor = AccessorFactory.getAccessorFor(Download.class);
-        UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
+        UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
         subscription =
-            updatesAccessor.getUpdates()
+            updateAccessor.getAll(false)
                 .first()
                 .observeOn(Schedulers.io())
                 .map(updates -> {

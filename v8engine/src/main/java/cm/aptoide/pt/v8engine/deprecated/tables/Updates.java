@@ -9,7 +9,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -98,10 +99,13 @@ public class Updates extends BaseTable {
   }
 
   private boolean isExcluded(String packageName) {
-    return DeprecatedDatabase.get()
-        .where(Update.class)
-        .equalTo(Update.PACKAGE_NAME, packageName)
-        .equalTo(Update.EXCLUDED, true)
-        .findFirst() != null;
+    //return DeprecatedDatabase.get()
+    //    .where(Update.class)
+    //    .equalTo(Update.PACKAGE_NAME, packageName)
+    //    .equalTo(Update.EXCLUDED, true)
+    //    .findFirst() != null;
+
+    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    return updateAccessor.get(packageName, true).toBlocking().first() != null;
   }
 }

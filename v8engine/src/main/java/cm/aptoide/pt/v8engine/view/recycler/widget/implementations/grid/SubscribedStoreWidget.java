@@ -14,7 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -28,8 +29,6 @@ import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import io.realm.Realm;
-import lombok.Cleanup;
 
 /**
  * Created by neuro on 11-05-2016. //todo: código duplicado, se cair a reflexão, deixa de o ser.
@@ -87,13 +86,15 @@ import lombok.Cleanup;
           .subscribe(eResponse -> {
             switch (eResponse) {
               case YES:
-                @Cleanup Realm realm = DeprecatedDatabase.get();
 
                 if (AptoideAccountManager.isLoggedIn()) {
                   AptoideAccountManager.unsubscribeStore(store.getStoreName());
                 }
 
-                DeprecatedDatabase.StoreQ.delete(store.getStoreId(), realm);
+                //@Cleanup Realm realm = DeprecatedDatabase.get();
+                //DeprecatedDatabase.StoreQ.delete(store.getStoreId(), realm);
+                StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+                storeAccessor.remove(store.getStoreId());
 
                 break;
             }

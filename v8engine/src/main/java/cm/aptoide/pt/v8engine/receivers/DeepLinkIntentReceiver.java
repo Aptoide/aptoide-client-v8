@@ -16,7 +16,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -341,14 +344,24 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   }
 
   public void startFromPackageName(String packageName) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
+    //  startFromAppView(packageName);
+    //} else {
+    //  startFromSearch(packageName);
+    //}
 
-    Intent i;
-    if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
-      startFromAppView(packageName);
-    } else {
-      startFromSearch(packageName);
-    }
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    installedAccessor.get(packageName).subscribe(installed -> {
+      if(installed!=null) {
+        startFromAppView(packageName);
+      }else {
+        startFromSearch(packageName);
+      }
+    }, err ->{
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
   }
 
   @Override public void startActivity(Intent intent) {

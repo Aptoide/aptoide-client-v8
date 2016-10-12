@@ -20,9 +20,11 @@ import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -54,6 +56,8 @@ import rx.subscriptions.CompositeSubscription;
   private ProgressBar progressBar;
   private CompositeSubscription subscriptions;
 
+  private UpdateRepository updateRepository;
+
   public UpdateWidget(View itemView) {
     super(itemView);
   }
@@ -69,6 +73,8 @@ import rx.subscriptions.CompositeSubscription;
     imgUpdateLayout = (ImageView) itemView.findViewById(R.id.img_update_layout);
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+
+    updateRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class));
   }
 
   @Override public void bindView(UpdateDisplayable updateDisplayable) {
@@ -99,8 +105,9 @@ import rx.subscriptions.CompositeSubscription;
           .setNegativeButton(R.string.no, null)
           .setPositiveButton(R.string.yes, (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
-              @Cleanup Realm realm1 = DeprecatedDatabase.get();
-              DeprecatedDatabase.UpdatesQ.setExcluded(packageName, true, realm1);
+              //@Cleanup Realm realm1 = DeprecatedDatabase.get();
+              //DeprecatedDatabase.UpdatesQ.setExcluded(packageName, true, realm1);
+              updateRepository.setExcluded(packageName, true);
             }
             dialog.dismiss();
           });

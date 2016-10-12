@@ -26,9 +26,6 @@ import rx.functions.Action0;
 public abstract class SupportV4BaseFragment extends RxFragment
     implements UiComponentBasics, PermissionRequest {
 
-  private final String TAG = getClass().getSimpleName();
-  protected Realm realm;
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -44,13 +41,6 @@ public abstract class SupportV4BaseFragment extends RxFragment
     setupViews();
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    realm.close();
-    realm = null;
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     CrashReports.ScreenUtils.getInstance().decrementNumberOfScreens();
@@ -58,8 +48,6 @@ public abstract class SupportV4BaseFragment extends RxFragment
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-
-    realm = DeprecatedDatabase.get();
     return inflater.inflate(getContentViewId(), container, false);
   }
 

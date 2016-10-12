@@ -85,7 +85,8 @@ public class RollbackFragment extends GridRecyclerFragment {
       getActivity().onBackPressed();
       return true;
     } else if (itemId == R.id.menu_clear) {
-      DeprecatedDatabase.RollbackQ.deleteAll(realm);
+      //DeprecatedDatabase.RollbackQ.deleteAll(realm);
+      AccessorFactory.getAccessorFor(Rollback.class).removeAll();
       clearDisplayables();
       finishLoading();
       return true;

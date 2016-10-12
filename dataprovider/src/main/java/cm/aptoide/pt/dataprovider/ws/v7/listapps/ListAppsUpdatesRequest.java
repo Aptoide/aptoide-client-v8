@@ -75,22 +75,23 @@ import rx.schedulers.Schedulers;
     return apksDatas;
   }
 
-  private static List<ApksData> getInstalledApksDataWithoutExcluded() {
-    LinkedList<ApksData> apksDatas = new LinkedList<>();
-
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-
-    //RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
-    RealmResults<Installed> installeds = DeprecatedDatabase.InstalledQ.getAll(realm);
-    for (Installed installed : installeds) {
-      if (!DeprecatedDatabase.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
-        apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(),
-            installed.getSignature()));
-      }
-    }
-
-    return apksDatas;
-  }
+  // unused method
+  //private static List<ApksData> getInstalledApksDataWithoutExcluded() {
+  //  LinkedList<ApksData> apksDatas = new LinkedList<>();
+  //
+  //  @Cleanup Realm realm = DeprecatedDatabase.get();
+  //
+  //  //RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
+  //  RealmResults<Installed> installeds = DeprecatedDatabase.InstalledQ.getAll(realm);
+  //  for (Installed installed : installeds) {
+  //    if (!DeprecatedDatabase.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
+  //      apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(),
+  //          installed.getSignature()));
+  //    }
+  //  }
+  //
+  //  return apksDatas;
+  //}
 
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {

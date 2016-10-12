@@ -17,6 +17,8 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
@@ -65,7 +67,6 @@ public abstract class V8Engine extends DataProvider {
   public static void loadStores() {
 
     AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
 
       if (subscriptions.size() > 0) {
         for (Subscription subscription : subscriptions) {
@@ -78,9 +79,7 @@ public abstract class V8Engine extends DataProvider {
           store.setStoreName(subscription.getName());
           store.setTheme(subscription.getTheme());
 
-          realm.beginTransaction();
-          realm.copyToRealmOrUpdate(store);
-          realm.commitTransaction();
+          ((StoreAccessor) AccessorFactory.getAccessorFor(Store.class)).insert(store);
         }
       } else {
         addDefaultStore();
@@ -99,15 +98,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   public static void clearUserData() {
-    clearStores();
-  }
-
-  private static void clearStores() {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    realm.beginTransaction();
-    realm.delete(Store.class);
-    realm.commitTransaction();
-
+    AccessorFactory.getAccessorFor(Store.class).removeAll();
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
   }
 
@@ -135,7 +126,6 @@ public abstract class V8Engine extends DataProvider {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-    DeprecatedDatabase.initialize(this);
     Database.initialize(this);
 
     generateAptoideUUID().subscribe();
@@ -228,8 +218,8 @@ public abstract class V8Engine extends DataProvider {
 
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      DeprecatedDatabase.dropTable(Installed.class, realm);
+      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+      installedAccessor.removeAll();
 
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
       Logger.d(TAG, "Found " + installedApps.size() + " user installed apps.");
@@ -240,7 +230,7 @@ public abstract class V8Engine extends DataProvider {
 
       for (PackageInfo packageInfo : installedApps) {
         Installed installed = new Installed(packageInfo);
-        DeprecatedDatabase.save(installed, realm);
+        installedAccessor.insert(installed);
       }
       return null;
     }).subscribeOn(Schedulers.io());

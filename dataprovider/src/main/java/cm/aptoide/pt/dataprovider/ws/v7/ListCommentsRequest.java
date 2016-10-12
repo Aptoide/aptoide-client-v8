@@ -23,6 +23,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import rx.Observable;
 
+import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
+
 /**
  * Created by sithengineer on 20/07/16.
  */
@@ -76,9 +78,9 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     //
     //
     //
-    final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeName);
+    final BaseRequestWithStore.StoreCredentials storeOnRequest = getStore(storeName);
     String username = storeOnRequest.getUsername();
-    String password = storeOnRequest.getPasswordSha1();
+    String password = storeOnRequest.getPassword();
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));

@@ -10,12 +10,17 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
+import cm.aptoide.pt.database.accessors.Accessor;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
@@ -32,6 +37,8 @@ import lombok.Cleanup;
  */
 @Displayables({ GridDisplayDisplayable.class }) public class GridDisplayWidget
     extends Widget<GridDisplayDisplayable> {
+
+  private static final String TAG = GridDisplayWidget.class.getName();
 
   private ImageView imageView;
 
@@ -57,12 +64,24 @@ import lombok.Cleanup;
       } else {
         switch (name) {
           case facebook:
-            @Cleanup Realm realm = DeprecatedDatabase.get();
-            Installed installedFacebook =
-                DeprecatedDatabase.InstalledQ.get(HomeFragment.FACEBOOK_PACKAGE_NAME, realm);
-            sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
-                installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-                event.getAction()));
+            //@Cleanup Realm realm = DeprecatedDatabase.get();
+            //Installed installedFacebook =
+            //    DeprecatedDatabase.InstalledQ.get(HomeFragment.FACEBOOK_PACKAGE_NAME, realm);
+            //sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
+            //    installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+            //    event.getAction()));
+            InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+            installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME).subscribe(
+                installedFacebook -> {
+                  sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
+                      installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+                      event.getAction()));
+                },
+                err -> {
+                  Logger.e(TAG, err);
+                  CrashReports.logException(err);
+                }
+            );
             break;
           case twitch:
           case youtube:

@@ -12,12 +12,10 @@ import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public class DownloadAccessor implements Accessor {
-
-  private final Database database;
+public class DownloadAccessor extends SimpleAccessor<Download> {
 
   public DownloadAccessor(Database db) {
-    this.database = db;
+    super(db, Download.class);
   }
 
   public Observable<List<Download>> getAll() {

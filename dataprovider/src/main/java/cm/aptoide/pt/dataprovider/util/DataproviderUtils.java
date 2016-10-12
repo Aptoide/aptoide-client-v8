@@ -7,24 +7,27 @@ package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.CrashReports;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import io.realm.Realm;
 import java.io.IOException;
 import java.util.Date;
-import lombok.Cleanup;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -44,24 +47,52 @@ public class DataproviderUtils {
 
   public static void checkUpdates(
       @Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
-    @Cleanup Realm realm1 = DeprecatedDatabase.get();
-    if (DeprecatedDatabase.StoreQ.getAll(realm1).size() == 0) {
-      return;
-    }
 
-    ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      for (App app : listAppsUpdates.getList()) {
-        Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);
-        if (update == null || !update.isExcluded()) {
-          DeprecatedDatabase.save(new Update(app), realm);
-        }
-      }
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
 
-      if (successRequestListener != null) {
-        successRequestListener.call(listAppsUpdates);
+    storeAccessor.getAll().subscribe(listUpdtes -> {
+      if (listUpdtes == null || listUpdtes.size() == 0) {
+        return;
       }
-    }, Throwable::printStackTrace, true);
+    }, err -> {
+      CrashReports.logException(err);
+      Logger.e(TAG, err);
+    });
+
+    // v1
+    //ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
+    //  @Cleanup Realm realm = DeprecatedDatabase.get();
+    //  for (App app : listAppsUpdates.getList()) {
+    //    Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);
+    //    if (update == null || !update.isExcluded()) {
+    //      DeprecatedDatabase.save(new Update(app), realm);
+    //    }
+    //  }
+    //
+    //  if (successRequestListener != null) {
+    //    successRequestListener.call(listAppsUpdates);
+    //  }
+    //}, Throwable::printStackTrace, true);
+
+
+    // v2
+    ListAppsUpdatesRequest.of().observe().subscribe(listAppsUpdates -> {
+
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+
+      for(App app : listAppsUpdates.getList()) {
+        updateAccessor.get(app.getPackageName()).subscribe(currentAppUpdate -> {
+          if(currentAppUpdate == null || !currentAppUpdate.isExcluded()) {
+            updateAccessor.insert(new Update(app));
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
+      }
+    });
+
+    // TODO: 07/10/16 sithengineer version 3 of the previous code.
   }
 
   /**

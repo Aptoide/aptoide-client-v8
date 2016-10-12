@@ -47,7 +47,7 @@ import rx.Observable;
 
     body.setContext(storeContext);
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPasswordSha1());
+    body.setStorePassSha1(store.getPassword());
 
     return new GetStoreRequest("", OkHttpClientFactory.getSingletonClient(),
         WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
@@ -71,7 +71,7 @@ import rx.Observable;
       body = new Body(storeName, WidgetsArgs.createDefault());
     }
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPasswordSha1());
+    body.setStorePassSha1(store.getPassword());
     return new GetStoreRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(),
         WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
   }

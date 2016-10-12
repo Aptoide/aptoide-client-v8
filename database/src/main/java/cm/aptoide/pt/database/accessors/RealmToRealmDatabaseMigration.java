@@ -43,17 +43,12 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     // DynamicRealm exposes an editable schema
     RealmSchema schema = realm.getSchema();
 
-    //  Migrate from version 0 (<=8075) to version 1 (8076):
-    //    ~ PK in Download changed from a long called "id" to a String called "md5"
-    //    + boolean "isDownloading" in Scheduled
-    //    - long appId in FileToDownload
-    //    ~ set "md5" as PK in FileToDownload
+    //  Migrate from version 0 (<=8075) to version 1 (8076)
     if (oldVersion <= 8075) {
 
       oldVersion = 8075;
       schema.get("Scheduled")
           .removeField("appId");
-
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -72,16 +67,24 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 
       oldVersion++;
+
+      Logger.w(TAG, "DB migrated to version " + oldVersion);
     }
 
     //  Migrate from version 1 (8076) to version 2 (8077)
     if(oldVersion == 8076) {
-      RealmObjectSchema schemaFile = schema.get("Scheduled");
-      if(schemaFile.hasPrimaryKey()){
-        schemaFile.removePrimaryKey();
+      RealmObjectSchema scheduledSchema = schema.get("Scheduled");
+      if(scheduledSchema.hasPrimaryKey()){
+        scheduledSchema.removePrimaryKey();
       }
-      schemaFile.removeField("md5");
-      schemaFile.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
+      scheduledSchema.removeField("md5");
+      scheduledSchema.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
+
+      scheduledSchema.addPrimaryKey("packageName");
+      scheduledSchema.addField("appAction", String.class);
+
+      schema.get("FileToDownload")
+          .removePrimaryKey();
 
       realm.where(Update.class.getSimpleName())
           //.equalTo(Update.LABEL, "").or()
@@ -90,6 +93,8 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .deleteAllFromRealm();
 
       oldVersion++;
+
+      Logger.w(TAG, "DB migrated to version " + oldVersion);
     }
 
   }

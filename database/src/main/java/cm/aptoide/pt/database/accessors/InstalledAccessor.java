@@ -7,22 +7,37 @@ package cm.aptoide.pt.database.accessors;
 
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import io.realm.Sort;
 import java.util.List;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 01/09/16.
  */
-public class InstalledAccessor implements Accessor {
+public class InstalledAccessor extends SimpleAccessor<Installed> {
 
-  private final Database database;
-
-  protected InstalledAccessor(Database db) {
-    this.database = db;
+  public InstalledAccessor(Database db) {
+    super(db, Installed.class);
   }
 
   public Observable<List<Installed>> getAll() {
     return database.getAll(Installed.class);
+  }
+
+  public Observable<List<Installed>> getAllSorted() {
+    return getAllSorted(Sort.ASCENDING);
+  }
+
+  public Observable<List<Installed>> getAllSorted(Sort sort) {
+      return Observable.fromCallable(() -> Database.get())
+          .flatMap(realm -> realm.where(Installed.class)
+              .findAllSorted(Installed.NAME, sort)
+              .asObservable()
+              .unsubscribeOn(RealmSchedulers.getScheduler()))
+          .flatMap(installed -> database.copyFromRealm(installed))
+          .subscribeOn(RealmSchedulers.getScheduler())
+          .observeOn(Schedulers.io());
   }
 
   public Observable<Installed> get(String packageName) {
@@ -46,5 +61,13 @@ public class InstalledAccessor implements Accessor {
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installeds -> database.copyFromRealm(installeds))
         .subscribeOn(RealmSchedulers.getScheduler());
+  }
+
+  public void insert(Installed installed) {
+    database.insert(installed);
+  }
+
+  public void remove(String packageName) {
+    database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
   }
 }

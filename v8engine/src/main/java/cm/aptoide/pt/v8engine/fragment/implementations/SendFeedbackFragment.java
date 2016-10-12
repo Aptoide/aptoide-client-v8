@@ -18,7 +18,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -28,6 +29,8 @@ import cm.aptoide.pt.v8engine.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import java.util.ArrayList;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by trinkes on 7/12/16.
@@ -83,40 +86,78 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
       emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@aptoide.com" });
 
-      String versionName = "";
+      //String versionName = "";
+      //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
+      //if (installed != null) {
+      //  versionName = installed.getVersionName();
+      //}
+      //
+      //emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+      //    "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
+      //emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
+      ////attach screenshots and logs
+      //if (logsAndScreenshotsCb.isChecked()) {
+      //  ArrayList<Uri> uris = new ArrayList<Uri>();
+      //  File ss = new File(screenShotPath);
+      //  if (ss != null) {
+      //    Uri urifile = Uri.fromFile(ss);
+      //    uris.add(urifile);
+      //  }
+      //
+      //  File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
+      //      LOGS_FILE_NAME);
+      //  if (logs != null) {
+      //    Uri urifile = Uri.fromFile(logs);
+      //    uris.add(urifile);
+      //  }
+      //  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+      //}
+      //try {
+      //  startActivity(emailIntent);
+      //  getActivity().onBackPressed();
+      //  //				Analytics.SendFeedback.sendFeedback();
+      //} catch (android.content.ActivityNotFoundException ex) {
+      //  ShowMessage.asSnack(getView(), R.string.feedback_no_email);
+      //}
 
-      Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
-      if (installed != null) {
-        versionName = installed.getVersionName();
-      }
+      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+      Subscription unManagedSubscription = installedAccessor.get(getContext().getPackageName())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(installed1 -> {
+            String versionName = "";
+            if (installed1 != null) {
+              versionName = installed1.getVersionName();
+            }
 
-      emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-          "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
-      emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
-      //attach screenshots and logs
-      if (logsAndScreenshotsCb.isChecked()) {
-        ArrayList<Uri> uris = new ArrayList<Uri>();
-        File ss = new File(screenShotPath);
-        if (ss != null) {
-          Uri urifile = Uri.fromFile(ss);
-          uris.add(urifile);
-        }
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+                "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
+            emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
+            //attach screenshots and logs
+            if (logsAndScreenshotsCb.isChecked()) {
+              ArrayList<Uri> uris = new ArrayList<Uri>();
+              File ss = new File(screenShotPath);
+              if (ss != null) {
+                Uri urifile = Uri.fromFile(ss);
+                uris.add(urifile);
+              }
 
-        File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
-            LOGS_FILE_NAME);
-        if (logs != null) {
-          Uri urifile = Uri.fromFile(logs);
-          uris.add(urifile);
-        }
-        emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-      }
-      try {
-        startActivity(emailIntent);
-        getActivity().onBackPressed();
-        //				Analytics.SendFeedback.sendFeedback();
-      } catch (android.content.ActivityNotFoundException ex) {
-        ShowMessage.asSnack(getView(), R.string.feedback_no_email);
-      }
+              File logs =
+                  AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
+                      LOGS_FILE_NAME);
+              if (logs != null) {
+                Uri urifile = Uri.fromFile(logs);
+                uris.add(urifile);
+              }
+              emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+            }
+            try {
+              startActivity(emailIntent);
+              getActivity().onBackPressed();
+              //				Analytics.SendFeedback.sendFeedback();
+            } catch (android.content.ActivityNotFoundException ex) {
+              ShowMessage.asSnack(getView(), R.string.feedback_no_email);
+            }
+          });
     } else {
       ShowMessage.asSnack(getView(), R.string.feedback_not_valid);
     }

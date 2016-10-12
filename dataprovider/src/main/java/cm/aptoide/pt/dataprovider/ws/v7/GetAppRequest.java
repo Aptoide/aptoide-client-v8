@@ -20,6 +20,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
+import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
+
 /**
  * Created by neuro on 22-04-2016.
  */
@@ -82,8 +84,8 @@ import rx.Observable;
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     Body body = new Body(appId, forceServerRefresh);
-    body.setStoreUser(getStoreOnRequest(storeName).getUsername());
-    body.setStorePassSha1(getStoreOnRequest(storeName).getPasswordSha1());
+    body.setStoreUser(getStore(storeName).getUsername());
+    body.setStorePassSha1(getStore(storeName).getPassword());
 
     return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
         WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));

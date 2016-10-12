@@ -21,7 +21,7 @@ import rx.Observable;
  */
 @AllArgsConstructor public class RollbackRepository implements Repository {
 
-  private RollbackAccessor accessor;
+  private final RollbackAccessor accessor;
 
   /*
 
