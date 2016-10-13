@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,11 +22,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.media.tv.TvInputService;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
@@ -41,6 +44,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import cm.aptoide.pt.actions.GenerateClientId;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -665,6 +669,21 @@ public class AptoideUtils {
   public static class SystemU {
 
     public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
+
+    public static final String TERMINAL_INFO = getModel() + "(" + getProduct() + ")"
+        + ";v" + getRelease() + ";" + System.getProperty("os.arch");
+
+    public static String getProduct() {
+      return android.os.Build.PRODUCT.replace(";", " ");
+    }
+
+    public static String getModel() {
+      return android.os.Build.MODEL.replaceAll(";", " ");
+    }
+
+    public static String getRelease() {
+      return android.os.Build.VERSION.RELEASE.replaceAll(";", " ");
+    }
 
     public static int getSdkVer() {
       return Build.VERSION.SDK_INT;
@@ -1522,6 +1541,24 @@ public class AptoideUtils {
         }
       }
       return false;
+    }
+
+    public static String getDefaultUserAgent(GenerateClientId generateClientId)  {
+      //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
+      //String currentUserId = getUserId();
+      //String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
+      DisplayMetrics displayMetrics = new DisplayMetrics();
+      String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+
+      String verString = null;
+      try {
+        verString = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+
+      //return "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:" + generateClientId.getClientId() + ";" + sPref.getString(AptoideConfiguration.LOGIN_USER_LOGIN, "") + ";";
+      return "";
     }
   }
 }

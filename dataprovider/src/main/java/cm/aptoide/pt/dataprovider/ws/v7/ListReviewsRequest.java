@@ -38,7 +38,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_COMMENTS = 10;
 
   protected ListReviewsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
+    super(body, OkHttpClientFactory.getSingletonClient(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext())), WebService.getDefaultConverter(),
         baseHost);
   }
 
@@ -49,7 +49,6 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    //IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh(),
         username, password);
     return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
@@ -67,7 +66,6 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    //IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh());
     return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
@@ -81,7 +79,6 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    //IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(storeName, packageName, maxReviews, 0,
         ManagerPreferences.getAndResetForceServerRefresh());
     return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
