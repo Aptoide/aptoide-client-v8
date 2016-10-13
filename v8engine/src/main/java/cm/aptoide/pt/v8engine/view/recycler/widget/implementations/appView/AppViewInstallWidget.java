@@ -42,6 +42,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
@@ -57,7 +58,6 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -99,7 +99,6 @@ import rx.subscriptions.CompositeSubscription;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private boolean isUpdate;
-  private AptoideDownloadManager aptoideDownloadManager;
 
   //private Subscription subscribe;
   //private long appID;
@@ -134,7 +133,6 @@ import rx.subscriptions.CompositeSubscription;
       subscriptions = new CompositeSubscription();
     }
 
-    aptoideDownloadManager = AptoideDownloadManager.getInstance();
     AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
@@ -281,24 +279,17 @@ import rx.subscriptions.CompositeSubscription;
 
   public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    aptoideDownloadManager.getDownload(app.getMd5())
-        .firstOrDefault(null)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(download -> {
-          int downloadStatus = download.getOverallDownloadStatus();
-          if ((downloadStatus == Download.PROGRESS
-              || downloadStatus == Download.IN_QUEUE
-              || downloadStatus == Download.PENDING
-              ||
-              downloadStatus == Download.PAUSED)) {
+    installManager.getInstallation(app.getMd5())
+        .firstOrDefault(null).observeOn(AndroidSchedulers.mainThread()).subscribe(progress -> {
+      if ((progress.getState() == Progress.ACTIVE)) {
             setDownloadBarVisible(true);
-            setupDownloadControls(app, download, displayable);
-            aptoideDownloadManager.getDownload(app.getMd5())
+        setupDownloadControls(app, progress, displayable);
+        installManager.getInstallation(app.getMd5())
                 .observeOn(AndroidSchedulers.mainThread())
-                .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-                    onGoingDownload.getOverallDownloadStatus()))
+            .takeUntil(installationProgress -> shouldContinueListenDownload(
+                installationProgress.getState()))
                 .subscribe(onGoingDownload -> {
-                  manageDownload(onGoingDownload, displayable, app);
+                  manageDownload(progress, app);
                 }, err -> {
                   Logger.e(TAG, err);
                 });
@@ -334,10 +325,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   private boolean shouldContinueListenDownload(int downloadStatus) {
-    return downloadStatus != Download.PROGRESS
-        && downloadStatus != Download.INVALID_STATUS
-        && downloadStatus != Download.PENDING
-        && downloadStatus != Download.IN_QUEUE;
+    return downloadStatus != Progress.INACTIVE;
   }
 
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
@@ -401,7 +389,7 @@ import rx.subscriptions.CompositeSubscription;
                       .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(progress -> {
-                        manageDownload(progress.getRequest(), displayable, app);
+                        manageDownload(progress, app);
                 /*if (!setupDownloadControlsRunned) {
                   // TODO: 09/09/16 refactor this
                   setupDownloadControls(app, appDownload, displayable);
@@ -415,7 +403,8 @@ import rx.subscriptions.CompositeSubscription;
                         //  }, throwable -> throwable.printStackTrace());
                         //}
                       }, Throwable::printStackTrace));
-                  setupDownloadControls(app, appDownload, displayable);
+                  setupDownloadControls(app, new Progress<>(appDownload, true, 100, 0, 0, 0),
+                      displayable);
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -457,7 +446,7 @@ import rx.subscriptions.CompositeSubscription;
                   downloadAction)))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            manageDownload(progress.getRequest(), displayable, app);
+            manageDownload(progress, app);
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
@@ -480,7 +469,7 @@ import rx.subscriptions.CompositeSubscription;
       //      Logger.e(TAG, err);
       //    });
       ShowMessage.asSnack(v, installOrUpgradeMsg);
-      setupDownloadControls(app, appDownload, displayable);
+      setupDownloadControls(app, new Progress<>(appDownload, true, 100, 0, 0, 0), displayable);
     };
 
     findTrustedVersion(app, appVersions);
@@ -513,12 +502,9 @@ import rx.subscriptions.CompositeSubscription;
     };
   }
 
-  @MainThread private void manageDownload(Download download, AppViewInstallDisplayable displayable,
-      GetAppMeta.App app) {
+  @MainThread private void manageDownload(Progress<Download> progress, GetAppMeta.App app) {
 
-    Context ctx = getContext();
-
-    switch (download.getOverallDownloadStatus()) {
+    switch (progress.getRequest().getOverallDownloadStatus()) {
 
       case Download.PAUSED: {
         actionResume.setVisibility(View.VISIBLE);
@@ -528,10 +514,10 @@ import rx.subscriptions.CompositeSubscription;
 
       case Download.IN_QUEUE:
       case Download.PROGRESS: {
-        downloadProgress.setProgress(download.getOverallProgress());
+        downloadProgress.setProgress(progress.getCurrent());
         //textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) +
         // "/s");
-        textProgress.setText(download.getOverallProgress() + "%");
+        textProgress.setText(progress.getCurrent() + "%");
         break;
       }
 
@@ -545,15 +531,10 @@ import rx.subscriptions.CompositeSubscription;
         Analytics.SourceDownloadComplete.downloadComplete(app.getId(), app.getPackageName());
         setDownloadBarVisible(false);
 
-        Observable<Void> install;
         if (!isUpdate) {
           if (minimalAd != null && minimalAd.getCpdUrl() != null) {
             DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
           }
-        }
-
-        if (actionButton.getVisibility() == View.VISIBLE) {
-          setupActionButton(R.string.open, v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
         }
 
         //install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
@@ -579,7 +560,7 @@ import rx.subscriptions.CompositeSubscription;
     }
   }
 
-  private void setupDownloadControls(GetAppMeta.App app, Download download,
+  private void setupDownloadControls(GetAppMeta.App app, Progress<Download> progress,
       AppViewInstallDisplayable displayable) {
     String md5 = app.getMd5();
 
@@ -595,27 +576,30 @@ import rx.subscriptions.CompositeSubscription;
     });
 
     actionResume.setOnClickListener(view -> {
-      subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+      PermissionManager permissionManager = new PermissionManager();
+      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+          .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
+              (PermissionRequest) getContext()))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                  download.getAction())))
+                  progress.getRequest().getAction())))
           .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(progress -> {
+          .subscribe(downloadProgress -> {
             if (actionPause.getVisibility() != View.VISIBLE) {
               actionResume.setVisibility(View.GONE);
               actionPause.setVisibility(View.VISIBLE);
             }
-            manageDownload(progress.getRequest(), displayable, app);
+            manageDownload(downloadProgress, app);
           }, err -> {
             Logger.e(TAG, err);
           }));
     });
 
     setDownloadBarVisible(true);
-    switch (download.getOverallDownloadStatus()) {
-      case Download.PAUSED:
-        downloadProgress.setProgress(download.getOverallProgress());
-        textProgress.setText(download.getOverallProgress() + "%");
+    switch (progress.getState()) {
+      case Progress.INACTIVE:
+        downloadProgress.setProgress(progress.getCurrent());
+        textProgress.setText(progress.getCurrent() + "%");
         actionResume.setVisibility(View.VISIBLE);
         actionPause.setVisibility(View.GONE);
       default:
