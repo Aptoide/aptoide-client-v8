@@ -150,17 +150,19 @@ public class DisplayablesFactory {
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
         if (useBigBrick) {
-          displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag())
-              .setDefaultPerLineCount(1));
+          displayables.add(
+              new AppBrickDisplayable(apps.get(0), wsWidget.getTag()).setDefaultPerLineCount(1));
 
           nrAppBricks++;
         }
 
-        for (int i = (useBigBrick ? 1 : 0); i < nrAppBricks; i++) {
-          Displayable appDisplayablePojo = new AppBrickDisplayable(apps.get(i), wsWidget.getTag());
-          displayables.add(appDisplayablePojo);
+        if (!(useBigBrick && apps.size() <= 1)) {
+          for (int i = (useBigBrick ? 1 : 0); i < nrAppBricks; i++) {
+            Displayable appDisplayablePojo =
+                new AppBrickDisplayable(apps.get(i), wsWidget.getTag());
+            displayables.add(appDisplayablePojo);
+          }
         }
-
         displayables.add(new FooterDisplayable(wsWidget, wsWidget.getTag()));
       }
     } else if (Layout.LIST.equals(wsWidget.getData().getLayout())) {
