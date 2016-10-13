@@ -6,4 +6,5 @@ package cm.aptoide.pt.actions;
 
 public interface GenerateClientId {
   String getClientId();
+  String getLoginInfo();
 }

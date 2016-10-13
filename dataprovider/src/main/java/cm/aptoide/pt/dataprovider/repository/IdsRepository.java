@@ -140,20 +140,24 @@ import lombok.AllArgsConstructor;
   @Override public String getClientId() {
 
     String result = getAdvertisingId();
-    if(!TextUtils.isEmpty(result)) {
+    if (!TextUtils.isEmpty(result)) {
       return result;
     }
 
     result = android.provider.Settings.Secure.ANDROID_ID;
-    if(!TextUtils.isEmpty(result)) {
+    if (!TextUtils.isEmpty(result)) {
       return result;
     }
 
     result = getAptoideClientUUID();
-    if(!TextUtils.isEmpty(result)) {
-       return result;
+    if (!TextUtils.isEmpty(result)) {
+      return result;
     }
-
     return "NoInfo";
+  }
+
+  @Override public String getLoginInfo() {
+
+    return "";
   }
 }
