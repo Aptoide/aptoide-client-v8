@@ -1015,16 +1015,6 @@ public class Analytics {
     }
   }
 
-  public static class SourceViewedApplication {
-    private static final String PARTIAL_EVENT_NAME = "_Viewed_Application";
-    private static final String PACKAGE_NAME = "Package Name";
-
-    public static void view(String packageName) {
-      String lastStep = Analytics.AppViewViewedFrom.getLastStep();
-      track(lastStep.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
-    }
-  }
-
   public static class SourceDownloadComplete {
     private static final String PARTIAL_EVENT_NAME = "_Download_Complete";
     private static final String PACKAGE_NAME = "Package Name";
