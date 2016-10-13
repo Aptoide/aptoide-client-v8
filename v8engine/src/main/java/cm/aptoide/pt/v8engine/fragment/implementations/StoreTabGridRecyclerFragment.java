@@ -182,6 +182,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       addDisplayables(displayables);
     }, e -> finishLoading());
 
+    //Highlighted should have pull to refresh
     //getView().findViewById(R.id.swipe_container).setEnabled(false);
   }
 

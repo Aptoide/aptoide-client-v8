@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.realm;
 
+import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import io.realm.RealmObject;
@@ -47,10 +48,13 @@ import lombok.AllArgsConstructor;
   // Meta fields
   private boolean isDownloading;
 
+//AppAction
+  private String appAction;
+
   public Scheduled() {
   }
 
-  public static Scheduled from(GetAppMeta.App app) {
+  public static Scheduled from(GetAppMeta.App app, AppAction appAction) {
 
     String mainObbName = null;
     String mainObbPath = null;
@@ -81,7 +85,7 @@ import lombok.AllArgsConstructor;
     return new Scheduled(app.getName(), app.getFile().getVername(), app.getIcon(),
         app.getFile().getPath(), app.getFile().getMd5sum(), app.getFile().getVercode(),
         app.getPackageName(), app.getStore().getName(), app.getFile().getPathAlt(), mainObbName,
-        mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false);
+        mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false, appAction.name());
   }
 
   public String getName() {
@@ -98,6 +102,18 @@ import lombok.AllArgsConstructor;
 
   public void setVersionName(String versionName) {
     this.versionName = versionName;
+  }
+
+  public String getAppAction() {
+    return appAction;
+  }
+
+  public void setAppAction(String appAction) {
+    this.appAction = appAction;
+  }
+
+  public AppAction getAppActionAsEnum() {
+    return AppAction.valueOf(appAction);
   }
 
   public String getIcon() {
