@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.payment.providers.boacompra.BoaCompraAuthorization;
+import cm.aptoide.pt.v8engine.payment.providers.boacompra.BoaCompraPayment;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalConverter;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -20,6 +22,7 @@ import com.paypal.android.sdk.payments.PayPalConfiguration;
 public class PaymentFactory {
 
   public static final String PAYPAL = "paypal";
+  public static final String BOACOMPRA = "boacompra";
 
   public Payment create(Context context, PaymentService paymentService, Product product) {
     switch (paymentService.getShortName()) {
@@ -30,6 +33,10 @@ public class PaymentFactory {
                 paymentService.getTaxRate()), getLocalBroadcastManager(context),
             getPayPalConfiguration(), getPaymentConverter(), product,
             paymentService.getTypes().get(0).getLabel());
+      case BOACOMPRA:
+        return new BoaCompraPayment(BuildConfig.BOACOMPRA_API_HOST,
+            new BoaCompraAuthorization(BuildConfig.BOACOMPRA_SECRET_KEY,
+                BuildConfig.BOACOMPRA_STORE_ID));
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());
