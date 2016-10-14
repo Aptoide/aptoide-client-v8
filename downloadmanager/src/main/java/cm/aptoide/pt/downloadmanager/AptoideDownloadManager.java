@@ -41,6 +41,7 @@ public class AptoideDownloadManager {
   static public final int PROGRESS_MAX_VALUE = 100;
   private static final String TAG = AptoideDownloadManager.class.getSimpleName();
   private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
+
   /***********
    * Paths
    *****************/
@@ -54,7 +55,7 @@ public class AptoideDownloadManager {
   private boolean isPausing = false;
   @Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface
       downloadNotificationActionsInterface;
-  @Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
+  @Getter private DownloadSettingsInterface settingsInterface;
   private DownloadAccessor downloadAccessor;
   private CacheManager cacheHelper;
   private FileUtils fileUtils;
@@ -70,7 +71,7 @@ public class AptoideDownloadManager {
     return instance;
   }
 
-  void initDownloadService(Context context) {
+  public void initDownloadService(Context context) {
     AptoideDownloadManager.context = context;
     createDownloadDirs();
   }
@@ -90,7 +91,7 @@ public class AptoideDownloadManager {
    * message.
    */
   public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-    return getDownloadStatus(download.getMd5()).flatMap(status -> {
+    return getDownloadStatus(download.getMd5()).first().flatMap(status -> {
       if (status == Download.COMPLETED) {
         return Observable.just(download);
       } else {

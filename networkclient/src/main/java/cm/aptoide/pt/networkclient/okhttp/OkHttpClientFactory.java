@@ -8,7 +8,6 @@ package cm.aptoide.pt.networkclient.okhttp;
 import cm.aptoide.pt.actions.GenerateClientId;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
@@ -43,27 +42,30 @@ public class OkHttpClientFactory {
 
     clientBuilder.addInterceptor(interceptor);
 
-    if(generateClientId!=null){
-      clientBuilder.addInterceptor(new UserAgentInterceptor(AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData)));
+    if (generateClientId != null) {
+      clientBuilder.addInterceptor(new UserAgentInterceptor(
+          AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData)));
     }
 
     return clientBuilder.build();
   }
 
   public static OkHttpClient newClient(GenerateClientId generateClientId, UserData userData) {
-    return new OkHttpClient.Builder().addInterceptor(
-        new UserAgentInterceptor(AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData))).build();
+    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData))).build();
   }
 
   /**
-   *
-   * @param generateClientId an entity that generates user unique ids to use in User-Agent HEADER or null
+   * @param generateClientId an entity that generates user unique ids to use in User-Agent HEADER
+   * or
+   * null
    * @return an {@link OkHttpClient} instance
    */
-  public static OkHttpClient getSingletonClient(GenerateClientId generateClientId, UserData userData) {
+  public static OkHttpClient getSingletonClient(GenerateClientId generateClientId,
+      UserData userData) {
     if (httpClientInstance == null) {
-      httpClientInstance =
-          newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor(), generateClientId, userData);
+      httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor(),
+          generateClientId, userData);
     }
     return httpClientInstance;
   }
@@ -82,18 +84,13 @@ public class OkHttpClientFactory {
       HttpUrl httpUrl = request.url();
       if (response != null) {
 
-        if (BuildConfig.DEBUG) {
-          Logger.v(TAG, String.format("cache hit '%s'", httpUrl));
-        }
-
+        Logger.v(TAG, String.format("cache hit '%s'", httpUrl));
         return response;
-      }
+      } else {
 
-      if (BuildConfig.DEBUG) {
         Logger.v(TAG, String.format("cache miss '%s'", httpUrl));
+        return customCache.put(request, chain.proceed(request));
       }
-
-      return customCache.put(request, chain.proceed(request));
     }
   }
 }

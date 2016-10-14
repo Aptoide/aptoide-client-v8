@@ -8,17 +8,16 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.content.DialogInterface;
 import android.support.annotation.UiThread;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -29,10 +28,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import io.realm.Realm;
-import java.util.List;
 import lombok.Cleanup;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -115,41 +112,26 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void onViewAttached() {
     subscriptions.add(RxView.clicks(updateButtonLayout)
-        .flatMap(click -> displayable.downloadAndInstall(getContext()))
+        .flatMap(
+            click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));
 
-    subscriptions.add(displayable.getDownloadManager()
-        .getAllDownloads()
-        .observeOn(Schedulers.io())
-        .map(downloads -> getDownloadFromList(downloads, displayable.getMd5()))
-        .map(download -> shouldDisplayProgress(download))
+    subscriptions.add(displayable.getUpdates()
+        .filter(
+            downloadProgress -> downloadProgress.getRequest().getMd5() == displayable.getDownload()
+                .getMd5())
+        .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(shouldShow -> showProgress(shouldShow),
             throwable -> throwable.printStackTrace()));
-  }
-
-  private Download getDownloadFromList(List<Download> downloads, String md5) {
-    for (int i = 0; i < downloads.size(); i++) {
-      Download download = downloads.get(i);
-      if (TextUtils.equals(download.getMd5(), md5)) {
-        return download;
-      }
-    }
-    return null;
   }
 
   @Override public void onViewDetached() {
     if (subscriptions != null && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();
     }
-  }
-
-  private boolean shouldDisplayProgress(Download download) {
-    return download != null && (download.getOverallDownloadStatus() == Download.PROGRESS
-        || download.getOverallDownloadStatus() == Download.IN_QUEUE
-        || download.getOverallDownloadStatus() == Download.PENDING);
   }
 
   @UiThread private void showProgress(Boolean showProgress) {

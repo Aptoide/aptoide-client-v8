@@ -32,8 +32,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
@@ -61,11 +61,9 @@ import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -73,7 +71,7 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -152,6 +150,8 @@ public class AppViewFragment extends GridRecyclerFragment
   private Menu menu;
   private String appName;
   private String wUrl;
+  private GetAppMeta.App app;
+  private AppAction appAction = AppAction.OPEN;
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
@@ -222,10 +222,7 @@ public class AppViewFragment extends GridRecyclerFragment
     DownloadInstallationProvider installationProvider =
         new DownloadInstallationProvider(downloadManager);
 
-    installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            installationProvider), RepositoryFactory.getRepositoryFor(Rollback.class),
-        new RollbackActionFactory(), installationProvider);
+    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(
@@ -372,6 +369,9 @@ public class AppViewFragment extends GridRecyclerFragment
       shareApp(appName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
+
+      scheduled = Scheduled.from(app, appAction);
+
       @Cleanup Realm realm = DeprecatedDatabase.get();
       realm.beginTransaction();
       realm.copyToRealmOrUpdate(scheduled);
@@ -456,8 +456,10 @@ public class AppViewFragment extends GridRecyclerFragment
     }
 
     // useful data for the schedule updates menu option
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    scheduled = Scheduled.from(app);
+    app = getApp.getNodes().getMeta().getData();
+    installAction().subscribe(appAction -> {
+      AppViewFragment.this.appAction = appAction;
+    });
 
     header.setup(getApp);
     setupDisplayables(getApp);
@@ -613,6 +615,29 @@ public class AppViewFragment extends GridRecyclerFragment
   public void setupShare(GetApp app) {
     appName = app.getNodes().getMeta().getData().getName();
     wUrl = app.getNodes().getMeta().getData().getUrls().getW();
+  }
+
+  public Observable<AppAction> installAction() {
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    return installedAccessor.get(packageName).map(installed -> {
+
+      if (installed != null) {
+        if (app.getFile().getVercode() == installed.getVersionCode()) {
+          //current installed version
+          return AppAction.OPEN;
+        } else if (app.getFile().getVercode() > installed.getVersionCode()) {
+          //update
+          return AppAction.UPDATE;
+        } else {
+          //downgrade
+          return AppAction.DOWNGRADE;
+        }
+      } else {
+        //app not installed
+        return AppAction.INSTALL;
+      }
+    });
   }
 
   private enum BundleKeys {

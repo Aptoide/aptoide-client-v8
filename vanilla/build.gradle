@@ -125,7 +125,7 @@ android {
       Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "PROD_VERSION_CODE")
       versionCode value
-      versionName "8.0.0.5"
+      versionName "8.0.0.6"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
   }

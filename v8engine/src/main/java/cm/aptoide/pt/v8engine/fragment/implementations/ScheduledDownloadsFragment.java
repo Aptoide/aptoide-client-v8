@@ -18,21 +18,19 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -41,8 +39,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sch
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
@@ -51,10 +47,13 @@ import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_D
  * Created by sithengineer on 19/07/16.
  */
 public class ScheduledDownloadsFragment extends GridRecyclerFragment {
+
+  private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
+
   public static final String OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI =
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
   public static final String OPEN_MODE = "openMode";
-  private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
+
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;
@@ -256,77 +255,33 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
     if (installing == null || installing.isEmpty()) return false;
 
-    DownloadFactory factory = new DownloadFactory();
-    ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
-      scheduledDownloadRepository.setInstalling(installing)
-          .flatMapIterable(scheduleds -> scheduleds)
-          .map(scheduled -> factory.create(scheduled))
-          .toList()
-          .flatMap(downloads -> downloadAndInstallDownloadList(downloads))
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(aVoid -> {
+    Context context = getContext();
+    PermissionManager permissionManager = new PermissionManager();
+    PermissionRequest permissionRequest = ((PermissionRequest) context);
+    DownloadFactory downloadFactory = new DownloadFactory();
+    InstallerFactory installerFactory = new InstallerFactory();
 
-            Logger.i(TAG, "finished installing scheduled downloads");
-          });
-    }, () -> {
-    });
+    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        installerFactory.create(context, InstallerFactory.ROLLBACK),
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
+
+    permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
+        .flatMapIterable(scheduleds -> scheduleds)
+        .map(scheduled -> downloadFactory.create(scheduled))
+        .flatMap(downloadItem -> installManager.install(context, downloadItem)
+            .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
+            .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
+                downloadItem.getMd5())))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(aVoid -> {
+          Logger.i(TAG, "finished installing scheduled downloads");
+        }, throwable -> {
+          Logger.e(TAG, throwable.getMessage());
+        });
 
     return true;
-  }
-
-  public Observable<List<Download>> downloadAndInstallDownloadList(List<Download> downloadList) {
-
-    PermissionManager permissionManager = new PermissionManager();
-
-    DownloadServiceHelper downloadManager =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-
-    Installer installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            new DownloadInstallationProvider(downloadManager)),
-        RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
-        new DownloadInstallationProvider(downloadManager));
-
-    PermissionRequest permissionRequest = ((PermissionRequest) getContext());
-    DownloadServiceHelper downloadServiceHelper =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
-
-    Context ctx = getContext();
-
-    return Observable.from(downloadList)
-        .flatMap(downloadItem -> downloadAndInstall(downloadItem, permissionRequest,
-            downloadServiceHelper, installManager, ctx))
-        .buffer(downloadList.size()) // buffer all downloads in one event
-        .first(); // return the whole list in one (first) event
-  }
-
-  private Observable<Download> downloadAndInstall(Download download,
-      PermissionRequest permissionRequest, DownloadServiceHelper downloadServiceHelper,
-      Installer installManager, Context context) {
-    Logger.v(TAG, "downloading app with md5 " + download.getMd5());
-    return downloadServiceHelper.startDownload(permissionRequest, download)
-        .map(downloadItem -> { // for logging purposes only
-          Logger.d(TAG, String.format(Locale.ROOT,
-              "scheduled download progress = %d and status = %d for app md5 %s",
-              downloadItem.getOverallProgress(), downloadItem.getOverallDownloadStatus(),
-              downloadItem.getMd5()));
-
-          return downloadItem;
-        })
-        .filter(downloadItem -> downloadItem.getOverallDownloadStatus() == Download.COMPLETED)
-        .flatMap(
-            downloadItem -> installAndRemoveFromList(installManager, context, downloadItem.getMd5())
-                .map(aVoid -> downloadItem));
-  }
-
-  private Observable<Void> installAndRemoveFromList(Installer installManager, Context context,
-      String md5) {
-    Logger.v(TAG, "installing app with md5 " + md5);
-    return installManager.install(context, (PermissionRequest) context, md5)
-        .doOnError(err -> Logger.e(TAG, err))
-        .doOnNext(aVoid -> scheduledDownloadRepository.deleteScheduledDownload(md5))
-        .doOnUnsubscribe(() -> Logger.d(TAG,
-            "Scheduled Downloads do on unsubscribed called for install manager"));
   }
 
   public enum OpenMode {

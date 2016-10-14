@@ -9,7 +9,7 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 /**
  * Created by trinkes on 6/28/16.
  */
-public class DownloadNotificationActionsActionsInterface
+@Deprecated public class DownloadNotificationActionsActionsInterface
     implements DownloadNotificationActionsInterface {
 
   private static final String TAG =

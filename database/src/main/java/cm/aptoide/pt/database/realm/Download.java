@@ -14,13 +14,17 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by sithengineer on 17/05/16.
  */
 public class Download extends RealmObject {
+
+  public static String TAG = Download.class.getSimpleName();
+
+  public static final int ACTION_INSTALL = 0;
+  public static final int ACTION_UPDATE = 1;
+  public static final int ACTION_DOWNGRADE = 2;
 
   public static final String DOWNLOAD_ID = "appId";
   public static final String MD5 = "md5";
@@ -38,9 +42,6 @@ public class Download extends RealmObject {
   public static final int RETRY = 11;
   public static final int NOT_DOWNLOADED = 12;
   public static final int IN_QUEUE = 13;
-  public static final int ASCENDING = 1;
-  public static final int DESCENDING = -1;
-  public static String TAG = Download.class.getSimpleName();
 
   RealmList<FileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
@@ -50,21 +51,12 @@ public class Download extends RealmObject {
   private String Icon;
   private long timeStamp;
   private int downloadSpeed;
+  private String packageName;
+  private int versionCode;
+  private int action;
+  private boolean scheduled;
 
   public Download() {
-  }
-
-  /**
-   * This method sorts the downloads by time stamp
-   *
-   * @param downloads list of downloads to sort
-   * @param sortOrder 1 if should be sorted ASCENDING, -1 if DESCENDING
-   */
-  public static List<Download> sortDownloads(List<Download> downloads,
-      @DownloadSort int sortOrder) {
-    Collections.sort(downloads,
-        (lhs, rhs) -> Long.valueOf(lhs.getTimeStamp()).compareTo(rhs.getTimeStamp()) * sortOrder);
-    return downloads;
   }
 
   public long getTimeStamp() {
@@ -158,6 +150,38 @@ public class Download extends RealmObject {
     this.downloadSpeed = speed;
   }
 
+  public int getVersionCode() {
+    return versionCode;
+  }
+
+  public void setVersionCode(int versionCode) {
+    this.versionCode = versionCode;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+
+  public int getAction() {
+    return action;
+  }
+
+  public void setAction(int action) {
+    this.action = action;
+  }
+
+  public void setScheduled(boolean scheduled) {
+    this.scheduled = scheduled;
+  }
+
+  public boolean isScheduled() {
+    return scheduled;
+  }
+
   public String getMd5() {
     return md5;
   }
@@ -175,12 +199,5 @@ public class Download extends RealmObject {
 
   public @interface DownloadState {
 
-  }
-
-  @IntDef({
-      ASCENDING, DESCENDING
-  }) @Retention(RetentionPolicy.SOURCE)
-
-  public @interface DownloadSort {
   }
 }
