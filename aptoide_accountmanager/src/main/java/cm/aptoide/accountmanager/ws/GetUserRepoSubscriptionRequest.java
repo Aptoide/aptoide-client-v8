@@ -19,14 +19,15 @@ import rx.Observable;
  */
 public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepoSubscription> {
 
-  protected GetUserRepoSubscriptionRequest(OkHttpClient httpClient,
+  GetUserRepoSubscriptionRequest() { }
+
+  GetUserRepoSubscriptionRequest(OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
   }
 
   public static GetUserRepoSubscriptionRequest of() {
-    return new GetUserRepoSubscriptionRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter());
+    return new GetUserRepoSubscriptionRequest();
   }
 
   @Override protected Observable<GetUserRepoSubscription> loadDataFromNetwork(Interfaces interfaces,

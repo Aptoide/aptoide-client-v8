@@ -12,7 +12,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.2.0'
+    classpath 'com.android.tools.build:gradle:2.2.1'
     classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
@@ -87,6 +87,7 @@ ext {
   JUNIT_VERSION = '4.12'
   MOCKITO_CORE_VERSION = '1.10.19'
   ROBOELECTRIC_VERSION = '3.0'
+  MOCKWEBSERVER_VERSION = '3.4.1'
 
   // Leak Canary
   LEAK_CANARY_VERSION = '1.4-beta2'

@@ -29,6 +29,7 @@ import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -196,9 +197,18 @@ public abstract class V8Engine extends DataProvider {
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
     AptoideDownloadManager.getInstance()
-        .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
-            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
-            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient());
+        .init(
+            this,
+            new DownloadNotificationActionsActionsInterface(),
+            settingsInterface,
+            downloadAccessor,
+            new CacheHelper(downloadAccessor, settingsInterface),
+            new FileUtils(action -> Analytics.File.moveFile(action)),
+            new TokenHttpClient(
+                new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
+                AptoideAccountManager.getUserData()
+            )
+        );
 
     // setupCurrentActivityListener();
 

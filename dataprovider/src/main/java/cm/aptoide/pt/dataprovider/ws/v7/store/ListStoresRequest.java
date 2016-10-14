@@ -28,8 +28,17 @@ import rx.Observable;
  */
 public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
-  public static final String STORT_BY_DOWNLOADS = "downloads7d";
+  static final String STORT_BY_DOWNLOADS = "downloads7d";
   private String url;
+
+  private ListStoresRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
+    this.url = url;
+  }
+
+  private ListStoresRequest(Body body, String baseHost) {
+    super(body, baseHost);
+  }
 
   private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
       Body body, String baseHost) {
@@ -37,7 +46,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     this.url = url;
   }
 
-  public ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body,
+  private ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body,
       String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
   }
@@ -50,8 +59,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
-    return new ListStoresRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), (Body) decorator.decorate(baseBody), BASE_HOST);
+    return new ListStoresRequest((Body) decorator.decorate(baseBody), BASE_HOST);
   }
 
   public static ListStoresRequest ofAction(String url) {
@@ -60,7 +68,6 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
             DataProvider.getContext()));
 
     return new ListStoresRequest(url.replace("listStores", ""),
-        OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
         (Body) decorator.decorate(new Body()), BASE_HOST);
   }
 
