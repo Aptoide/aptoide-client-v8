@@ -154,6 +154,7 @@ import rx.schedulers.Schedulers;
       this.apksData = body.getApksData();
       this.storeIds = body.getStoreIds();
       this.setQ(body.getQ());
+      this.setCountry(body.getCountry());
       this.setAptoideVercode(body.getAptoideVercode());
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
