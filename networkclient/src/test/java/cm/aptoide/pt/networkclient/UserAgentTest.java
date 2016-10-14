@@ -45,10 +45,6 @@ public class UserAgentTest {
       @Override public String getClientId() {
         return "dummy client id";
       }
-
-      @Override public String getLoginInfo() {
-        return "dummy login user";
-      }
     };
 
     final String expectedUserAgent =
@@ -76,10 +72,6 @@ public class UserAgentTest {
     GenerateClientId generateClientId = new GenerateClientId() {
       @Override public String getClientId() {
         return "dummy client id";
-      }
-
-      @Override public String getLoginInfo() {
-        return "dummy login user";
       }
     };
     final String expectedUserAgent =

@@ -155,9 +155,4 @@ import lombok.AllArgsConstructor;
     }
     return "NoInfo";
   }
-
-  @Override public String getLoginInfo() {
-
-    return "";
-  }
 }

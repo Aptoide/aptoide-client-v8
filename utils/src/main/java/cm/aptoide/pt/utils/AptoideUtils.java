@@ -1558,21 +1558,19 @@ public class AptoideUtils {
         e.printStackTrace();
       }
 
-      if (generateClientId == null) {
-        return "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:;;";
-      } else {
-        return "aptoide-"
-            + verString
-            + ";"
-            + SystemU.TERMINAL_INFO
-            + ";"
-            + myscr
-            + ";id:"
-            + generateClientId.getClientId()
-            + ";"
-            + generateClientId.getLoginInfo()
-            + ";";
+      StringBuilder sb = new StringBuilder(
+          "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
+
+      if (generateClientId != null) {
+        sb.append(generateClientId.getClientId());
       }
+      sb.append(";");
+
+      //if(userEmail!= null) {
+      //  sb.append(userEmail);
+      //}
+      sb.append(";");
+      return sb.toString();
     }
   }
 }
