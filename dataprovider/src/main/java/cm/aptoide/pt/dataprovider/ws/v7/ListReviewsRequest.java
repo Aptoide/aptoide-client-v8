@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -38,7 +39,9 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_COMMENTS = 10;
 
   protected ListReviewsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext())), WebService.getDefaultConverter(),
+    super(body, OkHttpClientFactory.getSingletonClient(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()), AptoideAccountManager
+            .getUserData()), WebService.getDefaultConverter(),
         baseHost);
   }
 

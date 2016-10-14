@@ -37,7 +37,6 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -70,12 +69,19 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
   private boolean accessTokenRetry = false;
 
   protected V7(B body, String baseHost) {
-    super(Interfaces.class, new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()), WebService.getDefaultConverter(), baseHost);
+    super(Interfaces.class,
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        AptoideAccountManager.getUserData(),
+        WebService.getDefaultConverter(), baseHost
+    );
     this.body = body;
   }
 
   protected V7(B body, Converter.Factory converterFactory, String baseHost) {
-    super(Interfaces.class, new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()), converterFactory, baseHost);
+    super(Interfaces.class,
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        AptoideAccountManager.getUserData(),
+        converterFactory, baseHost);
     this.body = body;
   }
 

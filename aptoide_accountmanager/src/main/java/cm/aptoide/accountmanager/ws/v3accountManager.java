@@ -40,7 +40,8 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
   private boolean accessTokenRetry = false;
 
   v3accountManager() {
-    super(Interfaces.class, OkHttpClientFactory.getSingletonClient(null), WebService.getDefaultConverter(),
+    super(Interfaces.class, OkHttpClientFactory.getSingletonClient(null,
+        AptoideAccountManager.getUserData()), WebService.getDefaultConverter(),
         "https://webservices.aptoide.com/webservices/");
     this.map = new BaseBody();
   }

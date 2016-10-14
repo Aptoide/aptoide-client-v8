@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -1541,7 +1542,7 @@ public class AptoideUtils {
       return false;
     }
 
-    public static String getDefaultUserAgent(GenerateClientId generateClientId) {
+    public static String getDefaultUserAgent(GenerateClientId generateClientId, UserData userData) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1566,9 +1567,10 @@ public class AptoideUtils {
       }
       sb.append(";");
 
-      //if(userEmail!= null) {
-      //  sb.append(userEmail);
-      //}
+      String userEmail = userData.getEmail();
+      if(userEmail!= null) {
+        sb.append(userEmail);
+      }
       sb.append(";");
       return sb.toString();
     }

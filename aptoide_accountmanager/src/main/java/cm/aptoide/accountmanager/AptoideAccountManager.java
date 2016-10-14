@@ -39,6 +39,7 @@ import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -296,6 +297,14 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
     }
     return userName;
+  }
+
+  public static UserData getUserData () {
+    return new UserData() {
+      @Override public String getEmail() {
+        return getUserEmail();
+      }
+    };
   }
 
   /**

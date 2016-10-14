@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -29,8 +30,8 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
   public Aptwords(IdsRepository idsRepository) {
     super(Interfaces.class, OkHttpClientFactory.getSingletonClient(new IdsRepository(
-            SecurePreferencesImplementation.getInstance(), DataProvider
-            .getContext())),
+            SecurePreferencesImplementation.getInstance(), DataProvider.getContext()), AptoideAccountManager
+            .getUserData()),
         WebService.getDefaultConverter(), BASE_URL);
     this.idsRepository = idsRepository;
   }
