@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.UriMatcher;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
@@ -20,15 +21,17 @@ import android.os.Binder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.accountmanager.util.UserInfo;
 import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import java.util.Locale;
 import java.util.Map;
@@ -37,7 +40,7 @@ import java.util.Map;
  * Created by marcelobenites on 7/7/16.
  */
 public class ToolboxContentProvider extends ContentProvider {
-
+  private static final String TAG = ToolboxContentProvider.class.getSimpleName();
   private static final String TOOLBOX_PROVIDER_AUTHORITY = "cm.aptoide.pt.StubProvider";
 
   private static final String BACKUP_PACKAGE = "pt.aptoide.backupapps";
@@ -157,50 +160,66 @@ public class ToolboxContentProvider extends ContentProvider {
 
   @Override
   public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
     int changed = 0;
-    switch (uriMatcher.match(uri)) {
-      case CHANGE_PREFERENCE:
-        SharedPreferences.Editor edit =
-            PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-        for (final Map.Entry<String, Object> entry : values.valueSet()) {
-          Object value = entry.getValue();
-          if (value instanceof String) {
-            if (!ManagerPreferences.isDebug()) {
-              AptoideUtils.ThreadU.runOnUiThread(() -> Toast.makeText(getContext(),
-                  "Please enable debug mode for toolbox to work.", Toast.LENGTH_LONG).show());
-            }
-            if (entry.getKey().equals(ManagedKeys.FORCE_COUNTRY)) {
-              ManagerPreferences.setForceCountry((String) value);
-              changed++;
-            } else if (entry.getKey().equals(ManagedKeys.NOTIFICATION_TYPE)) {
-              ManagerPreferences.setNotificationType((String) value);
-              changed++;
-            } else if (entry.getKey().equals("pullNotificationAction")) {
-              Context context = getContext();
-              if (context != null) {
-                Intent intent = new Intent(getContext(), PullingContentService.class);
-                intent.setAction(PullingContentService.PUSH_NOTIFICATIONS_ACTION);
-                context.startService(intent);
-                changed++;
+    try {
+      int uid = Binder.getCallingUid();
+      Context context = getContext();
+      PackageManager pm = context.getPackageManager();
+      String callerPackage = pm.getPackagesForUid(uid)[0];
+      Log.d("AptoideDebug", "Someone is trying to update preferences");
+      int result = pm.checkSignatures(callerPackage, context.getPackageName());
+
+      if (result == PackageManager.SIGNATURE_MATCH) {
+        switch (uriMatcher.match(uri)) {
+          case CHANGE_PREFERENCE:
+            SharedPreferences.Editor edit =
+                PreferenceManager.getDefaultSharedPreferences(context).edit();
+            for (final Map.Entry<String, Object> entry : values.valueSet()) {
+              Object value = entry.getValue();
+              if (value instanceof String) {
+                if (!ManagerPreferences.isDebug()) {
+                  AptoideUtils.ThreadU.runOnUiThread(
+                      () -> Toast.makeText(context, "Please enable debug mode for toolbox to work.",
+                          Toast.LENGTH_LONG).show());
+                }
+                if (entry.getKey().equals(ManagedKeys.FORCE_COUNTRY)) {
+                  ManagerPreferences.setForceCountry((String) value);
+                  changed++;
+                } else if (entry.getKey().equals(ManagedKeys.NOTIFICATION_TYPE)) {
+                  ManagerPreferences.setNotificationType((String) value);
+                  changed++;
+                } else if (entry.getKey().equals("pullNotificationAction")) {
+                  Intent intent = new Intent(context, PullingContentService.class);
+                  intent.setAction(PullingContentService.PUSH_NOTIFICATIONS_ACTION);
+                  context.startService(intent);
+                  changed++;
+                }
+              } else if (value instanceof Boolean) {
+                if (entry.getKey().equals(ManagedKeys.DEBUG)) {
+                  ManagerPreferences.setDebug((Boolean) entry.getValue());
+                  Logger.setDBG((Boolean) entry.getValue());
+                  changed++;
+                }
+              }
+              if (changed > 0 && !TextUtils.isEmpty(entry.getValue().toString())) {
+                AptoideUtils.ThreadU.runOnUiThread(() -> Toast.makeText(context,
+                    "Preference set: " + entry.getKey() + "=" + entry.getValue(), Toast.LENGTH_LONG)
+                    .show());
               }
             }
-          } else if (value instanceof Boolean) {
-            if (entry.getKey().equals(ManagedKeys.DEBUG)) {
-              ManagerPreferences.setDebug((Boolean) entry.getValue());
-              changed++;
-            }
-          }
-          if (changed > 0 && !TextUtils.isEmpty(entry.getValue().toString())) {
-            AptoideUtils.ThreadU.runOnUiThread(() -> Toast.makeText(getContext(),
-                "Preference set: " + entry.getKey() + "=" + entry.getValue(), Toast.LENGTH_LONG)
-                .show());
-          }
-        }
 
-        edit.apply();
-        return changed;
-      default:
-        return changed;
+            edit.apply();
+            return changed;
+          default:
+            return changed;
+        }
+      }
+    } catch (NullPointerException e) {
+      //it can happen if package manager or context is null
+      CrashReports.logException(e);
+      Logger.e(TAG, "update: " + e);
     }
+    return changed;
   }
 }

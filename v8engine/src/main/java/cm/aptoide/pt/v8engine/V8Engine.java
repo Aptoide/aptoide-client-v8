@@ -28,6 +28,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -145,7 +146,7 @@ public abstract class V8Engine extends DataProvider {
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
-
+    Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
 
     if (BuildConfig.DEBUG) {
