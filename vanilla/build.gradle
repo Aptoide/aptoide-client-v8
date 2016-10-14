@@ -93,9 +93,11 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      versionName "8.0.0." + getDate()
-      versionCode getVersionCode("../../aptoideProperties/version.properties",
-          "INTERNAL_VERSION_CODE")
+//      versionName "8.0.0." + getDate()
+//      versionCode getVersionCode("../../aptoideProperties/version.properties",
+//          "INTERNAL_VERSION_CODE")
+      versionName "8.0.0.6"
+      versionCode 8088
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
 
@@ -202,7 +204,14 @@ dependencies {
   //
 
   debugCompile project(path: ':v8engine', configuration: 'debug')
+//  {
+//    exclude(group:"com.android.support", name:"multidex")
+//  }
+
   releaseCompile project(path: ':v8engine', configuration: 'release')
+//  {
+//    exclude(group:"com.android.support", name:"multidex")
+//  }
 
   //
   // custom libs in folders
