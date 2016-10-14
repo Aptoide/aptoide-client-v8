@@ -5,9 +5,12 @@
 
 package cm.aptoide.pt.networkclient.okhttp;
 
+import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
 import okhttp3.Cache;
@@ -29,25 +32,38 @@ public class OkHttpClientFactory {
   private static OkHttpClient httpClientInstance;
 
   public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
-      Interceptor interceptor) {
+      Interceptor interceptor, GenerateClientId generateClientId, UserData userData) {
     OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
     //		if (BuildConfig.DEBUG) {
     //			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
     //		}
 
-    return clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)) // 10 MiB
-        .addInterceptor(interceptor).build();
+    clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
+
+    clientBuilder.addInterceptor(interceptor);
+
+    if(generateClientId!=null){
+      clientBuilder.addInterceptor(new UserAgentInterceptor(AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData)));
+    }
+
+    return clientBuilder.build();
   }
 
-  public static OkHttpClient newClient() {
-    return new OkHttpClient.Builder().build();
+  public static OkHttpClient newClient(GenerateClientId generateClientId, UserData userData) {
+    return new OkHttpClient.Builder().addInterceptor(
+        new UserAgentInterceptor(AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData))).build();
   }
 
-  public static OkHttpClient getSingletonClient() {
+  /**
+   *
+   * @param generateClientId an entity that generates user unique ids to use in User-Agent HEADER or null
+   * @return an {@link OkHttpClient} instance
+   */
+  public static OkHttpClient getSingletonClient(GenerateClientId generateClientId, UserData userData) {
     if (httpClientInstance == null) {
       httpClientInstance =
-          newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor());
+          newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor(), generateClientId, userData);
     }
     return httpClientInstance;
   }

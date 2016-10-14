@@ -25,15 +25,16 @@ import rx.Observable;
   private ArrayList<String> list;
   private boolean matureSwitch;
 
-  public ChangeUserSettingsRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
+  ChangeUserSettingsRequest(){ }
+
+  ChangeUserSettingsRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
     list = new ArrayList<>();
   }
 
   public static ChangeUserSettingsRequest of(boolean matureSwitchStatus) {
     ChangeUserSettingsRequest request =
-        new ChangeUserSettingsRequest(OkHttpClientFactory.getSingletonClient(),
-            WebService.getDefaultConverter());
+        new ChangeUserSettingsRequest();
     request.setMatureSwitch(matureSwitchStatus);
     return request;
   }

@@ -34,9 +34,8 @@ import rx.Observable;
 
   private static final Integer MAX_LIMIT = 10;
 
-  private ListAppVersionsRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      Body body, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
+  private ListAppVersionsRequest(Body body, String baseHost) {
+    super(body, WebService.getDefaultConverter() , baseHost);
   }
 
   public static ListAppVersionsRequest of() {
@@ -45,8 +44,7 @@ import rx.Observable;
             DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), (Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
   }
 
   public static ListAppVersionsRequest of(int limit, int offset) {
@@ -56,8 +54,7 @@ import rx.Observable;
     Body body = new Body();
     body.setLimit(limit);
     body.setOffset(offset);
-    return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), (Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
   }
 
   public static ListAppVersionsRequest of(String packageName) {
@@ -66,8 +63,7 @@ import rx.Observable;
             DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), (Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
   }
 
   public static ListAppVersionsRequest of(String packageName, int limit, int offset) {
@@ -77,8 +73,7 @@ import rx.Observable;
     Body body = new Body(packageName);
     body.setLimit(limit);
     body.setOffset(offset);
-    return new ListAppVersionsRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), (Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,

@@ -8,8 +8,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
@@ -37,6 +39,7 @@ import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import io.realm.Realm;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -64,6 +67,28 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
   @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
+
+  protected V7(B body, String baseHost) {
+    super(Interfaces.class,
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        AptoideAccountManager.getUserData(),
+        WebService.getDefaultConverter(), baseHost
+    );
+    this.body = body;
+  }
+
+  protected V7(B body, Converter.Factory converterFactory, String baseHost) {
+    super(Interfaces.class,
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        AptoideAccountManager.getUserData(),
+        converterFactory, baseHost);
+    this.body = body;
+  }
+
+  protected V7(B body, OkHttpClient httpClient, String baseHost) {
+    super(Interfaces.class, httpClient, WebService.getDefaultConverter(), baseHost);
+    this.body = body;
+  }
 
   protected V7(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost) {

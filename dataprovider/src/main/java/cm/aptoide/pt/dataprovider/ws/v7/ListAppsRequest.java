@@ -28,6 +28,11 @@ import rx.Observable;
 
   private String url;
 
+  private ListAppsRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
+    this.url = url;
+  }
+
   private ListAppsRequest(String url, Body body, Converter.Factory converterFactory,
       OkHttpClient httpClient, String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
@@ -55,8 +60,7 @@ import rx.Observable;
     body.setStoreUser(store.getUsername());
     body.setStorePassSha1(store.getPasswordSha1());
 
-    return new ListAppsRequest(v7Url.get(), (Body) decorator.decorate(body),
-        WebService.getDefaultConverter(), OkHttpClientFactory.getSingletonClient(), BASE_HOST);
+    return new ListAppsRequest(v7Url.get(), (Body) decorator.decorate(body), BASE_HOST);
   }
 
   @Override

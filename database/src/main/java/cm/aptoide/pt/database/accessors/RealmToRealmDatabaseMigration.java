@@ -5,9 +5,12 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import android.text.TextUtils;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
+import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
@@ -47,9 +50,9 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     if (oldVersion <= 8075) {
 
       oldVersion = 8075;
+
       schema.get("Scheduled")
           .removeField("appId");
-
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -77,6 +80,21 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       if(schemaFile.hasPrimaryKey()){
         schemaFile.removePrimaryKey();
       }
+
+      // remove entries with duplicated MD5 fields
+      // this leads to the removal of some Scheduled updates
+
+      String previous_md5 = "";
+      for (DynamicRealmObject dynamicRealmObject :
+          realm.where("Scheduled").findAllSorted("md5")) {
+
+        String current_md5 = dynamicRealmObject.getString("md5");
+        if(TextUtils.equals(previous_md5, current_md5)){
+          dynamicRealmObject.deleteFromRealm();
+        }
+        previous_md5 = current_md5;
+      }
+
       schemaFile.removeField("md5");
       schemaFile.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 

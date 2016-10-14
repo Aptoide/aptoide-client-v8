@@ -35,8 +35,7 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
   private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
   protected ListFullCommentsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-        baseHost);
+    super(body, baseHost);
   }
 
   public static ListFullCommentsRequest of(long reviewId, int limit) {

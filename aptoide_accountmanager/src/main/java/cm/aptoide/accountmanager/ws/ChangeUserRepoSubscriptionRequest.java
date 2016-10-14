@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -21,15 +22,17 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
   private String storeName;
   private boolean subscribe;
 
-  protected ChangeUserRepoSubscriptionRequest(OkHttpClient client,
+  ChangeUserRepoSubscriptionRequest(){ }
+
+  ChangeUserRepoSubscriptionRequest(OkHttpClient client,
       Converter.Factory converterFactory) {
     super(client, converterFactory);
   }
 
   public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe) {
+
     ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest =
-        new ChangeUserRepoSubscriptionRequest(OkHttpClientFactory.getSingletonClient(),
-            WebService.getDefaultConverter());
+        new ChangeUserRepoSubscriptionRequest();
 
     changeUserRepoSubscriptionRequest.storeName = storeName;
     changeUserRepoSubscriptionRequest.subscribe = subscribe;

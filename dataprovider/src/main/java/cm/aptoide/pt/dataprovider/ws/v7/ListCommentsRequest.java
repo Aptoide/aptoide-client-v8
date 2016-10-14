@@ -38,8 +38,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   private static String url;
 
   protected ListCommentsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-        baseHost);
+    super(body, baseHost);
   }
 
   public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName) {
