@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
@@ -318,6 +319,15 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
       return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory);
     }
     throw new IllegalArgumentException(
-        "Only articles, features, store latest apps, app updates, videos and recommendations supported.");
+        "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");
+  }
+
+  public void goToTop() {
+    GridLayoutManager layoutManager = ((GridLayoutManager) recyclerView.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      getRecyclerView().scrollToPosition(10);
+    }
+    getRecyclerView().smoothScrollToPosition(0);
   }
 }
