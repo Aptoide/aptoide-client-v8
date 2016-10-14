@@ -12,9 +12,11 @@ import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.io.IOException;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
@@ -37,7 +39,14 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
 
-  protected v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory) {
+  v3accountManager() {
+    super(Interfaces.class, OkHttpClientFactory.getSingletonClient(null,
+        AptoideAccountManager.getUserData()), WebService.getDefaultConverter(),
+        "https://webservices.aptoide.com/webservices/");
+    this.map = new BaseBody();
+  }
+
+  v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(Interfaces.class, httpClient, converterFactory,
         "https://webservices.aptoide.com/webservices/");
     this.map = new BaseBody();

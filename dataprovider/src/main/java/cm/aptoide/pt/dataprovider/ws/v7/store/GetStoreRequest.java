@@ -31,6 +31,11 @@ import rx.Observable;
 
   private final String url;
 
+  private GetStoreRequest(String url, String baseHost, Body body) {
+    super(body, baseHost);
+    this.url = url;
+  }
+
   private GetStoreRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost, Body body) {
     super(body, httpClient, converterFactory, baseHost);
@@ -49,8 +54,7 @@ import rx.Observable;
     body.setStoreUser(store.getUsername());
     body.setStorePassSha1(store.getPasswordSha1());
 
-    return new GetStoreRequest("", OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
+    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body));
   }
 
   public static GetStoreRequest ofAction(String url) {
@@ -72,8 +76,7 @@ import rx.Observable;
     }
     body.setStoreUser(store.getUsername());
     body.setStorePassSha1(store.getPasswordSha1());
-    return new GetStoreRequest(v7Url.get(), OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
+    return new GetStoreRequest(v7Url.get(), BASE_HOST, (Body) decorator.decorate(body));
   }
 
   @Override

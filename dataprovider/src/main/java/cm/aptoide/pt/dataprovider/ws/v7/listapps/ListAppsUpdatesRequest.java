@@ -46,6 +46,10 @@ import rx.schedulers.Schedulers;
 
   private static final int SPLIT_SIZE = 100;
 
+  private ListAppsUpdatesRequest(Body body, String baseHost) {
+    super(body, baseHost);
+  }
+
   private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
       Body body, String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
@@ -56,8 +60,7 @@ import rx.schedulers.Schedulers;
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository);
 
-    return new ListAppsUpdatesRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), (Body) decorator.decorate(
+    return new ListAppsUpdatesRequest((Body) decorator.decorate(
         new Body(getInstalledApks(), StoreUtils.getSubscribedStoresIds(),
             idsRepository.getAdvertisingId())), BASE_HOST);
   }

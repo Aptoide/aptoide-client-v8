@@ -29,7 +29,12 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
   private String url;
 
-  public GetUserTimelineRequest(String url, Body body, OkHttpClient httpClient,
+  GetUserTimelineRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
+    this.url = url;
+  }
+
+  GetUserTimelineRequest(String url, Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
     this.url = url;
@@ -42,8 +47,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
             DataProvider.getContext()));
 
     GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url,
-        (Body) decorator.decorate(new Body(limit, offset, packages)),
-        OkHttpClientFactory.newClient(), WebService.getDefaultConverter(), BASE_HOST);
+        (Body) decorator.decorate(new Body(limit, offset, packages)), BASE_HOST);
     return getAppRequest;
   }
 
