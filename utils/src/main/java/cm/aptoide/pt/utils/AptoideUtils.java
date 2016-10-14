@@ -83,8 +83,11 @@ import javax.crypto.spec.SecretKeySpec;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
 
 import static android.net.ConnectivityManager.TYPE_ETHERNET;
 import static android.net.ConnectivityManager.TYPE_MOBILE;
@@ -722,6 +725,25 @@ public class AptoideUtils {
         CrashReports.logException(e);
       }
       return null;
+    }
+
+    public static boolean isRooted() {
+      return findBinary("su");
+    }
+
+    private static boolean findBinary(String binaryName) {
+      boolean found = false;
+
+      String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
+          "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+      for (String where : places) {
+        if (new File(where + binaryName).exists()) {
+          found = true;
+          break;
+        }
+      }
+
+      return found;
     }
 
     public static List<PackageInfo> getAllInstalledApps() {
