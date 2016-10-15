@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 04/08/2016.
  */
 
-package cm.aptoide.pt.dataprovider.model;
+package cm.aptoide.pt.database.realm;
 
 import android.os.Parcel;
 import android.os.Parcelable;

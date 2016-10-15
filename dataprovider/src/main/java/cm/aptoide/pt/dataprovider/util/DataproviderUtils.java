@@ -6,10 +6,10 @@
 package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.google.android.gms.common.ConnectionResult;
@@ -84,7 +84,7 @@ public class DataproviderUtils {
       knock(minimalAd.getCpdUrl());
     }
 
-    public static void knockCpi(StoredMinimalAd minimalAd) {
+    public static void knockCpi(StoredMinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova ad installed.
       knock(minimalAd.getCpiUrl());
     }
