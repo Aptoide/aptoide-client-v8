@@ -14,6 +14,9 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import lombok.Cleanup;
 
@@ -169,5 +172,17 @@ public class StoreUtils {
   private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
     return getStoreMetaRequest.getBody().getStoreUser() != null
         && getStoreMetaRequest.getBody().getStorePassSha1() != null;
+  }
+
+  public static List<Long> getSubscribedStoresIds() {
+
+    List<Long> storesNames = new LinkedList<>();
+    @Cleanup Realm realm = DeprecatedDatabase.get();
+    RealmResults<Store> stores = DeprecatedDatabase.StoreQ.getAll(realm);
+    for (Store store : stores) {
+      storesNames.add(store.getStoreId());
+    }
+
+    return storesNames;
   }
 }

@@ -12,6 +12,7 @@ import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
@@ -93,7 +94,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       if (storeName != null) {
         of = ListSearchAppsRequest.of(query, storeName);
       } else {
-        of = ListSearchAppsRequest.of(query, addSubscribedStores);
+        of = ListSearchAppsRequest.of(query, addSubscribedStores,
+            StoreUtils.getSubscribedStoresIds());
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

@@ -14,8 +14,6 @@ import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -55,14 +53,14 @@ import rx.schedulers.Schedulers;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static ListAppsUpdatesRequest of() {
+  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds) {
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
-        new Body(getInstalledApks(), StoreUtils.getSubscribedStoresIds(),
-            idsRepository.getAdvertisingId())), BASE_HOST);
+        new Body(getInstalledApks(), subscribedStoresIds, idsRepository.getAdvertisingId())),
+        BASE_HOST);
   }
 
   private static List<ApksData> getInstalledApks() {

@@ -26,7 +26,7 @@ public class UpdateUtils {
       return;
     }
 
-    ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
+    ListAppsUpdatesRequest.of(StoreUtils.getSubscribedStoresIds()).execute(listAppsUpdates -> {
       @Cleanup Realm realm = DeprecatedDatabase.get();
       for (App app : listAppsUpdates.getList()) {
         Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);

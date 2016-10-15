@@ -23,19 +23,6 @@ public class StoreUtils {
   public static final String PRIVATE_STORE_ERROR = "STORE-3";
   public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
 
-  public static List<Long> getSubscribedStoresIds() {
-
-    List<Long> storesNames = new LinkedList<>();
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    RealmResults<Store> stores =
-        DeprecatedDatabase.StoreQ.getAll(realm);
-    for (Store store : stores) {
-      storesNames.add(store.getStoreId());
-    }
-
-    return storesNames;
-  }
-
   public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap() {
     @Cleanup Realm realm = DeprecatedDatabase.get();
     HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
