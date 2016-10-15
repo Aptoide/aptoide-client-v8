@@ -11,8 +11,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
@@ -48,10 +46,10 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     this.url = url;
   }
 
-  public static ListFullReviewsRequest of(long storeId, int limit, int offset) {
-    final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
-    String username = storeOnRequest.getUsername();
-    String password = storeOnRequest.getPasswordSha1();
+  public static ListFullReviewsRequest of(long storeId, int limit, int offset,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
+    String username = storeCredentials.getUsername();
+    String password = storeCredentials.getPasswordSha1();
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),

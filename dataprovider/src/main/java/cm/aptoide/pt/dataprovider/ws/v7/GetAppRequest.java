@@ -9,8 +9,6 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -66,7 +64,8 @@ import rx.Observable;
         (Body) decorator.decorate(new Body(forceServerRefresh, md5)));
   }
 
-  public static GetAppRequest of(long appId, String storeName) {
+  public static GetAppRequest of(long appId, String storeName,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -74,8 +73,8 @@ import rx.Observable;
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     Body body = new Body(appId, forceServerRefresh);
-    body.setStoreUser(getStoreOnRequest(storeName).getUsername());
-    body.setStorePassSha1(getStoreOnRequest(storeName).getPasswordSha1());
+    body.setStoreUser(storeCredentials.getUsername());
+    body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
     return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body));
   }

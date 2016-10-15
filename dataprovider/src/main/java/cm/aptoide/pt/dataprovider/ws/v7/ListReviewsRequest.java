@@ -45,18 +45,6 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
         baseHost);
   }
 
-  public static ListReviewsRequest of(long storeId, int limit, int offset) {
-    final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeId);
-    String username = storeOnRequest.getUsername();
-    String password = storeOnRequest.getPasswordSha1();
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
-    Body body = new Body(storeId, offset, limit, ManagerPreferences.getAndResetForceServerRefresh(),
-        username, password);
-    return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
-  }
-
   public static ListReviewsRequest of(String storeName, String packageName) {
     return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
   }

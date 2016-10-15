@@ -6,14 +6,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
@@ -41,10 +39,11 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     super(body, baseHost);
   }
 
-  public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName) {
+  public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
     Logger.d("lou", "of: A");
     ListCommentsRequest.url = url;
-    return of(reviewId, limit, storeName);
+    return of(reviewId, limit, storeName, storeCredentials);
   }
 
   public static ListCommentsRequest of(long reviewId, int offset, int limit) {
@@ -70,14 +69,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     return new ListCommentsRequest((Body) decorator.decorate(body), BASE_HOST);
   }
 
-  public static ListCommentsRequest of(long reviewId, int limit, String storeName) {
+  public static ListCommentsRequest of(long reviewId, int limit, String storeName,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
     Logger.d("lou", "of: D");
     //
     //
     //
-    final StoreCredentialsApp storeOnRequest = getStoreOnRequest(storeName);
-    String username = storeOnRequest.getUsername();
-    String password = storeOnRequest.getPasswordSha1();
+    String username = storeCredentials.getUsername();
+    String password = storeCredentials.getPasswordSha1();
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));

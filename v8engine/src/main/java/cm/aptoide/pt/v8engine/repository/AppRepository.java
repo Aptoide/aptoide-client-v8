@@ -13,6 +13,7 @@ import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import rx.Observable;
@@ -27,7 +28,9 @@ import rx.Observable;
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(appId, storeName).observe(refresh).flatMap(response -> {
+    return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName))
+        .observe(refresh)
+        .flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);

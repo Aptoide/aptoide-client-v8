@@ -36,6 +36,7 @@ import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -88,7 +89,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
           Observable.from(reviews)
               .forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(),
-                  fullReview.getId(), 3, storeName).execute(listComments -> {
+                  fullReview.getId(), 3, storeName, StoreUtils.getStoreCredentials(storeName))
+                  .execute(listComments -> {
                 fullReview.setCommentList(listComments);
                 countDownLatch.countDown();
               }, e -> countDownLatch.countDown()));

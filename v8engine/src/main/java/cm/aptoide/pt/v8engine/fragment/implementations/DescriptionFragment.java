@@ -5,19 +5,15 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -28,6 +24,7 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 
 /**
@@ -80,7 +77,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (hasAppId) {
-      GetAppRequest.of(appId, storeName).execute(getApp -> {
+      GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName))
+          .execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();
