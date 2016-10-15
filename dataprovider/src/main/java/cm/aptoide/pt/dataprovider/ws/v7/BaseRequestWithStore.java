@@ -5,11 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.realm.Store;
-import io.realm.Realm;
-import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -37,37 +32,24 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  protected static StoreCredentials getStore(Long storeId) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-
-    if (storeId != null) {
-      Store store = DeprecatedDatabase.StoreQ.get(storeId, realm);
-      if (store != null) {
-        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-      }
-    }
-    return new StoreCredentials();
-  }
-
-  protected static StoreCredentials getStore(String storeName) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    if (storeName != null) {
-      Store store = DeprecatedDatabase.StoreQ.get(storeName, realm);
-      if (store != null) {
-        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-      }
-    }
-    return new StoreCredentials();
-  }
-
-  @AllArgsConstructor public static class StoreCredentials {
-
+  public static class StoreCredentials {
+    @Getter private final Long id;
+    @Getter private final String name;
     @Getter private final String username;
     @Getter private final String passwordSha1;
 
-    public StoreCredentials() {
-      username = null;
-      passwordSha1 = null;
+    public StoreCredentials(Long id, String username, String passwordSha1) {
+      this.name = null;
+      this.id = id;
+      this.username = username;
+      this.passwordSha1 = passwordSha1;
+    }
+
+    public StoreCredentials(String name, String username, String passwordSha1) {
+      this.id = null;
+      this.name = name;
+      this.username = username;
+      this.passwordSha1 = passwordSha1;
     }
   }
 }

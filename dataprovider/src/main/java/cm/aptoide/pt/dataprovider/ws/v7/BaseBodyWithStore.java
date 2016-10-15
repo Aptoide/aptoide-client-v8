@@ -14,20 +14,15 @@ import lombok.Setter;
  */
 @EqualsAndHashCode(callSuper = true) public class BaseBodyWithStore extends BaseBody {
 
-  @Getter private Long storeId;
-  @Getter private String storeName;
-  @Getter @Setter private String storeUser;
-  @Getter @Setter private String storePassSha1;
+  @Getter private final Long storeId;
+  @Getter private final String storeName;
+  @Getter @Setter private final String storeUser;
+  @Getter @Setter private final String storePassSha1;
 
-  public BaseBodyWithStore(Long storeId) {
-    this.storeId = storeId;
-    this.storeUser = storeUser;
-    this.storePassSha1 = storePassSha1;
-  }
-
-  public BaseBodyWithStore(String storeName) {
-    this.storeName = storeName;
-    this.storeUser = storeUser;
-    this.storePassSha1 = storePassSha1;
+  public BaseBodyWithStore(BaseRequestWithStore.StoreCredentials storeCredentials) {
+    this.storeId = storeCredentials.getId();
+    this.storeName = storeCredentials.getName();
+    this.storeUser = storeCredentials.getUsername();
+    this.storePassSha1 = storeCredentials.getPasswordSha1();
   }
 }

@@ -16,9 +16,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
@@ -137,7 +137,8 @@ public class PrivateStoreDialog extends DialogFragment {
   }
 
   private GetStoreMetaRequest buildRequest() {
-    return GetStoreMetaRequest.of(storeName, storeUser, storePassSha1);
+    return GetStoreMetaRequest.of(
+        new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1));
   }
 
   public void setIsInsideStore(boolean isInsideStore) {

@@ -117,7 +117,8 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private GetStoreMetaRequest buildRequest(String storeName) {
-    return GetStoreMetaRequest.of(storeName);
+    return GetStoreMetaRequest.of(
+        cm.aptoide.pt.v8engine.util.StoreUtils.getStoreCredentials(storeName));
   }
 
   private void showLoadingDialog() {

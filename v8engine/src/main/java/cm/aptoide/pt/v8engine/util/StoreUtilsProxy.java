@@ -20,13 +20,17 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 public class StoreUtilsProxy {
 
   public static void subscribeStore(String storeName) {
-    subscribeStore(GetStoreMetaRequest.of(storeName), null, null, storeName);
+    subscribeStore(GetStoreMetaRequest.of(
+        cm.aptoide.pt.v8engine.util.StoreUtils.getStoreCredentials(storeName)), null, null,
+        storeName);
   }
 
   public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
-    subscribeStore(GetStoreMetaRequest.of(storeName), successRequestListener, errorRequestListener,
+    subscribeStore(GetStoreMetaRequest.of(
+        cm.aptoide.pt.v8engine.util.StoreUtils.getStoreCredentials(storeName)),
+        successRequestListener, errorRequestListener,
         storeName);
   }
 

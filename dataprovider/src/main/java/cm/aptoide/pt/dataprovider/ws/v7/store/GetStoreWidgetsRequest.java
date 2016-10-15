@@ -12,8 +12,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,28 +39,15 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static GetStoreWidgetsRequest ofAction(String url) {
+  public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
-    V7Url v7Url = new V7Url(url).remove("getStoreWidgets");
-    Long storeId = v7Url.getStoreId();
-    final StoreCredentials store;
-    final Body body;
-    if (storeId != null) {
-      store = getStore(storeId);
-      body = new Body(storeId, WidgetsArgs.createDefault());
-    } else {
-      String storeName = v7Url.getStoreName();
-      store = getStore(storeName);
-      body = new Body(storeName, WidgetsArgs.createDefault());
-    }
+    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
-    body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPasswordSha1());
-
-    return new GetStoreWidgetsRequest(v7Url.get(), BASE_HOST, (Body) decorator.decorate(body));
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
+        (Body) decorator.decorate(body));
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
@@ -74,13 +59,8 @@ import rx.Observable;
 
     @Getter private WidgetsArgs widgetsArgs;
 
-    public Body(Long storeId, WidgetsArgs widgetsArgs) {
-      super(storeId);
-      this.widgetsArgs = widgetsArgs;
-    }
-
-    public Body(String storeName, WidgetsArgs widgetsArgs) {
-      super(storeName);
+    public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
+      super(storeCredentials);
       this.widgetsArgs = widgetsArgs;
     }
   }

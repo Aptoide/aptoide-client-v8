@@ -75,16 +75,6 @@ public class StoreUtils {
 
   /**
    * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
-   * instead, else, use this
-   */
-  @Deprecated public static void subscribeStore(String storeName,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
-    subscribeStore(GetStoreMetaRequest.of(storeName), successRequestListener, errorRequestListener);
-  }
-
-  /**
-   * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
    * instead, else, use this.
    */
   @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
