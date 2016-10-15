@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
+import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import com.bumptech.glide.request.target.NotificationTarget;
 
 /**
@@ -71,7 +71,7 @@ public class PullingContentService extends Service {
     if (action != null) {
       switch (action) {
         case UPDATES_ACTION:
-          DataproviderUtils.checkUpdates(this::setUpdatesNotification);
+          UpdateUtils.checkUpdates(this::setUpdatesNotification);
           break;
         case PUSH_NOTIFICATIONS_ACTION:
           PushNotificationsRequest.of().execute(this::setPushNotification, true);

@@ -22,7 +22,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
@@ -43,6 +42,7 @@ import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
@@ -92,7 +92,7 @@ public abstract class V8Engine extends DataProvider {
         addDefaultStore();
       }
 
-      DataproviderUtils.checkUpdates();
+      UpdateUtils.checkUpdates();
     }, e -> {
       Logger.e(TAG, e);
       //CrashReports.logException(e);
@@ -123,7 +123,7 @@ public abstract class V8Engine extends DataProvider {
 
   private static void addDefaultStore() {
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
-        getStoreMeta -> DataproviderUtils.checkUpdates(), null);
+        getStoreMeta -> UpdateUtils.checkUpdates(), null);
   }
 
   @Override public void onCreate() {

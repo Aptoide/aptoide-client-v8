@@ -33,7 +33,6 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
@@ -46,6 +45,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
+import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import io.realm.Realm;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -93,7 +93,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
       @Cleanup Realm realm = DeprecatedDatabase.get();
       DeprecatedDatabase.dropTable(Update.class, realm);
-      DataproviderUtils.checkUpdates();
+      UpdateUtils.checkUpdates();
     }
   }
 
