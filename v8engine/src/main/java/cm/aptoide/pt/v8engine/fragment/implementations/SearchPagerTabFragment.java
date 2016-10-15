@@ -92,10 +92,10 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       recyclerView.clearOnScrollListeners();
       ListSearchAppsRequest of;
       if (storeName != null) {
-        of = ListSearchAppsRequest.of(query, storeName);
+        of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap());
       } else {
         of = ListSearchAppsRequest.of(query, addSubscribedStores,
-            StoreUtils.getSubscribedStoresIds());
+            StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap());
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

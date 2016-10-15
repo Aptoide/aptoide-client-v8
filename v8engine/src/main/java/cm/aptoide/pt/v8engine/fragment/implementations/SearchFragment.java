@@ -151,7 +151,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
     if (storeName != null) {
       shouldFinishLoading = true;
-      ListSearchAppsRequest of = ListSearchAppsRequest.of(query, storeName);
+      ListSearchAppsRequest of =
+          ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 

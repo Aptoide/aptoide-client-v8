@@ -8,7 +8,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -35,14 +34,13 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static ListSearchAppsRequest of(String query, String storeName) {
+  public static ListSearchAppsRequest of(String query, String storeName,
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     List<String> stores = Collections.singletonList(storeName);
 
-    HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
-        StoreUtils.getSubscribedStoresAuthMap();
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
@@ -55,7 +53,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      List<Long> subscribedStoresIds) {
+      List<Long> subscribedStoresIds,
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -64,8 +63,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds,
-              StoreUtils.getSubscribedStoresAuthMap(), false)), BASE_HOST);
+          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
+              false)), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
           (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false)), BASE_HOST);
@@ -80,8 +79,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds,
-              StoreUtils.getSubscribedStoresAuthMap(), trustedOnly)), BASE_HOST);
+          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly)),
+          BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
           (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly)),

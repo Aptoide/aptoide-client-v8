@@ -12,9 +12,11 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -184,5 +186,18 @@ public class StoreUtils {
     }
 
     return storesNames;
+  }
+
+  public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap() {
+    @Cleanup Realm realm = DeprecatedDatabase.get();
+    HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
+    RealmResults<Store> stores = DeprecatedDatabase.StoreQ.getAll(realm);
+    for (Store store : stores) {
+      if (store.getPasswordSha1() != null) {
+        storesAuthMap.put(store.getStoreName(),
+            new LinkedList<>(Arrays.asList(store.getUsername(), store.getPasswordSha1())));
+      }
+    }
+    return storesAuthMap.size() > 0 ? storesAuthMap : null;
   }
 }
