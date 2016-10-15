@@ -75,7 +75,7 @@ public class PrivateStoreDialog extends DialogFragment {
       storePassSha1 = AptoideUtils.AlgorithmU.computeSha1(
           ((EditText) rootView.findViewById(R.id.edit_store_password)).getText().toString());
 
-      StoreUtils.subscribeStore(buildRequest(), getStoreMeta -> {
+      cm.aptoide.pt.v8engine.util.StoreUtils.subscribeStore(buildRequest(), getStoreMeta -> {
         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
         dismissLoadingDialog();
         dismiss();
