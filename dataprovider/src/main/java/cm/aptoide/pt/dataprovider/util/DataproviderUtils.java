@@ -6,9 +6,9 @@
 package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.model.MinimalAdInterface;
 import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -74,12 +74,12 @@ public class DataproviderUtils {
           .isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
     }
 
-    public static void knockCpc(MinimalAd minimalAd) {
+    public static void knockCpc(MinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova clicked on ad.
       knock(minimalAd.getCpcUrl());
     }
 
-    public static void knockCpd(MinimalAd minimalAd) {
+    public static void knockCpd(MinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova clicked on download button.
       knock(minimalAd.getCpdUrl());
     }
