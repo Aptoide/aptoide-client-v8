@@ -28,6 +28,9 @@ import lombok.Cleanup;
 
 public class StoreUtils {
 
+  public static final String PRIVATE_STORE_ERROR = "STORE-3";
+  public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
+
   public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId) {
 
     @Cleanup Realm realm = DeprecatedDatabase.get();
