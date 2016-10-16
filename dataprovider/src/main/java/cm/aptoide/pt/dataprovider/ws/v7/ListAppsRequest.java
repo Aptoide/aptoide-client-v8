@@ -26,8 +26,8 @@ import rx.Observable;
 
   private String url;
 
-  private ListAppsRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+  private ListAppsRequest(String url, Body body, String baseHost, String email) {
+    super(body, baseHost, email);
     this.url = url;
   }
 
@@ -38,13 +38,13 @@ import rx.Observable;
   }
 
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken) {
+      String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new ListAppsRequest(new V7Url(url).remove("listApps").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST, email);
   }
 
   @Override

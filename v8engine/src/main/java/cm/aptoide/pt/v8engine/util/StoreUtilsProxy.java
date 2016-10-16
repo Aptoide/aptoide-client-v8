@@ -21,7 +21,7 @@ public class StoreUtilsProxy {
 
   public static void subscribeStore(String storeName) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken()), null, null,
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail()), null, null,
         storeName);
   }
 
@@ -29,7 +29,7 @@ public class StoreUtilsProxy {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken()),
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail()),
         successRequestListener, errorRequestListener,
         storeName);
   }

@@ -42,7 +42,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import cm.aptoide.pt.actions.GenerateClientId;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -669,22 +668,21 @@ public class AptoideUtils {
 
   public static class SystemU {
 
-    public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
-
     public static final String TERMINAL_INFO =
         getModel() + "(" + getProduct() + ")" + ";v" + getRelease() + ";" + System.getProperty(
             "os.arch");
+    public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
 
     public static String getProduct() {
-      return android.os.Build.PRODUCT.replace(";", " ");
+      return Build.PRODUCT.replace(";", " ");
     }
 
     public static String getModel() {
-      return android.os.Build.MODEL.replaceAll(";", " ");
+      return Build.MODEL.replaceAll(";", " ");
     }
 
     public static String getRelease() {
-      return android.os.Build.VERSION.RELEASE.replaceAll(";", " ");
+      return Build.VERSION.RELEASE.replaceAll(";", " ");
     }
 
     public static int getSdkVer() {
@@ -1564,7 +1562,7 @@ public class AptoideUtils {
       return false;
     }
 
-    public static String getDefaultUserAgent(GenerateClientId generateClientId, UserData userData) {
+    public static String getDefaultUserAgent(GenerateClientId generateClientId, String email) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1589,9 +1587,8 @@ public class AptoideUtils {
       }
       sb.append(";");
 
-      String userEmail = userData.getEmail();
-      if(userEmail!= null) {
-        sb.append(userEmail);
+      if (email != null) {
+        sb.append(email);
       }
       sb.append(";");
       return sb.toString();

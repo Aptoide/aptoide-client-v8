@@ -29,8 +29,8 @@ import rx.Observable;
 
   private final String url;
 
-  private GetStoreRequest(String url, String baseHost, Body body) {
-    super(body, baseHost);
+  private GetStoreRequest(String url, String baseHost, Body body, String email) {
+    super(body, baseHost, email);
     this.url = url;
   }
 
@@ -41,7 +41,7 @@ import rx.Observable;
   }
 
   public static GetStoreRequest of(StoreCredentials storeCredentials, StoreContext storeContext,
-      String accessToken) {
+      String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -49,11 +49,11 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
 
-    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body, accessToken));
+    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body, accessToken), email);
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken) {
+      String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -61,7 +61,7 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreRequest(new V7Url(url).remove("getStore").get(), BASE_HOST,
-        (Body) decorator.decorate(body, accessToken));
+        (Body) decorator.decorate(body, accessToken), email);
   }
 
   @Override

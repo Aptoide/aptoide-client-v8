@@ -38,7 +38,6 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.actions.GenerateClientId;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -48,7 +47,6 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
-import io.fabric.sdk.android.services.common.Crash;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import javax.security.auth.login.LoginException;
@@ -192,8 +190,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public static boolean isLoggedIn() {
-    AccountManager manager =
-        android.accounts.AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
     return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
   }
 
@@ -689,8 +686,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   private void removeLocalAccount() {
-    AccountManager manager =
-        android.accounts.AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
     Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
     for (Account account : accounts) {
       if (Build.VERSION.SDK_INT >= 22) {

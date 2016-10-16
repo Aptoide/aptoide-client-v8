@@ -140,7 +140,7 @@ public class PrivateStoreDialog extends DialogFragment {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        AptoideAccountManager.getAccessToken());
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
   }
 
   public void setIsInsideStore(boolean isInsideStore) {

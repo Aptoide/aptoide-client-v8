@@ -26,9 +26,10 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   private String tracker;
   private String success;
 
-  private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success) {
+  private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success,
+      String email) {
     super(new IdsRepository(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()));
+        DataProvider.getContext()), email);
     this.adId = adId;
     this.appId = appId;
     this.success = (success ? "1" : "0");
@@ -36,18 +37,18 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     extractAndSetTracker(clickUrl);
   }
 
-  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl,
-      boolean success) {
-    return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
+  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success,
+      String email) {
+    return new RegisterAdRefererRequest(adId, appId, clickUrl, success, email);
   }
 
-  public static RegisterAdRefererRequest of(GetAdsResponse.Ad ad, boolean success) {
+  public static RegisterAdRefererRequest of(GetAdsResponse.Ad ad, boolean success, String email) {
     long appId = ad.getData().getId();
     long adId = ad.getInfo().getAdId();
     String clickUrl =
         DataproviderUtils.AdNetworksUtils.parseMacros(ad.getPartner().getData().getClickUrl());
 
-    return of(adId, appId, clickUrl, success);
+    return of(adId, appId, clickUrl, success, email);
   }
 
   public void execute() {

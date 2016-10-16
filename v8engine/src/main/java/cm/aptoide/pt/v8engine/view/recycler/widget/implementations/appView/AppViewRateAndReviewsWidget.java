@@ -155,7 +155,8 @@ import java.util.List;
 
   public void loadTopReviews(String storeName, String packageName) {
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken()).execute(listReviews -> {
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        .execute(listReviews -> {
 
           List<Review> reviews = listReviews.getDatalist().getList();
           if (reviews == null || reviews.isEmpty()) {

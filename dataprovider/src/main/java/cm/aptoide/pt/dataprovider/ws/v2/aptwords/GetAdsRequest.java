@@ -38,7 +38,7 @@ import rx.Observable;
   private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
       .addInterceptor(new UserAgentInterceptor(
           AptoideUtils.NetworkUtils.getDefaultUserAgent(idsRepository,
-              AptoideAccountManager.getUserData())))
+              AptoideAccountManager.getUserEmail())))
       .connectTimeout(2, TimeUnit.SECONDS)
       .build();
 

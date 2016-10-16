@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -38,41 +37,42 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
 
-  protected ListReviewsRequest(Body body, String baseHost) {
+  protected ListReviewsRequest(Body body, String baseHost, String email) {
     super(body, OkHttpClientFactory.getSingletonClient(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()), AptoideAccountManager
-            .getUserData()), WebService.getDefaultConverter(),
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
+        email), WebService.getDefaultConverter(),
         baseHost);
   }
 
-  public static ListReviewsRequest of(String storeName, String packageName, String accessToken) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken);
+  public static ListReviewsRequest of(String storeName, String packageName, String accessToken,
+      String email) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, email);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken) {
+      int maxComments, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken) {
+      int maxReviews, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(storeName, packageName, maxReviews, 0,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

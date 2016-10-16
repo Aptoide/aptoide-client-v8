@@ -64,19 +64,19 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
 
-  protected V7(B body, String baseHost) {
+  protected V7(B body, String baseHost, String email) {
     super(Interfaces.class,
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        AptoideAccountManager.getUserData(),
+        email,
         WebService.getDefaultConverter(), baseHost
     );
     this.body = body;
   }
 
-  protected V7(B body, Converter.Factory converterFactory, String baseHost) {
+  protected V7(B body, Converter.Factory converterFactory, String baseHost, String email) {
     super(Interfaces.class,
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        AptoideAccountManager.getUserData(),
+        email,
         converterFactory, baseHost);
     this.body = body;
   }

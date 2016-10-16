@@ -28,7 +28,8 @@ public class UpdateUtils {
     }
 
     ListAppsUpdatesRequest.of(StoreUtils.getSubscribedStoresIds(),
-        AptoideAccountManager.getAccessToken()).execute(listAppsUpdates -> {
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        .execute(listAppsUpdates -> {
       @Cleanup Realm realm = DeprecatedDatabase.get();
       for (App app : listAppsUpdates.getList()) {
         Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);

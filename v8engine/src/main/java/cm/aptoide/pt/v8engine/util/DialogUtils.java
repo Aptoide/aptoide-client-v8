@@ -106,11 +106,11 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken())
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken())
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
             .execute(successRequestListener, errorRequestListener);
       }
     });

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.networkclient;
 
 import cm.aptoide.pt.actions.GenerateClientId;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -49,11 +48,12 @@ public abstract class WebService<T, U> {
   private Retrofit retrofit;
   private Observable<T> service;
 
-  protected WebService(Class<T> clazz, GenerateClientId idGenerator, UserData userData, Converter.Factory converterFactory, String baseHost) {
+  protected WebService(Class<T> clazz, GenerateClientId idGenerator, String email,
+      Converter.Factory converterFactory, String baseHost) {
     this.converterFactory = converterFactory;
     this.clazz = clazz;
     this.baseHost = baseHost;
-    this.httpClient = OkHttpClientFactory.getSingletonClient(idGenerator, userData);
+    this.httpClient = OkHttpClientFactory.getSingletonClient(idGenerator, email);
   }
 
   protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory,

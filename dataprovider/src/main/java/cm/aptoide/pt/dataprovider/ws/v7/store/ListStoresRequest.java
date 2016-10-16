@@ -29,13 +29,13 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   static final String STORT_BY_DOWNLOADS = "downloads7d";
   private String url;
 
-  private ListStoresRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+  private ListStoresRequest(String url, Body body, String baseHost, String email) {
+    super(body, baseHost, email);
     this.url = url;
   }
 
-  private ListStoresRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  private ListStoresRequest(Body body, String baseHost, String email) {
+    super(body, baseHost, email);
   }
 
   private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -49,7 +49,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken) {
+  public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken,
+      String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -57,16 +58,17 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
-    return new ListStoresRequest((Body) decorator.decorate(baseBody, accessToken), BASE_HOST);
+    return new ListStoresRequest((Body) decorator.decorate(baseBody, accessToken), BASE_HOST,
+        email);
   }
 
-  public static ListStoresRequest ofAction(String url, String accessToken) {
+  public static ListStoresRequest ofAction(String url, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new ListStoresRequest(url.replace("listStores", ""),
-        (Body) decorator.decorate(new Body(), accessToken), BASE_HOST);
+        (Body) decorator.decorate(new Body(), accessToken), BASE_HOST, email);
   }
 
   @Override

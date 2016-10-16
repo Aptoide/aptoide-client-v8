@@ -111,14 +111,15 @@ import rx.schedulers.Schedulers;
             product.getId(), paymentConfirmation.getPrice().getAmount(),
             paymentConfirmation.getPrice().getTaxRate(),
             paymentConfirmation.getPrice().getCurrency(), operatorManager, product.getApiVersion(),
-            product.getDeveloperPayload(), AptoideAccountManager.getAccessToken());
+            product.getDeveloperPayload(), AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail());
       } else {
         final PaidAppProduct product = (PaidAppProduct) paymentConfirmation.getProduct();
         return CheckProductPaymentRequest.ofPaidApp(paymentConfirmation.getPaymentConfirmationId(),
             paymentConfirmation.getPaymentId(), product.getId(),
             paymentConfirmation.getPrice().getAmount(), paymentConfirmation.getPrice().getTaxRate(),
             paymentConfirmation.getPrice().getCurrency(), operatorManager, product.getStoreName(),
-            AptoideAccountManager.getAccessToken());
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
       }
     }).flatMap(request -> request.observe()).flatMap(response -> {
       if (response != null && response.isOk()) {

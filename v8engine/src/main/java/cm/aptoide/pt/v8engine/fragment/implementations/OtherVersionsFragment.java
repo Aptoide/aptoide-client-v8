@@ -156,7 +156,8 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
-        ListAppVersionsRequest.of(appPackge, AptoideAccountManager.getAccessToken()),
+        ListAppVersionsRequest.of(appPackge, AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail()),
             otherVersionsSuccessRequestListener, errorRequestListener);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);

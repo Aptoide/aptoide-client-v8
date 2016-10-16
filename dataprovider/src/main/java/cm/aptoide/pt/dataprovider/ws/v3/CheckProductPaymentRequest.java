@@ -17,32 +17,32 @@ import rx.Observable;
  */
 public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
-  private CheckProductPaymentRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody);
+  private CheckProductPaymentRequest(String baseHost, BaseBody baseBody, String email) {
+    super(baseHost, baseBody, email);
   }
 
   public static CheckProductPaymentRequest ofInAppBilling(String paymentConfirmationId,
       int paymentId, int productId, double price, double taxRate, String currency,
       NetworkOperatorManager operatorManager, int apiVersion, String developerPayload,
-      String accessToken) {
+      String accessToken, String email) {
     final BaseBody args = new BaseBody();
     addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
         operatorManager, args, accessToken);
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("developerPayload", developerPayload);
-    return new CheckProductPaymentRequest(BASE_HOST, args);
+    return new CheckProductPaymentRequest(BASE_HOST, args, email);
   }
 
   public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId,
       int productId, double price, double taxRate, String currency,
-      NetworkOperatorManager operatorManager, String storeName, String accessToken) {
+      NetworkOperatorManager operatorManager, String storeName, String accessToken, String email) {
     final BaseBody args = new BaseBody();
     addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
         operatorManager, args, accessToken);
     args.put("reqtype", "apkpurchasestatus");
     args.put("repo", storeName);
-    return new CheckProductPaymentRequest(BASE_HOST, args);
+    return new CheckProductPaymentRequest(BASE_HOST, args, email);
   }
 
   private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,

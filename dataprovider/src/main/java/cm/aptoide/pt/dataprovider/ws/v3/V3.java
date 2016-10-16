@@ -44,14 +44,13 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
 
-  protected V3(String baseHost) {
-    this(baseHost, new BaseBody());
+  protected V3(String baseHost, String email) {
+    this(baseHost, new BaseBody(), email);
   }
 
-  protected V3(String baseHost, BaseBody baseBody) {
+  protected V3(String baseHost, BaseBody baseBody, String email) {
     super(Interfaces.class, OkHttpClientFactory.getSingletonClient(new IdsRepository(
-            SecurePreferencesImplementation.getInstance(), DataProvider
-            .getContext()), AptoideAccountManager.getUserData()),
+            SecurePreferencesImplementation.getInstance(), DataProvider.getContext()), email),
         WebService.getDefaultConverter(), baseHost);
     this.map = baseBody;
   }

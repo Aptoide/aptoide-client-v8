@@ -27,8 +27,8 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
   private String url;
 
-  GetUserTimelineRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+  GetUserTimelineRequest(String url, Body body, String baseHost, String email) {
+    super(body, baseHost, email);
     this.url = url;
   }
 
@@ -39,13 +39,14 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
-      List<String> packages, String accessToken) {
+      List<String> packages, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url,
-        (Body) decorator.decorate(new Body(limit, offset, packages), accessToken), BASE_HOST);
+        (Body) decorator.decorate(new Body(limit, offset, packages), accessToken), BASE_HOST,
+        email);
     return getAppRequest;
   }
 

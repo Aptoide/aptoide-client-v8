@@ -6,7 +6,6 @@
 package cm.aptoide.pt.networkclient.okhttp;
 
 import cm.aptoide.pt.actions.GenerateClientId;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -31,7 +30,7 @@ public class OkHttpClientFactory {
   private static OkHttpClient httpClientInstance;
 
   public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
-      Interceptor interceptor, GenerateClientId generateClientId, UserData userData) {
+      Interceptor interceptor, GenerateClientId generateClientId, String email) {
     OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
     //		if (BuildConfig.DEBUG) {
@@ -44,15 +43,15 @@ public class OkHttpClientFactory {
 
     if (generateClientId != null) {
       clientBuilder.addInterceptor(new UserAgentInterceptor(
-          AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData)));
+          AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, email)));
     }
 
     return clientBuilder.build();
   }
 
-  public static OkHttpClient newClient(GenerateClientId generateClientId, UserData userData) {
+  public static OkHttpClient newClient(GenerateClientId generateClientId, String email) {
     return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData))).build();
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, email))).build();
   }
 
   /**
@@ -61,11 +60,10 @@ public class OkHttpClientFactory {
    * null
    * @return an {@link OkHttpClient} instance
    */
-  public static OkHttpClient getSingletonClient(GenerateClientId generateClientId,
-      UserData userData) {
+  public static OkHttpClient getSingletonClient(GenerateClientId generateClientId, String email) {
     if (httpClientInstance == null) {
       httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor(),
-          generateClientId, userData);
+          generateClientId, email);
     }
     return httpClientInstance;
   }

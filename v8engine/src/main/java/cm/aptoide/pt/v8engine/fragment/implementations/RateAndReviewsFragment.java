@@ -91,7 +91,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
           Observable.from(reviews)
               .forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(),
                   fullReview.getId(), 3, storeName, StoreUtils.getStoreCredentials(storeName),
-                  AptoideAccountManager.getAccessToken())
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
                   .execute(listComments -> {
                 fullReview.setCommentList(listComments);
                 countDownLatch.countDown();
@@ -260,7 +260,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken()).execute(getApp -> {
+    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
+        AptoideAccountManager.getUserEmail()).execute(getApp -> {
       GetAppMeta.App data = getApp.getNodes().getMeta().getData();
       setupTitle(data.getName());
       setupRating(data);
@@ -275,7 +276,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
   private void fetchReviews() {
     ListReviewsRequest of =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken());
+        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail());
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of,
         listFullReviewsSuccessRequestListener, errorRequestListener);

@@ -211,7 +211,7 @@ public abstract class V8Engine extends DataProvider {
             downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
-                AptoideAccountManager.getUserData()));
+                AptoideAccountManager.getUserEmail()));
 
     // setupCurrentActivityListener();
 

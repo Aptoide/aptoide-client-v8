@@ -16,7 +16,6 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.io.IOException;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
@@ -41,7 +40,7 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 
   v3accountManager() {
     super(Interfaces.class, OkHttpClientFactory.getSingletonClient(null,
-        AptoideAccountManager.getUserData()), WebService.getDefaultConverter(),
+        AptoideAccountManager.getUserEmail()), WebService.getDefaultConverter(),
         "https://webservices.aptoide.com/webservices/");
     this.map = new BaseBody();
   }

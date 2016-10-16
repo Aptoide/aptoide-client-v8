@@ -27,12 +27,12 @@ import rx.Observable;
 
   private String url;
 
-  private GetStoreMetaRequest(String baseHost, Body body) {
-    super(body, baseHost);
+  private GetStoreMetaRequest(String baseHost, Body body, String email) {
+    super(body, baseHost, email);
   }
 
-  private GetStoreMetaRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+  private GetStoreMetaRequest(String url, Body body, String baseHost, String email) {
+    super(body, baseHost, email);
     this.url = url;
   }
 
@@ -48,22 +48,23 @@ import rx.Observable;
   }
 
   public static GetStoreMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken) {
+      String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new GetStoreMetaRequest(new V7Url(url).remove("getStoreMeta").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST, email);
   }
 
-  public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken) {
+  public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken,
+      String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new GetStoreMetaRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken));
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), email);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,

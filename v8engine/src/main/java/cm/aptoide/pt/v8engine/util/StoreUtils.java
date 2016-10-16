@@ -92,7 +92,8 @@ public class StoreUtils {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken()), successRequestListener,
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail()),
+        successRequestListener,
         errorRequestListener);
   }
 

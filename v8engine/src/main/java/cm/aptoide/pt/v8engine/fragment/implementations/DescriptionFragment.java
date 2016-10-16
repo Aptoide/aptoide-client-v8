@@ -79,7 +79,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (hasAppId) {
       GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
-          AptoideAccountManager.getAccessToken())
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
           .execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);

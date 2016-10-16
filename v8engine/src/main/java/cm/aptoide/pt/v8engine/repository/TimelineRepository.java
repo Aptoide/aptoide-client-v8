@@ -31,7 +31,7 @@ public class TimelineRepository {
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        AptoideAccountManager.getAccessToken())
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
         .observe(refresh)
         .doOnNext(item -> filter.clear())
         .map(getUserTimeline -> getUserTimeline.getDatalist())

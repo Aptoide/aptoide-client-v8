@@ -13,18 +13,19 @@ import rx.Observable;
  */
 public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
-  public InAppBillingAvailableRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody);
+  public InAppBillingAvailableRequest(String baseHost, BaseBody baseBody, String email) {
+    super(baseHost, baseBody, email);
   }
 
-  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
+  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type,
+      String email) {
     final BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabavailable");
     args.put("package", packageName);
     args.put("purchasetype", type);
-    return new InAppBillingAvailableRequest(BASE_HOST, args);
+    return new InAppBillingAvailableRequest(BASE_HOST, args, email);
   }
 
   @Override

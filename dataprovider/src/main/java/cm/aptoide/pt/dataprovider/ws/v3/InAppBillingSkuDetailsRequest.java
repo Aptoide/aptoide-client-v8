@@ -15,13 +15,13 @@ import rx.Observable;
  */
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
-  public InAppBillingSkuDetailsRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody);
+  public InAppBillingSkuDetailsRequest(String baseHost, BaseBody baseBody, String email) {
+    super(baseHost, baseBody, email);
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type,
-      String accessToken) {
+      List<String> skuList, NetworkOperatorManager operatorManager, String type, String accessToken,
+      String email) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
@@ -46,7 +46,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       args.put("simcc", operatorManager.getSimCountryISO());
     }
 
-    return new InAppBillingSkuDetailsRequest(BASE_HOST, args);
+    return new InAppBillingSkuDetailsRequest(BASE_HOST, args, email);
   }
 
   @Override

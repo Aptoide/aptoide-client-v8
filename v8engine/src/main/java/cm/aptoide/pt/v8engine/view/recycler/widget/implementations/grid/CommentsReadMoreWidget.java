@@ -34,7 +34,7 @@ public class CommentsReadMoreWidget extends BaseWidget<CommentsReadMoreDisplayab
     Review review = displayable.getPojo();
     RxView.clicks(readMoreButton).subscribe(aVoid -> {
       ListCommentsRequest.of(review.getId(), displayable.getNext(), 100,
-          AptoideAccountManager.getAccessToken())
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
           .execute(listComments -> displayable.getCommentAdder()
               .addComment(listComments.getDatalist().getList()));
     });

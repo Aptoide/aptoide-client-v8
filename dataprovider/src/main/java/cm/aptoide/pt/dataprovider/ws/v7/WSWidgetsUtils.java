@@ -25,7 +25,7 @@ public class WSWidgetsUtils {
 
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
-      boolean refresh, Action1<Throwable> action1, String accessToken) {
+      boolean refresh, Action1<Throwable> action1, String accessToken, String email) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -36,17 +36,19 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          ioScheduler(ListAppsRequest.ofAction(url, storeCredentials, accessToken).observe(refresh))
+          ioScheduler(
+              ListAppsRequest.ofAction(url, storeCredentials, accessToken, email).observe(refresh))
               .subscribe(
               listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
           break;
         case STORES_GROUP:
-          ioScheduler(ListStoresRequest.ofAction(url, accessToken).observe(refresh)).subscribe(
+          ioScheduler(
+              ListStoresRequest.ofAction(url, accessToken, email).observe(refresh)).subscribe(
               listStores -> setObjectView(wsWidget, countDownLatch, listStores), action1);
           break;
         case DISPLAYS:
-          ioScheduler(
-              GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken).observe(refresh))
+          ioScheduler(GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email)
+              .observe(refresh))
               .subscribe(
               getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays),
               action1);
@@ -56,12 +58,12 @@ public class WSWidgetsUtils {
               getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse), action1);
           break;
         case STORE_META:
-          ioScheduler(GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken)
+          ioScheduler(GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email)
               .observe(refresh)).subscribe(
               getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta), action1);
           break;
         case REVIEWS_GROUP:
-          ioScheduler(ListFullReviewsRequest.ofAction(url, refresh, accessToken)
+          ioScheduler(ListFullReviewsRequest.ofAction(url, refresh, accessToken, email)
               .observe(refresh)).subscribe(
               reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;

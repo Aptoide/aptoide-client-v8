@@ -59,7 +59,8 @@ import rx.Observable;
    */
   public static CheckUserCredentialsRequest of(String accessToken) {
     CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application.getContext(),
-        OkHttpClientFactory.getSingletonClient(null, AptoideAccountManager.getUserData()), WebService.getDefaultConverter());
+        OkHttpClientFactory.getSingletonClient(null, AptoideAccountManager.getUserEmail()),
+        WebService.getDefaultConverter());
     request.setToken(accessToken);
     return request;
   }

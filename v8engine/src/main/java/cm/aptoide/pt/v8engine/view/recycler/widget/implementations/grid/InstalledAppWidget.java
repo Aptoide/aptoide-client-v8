@@ -136,7 +136,8 @@ import java.util.Locale;
 
       dialog.dismiss();
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-          AptoideAccountManager.getAccessToken()).execute(response -> {
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+          .execute(response -> {
         if (response.isOk()) {
           Logger.d(TAG, "review added");
           ShowMessage.asSnack(labelTextView, R.string.review_success);

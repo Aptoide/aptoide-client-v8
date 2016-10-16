@@ -24,8 +24,8 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true) public class GetAppRequest
     extends V7<GetApp, GetAppRequest.Body> {
 
-  private GetAppRequest(String baseHost, Body body) {
-    super(body, baseHost);
+  private GetAppRequest(String baseHost, Body body, String email) {
+    super(body, baseHost, email);
   }
 
   private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -33,7 +33,8 @@ import rx.Observable;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static GetAppRequest of(String packageName, String storeName, String accessToken) {
+  public static GetAppRequest of(String packageName, String storeName, String accessToken,
+      String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -42,31 +43,31 @@ import rx.Observable;
 
     return new GetAppRequest(BASE_HOST,
         (Body) decorator.decorate(new Body(packageName, storeName, forceServerRefresh),
-            accessToken));
+            accessToken), email);
   }
 
-  public static GetAppRequest of(long appId, String accessToken) {
+  public static GetAppRequest of(long appId, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, forceServerRefresh), accessToken));
+        (Body) decorator.decorate(new Body(appId, forceServerRefresh), accessToken), email);
   }
 
-  public static GetAppRequest ofMd5(String md5, String accessToken) {
+  public static GetAppRequest ofMd5(String md5, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(forceServerRefresh, md5), accessToken));
+        (Body) decorator.decorate(new Body(forceServerRefresh, md5), accessToken), email);
   }
 
   public static GetAppRequest of(long appId, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -77,7 +78,7 @@ import rx.Observable;
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body, accessToken));
+    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body, accessToken), email);
   }
 
   @Override
