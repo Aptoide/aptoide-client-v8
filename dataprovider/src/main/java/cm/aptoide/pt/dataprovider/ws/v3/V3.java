@@ -8,7 +8,6 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
-import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;

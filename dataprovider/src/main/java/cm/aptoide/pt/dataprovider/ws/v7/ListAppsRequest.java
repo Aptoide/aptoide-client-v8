@@ -37,13 +37,14 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials) {
+  public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new ListAppsRequest(new V7Url(url).remove("listApps").get(),
-        (Body) decorator.decorate(new Body(storeCredentials)), BASE_HOST);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 
   @Override

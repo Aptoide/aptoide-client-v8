@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
@@ -26,7 +27,8 @@ public class UpdateUtils {
       return;
     }
 
-    ListAppsUpdatesRequest.of(StoreUtils.getSubscribedStoresIds()).execute(listAppsUpdates -> {
+    ListAppsUpdatesRequest.of(StoreUtils.getSubscribedStoresIds(),
+        AptoideAccountManager.getAccessToken()).execute(listAppsUpdates -> {
       @Cleanup Realm realm = DeprecatedDatabase.get();
       for (App app : listAppsUpdates.getList()) {
         Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);

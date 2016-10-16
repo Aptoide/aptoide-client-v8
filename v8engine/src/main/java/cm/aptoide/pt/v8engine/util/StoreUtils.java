@@ -91,8 +91,8 @@ public class StoreUtils {
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
-    subscribeStore(
-        GetStoreMetaRequest.of(getStoreCredentials(storeName)), successRequestListener,
+    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken()), successRequestListener,
         errorRequestListener);
   }
 

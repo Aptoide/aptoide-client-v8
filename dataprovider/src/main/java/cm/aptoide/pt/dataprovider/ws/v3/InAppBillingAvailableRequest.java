@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import rx.Observable;
 

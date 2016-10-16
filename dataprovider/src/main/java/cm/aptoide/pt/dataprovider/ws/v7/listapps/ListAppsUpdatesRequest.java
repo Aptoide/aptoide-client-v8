@@ -48,13 +48,14 @@ import rx.schedulers.Schedulers;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds) {
+  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken) {
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
-        new Body(getInstalledApks(), subscribedStoresIds, idsRepository.getAdvertisingId())),
+        new Body(getInstalledApks(), subscribedStoresIds, idsRepository.getAdvertisingId()),
+        accessToken),
         BASE_HOST);
   }
 

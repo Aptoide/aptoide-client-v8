@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -117,7 +118,8 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private GetStoreMetaRequest buildRequest(String storeName) {
-    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName));
+    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken());
   }
 
   private void showLoadingDialog() {

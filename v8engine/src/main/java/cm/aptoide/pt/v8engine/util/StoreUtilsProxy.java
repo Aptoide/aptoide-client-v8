@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
@@ -19,14 +20,16 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 public class StoreUtilsProxy {
 
   public static void subscribeStore(String storeName) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName)), null, null,
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken()), null, null,
         storeName);
   }
 
   public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName)),
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken()),
         successRequestListener, errorRequestListener,
         storeName);
   }

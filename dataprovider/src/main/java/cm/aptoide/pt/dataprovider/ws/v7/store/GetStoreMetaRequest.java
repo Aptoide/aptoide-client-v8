@@ -47,22 +47,23 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static GetStoreMetaRequest ofAction(String url, StoreCredentials storeCredentials) {
+  public static GetStoreMetaRequest ofAction(String url, StoreCredentials storeCredentials,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new GetStoreMetaRequest(new V7Url(url).remove("getStoreMeta").get(),
-        (Body) decorator.decorate(new Body(storeCredentials)), BASE_HOST);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 
-  public static GetStoreMetaRequest of(StoreCredentials storeCredentials) {
+  public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new GetStoreMetaRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(storeCredentials)));
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken));
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,

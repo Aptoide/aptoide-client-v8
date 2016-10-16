@@ -35,7 +35,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, String storeName,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap) {
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -45,16 +45,18 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
       return new ListSearchAppsRequest((Body) decorator.decorate(
-          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false)), BASE_HOST);
+          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false), accessToken),
+          BASE_HOST);
     }
     return new ListSearchAppsRequest(
-        (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, stores, false)),
+        (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, stores, false),
+            accessToken),
         BASE_HOST);
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      List<Long> subscribedStoresIds,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap) {
+      List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -64,26 +66,29 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
-              false)), BASE_HOST);
+              false), accessToken), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
-          (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false)), BASE_HOST);
+          (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false), accessToken),
+          BASE_HOST);
     }
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds) {
+      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly)),
+          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly),
+          accessToken),
           BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
-          (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly)),
+          (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly),
+              accessToken),
           BASE_HOST);
     }
   }

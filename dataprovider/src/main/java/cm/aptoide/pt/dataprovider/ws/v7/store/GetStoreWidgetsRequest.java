@@ -39,7 +39,8 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials) {
+  public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -47,7 +48,7 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
-        (Body) decorator.decorate(body));
+        (Body) decorator.decorate(body, accessToken));
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,

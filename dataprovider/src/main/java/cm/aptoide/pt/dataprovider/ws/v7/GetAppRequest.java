@@ -33,7 +33,7 @@ import rx.Observable;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static GetAppRequest of(String packageName, String storeName) {
+  public static GetAppRequest of(String packageName, String storeName, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -41,31 +41,32 @@ import rx.Observable;
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(packageName, storeName, forceServerRefresh)));
+        (Body) decorator.decorate(new Body(packageName, storeName, forceServerRefresh),
+            accessToken));
   }
 
-  public static GetAppRequest of(long appId) {
+  public static GetAppRequest of(long appId, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, forceServerRefresh)));
+        (Body) decorator.decorate(new Body(appId, forceServerRefresh), accessToken));
   }
 
-  public static GetAppRequest ofMd5(String md5) {
+  public static GetAppRequest ofMd5(String md5, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(forceServerRefresh, md5)));
+        (Body) decorator.decorate(new Body(forceServerRefresh, md5), accessToken));
   }
 
   public static GetAppRequest of(long appId, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -76,7 +77,7 @@ import rx.Observable;
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body));
+    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body, accessToken));
   }
 
   @Override

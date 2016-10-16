@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
@@ -148,7 +149,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListStores(String url, boolean refresh) {
-    ListStoresRequest listStoresRequest = ListStoresRequest.ofAction(url);
+    ListStoresRequest listStoresRequest =
+        ListStoresRequest.ofAction(url, AptoideAccountManager.getAccessToken());
     Action1<ListStores> listStoresAction = listStores -> {
 
       // Load sub nodes
@@ -188,7 +190,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   private void caseListApps(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
-    ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url, storeCredentials);
+    ListAppsRequest listAppsRequest =
+        ListAppsRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken());
     Action1<ListApps> listAppsAction = listApps -> {
 
       // Load sub nodes
@@ -231,7 +234,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   private Subscription caseGetStore(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
-    return GetStoreRequest.ofAction(url, storeCredentials)
+    return GetStoreRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken())
         .observe(refresh)
         .observeOn(Schedulers.io())
         .subscribe(getStore -> {
@@ -243,8 +246,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
           Observable.from(list)
               .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, storeCredentials,
-                  countDownLatch, refresh,
-                  throwable -> countDownLatch.countDown()));
+                  countDownLatch, refresh, throwable -> countDownLatch.countDown(),
+                  AptoideAccountManager.getAccessToken()));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -264,7 +267,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   private Subscription caseGetStoreWidgets(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
-    return GetStoreWidgetsRequest.ofAction(url, storeCredentials)
+    return GetStoreWidgetsRequest.ofAction(url, storeCredentials,
+        AptoideAccountManager.getAccessToken())
         .observe(refresh)
         .observeOn(Schedulers.io())
         .subscribe(getStoreWidgets -> {
@@ -275,8 +279,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
           Observable.from(list)
               .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, storeCredentials,
-                  countDownLatch, refresh,
-                  throwable -> finishLoading(throwable)));
+                  countDownLatch, refresh, throwable -> finishLoading(throwable),
+                  AptoideAccountManager.getAccessToken()));
 
           try {
             countDownLatch.await();
@@ -341,7 +345,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListReviews(String url, boolean refresh) {
-    ListFullReviewsRequest listFullReviewsRequest = ListFullReviewsRequest.ofAction(url, refresh);
+    ListFullReviewsRequest listFullReviewsRequest =
+        ListFullReviewsRequest.ofAction(url, refresh, AptoideAccountManager.getAccessToken());
     Action1<ListFullReviews> listFullReviewsAction = (listFullReviews -> {
       if (listFullReviews != null
           && listFullReviews.getDatalist() != null

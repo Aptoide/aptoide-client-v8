@@ -45,34 +45,34 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
         baseHost);
   }
 
-  public static ListReviewsRequest of(String storeName, String packageName) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS);
+  public static ListReviewsRequest of(String storeName, String packageName, String accessToken) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments) {
+      int maxComments, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews) {
+      int maxReviews, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(storeName, packageName, maxReviews, 0,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

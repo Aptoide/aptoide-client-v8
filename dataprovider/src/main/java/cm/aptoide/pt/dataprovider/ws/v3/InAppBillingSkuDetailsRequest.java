@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import java.util.List;
@@ -22,14 +20,15 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type) {
+      List<String> skuList, NetworkOperatorManager operatorManager, String type,
+      String accessToken) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabskudetails");
     args.put("purchasetype", type);
-    args.put("access_token", AptoideAccountManager.getAccessToken());
+    args.put("access_token", accessToken);
 
     if (!skuList.isEmpty()) {
       final StringBuilder stringBuilder = new StringBuilder();

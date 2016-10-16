@@ -14,7 +14,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.List;
 import lombok.Data;
@@ -22,8 +21,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -38,42 +35,43 @@ import rx.Observable;
     super(body, WebService.getDefaultConverter() , baseHost);
   }
 
-  public static ListAppVersionsRequest of() {
+  public static ListAppVersionsRequest of(String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListAppVersionsRequest of(int limit, int offset) {
+  public static ListAppVersionsRequest of(int limit, int offset, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(limit);
     body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListAppVersionsRequest of(String packageName) {
+  public static ListAppVersionsRequest of(String packageName, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListAppVersionsRequest of(String packageName, int limit, int offset) {
+  public static ListAppVersionsRequest of(String packageName, int limit, int offset,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(limit);
     body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,

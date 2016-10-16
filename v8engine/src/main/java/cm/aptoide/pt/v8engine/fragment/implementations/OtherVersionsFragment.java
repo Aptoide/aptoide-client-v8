@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -154,8 +155,8 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
           addDisplayables(displayables);
         };
 
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), ListAppVersionsRequest.of(appPackge),
+    endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
+        ListAppVersionsRequest.of(appPackge, AptoideAccountManager.getAccessToken()),
             otherVersionsSuccessRequestListener, errorRequestListener);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);

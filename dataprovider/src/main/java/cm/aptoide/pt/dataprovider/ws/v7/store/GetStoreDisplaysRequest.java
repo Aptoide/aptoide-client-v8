@@ -38,13 +38,14 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static GetStoreDisplaysRequest ofAction(String url, StoreCredentials storeCredentials) {
+  public static GetStoreDisplaysRequest ofAction(String url, StoreCredentials storeCredentials,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays").get(),
-        (Body) decorator.decorate(new Body(storeCredentials)), BASE_HOST);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,

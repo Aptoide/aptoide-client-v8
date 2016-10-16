@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -92,10 +93,12 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       recyclerView.clearOnScrollListeners();
       ListSearchAppsRequest of;
       if (storeName != null) {
-        of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap());
+        of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
+            AptoideAccountManager.getAccessToken());
       } else {
         of = ListSearchAppsRequest.of(query, addSubscribedStores,
-            StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap());
+            StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
+            AptoideAccountManager.getAccessToken());
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

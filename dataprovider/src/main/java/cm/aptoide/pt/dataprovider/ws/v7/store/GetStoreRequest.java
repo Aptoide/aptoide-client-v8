@@ -40,7 +40,8 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static GetStoreRequest of(StoreCredentials storeCredentials, StoreContext storeContext) {
+  public static GetStoreRequest of(StoreCredentials storeCredentials, StoreContext storeContext,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -48,10 +49,11 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
 
-    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body));
+    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body, accessToken));
   }
 
-  public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials) {
+  public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
+      String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -59,7 +61,7 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreRequest(new V7Url(url).remove("getStore").get(), BASE_HOST,
-        (Body) decorator.decorate(body));
+        (Body) decorator.decorate(body, accessToken));
   }
 
   @Override
