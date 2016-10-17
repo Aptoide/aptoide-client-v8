@@ -23,7 +23,6 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.xml.XmlAppHandler;
@@ -70,7 +69,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
-  private Class startClass = MainActivityFragment.class;
+  private Class startClass = V8Engine.getConfiguration().getMainActivityClass();
   private AsyncTask<String, Void, Void> asyncTask;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
