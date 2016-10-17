@@ -37,7 +37,9 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
@@ -62,6 +64,7 @@ public abstract class V8Engine extends DataProvider {
 
   @Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
+  @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   private RefWatcher refWatcher;
 
@@ -134,6 +137,7 @@ public abstract class V8Engine extends DataProvider {
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
     fragmentProvider = createFragmentProvider();
+    activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
 
     //
@@ -226,6 +230,10 @@ public abstract class V8Engine extends DataProvider {
 
   protected FragmentProvider createFragmentProvider() {
     return new FragmentProviderImpl();
+  }
+
+  protected ActivityProvider createActivityProvider() {
+    return new ActivityProviderImpl();
   }
 
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {

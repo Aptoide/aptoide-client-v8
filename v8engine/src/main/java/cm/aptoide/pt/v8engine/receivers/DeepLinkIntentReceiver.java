@@ -70,7 +70,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
-  private Class startClass = V8Engine.getConfiguration().getMainActivityClass();
+  private Class startClass = V8Engine.getActivityProvider().getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

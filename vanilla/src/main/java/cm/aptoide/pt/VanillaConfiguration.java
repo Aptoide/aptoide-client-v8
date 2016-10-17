@@ -5,11 +5,9 @@
 
 package cm.aptoide.pt;
 
-import android.app.Activity;
 import android.os.Environment;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
 
 /**
  * Created by neuro on 10-05-2016.
@@ -97,9 +95,5 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public boolean isAlwaysUpdate() {
     return ManagerPreferences.isAllwaysUpdate();
-  }
-
-  @Override public Class<? extends Activity> getMainActivityClass() {
-    return MainActivityFragment.class;
   }
 }
