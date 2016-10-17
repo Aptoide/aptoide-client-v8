@@ -47,6 +47,8 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public Observable<Void> install(Context context, String md5) {
+    Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
+        AptoideUtils.SystemU.isRooted());
     return installationProvider.getInstallation(md5)
         .observeOn(Schedulers.computation())
         .flatMap(installation -> {
@@ -127,7 +129,7 @@ import rx.schedulers.Schedulers;
                     .observeOn(Schedulers.computation())
                     .delay(10, TimeUnit.SECONDS)
                     .subscribe(
-                        exitCodeToSend -> Analytics.RootInstall.installCompleted(exitCodeToSend,
+                        exitCodeToSend -> Analytics.RootInstall.rootInstallCompleted(exitCodeToSend,
                             isInstalled(packageName, versionCode)));
                 if (exitCode == 0) {
                   Logger.v(TAG, "app successfully installed using root");
