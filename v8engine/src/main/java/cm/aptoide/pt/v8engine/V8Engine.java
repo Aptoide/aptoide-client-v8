@@ -154,6 +154,10 @@ public abstract class V8Engine extends DataProvider {
 
     generateAptoideUUID().subscribe();
 
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
+        AptoideAccountManager.getUserEmail()));
+
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);

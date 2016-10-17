@@ -110,4 +110,23 @@ public class SecurePreferences {
     return SecurePreferencesImplementation.getInstance()
         .getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
   }
+
+  public static String getUserAgent() {
+    String userAgent =
+        SecurePreferencesImplementation.getInstance().getString(SecureKeys.USER_AGENT, null);
+
+    if (userAgent == null) {
+      throw new RuntimeException("User Agent not set!");
+    }
+
+    return userAgent;
+  }
+
+  public static void setUserAgent(String userAgent) {
+    SecurePreferencesImplementation.getInstance()
+        .edit()
+        .putString(SecureKeys.USER_AGENT, userAgent)
+        .apply();
+  }
+
 }
