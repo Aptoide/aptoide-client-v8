@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.table;
+package cm.aptoide.pt.table;
 
 /**
  * Created by sithengineer on 14/10/2016.

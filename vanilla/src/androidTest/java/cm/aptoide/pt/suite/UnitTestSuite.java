@@ -1,6 +1,6 @@
-package cm.aptoide.pt.v8engine.suite;
+package cm.aptoide.pt.suite;
 
-import cm.aptoide.pt.v8engine.DbMigrationTest;
+import cm.aptoide.pt.DbMigrationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

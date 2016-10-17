@@ -24,7 +24,7 @@ android {
   defaultConfig {
     minSdkVersion 15
     consumerProguardFiles "proguard-rules.txt"
-    testInstrumentationRunner "cm.aptoide.pt.v8engine.MultidexAndroidJunitRunner"
+    //testInstrumentationRunner "cm.aptoide.pt.v8engine.MultidexAndroidJunitRunner"
 
     // Enabling multidex support.
     multiDexEnabled true
@@ -111,29 +111,29 @@ dependencies {
   // inter-projects dependencies
   //
 
-  debugCompile project(path: ':database', configuration: 'debug')
-  releaseCompile project(path: ':database', configuration: 'release')
+  debugCompile project(path: ":database", configuration: "debug")
+  releaseCompile project(path: ":database", configuration: "release")
 
-  debugCompile project(path: ':dataprovider', configuration: 'debug')
-  releaseCompile project(path: ':dataprovider', configuration: 'release')
+  debugCompile project(path: ":dataprovider", configuration: "debug")
+  releaseCompile project(path: ":dataprovider", configuration: "release")
 
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
+  debugCompile project(path: ":utils", configuration: "debug")
+  releaseCompile project(path: ":utils", configuration: "release")
 
-  debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
-  releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
+  debugCompile project(path: ":aptoide_accountmanager", configuration: "debug")
+  releaseCompile project(path: ":aptoide_accountmanager", configuration: "release")
 
-  debugCompile project(path: ':imageloader', configuration: 'debug')
-  releaseCompile project(path: ':imageloader', configuration: 'release')
+  debugCompile project(path: ":imageloader", configuration: "debug")
+  releaseCompile project(path: ":imageloader", configuration: "release")
 
-  debugCompile project(path: ':downloadmanager', configuration: 'debug')
-  releaseCompile project(path: ':downloadmanager', configuration: 'release')
+  debugCompile project(path: ":downloadmanager", configuration: "debug")
+  releaseCompile project(path: ":downloadmanager", configuration: "release")
 
   //
   // custom libs in folders
   //
 
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  //compile fileTree(dir: 'libs', include: ['*.jar'])
 
   //
   // from remote repos
@@ -144,14 +144,19 @@ dependencies {
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestCompile "com.android.support.test:runner:${RUNNER_VERSION}"
+  androidTestCompile ("com.android.support.test:runner:${RUNNER_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
   androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestCompile "com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"
+  androidTestCompile ("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
 
   compile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
   //noinspection GradleDependency
-  compile("com.android.support:support-v4:${SUPPORT_LIB_VERSION}"){
-    exclude module:"support-annotations"
+  compile ("com.android.support:support-v4:${SUPPORT_LIB_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
   }
 
   //noinspection GradleDependency
@@ -195,6 +200,7 @@ dependencies {
   // paypal SDK
   compile("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
+    exclude group:"com.android.support", module:"support-v4"
   }
 
   // Localytics sdk

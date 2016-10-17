@@ -1,8 +1,7 @@
-package cm.aptoide.pt.v8engine.table;
+package cm.aptoide.pt.table;
 
 import android.util.Pair;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.table;
+package cm.aptoide.pt.table;
 
 import android.util.Pair;
 import java.util.Set;

@@ -3,22 +3,21 @@
  * Modified by Neurophobic Animal on 12/04/2016.
  */
 
-package cm.aptoide.pt.v8engine;
+package cm.aptoide.pt;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Pair;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
-import cm.aptoide.pt.v8engine.table.ColumnDefinition;
-import cm.aptoide.pt.v8engine.table.Table;
-import cm.aptoide.pt.v8engine.table.TableBag;
+import cm.aptoide.pt.table.ColumnDefinition;
+import cm.aptoide.pt.table.Table;
+import cm.aptoide.pt.table.TableBag;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -94,17 +93,17 @@ public class DbMigrationTest {
       accessor.get(md5s[finalI]).subscribe(scheduled -> {
         // assert data fields
         assertEquals(scheduled.getName(), insertedValues[finalI].get(
-            cm.aptoide.pt.v8engine.table.Scheduled.name.getName()
+            cm.aptoide.pt.table.Scheduled.name.getName()
           )
         );
 
         assertEquals(scheduled.getMd5(), insertedValues[finalI].get(
-            cm.aptoide.pt.v8engine.table.Scheduled.md5.getName()
+            cm.aptoide.pt.table.Scheduled.md5.getName()
             )
         );
 
         assertEquals(scheduled.getIcon(), insertedValues[finalI].get(
-            cm.aptoide.pt.v8engine.table.Scheduled.icon.getName()
+            cm.aptoide.pt.table.Scheduled.icon.getName()
             )
         );
 

@@ -1,7 +1,5 @@
-package cm.aptoide.pt.v8engine;
+package cm.aptoide.pt;
 
-import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.test.runner.AndroidJUnitRunner;
