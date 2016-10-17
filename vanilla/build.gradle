@@ -75,8 +75,7 @@ android {
                             suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider",
                             currentApplicationId       : "cm.aptoide.pt",
                             fabricApiKey               : fabricConfigured ?
-                                localProperties.FABRIC_API_KEY : ""
-    ]
+                                localProperties.FABRIC_API_KEY : ""]
   }
 
   lintOptions {
@@ -101,8 +100,7 @@ android {
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.internal",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal",
-                              currentApplicationId       : "cm.aptoide.pt.internal"
-      ]
+                              currentApplicationId       : "cm.aptoide.pt.internal"]
     }
 
     dev {
@@ -117,8 +115,7 @@ android {
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.dev",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev",
-                              currentApplicationId       : "cm.aptoide.pt.dev"
-      ]
+                              currentApplicationId       : "cm.aptoide.pt.dev"]
     }
 
     prod {
@@ -178,15 +175,15 @@ android {
         output.outputFile = new File(output.outputFile.parent, newName)
       }
 
-//      variant.productFlavors.each { flavor ->
-//        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
-//            VersionCodeFileUpdateTask
-//        versionUpdate.versionPropertiesFile =
-//            project.file("../../aptoideProperties/version.properties")
-//        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
-//        versionUpdate.versionCode = variant.mergedFlavor.versionCode
-//        variant.assemble.dependsOn versionUpdate
-//      }
+      //      variant.productFlavors.each { flavor ->
+      //        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
+      //            VersionCodeFileUpdateTask
+      //        versionUpdate.versionPropertiesFile =
+      //            project.file("../../aptoideProperties/version.properties")
+      //        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
+      //        versionUpdate.versionCode = variant.mergedFlavor.versionCode
+      //        variant.assemble.dependsOn versionUpdate
+      //      }
     }
   }
 
@@ -278,6 +275,8 @@ if (propFile.canRead()) {
     android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
     android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
     android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    android.signingConfigs.release.v2SigningEnabled = false
+
     println 'all good to go'
   } else {
     android.buildTypes.release.signingConfig = null
@@ -287,37 +286,3 @@ if (propFile.canRead()) {
   println 'signing.properties not found'
   android.buildTypes.release.signingConfig = null
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

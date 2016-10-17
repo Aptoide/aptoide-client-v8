@@ -12,11 +12,13 @@ import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
+import rx.Subscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -27,6 +29,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   private TextView descriptionTextView;
   private Button readMoreBtn;
   private String storeName;
+  private String storeTheme;
+  private Subscription buttonSubscription;
 
   public AppViewDescriptionWidget(View itemView) {
     super(itemView);
@@ -41,10 +45,14 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
     final GetAppMeta.Media media = app.getMedia();
     this.storeName = app.getStore().getName();
+    this.storeTheme = app.getStore().getAppearance().getTheme();
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      readMoreBtn.setOnClickListener(seeMoreHandler(app.getId(),app.getStore().getAppearance().getTheme()));
+      buttonSubscription = RxView.clicks(readMoreBtn).subscribe(click -> {
+        ((FragmentShower) getContext()).pushFragmentV4(
+            DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
+      });
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);
@@ -57,13 +65,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   }
 
   @Override public void onViewDetached() {
-
-  }
-
-  private View.OnClickListener seeMoreHandler(final long appId, final String storeTheme) {
-    return v -> {
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newDescriptionFragment(appId, storeName, storeTheme));
-    };
+    buttonSubscription.unsubscribe();
   }
 }
