@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -39,8 +40,6 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -63,7 +62,6 @@ import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -71,7 +69,6 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
-import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -118,7 +115,6 @@ public class AppViewFragment extends GridRecyclerFragment
   // vars
   //
   private AppViewHeader header;
-  //	private GetAppMeta.App app;
   private long appId;
   private String packageName;
   private OpenType openType;
@@ -132,7 +128,6 @@ public class AppViewFragment extends GridRecyclerFragment
   private Installer installManager;
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
-  private DownloadServiceHelper downloadManager;
   private AppRepository appRepository;
   private ProductFactory productFactory;
   private Subscription subscription;
@@ -152,6 +147,7 @@ public class AppViewFragment extends GridRecyclerFragment
   private String wUrl;
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
+  private InstalledAccessor installedAccessor;
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
@@ -215,13 +211,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    downloadManager =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-
     permissionManager = new PermissionManager();
-    DownloadInstallationProvider installationProvider =
-        new DownloadInstallationProvider(downloadManager);
-
     installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
 
     productFactory = new ProductFactory();
@@ -229,6 +219,7 @@ public class AppViewFragment extends GridRecyclerFragment
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
         productFactory);
     adRepository = new AdRepository();
+    installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -278,7 +269,7 @@ public class AppViewFragment extends GridRecyclerFragment
     GetAppMeta.Media media = app.getMedia();
 
     installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
-        openType == OpenType.OPEN_AND_INSTALL, AccessorFactory.getAccessorFor(Installed.class));
+        openType == OpenType.OPEN_AND_INSTALL, installedAccessor);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -451,14 +442,19 @@ public class AppViewFragment extends GridRecyclerFragment
   }
 
   private void setupAppView(GetApp getApp) {
+    app = getApp.getNodes().getMeta().getData();
+    updateLocalVars(app);
     if (storeTheme == null) {
       storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
     }
 
     // useful data for the schedule updates menu option
-    app = getApp.getNodes().getMeta().getData();
-    installAction().subscribe(appAction -> {
+    installAction().observeOn(AndroidSchedulers.mainThread()).subscribe(appAction -> {
       AppViewFragment.this.appAction = appAction;
+      MenuItem item = menu.findItem(R.id.menu_schedule);
+      if (item != null) {
+        item.setVisible(appAction != AppAction.OPEN);
+      }
     });
 
     header.setup(getApp);
@@ -484,6 +480,15 @@ public class AppViewFragment extends GridRecyclerFragment
           });
     }
     finishLoading();
+  }
+
+  private void updateLocalVars(GetAppMeta.App app) {
+    appId = app.getId();
+    packageName = app.getPackageName();
+    storeName = app.getStore().getName();
+    storeTheme = app.getStore().getAppearance().getTheme();
+    md5 = app.getMd5();
+    appName = app.getName();
   }
 
   private void showHideMenus(boolean visible) {
@@ -618,11 +623,10 @@ public class AppViewFragment extends GridRecyclerFragment
   }
 
   public Observable<AppAction> installAction() {
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    return installedAccessor.get(packageName).map(installed -> {
-
-      if (installed != null) {
+    return installedAccessor.getInstalledAsList(packageName).map(installedList -> {
+      if (installedList != null && installedList.size() > 0) {
+        Installed installed = installedList.get(0);
         if (app.getFile().getVercode() == installed.getVersionCode()) {
           //current installed version
           return AppAction.OPEN;
