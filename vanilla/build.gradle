@@ -129,6 +129,7 @@ android {
 
   buildTypes {
     release {
+      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
@@ -136,6 +137,7 @@ android {
     }
 
     debug {
+      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
       ext.enableCrashlytics = false
       multiDexEnabled true
       zipAlignEnabled false
@@ -285,4 +287,10 @@ if (propFile.canRead()) {
 } else {
   println 'signing.properties not found'
   android.buildTypes.release.signingConfig = null
+}
+
+void configureLocalytics(androidDelegate, key) {
+  boolean keyExists = key != null
+  androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
+  androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists ? key : ""]
 }

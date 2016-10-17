@@ -135,7 +135,6 @@ public class Analytics {
         ACTIVATE_LOCALYTICS =
             ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
         isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-        Logger.d(TAG, "teste : " + ACTIVATE_LOCALYTICS + " : " + isFirstSession);
         if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
           return;
         }
