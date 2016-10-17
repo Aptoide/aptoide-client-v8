@@ -430,6 +430,7 @@ import rx.subscriptions.CompositeSubscription;
     @StringRes final int installOrUpgradeMsg =
         this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
     int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
+    PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
 
       if (installOrUpgradeMsg == R.string.installing_msg) {
@@ -440,7 +441,8 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory factory = new DownloadFactory();
       Download appDownload = factory.create(app, downloadAction);
 
-      subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+          .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                   downloadAction)))
