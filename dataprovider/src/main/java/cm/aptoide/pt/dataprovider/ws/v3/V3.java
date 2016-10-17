@@ -6,9 +6,9 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.ErrorResponse;
@@ -21,7 +21,6 @@ import cm.aptoide.pt.model.v3.PaymentResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
 import retrofit2.adapter.rxjava.HttpException;
@@ -82,7 +81,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
             if (!accessTokenRetry) {
               accessTokenRetry = true;
-              return AptoideAccountManager.invalidateAccessToken(Application.getContext())
+              return DataProvider.invalidateAccessToken()
                   .flatMap(s -> {
                     this.map.setAccess_token(s);
                     return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());

@@ -21,6 +21,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
@@ -331,4 +332,8 @@ public abstract class V8Engine extends DataProvider {
   //			refWatcher.watch(activity);
   //		}
   //	}
+
+  @Override protected TokenInvalidator getTokenInvalidator() {
+    return AptoideAccountManager::invalidateAccessToken;
+  }
 }

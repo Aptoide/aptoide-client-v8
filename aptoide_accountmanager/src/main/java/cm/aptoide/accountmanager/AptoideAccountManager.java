@@ -38,7 +38,6 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -254,8 +253,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (userAccount == null) {
       Account[] accounts = accountManager.getAccounts();
       for (final Account account : accounts) {
-        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail()) && TextUtils.equals(
-            account.type, Constants.ACCOUNT_TYPE)) {
+        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail())
+            && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
           userAccount = account;
           break;
         }
@@ -294,14 +293,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
     }
     return userName;
-  }
-
-  public static UserData getUserData () {
-    return new UserData() {
-      @Override public String getEmail() {
-        return getUserEmail();
-      }
-    };
   }
 
   /**
@@ -674,7 +665,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     return refreshUserInfoData().doOnNext(AptoideAccountManager::saveUserInfo);
   }
 
-  public static Observable<CheckUserCredentialsJson > refreshUserInfoData() {
+  public static Observable<CheckUserCredentialsJson> refreshUserInfoData() {
     return CheckUserCredentialsRequest.of(getAccessToken())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
@@ -761,13 +752,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
-      refreshAndSaveUserInfoData().subscribe(
-          userData -> {
+      refreshAndSaveUserInfoData().subscribe(userData -> {
 
-          }, e -> {
-            Logger.e(TAG, e);
-          }
-      );
+      }, e -> {
+        Logger.e(TAG, e);
+      });
       toReturn = true;
     }
     return toReturn;
