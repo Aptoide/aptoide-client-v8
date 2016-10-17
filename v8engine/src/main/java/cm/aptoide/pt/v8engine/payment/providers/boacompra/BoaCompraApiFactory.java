@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.payment.providers.boacompra;
 
+import android.os.Build;
 import java.io.IOException;
 import java.util.Locale;
 import okhttp3.Interceptor;
@@ -24,7 +25,7 @@ final class BoaCompraApiFactory {
 
   public static BoaCompraApi create(String apiUrl, final BoaCompraAuthorization authorization) {
 
-    OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+    final OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(new Interceptor() {
       @Override public Response intercept(Chain chain) throws IOException {
 
         final Request request = chain.request();
@@ -38,12 +39,21 @@ final class BoaCompraApiFactory {
           } finally {
             buffer.close();
           }
-          requestBuilder.addHeader("Content-Type", request.body().contentType().toString());
+
+          // Remove Content-Type added by OkHttp because it includes the charset. BoaCompra API is
+          // not RFC7231 compliant.
+          requestBuilder.removeHeader("Content-Type");
+          requestBuilder.addHeader("Content-Type", "application/json");
         }
 
         requestBuilder.addHeader("Authorization", authorization.generate(request));
         requestBuilder.addHeader("Accept", "application/vnd.boacompra.com.v1+json; charset=UTF-8");
-        requestBuilder.addHeader("Accept-Language", Locale.getDefault().toString());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          requestBuilder.addHeader("Accept-Language", Locale.getDefault().toLanguageTag());
+        } else {
+          requestBuilder.addHeader("Accept-Language", Locale.getDefault().getLanguage());
+        }
 
         return chain.proceed(requestBuilder.build());
       }
