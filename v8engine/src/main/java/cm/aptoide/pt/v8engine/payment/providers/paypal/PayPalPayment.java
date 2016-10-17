@@ -16,7 +16,6 @@ import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import java.util.Locale;
 
@@ -99,12 +98,6 @@ public class PayPalPayment implements Payment {
 
   @Override public Product getProduct() {
     return product;
-  }
-
-  private void startPayPalActivity() {
-    Intent intent = new Intent(context, PayPalService.class);
-    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
-    context.startService(intent);
   }
 
   public class PaymentConfirmationReceiver extends BroadcastReceiver {
