@@ -13,12 +13,12 @@ import rx.Observable;
  */
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
-  protected AddApkFlagRequest(BaseBody baseBody, String email) {
-    super(BASE_HOST, baseBody, email);
+  protected AddApkFlagRequest(BaseBody baseBody) {
+    super(BASE_HOST, baseBody);
   }
 
   public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag,
-      String accessToken, String email) {
+      String accessToken) {
     BaseBody args = new BaseBody();
 
     args.put("repo", storeName);
@@ -27,7 +27,7 @@ public class AddApkFlagRequest extends V3<GenericResponseV2> {
     args.put("mode", "json");
     args.put("access_token", accessToken);
 
-    return new AddApkFlagRequest(args, email);
+    return new AddApkFlagRequest(args);
   }
 
   @Override protected Observable<GenericResponseV2> loadDataFromNetwork(Interfaces interfaces,

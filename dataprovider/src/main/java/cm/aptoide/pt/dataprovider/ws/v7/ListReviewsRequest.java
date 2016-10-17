@@ -13,6 +13,7 @@ import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,10 +38,9 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
 
-  protected ListReviewsRequest(Body body, String baseHost, String email) {
-    super(body, OkHttpClientFactory.getSingletonClient(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),
-        email), WebService.getDefaultConverter(),
+  protected ListReviewsRequest(Body body, String baseHost) {
+    super(body, OkHttpClientFactory.getSingletonClient(SecurePreferences.getUserAgent()),
+        WebService.getDefaultConverter(),
         baseHost);
   }
 
@@ -59,7 +59,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
             DataProvider.getContext()));
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
+    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   /**
@@ -72,7 +72,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
             DataProvider.getContext()));
     Body body = new Body(storeName, packageName, maxReviews, 0,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
+    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

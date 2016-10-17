@@ -13,8 +13,8 @@ import rx.Observable;
  */
 public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
 
-  private InAppBillingConsumeRequest(String baseHost, BaseBody baseBody, String email) {
-    super(baseHost, baseBody, email);
+  private InAppBillingConsumeRequest(String baseHost, BaseBody baseBody) {
+    super(baseHost, baseBody);
   }
 
   public static InAppBillingConsumeRequest of(int apiVersion, String packageName,
@@ -26,7 +26,7 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
     args.put("reqtype", "iabconsume");
     args.put("purchasetoken", purchaseToken);
     args.put("access_token", accessToken);
-    return new InAppBillingConsumeRequest(BASE_HOST, args, email);
+    return new InAppBillingConsumeRequest(BASE_HOST, args);
   }
 
   @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,

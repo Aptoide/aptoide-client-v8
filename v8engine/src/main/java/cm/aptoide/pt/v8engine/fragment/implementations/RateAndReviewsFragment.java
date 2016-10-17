@@ -260,8 +260,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail()).execute(getApp -> {
+    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken()).execute(getApp -> {
       GetAppMeta.App data = getApp.getNodes().getMeta().getData();
       setupTitle(data.getName());
       setupRating(data);

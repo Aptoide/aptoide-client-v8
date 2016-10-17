@@ -23,8 +23,8 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
 
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
-  protected PostReviewRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  protected PostReviewRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
@@ -39,7 +39,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(storeName, packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
+    return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
@@ -54,7 +54,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
+    return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

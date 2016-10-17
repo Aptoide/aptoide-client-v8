@@ -22,8 +22,8 @@ public class PostCommentRequest extends V7<BaseV7Response, PostCommentRequest.Bo
 
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
-  protected PostCommentRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  protected PostCommentRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   public static PostCommentRequest of(long reviewId, String text, String accessToken,
@@ -37,7 +37,7 @@ public class PostCommentRequest extends V7<BaseV7Response, PostCommentRequest.Bo
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(reviewId, text);
-    return new PostCommentRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
+    return new PostCommentRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

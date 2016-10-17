@@ -15,12 +15,12 @@ import rx.Observable;
  */
 public class GetApkInfoRequest extends V3<PaidApp> {
 
-  protected GetApkInfoRequest(BaseBody baseBody, String email) {
-    super(BASE_HOST, baseBody, email);
+  protected GetApkInfoRequest(BaseBody baseBody) {
+    super(BASE_HOST, baseBody);
   }
 
   public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,
-      boolean fromSponsored, String storeName, String accessToken, String email) {
+      boolean fromSponsored, String storeName, String accessToken) {
     BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);
     args.put("repo", storeName);
@@ -31,7 +31,7 @@ public class GetApkInfoRequest extends V3<PaidApp> {
       args.put("adview", "1");
     }
     addOptions(args, operatorManager);
-    return new GetApkInfoRequest(args, email);
+    return new GetApkInfoRequest(args);
   }
 
   private static void addOptions(BaseBody args,

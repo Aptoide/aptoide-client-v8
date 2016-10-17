@@ -27,8 +27,8 @@ import rx.Observable;
 
   private String url;
 
-  GetStoreDisplaysRequest(String url, Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  GetStoreDisplaysRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
     this.url = url;
   }
 
@@ -45,7 +45,7 @@ import rx.Observable;
             DataProvider.getContext()));
 
     return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST, email);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,

@@ -31,18 +31,17 @@ import rx.Observable;
 
   private static final Integer MAX_LIMIT = 10;
 
-  private ListAppVersionsRequest(Body body, String baseHost, String email) {
-    super(body, WebService.getDefaultConverter(), baseHost, email);
+  private ListAppVersionsRequest(Body body, String baseHost) {
+    super(body, WebService.getDefaultConverter(), baseHost);
   }
 
-  public static ListAppVersionsRequest of(String accessToken, String email) {
+  public static ListAppVersionsRequest of(String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListAppVersionsRequest of(int limit, int offset, String accessToken, String email) {
@@ -52,8 +51,7 @@ import rx.Observable;
     Body body = new Body();
     body.setLimit(limit);
     body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListAppVersionsRequest of(String packageName, String accessToken, String email) {
@@ -62,8 +60,7 @@ import rx.Observable;
             DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListAppVersionsRequest of(String packageName, int limit, int offset,
@@ -74,8 +71,7 @@ import rx.Observable;
     Body body = new Body(packageName);
     body.setLimit(limit);
     body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,

@@ -27,12 +27,12 @@ import rx.Observable;
 
   private String url;
 
-  private GetStoreMetaRequest(String baseHost, Body body, String email) {
-    super(body, baseHost, email);
+  private GetStoreMetaRequest(String baseHost, Body body) {
+    super(body, baseHost);
   }
 
-  private GetStoreMetaRequest(String url, Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  private GetStoreMetaRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
     this.url = url;
   }
 
@@ -54,7 +54,7 @@ import rx.Observable;
             DataProvider.getContext()));
 
     return new GetStoreMetaRequest(new V7Url(url).remove("getStoreMeta").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST, email);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 
   public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken,
@@ -64,7 +64,7 @@ import rx.Observable;
             DataProvider.getContext()));
 
     return new GetStoreMetaRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), email);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken));
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,

@@ -18,8 +18,8 @@ import rx.Observable;
  */
 public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
 
-  protected PushNotificationsRequest(BaseBody baseBody, String email) {
-    super(BASE_HOST, baseBody, email);
+  protected PushNotificationsRequest(BaseBody baseBody) {
+    super(BASE_HOST, baseBody);
   }
 
   public static PushNotificationsRequest of(String email) {
@@ -41,7 +41,7 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
       args.put("notification_type", "aptoide_vanilla");
     }
     args.put("id", String.valueOf(ManagerPreferences.getLastPushNotificationId()));
-    return new PushNotificationsRequest(args, email);
+    return new PushNotificationsRequest(args);
   }
 
   @Override

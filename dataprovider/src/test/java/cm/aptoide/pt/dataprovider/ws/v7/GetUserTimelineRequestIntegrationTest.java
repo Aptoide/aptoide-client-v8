@@ -712,7 +712,7 @@ public class GetUserTimelineRequestIntegrationTest {
       String aptoideId, String accessToken, int aptoideVercode, String cdn, String language,
       String q, Integer limit, boolean mature, int offset, List<String> packages, String email) {
     return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(limit, offset, packages),
-        baseHost, email);
+        baseHost);
   }
 
   @NonNull

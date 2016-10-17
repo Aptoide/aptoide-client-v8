@@ -22,8 +22,8 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
 
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
-  protected SetReviewRatingRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  protected SetReviewRatingRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   public static SetReviewRatingRequest of(long reviewId, boolean helpful, String accessToken,
@@ -36,8 +36,7 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(reviewId, helpful ? "up" : "down");
-    return new SetReviewRatingRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new SetReviewRatingRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

@@ -25,8 +25,8 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-  private ListSearchAppsRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  private ListSearchAppsRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -47,11 +47,11 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
       return new ListSearchAppsRequest((Body) decorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false), accessToken),
-          BASE_HOST, email);
+          BASE_HOST);
     }
     return new ListSearchAppsRequest(
         (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, stores, false),
-            accessToken), BASE_HOST, email);
+            accessToken), BASE_HOST);
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
@@ -66,11 +66,11 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
-              false), accessToken), BASE_HOST, email);
+              false), accessToken), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
           (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false), accessToken),
-          BASE_HOST, email);
+          BASE_HOST);
     }
   }
 
@@ -83,11 +83,11 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly),
-          accessToken), BASE_HOST, email);
+          accessToken), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
           (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly),
-              accessToken), BASE_HOST, email);
+              accessToken), BASE_HOST);
     }
   }
 

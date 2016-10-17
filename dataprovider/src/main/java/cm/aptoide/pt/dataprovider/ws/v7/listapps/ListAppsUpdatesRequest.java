@@ -39,8 +39,8 @@ import rx.schedulers.Schedulers;
 
   private static final int SPLIT_SIZE = 100;
 
-  private ListAppsUpdatesRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  private ListAppsUpdatesRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -56,7 +56,7 @@ import rx.schedulers.Schedulers;
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
         new Body(getInstalledApks(), subscribedStoresIds, idsRepository.getAdvertisingId()),
-        accessToken), BASE_HOST, email);
+        accessToken), BASE_HOST);
   }
 
   private static List<ApksData> getInstalledApks() {

@@ -15,8 +15,8 @@ import rx.Observable;
  */
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
-  public InAppBillingSkuDetailsRequest(String baseHost, BaseBody baseBody, String email) {
-    super(baseHost, baseBody, email);
+  public InAppBillingSkuDetailsRequest(String baseHost, BaseBody baseBody) {
+    super(baseHost, baseBody);
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
@@ -46,7 +46,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       args.put("simcc", operatorManager.getSimCountryISO());
     }
 
-    return new InAppBillingSkuDetailsRequest(BASE_HOST, args, email);
+    return new InAppBillingSkuDetailsRequest(BASE_HOST, args);
   }
 
   @Override

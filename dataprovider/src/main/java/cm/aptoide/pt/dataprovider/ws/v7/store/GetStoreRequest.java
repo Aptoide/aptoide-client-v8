@@ -29,8 +29,8 @@ import rx.Observable;
 
   private final String url;
 
-  private GetStoreRequest(String url, String baseHost, Body body, String email) {
-    super(body, baseHost, email);
+  private GetStoreRequest(String url, String baseHost, Body body) {
+    super(body, baseHost);
     this.url = url;
   }
 
@@ -49,7 +49,7 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
 
-    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body, accessToken), email);
+    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body, accessToken));
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -61,7 +61,7 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreRequest(new V7Url(url).remove("getStore").get(), BASE_HOST,
-        (Body) decorator.decorate(body, accessToken), email);
+        (Body) decorator.decorate(body, accessToken));
   }
 
   @Override

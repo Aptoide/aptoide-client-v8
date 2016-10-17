@@ -30,7 +30,7 @@ import rx.Observable;
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
       String storeName) {
     return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe(refresh)
         .flatMap(response -> {
       if (response != null && response.isOk()) {
@@ -48,8 +48,7 @@ import rx.Observable;
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail())
+    return GetAppRequest.of(packageName, storeName, AptoideAccountManager.getAccessToken())
         .observe(refresh)
         .flatMap(response -> {
       if (response != null && response.isOk()) {
@@ -98,7 +97,7 @@ import rx.Observable;
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {
@@ -112,8 +111,7 @@ import rx.Observable;
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail())
+    return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken())
         .observe(refresh)
         .flatMap(response -> {
       if (response != null && response.isOk()) {

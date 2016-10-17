@@ -29,13 +29,13 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   static final String STORT_BY_DOWNLOADS = "downloads7d";
   private String url;
 
-  private ListStoresRequest(String url, Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  private ListStoresRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
     this.url = url;
   }
 
-  private ListStoresRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  private ListStoresRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -58,8 +58,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
-    return new ListStoresRequest((Body) decorator.decorate(baseBody, accessToken), BASE_HOST,
-        email);
+    return new ListStoresRequest((Body) decorator.decorate(baseBody, accessToken), BASE_HOST);
   }
 
   public static ListStoresRequest ofAction(String url, String accessToken, String email) {
@@ -68,7 +67,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
             DataProvider.getContext()));
 
     return new ListStoresRequest(url.replace("listStores", ""),
-        (Body) decorator.decorate(new Body(), accessToken), BASE_HOST, email);
+        (Body) decorator.decorate(new Body(), accessToken), BASE_HOST);
   }
 
   @Override

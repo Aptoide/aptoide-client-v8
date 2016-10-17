@@ -32,8 +32,8 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
 
   private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
-  protected ListFullCommentsRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  protected ListFullCommentsRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   public static ListFullCommentsRequest of(long reviewId, int limit, String accessToken,
@@ -49,8 +49,7 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
 
-    return new ListFullCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListFullCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListFullComments> loadDataFromNetwork(Interfaces interfaces,

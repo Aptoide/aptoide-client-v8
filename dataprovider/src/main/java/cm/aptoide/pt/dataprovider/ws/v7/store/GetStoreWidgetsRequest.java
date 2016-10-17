@@ -28,8 +28,8 @@ import rx.Observable;
 
   private final String url;
 
-  private GetStoreWidgetsRequest(String url, String baseHost, Body body, String email) {
-    super(body, baseHost, email);
+  private GetStoreWidgetsRequest(String url, String baseHost, Body body) {
+    super(body, baseHost);
     this.url = url;
   }
 
@@ -48,7 +48,7 @@ import rx.Observable;
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
-        (Body) decorator.decorate(body, accessToken), email);
+        (Body) decorator.decorate(body, accessToken));
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,

@@ -14,14 +14,14 @@ import rx.Observable;
  */
 public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesResponse> {
 
-  private InAppBillingPurchasesRequest(String baseHost, BaseBody baseBody, String email) {
-    super(baseHost, baseBody, email);
+  private InAppBillingPurchasesRequest(String baseHost, BaseBody baseBody) {
+    super(baseHost, baseBody);
   }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type,
       String accessToken, String email) {
     BaseBody args = getBaseArgs(apiVersion, packageName, type, accessToken);
-    return new InAppBillingPurchasesRequest(BASE_HOST, args, email);
+    return new InAppBillingPurchasesRequest(BASE_HOST, args);
   }
 
   @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName, String type,

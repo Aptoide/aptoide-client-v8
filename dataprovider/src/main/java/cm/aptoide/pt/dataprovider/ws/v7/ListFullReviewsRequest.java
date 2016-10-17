@@ -37,12 +37,12 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private static final int MAX_COMMENTS = 10;
   private String url;
 
-  protected ListFullReviewsRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  protected ListFullReviewsRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
-  public ListFullReviewsRequest(String url, Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  public ListFullReviewsRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
     this.url = url;
   }
 
@@ -58,8 +58,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
         username, password);
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh, String accessToken,
@@ -68,7 +67,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
-        (Body) decorator.decorate(new Body(refresh), accessToken), BASE_HOST, email);
+        (Body) decorator.decorate(new Body(refresh), accessToken), BASE_HOST);
   }
 
   public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
@@ -87,8 +86,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
 
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   /**
@@ -103,8 +101,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
 
     Body body = new Body(storeName, packageName, maxReviews, 0,
         ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        email);
+    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces,

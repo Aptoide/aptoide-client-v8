@@ -5,10 +5,8 @@
 
 package cm.aptoide.pt.networkclient.okhttp;
 
-import cm.aptoide.pt.actions.GenerateClientId;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
 import okhttp3.Cache;
@@ -30,7 +28,7 @@ public class OkHttpClientFactory {
   private static OkHttpClient httpClientInstance;
 
   public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
-      Interceptor interceptor, GenerateClientId generateClientId, String email) {
+      Interceptor interceptor, String userAgent) {
     OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
     //		if (BuildConfig.DEBUG) {
@@ -41,29 +39,22 @@ public class OkHttpClientFactory {
 
     clientBuilder.addInterceptor(interceptor);
 
-    if (generateClientId != null) {
-      clientBuilder.addInterceptor(new UserAgentInterceptor(
-          AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, email)));
-    }
+    clientBuilder.addInterceptor(new UserAgentInterceptor(userAgent));
 
     return clientBuilder.build();
   }
 
-  public static OkHttpClient newClient(GenerateClientId generateClientId, String email) {
-    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, email))).build();
+  public static OkHttpClient newClient(String userAgent) {
+    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(userAgent)).build();
   }
 
   /**
-   * @param generateClientId an entity that generates user unique ids to use in User-Agent HEADER
-   * or
-   * null
    * @return an {@link OkHttpClient} instance
    */
-  public static OkHttpClient getSingletonClient(GenerateClientId generateClientId, String email) {
+  public static OkHttpClient getSingletonClient(String userAgent) {
     if (httpClientInstance == null) {
       httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor(),
-          generateClientId, email);
+          userAgent);
     }
     return httpClientInstance;
   }

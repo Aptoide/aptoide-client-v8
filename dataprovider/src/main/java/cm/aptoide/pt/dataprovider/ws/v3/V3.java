@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.ErrorResponse;
@@ -24,7 +22,7 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
@@ -44,13 +42,13 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
 
-  protected V3(String baseHost, String email) {
-    this(baseHost, new BaseBody(), email);
+  protected V3(String baseHost) {
+    this(baseHost, new BaseBody());
   }
 
-  protected V3(String baseHost, BaseBody baseBody, String email) {
-    super(Interfaces.class, OkHttpClientFactory.getSingletonClient(new IdsRepository(
-            SecurePreferencesImplementation.getInstance(), DataProvider.getContext()), email),
+  protected V3(String baseHost, BaseBody baseBody) {
+    super(Interfaces.class,
+        OkHttpClientFactory.getSingletonClient(SecurePreferences.getUserAgent()),
         WebService.getDefaultConverter(), baseHost);
     this.map = baseBody;
   }

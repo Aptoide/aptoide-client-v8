@@ -58,7 +58,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.getSingletonClient(generateClientId, userData)
+    String result = OkHttpClientFactory.getSingletonClient(userData)
         .newCall(testRequest)
         .execute()
         .body()
@@ -88,7 +88,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.newClient(generateClientId, userData)
+    String result = OkHttpClientFactory.newClient(userData)
         .newCall(testRequest)
         .execute()
         .body()

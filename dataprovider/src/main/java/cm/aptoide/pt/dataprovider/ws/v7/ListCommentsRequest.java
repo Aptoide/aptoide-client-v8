@@ -35,15 +35,15 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
   private static String url;
 
-  protected ListCommentsRequest(Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  protected ListCommentsRequest(Body body, String baseHost) {
+    super(body, baseHost);
   }
 
   public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email) {
     Logger.d("lou", "of: A");
     ListCommentsRequest.url = url;
-    return of(reviewId, limit, storeName, storeCredentials, accessToken, email);
+    return of(reviewId, limit, storeName, storeCredentials, accessToken);
   }
 
   public static ListCommentsRequest of(long reviewId, int offset, int limit, String accessToken,
@@ -67,11 +67,11 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
-    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
+    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListCommentsRequest of(long reviewId, int limit, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
     Logger.d("lou", "of: D");
     //
     //
@@ -87,7 +87,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc,
             username, password);
-    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST, email);
+    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces,

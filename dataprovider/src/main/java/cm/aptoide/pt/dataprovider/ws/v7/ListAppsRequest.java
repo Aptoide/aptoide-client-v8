@@ -26,8 +26,8 @@ import rx.Observable;
 
   private String url;
 
-  private ListAppsRequest(String url, Body body, String baseHost, String email) {
-    super(body, baseHost, email);
+  private ListAppsRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
     this.url = url;
   }
 
@@ -44,7 +44,7 @@ import rx.Observable;
             DataProvider.getContext()));
 
     return new ListAppsRequest(new V7Url(url).remove("listApps").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST, email);
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 
   @Override
