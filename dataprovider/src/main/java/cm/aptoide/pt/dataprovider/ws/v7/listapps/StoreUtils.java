@@ -182,7 +182,8 @@ public class StoreUtils {
 
     StoreAccessor storeAccessor =
         AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class);
-    return storeAccessor.get(storeName).map(store -> store != null).toBlocking().first();
+    return storeAccessor.get(storeName).map(store -> store != null).toBlocking()
+        .firstOrDefault(null);
   }
 
   public static String split(String repoUrl) {

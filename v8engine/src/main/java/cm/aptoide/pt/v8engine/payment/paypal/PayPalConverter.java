@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import java.math.BigDecimal;
+import com.paypal.android.sdk.payments.PayPalPayment;
 
 /**
  * Created by marcelobenites on 8/10/16.

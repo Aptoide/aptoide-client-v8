@@ -67,7 +67,7 @@ import rx.Observable;
       store = getStore(storeName);
     }
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPasswordSha1());
+    body.setStorePassSha1(store.getPassword());
     return new GetStoreMetaRequest(v7Url.get(), (Body) decorator.decorate(body), BASE_HOST);
   }
 
@@ -90,7 +90,7 @@ import rx.Observable;
     final StoreCredentials store = getStore(storeName);
     final Body body = new Body(storeName);
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPasswordSha1());
+    body.setStorePassSha1(store.getPassword());
     return new GetStoreMetaRequest(BASE_HOST, (Body) decorator.decorate(body));
   }
 

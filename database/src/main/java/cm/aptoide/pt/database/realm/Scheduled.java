@@ -173,18 +173,6 @@ import lombok.AllArgsConstructor;
     this.alternativeApkPath = alternativeApkPath;
   }
 
-  public String getAppAction() {
-    return appAction;
-  }
-
-  public void setAppAction(String appAction) {
-    this.appAction = appAction;
-  }
-
-  public AppAction getAppActionAsEnum() {
-    return AppAction.valueOf(appAction);
-  }
-
   public Obb getObb() {
     Obb obb = new Obb();
     Obb.ObbItem mainItem = new Obb.ObbItem();

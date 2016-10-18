@@ -12,19 +12,23 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.UpdatesAccessor;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import java.util.ArrayList;
+import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 
@@ -79,10 +83,6 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     */
     more.setOnClickListener((view) -> {
       ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
-        DownloadServiceHelper downloadManager =
-            new DownloadServiceHelper(AptoideDownloadManager.getInstance(),
-                new PermissionManager());
-        final DownloadAccessor accessor = AccessorFactory.getAccessorFor(Download.class);
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
         subscription =
             updateAccessor.getAll(false)
@@ -90,23 +90,20 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                 .observeOn(Schedulers.io())
                 .map(updates -> {
 
-                  List<Download> downloadList = new ArrayList<>(updates.size());
+                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
                     downloadList.add(new DownloadFactory().create(update));
                   }
                   return downloadList;
                 })
                 .flatMapIterable(downloads -> downloads)
-                .map(download -> downloadManager.startDownload(accessor,
-                    (PermissionRequest) getContext(), download))
+                .map(download -> displayable.getInstallManager()
+                    .install(UpdatesHeaderWidget.this.getContext(), download))
                 .toList()
                 .flatMap(observables -> Observable.merge(observables))
-                .filter(downloading -> downloading.getOverallDownloadStatus() == Download.COMPLETED)
-                .flatMap(downloading -> displayable.getInstallManager()
-                    .update(UpdatesHeaderWidget.this.getContext(),
-                        (PermissionRequest) UpdatesHeaderWidget.this.getContext(),
-                        downloading.getMd5()))
-                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                .filter(downloading -> downloading.getState()== Progress.DONE)
+                .subscribe(
+                    aVoid -> Logger.i(TAG, "Update task completed"),
                     throwable -> throwable.printStackTrace());
       }, () -> {
       });

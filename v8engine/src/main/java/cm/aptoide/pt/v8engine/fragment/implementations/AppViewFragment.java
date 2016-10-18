@@ -32,10 +32,12 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -240,20 +242,43 @@ public class AppViewFragment extends GridRecyclerFragment
   }
 
   private void setupObservables(GetApp getApp) {
+
+    // ??
+
+    final long storeId = getApp.getNodes().getMeta().getData().getStore().getId();
+
     // For stores subscription
-    DeprecatedDatabase.StoreQ.getAll(realm)
-        .asObservable()
+    //DeprecatedDatabase.StoreQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(stores -> {
+    //      if (DeprecatedDatabase.StoreQ.get(storeId, realm) != null) {
+    //        adapter.notifyDataSetChanged();
+    //      }
+    //    });
+
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(stores -> {
-          if (DeprecatedDatabase.StoreQ.get(
-              getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
+        .flatMap(list -> storeAccessor.get(storeId))
+        .subscribe(store -> {
+          if (store != null) {
             adapter.notifyDataSetChanged();
           }
         });
 
+    // ??
+
     // For install actions
-    DeprecatedDatabase.RollbackQ.getAll(realm)
-        .asObservable()
+    //DeprecatedDatabase.RollbackQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(rollbacks -> {
+    //      adapter.notifyDataSetChanged();
+    //    });
+
+    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    rollbackAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();

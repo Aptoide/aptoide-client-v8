@@ -54,21 +54,15 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     //}
     //return new StoreCredentialsApp();
 
-    final StoreCredentials storeCredentialsApp = new StoreCredentials();
-    if (TextUtils.isEmpty(storeName)) {
-      return storeCredentialsApp;
-    }
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    storeAccessor.get(storeName).toBlocking().subscribe(store -> {
+    if (!TextUtils.isEmpty(storeName)) {
+      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      Store store = storeAccessor.get(storeName).toBlocking().firstOrDefault(null);
       if (store != null) {
-        storeCredentialsApp.updateWith(store);
+        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
       }
-    }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
-    });
+    }
 
-    return storeCredentialsApp;
+    return new StoreCredentials();
   }
 
   /**
@@ -85,22 +79,15 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     //}
     //return new StoreCredentialsApp();
 
-    final StoreCredentials storeCredentialsApp = new StoreCredentials();
-    if (storeId == null) {
-      return storeCredentialsApp;
+    if (storeId != null) {
+      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      Store store = storeAccessor.get(storeId).toBlocking().firstOrDefault(null);
+      if (store != null) {
+        return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
+      }
     }
 
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    storeAccessor.get(storeId).toBlocking().subscribe(store -> {
-      if (store != null) {
-        storeCredentialsApp.updateWith(store);
-      }
-    }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
-    });
-
-    return storeCredentialsApp;
+    return new StoreCredentials();
   }
 
   @AllArgsConstructor public static class StoreCredentials {
@@ -111,11 +98,6 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     public StoreCredentials() {
       username = null;
       password = null;
-    }
-
-    public void updateWith(Store store) {
-      this.username = store.getUsername();
-      this.password = store.getPasswordSha1();
     }
   }
 }

@@ -71,11 +71,17 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {
     return Observable.fromCallable(() -> Database.get())
-        .flatMap(realm -> realm.where(Update.class)
+        .flatMap(realm -> Observable.defer(() -> {
+          Update update = realm.where(Update.class)
             .equalTo(Update.EXCLUDED, isExcluded)
             .contains(Update.PACKAGE_NAME, packageName)
-            .findFirst()
-            .asObservable())
+            .findFirst();
+          
+          if(update!=null) {
+            return Observable.just(update);
+          }
+          return Observable.empty();
+        }))
         .unsubscribeOn(RealmSchedulers.getScheduler())
         .map(update -> update != null)
         .subscribeOn(RealmSchedulers.getScheduler())

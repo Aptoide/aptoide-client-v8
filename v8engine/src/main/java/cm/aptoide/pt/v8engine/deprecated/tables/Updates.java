@@ -106,6 +106,6 @@ public class Updates extends BaseTable {
     //    .findFirst() != null;
 
     UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    return updateAccessor.get(packageName, true).toBlocking().first() != null;
+    return updateAccessor.get(packageName, true).toBlocking().firstOrDefault(null) != null;
   }
 }

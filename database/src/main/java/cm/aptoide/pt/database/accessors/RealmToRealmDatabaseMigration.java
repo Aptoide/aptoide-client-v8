@@ -90,8 +90,8 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
         previous_md5 = current_md5;
       }
 
-      schemaFile.removeField("md5");
-      schemaFile.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
+      scheduledSchema.removeField("md5");
+      scheduledSchema.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 
       scheduledSchema.addPrimaryKey("packageName");
       scheduledSchema.addField("appAction", String.class);

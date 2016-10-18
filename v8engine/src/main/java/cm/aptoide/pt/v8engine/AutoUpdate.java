@@ -147,7 +147,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                       File apk = new File(downloadedFile.getFilePath());
                       String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
                       if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-                        installer.install(activity, autoUpdateInfo.md5).toBlocking().subscribe();
+                        installer.install(activity, autoUpdateInfo.md5).toBlocking().first();
                       } else {
                         Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
                         throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);
