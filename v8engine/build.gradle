@@ -94,7 +94,6 @@ void configureFlurry(androidDelegate, key) {
 void configureLocalytics(androidDelegate, key) {
   boolean keyExists = key != null
   androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
-  androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists ? key : ""]
 }
 
 void configurePayPal(androidDelegate, key, environment) {

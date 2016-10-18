@@ -25,8 +25,7 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
   protected SetReviewRatingRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-        baseHost);
+    super(body, baseHost);
   }
 
   public static SetReviewRatingRequest of(long reviewId, boolean helpful) {

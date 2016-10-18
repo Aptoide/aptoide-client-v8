@@ -38,6 +38,7 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -296,6 +297,14 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     return userName;
   }
 
+  public static UserData getUserData() {
+    return new UserData() {
+      @Override public String getEmail() {
+        return getUserEmail();
+      }
+    };
+  }
+
   /**
    * Handles the answer given by sign in. It receives the data and inform the Aptoide server
    *
@@ -494,12 +503,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       throw new IllegalThreadStateException("This method shouldn't be called on ui thread.");
     }
     String refreshToken = getRefreshToken();
-    final String[] stringToReturn = { "" };
-    getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
-        .subscribe((token) -> {
-          stringToReturn[0] = token;
-        });
-    return stringToReturn[0];
+    //final String[] stringToReturn = { "" };
+    //stringToReturn[0] =
+    //    getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
+    //        .first();
+    //return stringToReturn[0];
+    return getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
+        .first();
   }
 
   private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,

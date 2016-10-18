@@ -30,6 +30,12 @@ import lombok.AllArgsConstructor;
     if (ManagerPreferences.getHWSpecsFilter()) {
       baseBody.setQ(Api.Q);
     }
+    if (ManagerPreferences.isDebug()) {
+      String forceCountry = ManagerPreferences.getForceCountry();
+      if (!TextUtils.isEmpty(forceCountry)) {
+        baseBody.setCountry(forceCountry);
+      }
+    }
 
     return baseBody;
   }

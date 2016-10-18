@@ -7,38 +7,35 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
-import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -53,9 +50,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private List<Displayable> installedDisplayablesList = new LinkedList<>();
   private Subscription installedSubscription;
   private Subscription updatesSubscription;
-  private Installer installManager;
-  private DownloadFactory downloadFactory;
-  private DownloadServiceHelper downloadManager;
+  private InstallManager installManager;
 
   public static UpdatesFragment newInstance() {
     UpdatesFragment fragment = new UpdatesFragment();
@@ -64,15 +59,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    PermissionManager permissionManager = new PermissionManager();
-    downloadManager =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-    installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            new DownloadInstallationProvider(downloadManager)),
-        RepositoryFactory.getRepositoryFor(Rollback.class), new RollbackActionFactory(),
-        new DownloadInstallationProvider(downloadManager));
-    downloadFactory = new DownloadFactory();
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -171,8 +161,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
                 for (Update update : updates) {
                   updatesDisplayablesList.add(
-                      UpdateDisplayable.create(update, installManager, downloadFactory,
-                          downloadManager));
+                      UpdateDisplayable.create(update, installManager, new DownloadFactory()));
                 }
               }
 
@@ -218,27 +207,49 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       //  finishLoading();
       //}
       //finishLoading();
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      Subscription unManagedSubscription = installedAccessor.getAllSorted()
+      final UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      final InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+      Subscription unManagedSubscription = installedAccessor.getAllSorted().flatMap(
+          // hack to make stream of changes complete inside this observable
+          listItems ->
+          Observable.from(listItems)
+              .flatMap(item -> filterUpdates(updateAccessor, item)) // filter for installed apps in updates
+              .filter(item -> item.isSystemApp())
+              .toList()
+          )
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .doOnCompleted(() -> setDisplayables())
-          .flatMapIterable(items -> items)
-          .filter(
-              item -> updateAccessor.contains(item.getPackageName(), false).toBlocking().first())
-          .toList()
-          .subscribe(installedApps -> {
-            for (Installed installedApp : installedApps) {
-              if (installedApp.isSystemApp()) {
-                installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
+          .subscribe(
+              installedApps -> {
+                installedDisplayablesList.clear();
+                installedDisplayablesList.add(new StoreGridHeaderDisplayable(
+                    new GetStoreWidgets.WSWidget().setTitle(
+                        AptoideUtils.StringU.getResString(R.string.installed_tab)))
+                );
+
+                for (Installed installedApp : installedApps) {
+                  installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
+
+                }
+                setDisplayables();
+                finishLoading();
+              }, err -> {
+                Logger.w(TAG, "finished loading not being called in fetchInstalled");
+                Logger.printException(err);
+                CrashReports.logException(err);
               }
-            }
-          }, err -> {
-            Logger.w(TAG, "finished loading not being called in fetchInstalled");
-            Logger.printException(err);
-            CrashReports.logException(err);
-          });
+          );
     }
+  }
+
+  private Observable<Installed> filterUpdates(UpdateAccessor updateAccessor, Installed item) {
+    return updateAccessor.contains(item.getPackageName(), false).flatMap(
+        itemIsContained -> {
+          if(itemIsContained) {
+            return Observable.just(item);
+          }
+          return Observable.empty();
+        }
+    );
   }
 
   private void setDisplayables() {

@@ -105,6 +105,18 @@ import lombok.AllArgsConstructor;
     this.versionName = versionName;
   }
 
+  public String getAppAction() {
+    return appAction;
+  }
+
+  public void setAppAction(String appAction) {
+    this.appAction = appAction;
+  }
+
+  public AppAction getAppActionAsEnum() {
+    return AppAction.valueOf(appAction);
+  }
+
   public String getIcon() {
     return icon;
   }
@@ -159,18 +171,6 @@ import lombok.AllArgsConstructor;
 
   public void setAlternativeApkPath(String alternativeApkPath) {
     this.alternativeApkPath = alternativeApkPath;
-  }
-
-  public String getAppAction() {
-    return appAction;
-  }
-
-  public void setAppAction(String appAction) {
-    this.appAction = appAction;
-  }
-
-  public AppAction getAppActionAsEnum() {
-    return AppAction.valueOf(appAction);
   }
 
   public Obb getObb() {

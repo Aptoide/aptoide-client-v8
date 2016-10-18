@@ -26,8 +26,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
   protected PostReviewRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-        baseHost);
+    super(body, baseHost);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,

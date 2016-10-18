@@ -27,13 +27,14 @@ import rx.Observable;
   private String email;
   private String name;
 
-  public CreateUserRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
+  CreateUserRequest(){ }
+
+  CreateUserRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
   }
 
   public static CreateUserRequest of(String email, String password) {
-    return new CreateUserRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter()).setEmail(email).setName("").setPassword(password);
+    return new CreateUserRequest().setEmail(email).setName("").setPassword(password);
   }
 
   @Override

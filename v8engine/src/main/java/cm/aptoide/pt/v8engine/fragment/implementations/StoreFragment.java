@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -167,28 +168,53 @@ public class StoreFragment extends BasePagerToolbarFragment {
       pagerSlidingTabStrip.setViewPager(viewPager);
     }
 
-    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-    floatingActionButton.setOnClickListener(
-        v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
-
+    /*
+     *  Click on tab listener
+     */
     StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
+    pagerSlidingTabStrip.setOnTabReselectedListener(position -> {
+      if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+          if (fragment != null && fragment instanceof AppsTimelineFragment) {
+            ((AppsTimelineFragment) fragment).goToTop();
+          }
+        }
+      }
+    });
+
+    /*
+     *  On Orientation change keep the fab up on subscribed stores
+     */
     if (viewPager.getCurrentItem() == adapter.getEventNamePosition(Event.Name.myStores)) {
+      FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+      floatingActionButton.setOnClickListener(
+          v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
       floatingActionButton.show();
     } else {
       floatingActionButton.hide();
     }
 
+    /* Be careful maintaining this code
+     * this affects both the main ViewPager when we open app
+     * and the ViewPager inside the StoresView
+     */
     viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
+
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
-        }
-
-        if (Integer.valueOf(position).equals(adapter.getEventNamePosition(Event.Name.myStores))) {
-          floatingActionButton.show();
-        } else if (floatingActionButton.getVisibility() == View.VISIBLE) {
           floatingActionButton.hide();
+          floatingActionButton.setOnClickListener(null);
+        } else if (Integer.valueOf(position)
+            .equals(adapter.getEventNamePosition(Event.Name.myStores))) {
+          FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+          floatingActionButton.setOnClickListener(
+              v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
+          floatingActionButton.show();
+        } else {
+          floatingActionButton.hide();
+          floatingActionButton.setOnClickListener(null);
         }
       }
     });

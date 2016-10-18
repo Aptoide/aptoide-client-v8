@@ -34,9 +34,10 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     args.put("limit", "1");
     args.put("lang", AptoideUtils.SystemU.getCountryCode());
 
-    // TODO: 7/13/16 trinkes verify this to work with aptoide toolbox
-    if (BuildConfig.DEBUG) {
-      args.put("notification_type", "aptoide_tests");
+    if (BuildConfig.DEBUG || ManagerPreferences.isDebug()) {
+      String notificationType = ManagerPreferences.getNotificationType();
+      args.put("notification_type",
+          TextUtils.isEmpty(notificationType) ? "aptoide_tests" : notificationType);
     } else {
       args.put("notification_type", "aptoide_vanilla");
     }

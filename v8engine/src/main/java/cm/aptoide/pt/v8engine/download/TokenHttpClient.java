@@ -6,6 +6,10 @@
 package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
+import cm.aptoide.pt.utils.AptoideUtils;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import java.io.IOException;
 import okhttp3.Interceptor;
@@ -19,6 +23,14 @@ import okhttp3.Response;
  * Created by marcelobenites on 9/12/16.
  */
 public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMaker {
+
+  private final GenerateClientId generateClientId;
+  private final UserData userData;
+
+  public TokenHttpClient(GenerateClientId generateClientId, UserData userData) {
+    this.generateClientId = generateClientId;
+    this.userData = userData;
+  }
 
   @Override public OkHttpClient customMake() {
     return new OkHttpClient.Builder().addInterceptor(new Interceptor() {
@@ -37,6 +49,9 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
 
         return chain.proceed(request);
       }
-    }).build();
+    })
+        .addInterceptor(new UserAgentInterceptor(
+            AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData)))
+        .build();
   }
 }

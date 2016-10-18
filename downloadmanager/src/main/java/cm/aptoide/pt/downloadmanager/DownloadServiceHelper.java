@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 7/4/16.
  */
-public class DownloadServiceHelper {
+@Deprecated public class DownloadServiceHelper {
 
   private final AptoideDownloadManager aptoideDownloadManager;
   private PermissionManager permissionManager;

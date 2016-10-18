@@ -27,7 +27,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by trinkes on 5/18/16.
  */
-public class DownloadService extends Service {
+@Deprecated public class DownloadService extends Service {
 
   public static final int NOTIFICATION_ID = 8;
   private static final String TAG = DownloadService.class.getSimpleName();

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by Marcelo Benites on 19/07/2016.
+ * Modified by Marcelo Benites on 29/09/2016.
  */
 
-package cm.aptoide.pt.v8engine.install;
+package cm.aptoide.pt.v8engine.install.installer;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

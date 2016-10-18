@@ -64,6 +64,7 @@ dependencies {
 
   testCompile "junit:junit:${JUNIT_VERSION}"
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "com.squareup.okhttp3:mockwebserver:${MOCKWEBSERVER_VERSION}"
 
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"

@@ -12,8 +12,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
-import cm.aptoide.pt.v8engine.install.RollbackInstallation;
-import cm.aptoide.pt.v8engine.install.RollbackInstallationFactory;
+import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;
 import java.io.File;
 import lombok.AllArgsConstructor;
 import rx.Observable;
@@ -22,18 +21,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 9/8/16.
  */
-@AllArgsConstructor public class RollbackActionFactory implements RollbackInstallationFactory {
-
-  @Override public Observable<Rollback> createRollback(RollbackInstallation installation,
-      Rollback.Action action) {
-    return Observable.fromCallable(() -> createRollbackItem(installation, action))
-        .subscribeOn(Schedulers.computation());
-  }
+@AllArgsConstructor public class RollbackFactory {
 
   /**
    * @param context used to get app info context.getPackageManager().getPackageInfo()
    */
-  @Override public Observable<Rollback> createRollback(Context context, String packageName,
+  public Observable<Rollback> createRollback(Context context, String packageName,
       Rollback.Action action, @Nullable String icon) {
 
     return Observable.fromCallable(() -> {
@@ -63,7 +56,7 @@ import rx.schedulers.Schedulers;
   }
 
   @NonNull
-  private Rollback createRollbackItem(RollbackInstallation installation, Rollback.Action action) {
+  public Rollback createRollback(RollbackInstallation installation, Rollback.Action action) {
     Rollback rollback = new Rollback();
     rollback.setMd5(installation.getId());
     //rollback.setMd5(AptoideUtils.AlgorithmU.computeMd5(installation.getFile()));

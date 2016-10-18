@@ -31,12 +31,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
   private static final int DATABASE_VERSION = 44;
-  private final Context context;
   private Throwable agregateExceptions;
 
   public SQLiteDatabaseHelper(Context context) {
     super(context, "aptoide.db", null, DATABASE_VERSION);
-    this.context = context;
   }
 
   @Override public void onCreate(SQLiteDatabase db) {

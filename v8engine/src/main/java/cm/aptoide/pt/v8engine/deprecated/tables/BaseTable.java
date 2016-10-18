@@ -63,13 +63,18 @@ public abstract class BaseTable {
       }
 
       // delete migrated table
-      // FIXME: 29/08/16 sithengineer uncomment the following lines when migration script is stable
+      // TODO: 29/08/16 sithengineer uncomment the following lines when migration script is stable
       //			db.beginTransaction();
       //			db.execSQL(DROP_TABLE_SQL + tableName);
       //			db.endTransaction();
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
-    } finally {
+    }
+    catch (Exception e) {
+      Logger.e(TAG, e);
+      //CrashReports.logException(e);
+    }
+    finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();
       }

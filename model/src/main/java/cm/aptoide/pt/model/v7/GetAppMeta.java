@@ -42,6 +42,10 @@ import lombok.EqualsAndHashCode;
     public boolean isPaid() {
       return (pay != null && pay.getPrice() != null && pay.getPrice().floatValue() > 0.0f);
     }
+
+    public String getMd5() {
+      return file == null ? "" : file.getMd5sum();
+    }
   }
 
   @Data public static class Pay {

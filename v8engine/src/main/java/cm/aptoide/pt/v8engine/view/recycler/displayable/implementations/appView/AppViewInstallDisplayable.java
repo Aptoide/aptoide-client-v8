@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.Button;
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -24,7 +23,6 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import lombok.Getter;
-import rx.Observable;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -37,7 +35,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   @Getter private MinimalAd minimalAd;
 
   private RollbackRepository rollbackRepository;
-  private Installer installManager;
+  //private Installer installManager;
 
   private String md5;
   private String packageName;
@@ -51,7 +49,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   public AppViewInstallDisplayable(Installer installManager, GetApp getApp, MinimalAd minimalAd,
       boolean shouldInstall, InstalledAccessor installedAccessor) {
     super(getApp);
-    this.installManager = installManager;
+    //this.installManager = installManager;
     this.md5 = getApp.getNodes().getMeta().getData().getFile().getMd5sum();
     this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
     this.minimalAd = minimalAd;
@@ -74,21 +72,21 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     }
   }
 
-  public Observable<Void> update(Context context) {
-    return installManager.update(context, (PermissionRequest) context, md5);
-  }
-
-  public Observable<Void> install(Context context) {
-    return installManager.install(context, (PermissionRequest) context, md5);
-  }
-
-  public Observable<Void> uninstall(Context context) {
-    return installManager.uninstall(context, packageName);
-  }
-
-  public Observable<Void> downgrade(Context context) {
-    return installManager.downgrade(context, (PermissionRequest) context, md5);
-  }
+  //public Observable<Void> update(Context context) {
+  //  return installManager.update(context, appId);
+  //}
+  //
+  //public Observable<Void> install(Context context) {
+  //  return installManager.install(context, appId);
+  //}
+  //
+  //public Observable<Void> uninstall(Context context) {
+  //  return installManager.uninstall(context, packageName);
+  //}
+  //
+  //public Observable<Void> downgrade(Context context) {
+  //  return installManager.downgrade(context, appId);
+  //}
 
   public void startInstallationProcess() {
     if (installButton != null) {

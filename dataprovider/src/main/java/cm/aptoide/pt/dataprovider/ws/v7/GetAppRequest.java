@@ -28,6 +28,10 @@ import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
 @EqualsAndHashCode(callSuper = true) public class GetAppRequest
     extends V7<GetApp, GetAppRequest.Body> {
 
+  private GetAppRequest(String baseHost, Body body) {
+    super(body, baseHost);
+  }
+
   private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost, Body body) {
     super(body, httpClient, converterFactory, baseHost);
@@ -38,13 +42,9 @@ import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST,
+    return new GetAppRequest(BASE_HOST,
         (Body) decorator.decorate(new Body(packageName, storeName, forceServerRefresh)));
   }
 
@@ -52,13 +52,9 @@ import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST,
+    return new GetAppRequest(BASE_HOST,
         (Body) decorator.decorate(new Body(appId, forceServerRefresh)));
   }
 
@@ -66,13 +62,9 @@ import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST,
+    return new GetAppRequest(BASE_HOST,
         (Body) decorator.decorate(new Body(forceServerRefresh, md5)));
   }
 
@@ -87,8 +79,7 @@ import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
     body.setStoreUser(getStore(storeName).getUsername());
     body.setStorePassSha1(getStore(storeName).getPassword());
 
-    return new GetAppRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
+    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body));
   }
 
   @Override

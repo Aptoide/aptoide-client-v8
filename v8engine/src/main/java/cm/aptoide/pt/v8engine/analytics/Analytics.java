@@ -136,7 +136,6 @@ public class Analytics {
         ACTIVATE_LOCALYTICS =
             ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
         isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-        Logger.d(TAG, "teste : " + ACTIVATE_LOCALYTICS + " : " + isFirstSession);
         if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
           return;
         }
@@ -1016,16 +1015,6 @@ public class Analytics {
     }
   }
 
-  public static class SourceViewedApplication {
-    private static final String PARTIAL_EVENT_NAME = "_Viewed_Application";
-    private static final String PACKAGE_NAME = "Package Name";
-
-    public static void view(String packageName) {
-      String lastStep = Analytics.AppViewViewedFrom.getLastStep();
-      track(lastStep.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
-    }
-  }
-
   public static class SourceDownloadComplete {
     private static final String PARTIAL_EVENT_NAME = "_Download_Complete";
     private static final String PACKAGE_NAME = "Package Name";
@@ -1046,16 +1035,30 @@ public class Analytics {
 
   public static class RootInstall {
 
-    private static final String EVENT_NAME = "ROOT_INSTALL";
+    private static final String ROOT_INSTALL_EVENT_NAME = "ROOT_INSTALL";
     private static final String EXIT_CODE = "EXIT_CODE";
     private static final String IS_INSTALLED = "IS_INSTALLED";
+    private static final String CONCAT = "CONCAT";
+    private static final String IS_ROOT = "IS_ROOT";
+    private static final String SETTING_ROOT = "SETTING_ROOT";
+    private static final String IS_INSTALLATION_TYPE_EVENT_NAME = "INSTALLATION_TYPE";
 
-    public static void installCompleted(int exitCode, boolean isInstalled) {
+    public static void rootInstallCompleted(int exitCode, boolean isInstalled) {
       Map<String, String> map = new HashMap<>();
       map.put(EXIT_CODE, String.valueOf(exitCode));
       map.put(IS_INSTALLED, String.valueOf(isInstalled));
+      map.put(CONCAT, String.valueOf(isInstalled) + "_" + exitCode);
 
-      logFabricEvent(EVENT_NAME, map, FABRIC);
+      logFabricEvent(ROOT_INSTALL_EVENT_NAME, map, FABRIC);
+    }
+
+    public static void installationType(boolean isRootAllowed, boolean isRoot) {
+      Map<String, String> map = new HashMap<>();
+      map.put(IS_ROOT, String.valueOf(isRoot));
+      map.put(SETTING_ROOT, String.valueOf(isRootAllowed));
+      map.put(CONCAT, String.valueOf(isRootAllowed) + "_" + String.valueOf(isRoot));
+
+      logFabricEvent(IS_INSTALLATION_TYPE_EVENT_NAME, map, FABRIC);
     }
   }
 }

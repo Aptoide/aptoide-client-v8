@@ -29,6 +29,8 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.PRNGFixes;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -36,7 +38,9 @@ import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
@@ -59,6 +63,7 @@ public abstract class V8Engine extends DataProvider {
 
   @Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
+  @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   private RefWatcher refWatcher;
 
@@ -111,9 +116,16 @@ public abstract class V8Engine extends DataProvider {
 
   @Override public void onCreate() {
     CrashReports.setup(this);
+    try {
+      PRNGFixes.apply();
+    } catch (Exception e) {
+      Logger.e(TAG, "onCreate: " + e);
+      CrashReports.logException(e);
+    }
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
     fragmentProvider = createFragmentProvider();
+    activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
 
     //
@@ -132,7 +144,7 @@ public abstract class V8Engine extends DataProvider {
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
-
+    Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
 
     if (BuildConfig.DEBUG) {
@@ -184,7 +196,9 @@ public abstract class V8Engine extends DataProvider {
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
             downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
-            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient());
+            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
+                new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
+                AptoideAccountManager.getUserData()));
 
     // setupCurrentActivityListener();
 
@@ -203,6 +217,10 @@ public abstract class V8Engine extends DataProvider {
 
   protected FragmentProvider createFragmentProvider() {
     return new FragmentProviderImpl();
+  }
+
+  protected ActivityProvider createActivityProvider() {
+    return new ActivityProviderImpl();
   }
 
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
@@ -234,6 +252,10 @@ public abstract class V8Engine extends DataProvider {
       return null;
     }).subscribeOn(Schedulers.io());
   }
+
+  //
+  // Strict Mode
+  //
 
   private void setupStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()

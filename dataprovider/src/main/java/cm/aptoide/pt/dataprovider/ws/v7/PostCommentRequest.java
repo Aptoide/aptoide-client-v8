@@ -25,8 +25,7 @@ public class PostCommentRequest extends V7<BaseV7Response, PostCommentRequest.Bo
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
   protected PostCommentRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-        baseHost);
+    super(body, baseHost);
   }
 
   public static PostCommentRequest of(long reviewId, String text) {
