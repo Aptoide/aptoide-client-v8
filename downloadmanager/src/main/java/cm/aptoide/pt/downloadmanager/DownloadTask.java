@@ -13,11 +13,13 @@ import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
 import rx.Observable;
@@ -199,10 +201,20 @@ class DownloadTask extends FileDownloadLargeFileListener {
     Observable.from(download.getFilesToDownload())
         .filter(file -> file.getDownloadId() == task.getId())
         .flatMap(file -> {
-          file.setPath(getFilePathFromFileType(file));
           file.setStatus(Download.COMPLETED);
-          return moveFileToRightPlace(download).doOnNext(
-              fileMoved -> file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE));
+          return moveFileToRightPlace(download).doOnNext(fileMoved -> {
+            if (fileMoved == null) {
+              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+            } else {
+              if (fileMoved) {
+                Logger.d(TAG, "Download md5 match");
+                file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+              } else {
+                Logger.e(TAG, "Download md5 is not correct");
+                setDownloadStatus(Download.ERROR, download, task);
+              }
+            }
+          });
         })
         .doOnUnsubscribe(() -> AptoideDownloadManager.getInstance().setDownloading(false))
         .subscribeOn(Schedulers.io())
@@ -269,7 +281,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
     }
   }
 
-  private Observable<Void> moveFileToRightPlace(Download download) {
+  private Observable<Boolean> moveFileToRightPlace(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       if (fileToDownload.getStatus() != Download.COMPLETED) {
         return Observable.just(null);
@@ -277,10 +289,19 @@ class DownloadTask extends FileDownloadLargeFileListener {
     }
     return Observable.fromCallable(() -> {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        fileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, fileToDownload.getPath(),
+        if (!TextUtils.isEmpty(fileToDownload.getMd5())) {
+          if (!TextUtils.equals(AptoideUtils.AlgorithmU.computeMd5(new File(
+                  AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())),
+              fileToDownload.getMd5())) {
+            return false;
+          }
+        }
+        String newFilePath = getFilePathFromFileType(fileToDownload);
+        fileUtils.copyFile(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH, newFilePath,
             fileToDownload.getFileName());
+        fileToDownload.setPath(newFilePath);
       }
-      return null;
+      return true;
     });
   }
 }
