@@ -90,7 +90,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   private void handleDeepLinks(Intent intent) {
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
-      if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
+
+      if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
+        appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
+      } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
         appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
         appViewDeepLink(
@@ -137,6 +140,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   private void appViewDeepLink(long appId) {
     pushFragmentV4(AppViewFragment.newInstance(appId));
+  }
+
+  private void appViewDeepLink(String md5) {
+    pushFragmentV4(AppViewFragment.newInstance(md5));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
