@@ -7,5 +7,5 @@ public interface DownloadNotificationActionsInterface {
 
   void button1Pressed();
 
-  void notificationPressed(long appId);
+  void notificationPressed(String md5);
 }

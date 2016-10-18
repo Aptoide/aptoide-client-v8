@@ -53,7 +53,7 @@ public class NotificationEventReceiver extends BroadcastReceiver {
             if (intent.hasExtra(AptoideDownloadManager.FILE_MD5_EXTRA)) {
               downloadManager.getDownloadNotificationActionsInterface()
                   .notificationPressed(
-                      intent.getLongExtra(AptoideDownloadManager.FILE_MD5_EXTRA, 0));
+                      intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA));
             }
             break;
           }
