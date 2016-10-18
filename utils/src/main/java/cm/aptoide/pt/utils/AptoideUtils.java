@@ -82,11 +82,8 @@ import javax.crypto.spec.SecretKeySpec;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
 
 import static android.net.ConnectivityManager.TYPE_ETHERNET;
 import static android.net.ConnectivityManager.TYPE_MOBILE;
@@ -101,14 +98,14 @@ public class AptoideUtils {
   @Getter @Setter private static Context context;
 
   public static class Core {
-
+    private static final String TAG = "Core";
     public static int getVerCode() {
       PackageManager manager = context.getPackageManager();
       try {
         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
         return info.versionCode;
       } catch (PackageManager.NameNotFoundException e) {
-        CrashReports.logException(e);
+        Logger.e(TAG, e);
         return -1;
       }
     }
@@ -131,7 +128,7 @@ public class AptoideUtils {
       try {
         myversionCode = manager.getPackageInfo(context.getPackageName(), 0).versionCode;
       } catch (PackageManager.NameNotFoundException ignore) {
-        CrashReports.logException(ignore);
+        Logger.e(TAG, ignore);
       }
 
       String filters =
@@ -170,8 +167,7 @@ public class AptoideUtils {
         md.update(bytes, 0, bytes.length);
         return md.digest();
       } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
-        CrashReports.logException(e);
+        Logger.e(TAG, e);
       }
 
       return new byte[0];
@@ -182,7 +178,6 @@ public class AptoideUtils {
         return convToHex(computeSha1(text.getBytes("iso-8859-1")));
       } catch (UnsupportedEncodingException e) {
         Logger.e(TAG, "computeSha1(String)", e);
-        CrashReports.logException(e);
       }
       return "";
     }
@@ -196,13 +191,11 @@ public class AptoideUtils {
         byte[] bytes = mac.doFinal(value.getBytes("UTF-8"));
         return convToHex(bytes);
       } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
+        Logger.e(TAG, e);
       } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-        CrashReports.logException(e);
+        Logger.e(TAG, e);
       } catch (InvalidKeyException e) {
-        e.printStackTrace();
-        CrashReports.logException(e);
+        Logger.e(TAG, e);
       }
       return "";
     }
@@ -256,7 +249,6 @@ public class AptoideUtils {
         is.close();
       } catch (Exception e) {
         e.printStackTrace();
-        CrashReports.logException(e);
         return null;
       }
 
@@ -466,7 +458,6 @@ public class AptoideUtils {
         v1.setDrawingCacheEnabled(false);
       } catch (Exception e) {
         Logger.e("FeedBackActivity-screenshot", "Exception: " + e.getMessage());
-        CrashReports.logException(e);
         return null;
       }
 
@@ -480,11 +471,9 @@ public class AptoideUtils {
         fout.close();
       } catch (FileNotFoundException e) {
         Logger.e("FeedBackActivity-screenshot", "FileNotFoundException: " + e.getMessage());
-        CrashReports.logException(e);
         return null;
       } catch (IOException e) {
         Logger.e("FeedBackActivity-screenshot", "IOException: " + e.getMessage());
-        CrashReports.logException(e);
         return null;
       }
       return imageFile;
@@ -493,11 +482,13 @@ public class AptoideUtils {
     public enum Size {
       notfound, small, normal, large, xlarge;
 
+      private static final String TAG = Size.class.getSimpleName();
+
       public static Size lookup(String screen) {
         try {
           return valueOf(screen);
         } catch (Exception e) {
-          CrashReports.logException(e);
+          Logger.e(TAG, e);
           return notfound;
         }
       }
@@ -626,8 +617,6 @@ public class AptoideUtils {
         final String displayLanguage = Locale.getDefault().getDisplayLanguage();
         Logger.e("UnknownFormatConversion",
             "String: " + resourceEntryName + " Locale: " + displayLanguage);
-        CrashReports.logMessage(3, "UnknownFormatConversion",
-            "String: " + resourceEntryName + " Locale: " + displayLanguage);
         result = resources.getString(resId);
       }
       return result;
@@ -671,6 +660,7 @@ public class AptoideUtils {
     public static final String TERMINAL_INFO =
         getModel() + "(" + getProduct() + ")" + ";v" + getRelease() + ";" + System.getProperty(
             "os.arch");
+    private static final String TAG = "SystemU";
     public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
 
     public static String getProduct() {
@@ -720,7 +710,6 @@ public class AptoideUtils {
             .getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
       } catch (PackageManager.NameNotFoundException e) {
         e.printStackTrace();
-        CrashReports.logException(e);
       }
       return null;
     }
@@ -805,7 +794,6 @@ public class AptoideUtils {
         process = Runtime.getRuntime().exec("logcat -d");
       } catch (IOException e) {
         Logger.e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
-        CrashReports.logException(e);
         return null;
       }
       FileOutputStream outputStream;
@@ -832,7 +820,7 @@ public class AptoideUtils {
         }
         outputStream.write(log.toString().getBytes());
       } catch (IOException e) {
-        CrashReports.logException(e);
+        Logger.e(TAG, e);
         return logsFile;
       }
 
@@ -863,7 +851,6 @@ public class AptoideUtils {
               }
             }
           } catch (Exception e) {
-            CrashReports.logException(e);
             Logger.printException(e);
           }
         }
@@ -964,7 +951,6 @@ public class AptoideUtils {
     public static void runOnIoThread(Runnable runnable) {
       Observable.just(null).observeOn(Schedulers.io()).subscribe(o -> runnable.run(), e -> {
         Logger.printException(e);
-        CrashReports.logException(e);
       });
     }
 
@@ -980,7 +966,6 @@ public class AptoideUtils {
       try {
         Thread.sleep(l);
       } catch (InterruptedException e) {
-        CrashReports.logException(e);
         e.printStackTrace();
       }
     }
@@ -1350,8 +1335,6 @@ public class AptoideUtils {
         }
       } catch (Exception e) {
         Logger.printException(e);
-        CrashReports.logString("imageUrl", imageUrl);
-        CrashReports.logException(e);
       }
 
       return screen;
@@ -1446,7 +1429,6 @@ public class AptoideUtils {
         }
       } catch (Exception e) {
         Logger.printException(e);
-        CrashReports.logException(e);
       }
       return iconUrl;
     }
