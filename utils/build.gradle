@@ -5,9 +5,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-
 retrolambda {
   jvmArgs '-noverify'
   //defaultMethods true
@@ -20,7 +17,6 @@ android {
   defaultConfig {
     minSdkVersion 9
     consumerProguardFiles "proguard-rules.txt"
-    configureFabric delegate, localProperties.FABRIC_API_KEY
   }
 
   lintOptions {
@@ -45,10 +41,6 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-}
-
-void configureFabric(androidDelegate, key) {
-  androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
 }
 
 dependencies {
@@ -82,8 +74,4 @@ dependencies {
   compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"
   // And ProGuard rules for RxJava!
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-
-  compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
-    transitive = true;
-  }
 }

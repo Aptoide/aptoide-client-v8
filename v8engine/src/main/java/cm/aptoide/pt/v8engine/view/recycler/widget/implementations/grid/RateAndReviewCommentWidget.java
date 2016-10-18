@@ -169,7 +169,9 @@ import java.util.Locale;
       textInputLayout.setErrorEnabled(false);
       dialog.dismiss();
 
-      PostCommentRequest.of(reviewId, commentOnReviewText).execute(response -> {
+      PostCommentRequest.of(reviewId, commentOnReviewText, AptoideAccountManager.getAccessToken(),
+          AptoideAccountManager.getUserEmail())
+          .execute(response -> {
         dialog.dismiss();
         if (response.isOk()) {
           ManagerPreferences.setForceServerRefreshFlag(true);
@@ -196,7 +198,9 @@ import java.util.Locale;
 
   private void loadCommentsForThisReview(long reviewId, int limit,
       RateAndReviewsFragment.CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit).execute(listComments -> {
+    ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
+        AptoideAccountManager.getUserEmail())
+        .execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
         commentAdder.addComment(comments);
@@ -218,7 +222,9 @@ import java.util.Locale;
     flagNotHelfull.setVisibility(View.INVISIBLE);
 
     if (AptoideAccountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive).execute(response -> {
+      SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
+          AptoideAccountManager.getUserEmail())
+          .execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
           return;

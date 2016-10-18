@@ -6,18 +6,16 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,14 +48,15 @@ import rx.schedulers.Schedulers;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static ListAppsUpdatesRequest of() {
+  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
+      String email) {
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
-        new Body(getInstalledApks(), StoreUtils.getSubscribedStoresIds(),
-            idsRepository.getAdvertisingId())), BASE_HOST);
+        new Body(getInstalledApks(), subscribedStoresIds, idsRepository.getAdvertisingId()),
+        accessToken), BASE_HOST);
   }
 
   private static List<ApksData> getInstalledApks() {
@@ -72,24 +71,6 @@ import rx.schedulers.Schedulers;
 
     return apksDatas;
   }
-
-  // unused method
-  //private static List<ApksData> getInstalledApksDataWithoutExcluded() {
-  //  LinkedList<ApksData> apksDatas = new LinkedList<>();
-  //
-  //  @Cleanup Realm realm = DeprecatedDatabase.get();
-  //
-  //  //RealmResults<Update> excludedUpdates = Database.UpdatesQ.getAll(realm, true);
-  //  RealmResults<Installed> installeds = DeprecatedDatabase.InstalledQ.getAll(realm);
-  //  for (Installed installed : installeds) {
-  //    if (!DeprecatedDatabase.UpdatesQ.contains(installed.getPackageName(), true, realm)) {
-  //      apksDatas.add(new ApksData(installed.getPackageName(), installed.getVersionCode(),
-  //          installed.getSignature()));
-  //    }
-  //  }
-  //
-  //  return apksDatas;
-  //}
 
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {

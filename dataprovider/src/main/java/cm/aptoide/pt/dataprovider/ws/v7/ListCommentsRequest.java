@@ -12,8 +12,6 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
@@ -22,8 +20,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import rx.Observable;
-
-import static cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore.getStore;
 
 /**
  * Created by sithengineer on 20/07/16.
@@ -43,20 +39,22 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     super(body, baseHost);
   }
 
-  public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName) {
+  public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName,
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email) {
     Logger.d("lou", "of: A");
     ListCommentsRequest.url = url;
-    return of(reviewId, limit, storeName);
+    return of(reviewId, limit, storeName, storeCredentials, accessToken);
   }
 
-  public static ListCommentsRequest of(long reviewId, int offset, int limit) {
+  public static ListCommentsRequest of(long reviewId, int offset, int limit, String accessToken,
+      String email) {
     Logger.d("lou", "of: B");
-    ListCommentsRequest listCommentsRequest = of(reviewId, limit);
+    ListCommentsRequest listCommentsRequest = of(reviewId, limit, accessToken, email);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
 
-  public static ListCommentsRequest of(long reviewId, int limit) {
+  public static ListCommentsRequest of(long reviewId, int limit, String accessToken, String email) {
     Logger.d("lou", "of: C");
     //
     //
@@ -69,17 +67,17 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
-    return new ListCommentsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListCommentsRequest of(long reviewId, int limit, String storeName) {
+  public static ListCommentsRequest of(long reviewId, int limit, String storeName,
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
     Logger.d("lou", "of: D");
     //
     //
     //
-    final BaseRequestWithStore.StoreCredentials storeOnRequest = getStore(storeName);
-    String username = storeOnRequest.getUsername();
-    String password = storeOnRequest.getPassword();
+    String username = storeCredentials.getUsername();
+    String password = storeCredentials.getPasswordSha1();
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -89,7 +87,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc,
             username, password);
-    return new ListCommentsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces,

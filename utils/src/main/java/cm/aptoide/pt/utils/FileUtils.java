@@ -91,14 +91,12 @@ public class FileUtils {
 
       return true;
     } catch (IOException e) {
-      CrashReports.logException(e);
       Logger.e(TAG, e.getMessage());
       if (fos != null) {
         try {
           fos.close();
         } catch (IOException e1) {
-          CrashReports.logException(e1);
-          e1.printStackTrace();
+          Logger.e(TAG, e1.getMessage());
         }
       }
     }
@@ -164,7 +162,6 @@ public class FileUtils {
         sendFileMoveEvent.call(COPY);
       }
     } catch (Exception e) {
-      CrashReports.logException(e);
       File inputFile = new File(inputPath + "/" + fileName);
       if (inputFile.exists()) {
         inputFile.delete();

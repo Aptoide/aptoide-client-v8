@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
@@ -34,7 +35,8 @@ import rx.Observable;
   private final ProductFactory productFactory;
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
-    return InAppBillingAvailableRequest.of(apiVersion, packageName, type)
+    return InAppBillingAvailableRequest.of(apiVersion, packageName, type,
+        AptoideAccountManager.getUserEmail())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -65,7 +67,8 @@ import rx.Observable;
 
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
-    return InAppBillingPurchasesRequest.of(apiVersion, packageName, type)
+    return InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -78,7 +81,8 @@ import rx.Observable;
 
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
-    return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken)
+    return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken,
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -106,7 +110,8 @@ import rx.Observable;
 
   private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
       String packageName, List<String> skuList, String type) {
-    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type)
+    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

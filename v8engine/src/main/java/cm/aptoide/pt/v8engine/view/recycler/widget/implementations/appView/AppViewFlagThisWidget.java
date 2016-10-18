@@ -8,13 +8,13 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewFlagThisDisplayable;
@@ -127,7 +127,9 @@ import java.util.Map;
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
-      AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase()).execute(response -> {
+      AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
+          AptoideAccountManager.getAccessToken())
+          .execute(response -> {
         if (response.isOk() && !response.hasErrors()) {
           boolean voteSubmitted = false;
           switch (type) {

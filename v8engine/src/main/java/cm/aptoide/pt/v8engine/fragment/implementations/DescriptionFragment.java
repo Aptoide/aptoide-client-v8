@@ -15,15 +15,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 
 /**
@@ -76,7 +78,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (hasAppId) {
-      GetAppRequest.of(appId, storeName).execute(getApp -> {
+      GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
+          AptoideAccountManager.getAccessToken())
+          .execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

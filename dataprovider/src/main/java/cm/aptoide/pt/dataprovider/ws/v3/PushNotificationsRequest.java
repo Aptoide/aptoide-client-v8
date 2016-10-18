@@ -6,8 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.BuildConfig;
-import cm.aptoide.accountmanager.ws.BaseBody;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -23,7 +22,7 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     super(BASE_HOST, baseBody);
   }
 
-  public static PushNotificationsRequest of() {
+  public static PushNotificationsRequest of(String email) {
     BaseBody args = new BaseBody();
 
     String oemid = DataProvider.getConfiguration().getExtraId();

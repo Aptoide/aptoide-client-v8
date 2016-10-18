@@ -10,8 +10,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullComments;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
@@ -38,7 +36,8 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
     super(body, baseHost);
   }
 
-  public static ListFullCommentsRequest of(long reviewId, int limit) {
+  public static ListFullCommentsRequest of(long reviewId, int limit, String accessToken,
+      String email) {
     //
     //
     //
@@ -50,7 +49,7 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
 
-    return new ListFullCommentsRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new ListFullCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<ListFullComments> loadDataFromNetwork(Interfaces interfaces,

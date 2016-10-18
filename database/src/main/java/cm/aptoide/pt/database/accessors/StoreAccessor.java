@@ -28,4 +28,8 @@ public class StoreAccessor extends SimpleAccessor<Store> {
   public void remove(long storeId) {
     database.delete(Store.class, Store.STORE_ID, storeId);
   }
+
+  public void save(Store store) {
+    Database.save(store);
+  }
 }

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import rx.Observable;
 
@@ -18,7 +17,8 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
     super(baseHost, baseBody);
   }
 
-  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
+  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type,
+      String email) {
     final BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("apiversion", String.valueOf(apiVersion));
