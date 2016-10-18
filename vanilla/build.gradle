@@ -75,8 +75,7 @@ android {
                             suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider",
                             currentApplicationId       : "cm.aptoide.pt",
                             fabricApiKey               : fabricConfigured ?
-                                localProperties.FABRIC_API_KEY : ""
-    ]
+                                localProperties.FABRIC_API_KEY : ""]
   }
 
   lintOptions {
@@ -101,8 +100,7 @@ android {
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.internal",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal",
-                              currentApplicationId       : "cm.aptoide.pt.internal"
-      ]
+                              currentApplicationId       : "cm.aptoide.pt.internal"]
     }
 
     dev {
@@ -117,21 +115,21 @@ android {
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.dev",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev",
-                              currentApplicationId       : "cm.aptoide.pt.dev"
-      ]
+                              currentApplicationId       : "cm.aptoide.pt.dev"]
     }
 
     prod {
       Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "PROD_VERSION_CODE")
       versionCode value
-      versionName "8.0.0.5"
+      versionName "8.0.0.7"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
   }
 
   buildTypes {
     release {
+      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
@@ -139,6 +137,7 @@ android {
     }
 
     debug {
+      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
       ext.enableCrashlytics = false
       multiDexEnabled true
       zipAlignEnabled false
@@ -178,15 +177,15 @@ android {
         output.outputFile = new File(output.outputFile.parent, newName)
       }
 
-//      variant.productFlavors.each { flavor ->
-//        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
-//            VersionCodeFileUpdateTask
-//        versionUpdate.versionPropertiesFile =
-//            project.file("../../aptoideProperties/version.properties")
-//        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
-//        versionUpdate.versionCode = variant.mergedFlavor.versionCode
-//        variant.assemble.dependsOn versionUpdate
-//      }
+      //      variant.productFlavors.each { flavor ->
+      //        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
+      //            VersionCodeFileUpdateTask
+      //        versionUpdate.versionPropertiesFile =
+      //            project.file("../../aptoideProperties/version.properties")
+      //        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
+      //        versionUpdate.versionCode = variant.mergedFlavor.versionCode
+      //        variant.assemble.dependsOn versionUpdate
+      //      }
     }
   }
 
@@ -278,6 +277,8 @@ if (propFile.canRead()) {
     android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
     android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
     android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    android.signingConfigs.release.v2SigningEnabled = false
+
     println 'all good to go'
   } else {
     android.buildTypes.release.signingConfig = null
@@ -288,36 +289,8 @@ if (propFile.canRead()) {
   android.buildTypes.release.signingConfig = null
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void configureLocalytics(androidDelegate, key) {
+  boolean keyExists = key != null
+  androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
+  androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists ? key : ""]
+}

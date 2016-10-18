@@ -36,15 +36,12 @@ import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -65,11 +62,8 @@ import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -77,7 +71,6 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -122,7 +115,6 @@ public class AppViewFragment extends GridRecyclerFragment
   // vars
   //
   private AppViewHeader header;
-  //	private GetAppMeta.App app;
   private long appId;
   private String packageName;
   private OpenType openType;
@@ -136,7 +128,6 @@ public class AppViewFragment extends GridRecyclerFragment
   private Installer installManager;
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
-  private DownloadServiceHelper downloadManager;
   private AppRepository appRepository;
   private ProductFactory productFactory;
   private Subscription subscription;
@@ -154,6 +145,9 @@ public class AppViewFragment extends GridRecyclerFragment
   private Menu menu;
   private String appName;
   private String wUrl;
+  private GetAppMeta.App app;
+  private AppAction appAction = AppAction.OPEN;
+  private InstalledAccessor installedAccessor;
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
@@ -217,23 +211,15 @@ public class AppViewFragment extends GridRecyclerFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    downloadManager =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-
     permissionManager = new PermissionManager();
-    DownloadInstallationProvider installationProvider =
-        new DownloadInstallationProvider(downloadManager);
-
-    installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            installationProvider), RepositoryFactory.getRepositoryFor(Rollback.class),
-        new RollbackActionFactory(), installationProvider);
+    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
         productFactory);
     adRepository = new AdRepository();
+    installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -255,40 +241,22 @@ public class AppViewFragment extends GridRecyclerFragment
 
   private void setupObservables(GetApp getApp) {
     // For stores subscription
-    //DeprecatedDatabase.StoreQ.getAll( realm)
-    //    .asObservable()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(stores -> {
-    //      if (DeprecatedDatabase.StoreQ.get(
-    //          getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
-    //        adapter.notifyDataSetChanged();
-    //      }
-    //    });
-
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    storeAccessor.getAll().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
-      // ??
-      adapter.notifyDataSetChanged();
-    }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
-    });
+    DeprecatedDatabase.StoreQ.getAll(realm)
+        .asObservable()
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(stores -> {
+          if (DeprecatedDatabase.StoreQ.get(
+              getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
+            adapter.notifyDataSetChanged();
+          }
+        });
 
     // For install actions
-    //DeprecatedDatabase.RollbackQ.getAll(realm)
-    //    .asObservable()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(rollbacks -> {
-    //      adapter.notifyDataSetChanged();
-    //    });
-    RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
-    rollbackAccessor.getAll()
+    DeprecatedDatabase.RollbackQ.getAll(realm)
+        .asObservable()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
         });
 
     // TODO: 27-05-2016 neuro install actions, not present in v7
@@ -301,7 +269,7 @@ public class AppViewFragment extends GridRecyclerFragment
     GetAppMeta.Media media = app.getMedia();
 
     installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
-        openType == OpenType.OPEN_AND_INSTALL, AccessorFactory.getAccessorFor(Installed.class));
+        openType == OpenType.OPEN_AND_INSTALL, installedAccessor);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -392,6 +360,9 @@ public class AppViewFragment extends GridRecyclerFragment
       shareApp(appName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
+
+      scheduled = Scheduled.from(app, appAction);
+
       //@Cleanup Realm realm = DeprecatedDatabase.get();
       //realm.beginTransaction();
       //realm.copyToRealmOrUpdate(scheduled);
@@ -474,13 +445,20 @@ public class AppViewFragment extends GridRecyclerFragment
   }
 
   private void setupAppView(GetApp getApp) {
+    app = getApp.getNodes().getMeta().getData();
+    updateLocalVars(app);
     if (storeTheme == null) {
       storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
     }
 
     // useful data for the schedule updates menu option
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    scheduled = Scheduled.from(app, AppAction.INSTALL);
+    installAction().observeOn(AndroidSchedulers.mainThread()).subscribe(appAction -> {
+      AppViewFragment.this.appAction = appAction;
+      MenuItem item = menu.findItem(R.id.menu_schedule);
+      if (item != null) {
+        item.setVisible(appAction != AppAction.OPEN);
+      }
+    });
 
     header.setup(getApp);
     setupDisplayables(getApp);
@@ -505,6 +483,15 @@ public class AppViewFragment extends GridRecyclerFragment
           });
     }
     finishLoading();
+  }
+
+  private void updateLocalVars(GetAppMeta.App app) {
+    appId = app.getId();
+    packageName = app.getPackageName();
+    storeName = app.getStore().getName();
+    storeTheme = app.getStore().getAppearance().getTheme();
+    md5 = app.getMd5();
+    appName = app.getName();
   }
 
   private void showHideMenus(boolean visible) {
@@ -636,6 +623,28 @@ public class AppViewFragment extends GridRecyclerFragment
   public void setupShare(GetApp app) {
     appName = app.getNodes().getMeta().getData().getName();
     wUrl = app.getNodes().getMeta().getData().getUrls().getW();
+  }
+
+  public Observable<AppAction> installAction() {
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    return installedAccessor.getInstalledAsList(packageName).map(installedList -> {
+      if (installedList != null && installedList.size() > 0) {
+        Installed installed = installedList.get(0);
+        if (app.getFile().getVercode() == installed.getVersionCode()) {
+          //current installed version
+          return AppAction.OPEN;
+        } else if (app.getFile().getVercode() > installed.getVersionCode()) {
+          //update
+          return AppAction.UPDATE;
+        } else {
+          //downgrade
+          return AppAction.DOWNGRADE;
+        }
+      } else {
+        //app not installed
+        return AppAction.INSTALL;
+      }
+    });
   }
 
   private enum BundleKeys {
@@ -794,7 +803,6 @@ public class AppViewFragment extends GridRecyclerFragment
           app.getFile().getMalware().getRank().name());
       Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(),
           app.getDeveloper().getName(), app.getFile().getMalware().getRank().name());
-      Analytics.SourceViewedApplication.view(app.getPackageName());
 
       final Malware malware = app.getFile().getMalware();
       badge.setOnClickListener(v -> {

@@ -5,9 +5,12 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import android.text.TextUtils;
+import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
+import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
@@ -29,10 +32,6 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
   @Override public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
-    Logger.w(TAG,
-        String.format(Locale.ROOT, "realm database migration from version %d to %d", oldVersion,
-            newVersion));
-
     // During a migration, a DynamicRealm is exposed. A DynamicRealm is an untyped variant of a normal Realm, but
     // with the same object creation and query capabilities.
     // A DynamicRealm uses Strings instead of Class references because the Classes might not even exist or have been
@@ -47,7 +46,9 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     if (oldVersion <= 8075) {
 
       oldVersion = 8075;
-      schema.get("Scheduled").removeField("appId");
+
+      schema.get("Scheduled")
+          .removeField("appId");
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -74,8 +75,23 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       if (scheduledSchema.hasPrimaryKey()) {
         scheduledSchema.removePrimaryKey();
       }
-      scheduledSchema.removeField("md5");
-      scheduledSchema.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
+
+      // remove entries with duplicated MD5 fields
+      // this leads to the removal of some Scheduled updates
+
+      String previous_md5 = "";
+      for (DynamicRealmObject dynamicRealmObject :
+          realm.where("Scheduled").findAllSorted("md5")) {
+
+        String current_md5 = dynamicRealmObject.getString("md5");
+        if(TextUtils.equals(previous_md5, current_md5)){
+          dynamicRealmObject.deleteFromRealm();
+        }
+        previous_md5 = current_md5;
+      }
+
+      schemaFile.removeField("md5");
+      schemaFile.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 
       scheduledSchema.addPrimaryKey("packageName");
       scheduledSchema.addField("appAction", String.class);

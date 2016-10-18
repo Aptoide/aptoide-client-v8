@@ -28,6 +28,10 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
+  private ListSearchAppsRequest(Body body, String baseHost) {
+    super(body, baseHost);
+  }
+
   private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
       Body body, String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
@@ -37,9 +41,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
-
     List<String> stores = Collections.singletonList(storeName);
 
     HashMapNotNull<String, List<String>> subscribedStoresAuthMap =
@@ -47,12 +48,10 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-      return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(),
-          WebService.getDefaultConverter(), (Body) decorator.decorate(
+      return new ListSearchAppsRequest((Body) decorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false)), BASE_HOST);
     }
-    return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(),
+    return new ListSearchAppsRequest(
         (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, stores, false)),
         BASE_HOST);
   }
@@ -65,13 +64,11 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(),
-          WebService.getDefaultConverter(), (Body) decorator.decorate(
+      return new ListSearchAppsRequest((Body) decorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, StoreUtils.getSubscribedStoresIds(),
               StoreUtils.getSubscribedStoresAuthMap(), false)), BASE_HOST);
     } else {
-      return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(),
-          WebService.getDefaultConverter(),
+      return new ListSearchAppsRequest(
           (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false)), BASE_HOST);
     }
   }
@@ -83,13 +80,11 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
             DataProvider.getContext()));
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(),
-          WebService.getDefaultConverter(), (Body) decorator.decorate(
+      return new ListSearchAppsRequest((Body) decorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, StoreUtils.getSubscribedStoresIds(),
               StoreUtils.getSubscribedStoresAuthMap(), trustedOnly)), BASE_HOST);
     } else {
-      return new ListSearchAppsRequest(OkHttpClientFactory.getSingletonClient(),
-          WebService.getDefaultConverter(),
+      return new ListSearchAppsRequest(
           (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly)),
           BASE_HOST);
     }

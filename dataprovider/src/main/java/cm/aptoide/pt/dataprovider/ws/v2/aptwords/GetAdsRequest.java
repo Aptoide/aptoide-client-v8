@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -12,7 +13,7 @@ import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -31,7 +32,13 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetAdsRequest
     extends Aptwords<GetAdsResponse> {
 
+  private static IdsRepository idsRepository =
+      new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+
   private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
+      .addInterceptor(new UserAgentInterceptor(
+          AptoideUtils.NetworkUtils.getDefaultUserAgent(idsRepository,
+              AptoideAccountManager.getUserData())))
       .connectTimeout(2, TimeUnit.SECONDS)
       .build();
 
@@ -43,10 +50,8 @@ import rx.Observable;
   private String categories;
   private String excludedNetworks;
 
-  public GetAdsRequest() {
-    super(client, WebService.getDefaultConverter(),
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+  private GetAdsRequest() {
+    super(client);
   }
 
   private static GetAdsRequest of(Location location, String keyword, Integer limit) {

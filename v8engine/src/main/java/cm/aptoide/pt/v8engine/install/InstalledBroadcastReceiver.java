@@ -147,7 +147,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   private void databaseOnPackageAdded(String packageName) {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    if (checkAndLogNullPackageInfo(packageInfo)) {
+    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return;
     }
 
@@ -184,10 +184,11 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
         Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
       }
 
-      PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
-      if (checkAndLogNullPackageInfo(packageInfo)) {
-        return;
-      }
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+
+    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
+      return;
+    }
 
       if (update != null) {
         if (packageInfo.versionCode >= update.getVersionCode()) {
@@ -206,11 +207,13 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
   /**
    * @param packageInfo packageInfo.
+   * @param packageName
    * @return true if packageInfo is null, false otherwise.
    */
-  private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo) {
+  private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {
     if (packageInfo == null) {
-      CrashReports.logException(new IllegalArgumentException("PackageName null!"));
+      CrashReports.logException(
+          new IllegalArgumentException("PackageName null for package " + packageName));
       return true;
     } else {
       return false;

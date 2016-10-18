@@ -23,6 +23,19 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 
   private static final String TAG = BaseRequestWithStore.class.getName();
 
+  public BaseRequestWithStore(B body, String baseHost) {
+    super(body, baseHost);
+  }
+
+  public BaseRequestWithStore(B body, Converter.Factory converterFactory,
+      String baseHost) {
+    super(body, converterFactory, baseHost);
+  }
+
+  public BaseRequestWithStore(B body, OkHttpClient httpClient, String baseHost) {
+    super(body, httpClient, baseHost);
+  }
+
   public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost) {
     super(body, httpClient, converterFactory, baseHost);

@@ -29,7 +29,12 @@ import rx.Observable;
 
   private String url;
 
-  public GetStoreDisplaysRequest(String url, Body body, OkHttpClient httpClient,
+  GetStoreDisplaysRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
+    this.url = url;
+  }
+
+  GetStoreDisplaysRequest(String url, Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
     this.url = url;
@@ -53,9 +58,8 @@ import rx.Observable;
       store = getStore(storeName);
     }
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPassword());
-    return new GetStoreDisplaysRequest(v7Url.get(), (Body) decorator.decorate(body),
-        OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST);
+    body.setStorePassSha1(store.getPasswordSha1());
+    return new GetStoreDisplaysRequest(v7Url.get(), (Body) decorator.decorate(body), BASE_HOST);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,

@@ -9,7 +9,7 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 /**
  * Created by trinkes on 6/28/16.
  */
-public class DownloadNotificationActionsActionsInterface
+@Deprecated public class DownloadNotificationActionsActionsInterface
     implements DownloadNotificationActionsInterface {
 
   private static final String TAG =
@@ -30,7 +30,7 @@ public class DownloadNotificationActionsActionsInterface
 
   @NonNull private Intent createDeeplinkingIntent() {
     Intent intent = new Intent();
-    intent.setClass(Application.getContext(), MainActivityFragment.class);
+    intent.setClass(Application.getContext(), V8Engine.getConfiguration().getMainActivityClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
   }

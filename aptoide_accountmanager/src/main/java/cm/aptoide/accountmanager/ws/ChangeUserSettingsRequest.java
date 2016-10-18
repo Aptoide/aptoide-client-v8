@@ -3,8 +3,6 @@ package cm.aptoide.accountmanager.ws;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.ChangeUserSettingsResponse;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.ArrayList;
 import lombok.Data;
@@ -25,15 +23,18 @@ import rx.Observable;
   private ArrayList<String> list;
   private boolean matureSwitch;
 
-  public ChangeUserSettingsRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
+  ChangeUserSettingsRequest() {
+    list = new ArrayList<>();
+  }
+
+  ChangeUserSettingsRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
     list = new ArrayList<>();
   }
 
   public static ChangeUserSettingsRequest of(boolean matureSwitchStatus) {
     ChangeUserSettingsRequest request =
-        new ChangeUserSettingsRequest(OkHttpClientFactory.getSingletonClient(),
-            WebService.getDefaultConverter());
+        new ChangeUserSettingsRequest();
     request.setMatureSwitch(matureSwitchStatus);
     return request;
   }

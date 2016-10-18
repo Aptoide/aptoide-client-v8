@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.CrashReports;
 import com.jakewharton.disklrucache.DiskLruCache;
 import java.io.File;
 import java.io.IOException;
@@ -149,7 +150,8 @@ public class RequestCache {
         return cachedResponse;
       }
     } catch (Exception ex) {
-      Logger.e(TAG, "", ex);
+      CrashReports.logException(ex);
+      Logger.e(TAG, "Can't put request on cache: ", ex);
       if (editor != null) {
         editor.abortUnlessCommitted();
       }
@@ -206,7 +208,8 @@ public class RequestCache {
 
       return response;
     } catch (Exception ex) {
-      Logger.e(TAG, "", ex);
+      CrashReports.logException(ex);
+      Logger.e(TAG, "Can't get request on cache: ", ex);
     } finally {
       if (snapshot != null) {
         snapshot.close();

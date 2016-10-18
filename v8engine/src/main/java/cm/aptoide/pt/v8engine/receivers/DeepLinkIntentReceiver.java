@@ -25,8 +25,8 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.xml.XmlAppHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,7 +70,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
-  private Class startClass = MainActivityFragment.class;
+  private Class startClass = V8Engine.getConfiguration().getMainActivityClass();
   private AsyncTask<String, Void, Void> asyncTask;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -447,6 +447,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
   public static class DeepLinksKeys {
 
+
+    public static final String APP_MD5_KEY = "md5";
     public static final String APP_ID_KEY = "appId";
     public static final String PACKAGE_NAME_KEY = "packageName";
     public static final String STORENAME_KEY = "storeName";

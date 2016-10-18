@@ -22,8 +22,8 @@ import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
 import com.bumptech.glide.request.target.NotificationTarget;
@@ -86,7 +86,8 @@ public class PullingContentService extends Service {
   }
 
   private void setUpdatesNotification(ListAppsUpdates listAppsUpdates) {
-    Intent resultIntent = new Intent(Application.getContext(), MainActivityFragment.class);
+    Intent resultIntent =
+        new Intent(Application.getContext(), V8Engine.getConfiguration().getMainActivityClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
     PendingIntent resultPendingIntent =
         PendingIntent.getActivity(Application.getContext(), 0, resultIntent,

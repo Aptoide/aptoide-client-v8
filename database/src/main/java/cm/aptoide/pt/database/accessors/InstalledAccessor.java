@@ -52,8 +52,19 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     return get(packageName).map(installed -> installed != null);
   }
 
+  public Observable<List<Installed>> getInstalledAsList(String packageName) {
+    return Observable.fromCallable(() -> Database.get())
+        .flatMap(realm -> realm.where(Installed.class)
+            .equalTo(Installed.PACKAGE_NAME, packageName)
+            .findAll()
+            .asObservable()
+            .unsubscribeOn(RealmSchedulers.getScheduler()))
+        .flatMap(installeds -> database.copyFromRealm(installeds))
+        .subscribeOn(RealmSchedulers.getScheduler());
+  }
+
   public Observable<List<Installed>> get(String[] apps) {
-    return Observable.fromCallable(() -> database.get())
+    return Observable.fromCallable(() -> Database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .in(Installed.PACKAGE_NAME, apps)
             .findAll()

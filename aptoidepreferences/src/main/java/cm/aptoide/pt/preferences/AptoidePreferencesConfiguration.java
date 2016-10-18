@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.preferences;
 
+import android.app.Activity;
 import android.support.annotation.DrawableRes;
 
 /**
@@ -59,4 +60,6 @@ public interface AptoidePreferencesConfiguration {
   String getExtraId();
 
   boolean isAlwaysUpdate();
+
+  Class<? extends Activity> getMainActivityClass();
 }

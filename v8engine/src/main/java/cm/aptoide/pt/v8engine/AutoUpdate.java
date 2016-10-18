@@ -15,13 +15,13 @@ import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import java.io.File;
 import java.io.IOException;
@@ -40,15 +40,15 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private final String url = Application.getConfiguration().getAutoUpdateUrl();
 
   private AptoideBaseActivity activity;
-  private InstallManager installManager;
+  private Installer installer;
   private DownloadFactory downloadFactory;
-  private DownloadServiceHelper downloadManager;
+  private AptoideDownloadManager downloadManager;
   private ProgressDialog dialog;
 
-  public AutoUpdate(AptoideBaseActivity activity, InstallManager installManager,
-      DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
+  public AutoUpdate(AptoideBaseActivity activity, Installer installer,
+      DownloadFactory downloadFactory, AptoideDownloadManager downloadManager) {
     this.activity = activity;
-    this.installManager = installManager;
+    this.installer = installer;
     this.downloadFactory = downloadFactory;
     this.downloadManager = downloadManager;
   }
@@ -134,7 +134,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           dialog = new ProgressDialog(activity);
           dialog.setMessage(activity.getString(R.string.retrieving_update));
           dialog.show();
-          downloadManager.startDownload(activity, downloadFactory.create(autoUpdateInfo))
+          downloadManager.startDownload(downloadFactory.create(autoUpdateInfo))
               .subscribe(download -> {
                 if (download.getOverallDownloadStatus() == Download.COMPLETED) {
                   if (activity.is_resumed() && this.dialog.isShowing()) {
@@ -147,9 +147,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                       File apk = new File(downloadedFile.getFilePath());
                       String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
                       if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-                        installManager.install(activity, activity, download.getMd5())
-                            .toBlocking()
-                            .subscribe();
+                        installer.install(activity, autoUpdateInfo.md5).toBlocking().subscribe();
                       } else {
                         Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
                         throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);
@@ -186,6 +184,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
     public String md5;
     public int vercode;
+    public String packageName;
+    public int appId;
     public String path;
     public int minsdk = 0;
     public int minAptoideVercode = 0;
@@ -222,6 +222,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
       } else if (localName.equals("minAptVercode")) {
         info.minAptoideVercode = Integer.parseInt(sb.toString());
       }
+      info.packageName = activity.getPackageName();
     }
 
     @Override public void characters(char[] ch, int start, int length) throws SAXException {

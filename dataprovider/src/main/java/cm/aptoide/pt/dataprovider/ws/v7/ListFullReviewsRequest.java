@@ -42,13 +42,11 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private String url;
 
   protected ListFullReviewsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-        baseHost);
+    super(body, baseHost);
   }
 
   public ListFullReviewsRequest(String url, Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-        baseHost);
+    super(body, baseHost);
     this.url = url;
   }
 

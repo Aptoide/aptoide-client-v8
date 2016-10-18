@@ -29,12 +29,21 @@ import rx.Observable;
 
   private String url;
 
+  private GetStoreMetaRequest(String baseHost, Body body) {
+    super(body, baseHost);
+  }
+
+  private GetStoreMetaRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
+    this.url = url;
+  }
+
   private GetStoreMetaRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost, Body body) {
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public GetStoreMetaRequest(String url, Body body, OkHttpClient httpClient,
+  private GetStoreMetaRequest(String url, Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, String baseHost) {
     super(body, httpClient, converterFactory, baseHost);
     this.url = url;
@@ -58,9 +67,8 @@ import rx.Observable;
       store = getStore(storeName);
     }
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPassword());
-    return new GetStoreMetaRequest(v7Url.get(), (Body) decorator.decorate(body),
-        OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_HOST);
+    body.setStorePassSha1(store.getPasswordSha1());
+    return new GetStoreMetaRequest(v7Url.get(), (Body) decorator.decorate(body), BASE_HOST);
   }
 
   public static GetStoreMetaRequest of(String storeName, String username, String passwordSha1) {
@@ -71,8 +79,7 @@ import rx.Observable;
     final Body body = new Body(storeName);
     body.setStoreUser(username);
     body.setStorePassSha1(passwordSha1);
-    return new GetStoreMetaRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
+    return new GetStoreMetaRequest(BASE_HOST, (Body) decorator.decorate(body));
   }
 
   public static GetStoreMetaRequest of(String storeName) {
@@ -83,9 +90,8 @@ import rx.Observable;
     final StoreCredentials store = getStore(storeName);
     final Body body = new Body(storeName);
     body.setStoreUser(store.getUsername());
-    body.setStorePassSha1(store.getPassword());
-    return new GetStoreMetaRequest(OkHttpClientFactory.getSingletonClient(),
-        WebService.getDefaultConverter(), BASE_HOST, (Body) decorator.decorate(body));
+    body.setStorePassSha1(store.getPasswordSha1());
+    return new GetStoreMetaRequest(BASE_HOST, (Body) decorator.decorate(body));
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,

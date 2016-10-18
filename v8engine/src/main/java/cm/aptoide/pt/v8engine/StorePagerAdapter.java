@@ -103,8 +103,19 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     return availableEventsMap.containsKey(name);
   }
 
+  /**
+   * Returns the position of an Event, given a name.
+   *
+   * @param name name of the Event {@link Event.Name}
+   * @return returns a positive integer 0...X if there is an Event with requested name, else returns
+   * -1.
+   */
   public Integer getEventNamePosition(Event.Name name) {
-    return availableEventsMap.get(name);
+    final Integer integer = availableEventsMap.get(name);
+    if (integer  == null) {
+      return -1;
+    }
+    return integer;
   }
 
   private Fragment caseClient(Event event) {

@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.install.provider;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.v8engine.install.RollbackInstallation;
+import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;
 import java.io.File;
 
 /**

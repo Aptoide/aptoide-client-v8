@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified by Marcelo Benites on 29/09/2016.
  */
 
-package cm.aptoide.pt.v8engine.install;
+package cm.aptoide.pt.v8engine.install.installer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +12,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
 import java.io.File;
@@ -32,11 +32,10 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 7/18/16.
  */
-@AllArgsConstructor public class InstallManager implements Installer {
+@AllArgsConstructor public class DefaultInstaller implements Installer {
 
-  private static final String TAG = InstallManager.class.getSimpleName();
+  private static final String TAG = DefaultInstaller.class.getSimpleName();
 
-  private final PermissionManager permissionManager;
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
 
@@ -47,38 +46,35 @@ import rx.schedulers.Schedulers;
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Observable<Void> install(Context context, PermissionRequest permissionRequest,
-      String md5) {
-    return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .ignoreElements()
-        .concatWith(installationProvider.getInstallation(md5)
-            .observeOn(Schedulers.computation())
-            .flatMap(installation -> {
-              if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
-                return Observable.just(null);
-              } else {
-                return systemInstall(context, installation.getFile()).onErrorResumeNext(
-                    Observable.fromCallable(
-                        () -> rootInstall(installation.getFile(), installation.getPackageName(),
-                            installation.getVersionCode())))
-                    .onErrorResumeNext(defaultInstall(context, installation.getFile(),
-                        installation.getPackageName()));
-              }
-            })
-            .doOnError(CrashReports::logException));
+  @Override public Observable<Void> install(Context context, String md5) {
+    Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
+        AptoideUtils.SystemU.isRooted());
+    return installationProvider.getInstallation(md5)
+        .observeOn(Schedulers.computation())
+        .flatMap(installation -> {
+          if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
+            return Observable.just(null);
+          } else {
+            return systemInstall(context, installation.getFile()).onErrorResumeNext(
+                Observable.fromCallable(
+                    () -> rootInstall(installation.getFile(), installation.getPackageName(),
+                        installation.getVersionCode())))
+                .onErrorResumeNext(
+                    defaultInstall(context, installation.getFile(), installation.getPackageName()));
+          }
+        })
+        .doOnError(CrashReports::logException);
   }
 
-  @Override
-  public Observable<Void> update(Context context, PermissionRequest permissionRequest, String md5) {
-    return install(context, permissionRequest, md5);
+  @Override public Observable<Void> update(Context context, String md5) {
+    return install(context, md5);
   }
 
-  @Override public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest,
-      String md5) {
+  @Override public Observable<Void> downgrade(Context context, String md5) {
     return installationProvider.getInstallation(md5)
         .first()
-        .concatMap(installation -> uninstall(context, installation.getPackageName()))
-        .concatWith(install(context, permissionRequest, md5));
+        .flatMap(installation -> uninstall(context, installation.getPackageName()))
+        .flatMap(success -> install(context, md5));
   }
 
   @Override public Observable<Void> uninstall(Context context, String packageName) {
@@ -89,9 +85,7 @@ import rx.schedulers.Schedulers;
     return Observable.<Void>fromCallable(() -> {
       startUninstallIntent(context, packageName, uri);
       return null;
-    }).ignoreElements()
-        .concatWith(packageIntent(context, intentFilter, packageName))
-        .subscribeOn(Schedulers.computation());
+    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {
@@ -102,7 +96,7 @@ import rx.schedulers.Schedulers;
     return Observable.<Void>fromCallable(() -> {
       startInstallIntent(context, file);
       return null;
-    }).ignoreElements().concatWith(packageIntent(context, intentFilter, packageName));
+    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
   private void startInstallIntent(Context context, File file) {
@@ -119,7 +113,7 @@ import rx.schedulers.Schedulers;
 
   private Void rootInstall(File file, String packageName, int versionCode)
       throws InstallationException {
-    if (!AptoideUtils.SystemU.hasRoot()) {
+    if (!AptoideUtils.SystemU.hasRoot() || !ManagerPreferences.allowRootInstallation()) {
       throw new InstallationException("No root permissions");
     }
 
@@ -135,7 +129,7 @@ import rx.schedulers.Schedulers;
                     .observeOn(Schedulers.computation())
                     .delay(10, TimeUnit.SECONDS)
                     .subscribe(
-                        exitCodeToSend -> Analytics.RootInstall.installCompleted(exitCodeToSend,
+                        exitCodeToSend -> Analytics.RootInstall.rootInstallCompleted(exitCodeToSend,
                             isInstalled(packageName, versionCode)));
                 if (exitCode == 0) {
                   Logger.v(TAG, "app successfully installed using root");
@@ -173,6 +167,7 @@ import rx.schedulers.Schedulers;
       // Check if package is installed first
       packageManager.getPackageInfo(packageName, 0);
       Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       context.startActivity(intent);
     } catch (PackageManager.NameNotFoundException e) {
       CrashReports.logException(e);
@@ -180,7 +175,7 @@ import rx.schedulers.Schedulers;
     }
   }
 
-  @NonNull private Observable<Void> packageIntent(Context context, IntentFilter intentFilter,
+  @NonNull private Observable<Void> waitPackageIntent(Context context, IntentFilter intentFilter,
       String packageName) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
         .first(intent -> intent.getData().toString().contains(packageName))

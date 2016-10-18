@@ -8,6 +8,8 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.text.TextUtils;
+import cm.aptoide.pt.actions.GenerateClientId;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.utils.CrashReports;
@@ -19,7 +21,7 @@ import lombok.AllArgsConstructor;
 /**
  * Created by neuro on 11-07-2016.
  */
-@AllArgsConstructor public class IdsRepository {
+@AllArgsConstructor public class IdsRepository implements GenerateClientId {
 
   private static final String APTOIDE_CLIENT_UUID = "aptoide_client_uuid";
   private static final String ADVERTISING_ID_CLIENT = "advertisingIdClient";
@@ -133,5 +135,24 @@ import lombok.AllArgsConstructor;
     secureRandom.setSeed(deviceId.hashCode());
     secureRandom.nextBytes(data);
     return UUID.nameUUIDFromBytes(data).toString();
+  }
+
+  @Override public String getClientId() {
+
+    String result = getAdvertisingId();
+    if (!TextUtils.isEmpty(result)) {
+      return result;
+    }
+
+    result = android.provider.Settings.Secure.ANDROID_ID;
+    if (!TextUtils.isEmpty(result)) {
+      return result;
+    }
+
+    result = getAptoideClientUUID();
+    if (!TextUtils.isEmpty(result)) {
+      return result;
+    }
+    return "NoInfo";
   }
 }

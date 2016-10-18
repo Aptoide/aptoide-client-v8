@@ -6,14 +6,14 @@
 package cm.aptoide.pt.logger;
 
 import android.util.Log;
-import cm.aptoide.pt.utils.BuildConfig;
+import lombok.Setter;
 
 /**
  * Aptoide default logger.
  */
 public class Logger {
 
-  private static final boolean DBG = BuildConfig.DEBUG;
+  @Setter private static boolean DBG;
 
   /**
    * Prints the stacktrace

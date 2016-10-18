@@ -29,6 +29,8 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.PRNGFixes;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -111,6 +113,12 @@ public abstract class V8Engine extends DataProvider {
 
   @Override public void onCreate() {
     CrashReports.setup(this);
+    try {
+      PRNGFixes.apply();
+    } catch (Exception e) {
+      Logger.e(TAG, "onCreate: " + e);
+      CrashReports.logException(e);
+    }
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
     fragmentProvider = createFragmentProvider();
@@ -132,7 +140,7 @@ public abstract class V8Engine extends DataProvider {
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
-
+    Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
 
     if (BuildConfig.DEBUG) {
@@ -184,7 +192,9 @@ public abstract class V8Engine extends DataProvider {
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
             downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
-            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient());
+            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
+                new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
+                AptoideAccountManager.getUserData()));
 
     // setupCurrentActivityListener();
 
@@ -234,6 +244,10 @@ public abstract class V8Engine extends DataProvider {
       return null;
     }).subscribeOn(Schedulers.io());
   }
+
+  //
+  // Strict Mode
+  //
 
   private void setupStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()

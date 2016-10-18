@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import android.content.Context;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
@@ -12,14 +13,14 @@ public class ActiveDownloadsHeaderDisplayable extends Displayable {
 
   private static final String TAG = ActiveDownloadsHeaderDisplayable.class.getSimpleName();
   @Getter private String label;
-  @Getter private DownloadServiceHelper downloadManager;
+  private InstallManager installManager;
 
   public ActiveDownloadsHeaderDisplayable() {
   }
 
-  public ActiveDownloadsHeaderDisplayable(String label, DownloadServiceHelper downloadManager) {
+  public ActiveDownloadsHeaderDisplayable(String label, InstallManager installManager) {
     this.label = label;
-    this.downloadManager = downloadManager;
+    this.installManager = installManager;
   }
 
   @Override public int getViewLayout() {
@@ -28,5 +29,9 @@ public class ActiveDownloadsHeaderDisplayable extends Displayable {
 
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  public void pauseAllDownloads(Context context) {
+    installManager.stopAllInstallations(context);
   }
 }
