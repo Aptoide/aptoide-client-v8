@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.repository;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckInAppBillingPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
@@ -18,7 +19,9 @@ import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.Collections;
@@ -108,6 +111,27 @@ public class InAppBillingRepository {
   public Observable<InAppBillingSkuDetailsResponse> getSKUDetails(int apiVersion,
       String packageName, String sku, String type) {
     return getSKUListDetails(apiVersion, packageName, Collections.singletonList(sku), type);
+  }
+
+  public Observable<Void> savePaymentConfirmation(
+      PaymentConfirmation paymentConfirmation) {
+    return Observable.fromCallable(() -> {
+      final InAppBillingProduct product = (InAppBillingProduct) paymentConfirmation.getProduct();
+      return CheckInAppBillingPaymentRequest.of(paymentConfirmation.getPaymentConfirmationId(),
+          paymentConfirmation.getPaymentId(), product.getId(),
+          paymentConfirmation.getPrice().getAmount(), paymentConfirmation.getPrice().getTaxRate(),
+          paymentConfirmation.getPrice().getCurrency(), operatorManager, product.getApiVersion(),
+          product.getDeveloperPayload(), AptoideAccountManager.getAccessToken());
+    }).flatMap(request -> request.observe()).flatMap(response -> {
+      if (response != null && response.isOk()
+          // Check if state is equal purchased
+          && response.getPurchaseInformation().getPurchaseList().get(0).getPurchaseState() == 0) {
+        return Observable.just(null);
+      }
+      return Observable.error(new SecurityException(
+          "Could not save in-app product payment confirmation. Server response: " + V3.getErrorMessage(
+              response)));
+    });
   }
 
   private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,

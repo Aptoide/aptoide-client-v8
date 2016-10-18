@@ -36,7 +36,7 @@ public class PaymentFactory {
       case BOACOMPRA:
         return new BoaCompraPayment(BuildConfig.BOACOMPRA_API_HOST,
             new BoaCompraAuthorization(BuildConfig.BOACOMPRA_SECRET_KEY,
-                BuildConfig.BOACOMPRA_STORE_ID));
+                BuildConfig.BOACOMPRA_MERCHANT_ID));
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());

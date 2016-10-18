@@ -1,35 +1,35 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified by Marcelo Benites on 17/10/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import java.util.Locale;
 import rx.Observable;
 
 /**
- * Created by marcelobenites on 7/28/16.
- *
- * @author SithEngineer marcelobenites
+ * Created by marcelobenites on 17/10/16.
  */
-public class CheckProductPaymentRequest extends V3<BaseV3Response> {
 
-  private CheckProductPaymentRequest(String baseHost, BaseBody baseBody) {
+public class CheckInAppBillingPaymentRequest extends V3<InAppBillingPurchasesResponse> {
+
+  public CheckInAppBillingPaymentRequest(String baseHost, BaseBody baseBody) {
     super(baseHost, baseBody);
   }
 
-  public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId,
-      int productId, double price, double taxRate, String currency,
-      NetworkOperatorManager operatorManager, String storeName, String accessToken) {
+  public static CheckInAppBillingPaymentRequest of(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency,
+      NetworkOperatorManager operatorManager, int apiVersion, String developerPayload,
+      String accessToken) {
     final BaseBody args = new BaseBody();
     addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
         operatorManager, args, accessToken);
-    args.put("reqtype", "apkpurchasestatus");
-    args.put("repo", storeName);
-    return new CheckProductPaymentRequest(BASE_HOST, args);
+    args.put("reqtype", "iabpurchasestatus");
+    args.put("apiversion", String.valueOf(apiVersion));
+    args.put("developerPayload", developerPayload);
+    return new CheckInAppBillingPaymentRequest(BASE_HOST, args);
   }
 
   private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,
@@ -51,8 +51,9 @@ public class CheckProductPaymentRequest extends V3<BaseV3Response> {
     }
   }
 
-  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
+  @Override
+  protected Observable<InAppBillingPurchasesResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.checkPaidAppProductPayment(map);
+    return interfaces.checkInAppProductPayment(map);
   }
 }
