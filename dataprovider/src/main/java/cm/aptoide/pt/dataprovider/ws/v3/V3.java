@@ -17,7 +17,6 @@ import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v3.PaymentResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
@@ -132,7 +131,10 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("processInAppBilling") @FormUrlEncoded
     Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
-    @POST("checkProductPayment") @FormUrlEncoded Observable<PaymentResponse> checkProductPayment(
+    @POST("checkProductPayment") @FormUrlEncoded Observable<BaseV3Response> checkPaidAppProductPayment(
         @FieldMap BaseBody args);
+
+    @POST("checkProductPayment") @FormUrlEncoded
+    Observable<InAppBillingPurchasesResponse> checkInAppProductPayment(@FieldMap BaseBody args);
   }
 }
