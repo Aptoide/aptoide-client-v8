@@ -4,4 +4,5 @@
  */
 
 include ':vanilla', ':v8engine', ':dataprovider', ':model', ':networkclient', ':aptoidepreferences',
+    ':crashreports',
     ':utils', ':aptoide_accountmanager', ':database', ':imageloader', ':downloadmanager'

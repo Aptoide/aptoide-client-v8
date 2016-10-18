@@ -1,4 +1,4 @@
-package cm.aptoide.pt.utils;
+package cm.aptoide.pt.crashreports;
 
 import android.content.Context;
 import cm.aptoide.pt.logger.Logger;
@@ -7,6 +7,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import lombok.Setter;
+import pt.aptoide.cm.crashreports.BuildConfig;
 
 /**
  * Created by diogoloureiro on 16/09/16.

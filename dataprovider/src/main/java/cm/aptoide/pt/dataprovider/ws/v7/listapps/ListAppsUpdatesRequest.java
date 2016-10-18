@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
@@ -15,7 +16,6 @@ import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedList;
 import java.util.List;

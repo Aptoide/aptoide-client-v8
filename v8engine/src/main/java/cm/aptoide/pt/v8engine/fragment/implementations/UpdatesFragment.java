@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Download;
@@ -16,7 +17,6 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;

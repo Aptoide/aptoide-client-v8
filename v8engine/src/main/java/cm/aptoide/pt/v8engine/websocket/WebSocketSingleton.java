@@ -8,12 +8,13 @@ package cm.aptoide.pt.v8engine.websocket;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.CrashReports;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
@@ -143,8 +144,7 @@ public class WebSocketSingleton {
   public void connect() {
 
     if (web_socket_client == null) {
-      web_socket_client =
-          new WebSocketClient(java.net.URI.create("ws://buzz.webservices.aptoide.com:9000"),
+      web_socket_client = new WebSocketClient(URI.create("ws://buzz.webservices.aptoide.com:9000"),
               listener, null);
       web_socket_client.connect();
     }

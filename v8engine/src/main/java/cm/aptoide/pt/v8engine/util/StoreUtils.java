@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -13,7 +14,6 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.utils.CrashReports;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.Arrays;

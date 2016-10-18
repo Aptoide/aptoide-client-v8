@@ -9,24 +9,17 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.accessors.UpdatesAccessor;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
-import cm.aptoide.pt.v8engine.deprecated.tables.Updates;
 import io.realm.Realm;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 /**
  * Created by sithengineer on 24/08/16.
