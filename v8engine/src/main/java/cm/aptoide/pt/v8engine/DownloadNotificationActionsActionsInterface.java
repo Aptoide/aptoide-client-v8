@@ -21,10 +21,10 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
     Application.getContext().startActivity(intent);
   }
 
-  @Override public void notificationPressed(long appId) {
+  @Override public void notificationPressed(String md5) {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
     Application.getContext().startActivity(intent);
   }
 
