@@ -18,7 +18,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -29,7 +29,9 @@ import rx.Subscription;
   private TextView descriptionTextView;
   private Button readMoreBtn;
   private String storeName;
-  private Subscription buttonSubscription;
+  private CompositeSubscription subscriptions;
+  private GetAppMeta.Media media;
+  private GetAppMeta.App app;
 
   public AppViewDescriptionWidget(View itemView) {
     super(itemView);
@@ -41,30 +43,32 @@ import rx.Subscription;
   }
 
   @Override public void bindView(AppViewDescriptionDisplayable displayable) {
-    final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
-    final GetAppMeta.Media media = app.getMedia();
+    this.app = displayable.getPojo().getNodes().getMeta().getData();
+    this.media = app.getMedia();
     this.storeName = app.getStore().getName();
-
-    if (!TextUtils.isEmpty(media.getDescription())) {
-      descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      buttonSubscription = RxView.clicks(readMoreBtn).subscribe(
-          click -> {
-            ((FragmentShower) getContext()).pushFragmentV4(
-                DescriptionFragment.newInstance(app.getId(), storeName));
-          }
-      );
-    } else {
-      // only show "default" description if the app doesn't have one
-      descriptionTextView.setText(R.string.description_not_available);
-      readMoreBtn.setVisibility(View.GONE);
-    }
   }
 
   @Override public void onViewAttached() {
-
+    if (subscriptions == null) {
+      subscriptions = new CompositeSubscription();
+      if (!TextUtils.isEmpty(media.getDescription())) {
+        descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
+        subscriptions.add(RxView.clicks(readMoreBtn).subscribe(click -> {
+          ((FragmentShower) getContext()).pushFragmentV4(
+              DescriptionFragment.newInstance(app.getId(), storeName));
+        }));
+      } else {
+        // only show "default" description if the app doesn't have one
+        descriptionTextView.setText(R.string.description_not_available);
+        readMoreBtn.setVisibility(View.GONE);
+      }
+    }
   }
 
   @Override public void onViewDetached() {
-    buttonSubscription.unsubscribe();
+    if (subscriptions != null) {
+      subscriptions.unsubscribe();
+      subscriptions = null;
+    }
   }
 }
