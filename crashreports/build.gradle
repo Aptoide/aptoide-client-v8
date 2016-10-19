@@ -10,14 +10,11 @@ Properties localProperties = new Properties()
 localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion "24.0.3"
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdkVersion 9
-    targetSdkVersion 24
-    versionCode 1
-    versionName "1.0"
 
     configureFabric delegate, localProperties.FABRIC_API_KEY
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
