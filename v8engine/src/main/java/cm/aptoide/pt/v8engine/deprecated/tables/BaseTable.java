@@ -31,7 +31,7 @@ public abstract class BaseTable {
     return null;
   }
 
-  public void migrate(SQLiteDatabase db, Accessor accessor) {
+  public void migrate(SQLiteDatabase db, Accessor<RealmObject> accessor) {
     Cursor cursor = null;
     try {
 

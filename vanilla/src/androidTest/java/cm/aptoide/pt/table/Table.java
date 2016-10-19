@@ -10,7 +10,7 @@ import java.util.Set;
 public interface Table {
 
   enum ColumnType {
-    INTEGER, REAL, TEXT, DATE
+    NULL, INTEGER, REAL, TEXT, BLOB
   }
 
   /**

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.table;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by sithengineer on 14/10/2016.
@@ -10,18 +9,19 @@ import java.util.Map;
 public class TableBag {
 
   public enum TableName{
-    SCHEDULED
+    SCHEDULED, INSTALLED
   }
 
-  private Map<TableName, Table> tables;
+  private HashMap<TableName, Table> tables;
 
   public TableBag() {
-    tables = Collections.emptyMap();
+    tables = new HashMap<>();
     init();
   }
 
   private void init() {
-    tables.put(TableName.SCHEDULED, new Scheduled());
+    tables.put(TableName.SCHEDULED, new ScheduledTable());
+    tables.put(TableName.INSTALLED, new InstalledTable());
   }
 
   public Table get(TableName tableName) {
