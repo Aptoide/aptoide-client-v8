@@ -139,10 +139,6 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     pushFragmentV4(AppViewFragment.newInstance(md5));
   }
 
-  private void appViewDeepLink(String md5) {
-    pushFragmentV4(AppViewFragment.newInstance(md5));
-  }
-
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
