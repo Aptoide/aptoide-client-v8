@@ -35,7 +35,7 @@ import lombok.EqualsAndHashCode;
       "orderId", "packageName", "productId", "purchaseTime", "purchaseToken", "purchaseState",
       "developerPayload"
   }) @JsonInclude(JsonInclude.Include.NON_NULL) @Data public static class InAppBillingPurchase {
-    @JsonProperty("orderId") private int orderId;
+    @JsonProperty("orderId") private String orderId;
     @JsonProperty("packageName") private String packageName;
     @JsonProperty("productId") private String productId;
     @JsonProperty("purchaseTime") private long purchaseTime;
