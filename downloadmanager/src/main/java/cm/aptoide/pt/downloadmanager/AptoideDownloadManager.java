@@ -224,10 +224,14 @@ public class AptoideDownloadManager {
 
   @NonNull @Download.DownloadState private int getStateIfFileExists(Download downloadToCheck) {
     @Download.DownloadState int downloadStatus = Download.COMPLETED;
-    for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
-      if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
-        downloadStatus = Download.FILE_MISSING;
-        break;
+    if (downloadToCheck.getOverallDownloadStatus() == Download.PROGRESS) {
+      downloadStatus = Download.PROGRESS;
+    } else {
+      for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
+        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
+          downloadStatus = Download.FILE_MISSING;
+          break;
+        }
       }
     }
     return downloadStatus;

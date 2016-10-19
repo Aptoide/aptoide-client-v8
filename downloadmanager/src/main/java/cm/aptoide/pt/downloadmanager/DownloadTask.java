@@ -134,6 +134,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
             .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
             .setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
             .ready());
+        fileToDownload.setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH);
       }
 
       if (isSerial) {
@@ -202,17 +203,19 @@ class DownloadTask extends FileDownloadLargeFileListener {
         .filter(file -> file.getDownloadId() == task.getId())
         .flatMap(file -> {
           file.setStatus(Download.COMPLETED);
-          return moveFileToRightPlace(download).doOnNext(fileMoved -> {
-            if (fileMoved == null) {
+          for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+            if (fileToDownload.getStatus() != Download.COMPLETED) {
+              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+              return Observable.just(null);
+            }
+          }
+          return CheckMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
+            if (fileMoved) {
+              Logger.d(TAG, "Download md5 match");
               file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
             } else {
-              if (fileMoved) {
-                Logger.d(TAG, "Download md5 match");
-                file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
-              } else {
-                Logger.e(TAG, "Download md5 is not correct");
-                setDownloadStatus(Download.ERROR, download, task);
-              }
+              Logger.e(TAG, "Download md5 is not correct");
+              setDownloadStatus(Download.ERROR, download, task);
             }
           });
         })
@@ -281,12 +284,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
     }
   }
 
-  private Observable<Boolean> moveFileToRightPlace(Download download) {
-    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      if (fileToDownload.getStatus() != Download.COMPLETED) {
-        return Observable.just(null);
-      }
-    }
+  private Observable<Boolean> CheckMd5AndMoveFileToRightPlace(Download download) {
     return Observable.fromCallable(() -> {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
         if (!TextUtils.isEmpty(fileToDownload.getMd5())) {
