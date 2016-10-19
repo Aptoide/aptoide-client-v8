@@ -32,15 +32,15 @@ import lombok.EqualsAndHashCode;
   // Order must be kept here because the resulting JSON String is going to be encrypted using a
   // public key and the resulting signature must match a signature generated on server side.
   @JsonPropertyOrder({
-      "orderId", "packageName", "productId", "purchaseTime", "purchaseState", "purchaseToken",
+      "orderId", "packageName", "productId", "purchaseTime", "purchaseToken", "purchaseState",
       "developerPayload"
   }) @JsonInclude(JsonInclude.Include.NON_NULL) @Data public static class InAppBillingPurchase {
     @JsonProperty("orderId") private int orderId;
     @JsonProperty("packageName") private String packageName;
     @JsonProperty("productId") private String productId;
     @JsonProperty("purchaseTime") private long purchaseTime;
-    @JsonProperty("purchaseState") private int purchaseState;
     @JsonProperty("purchaseToken") private String purchaseToken;
+    @JsonProperty("purchaseState") private int purchaseState;
     @JsonProperty("developerPayload") private String developerPayload;
   }
 }
