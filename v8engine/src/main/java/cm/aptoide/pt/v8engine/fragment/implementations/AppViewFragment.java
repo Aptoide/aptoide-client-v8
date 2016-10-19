@@ -38,8 +38,8 @@ import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -260,7 +260,7 @@ public class AppViewFragment extends GridRecyclerFragment
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .flatMap(list -> storeAccessor.get(storeId))
+        .flatMap(list -> storeAccessor.get(storeId)).observeOn(AndroidSchedulers.mainThread())
         .subscribe(store -> {
           if (store != null) {
             adapter.notifyDataSetChanged();
@@ -280,6 +280,7 @@ public class AppViewFragment extends GridRecyclerFragment
     final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
     rollbackAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
         });

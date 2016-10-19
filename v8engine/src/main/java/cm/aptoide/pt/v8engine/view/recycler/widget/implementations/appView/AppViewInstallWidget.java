@@ -272,7 +272,7 @@ import rx.subscriptions.CompositeSubscription;
     actionButton.setOnClickListener(null);
     actionPause.setOnClickListener(null);
     actionCancel.setOnClickListener(null);
-    //subscribe.unsubscribe();
+    subscriptions.clear();
   }
 
   public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
