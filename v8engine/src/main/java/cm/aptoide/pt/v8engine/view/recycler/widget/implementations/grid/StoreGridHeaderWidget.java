@@ -53,7 +53,7 @@ import java.util.List;
               .newStoreGridRecyclerFragment(displayable.getPojo().getActions().get(0).getEvent(),
                   displayable.getPojo().getTitle(), displayable.getStoreTheme(),
                   displayable.getTag()));
-      Analytics.AppViewViewedFrom.addStepToList(pojo.getTitle());
+      Analytics.AppViewViewedFrom.addStepToList(pojo.getTag());
     });
   }
 
