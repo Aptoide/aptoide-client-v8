@@ -14,8 +14,14 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -194,5 +200,41 @@ public class InstallManager {
           }
           return progressStatus;
         });
+  }
+/*
+  public void suWarningAndPermission() {
+    if (showWarning())
+      askForPermission();
+  }
+
+  public void askForPermission() {
+    GenericDialogs.createGenericYesNoCancelMessage(Application.getContext(), "",
+        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+        .subscribe(eResponse -> {
+          switch (eResponse) {
+            case YES:
+              SecurePreferences.setRootDialogShowed(true);
+              ManagerPreferences.setAllowRootInstallation(true);
+              AptoideUtils.SystemU.askForRoot();
+              break;
+            case NO:
+              SecurePreferences.setRootDialogShowed(false);
+              ManagerPreferences.setAllowRootInstallation(false);
+              break;
+          }
+        });
+  }*/
+
+  public boolean showWarning() {
+    boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
+    boolean isRooted = AptoideUtils.SystemU.isRooted();
+    boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
+    return isRooted && !wasRootDialogShowed/* && canGiveRoot*/;
+  }
+
+  public void rootInstallAllowed(boolean allowRoot) {
+    SecurePreferences.setRootDialogShowed(allowRoot);
+    ManagerPreferences.setAllowRootInstallation(allowRoot);
+    AptoideUtils.SystemU.askForRoot();
   }
 }

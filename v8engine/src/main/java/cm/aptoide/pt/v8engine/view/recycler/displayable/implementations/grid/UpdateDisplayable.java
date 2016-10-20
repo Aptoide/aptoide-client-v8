@@ -10,6 +10,9 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -20,6 +23,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
 import rx.Scheduler;
+
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -65,6 +70,15 @@ import rx.Scheduler;
     Analytics.Updates.update();
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(sucess -> {
+          if (installManager.showWarning()) {
+            return GenericDialogs.createGenericYesNoCancelMessage(context, "",
+                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+                .map( answer -> (answer.equals(YES) ? true: false) )
+                .doOnNext( answer -> installManager.rootInstallAllowed(answer) );
+          }
+          return Observable.just(true);
+        })
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
         .flatMap(success -> installManager.install(context, download));
   }
