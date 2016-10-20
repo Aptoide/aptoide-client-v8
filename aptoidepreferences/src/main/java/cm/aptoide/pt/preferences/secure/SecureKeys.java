@@ -18,4 +18,5 @@ public class SecureKeys {
   public static final String ADULT_CONTENT_SWITCH = "aptoide_account_manager_mature_switch";
   public static final String ANIMATIONS_ENABLED = "googleAdvertisingId";
   public static final String WIZARD_AVAILABLE = "wizardAvailable";
+  public static final String ROOT_DIALOG_ShOWED = "rootDialogShowed";
 }

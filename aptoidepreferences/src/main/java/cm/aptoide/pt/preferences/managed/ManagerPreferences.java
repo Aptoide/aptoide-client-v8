@@ -150,4 +150,11 @@ public class ManagerPreferences {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getString(ManagedKeys.NOTIFICATION_TYPE, "");
   }
+
+  public static void setAllowRootInstallation(boolean allowRootInstallation) {
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, allowRootInstallation)
+        .apply();
+  }
 }

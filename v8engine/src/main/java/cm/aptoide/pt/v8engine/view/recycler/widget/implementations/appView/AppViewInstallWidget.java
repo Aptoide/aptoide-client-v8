@@ -37,6 +37,10 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureKeys;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
@@ -56,8 +60,11 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -382,10 +389,22 @@ import rx.subscriptions.CompositeSubscription;
                 if (eResponse == GenericDialogs.EResponse.YES) {
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
+
+                  //installManager.suWarningAndPermission();
+
                   DownloadFactory factory = new DownloadFactory();
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
 
                   subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+                      .flatMap(sucess -> {
+                        if (installManager.showWarning()) {
+                          return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
+                              AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+                              .map( answer -> (answer.equals(YES) ? true: false) )
+                              .doOnNext( answer -> installManager.rootInstallAllowed(answer) );
+                        }
+                        return Observable.just(true);
+                      })
                       .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(progress -> {
@@ -427,21 +446,34 @@ import rx.subscriptions.CompositeSubscription;
       ListAppVersions appVersions, AppViewInstallDisplayable displayable) {
 
     final Context context = getContext();
+
     @StringRes final int installOrUpgradeMsg =
         this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
     int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
     PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
 
+
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.SourceDownloadComplete.installClicked(app.getId());
       }
 
+      //installManager.suWarningAndPermission();
+
       DownloadFactory factory = new DownloadFactory();
       Download appDownload = factory.create(app, downloadAction);
 
       subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+          .flatMap(sucess -> {
+            if (installManager.showWarning()) {
+              return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
+                  AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+                  .map( answer -> (answer.equals(YES) ? true: false) )
+                  .doOnNext( answer -> installManager.rootInstallAllowed(answer) );
+            }
+            return Observable.just(true);
+          })
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),

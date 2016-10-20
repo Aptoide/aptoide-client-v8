@@ -113,8 +113,10 @@ import rx.schedulers.Schedulers;
 
   private Void rootInstall(File file, String packageName, int versionCode)
       throws InstallationException {
-    if (!AptoideUtils.SystemU.hasRoot() || !ManagerPreferences.allowRootInstallation()) {
+    if (!AptoideUtils.SystemU.isRooted()) {
       throw new InstallationException("No root permissions");
+    } else if (!ManagerPreferences.allowRootInstallation()) {
+      throw new InstallationException("User doesn't allow root installation");
     }
 
     try {

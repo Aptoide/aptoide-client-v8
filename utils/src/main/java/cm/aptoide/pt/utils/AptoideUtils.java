@@ -83,11 +83,8 @@ import javax.crypto.spec.SecretKeySpec;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
 
 import static android.net.ConnectivityManager.TYPE_ETHERNET;
 import static android.net.ConnectivityManager.TYPE_MOBILE;
@@ -725,6 +722,16 @@ public class AptoideUtils {
         CrashReports.logException(e);
       }
       return null;
+    }
+
+    public static void askForRoot() {
+      Process suProcess;
+
+      try {
+        suProcess = Runtime.getRuntime().exec("su");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 
     public static boolean isRooted() {

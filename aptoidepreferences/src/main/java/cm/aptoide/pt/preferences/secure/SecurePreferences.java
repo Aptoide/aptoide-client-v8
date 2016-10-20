@@ -110,4 +110,16 @@ public class SecurePreferences {
     return SecurePreferencesImplementation.getInstance()
         .getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
   }
+
+  public static void setRootDialogShowed(boolean displayed) {
+    SecurePreferencesImplementation.getInstance()
+        .edit()
+        .putBoolean(SecureKeys.ROOT_DIALOG_ShOWED, displayed)
+        .apply();
+  }
+
+  public static boolean isRootDialogShowed() {
+    return SecurePreferencesImplementation.getInstance()
+        .getBoolean(SecureKeys.ROOT_DIALOG_ShOWED, false);
+  }
 }

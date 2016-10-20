@@ -24,6 +24,8 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -39,8 +41,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sch
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
 /**
@@ -266,7 +270,17 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
 
+
     permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(success -> {
+          if (installManager.showWarning()) {
+            return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
+                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+                .map( answer -> ( answer.equals(YES) ? true: false ) )
+                .doOnNext( answer -> installManager.rootInstallAllowed(answer) );
+          }
+          return Observable.just(true);
+        })
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
         .flatMapIterable(scheduleds -> scheduleds)
         .map(scheduled -> downloadFactory.create(scheduled))
