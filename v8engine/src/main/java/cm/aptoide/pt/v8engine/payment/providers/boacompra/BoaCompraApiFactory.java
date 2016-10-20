@@ -43,8 +43,11 @@ final class BoaCompraApiFactory {
           // Remove Content-Type added by OkHttp because it includes the charset. BoaCompra API is
           // not RFC7231 compliant.
           requestBuilder.removeHeader("Content-Type");
-          requestBuilder.addHeader("Content-Type", "application/json");
         }
+
+        // BoaCompra API violates HTTP specification by making mandatory to add
+        // Content-Type header even when there is no body.
+        requestBuilder.addHeader("Content-Type", "application/json");
 
         requestBuilder.addHeader("Authorization", authorization.generate(request));
         requestBuilder.addHeader("Accept", "application/vnd.boacompra.com.v1+json; charset=UTF-8");

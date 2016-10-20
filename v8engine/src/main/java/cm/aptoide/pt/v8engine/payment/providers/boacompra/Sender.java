@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
   @JsonProperty("email") private final String email;
 
-  public Sender(String email) {
+  @JsonCreator public Sender(@JsonProperty("email") String email) {
     this.email = email;
   }
 
