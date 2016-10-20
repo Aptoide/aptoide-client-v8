@@ -302,26 +302,26 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
       switch (name) {
         case listApps:
-          caseListApps(url, create);
+          caseListApps(url, refresh);
           break;
         case getStore:
-          caseGetStore(url, create);
+          caseGetStore(url, refresh);
           break;
         case getStoreWidgets:
-          caseGetStoreWidgets(url, create);
+          caseGetStoreWidgets(url, refresh);
           break;
         case listReviews:
-          caseListReviews(url, create);
+          caseListReviews(url, refresh);
           break;
         //		break;
         //	case getApkComments:
         //todo
         //		break;
         case getAds:
-          caseGetAds(create);
+          caseGetAds(refresh);
           break;
         case listStores:
-          caseListStores(url, create);
+          caseListStores(url, refresh);
           break;
       }
     } else {

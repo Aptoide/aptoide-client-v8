@@ -29,6 +29,7 @@ public class RequestCache {
 
   public static final String BYPASS_HEADER_KEY = "Bypass-Cache";
   public static final String BYPASS_HEADER_VALUE = "true";
+  public static final String BYPASS_HEADER_FALSE_VALUE = "false";
 
   private static final String TAG = RequestCache.class.getName();
 
@@ -146,8 +147,7 @@ public class RequestCache {
         editor.commit();
 
         // return deep cloned response
-        Response cachedResponse = cacheEntry.getResponse(request);
-        return cachedResponse;
+        return cacheEntry.getResponse(request);
       }
     } catch (Exception ex) {
       CrashReports.logException(ex);
@@ -165,19 +165,18 @@ public class RequestCache {
    * @throws IOException
    */
   @Nullable public Response get(@NonNull Request request) {
-
-    if (!initialized) {
-      return null;
-    }
-
-    DiskLruCache.Snapshot snapshot = null;
-    try {
-
-      String header = request.headers().get(BYPASS_HEADER_KEY);
-      if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
+    synchronized (diskCacheLock) {
+      if (!initialized) {
         return null;
       }
-      synchronized (diskCacheLock) {
+
+      DiskLruCache.Snapshot snapshot = null;
+      try {
+
+        String header = request.headers().get(BYPASS_HEADER_KEY);
+        if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
+          return null;
+        }
         final String reqKey = keyAlgorithm.getKeyFrom(request);
         if (reqKey == null) {
           Logger.w(TAG, "Key algorithm returned a null key for request");
@@ -185,37 +184,37 @@ public class RequestCache {
         }
 
         snapshot = diskLruCache.get(reqKey);
+
+        // if snapshot entry doesn't exist return null
+        if (snapshot == null) return null;
+
+        String data = snapshot.getString(DATA_BUCKET_INDEX);
+        RequestCacheEntry cacheEntry = RequestCacheEntry.fromString(data);
+        // create response using the previous cloned request so that we don't modify it
+        Response response = cacheEntry.getResponse(request);
+
+        Calendar cacheMaxTime = Calendar.getInstance();
+        cacheMaxTime.setTime(SIMPLE_DATE_FORMAT.parse(snapshot.getString(TIMESTAMP_BUCKET_INDEX)));
+        int maxSeconds = response.cacheControl().maxAgeSeconds();
+        cacheMaxTime.add(Calendar.SECOND, maxSeconds);
+
+        // is the snapshot within the validity period?
+        Calendar current = Calendar.getInstance();
+        if (current.after(cacheMaxTime)) {
+          return null;
+        }
+
+        return response;
+      } catch (Exception ex) {
+        CrashReports.logException(ex);
+        Logger.e(TAG, "Can't get request on cache: ", ex);
+      } finally {
+        if (snapshot != null) {
+          snapshot.close();
+        }
       }
-
-      // if snapshot entry doesn't exist return null
-      if (snapshot == null) return null;
-
-      String data = snapshot.getString(DATA_BUCKET_INDEX);
-      RequestCacheEntry cacheEntry = RequestCacheEntry.fromString(data);
-      // create response using the previous cloned request so that we don't modify it
-      Response response = cacheEntry.getResponse(request);
-
-      Calendar cacheMaxTime = Calendar.getInstance();
-      cacheMaxTime.setTime(SIMPLE_DATE_FORMAT.parse(snapshot.getString(TIMESTAMP_BUCKET_INDEX)));
-      int maxSeconds = response.cacheControl().maxAgeSeconds();
-      cacheMaxTime.add(Calendar.SECOND, maxSeconds);
-
-      // is the snapshot within the validity period?
-      Calendar current = Calendar.getInstance();
-      if (current.after(cacheMaxTime)) {
-        return null;
-      }
-
-      return response;
-    } catch (Exception ex) {
-      CrashReports.logException(ex);
-      Logger.e(TAG, "Can't get request on cache: ", ex);
-    } finally {
-      if (snapshot != null) {
-        snapshot.close();
-      }
+      return null;
     }
-    return null;
   }
 
   public void destroy() {
