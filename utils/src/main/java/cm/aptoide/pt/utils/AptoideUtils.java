@@ -714,6 +714,16 @@ public class AptoideUtils {
       return null;
     }
 
+    public static void askForRoot() {
+      Process suProcess;
+
+      try {
+        suProcess = Runtime.getRuntime().exec("su");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
     public static boolean isRooted() {
       return findBinary("su");
     }
