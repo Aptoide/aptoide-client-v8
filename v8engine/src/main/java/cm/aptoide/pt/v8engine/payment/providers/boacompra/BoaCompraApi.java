@@ -15,6 +15,7 @@ import rx.Observable;
 
 interface BoaCompraApi {
 
-  @POST("pre-approvals") Observable<PreApprovalResponse> createPreApproval(
-      @Body PreApprovalRequest request);
+  @POST("pre-approvals") Observable<PreApprovalAuthorizationResponse> createPreApproval(
+      @Body PreApprovalAuthorizationRequest request);
+
 }
