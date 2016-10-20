@@ -92,12 +92,13 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       logException(ex);
     }
 
-    try {
-      new Installed().migrate(db,
-          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Installed.class)); // X
-    } catch (Exception ex) {
-      logException(ex);
-    }
+    // recreated upon app install
+    //try {
+    //  new Installed().migrate(db,
+    //      AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Installed.class)); // X
+    //} catch (Exception ex) {
+    //  logException(ex);
+    //}
 
     try {
       new Rollback().migrate(db,

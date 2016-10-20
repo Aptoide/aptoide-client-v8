@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class TableBag {
 
   public enum TableName{
-    SCHEDULED, INSTALLED
+    SCHEDULED, EXCLUDED
   }
 
   private HashMap<TableName, Table> tables;
@@ -21,7 +21,7 @@ public class TableBag {
 
   private void init() {
     tables.put(TableName.SCHEDULED, new ScheduledTable());
-    tables.put(TableName.INSTALLED, new InstalledTable());
+    tables.put(TableName.EXCLUDED, new ExcludedTable());
   }
 
   public Table get(TableName tableName) {
