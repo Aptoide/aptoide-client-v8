@@ -14,13 +14,13 @@ import java.util.Date;
  * Created by marcelobenites on 10/7/16.
  */
 
-class PreApproval {
+class PreApprovalAuthorization {
 
   private final String code;
   private final Date date;
   private final String redirectUrl;
 
-  @JsonCreator public PreApproval(@JsonProperty("pre-approval-code") String code,
+  @JsonCreator public PreApprovalAuthorization(@JsonProperty("pre-approval-code") String code,
       @JsonProperty("date") @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") Date date,
       @JsonProperty("redirect-url") String redirectUrl) {
     this.code = code;
