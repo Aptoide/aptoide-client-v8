@@ -16,11 +16,13 @@ import java.util.Date;
 
 class PreApproval {
 
-  @JsonProperty("pre-approval-code") private final String code;
-  @JsonProperty("date") @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") private final Date date;
-  @JsonProperty("redirect-url") private final String redirectUrl;
+  private final String code;
+  private final Date date;
+  private final String redirectUrl;
 
-  @JsonCreator public PreApproval(String code, Date date, String redirectUrl) {
+  @JsonCreator public PreApproval(@JsonProperty("pre-approval-code") String code,
+      @JsonProperty("date") @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") Date date,
+      @JsonProperty("redirect-url") String redirectUrl) {
     this.code = code;
     this.date = date;
     this.redirectUrl = redirectUrl;

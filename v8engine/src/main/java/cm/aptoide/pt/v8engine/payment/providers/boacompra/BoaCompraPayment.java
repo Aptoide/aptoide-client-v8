@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.payment.providers.boacompra;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.UserAuthorization;
 
 /**
  * Created by marcelobenites on 14/10/16.
@@ -16,9 +17,14 @@ import cm.aptoide.pt.v8engine.payment.Product;
 public class BoaCompraPayment implements Payment {
 
   private final BoaCompraApi api;
+  private final BoaCompraAuthorization authorization;
+  private final UserAuthorization userAuthorization;
 
-  public BoaCompraPayment(String apiUrl, BoaCompraAuthorization authorization) {
-    this.api = BoaCompraApiFactory.create(apiUrl, authorization);
+  public BoaCompraPayment(String apiUrl, BoaCompraAuthorization authorization,
+      UserAuthorization userAuthorization) {
+    this.userAuthorization = userAuthorization;
+    this.api =  BoaCompraApiFactory.create(apiUrl, authorization);
+    this.authorization = authorization;
   }
 
   @Override public int getId() {
@@ -50,6 +56,6 @@ public class BoaCompraPayment implements Payment {
   }
 
   @Override public void process(PaymentConfirmationListener listener) {
-
+    
   }
 }
