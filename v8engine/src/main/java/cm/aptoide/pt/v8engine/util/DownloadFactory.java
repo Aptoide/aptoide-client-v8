@@ -232,6 +232,7 @@ public class DownloadFactory {
     download.setPackageName(scheduled.getPackageName());
     download.setVersionCode(scheduled.getVerCode());
     download.setMd5(scheduled.getMd5());
+    download.setIcon(scheduled.getIcon());
 
     switch (scheduled.getAppActionAsEnum()) {
       case DOWNGRADE:
