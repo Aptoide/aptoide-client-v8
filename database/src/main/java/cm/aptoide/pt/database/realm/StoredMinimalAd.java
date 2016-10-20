@@ -1,5 +1,6 @@
 package cm.aptoide.pt.database.realm;
 
+import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -7,7 +8,7 @@ import io.realm.annotations.Required;
 /**
  * Created by neuro on 28-07-2016.
  */
-public class StoredMinimalAd extends RealmObject {
+public class StoredMinimalAd extends RealmObject implements StoredMinimalAdInterface {
 
   public static final String PACKAGE_NAME = "packageName";
   public static final String REFERRER = "referrer";
@@ -48,6 +49,7 @@ public class StoredMinimalAd extends RealmObject {
     this.referrer = referrer;
   }
 
+  @Override
   public String getCpiUrl() {
     return cpiUrl;
   }

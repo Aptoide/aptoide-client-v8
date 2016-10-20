@@ -13,6 +13,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -22,9 +23,8 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
@@ -34,7 +34,6 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -44,6 +43,8 @@ import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
@@ -88,7 +89,7 @@ public abstract class V8Engine extends DataProvider {
         addDefaultStore();
       }
 
-      DataproviderUtils.checkUpdates();
+      UpdateUtils.checkUpdates();
     }, e -> {
       Logger.e(TAG, e);
       //CrashReports.logException(e);
@@ -111,7 +112,7 @@ public abstract class V8Engine extends DataProvider {
 
   private static void addDefaultStore() {
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
-        getStoreMeta -> DataproviderUtils.checkUpdates(), null);
+        getStoreMeta -> UpdateUtils.checkUpdates(), null);
   }
 
   @Override public void onCreate() {
@@ -140,6 +141,10 @@ public abstract class V8Engine extends DataProvider {
     Database.initialize(this);
 
     generateAptoideUUID().subscribe();
+
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
+        AptoideAccountManager.getUserEmail()));
 
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
@@ -198,7 +203,7 @@ public abstract class V8Engine extends DataProvider {
             downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
-                AptoideAccountManager.getUserData()));
+                AptoideAccountManager.getUserEmail()));
 
     // setupCurrentActivityListener();
 
@@ -314,4 +319,8 @@ public abstract class V8Engine extends DataProvider {
   //			refWatcher.watch(activity);
   //		}
   //	}
+
+  @Override protected TokenInvalidator getTokenInvalidator() {
+    return AptoideAccountManager::invalidateAccessToken;
+  }
 }

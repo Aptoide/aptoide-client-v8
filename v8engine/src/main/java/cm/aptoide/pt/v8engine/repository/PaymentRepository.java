@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
@@ -110,13 +111,14 @@ import rx.schedulers.Schedulers;
             product.getId(), paymentConfirmation.getPrice().getAmount(),
             paymentConfirmation.getPrice().getTaxRate(),
             paymentConfirmation.getPrice().getCurrency(), operatorManager, product.getApiVersion(),
-            product.getDeveloperPayload());
+            product.getDeveloperPayload(), AptoideAccountManager.getAccessToken());
       } else {
         final PaidAppProduct product = (PaidAppProduct) paymentConfirmation.getProduct();
         return CheckProductPaymentRequest.ofPaidApp(paymentConfirmation.getPaymentConfirmationId(),
             paymentConfirmation.getPaymentId(), product.getId(),
             paymentConfirmation.getPrice().getAmount(), paymentConfirmation.getPrice().getTaxRate(),
-            paymentConfirmation.getPrice().getCurrency(), operatorManager, product.getStoreName());
+            paymentConfirmation.getPrice().getCurrency(), operatorManager, product.getStoreName(),
+            AptoideAccountManager.getAccessToken());
       }
     }).flatMap(request -> request.observe()).flatMap(response -> {
       if (response != null && response.isOk()) {

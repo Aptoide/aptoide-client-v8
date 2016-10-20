@@ -25,7 +25,7 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -48,12 +48,10 @@ import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_D
  */
 public class ScheduledDownloadsFragment extends GridRecyclerFragment {
 
-  private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
-
   public static final String OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI =
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
   public static final String OPEN_MODE = "openMode";
-
+  private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;

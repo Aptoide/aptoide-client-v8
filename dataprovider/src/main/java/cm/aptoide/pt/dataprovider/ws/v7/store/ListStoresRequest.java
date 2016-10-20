@@ -13,8 +13,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,7 +49,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static ListStoresRequest ofTopStores(int offset, int limit) {
+  public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken,
+      String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
@@ -59,16 +58,16 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
-    return new ListStoresRequest((Body) decorator.decorate(baseBody), BASE_HOST);
+    return new ListStoresRequest((Body) decorator.decorate(baseBody, accessToken), BASE_HOST);
   }
 
-  public static ListStoresRequest ofAction(String url) {
+  public static ListStoresRequest ofAction(String url, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepository(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new ListStoresRequest(url.replace("listStores", ""),
-        (Body) decorator.decorate(new Body()), BASE_HOST);
+        (Body) decorator.decorate(new Body(), accessToken), BASE_HOST);
   }
 
   @Override

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.Preference;
@@ -18,7 +19,7 @@ import android.widget.EditText;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 
@@ -27,8 +28,8 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
  */
 public class AdultDialog extends DialogFragment {
 
-  public static android.app.Dialog buildMaturePinInputDialog(final Context context,
-      final android.content.DialogInterface.OnClickListener positiveButtonListener) {
+  public static Dialog buildMaturePinInputDialog(final Context context,
+      final DialogInterface.OnClickListener positiveButtonListener) {
 
     final View view = LayoutInflater.from(context).inflate(R.layout.dialog_requestpin, null, false);
     final EditText pinEditText = ((EditText) view.findViewById(R.id.pininput));
@@ -58,7 +59,7 @@ public class AdultDialog extends DialogFragment {
   }
 
   public static Dialog setAdultPinDialog(final Context context, final Preference mp,
-      final android.content.DialogInterface.OnClickListener positiveButtonListener) {
+      final DialogInterface.OnClickListener positiveButtonListener) {
 
     //final View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_requestpin, null);
     //AlertDialog.Builder builder =
@@ -105,8 +106,8 @@ public class AdultDialog extends DialogFragment {
     return dialog.getCreatedDialog();
   }
 
-  private static android.app.Dialog dialogAsk21(final Context context,
-      final android.content.DialogInterface.OnClickListener positiveButtonListener) {
+  private static Dialog dialogAsk21(final Context context,
+      final DialogInterface.OnClickListener positiveButtonListener) {
 
 		/*
     return new android.app.AlertDialog.Builder(c).setMessage(c.getString(R.string.are_you_adult))
@@ -146,8 +147,8 @@ public class AdultDialog extends DialogFragment {
     //return GenericDialogs.createGenericYesNoCancelMessage(c, "", c.getString(R.string.are_you_adult));
   }
 
-  private static android.app.Dialog dialogAsk21(final Context context,
-      final android.content.DialogInterface.OnClickListener positiveButtonlistener,
+  private static Dialog dialogAsk21(final Context context,
+      final DialogInterface.OnClickListener positiveButtonlistener,
       DialogInterface.OnCancelListener cancelListener) {
 
     /*
@@ -188,8 +189,8 @@ public class AdultDialog extends DialogFragment {
     return dialog.getCreatedDialog();
   }
 
-  public static android.app.Dialog buildAreYouAdultDialog(final Context c,
-      final android.content.DialogInterface.OnClickListener positiveButtonlistener) {
+  public static Dialog buildAreYouAdultDialog(final Context c,
+      final DialogInterface.OnClickListener positiveButtonlistener) {
     int pin = SecurePreferences.getAdultContentPin();
     if (pin == -1) {
       return dialogAsk21(c, positiveButtonlistener);
@@ -198,8 +199,8 @@ public class AdultDialog extends DialogFragment {
     }
   }
 
-  public static android.app.Dialog buildAreYouAdultDialog(final Context c,
-      final android.content.DialogInterface.OnClickListener positiveButtonlistener,
+  public static Dialog buildAreYouAdultDialog(final Context c,
+      final DialogInterface.OnClickListener positiveButtonlistener,
       DialogInterface.OnCancelListener cancelListener) {
     int pin = SecurePreferences.getAdultContentPin();
     if (pin == -1) {
@@ -213,13 +214,11 @@ public class AdultDialog extends DialogFragment {
     super.onDetach();
   }
 
-  @NonNull @Override
-  public android.app.Dialog onCreateDialog(android.os.Bundle savedInstanceState) {
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-    return buildAreYouAdultDialog(getActivity(),
-        new android.content.DialogInterface.OnClickListener() {
-          @Override public void onClick(android.content.DialogInterface dialog, int which) {
-            if (which == android.content.DialogInterface.BUTTON_POSITIVE) {
+    return buildAreYouAdultDialog(getActivity(), new DialogInterface.OnClickListener() {
+      @Override public void onClick(DialogInterface dialog, int which) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
               SecurePreferences.setAdultSwitch(true);
             }
           }

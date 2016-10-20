@@ -20,7 +20,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.CircleTransform;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;

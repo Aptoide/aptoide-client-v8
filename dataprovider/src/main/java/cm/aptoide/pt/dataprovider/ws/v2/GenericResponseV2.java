@@ -13,7 +13,6 @@ import java.util.List;
 public class GenericResponseV2 {
 
   String status;
-
   List<ErrorResponse> errors;
 
   public String getStatus() {

@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.PaymentResponse;
 import java.util.Locale;
@@ -25,10 +23,11 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
   public static CheckProductPaymentRequest ofInAppBilling(String paymentConfirmationId,
       int paymentId, int productId, double price, double taxRate, String currency,
-      NetworkOperatorManager operatorManager, int apiVersion, String developerPayload) {
+      NetworkOperatorManager operatorManager, int apiVersion, String developerPayload,
+      String accessToken) {
     final BaseBody args = new BaseBody();
     addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
-        operatorManager, args);
+        operatorManager, args, accessToken);
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("developerPayload", developerPayload);
@@ -37,10 +36,10 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
   public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId,
       int productId, double price, double taxRate, String currency,
-      NetworkOperatorManager operatorManager, String storeName) {
+      NetworkOperatorManager operatorManager, String storeName, String accessToken) {
     final BaseBody args = new BaseBody();
     addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
-        operatorManager, args);
+        operatorManager, args, accessToken);
     args.put("reqtype", "apkpurchasestatus");
     args.put("repo", storeName);
     return new CheckProductPaymentRequest(BASE_HOST, args);
@@ -48,7 +47,7 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
 
   private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,
       double price, double taxRate, String currency, NetworkOperatorManager operatorManager,
-      BaseBody args) {
+      BaseBody args, String accessToken) {
 
     args.put("mode", "json");
     args.put("payreqtype", "rest");
@@ -58,7 +57,7 @@ public class CheckProductPaymentRequest extends V3<PaymentResponse> {
     args.put("productid", String.valueOf(productId));
     args.put("price", String.format(Locale.ROOT, "%.2f", price));
     args.put("currency", currency);
-    args.put("access_token", AptoideAccountManager.getAccessToken());
+    args.put("access_token", accessToken);
 
     if (operatorManager.isSimStateReady()) {
       args.put("simcc", operatorManager.getSimCountryISO());

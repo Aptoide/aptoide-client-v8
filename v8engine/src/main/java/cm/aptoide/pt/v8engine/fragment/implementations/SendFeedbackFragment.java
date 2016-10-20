@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -154,7 +155,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
               startActivity(emailIntent);
               getActivity().onBackPressed();
               //				Analytics.SendFeedback.sendFeedback();
-            } catch (android.content.ActivityNotFoundException ex) {
+            } catch (ActivityNotFoundException ex) {
               ShowMessage.asSnack(getView(), R.string.feedback_no_email);
             }
           });

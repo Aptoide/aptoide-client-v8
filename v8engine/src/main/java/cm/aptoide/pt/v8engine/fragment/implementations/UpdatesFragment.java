@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -15,18 +16,17 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
@@ -73,20 +73,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void reload() {
     super.reload();
 
-    //if (DeprecatedDatabase.StoreQ.getAll(realm).size() == 0) {
-    //  ShowMessage.asSnack(getView(), R.string.add_store);
-    //  finishLoading();
-    //} else {
-    //  DataproviderUtils.checkUpdates(listAppsUpdates -> {
-    //    if (listAppsUpdates.getList().size() == 0) {
-    //      finishLoading();
-    //      ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
-    //    }
-    //    if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
-    //      ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
-    //    }
-    //  });
-    //}
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     Subscription unManagedSubscription =
         storeAccessor.count().observeOn(AndroidSchedulers.mainThread()).subscribe(storeCount -> {
@@ -94,7 +80,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             ShowMessage.asSnack(getView(), R.string.add_store);
             finishLoading();
           } else {
-            DataproviderUtils.checkUpdates(listAppsUpdates -> {
+            UpdateUtils.checkUpdates(listAppsUpdates -> {
               if (listAppsUpdates.getList().size() == 0) {
                 finishLoading();
                 ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);

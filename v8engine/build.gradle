@@ -110,29 +110,35 @@ dependencies {
   // inter-projects dependencies
   //
 
-  debugCompile project(path: ":database", configuration: "debug")
-  releaseCompile project(path: ":database", configuration: "release")
+  debugCompile project(path: ':database', configuration: 'debug')
+  releaseCompile project(path: ':database', configuration: 'release')
 
-  debugCompile project(path: ":dataprovider", configuration: "debug")
-  releaseCompile project(path: ":dataprovider", configuration: "release")
+  debugCompile project(path: ':dataprovider', configuration: 'debug')
+  releaseCompile project(path: ':dataprovider', configuration: 'release')
 
-  debugCompile project(path: ":utils", configuration: "debug")
-  releaseCompile project(path: ":utils", configuration: "release")
+  debugCompile project(path: ':utils', configuration: 'debug')
+  releaseCompile project(path: ':utils', configuration: 'release')
 
-  debugCompile project(path: ":aptoide_accountmanager", configuration: "debug")
-  releaseCompile project(path: ":aptoide_accountmanager", configuration: "release")
+  debugCompile project(path: ':utilsdesign', configuration: 'debug')
+  releaseCompile project(path: ':utilsdesign', configuration: 'release')
 
-  debugCompile project(path: ":imageloader", configuration: "debug")
-  releaseCompile project(path: ":imageloader", configuration: "release")
+  debugCompile project(path: ':crashreports', configuration: 'debug')
+  releaseCompile project(path: ':crashreports', configuration: 'release')
 
-  debugCompile project(path: ":downloadmanager", configuration: "debug")
-  releaseCompile project(path: ":downloadmanager", configuration: "release")
+  debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
+  releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
+
+  debugCompile project(path: ':imageloader', configuration: 'debug')
+  releaseCompile project(path: ':imageloader', configuration: 'release')
+
+  debugCompile project(path: ':downloadmanager', configuration: 'debug')
+  releaseCompile project(path: ':downloadmanager', configuration: 'release')
 
   //
   // custom libs in folders
   //
 
-  //compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 
   //
   // from remote repos
@@ -199,7 +205,6 @@ dependencies {
   // paypal SDK
   compile("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
-    exclude group:"com.android.support", module:"support-v4"
   }
 
   // Localytics sdk

@@ -1,10 +1,10 @@
 package cm.aptoide.pt.v8engine.repository;
 
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.CrashReports;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import rx.Observable;

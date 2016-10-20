@@ -21,8 +21,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
@@ -37,6 +37,7 @@ import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import com.astuetz.PagerSlidingTabStrip;
 import com.trello.rxlifecycle.FragmentEvent;
@@ -128,7 +129,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
-      GetStoreRequest.of(storeName, storeContext)
+      GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

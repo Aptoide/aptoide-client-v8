@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -37,11 +38,11 @@ import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.iab.BillingBinder;
@@ -54,10 +55,9 @@ import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
@@ -260,7 +260,7 @@ public class AppViewFragment extends GridRecyclerFragment
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .flatMap(list -> storeAccessor.get(storeId))
+        .flatMap(list -> storeAccessor.get(storeId)).observeOn(AndroidSchedulers.mainThread())
         .subscribe(store -> {
           if (store != null) {
             adapter.notifyDataSetChanged();
@@ -280,6 +280,7 @@ public class AppViewFragment extends GridRecyclerFragment
     final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
     rollbackAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
         });

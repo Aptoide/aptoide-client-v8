@@ -91,4 +91,8 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
   public void remove(String packageName) {
     database.delete(Update.class, Update.PACKAGE_NAME, packageName);
   }
+
+  public void save(Update update) {
+    Database.save(update);
+  }
 }

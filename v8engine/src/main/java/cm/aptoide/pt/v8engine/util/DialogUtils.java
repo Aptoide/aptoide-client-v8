@@ -24,7 +24,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import java.util.Locale;
 import rx.functions.Action0;
@@ -105,10 +105,12 @@ public class DialogUtils {
       };
 
       if (storeName != null) {
-        PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating)
+        PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
             .execute(successRequestListener, errorRequestListener);
       } else {
-        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating)
+        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
             .execute(successRequestListener, errorRequestListener);
       }
     });
