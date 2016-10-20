@@ -15,7 +15,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;

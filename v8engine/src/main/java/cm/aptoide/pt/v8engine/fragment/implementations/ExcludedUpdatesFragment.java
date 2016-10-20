@@ -18,7 +18,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;

@@ -25,7 +25,7 @@ import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 

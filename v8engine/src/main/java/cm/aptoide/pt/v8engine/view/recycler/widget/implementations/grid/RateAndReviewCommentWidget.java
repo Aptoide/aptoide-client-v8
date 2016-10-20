@@ -28,7 +28,7 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;

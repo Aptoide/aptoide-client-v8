@@ -23,7 +23,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.util.DialogUtils;

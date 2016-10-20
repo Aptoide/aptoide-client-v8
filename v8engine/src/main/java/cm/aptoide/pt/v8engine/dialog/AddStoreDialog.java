@@ -20,7 +20,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -32,8 +32,6 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
  * use File | Settings |
  * File Templates.
  */
-
-// // TODO: 19-05-2016 neuro IMPORTS TODOS MARADOS!
 public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;

@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
