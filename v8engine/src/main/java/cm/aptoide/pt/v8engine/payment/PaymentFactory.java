@@ -34,13 +34,17 @@ public class PaymentFactory {
             getPayPalConfiguration(), getPaymentConverter(), product,
             paymentService.getTypes().get(0).getLabel());
       case BOACOMPRA:
-        return new BoaCompraPayment(BuildConfig.BOACOMPRA_API_HOST,
-            new BoaCompraAuthorization(BuildConfig.BOACOMPRA_SECRET_KEY,
-                BuildConfig.BOACOMPRA_MERCHANT_ID));
+        return new BoaCompraPayment(BuildConfig.BOACOMPRA_API_HOST, getBoaCompraAuthorization(),
+            new AptoideUserAuthorization());
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());
     }
+  }
+
+  @NonNull private BoaCompraAuthorization getBoaCompraAuthorization() {
+    return new BoaCompraAuthorization(BuildConfig.BOACOMPRA_SECRET_KEY,
+        BuildConfig.BOACOMPRA_MERCHANT_ID);
   }
 
   @NonNull private Price getPrice(double price, String currency, double taxRate) {
