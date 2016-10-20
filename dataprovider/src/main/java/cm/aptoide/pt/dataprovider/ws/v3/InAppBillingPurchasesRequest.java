@@ -6,8 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import rx.Observable;
 
@@ -20,19 +18,20 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
     super(baseHost, baseBody);
   }
 
-  public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type) {
-    BaseBody args = getBaseArgs(apiVersion, packageName, type);
+  public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type,
+      String accessToken, String email) {
+    BaseBody args = getBaseArgs(apiVersion, packageName, type, accessToken);
     return new InAppBillingPurchasesRequest(BASE_HOST, args);
   }
 
-  @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName,
-      String type) {
+  @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName, String type,
+      String accessToken) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabpurchases");
-    args.put("access_token", AptoideAccountManager.getAccessToken());
+    args.put("access_token", accessToken);
     args.put("purchasetype", type);
     return args;
   }

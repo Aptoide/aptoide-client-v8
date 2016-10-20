@@ -5,11 +5,14 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import io.realm.RealmObject;
 
@@ -18,6 +21,7 @@ import io.realm.RealmObject;
  */
 public final class AccessorFactory {
 
+  @NonNull
   public static <T extends RealmObject, A extends Accessor> A getAccessorFor(Class<T> clazz) {
     if (clazz.equals(Scheduled.class)) {
       return (A) new ScheduledAccessor(new Database());
@@ -28,13 +32,15 @@ public final class AccessorFactory {
     } else if (clazz.equals(Download.class)) {
       return (A) new DownloadAccessor(new Database());
     } else if (clazz.equals(Update.class)) {
-      return (A) new UpdatesAccessor(new Database());
+      return (A) new UpdateAccessor(new Database());
     } else if (clazz.equals(Rollback.class)) {
       return (A) new RollbackAccessor(new Database());
+    } else if (clazz.equals(Store.class)) {
+      return (A) new StoreAccessor(new Database());
+    } else if (clazz.equals(StoredMinimalAd.class)) {
+      return (A) new StoreMinimalAdAccessor(new Database());
     }
 
-    // TODO: 02/09/16 add missing cases
-
-    return null;
+    throw new RuntimeException("Create accessor for class " + clazz.getName());
   }
 }

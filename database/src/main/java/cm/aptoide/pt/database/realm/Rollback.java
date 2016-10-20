@@ -7,10 +7,8 @@ package cm.aptoide.pt.database.realm;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 import java.util.Calendar;
 
 /**

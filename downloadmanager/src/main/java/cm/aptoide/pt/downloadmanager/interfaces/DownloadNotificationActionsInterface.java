@@ -7,5 +7,5 @@ package cm.aptoide.pt.downloadmanager.interfaces;
 
   void button1Pressed();
 
-  void notificationPressed(long appId);
+  void notificationPressed(String md5);
 }

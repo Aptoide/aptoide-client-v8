@@ -261,7 +261,7 @@ public final class PRNGFixes {
       } catch (IOException e) {
         // On a small fraction of devices /dev/urandom is not writable.
         // Log and ignore.
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
           Log.w(TAG, "Failed to mix seed into " + URANDOM_FILE);
         }
       } finally {

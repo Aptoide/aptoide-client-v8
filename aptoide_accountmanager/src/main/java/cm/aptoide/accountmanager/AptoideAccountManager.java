@@ -38,17 +38,15 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.actions.GenerateClientId;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
-import io.fabric.sdk.android.services.common.Crash;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import javax.security.auth.login.LoginException;
@@ -192,8 +190,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public static boolean isLoggedIn() {
-    AccountManager manager =
-        android.accounts.AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
     return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
   }
 
@@ -257,8 +254,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (userAccount == null) {
       Account[] accounts = accountManager.getAccounts();
       for (final Account account : accounts) {
-        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail()) && TextUtils.equals(
-            account.type, Constants.ACCOUNT_TYPE)) {
+        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail())
+            && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
           userAccount = account;
           break;
         }
@@ -297,14 +294,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
     }
     return userName;
-  }
-
-  public static UserData getUserData () {
-    return new UserData() {
-      @Override public String getEmail() {
-        return getUserEmail();
-      }
-    };
   }
 
   /**
@@ -505,12 +494,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       throw new IllegalThreadStateException("This method shouldn't be called on ui thread.");
     }
     String refreshToken = getRefreshToken();
-    final String[] stringToReturn = { "" };
-    getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
-        .subscribe((token) -> {
-          stringToReturn[0] = token;
-        });
-    return stringToReturn[0];
+    //final String[] stringToReturn = { "" };
+    //stringToReturn[0] =
+    //    getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
+    //        .first();
+    //return stringToReturn[0];
+    return getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
+        .first();
   }
 
   private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
@@ -677,7 +667,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     return refreshUserInfoData().doOnNext(AptoideAccountManager::saveUserInfo);
   }
 
-  public static Observable<CheckUserCredentialsJson > refreshUserInfoData() {
+  public static Observable<CheckUserCredentialsJson> refreshUserInfoData() {
     return CheckUserCredentialsRequest.of(getAccessToken())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
@@ -689,8 +679,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   private void removeLocalAccount() {
-    AccountManager manager =
-        android.accounts.AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
     Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
     for (Account account : accounts) {
       if (Build.VERSION.SDK_INT >= 22) {
@@ -765,13 +754,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
-      refreshAndSaveUserInfoData().subscribe(
-          userData -> {
+      refreshAndSaveUserInfoData().subscribe(userData -> {
 
-          }, e -> {
-            Logger.e(TAG, e);
-          }
-      );
+      }, e -> {
+        Logger.e(TAG, e);
+      });
       toReturn = true;
     }
     return toReturn;

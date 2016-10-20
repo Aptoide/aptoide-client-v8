@@ -30,14 +30,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.accessors.RollbackAccessor;
+import cm.aptoide.pt.database.accessors.ScheduledAccessor;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.iab.BillingBinder;
@@ -50,10 +55,9 @@ import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
@@ -83,10 +87,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import io.realm.Realm;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
 import rx.Subscription;
@@ -240,21 +242,45 @@ public class AppViewFragment extends GridRecyclerFragment
   }
 
   private void setupObservables(GetApp getApp) {
+
+    // ??
+
+    final long storeId = getApp.getNodes().getMeta().getData().getStore().getId();
+
     // For stores subscription
-    DeprecatedDatabase.StoreQ.getAll(realm)
-        .asObservable()
+    //DeprecatedDatabase.StoreQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(stores -> {
+    //      if (DeprecatedDatabase.StoreQ.get(storeId, realm) != null) {
+    //        adapter.notifyDataSetChanged();
+    //      }
+    //    });
+
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(stores -> {
-          if (DeprecatedDatabase.StoreQ.get(
-              getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
+        .flatMap(list -> storeAccessor.get(storeId)).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(store -> {
+          if (store != null) {
             adapter.notifyDataSetChanged();
           }
         });
 
+    // ??
+
     // For install actions
-    DeprecatedDatabase.RollbackQ.getAll(realm)
-        .asObservable()
+    //DeprecatedDatabase.RollbackQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(rollbacks -> {
+    //      adapter.notifyDataSetChanged();
+    //    });
+
+    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    rollbackAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
         });
@@ -363,10 +389,13 @@ public class AppViewFragment extends GridRecyclerFragment
 
       scheduled = Scheduled.from(app, appAction);
 
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      realm.beginTransaction();
-      realm.copyToRealmOrUpdate(scheduled);
-      realm.commitTransaction();
+      //@Cleanup Realm realm = DeprecatedDatabase.get();
+      //realm.beginTransaction();
+      //realm.copyToRealmOrUpdate(scheduled);
+      //realm.commitTransaction();
+
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      scheduledAccessor.insert(scheduled);
 
       String str = this.getString(R.string.added_to_scheduled);
       ShowMessage.asSnack(this.getView(), str);

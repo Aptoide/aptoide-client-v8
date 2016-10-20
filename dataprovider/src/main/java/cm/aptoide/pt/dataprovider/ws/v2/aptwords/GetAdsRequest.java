@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -36,9 +35,7 @@ import rx.Observable;
       new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
   private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
-      .addInterceptor(new UserAgentInterceptor(
-          AptoideUtils.NetworkUtils.getDefaultUserAgent(idsRepository,
-              AptoideAccountManager.getUserData())))
+      .addInterceptor(new UserAgentInterceptor(SecurePreferences.getUserAgent()))
       .connectTimeout(2, TimeUnit.SECONDS)
       .build();
 

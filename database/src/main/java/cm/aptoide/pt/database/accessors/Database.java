@@ -11,7 +11,6 @@ import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmMigration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -28,13 +27,11 @@ import rx.Observable;
  */
 public final class Database {
 
-  private static final String TAG = Database.class.getSimpleName();
+  public static final int SCHEMA_VERSION = 8077; // if you bump this value, also add changes to the
+  //private static final String TAG = Database.class.getName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
   private static final String DB_NAME_E = "aptoide_mobile.db";
-  public static final int SCHEMA_VERSION = 8077; // if you bump this value, also add changes to the
-  // migration script
-  private static final RealmMigration MIGRATION = new RealmToRealmDatabaseMigration();
 
   private static boolean isInitialized = false;
 
@@ -86,15 +83,14 @@ public final class Database {
           //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           .schemaVersion(SCHEMA_VERSION)
-          .migration(MIGRATION)
+          .migration(new RealmToRealmDatabaseMigration())
           .build();
     } else {
       //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
           //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
-          .schemaVersion(SCHEMA_VERSION)
-          .migration(MIGRATION)
-          .build();
+          //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
+          .schemaVersion(SCHEMA_VERSION).migration(new RealmToRealmDatabaseMigration()).build();
     }
 
     //if (BuildConfig.DELETE_DB) {
@@ -104,39 +100,12 @@ public final class Database {
     isInitialized = true;
   }
 
-  public static <E extends RealmObject> void save(E realmObject) {
-    Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realm.insertOrUpdate(realmObject);
-    realm.commitTransaction();
-    realm.close();
-  }
-
-  public static <E extends RealmObject> void save(List<E> realmObject) {
-    @Cleanup Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realm.insertOrUpdate(realmObject);
-    realm.commitTransaction();
-  }
-
-  public static void delete(RealmObject realmObject) {
-    @Cleanup Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realmObject.deleteFromRealm();
-    realm.commitTransaction();
-  }
-
   protected static Realm get() {
     if (!isInitialized) {
       throw new IllegalStateException("You need to call Database.initialize(Context) first");
     }
-
     return Realm.getDefaultInstance();
   }
-
-  //
-  // Instance methods
-  //
 
   /**
    * this code is expected to run on only a single thread, so no synchronizing primitives were used
@@ -155,31 +124,71 @@ public final class Database {
     return INSTANCE;
   }
 
+  /**
+   * Use class Accessor for this operation, via AccessorFactory.
+   */
+  @Deprecated public static <E extends RealmObject> void save(E realmObject) {
+    Realm realm = Realm.getDefaultInstance();
+    realm.beginTransaction();
+    realm.insertOrUpdate(realmObject);
+    realm.commitTransaction();
+    realm.close();
+  }
+
+  /**
+   * Use class Accessor for this operation, via AccessorFactory.
+   */
+  @Deprecated public static <E extends RealmObject> void save(List<E> realmObject) {
+    @Cleanup Realm realm = Realm.getDefaultInstance();
+    realm.beginTransaction();
+    realm.insertOrUpdate(realmObject);
+    realm.commitTransaction();
+  }
+
+  /**
+   * Use class Accessor for this operation, via AccessorFactory.
+   */
+  @Deprecated public static void delete(RealmObject realmObject) {
+    @Cleanup Realm realm = Realm.getDefaultInstance();
+    realm.beginTransaction();
+    realmObject.deleteFromRealm();
+    realm.commitTransaction();
+  }
+
+  //
+  // Instance methods
+  //
+
   private Observable<Realm> getRealm() {
     return Observable.just(null)
         .observeOn(RealmSchedulers.getScheduler())
         .map(something -> Database.getInternal());
   }
 
-  protected <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
+  <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
     return Observable.just(results)
         .filter(data -> data.isLoaded())
         .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects));
   }
 
-  protected <E extends RealmObject> Observable<E> copyFromRealm(E object) {
+  <E extends RealmObject> Observable<E> copyFromRealm(E object) {
     return Observable.just(object)
         .filter(data -> data.isLoaded())
         .map(realmObject -> Database.getInternal().copyFromRealm(realmObject));
   }
 
-  private <E extends RealmObject> Observable<E> findFirst(RealmQuery<E> query) {
+  <E extends RealmObject> Observable<E> findFirst(RealmQuery<E> query) {
     return Observable.just(query.findFirst())
         .filter(realmObject -> realmObject != null)
         .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
         .flatMap(realmObject -> copyFromRealm(realmObject))
         .defaultIfEmpty(null);
+  }
+
+  public Observable<Long> count(Class clazz) {
+    return getRealm().flatMap(realm -> Observable.just(realm.where(clazz).count())
+        .unsubscribeOn(RealmSchedulers.getScheduler()));
   }
 
   public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
@@ -231,5 +240,26 @@ public final class Database {
       first.deleteFromRealm();
       realm.commitTransaction();
     }
+  }
+
+  public <E extends RealmObject> void deleteAll(Class<E> clazz) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.delete(clazz);
+    realm.commitTransaction();
+  }
+
+  public <E extends RealmObject> void insertAll(List<E> objects) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.insertOrUpdate(objects);
+    realm.commitTransaction();
+  }
+
+  public <E extends RealmObject> void insert(E object) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.insertOrUpdate(object);
+    realm.commitTransaction();
   }
 }

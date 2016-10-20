@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.logger.Logger;
@@ -74,7 +73,8 @@ public class RollbackFragment extends GridRecyclerFragment {
       getActivity().onBackPressed();
       return true;
     } else if (itemId == R.id.menu_clear) {
-      DeprecatedDatabase.RollbackQ.deleteAll(realm);
+      //DeprecatedDatabase.RollbackQ.deleteAll(realm);
+      AccessorFactory.getAccessorFor(Rollback.class).removeAll();
       clearDisplayables();
       finishLoading();
       return true;

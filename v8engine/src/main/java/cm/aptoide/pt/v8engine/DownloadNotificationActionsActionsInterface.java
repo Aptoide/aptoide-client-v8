@@ -21,16 +21,17 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
     Application.getContext().startActivity(intent);
   }
 
-  @Override public void notificationPressed(long appId) {
+  @Override public void notificationPressed(String md5) {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
     Application.getContext().startActivity(intent);
   }
 
   @NonNull private Intent createDeeplinkingIntent() {
     Intent intent = new Intent();
-    intent.setClass(Application.getContext(), MainActivityFragment.class);
+    intent.setClass(Application.getContext(),
+        V8Engine.getActivityProvider().getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
   }

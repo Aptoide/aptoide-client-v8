@@ -16,17 +16,18 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 
 /**
  * Created with IntelliJ IDEA. User: rmateus Date: 29-11-2013 Time: 15:56 To change this template
@@ -137,7 +138,9 @@ public class PrivateStoreDialog extends DialogFragment {
   }
 
   private GetStoreMetaRequest buildRequest() {
-    return GetStoreMetaRequest.of(storeName, storeUser, storePassSha1);
+    return GetStoreMetaRequest.of(
+        new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
   }
 
   public void setIsInsideStore(boolean isInsideStore) {

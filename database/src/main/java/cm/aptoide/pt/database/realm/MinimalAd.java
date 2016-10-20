@@ -3,11 +3,12 @@
  * Modified by SithEngineer on 04/08/2016.
  */
 
-package cm.aptoide.pt.dataprovider.model;
+package cm.aptoide.pt.database.realm;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.model.MinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import io.realm.RealmObject;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 20-06-2016.
  */
-public class MinimalAd extends RealmObject implements Parcelable {
+public class MinimalAd extends RealmObject implements Parcelable, MinimalAdInterface {
 
   public static final Creator<MinimalAd> CREATOR = new Creator<MinimalAd>() {
     @Override public MinimalAd createFromParcel(Parcel source) {

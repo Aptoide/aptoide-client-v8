@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 25/08/2016.
  */
 
-package cm.aptoide.pt.utils;
+package cm.aptoide.pt.utils.design;
 
 import android.app.Activity;
 import android.content.Context;

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -30,7 +31,8 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
   private int offset = 0;
   private SuccessRequestListener<ListStores> listener =
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
-          .subscribeOn(Schedulers.computation()).compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribeOn(Schedulers.computation())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(this::addDisplayables);
 
   public static FragmentTopStores newInstance() {
@@ -62,7 +64,8 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
 
   private void fetchStores() {
     final ListStoresRequest listStoresRequest =
-        ListStoresRequest.ofTopStores(offset, STORES_LIMIT_PER_REQUEST);
+        ListStoresRequest.ofTopStores(offset, STORES_LIMIT_PER_REQUEST,
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
             errorRequestListener);

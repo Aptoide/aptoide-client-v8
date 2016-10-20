@@ -9,8 +9,6 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +26,8 @@ public class PostCommentRequest extends V7<BaseV7Response, PostCommentRequest.Bo
     super(body, baseHost);
   }
 
-  public static PostCommentRequest of(long reviewId, String text) {
+  public static PostCommentRequest of(long reviewId, String text, String accessToken,
+      String email) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setComment/review_id/1/body/amazing%20review/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
@@ -38,7 +37,7 @@ public class PostCommentRequest extends V7<BaseV7Response, PostCommentRequest.Bo
     IdsRepository idsRepository =
         new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body = new Body(reviewId, text);
-    return new PostCommentRequest((Body) decorator.decorate(body), BASE_HOST);
+    return new PostCommentRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

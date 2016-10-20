@@ -25,15 +25,16 @@ import lombok.AllArgsConstructor;
   public static final String MD5 = "md5";
   public static final String VER_CODE = "verCode";
   public static final String IS_DOWNLOADING = "isDownloading";
+  public static final String APP_ACTION = "appAction";
 
-  //private long appId;
+  //private long appId; // not available in V7 database
   private String name;
   private String versionName;
   private String icon;
   private String path;
-  @PrimaryKey private String md5;
+  private String md5; // FK
   private int verCode;
-  private String packageName;
+  @PrimaryKey private String packageName; // FK
   private String storeName;
   private String alternativeApkPath;
 
@@ -48,7 +49,7 @@ import lombok.AllArgsConstructor;
   // Meta fields
   private boolean isDownloading;
 
-//AppAction
+  //AppAction
   private String appAction;
 
   public Scheduled() {

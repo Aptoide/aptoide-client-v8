@@ -13,13 +13,13 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -147,7 +147,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                       File apk = new File(downloadedFile.getFilePath());
                       String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
                       if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-                        installer.install(activity, autoUpdateInfo.md5).toBlocking().subscribe();
+                        installer.install(activity, autoUpdateInfo.md5).toBlocking().first();
                       } else {
                         Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
                         throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);

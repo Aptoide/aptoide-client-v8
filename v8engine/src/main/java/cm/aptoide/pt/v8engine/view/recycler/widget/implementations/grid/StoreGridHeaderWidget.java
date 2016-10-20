@@ -49,10 +49,11 @@ import java.util.List;
             ? View.VISIBLE : View.GONE);
     more.setOnClickListener((view) -> {
       FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-          V8Engine.getFragmentProvider().newStoreGridRecyclerFragment(
-              displayable.getPojo().getActions().get(0).getEvent(),
-              displayable.getPojo().getTitle(), displayable.getStoreTheme(), displayable.getTag()));
-      Analytics.AppViewViewedFrom.addStepToList(pojo.getTitle());
+          V8Engine.getFragmentProvider()
+              .newStoreGridRecyclerFragment(displayable.getPojo().getActions().get(0).getEvent(),
+                  displayable.getPojo().getTitle(), displayable.getStoreTheme(),
+                  displayable.getTag()));
+      Analytics.AppViewViewedFrom.addStepToList(pojo.getTag());
     });
   }
 

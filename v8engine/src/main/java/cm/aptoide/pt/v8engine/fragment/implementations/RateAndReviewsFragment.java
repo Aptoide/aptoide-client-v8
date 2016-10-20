@@ -17,7 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -29,26 +32,24 @@ import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
-import io.realm.Realm;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import lombok.Cleanup;
 import rx.Observable;
 import rx.Subscription;
 
@@ -88,7 +89,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
           Observable.from(reviews)
               .forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(),
-                  fullReview.getId(), 3, storeName).execute(listComments -> {
+                  fullReview.getId(), 3, storeName, StoreUtils.getStoreCredentials(storeName),
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+                  .execute(listComments -> {
                 fullReview.setCommentList(listComments);
                 countDownLatch.countDown();
               }, e -> countDownLatch.countDown()));
@@ -231,14 +234,24 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     inflater.inflate(R.menu.menu_install, menu);
     installMenuItem = menu.findItem(R.id.menu_install);
 
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+    ////check if the app is installed
+    //if (installed != null) {
+    //  // app installed... update text
+    //  installMenuItem.setTitle(R.string.open);
+    //}
 
-    //check if the app is installed
-    if (installed != null) {
-      // app installed... update text
-      installMenuItem.setTitle(R.string.open);
-    }
+    InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
+    accessor.get(packageName).subscribe(installed -> {
+      if (installed != null) {
+        // app installed... update text
+        installMenuItem.setTitle(R.string.open);
+      }
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -256,7 +269,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId).execute(getApp -> {
+    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken()).execute(getApp -> {
       GetAppMeta.App data = getApp.getNodes().getMeta().getData();
       setupTitle(data.getName());
       setupRating(data);
@@ -270,7 +283,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   }
 
   private void fetchReviews() {
-    ListReviewsRequest of = ListReviewsRequest.of(storeName, packageName);
+    ListReviewsRequest of =
+        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail());
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of,
         listFullReviewsSuccessRequestListener, errorRequestListener);

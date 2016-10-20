@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -22,7 +23,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
@@ -135,7 +135,6 @@ public class Analytics {
         ACTIVATE_LOCALYTICS =
             ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
         isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-        Logger.d(TAG, "teste : " + ACTIVATE_LOCALYTICS + " : " + isFirstSession);
         if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
           return;
         }
@@ -712,11 +711,27 @@ public class Analytics {
     public static final String EVENT_NAME = "Download Complete";
     private static final String PACKAGE_NAME = "Package Name";
     private static final String TRUSTED_BADGE = "Trusted Badge";
+    private static HashMap<Long, String> applicationsInstallClicked = new HashMap<>();
+
+    public static void installClicked(long id) {
+      int homeIndex = AppViewViewedFrom.STEPS.indexOf("home");
+      if (homeIndex > 0) {
+        applicationsInstallClicked.put(id, AppViewViewedFrom.STEPS.get(homeIndex - 1));
+      }
+    }
 
     public static void downloadComplete(GetAppMeta.App app) {
       try {
         HashMap<String, String> map = new HashMap<>();
-
+        String step = applicationsInstallClicked.get(app.getId());
+        if (!TextUtils.isEmpty(step)) {
+          if (step.equals("apps-group-editors-choice")) {
+            map.put("editors package name", app.getPackageName());
+          } else {
+            map.put("bundle package name", step + "_" + app.getPackageName());
+            map.put("bundle category", step);
+          }
+        }
         map.put(PACKAGE_NAME, app.getPackageName());
         map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
 
@@ -876,6 +891,7 @@ public class Analytics {
 
     public static final String APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY = "App_Viewed_Open_From";
     public static final int NUMBER_OF_STEPS_TO_RECORD = 5;
+    public static final String HOME_SCREEN_STEP = "home";
     private static ArrayList<String> STEPS = new ArrayList<>();
     private static String lastStep;
 
@@ -883,53 +899,42 @@ public class Analytics {
         String trustedBadge) {
 
       Collections.reverse(STEPS);
-      String stringForSourceEvent = formatStepsToSingleEvent(STEPS);
-      if (stringForSourceEvent.contains("home")) {
+      if (STEPS.contains(HOME_SCREEN_STEP)) {
+        String stringForSourceEvent = formatStepsToSingleEvent(STEPS);
         HashMap<String, String> map = new HashMap<>();
         map.put("Package Name", packageName);
         map.put("Source", stringForSourceEvent);
         map.put("Trusted Badge", trustedBadge);
         map.put("Application Publisher", developerName);
-
+        int index = STEPS.indexOf(HOME_SCREEN_STEP);
+        if (index > 0) {
+          String source = STEPS.get(index - 1);
+          if (source.equals("apps-group-editors-choice")) {
+            map.put("editors package name", packageName);
+          } else {
+            map.put("bundle package name", source + "_" + packageName);
+            map.put("bundle category", source);
+          }
+        }
+        Logger.d("teste", "appViewOpenFrom: " + map);
         track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
       }
       STEPS.clear();
     }
 
     private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {
-      String s = "";
-
-      Iterator iterator = listOfSteps.iterator();
-
-      while (iterator.hasNext()) {
-        String tmp = iterator.next().toString();
-        if (iterator.hasNext() && !tmp.equals("HOME")) {
-          s += (tmp.replace(" ", "-") + "_").toLowerCase();
-        } else {
-          s += tmp.replace(" ", "-").toLowerCase();
-        }
-        if (tmp.equals("HOME")) break;
-      }
-      return s;
+      return TextUtils.join("_", listOfSteps.subList(0, listOfSteps.indexOf(HOME_SCREEN_STEP)));
     }
 
     public static void addStepToList(String step) {
-
-      Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
-
-      if (step != null) {
-        if (STEPS.size() >= NUMBER_OF_STEPS_TO_RECORD) {
-          removeLeastRecentlyAddedElement(step);
-        } else {
-          STEPS.add(step);
+      if (!TextUtils.isEmpty(step)) {
+        STEPS.add(step.replace(" ", "-").toLowerCase());
+        Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
+        if (STEPS.size() > NUMBER_OF_STEPS_TO_RECORD) {
+          STEPS.remove(0);
         }
         lastStep = step;
       }
-    }
-
-    private static void removeLeastRecentlyAddedElement(String step) {
-      STEPS.remove(STEPS.size() - 1);
-      addStepToList(step);
     }
 
     static String getLastStep() {
@@ -1026,9 +1031,9 @@ public class Analytics {
     }
 
     public static void downloadComplete(long id, String packageName) {
-      if (applicationsInstallClicked.containsKey(id)) {
-        String value = applicationsInstallClicked.get(id);
-        track(value.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
+      String lastStep = applicationsInstallClicked.get(id);
+      if (!TextUtils.isEmpty(lastStep) && lastStep.contains("editors-choice")) {
+        track(lastStep.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
       }
     }
   }

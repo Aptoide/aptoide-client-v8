@@ -16,19 +16,20 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
-import cm.aptoide.pt.utils.ShowMessage;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.xml.XmlAppHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.realm.Realm;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -45,7 +46,6 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import lombok.Cleanup;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -70,7 +70,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
-  private Class startClass = MainActivityFragment.class;
+  private Class startClass = V8Engine.getActivityProvider().getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -341,14 +341,24 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   }
 
   public void startFromPackageName(String packageName) {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
+    //  startFromAppView(packageName);
+    //} else {
+    //  startFromSearch(packageName);
+    //}
 
-    Intent i;
-    if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
-      startFromAppView(packageName);
-    } else {
-      startFromSearch(packageName);
-    }
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    installedAccessor.get(packageName).subscribe(installed -> {
+      if (installed != null) {
+        startFromAppView(packageName);
+      } else {
+        startFromSearch(packageName);
+      }
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
   }
 
   @Override public void startActivity(Intent intent) {
@@ -436,7 +446,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   }
 
   public static class DeepLinksKeys {
-
 
     public static final String APP_MD5_KEY = "md5";
     public static final String APP_ID_KEY = "appId";

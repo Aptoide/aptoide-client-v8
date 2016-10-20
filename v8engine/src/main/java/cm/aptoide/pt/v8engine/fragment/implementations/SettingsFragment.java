@@ -31,25 +31,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
-import io.realm.Realm;
+import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import java.io.File;
 import java.text.DecimalFormat;
-import lombok.Cleanup;
 
 /**
  * Created by fabio on 26-10-2015.
@@ -91,9 +90,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     // TODO
     if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      DeprecatedDatabase.dropTable(Update.class, realm);
-      DataproviderUtils.checkUpdates();
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      updateAccessor.removeAll();
+      UpdateUtils.checkUpdates();
     }
   }
 

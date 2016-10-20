@@ -65,9 +65,8 @@ import lombok.Getter;
         recommendation.getRecommendedApp().getId(),
         recommendation.getRecommendedApp().getPackageName(),
         recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(),
-        abTestingURL, similarAppsNames,
-        recommendation.getRecommendedApp().getUpdated(), recommendation.getTimestamp(),
-        dateCalculator, spannableFactory);
+        abTestingURL, similarAppsNames, recommendation.getRecommendedApp().getUpdated(),
+        recommendation.getTimestamp(), dateCalculator, spannableFactory);
   }
 
   public String getTitle(Context context) {

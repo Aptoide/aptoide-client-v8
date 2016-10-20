@@ -3,10 +3,10 @@ package cm.aptoide.accountmanager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import cm.aptoide.pt.logger.Logger;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 

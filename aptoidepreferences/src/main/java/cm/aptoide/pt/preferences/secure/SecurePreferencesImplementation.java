@@ -68,7 +68,7 @@ public class SecurePreferencesImplementation implements SharedPreferences {
       }
       SecurePreferencesImplementation.sKey = SecurePreferencesImplementation.decode(value);
     } catch (Exception e) {
-      if(BuildConfig.DEBUG){
+      if (BuildConfig.DEBUG) {
         Log.e(TAG, "Error init:" + e.getMessage());
       }
       throw new IllegalStateException(e);
@@ -183,7 +183,7 @@ public class SecurePreferencesImplementation implements SharedPreferences {
           new SecretKeySpec(SecurePreferencesImplementation.sKey, AES_KEY_ALG));
       return SecurePreferencesImplementation.encode(cipher.doFinal(cleartext.getBytes("UTF-8")));
     } catch (Exception e) {
-      if(BuildConfig.DEBUG) {
+      if (BuildConfig.DEBUG) {
         Log.w(TAG, "encrypt", e);
       }
       return null;
@@ -201,7 +201,7 @@ public class SecurePreferencesImplementation implements SharedPreferences {
       return new String(cipher.doFinal(SecurePreferencesImplementation.decode(ciphertext)),
           "UTF-8");
     } catch (Exception e) {
-      if(BuildConfig.DEBUG) {
+      if (BuildConfig.DEBUG) {
         Log.w(TAG, "decrypt", e);
       }
       return null;

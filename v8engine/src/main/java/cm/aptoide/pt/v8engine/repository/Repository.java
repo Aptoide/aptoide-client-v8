@@ -9,5 +9,4 @@ package cm.aptoide.pt.v8engine.repository;
  * Created by sithengineer on 02/09/16.
  */
 public interface Repository {
-
 }

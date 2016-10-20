@@ -28,7 +28,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -39,8 +39,8 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -272,7 +272,7 @@ import rx.subscriptions.CompositeSubscription;
     actionButton.setOnClickListener(null);
     actionPause.setOnClickListener(null);
     actionCancel.setOnClickListener(null);
-    //subscribe.unsubscribe();
+    subscriptions.clear();
   }
 
   public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
@@ -436,6 +436,7 @@ import rx.subscriptions.CompositeSubscription;
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.SourceDownloadComplete.installClicked(app.getId());
+        Analytics.DownloadComplete.installClicked(app.getId());
       }
 
       DownloadFactory factory = new DownloadFactory();

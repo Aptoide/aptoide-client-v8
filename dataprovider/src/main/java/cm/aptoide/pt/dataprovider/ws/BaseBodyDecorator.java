@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws;
 
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -15,9 +14,9 @@ import lombok.AllArgsConstructor;
 
   private final IdsRepository idsRepository;
 
-  public BaseBody decorate(BaseBody baseBody) {
+  public BaseBody decorate(BaseBody baseBody, String accessToken) {
 
-    String access_token = AptoideAccountManager.getAccessToken();
+    String access_token = accessToken;
     if (!TextUtils.isEmpty(access_token)) {
       baseBody.setAccessToken(access_token);
     }

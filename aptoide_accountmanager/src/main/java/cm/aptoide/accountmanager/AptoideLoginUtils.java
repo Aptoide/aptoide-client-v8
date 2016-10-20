@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.ws.LoginMode;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import java.lang.ref.WeakReference;
 
 /**

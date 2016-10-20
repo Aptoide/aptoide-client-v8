@@ -7,9 +7,6 @@ package cm.aptoide.accountmanager.ws;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;

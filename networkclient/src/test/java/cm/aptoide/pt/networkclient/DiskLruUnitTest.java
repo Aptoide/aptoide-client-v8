@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.networkclient;
 
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
-import cm.aptoide.pt.utils.CrashReports;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;

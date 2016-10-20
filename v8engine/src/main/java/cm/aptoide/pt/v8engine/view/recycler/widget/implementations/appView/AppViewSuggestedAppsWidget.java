@@ -9,7 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;

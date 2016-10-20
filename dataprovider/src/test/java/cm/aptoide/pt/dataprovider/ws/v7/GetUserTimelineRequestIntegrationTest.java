@@ -23,8 +23,6 @@ import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestAppsTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -232,7 +230,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest("", server.url("/").toString(), "1234", "ABC", 1, "bla", "PT-BR",
-            "MyQ", 5, true, 0, Collections.emptyList());
+            "MyQ", 5, true, 0, Collections.emptyList(), "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -391,7 +389,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -482,7 +481,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -559,7 +559,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -603,7 +604,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -708,8 +710,9 @@ public class GetUserTimelineRequestIntegrationTest {
 
   @NonNull private GetUserTimelineRequest getGetUserTimelineRequest(String url, String baseHost,
       String aptoideId, String accessToken, int aptoideVercode, String cdn, String language,
-      String q, Integer limit, boolean mature, int offset, List<String> packages) {
-    return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(limit, offset, packages), baseHost);
+      String q, Integer limit, boolean mature, int offset, List<String> packages, String email) {
+    return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(limit, offset, packages),
+        baseHost);
   }
 
   @NonNull

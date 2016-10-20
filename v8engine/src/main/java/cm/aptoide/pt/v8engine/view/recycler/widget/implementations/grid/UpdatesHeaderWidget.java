@@ -12,16 +12,23 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.UpdatesAccessor;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import java.util.ArrayList;
+import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 
@@ -48,6 +55,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     title.setText(displayable.getLabel());
     more.setText(R.string.update_all);
     more.setVisibility(View.VISIBLE);
+    /*
     more.setOnClickListener((view) -> {
       PermissionManager permissionManager = new PermissionManager();
       UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
@@ -65,6 +73,40 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                   downloading))
               .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
                   throwable -> throwable.printStackTrace());
+
+      Intent intent = new Intent();
+      intent.setAction(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT);
+      intent.putExtra(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT, Event.Name.myDownloads);
+      getContext().sendBroadcast(intent);
+      Analytics.Updates.updateAll();
+    });
+    */
+    more.setOnClickListener((view) -> {
+      ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
+        UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+        subscription =
+            updateAccessor.getAll(false)
+                .first()
+                .observeOn(Schedulers.io())
+                .map(updates -> {
+
+                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+                  for (Update update : updates) {
+                    downloadList.add(new DownloadFactory().create(update));
+                  }
+                  return downloadList;
+                })
+                .flatMapIterable(downloads -> downloads)
+                .map(download -> displayable.getInstallManager()
+                    .install(UpdatesHeaderWidget.this.getContext(), download))
+                .toList()
+                .flatMap(observables -> Observable.merge(observables))
+                .filter(downloading -> downloading.getState()== Progress.DONE)
+                .subscribe(
+                    aVoid -> Logger.i(TAG, "Update task completed"),
+                    throwable -> throwable.printStackTrace());
+      }, () -> {
+      });
 
       Intent intent = new Intent();
       intent.setAction(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT);

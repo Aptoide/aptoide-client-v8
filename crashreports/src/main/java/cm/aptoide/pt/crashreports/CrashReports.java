@@ -1,4 +1,4 @@
-package cm.aptoide.pt.utils;
+package cm.aptoide.pt.crashreports;
 
 import android.content.Context;
 import cm.aptoide.pt.logger.Logger;
@@ -7,6 +7,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import lombok.Setter;
+import pt.aptoide.cm.crashreports.BuildConfig;
 
 /**
  * Created by diogoloureiro on 16/09/16.
@@ -15,9 +16,9 @@ public class CrashReports {
 
   private final static String TAG = CrashReports.class.getSimpleName();   //TAG for the logger
   @Setter private static String language;
-      //var with the language the app is set to
+  //var with the language the app is set to
   private static boolean fabricConfigured;
-      //var if fabric is configured or not, true by default
+  //var if fabric is configured or not, true by default
 
   /**
    * setup crash reports
@@ -76,13 +77,13 @@ public class CrashReports {
     static final String LIFE_CYCLE_STATE = "LIFE_CYCLE_STATE";
 
     private ArrayList<String> history = new ArrayList<>();
-        //arrayList with all screen names history
+    //arrayList with all screen names history
     private int MAX_HISTORY = 10;
-        //this var sets the max screens should be added to history
+    //this var sets the max screens should be added to history
     private int totalNumberScreens = 0;
-        //This saves the number of screens showed
+    //This saves the number of screens showed
     private int numberScreensOnBackStack = 0;
-        //This is the current number of screens on the backstack
+    //This is the current number of screens on the backstack
 
     private ScreenUtils() {
     }

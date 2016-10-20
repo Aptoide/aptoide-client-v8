@@ -79,7 +79,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         .map(downloads -> sortDownloads(downloads))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(downloads -> updateUi(downloads));
+        .subscribe(downloads -> updateUi(downloads), Throwable::printStackTrace);
   }
 
   private List<Progress<Download>> sortDownloads(List<Progress<Download>> progressList) {

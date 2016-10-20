@@ -13,11 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import com.trello.rxlifecycle.components.support.RxFragment;
-import io.realm.Realm;
 import rx.functions.Action0;
 
 /**
@@ -25,9 +23,6 @@ import rx.functions.Action0;
  */
 public abstract class SupportV4BaseFragment extends RxFragment
     implements UiComponentBasics, PermissionRequest {
-
-  private final String TAG = getClass().getSimpleName();
-  protected Realm realm;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -44,13 +39,6 @@ public abstract class SupportV4BaseFragment extends RxFragment
     setupViews();
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    realm.close();
-    realm = null;
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     CrashReports.ScreenUtils.getInstance().decrementNumberOfScreens();
@@ -58,8 +46,6 @@ public abstract class SupportV4BaseFragment extends RxFragment
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-
-    realm = DeprecatedDatabase.get();
     return inflater.inflate(getContentViewId(), container, false);
   }
 

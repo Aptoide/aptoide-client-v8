@@ -6,7 +6,6 @@
 package cm.aptoide.pt.networkclient;
 
 import cm.aptoide.pt.actions.GenerateClientId;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -48,11 +47,7 @@ public class UserAgentTest {
       }
     };
 
-    UserData userData = new UserData() {
-      @Override public String getEmail() {
-        return "user@aptoide.com";
-      }
-    };
+    String userData = "user@aptoide.com";
 
     final String expectedUserAgent =
         AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
@@ -63,7 +58,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.getSingletonClient(generateClientId, userData)
+    String result = OkHttpClientFactory.getSingletonClient(userData)
         .newCall(testRequest)
         .execute()
         .body()
@@ -82,11 +77,7 @@ public class UserAgentTest {
       }
     };
 
-    UserData userData = new UserData() {
-      @Override public String getEmail() {
-        return "user@aptoide.com";
-      }
-    };
+    String userData = "user@aptoide.com";
 
     final String expectedUserAgent =
         AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
@@ -97,7 +88,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.newClient(generateClientId, userData)
+    String result = OkHttpClientFactory.newClient(userData)
         .newCall(testRequest)
         .execute()
         .body()

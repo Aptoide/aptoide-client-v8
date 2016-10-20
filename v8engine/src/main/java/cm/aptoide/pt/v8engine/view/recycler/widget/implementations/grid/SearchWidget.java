@@ -87,8 +87,8 @@ import java.util.Locale;
       });
       menuItem = popup.getMenu().findItem(R.id.go_to_store);
       menuItem.setOnMenuItemClickListener(menuItem12 -> {
-        FragmentUtils.replaceFragmentV4(getContext(),
-            V8Engine.getFragmentProvider().newStoreFragment(pojo.getStore().getName(),
+        FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
+            .newStoreFragment(pojo.getStore().getName(),
                 pojo.getStore().getAppearance().getTheme()));
         return true;
       });
@@ -151,7 +151,7 @@ import java.util.Locale;
     itemView.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
         V8Engine.getFragmentProvider()
             .newAppViewFragment(pojo.getId(), pojo.getStore().getAppearance().getTheme(),
-            pojo.getStore().getName())));
+                pojo.getStore().getName())));
   }
 
   @Override public void onViewAttached() {

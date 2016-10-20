@@ -15,12 +15,10 @@ import rx.Observable;
 /**
  * Created by sithengineer on 01/09/16.
  */
-public class ScheduledAccessor implements Accessor {
-
-  private final Database database;
+public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
 
   protected ScheduledAccessor(Database db) {
-    this.database = db;
+    super(db, Scheduled.class);
   }
 
   public Observable<List<Scheduled>> getAll() {

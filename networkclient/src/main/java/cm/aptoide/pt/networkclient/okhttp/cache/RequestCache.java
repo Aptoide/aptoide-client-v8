@@ -7,10 +7,10 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import com.jakewharton.disklrucache.DiskLruCache;
 import java.io.File;
 import java.io.IOException;

@@ -15,28 +15,26 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sithengineer on 01/09/16.
  */
-public class RollbackAccessor implements Accessor {
-
-  private final Database database;
+public class RollbackAccessor extends SimpleAccessor<Rollback> {
 
   protected RollbackAccessor(Database db) {
-    this.database = db;
+    super(db, Rollback.class);
   }
 
   public Observable<List<Rollback>> getAll() {
     return database.getAll(Rollback.class);
   }
 
-  public Observable<List<Rollback>> getAllSorted(Sort sort) {
-    return Observable.fromCallable(() -> Database.get())
-        .flatMap(realm -> realm.where(Rollback.class)
-            .findAllSorted(Rollback.TIMESTAMP, sort)
-            .asObservable()
-            .unsubscribeOn(RealmSchedulers.getScheduler()))
-        .flatMap(rollbacks -> database.copyFromRealm(rollbacks))
-        .subscribeOn(RealmSchedulers.getScheduler())
-        .observeOn(Schedulers.io());
-  }
+  //public Observable<List<Rollback>> getAllSorted(Sort sort) {
+  //  return Observable.fromCallable(() -> Database.get())
+  //      .flatMap(realm -> realm.where(Rollback.class)
+  //          .findAllSorted(Rollback.TIMESTAMP, sort)
+  //          .asObservable()
+  //          .unsubscribeOn(RealmSchedulers.getScheduler()))
+  //      .flatMap(rollbacks -> database.copyFromRealm(rollbacks))
+  //      .subscribeOn(RealmSchedulers.getScheduler())
+  //      .observeOn(Schedulers.io());
+  //}
 
   public Observable<Rollback> get(String packageName) {
     return database.get(Rollback.class, Rollback.PACKAGE_NAME, packageName);
