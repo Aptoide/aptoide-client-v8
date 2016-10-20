@@ -436,6 +436,7 @@ import rx.subscriptions.CompositeSubscription;
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.SourceDownloadComplete.installClicked(app.getId());
+        Analytics.DownloadComplete.installClicked(app.getId());
       }
 
       DownloadFactory factory = new DownloadFactory();
