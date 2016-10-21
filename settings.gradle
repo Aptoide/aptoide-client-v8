@@ -15,4 +15,5 @@ include ':vanilla',
     ':aptoide_accountmanager',
     ':database',
     ':imageloader',
-    ':downloadmanager'
+    ':downloadmanager',
+    ':aptoidesdk'
