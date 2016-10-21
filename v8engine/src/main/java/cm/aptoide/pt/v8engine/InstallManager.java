@@ -201,29 +201,6 @@ public class InstallManager {
           return progressStatus;
         });
   }
-/*
-  public void suWarningAndPermission() {
-    if (showWarning())
-      askForPermission();
-  }
-
-  public void askForPermission() {
-    GenericDialogs.createGenericYesNoCancelMessage(Application.getContext(), "",
-        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
-        .subscribe(eResponse -> {
-          switch (eResponse) {
-            case YES:
-              SecurePreferences.setRootDialogShowed(true);
-              ManagerPreferences.setAllowRootInstallation(true);
-              AptoideUtils.SystemU.askForRoot();
-              break;
-            case NO:
-              SecurePreferences.setRootDialogShowed(false);
-              ManagerPreferences.setAllowRootInstallation(false);
-              break;
-          }
-        });
-  }*/
 
   public boolean showWarning() {
     boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
