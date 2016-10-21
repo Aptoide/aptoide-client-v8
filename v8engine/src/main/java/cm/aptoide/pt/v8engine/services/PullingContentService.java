@@ -28,6 +28,7 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
 import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import com.bumptech.glide.request.target.NotificationTarget;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/13/16.
@@ -40,6 +41,7 @@ public class PullingContentService extends Service {
   public static final long PUSH_NOTIFICATION_INTERVAL = AlarmManager.INTERVAL_DAY;
   public static final int PUSH_NOTIFICATION_ID = 86456;
   public static final int UPDATE_NOTIFICATION_ID = 123;
+  private CompositeSubscription subscriptions;
 
   public static void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -57,6 +59,7 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
+    subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
       setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, PUSH_NOTIFICATION_INTERVAL);
@@ -66,17 +69,23 @@ public class PullingContentService extends Service {
     }
   }
 
+  @Override public void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
+  }
+
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
 
-    String action = intent.getAction();
+    String action = intent == null ? null : intent.getAction();
     if (action != null) {
       switch (action) {
         case UPDATES_ACTION:
-          UpdateUtils.checkUpdates(this::setUpdatesNotification);
+          UpdateUtils.checkUpdates(
+              listAppsUpdates -> setUpdatesNotification(listAppsUpdates, startId));
           break;
         case PUSH_NOTIFICATIONS_ACTION:
           PushNotificationsRequest.of(AptoideAccountManager.getUserEmail())
-              .execute(this::setPushNotification, true);
+              .execute(response -> setPushNotification(response, startId));
           break;
       }
     }
@@ -87,7 +96,7 @@ public class PullingContentService extends Service {
     return null;
   }
 
-  private void setUpdatesNotification(ListAppsUpdates listAppsUpdates) {
+  private void setUpdatesNotification(ListAppsUpdates listAppsUpdates, int startId) {
     Intent resultIntent = new Intent(Application.getContext(),
         V8Engine.getActivityProvider().getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
@@ -125,10 +134,10 @@ public class PullingContentService extends Service {
       managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
       ManagerPreferences.setLastUpdates(numberUpdates);
     }
-    stopSelf();
+    stopSelf(startId);
   }
 
-  private void setPushNotification(GetPushNotificationsResponse response) {
+  private void setPushNotification(GetPushNotificationsResponse response, int startId) {
     for (final GetPushNotificationsResponse.Notification pushNotification : response.getResults()) {
       Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
@@ -177,5 +186,6 @@ public class PullingContentService extends Service {
       }
       managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
     }
+    stopSelf(startId);
   }
 }
