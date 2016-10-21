@@ -62,6 +62,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
@@ -395,16 +396,22 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
                   DownloadFactory factory = new DownloadFactory();
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
 
+                  if (installManager.showWarning() ) {
+                    GenericDialogs.createGenericYesNoCancelMessage(context, null
+                        , AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog) )
+                        .subscribe(eResponses -> {
+                          switch (eResponses) {
+                            case YES:
+                              installManager.rootInstallAllowed(true);
+                              break;
+                            case NO:
+                              installManager.rootInstallAllowed(false);
+                              break;
+                          }
+                        });
+                  }
+
                   subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
-                      .flatMap(sucess -> {
-                        if (installManager.showWarning()) {
-                          return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
-                              AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
-                              .map( answer -> (answer.equals(YES) ? true: false) )
-                              .doOnNext( answer -> installManager.rootInstallAllowed(answer) );
-                        }
-                        return Observable.just(true);
-                      })
                       .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(progress -> {
@@ -465,16 +472,22 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
       DownloadFactory factory = new DownloadFactory();
       Download appDownload = factory.create(app, downloadAction);
 
+      if (installManager.showWarning() ) {
+        GenericDialogs.createGenericYesNoCancelMessage(context, null
+            , AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog) )
+            .subscribe(eResponse -> {
+              switch (eResponse) {
+                case YES:
+                  installManager.rootInstallAllowed(true);
+                  break;
+                case NO:
+                  installManager.rootInstallAllowed(false);
+                  break;
+              }
+            });
+      }
+
       subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
-          .flatMap(sucess -> {
-            if (installManager.showWarning()) {
-              return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
-                  AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
-                  .map( answer -> (answer.equals(YES) ? true: false) )
-                  .doOnNext( answer -> installManager.rootInstallAllowed(answer) );
-            }
-            return Observable.just(true);
-          })
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),

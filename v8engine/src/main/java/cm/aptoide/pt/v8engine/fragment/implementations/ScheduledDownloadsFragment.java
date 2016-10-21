@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
@@ -268,24 +269,15 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
 
-
     permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(success -> {
-          if (installManager.showWarning()) {
-            return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
-                AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
-                .map( answer -> ( answer.equals(YES) ? true: false ) )
-                .doOnNext( answer -> installManager.rootInstallAllowed(answer) );
-          }
-          return Observable.just(true);
-        })
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
         .flatMapIterable(scheduleds -> scheduleds)
         .map(scheduled -> downloadFactory.create(scheduled))
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
-                downloadItem.getMd5())))
+                downloadItem.getMd5()))
+        )
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(aVoid -> {
           Logger.i(TAG, "finished installing scheduled downloads");
