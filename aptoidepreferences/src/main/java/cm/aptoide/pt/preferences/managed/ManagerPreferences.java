@@ -104,7 +104,7 @@ public class ManagerPreferences {
 
   public static boolean needsSqliteDbMigration() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.PREF_NEEDS_SQLITE_DB_MIGRATION, false);
+        .getBoolean(ManagedKeys.PREF_NEEDS_SQLITE_DB_MIGRATION, true);
   }
 
   public static void setNeedsSqliteDbMigration(boolean migrationNeeded) {

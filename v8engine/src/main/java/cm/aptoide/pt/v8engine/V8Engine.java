@@ -207,10 +207,9 @@ public abstract class V8Engine extends DataProvider {
 
     // setupCurrentActivityListener();
 
-    if (BuildConfig.DEBUG) {
-      setupStrictMode();
-      Logger.w(TAG, "StrictMode setup");
-    }
+    //if (BuildConfig.DEBUG) {
+    //  setupStrictMode();
+    //  Logger.w(TAG, "StrictMode setup")
 
     // this will trigger the migration if needed
     // FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
