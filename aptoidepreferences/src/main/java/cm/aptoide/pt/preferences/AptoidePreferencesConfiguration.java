@@ -59,4 +59,6 @@ public interface AptoidePreferencesConfiguration {
   String getExtraId();
 
   boolean isAlwaysUpdate();
+
+  String getDefaultTheme();
 }

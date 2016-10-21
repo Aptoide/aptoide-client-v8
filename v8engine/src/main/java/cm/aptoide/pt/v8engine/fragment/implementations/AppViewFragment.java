@@ -549,7 +549,8 @@ public class AppViewFragment extends GridRecyclerFragment
     V8Engine.getRefWatcher(getContext()).watch(this);
 
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
   }
 

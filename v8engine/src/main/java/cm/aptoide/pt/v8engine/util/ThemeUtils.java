@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
  * Created by pedroribeiro on 23/06/16.
@@ -36,7 +37,7 @@ public class ThemeUtils {
       sPref.edit().putString("theme", "default_dark").commit();
       activity.setTheme(R.style.AptoideThemeDefaultDark);
     } else {
-      sPref.edit().putString("theme", "default").commit();
+      sPref.edit().putString("theme", V8Engine.getConfiguration().getDefaultTheme()).commit();
       activity.setTheme(R.style.AptoideThemeDefault);
     }
   }

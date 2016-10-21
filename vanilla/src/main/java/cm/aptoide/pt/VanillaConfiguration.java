@@ -96,4 +96,8 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   @Override public boolean isAlwaysUpdate() {
     return ManagerPreferences.isAllwaysUpdate();
   }
+
+  @Override public String getDefaultTheme() {
+    return "default";
+  }
 }

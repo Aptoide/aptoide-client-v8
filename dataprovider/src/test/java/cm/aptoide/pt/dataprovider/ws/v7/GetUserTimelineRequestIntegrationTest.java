@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -251,7 +252,8 @@ public class GetUserTimelineRequestIntegrationTest {
                 Arrays.asList(getVote(5, 1), getVote(4, 0), getVote(3, 0), getVote(2, 0),
                     getVote(1, 1)))), getStore(15, "apps", "http://pool.img.aptoide" +
                     ".com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar" + ".jpg", null, null,
-                getAppearance("Aptoide Official App Store", "default"),
+                getAppearance("Aptoide Official App Store",
+                    DataProvider.getConfiguration().getDefaultTheme()),
                 getStats(15, 15, 1000944445)))));
     testSubscriber.assertValue(
         getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 milliseconds",
@@ -273,7 +275,7 @@ public class GetUserTimelineRequestIntegrationTest {
     String avatar = "http://pool.img.aptoide.com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar.jpg";
     String added = "2010-11-04 12:21:52";
     String modified = "2010-11-04 12:21:52";
-    String theme = "default";
+    String theme = DataProvider.getConfiguration().getDefaultTheme();
     String description = "Aptoide Official App Store";
     int apps = 168747;
     int subscribers = 143460;
