@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.analytics;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import cm.aptoide.pt.logger.Logger;
 import android.text.TextUtils;
@@ -16,6 +17,8 @@ import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.localytics.android.Localytics;
 import java.io.IOException;
@@ -26,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
 /**
  * Created by neuro on 07-05-2015.f
@@ -43,6 +48,14 @@ public class Analytics {
   private static final int FABRIC = 1 << 2;
   private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
   private static boolean isFirstSession;
+
+
+  public static boolean checkBuildVariant() {
+    if (BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev"))
+      return true;
+    return false;
+  }
+
 
   /**
    * Verifica se as flags fornecidas constam em accepted.
@@ -128,6 +141,9 @@ public class Analytics {
   public static class Lifecycle {
 
     public static class Application {
+
+      static AppEventsLogger facebookLogger;
+
       public static void onCreate(android.app.Application application) {
 
         SharedPreferences sPref =
@@ -142,6 +158,13 @@ public class Analytics {
         // Integrate Localytics
         Localytics.autoIntegrate(application);
         setupDimensions();
+
+        //Integrate FacebookSDK
+        if (checkBuildVariant()) {
+          FacebookSdk.sdkInitialize(application);
+          AppEventsLogger.activateApp(application);
+          facebookLogger = AppEventsLogger.newLogger(application);
+        }
 
         Logger.d(TAG, "Localytics session configured");
       }
@@ -617,6 +640,14 @@ public class Analytics {
         stringObjectHashMap.put(PACKAGE_NAME, packageName);
 
         track(EVENT_NAME, stringObjectHashMap, flags);
+
+        if (checkBuildVariant()) {
+          Bundle parameters = new Bundle();
+          parameters.putString(PACKAGE_NAME, packageName);
+          parameters.putString(TRUSTED_BADGE, trustedBadge);
+          parameters.putString(TYPE, type);
+          facebookLogger.logEvent(EVENT_NAME, parameters);
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -701,6 +732,13 @@ public class Analytics {
         map.put(APPLICATION_PUBLISHER, app.getDeveloper().getName());
 
         track(EVENT_NAME, map, ALL);
+
+        if (checkBuildVariant()) {
+          Bundle parameters = new Bundle();
+          parameters.putString(APPLICATION_NAME, app.getPackageName());
+          parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
+          facebookLogger.logEvent(EVENT_NAME, parameters);
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -736,6 +774,13 @@ public class Analytics {
         map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
 
         track(EVENT_NAME, map, ALL);
+
+        if (checkBuildVariant()) {
+          Bundle parameters = new Bundle();
+          parameters.putString(PACKAGE_NAME, app.getPackageName());
+          parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
+          facebookLogger.logEvent(EVENT_NAME, parameters);
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -918,6 +963,15 @@ public class Analytics {
         }
         Logger.d("teste", "appViewOpenFrom: " + map);
         track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
+
+        if (checkBuildVariant()) {
+          Bundle parameters = new Bundle();
+          parameters.putString("Package Name", packageName);
+          parameters.putString("Source", stringForSourceEvent);
+          parameters.putString("Trusted Badge", trustedBadge);
+          parameters.putString("Application Publisher", developerName);
+          facebookLogger.logEvent(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
+        }
       }
       STEPS.clear();
     }
