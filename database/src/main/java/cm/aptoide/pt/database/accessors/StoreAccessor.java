@@ -30,6 +30,6 @@ public class StoreAccessor extends SimpleAccessor<Store> {
   }
 
   public void save(Store store) {
-    Database.save(store);
+    database.insert(store);
   }
 }

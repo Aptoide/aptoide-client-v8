@@ -27,7 +27,7 @@ import rx.Observable;
  */
 public final class Database {
 
-  public static final int SCHEMA_VERSION = 8077; // if you bump this value, also add changes to the
+  public static final int SCHEMA_VERSION = 8078; // if you bump this value, also add changes to the
   //private static final String TAG = Database.class.getName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
@@ -122,37 +122,6 @@ public final class Database {
     }
 
     return INSTANCE;
-  }
-
-  /**
-   * Use class Accessor for this operation, via AccessorFactory.
-   */
-  @Deprecated public static <E extends RealmObject> void save(E realmObject) {
-    Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realm.insertOrUpdate(realmObject);
-    realm.commitTransaction();
-    realm.close();
-  }
-
-  /**
-   * Use class Accessor for this operation, via AccessorFactory.
-   */
-  @Deprecated public static <E extends RealmObject> void save(List<E> realmObject) {
-    @Cleanup Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realm.insertOrUpdate(realmObject);
-    realm.commitTransaction();
-  }
-
-  /**
-   * Use class Accessor for this operation, via AccessorFactory.
-   */
-  @Deprecated public static void delete(RealmObject realmObject) {
-    @Cleanup Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realmObject.deleteFromRealm();
-    realm.commitTransaction();
   }
 
   //

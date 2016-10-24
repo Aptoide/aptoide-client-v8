@@ -122,6 +122,7 @@ public class DownloadFactory {
     download.setAppName(rollback.getAppName());
     download.setPackageName(rollback.getPackageName());
     download.setVersionCode(rollback.getVersionCode());
+    download.setVersionName(rollback.getVersionName());
 
     switch (Rollback.Action.valueOf(rollback.getAction())) {
       case INSTALL:
