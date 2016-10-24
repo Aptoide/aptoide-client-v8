@@ -212,10 +212,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           listItems ->
           Observable.from(listItems)
               .flatMap(item -> filterUpdates(updateAccessor, item)) // filter for installed apps in updates
-              .filter(item -> item.isSystemApp())
+              .filter(item -> !item.isSystemApp())
               .toList()
           )
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .observeOn(AndroidSchedulers.mainThread())
           .subscribe(
               installedApps -> {
                 installedDisplayablesList.clear();
