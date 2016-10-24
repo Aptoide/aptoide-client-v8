@@ -5,7 +5,10 @@
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +16,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -110,11 +114,24 @@ public abstract class V8Engine extends DataProvider {
 
   public static void loadUserData() {
     loadStores();
+    regenerateUserAgent();
+  }
+
+  private static void regenerateUserAgent() {
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
+        new IdsRepository(
+            SecurePreferencesImplementation.getInstance(), getContext()), new UserData() {
+          @Override public String getUserEmail() {
+            return AptoideAccountManager.getUserEmail();
+          }
+        }
+    ));
   }
 
   public static void clearUserData() {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
+    regenerateUserAgent();
   }
 
   public static RefWatcher getRefWatcher(Context context) {
@@ -154,9 +171,14 @@ public abstract class V8Engine extends DataProvider {
 
     generateAptoideUUID().subscribe();
 
-    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
-        AptoideAccountManager.getUserEmail()));
+    regenerateUserAgent();
+
+    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
+    intentFilter.addAction(AptoideAccountManager.LOGOUT);
+    this.registerReceiver(new BroadcastReceiver() {
+      @Override public void onReceive(Context context, Intent intent) {
+      }
+    }, intentFilter);
 
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
@@ -215,7 +237,12 @@ public abstract class V8Engine extends DataProvider {
             downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
-                AptoideAccountManager.getUserEmail()));
+                new UserData() {
+                  @Override public String getUserEmail() {
+                    return AptoideAccountManager.getUserEmail();
+                  }
+                }
+                ));
 
     // setupCurrentActivityListener();
 

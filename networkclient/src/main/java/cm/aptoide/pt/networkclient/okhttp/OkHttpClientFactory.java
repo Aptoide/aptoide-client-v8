@@ -28,7 +28,7 @@ public class OkHttpClientFactory {
   private static OkHttpClient httpClientInstance;
 
   public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
-      Interceptor interceptor, String userAgent) {
+      Interceptor interceptor, UserAgentGenerator userAgentGenerator) {
     OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
     //		if (BuildConfig.DEBUG) {
@@ -39,22 +39,22 @@ public class OkHttpClientFactory {
 
     clientBuilder.addInterceptor(interceptor);
 
-    clientBuilder.addInterceptor(new UserAgentInterceptor(userAgent));
+    clientBuilder.addInterceptor(new UserAgentInterceptor(userAgentGenerator));
 
     return clientBuilder.build();
   }
 
-  public static OkHttpClient newClient(String userAgent) {
-    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(userAgent)).build();
+  public static OkHttpClient newClient(UserAgentGenerator userAgentGenerator) {
+    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(userAgentGenerator)).build();
   }
 
   /**
    * @return an {@link OkHttpClient} instance
    */
-  public static OkHttpClient getSingletonClient(String userAgent) {
+  public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator) {
     if (httpClientInstance == null) {
       httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor(),
-          userAgent);
+          userAgentGenerator);
     }
     return httpClientInstance;
   }

@@ -24,7 +24,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.accountmanager.util.UserInfo;
+import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.ChangeUserRepoSubscriptionRequest;
 import cm.aptoide.accountmanager.ws.ChangeUserSettingsRequest;
@@ -38,7 +38,6 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -63,7 +62,7 @@ import rx.schedulers.Schedulers;
  * <li>{@link #openAccountManager(Context, Bundle, boolean)}</li> <li>{@link
  * #getAccessToken()}</li>
  * <li>{@link #getUserEmail()}</li> <li>{@link #onActivityResult(Activity, int, int, Intent)}</li>
- * <li>{@link #getUserInfo()}</li> <li>{@link #updateMatureSwitch(boolean)}</li> <li>{@link
+ * <li>{@link #getUserData()}</li> <li>{@link #updateMatureSwitch(boolean)}</li> <li>{@link
  * #invalidateAccessToken(Context)}</li> <li>{@link #invalidateAccessTokenSync(Context)}</li>
  * <li>{@link #ACCOUNT_REMOVED_BROADCAST_KEY}</li>
  */
@@ -290,7 +289,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
       if (accounts.length > 0) {
         userName = accounts[0].name;
-        AccountManagerPreferences.setUserName(userName);
+        AccountManagerPreferences.setUserEmail(userName);
       }
     }
     return userName;
@@ -418,16 +417,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    *
    * @return User info class with all collected information about the user
    */
-  public static UserInfo getUserInfo() {
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUserName(AccountManagerPreferences.getUserNickName());
-    userInfo.setUserEmail(AccountManagerPreferences.getUserEmail());
-    userInfo.setQueueName(AccountManagerPreferences.getQueueName());
-    userInfo.setUserAvatar(AccountManagerPreferences.getUserAvatar());
-    userInfo.setUserRepo(AccountManagerPreferences.getUserRepo());
-    userInfo.setMatureSwitch(AccountManagerPreferences.getMatureSwitch());
-    userInfo.setUserAvatarRepo(AccountManagerPreferences.getRepoAvatar());
-    return userInfo;
+  public static UserCompleteData getUserData() {
+    UserCompleteData userCompleteData = new UserCompleteData();
+    userCompleteData.setUserName(AccountManagerPreferences.getUserNickName());
+    userCompleteData.setUserEmail(AccountManagerPreferences.getUserEmail());
+    userCompleteData.setQueueName(AccountManagerPreferences.getQueueName());
+    userCompleteData.setUserAvatar(AccountManagerPreferences.getUserAvatar());
+    userCompleteData.setUserRepo(AccountManagerPreferences.getUserRepo());
+    userCompleteData.setMatureSwitch(AccountManagerPreferences.getMatureSwitch());
+    userCompleteData.setUserAvatarRepo(AccountManagerPreferences.getRepoAvatar());
+    return userCompleteData;
   }
 
   /**
@@ -688,7 +687,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         manager.removeAccount(account, null, null);
       }
     }
-    AccountManagerPreferences.removeUserName();
+    AccountManagerPreferences.removeUserEmail();
     AccountManagerPreferences.removeAccessToken();
     AccountManagerPreferences.removeRefreshToken();
     AccountManagerPreferences.removeMatureSwitch();

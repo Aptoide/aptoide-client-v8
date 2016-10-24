@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -35,7 +36,11 @@ import rx.Observable;
       new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
   private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
-      .addInterceptor(new UserAgentInterceptor(SecurePreferences.getUserAgent()))
+      .addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
+        @Override public String generateUserAgent() {
+          return SecurePreferences.getUserAgent();
+        }
+      }))
       .connectTimeout(2, TimeUnit.SECONDS)
       .build();
 

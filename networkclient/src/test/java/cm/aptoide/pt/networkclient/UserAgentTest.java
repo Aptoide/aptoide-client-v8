@@ -6,7 +6,9 @@
 package cm.aptoide.pt.networkclient;
 
 import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
@@ -30,7 +32,11 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     OkHttpClient client = new OkHttpClient();
-    client.networkInterceptors().add(new UserAgentInterceptor("foo/bar"));
+    client.networkInterceptors().add(new UserAgentInterceptor(new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return "foo/bar";
+      }
+    }));
     Request testRequest = new Request.Builder().url(url).build();
     String result = client.newCall(testRequest).execute().body().string();
     assertEquals("OK", result);
@@ -47,10 +53,14 @@ public class UserAgentTest {
       }
     };
 
-    String userData = "user@aptoide.com";
+    final String userData = "user@aptoide.com";
 
     final String expectedUserAgent =
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, new UserData() {
+          @Override public String getUserEmail() {
+            return userData;
+          }
+        });
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));
@@ -58,7 +68,11 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.getSingletonClient(userData)
+    String result = OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return userData;
+      }
+    })
         .newCall(testRequest)
         .execute()
         .body()
@@ -77,10 +91,14 @@ public class UserAgentTest {
       }
     };
 
-    String userData = "user@aptoide.com";
+    final String userData = "user@aptoide.com";
 
     final String expectedUserAgent =
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, new UserData() {
+          @Override public String getUserEmail() {
+            return userData;
+          }
+        });
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));
@@ -88,7 +106,11 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.newClient(userData)
+    String result = OkHttpClientFactory.newClient(new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return userData;
+      }
+    })
         .newCall(testRequest)
         .execute()
         .body()

@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -38,8 +39,12 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
 
-  protected ListReviewsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(SecurePreferences.getUserAgent()),
+  private ListReviewsRequest(Body body, String baseHost) {
+    super(body, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+          @Override public String generateUserAgent() {
+            return SecurePreferences.getUserAgent();
+          }
+        }),
         WebService.getDefaultConverter(),
         baseHost);
   }
