@@ -99,6 +99,7 @@ public class AptoideUtils {
 
   public static class Core {
     private static final String TAG = "Core";
+
     public static int getVerCode() {
       PackageManager manager = context.getPackageManager();
       try {
@@ -721,8 +722,10 @@ public class AptoideUtils {
     private static boolean findBinary(String binaryName) {
       boolean found = false;
 
-      String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
-          "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+      String[] places = {
+          "/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/", "/data/local/bin/",
+          "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"
+      };
       for (String where : places) {
         if (new File(where + binaryName).exists()) {
           found = true;
@@ -1443,6 +1446,27 @@ public class AptoideUtils {
         return parseIcon(imageUrl);
       }
       return imageUrl;
+    }
+
+    private static final Pattern urlWithDimensionPattern =
+        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
+
+    /**
+     * Cleans the image URL out of "_widthXheight"
+     */
+    public static String cleanImageUrl(String originalUrl) {
+      int lastUnderScore = originalUrl.lastIndexOf('_');
+      if (lastUnderScore == -1) {
+        return originalUrl;
+      }
+
+      String lastPart = originalUrl.substring(lastUnderScore);
+      if (urlWithDimensionPattern.matcher(lastPart).matches()) {
+        int lastDot = originalUrl.lastIndexOf('.');
+        return originalUrl.substring(0, lastUnderScore) + originalUrl.substring(lastDot);
+      }
+
+      return originalUrl;
     }
   }
 

@@ -29,7 +29,7 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 44;
+  private static final int DATABASE_VERSION = 55;
   private Throwable agregateExceptions;
 
   public SQLiteDatabaseHelper(Context context) {
@@ -44,12 +44,16 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    ManagerPreferences.setNeedsSqliteDbMigration(true);
+
     Logger.w(TAG, "onUpgrade() called with: "
         + "oldVersion = ["
         + oldVersion
         + "], newVersion = ["
         + newVersion
         + "]");
+
     migrate(db);
 
     ManagerPreferences.setNeedsSqliteDbMigration(false);
