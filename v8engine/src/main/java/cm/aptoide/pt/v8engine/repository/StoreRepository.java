@@ -14,4 +14,8 @@ import rx.Observable;
   public Observable<Boolean> isSubscribed(long storeId) {
     return storeAccessor.get(storeId).map(store -> store != null);
   }
+
+  public Observable<Long> count() {
+    return storeAccessor.count();
+  }
 }

@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -25,8 +24,11 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
@@ -73,26 +75,36 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void reload() {
     super.reload();
 
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    Subscription unManagedSubscription =
-        storeAccessor.count().observeOn(AndroidSchedulers.mainThread()).subscribe(storeCount -> {
-          if (storeCount == 0) {
-            ShowMessage.asSnack(getView(), R.string.add_store);
-            finishLoading();
+    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
+    UpdateRepository updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+    storeRepository.count()
+        .first()
+        .flatMap(numberStores -> {
+          if (numberStores <= 0) {
+            return Observable.error(new RepositoryItemNotFoundException("no stores added"));
           } else {
-            UpdateUtils.checkUpdates(listAppsUpdates -> {
-              if (listAppsUpdates.getList().size() == 0) {
-                finishLoading();
-                ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
-              }
-              if (listAppsUpdates.getList().size() == updatesDisplayablesList.size() - 1) {
-                ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
-              }
-            });
+            return Observable.just(numberStores);
           }
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+        })
+        .flatMap(numberStores -> updateRepository.getUpdates(true))
+        .first()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(updates -> {
+          if (updates.size() == 0) {
+            finishLoading();
+            ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
+          } else if (updates.size() == updatesDisplayablesList.size() - 1) {
+            ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
+          }
+        }, throwable -> {
+          if (throwable instanceof RepositoryItemNotFoundException) {
+            ShowMessage.asSnack(getView(), R.string.add_store);
+          } else {
+            Logger.e(TAG, throwable);
+            CrashReports.logException(throwable);
+          }
+          finishLoading();
         });
   }
 

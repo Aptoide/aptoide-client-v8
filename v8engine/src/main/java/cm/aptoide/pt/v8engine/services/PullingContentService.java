@@ -15,10 +15,12 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
-import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -26,8 +28,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
-import cm.aptoide.pt.v8engine.util.UpdateUtils;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import com.bumptech.glide.request.target.NotificationTarget;
+import java.util.List;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -41,6 +45,7 @@ public class PullingContentService extends Service {
   public static final long PUSH_NOTIFICATION_INTERVAL = AlarmManager.INTERVAL_DAY;
   public static final int PUSH_NOTIFICATION_ID = 86456;
   public static final int UPDATE_NOTIFICATION_ID = 123;
+  private static final String TAG = PullingContentService.class.getSimpleName();
   private CompositeSubscription subscriptions;
 
   public static void setAlarm(AlarmManager am, Context context, String action, long time) {
@@ -80,8 +85,14 @@ public class PullingContentService extends Service {
     if (action != null) {
       switch (action) {
         case UPDATES_ACTION:
-          UpdateUtils.checkUpdates(
-              listAppsUpdates -> setUpdatesNotification(listAppsUpdates, startId));
+          UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+          subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
+            Logger.d(TAG, "updates refreshed");
+            setUpdatesNotification(updates, startId);
+          }, throwable -> {
+            throwable.printStackTrace();
+            CrashReports.logException(throwable);
+          }));
           break;
         case PUSH_NOTIFICATIONS_ACTION:
           PushNotificationsRequest.of(AptoideAccountManager.getUserEmail())
@@ -96,7 +107,7 @@ public class PullingContentService extends Service {
     return null;
   }
 
-  private void setUpdatesNotification(ListAppsUpdates listAppsUpdates, int startId) {
+  private void setUpdatesNotification(List<Update> updates, int startId) {
     Intent resultIntent = new Intent(Application.getContext(),
         V8Engine.getActivityProvider().getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
@@ -104,7 +115,7 @@ public class PullingContentService extends Service {
         PendingIntent.getActivity(Application.getContext(), 0, resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT);
 
-    int numberUpdates = listAppsUpdates.getList().size();
+    int numberUpdates = updates.size();
     if (numberUpdates > 0
         && numberUpdates != ManagerPreferences.getLastUpdates()
         && ManagerPreferences.isUpdateNotificationEnable()) {

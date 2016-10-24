@@ -22,6 +22,7 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
@@ -43,8 +44,9 @@ import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
@@ -89,11 +91,21 @@ public abstract class V8Engine extends DataProvider {
         addDefaultStore();
       }
 
-      UpdateUtils.checkUpdates();
+      checkUpdates();
     }, e -> {
       Logger.e(TAG, e);
       //CrashReports.logException(e);
     });
+  }
+
+  private static void checkUpdates() {
+    UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+    repository.getUpdates(true)
+        .first()
+        .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
   }
 
   public static void loadUserData() {
@@ -111,8 +123,8 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void addDefaultStore() {
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
-        getStoreMeta -> UpdateUtils.checkUpdates(), null);
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
+        null);
   }
 
   @Override public void onCreate() {
