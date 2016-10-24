@@ -29,7 +29,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
-import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -42,9 +43,14 @@ import rx.Subscription;
   private TextView storeNumberUsersView;
   private Button followButton;
   private View storeLayout;
+  private CompositeSubscription subscription;
+  private StoreRepository storeRepository;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
+    subscription = new CompositeSubscription();
+    storeRepository = new StoreRepository(
+        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
   }
 
   @Override protected void assignViews(View itemView) {
@@ -64,7 +70,7 @@ import rx.Subscription;
   }
 
   @Override public void onViewDetached() {
-
+    subscription.clear();
   }
 
   private void setupStoreInfo(GetApp getApp) {
@@ -95,28 +101,9 @@ import rx.Subscription;
     storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),
         store.getAppearance().getTheme()));
 
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //boolean subscribed = DeprecatedDatabase.StoreQ.get(store.getId(), realm) != null;
-    //
-    //if (subscribed) {
-    //  //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
-    //  //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
-    //  followButton.setText(R.string.followed);
-    //  followButton.setOnClickListener(
-    //      new Listeners().newOpenStoreListener(itemView, store.getName(),
-    //          store.getAppearance().getTheme()));
-    //} else {
-    //  //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
-    //  //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-    //  followButton.setText(R.string.appview_follow_store_button_text);
-    //  followButton.setOnClickListener(
-    //      new Listeners().newSubscribeStoreListener(itemView, store.getName()));
-    //}
-
-    StoreRepository storeRepository = new StoreRepository(
-        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
-    Subscription unManagedSubscription =
-        storeRepository.isSubscribed(store.getId()).subscribe(isSubscribed -> {
+    subscription.add(storeRepository.isSubscribed(store.getId())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribed -> {
           if (isSubscribed) {
             //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
@@ -131,7 +118,7 @@ import rx.Subscription;
             followButton.setOnClickListener(
                 new Listeners().newSubscribeStoreListener(itemView, store.getName()));
           }
-        });
+        }));
   }
 
   private static class Listeners {
