@@ -6,9 +6,11 @@
 package cm.aptoide.pt.v8engine.payment.providers.boacompra;
 
 import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.UserAuthorization;
+import rx.Observable;
 
 /**
  * Created by marcelobenites on 14/10/16.
@@ -47,15 +49,7 @@ public class BoaCompraPayment implements Payment {
     return null;
   }
 
-  @Override public void removeListener() {
-
-  }
-
-  @Override public boolean isProcessing() {
-    return false;
-  }
-
-  @Override public void process(PaymentConfirmationListener listener) {
-    
+  @Override public Observable<PaymentConfirmation> process() {
+    return null;
   }
 }
