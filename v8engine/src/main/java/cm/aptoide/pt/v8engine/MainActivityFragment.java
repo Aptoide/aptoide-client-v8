@@ -52,7 +52,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
   @Override protected android.support.v4.app.Fragment createFragment() {
     return V8Engine.getFragmentProvider()
         .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            "default");
+            V8Engine.getConfiguration().getDefaultTheme());
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -200,7 +200,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
             .newStoreGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                "default"));
+                V8Engine.getConfiguration().getDefaultTheme()));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

@@ -30,8 +30,8 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
@@ -127,7 +127,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
         packagesObservable = refreshPackages();
       }
       displayableObservable = packagesObservable.flatMap(
-          packages -> Observable.concat(getFreshDisplayables(create, packages),
+          packages -> Observable.concat(getFreshDisplayables(refresh, packages),
               getNextDisplayables(packages)));
     } else {
 
@@ -139,7 +139,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
       if (adapter.getItemCount() == 0) {
         displayableObservable = packagesObservable.flatMap(
-            packages -> Observable.concat(getFreshDisplayables(create, packages),
+            packages -> Observable.concat(getFreshDisplayables(refresh, packages),
                 getNextDisplayables(packages)));
       } else {
         displayableObservable =

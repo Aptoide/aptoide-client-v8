@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
 /**
@@ -71,7 +72,7 @@ public class GenericDialogs {
       // cleaning up
       subscriber.add(Subscriptions.create(dialog::dismiss));
       dialog.show();
-    });
+    }).subscribeOn(AndroidSchedulers.mainThread());
   }
 
   /**

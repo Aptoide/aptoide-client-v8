@@ -431,7 +431,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, create, sponsored, storeName)
+      subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
@@ -549,7 +549,8 @@ public class AppViewFragment extends GridRecyclerFragment
     V8Engine.getRefWatcher(getContext()).watch(this);
 
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
   }
 

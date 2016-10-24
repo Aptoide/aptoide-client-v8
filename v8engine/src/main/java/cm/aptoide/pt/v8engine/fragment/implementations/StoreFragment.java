@@ -31,6 +31,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
@@ -108,7 +109,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
   }
 
