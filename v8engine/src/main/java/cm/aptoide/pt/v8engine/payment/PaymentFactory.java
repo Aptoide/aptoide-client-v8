@@ -30,9 +30,8 @@ public class PaymentFactory {
         return new PayPalPayment(context, paymentService.getId(), paymentService.getShortName(),
             paymentService.getName(), paymentService.getSign(),
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
-                paymentService.getTaxRate()), getLocalBroadcastManager(context),
-            getPayPalConfiguration(), getPaymentConverter(), product,
-            paymentService.getTypes().get(0).getLabel());
+                paymentService.getTaxRate()), getPayPalConfiguration(), getPaymentConverter(),
+            product, paymentService.getTypes().get(0).getLabel());
       case BOACOMPRA:
         return new BoaCompraPayment(BuildConfig.BOACOMPRA_API_HOST, getBoaCompraAuthorization(),
             new AptoideUserAuthorization());

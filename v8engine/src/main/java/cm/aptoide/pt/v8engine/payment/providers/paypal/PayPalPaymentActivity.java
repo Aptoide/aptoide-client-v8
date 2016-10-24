@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -29,7 +28,6 @@ public class PayPalPaymentActivity extends AppCompatActivity {
   private static final String PAYPAL_CONFIGURATION_EXTRA =
       "cm.aptoide.pt.v8engine.payment.service.extra.PAYPAL_CONFIGURATION";
 
-  private LocalBroadcastManager broadcastManager;
   private com.paypal.android.sdk.payments.PayPalPayment payment;
   private PayPalConfiguration configuration;
   private Intent serviceIntent;
@@ -51,8 +49,6 @@ public class PayPalPaymentActivity extends AppCompatActivity {
           new PaymentException("Payment and PayPal configuration must be provided!"));
     }
 
-    broadcastManager = LocalBroadcastManager.getInstance(this);
-
     serviceIntent = new Intent(this, PayPalService.class);
     serviceIntent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
     startService(serviceIntent);
@@ -67,26 +63,26 @@ public class PayPalPaymentActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PAY_APP_REQUEST_CODE) {
       final Intent result =
-          new Intent(PayPalPayment.PaymentConfirmationReceiver.PAYMENT_RESULT_ACTION);
+          new Intent(PayPalPayment.PAYMENT_RESULT_ACTION);
       switch (resultCode) {
         case Activity.RESULT_OK:
-          broadcastManager.sendBroadcast(
-              result.putExtra(PayPalPayment.PaymentConfirmationReceiver.PAYMENT_STATUS_EXTRA,
-                  PayPalPayment.PaymentConfirmationReceiver.PAYMENT_STATUS_OK)
-                  .putExtra(PayPalPayment.PaymentConfirmationReceiver.PAYMENT_CONFIRMATION_EXTRA,
+          sendBroadcast(
+              result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
+                  PayPalPayment.PAYMENT_STATUS_OK)
+                  .putExtra(PayPalPayment.PAYMENT_CONFIRMATION_EXTRA,
                       (Parcelable) data.getParcelableExtra(
                           PaymentActivity.EXTRA_RESULT_CONFIRMATION)));
           break;
         case Activity.RESULT_CANCELED:
-          broadcastManager.sendBroadcast(
-              result.putExtra(PayPalPayment.PaymentConfirmationReceiver.PAYMENT_STATUS_EXTRA,
-                  PayPalPayment.PaymentConfirmationReceiver.PAYMENT_STATUS_CANCELLED));
+          sendBroadcast(
+              result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
+                  PayPalPayment.PAYMENT_STATUS_CANCELLED));
           break;
         case PaymentActivity.RESULT_EXTRAS_INVALID:
         default:
-          broadcastManager.sendBroadcast(
-              result.putExtra(PayPalPayment.PaymentConfirmationReceiver.PAYMENT_STATUS_EXTRA,
-                  PayPalPayment.PaymentConfirmationReceiver.PAYMENT_STATUS_FAILED));
+          sendBroadcast(
+              result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
+                  PayPalPayment.PAYMENT_STATUS_FAILED));
           break;
       }
       finish();

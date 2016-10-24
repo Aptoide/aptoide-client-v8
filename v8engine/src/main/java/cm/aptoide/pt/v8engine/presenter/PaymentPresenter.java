@@ -113,7 +113,7 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(purchase -> removeLoadingAndClearPaymentState())
         .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread())
             .doOnNext(throwable -> removeLoadingAndClearPaymentState())
-            .flatMap(throwable -> {
+            .<Throwable>flatMap(throwable -> {
               if (throwable instanceof PaymentCancellationException) {
                 return Observable.just(throwable);
               }

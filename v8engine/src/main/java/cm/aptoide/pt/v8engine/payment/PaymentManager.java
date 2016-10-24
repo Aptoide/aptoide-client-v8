@@ -9,7 +9,6 @@ import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentPurchaseNotFoundException;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
-import cm.aptoide.pt.v8engine.payment.rx.RxPayment;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -37,7 +36,7 @@ public class PaymentManager {
             "Product " + payment.getProduct().getId() + " already " +
                 "purchased."))).onErrorResumeNext(throwable -> {
       if (throwable instanceof PaymentPurchaseNotFoundException) {
-        return RxPayment.process(payment)
+        return payment.process()
             .flatMap(paymentConfirmation -> paymentRepository.savePaymentConfirmation(
                 paymentConfirmation)
                 .flatMap(saved -> getPurchase((AptoideProduct) payment.getProduct())));
