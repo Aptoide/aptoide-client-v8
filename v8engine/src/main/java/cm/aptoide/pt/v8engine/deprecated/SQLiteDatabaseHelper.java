@@ -44,9 +44,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    ManagerPreferences.setNeedsSqliteDbMigration(true);
-
     Logger.w(TAG, "onUpgrade() called with: "
         + "oldVersion = ["
         + oldVersion
