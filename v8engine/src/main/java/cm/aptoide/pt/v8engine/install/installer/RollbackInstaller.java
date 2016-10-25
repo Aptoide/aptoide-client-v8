@@ -51,17 +51,19 @@ import rx.Observable;
         .flatMap(success -> defaultInstaller.downgrade(context, md5));
   }
 
-  @Override public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+  @Override
+  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
     return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null, versionName).flatMap(
         rollback -> defaultInstaller.uninstall(context, packageName, versionName));
   }
 
   private Observable<Void> saveRollback(Context context, String packageName, Rollback.Action action,
       String icon, String versionName) {
-    return rollbackFactory.createRollback(context, packageName, action, icon, versionName).map(rollback -> {
-      repository.save(rollback);
-      return null;
-    });
+    return rollbackFactory.createRollback(context, packageName, action, icon, versionName)
+        .map(rollback -> {
+          repository.save(rollback);
+          return null;
+        });
   }
 
   private Observable<Void> saveRollback(RollbackInstallation installation, Rollback.Action action) {

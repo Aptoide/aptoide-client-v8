@@ -62,7 +62,8 @@ import rx.schedulers.Schedulers;
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
-        }).doOnError((throwable) -> {
+        })
+        .doOnError((throwable) -> {
           Logger.e(TAG, throwable);
           CrashReports.logException(throwable);
         });
@@ -75,11 +76,13 @@ import rx.schedulers.Schedulers;
   @Override public Observable<Void> downgrade(Context context, String md5) {
     return installationProvider.getInstallation(md5)
         .first()
-        .flatMap(installation -> uninstall(context, installation.getPackageName(), installation.getVersionName()))
+        .flatMap(installation -> uninstall(context, installation.getPackageName(),
+            installation.getVersionName()))
         .flatMap(success -> install(context, md5));
   }
 
-  @Override public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+  @Override
+  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
     final Uri uri = Uri.fromParts("package", packageName, null);
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);

@@ -111,11 +111,10 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     //  Migrate from version 2 (8077) to version 3 (8078)
     if (oldVersion == 8077) {
       RealmObjectSchema downloadSchema = schema.get("Download");
-      if (downloadSchema.hasPrimaryKey()) {
-        downloadSchema.removePrimaryKey();
-      }
-
       downloadSchema.addField("versionName", String.class);
+
+      RealmObjectSchema fileToDownloadSchema = schema.get("FileToDownload");
+      fileToDownloadSchema.addField("versionName", String.class);
 
       oldVersion++;
 

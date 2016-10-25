@@ -29,7 +29,7 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public String getVersionName() {
-    return null; // TODO
+    return download.getVersionName();
   }
 
   @Override public int getVersionCode() {
