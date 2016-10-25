@@ -61,4 +61,6 @@ public interface AptoidePreferencesConfiguration {
   boolean isAlwaysUpdate();
 
   String getDefaultTheme();
+
+  String getFeedbackEmail();
 }

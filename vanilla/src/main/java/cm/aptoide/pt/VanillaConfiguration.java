@@ -23,6 +23,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   private static final String AUTO_UPDATE_URL = "http://imgs.aptoide.com/latest_version_v8.xml";
   private static final String MARKETNAME = "Aptoide";
   private static final String DEFAULT_STORE = "apps";
+  private static final String FEEDBACK_EMAIL = "support@aptoide.com";
 
   @Override public String getAppId() {
     return APP_ID;
@@ -99,5 +100,9 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public String getDefaultTheme() {
     return "default";
+  }
+
+  @Override public String getFeedbackEmail() {
+    return FEEDBACK_EMAIL;
   }
 }
