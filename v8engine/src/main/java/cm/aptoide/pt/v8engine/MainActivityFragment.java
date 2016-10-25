@@ -12,6 +12,7 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -69,7 +70,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
       if (ManagerPreferences.isAutoUpdateEnable()) {
 
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
-            new DownloadFactory(), AptoideDownloadManager.getInstance()).execute();
+            new DownloadFactory(), AptoideDownloadManager.getInstance(),
+            new PermissionManager()).execute();
       }
       if (SecurePreferences.isWizardAvailable()) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

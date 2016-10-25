@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor public class Scheduled extends RealmObject {
 
-  public static final String APP_ID = "appId";
+  //public static final String APP_ID = "appId";
   public static final String NAME = "name";
   public static final String VERSION_NAME = "versionName";
   public static final String ICON = "icon";

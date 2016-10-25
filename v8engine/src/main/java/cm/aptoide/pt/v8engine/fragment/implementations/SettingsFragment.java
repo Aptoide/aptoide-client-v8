@@ -45,8 +45,9 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
-import cm.aptoide.pt.v8engine.util.UpdateUtils;
 import java.io.File;
 import java.text.DecimalFormat;
 
@@ -58,6 +59,7 @@ import java.text.DecimalFormat;
  */
 public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener {
+  private static final String TAG = SettingsFragment.class.getSimpleName();
 
   private static boolean isSetingPIN = false;
   private final String aptoide_path = null;
@@ -92,7 +94,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
-      UpdateUtils.checkUpdates();
+      UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+      repository.getUpdates(true)
+          .first()
+          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
+            throwable.printStackTrace();
+            CrashReports.logException(throwable);
+          });
     }
   }
 

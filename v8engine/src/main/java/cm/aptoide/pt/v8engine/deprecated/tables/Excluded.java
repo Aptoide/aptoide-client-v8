@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
 import android.database.Cursor;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
 
 /**
@@ -39,10 +40,14 @@ public class Excluded extends BaseTable {
 
     realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
     realmObject.setLabel(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-    realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICONPATH)));
     realmObject.setVersionCode(cursor.getInt(cursor.getColumnIndex(COLUMN_VERCODE)));
     realmObject.setUpdateVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERNAME)));
     realmObject.setExcluded(true);
+
+    String cleanIconPath = AptoideUtils.IconSizeU.cleanImageUrl(
+        cursor.getString(cursor.getColumnIndex(COLUMN_ICONPATH)));
+    realmObject.setIcon(cleanIconPath);
+
     // are this columns to remove?
     // COLUMN_NAME
     return realmObject;

@@ -19,8 +19,7 @@ import io.realm.RealmObject;
  * Created by sithengineer on 24/08/16.
  *
  * see method "getStartupInstalled()" in class "AptoideDatabase.java" from v7 code to understand
- * the
- * reason why of this code
+ * the reason why of this code
  */
 public final class Installed extends BaseTable {
 

@@ -76,6 +76,12 @@ android {
                             currentApplicationId       : "cm.aptoide.pt",
                             fabricApiKey               : fabricConfigured ?
                                 localProperties.FABRIC_API_KEY : ""]
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
+
+    // Enabling multidex support.
+    multiDexEnabled true
   }
 
   lintOptions {
@@ -201,23 +207,42 @@ dependencies {
   //
 
   debugCompile project(path: ':v8engine', configuration: 'debug')
+//  {
+//    exclude(group:"com.android.support", name:"multidex")
+//  }
+
   releaseCompile project(path: ':v8engine', configuration: 'release')
+//  {
+//    exclude(group:"com.android.support", name:"multidex")
+//  }
 
   //
   // custom libs in folders
   //
 
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  //compile fileTree(dir: 'libs', include: ['*.jar'])
 
   //
   // from remote repos
   //
 
+  // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  // Multi Dex support
-  compile "com.android.support:multidex:${MULTIDEX_VERSION}"
+  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  // Force usage of support annotations in the test app, since it is internally used by the runner module.
+  androidTestCompile ("com.android.support.test:runner:${RUNNER_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestCompile ("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
+
+  compile ("com.android.support:multidex:${MULTIDEX_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
 }
 
 //class VersionCodeFileUpdateTask extends DefaultTask {

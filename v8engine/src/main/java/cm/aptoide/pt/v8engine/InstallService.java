@@ -27,7 +27,9 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -46,6 +48,9 @@ public class InstallService extends Service {
   public static final String ACTION_START_INSTALL = "START_INSTALL";
   public static final String ACTION_INSTALL_FINISHED = "INSTALL_FINISHED";
   public static final String EXTRA_INSTALLATION_MD5 = "INSTALLATION_MD5";
+  public static final String EXTRA_INSTALLER_TYPE = "INSTALLER_TYPE";
+  public static final int INSTALLER_TYPE_DEFAULT = 0;
+  public static final int INSTALLER_TYPE_ROLLBACK = 1;
 
   private static final int NOTIFICATION_ID = 8;
 
@@ -54,26 +59,31 @@ public class InstallService extends Service {
   private CompositeSubscription subscriptions;
 
   private Notification notification;
-  private Installer installer;
+  private Installer rollbackInstaller;
+  private Installer defaultInstaller;
   private InstallManager installManager;
+  private Map<String, Integer> installerTypeMap;
 
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
     downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(this);
-    installer = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, installer,
+    rollbackInstaller = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(downloadManager, rollbackInstaller,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
     subscriptions = new CompositeSubscription();
     setupNotification();
+    installerTypeMap = new HashMap();
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
       String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
+        installerTypeMap.put(md5,
+            intent.getIntExtra(EXTRA_INSTALLER_TYPE, INSTALLER_TYPE_ROLLBACK));
         subscriptions.add(downloadAndInstall(this, md5).subscribe(hasNext -> treatNext(hasNext),
             throwable -> removeNotificationAndStop()));
       } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
@@ -168,6 +178,7 @@ public class InstallService extends Service {
 
   private Observable<Void> stopForegroundAndInstall(Context context, Download download,
       boolean removeNotification) {
+    Installer installer = getInstaller(download.getMd5());
     stopForeground(removeNotification);
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
@@ -180,6 +191,24 @@ public class InstallService extends Service {
         return Observable.error(
             new IllegalArgumentException("Invalid download action " + download.getAction()));
     }
+  }
+
+  private Installer getInstaller(String md5) {
+    Integer installerType = installerTypeMap.get(md5);
+    Installer installer;
+    switch (installerType) {
+      case INSTALLER_TYPE_DEFAULT:
+        if (defaultInstaller == null) {
+          defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
+        }
+        installer = defaultInstaller;
+        break;
+      case INSTALLER_TYPE_ROLLBACK:
+      default:
+        installer = rollbackInstaller;
+        break;
+    }
+    return installer;
   }
 
   private void setupNotification() {

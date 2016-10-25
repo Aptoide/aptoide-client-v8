@@ -62,8 +62,10 @@ import rx.schedulers.Schedulers;
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
-        })
-        .doOnError(CrashReports::logException);
+        }).doOnError((throwable) -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
   }
 
   @Override public Observable<Void> update(Context context, String md5) {

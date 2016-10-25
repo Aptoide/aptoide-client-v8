@@ -76,7 +76,7 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
             .equalTo(Update.EXCLUDED, isExcluded)
             .contains(Update.PACKAGE_NAME, packageName)
             .findFirst();
-          
+
           if(update!=null) {
             return Observable.just(update);
           }

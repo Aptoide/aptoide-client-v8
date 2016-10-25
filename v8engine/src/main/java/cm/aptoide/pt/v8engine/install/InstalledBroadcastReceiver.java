@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -42,7 +43,8 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
   @Override public void onReceive(Context context, Intent intent) {
     repository = new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
     installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
-    updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class));
+    updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
+        AccessorFactory.getAccessorFor(Store.class));
 
     String action = intent.getAction();
     String packageName = intent.getData().getEncodedSchemeSpecificPart();

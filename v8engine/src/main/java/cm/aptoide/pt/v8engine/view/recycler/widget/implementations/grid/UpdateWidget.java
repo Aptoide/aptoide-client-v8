@@ -15,11 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
@@ -28,8 +32,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Upd
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
-import io.realm.Realm;
-import lombok.Cleanup;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -38,6 +40,8 @@ import rx.subscriptions.CompositeSubscription;
  */
 @Displayables({ UpdateDisplayable.class }) public class UpdateWidget
     extends Widget<UpdateDisplayable> {
+
+  private static final String TAG = UpdateWidget.class.getSimpleName();
 
   private View updateRowRelativeLayout;
   private TextView labelTextView;
@@ -70,7 +74,8 @@ import rx.subscriptions.CompositeSubscription;
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
 
-    updateRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class));
+    updateRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
+        AccessorFactory.getAccessorFor(Store.class));
   }
 
   @Override public void bindView(UpdateDisplayable updateDisplayable) {
@@ -101,9 +106,14 @@ import rx.subscriptions.CompositeSubscription;
           .setNegativeButton(R.string.no, null)
           .setPositiveButton(R.string.yes, (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
-              //@Cleanup Realm realm1 = DeprecatedDatabase.get();
-              //DeprecatedDatabase.UpdatesQ.setExcluded(packageName, true, realm1);
-              updateRepository.setExcluded(packageName, true);
+              updateRepository.setExcluded(packageName, true)
+                  .subscribe(success -> Logger.d(TAG,
+                      String.format("Update with package name %s was excluded", packageName)),
+                      throwable -> {
+                        ShowMessage.asSnack(getContext(), R.string.unknown_error);
+                        Logger.e(TAG, throwable);
+                        CrashReports.logException(throwable);
+                      });
             }
             dialog.dismiss();
           });
