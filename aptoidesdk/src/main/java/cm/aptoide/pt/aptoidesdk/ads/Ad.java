@@ -38,12 +38,14 @@ import lombok.AllArgsConstructor;
   @AllArgsConstructor static class Network {
     final int id;
     final String clickUrl;
+    final String impressionUrl;
 
     public static Network fromGetAds(GetAdsResponse.Ad ad) {
       int adId = ad.getPartner().getInfo().getId();
       String clickUrl = ad.getPartner().getData().getClickUrl();
+      String impressionUrl = ad.getPartner().getData().getImpressionUrl();
 
-      return new Network(adId, clickUrl);
+      return new Network(adId, clickUrl, impressionUrl);
     }
   }
 
