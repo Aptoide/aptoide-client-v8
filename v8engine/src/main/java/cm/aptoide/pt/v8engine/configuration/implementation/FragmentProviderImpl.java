@@ -179,8 +179,8 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
-      String packageName) {
-    return RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName);
+      String packageName, String storeTheme) {
+    return RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName, storeTheme);
   }
 
   @Override public Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
