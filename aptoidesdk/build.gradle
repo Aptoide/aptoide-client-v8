@@ -36,6 +36,8 @@ dependencies {
   compile 'com.android.support:appcompat-v7:25.0.0'
   testCompile 'junit:junit:4.12'
 
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+
   debugCompile project(path: ':dataprovider', configuration: 'debug')
   releaseCompile project(path: ':dataprovider', configuration: 'release')
 }
