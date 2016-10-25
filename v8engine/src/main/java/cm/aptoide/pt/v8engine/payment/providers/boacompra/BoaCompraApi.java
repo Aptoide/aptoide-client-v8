@@ -22,4 +22,9 @@ interface BoaCompraApi {
 
   @GET("pre-approvals/{code}") Observable<PreApprovalListResponse> getPreApproval(
       @Path("code") String code);
+
+  @GET("pre-approvals") Observable<PreApprovalListResponse> getPreApprovals();
+
+  @POST("pre-approvals/{code}/cancel")
+  Observable<PreApprovalAuthorizationResponse> deletePreApproval(@Path("code") String code);
 }

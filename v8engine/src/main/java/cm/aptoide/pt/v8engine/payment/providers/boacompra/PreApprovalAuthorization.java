@@ -22,7 +22,7 @@ class PreApprovalAuthorization {
 
   @JsonCreator public PreApprovalAuthorization(@JsonProperty("pre-approval-code") String code,
       @JsonProperty("date") @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") Date date,
-      @JsonProperty("redirect-url") String redirectUrl) {
+      @JsonProperty(value = "redirect-url", defaultValue = "") String redirectUrl) {
     this.code = code;
     this.date = date;
     this.redirectUrl = redirectUrl;
