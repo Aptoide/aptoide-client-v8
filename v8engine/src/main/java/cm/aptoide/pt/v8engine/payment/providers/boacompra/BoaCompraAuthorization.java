@@ -13,6 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okio.Buffer;
+import okio.ByteString;
 
 /**
  * Created by marcelobenites on 10/7/16.
@@ -76,7 +77,10 @@ public final class BoaCompraAuthorization {
     final Buffer buffer = new Buffer();
     try {
       body.writeTo(buffer);
-      return buffer.md5().hex();
+      if (buffer.size() > 0) {
+        return buffer.md5().hex();
+      }
+      return ByteString.EMPTY.md5().hex();
     } finally {
       buffer.close();
     }

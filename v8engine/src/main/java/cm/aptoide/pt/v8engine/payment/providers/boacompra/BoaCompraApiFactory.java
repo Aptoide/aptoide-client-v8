@@ -9,10 +9,13 @@ import android.os.Build;
 import java.io.IOException;
 import java.util.Locale;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.Buffer;
+import okio.ByteString;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -35,7 +38,11 @@ final class BoaCompraApiFactory {
           final Buffer buffer = new Buffer();
           try {
             request.body().writeTo(buffer);
-            requestBuilder.addHeader("Content-MD5", buffer.md5().hex());
+            if (buffer.size() > 0) {
+              requestBuilder.addHeader("Content-MD5", buffer.md5().hex());
+            } else {
+              requestBuilder.addHeader("Content-MD5", ByteString.EMPTY.md5().hex());
+            }
           } finally {
             buffer.close();
           }
