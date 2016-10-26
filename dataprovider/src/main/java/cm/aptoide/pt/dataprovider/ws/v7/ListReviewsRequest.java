@@ -40,8 +40,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
 
   protected ListReviewsRequest(Body body, String baseHost) {
     super(body, OkHttpClientFactory.getSingletonClient(SecurePreferences.getUserAgent()),
-        WebService.getDefaultConverter(),
-        baseHost);
+        WebService.getDefaultConverter(), baseHost);
   }
 
   public static ListReviewsRequest of(String storeName, String packageName, String accessToken,
@@ -77,7 +76,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listReviews(body, bypassCache);
+    return interfaces.listReviews(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
