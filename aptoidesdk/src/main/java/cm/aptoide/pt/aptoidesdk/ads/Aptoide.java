@@ -1,10 +1,14 @@
-package cm.aptoide.pt.aptoidesdk;
+package cm.aptoide.pt.aptoidesdk.ads;
 
-import cm.aptoide.pt.aptoidesdk.entities.Ad;
-import cm.aptoide.pt.aptoidesdk.entities.AdController;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.logger.Logger;
+import java.util.concurrent.Callable;
 import rx.Observable;
+import rx.schedulers.Schedulers;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by neuro on 21-10-2016.
@@ -16,8 +20,19 @@ public class Aptoide {
   }
 
   public static Observable<App> getAppObservable(Ad ad) {
-    AdController.clickCpc(ad);
-    return getAppObservable(ad.getId());
+    return getAppObservable(ad.data.appId).map(app -> {
+      Observable.fromCallable(handleAds(ad)).subscribeOn(Schedulers.io()).subscribe(t -> {
+      }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
+      return app;
+    });
+  }
+
+  @NonNull private static Callable<Object> handleAds(Ad ad) {
+    return () -> {
+      ReferrerUtils.knockCpc(ad);
+      ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false);
+      return null;
+    };
   }
 
   public static App getApp(String packageName, String storeName) {
