@@ -7,12 +7,10 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -28,13 +26,7 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -50,9 +42,6 @@ import static cm.aptoide.pt.dataprovider.util.DataproviderUtils.knock;
 class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
-  private static ObjectMapper objectMapper = new ObjectMapper();
-  private static String ADS_REFERRERS_KEY = "AptoideSdkAdsReferrers";
-  private static double AD_EXPIRATION_IN_MILLIS = 5 * 60 * 1000;
 
   static void extractReferrer(Ad ad, final int retries, boolean broadcastReferrer) {
 
@@ -128,7 +117,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
                 //    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
                 //        minimalAd.getAdId()), realm);
 
-                storeAd(ad);
+                saveAd(ad);
               }
 
               future.cancel(false);
@@ -139,38 +128,8 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
           return false;
         }
 
-        private void storeAd(Ad ad) {
-          try {
-            SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance();
-            String string = sharedPreferences.getString(ADS_REFERRERS_KEY, null);
-
-            LongSparseArray<Ad> ads;
-            if (string != null) {
-              ads = objectMapper.readValue(string, new TypeReference<HashMap<Long, Ad>>() {
-              });
-              removeOldAds(ads);
-            } else {
-              ads = new LongSparseArray<>();
-            }
-            ads.put(ad.id, ad);
-            sharedPreferences.edit()
-                .putString(ADS_REFERRERS_KEY, objectMapper.writeValueAsString(ads))
-                .apply();
-          } catch (JsonProcessingException e) {
-            Logger.e(TAG, e);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
-
-        private void removeOldAds(LongSparseArray<Ad> ads) {
-          for (int i = 0; i < ads.size(); i++) {
-            long key = ads.keyAt(i);
-            Ad ad = ads.get(key);
-            if (System.currentTimeMillis() - ad.getTimestamp() > AD_EXPIRATION_IN_MILLIS) {
-              ads.remove(key);
-            }
-          }
+        private void saveAd(Ad ad) {
+          StoredAdsManager.getInstance().addAd(ad);
         }
 
         @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
