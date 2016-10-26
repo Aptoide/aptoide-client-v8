@@ -2,12 +2,14 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Created by neuro on 24-10-2016.
  */
 @AllArgsConstructor public class Ad {
 
+  @Getter final long timestamp;
   final long id;
   final Clicks clicks;
   final Network network;
@@ -20,7 +22,7 @@ import lombok.AllArgsConstructor;
     Network network = Network.fromGetAds(ad);
     Data data = Data.fromGetAds(ad);
 
-    return new Ad(adId, clicks, network, data);
+    return new Ad(System.currentTimeMillis(), adId, clicks, network, data);
   }
 
   public String getName() {
