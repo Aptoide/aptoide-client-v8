@@ -7,7 +7,9 @@ package cm.aptoide.accountmanager;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
 import android.accounts.NetworkErrorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -38,7 +40,6 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -47,6 +48,7 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 import java.util.List;
@@ -227,10 +229,21 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private static @Nullable String getRefreshToken() {
     String refreshToken = AccountManagerPreferences.getRefreshToken();
+
     if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
       refreshToken = getUserStringFromAndroidAccountManager(SecureKeys.REFRESH_TOKEN);
       AccountManagerPreferences.setRefreshToken(refreshToken);
     }
+
+    if(refreshToken==null  || TextUtils.isEmpty(refreshToken)) {
+      try{
+        refreshToken = getRefreshTokenFromAccountManager(); // as it is done in V7
+        AccountManagerPreferences.setRefreshToken(refreshToken);
+      } catch (Exception e) {
+        Logger.e(TAG, e);
+      }
+    }
+
     return refreshToken;
   }
 
@@ -272,6 +285,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
     return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
+  }
+
+  private static @Nullable String getRefreshTokenFromAccountManager()
+      throws AuthenticatorException, OperationCanceledException, IOException {
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    String refreshToken = manager
+        .blockingGetAuthToken(accountsByType[0], Constants.AUTHTOKEN_TYPE_FULL_ACCESS, false);
+    return refreshToken;
   }
 
   @Nullable public static LoginMode getLoginMode() {
