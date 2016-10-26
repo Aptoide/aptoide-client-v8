@@ -69,7 +69,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   }
 
   @Override protected String getActivityTitle() {
-    return getString(R.string.login_activity_title);
+    return getString(R.string.login);
   }
 
   @Override int getLayoutId() {
