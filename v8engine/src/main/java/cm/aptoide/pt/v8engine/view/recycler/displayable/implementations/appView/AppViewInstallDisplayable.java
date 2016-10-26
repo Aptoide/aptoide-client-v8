@@ -7,62 +7,100 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.Button;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import rx.Observable;
 
 /**
  * Created by sithengineer on 06/05/16.
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
+  /**
+   * App not installed
+   */
+  public static final int ACTION_INSTALL = 0;
+  /**
+   * installed app has lower version than the current
+   */
+  public static final int ACTION_UPDATE = 1;
+  /**
+   * installed app has higher version than the current
+   */
+  public static final int ACTION_DOWNGRADE = 2;
+  /**
+   * installed app has the same version than the current
+   */
+  public static final int ACTION_OPEN = 3;
+  /**
+   * The current app is installing
+   */
+  public static final int ACTION_INSTALLING = 4;
   private static final String TAG = AppViewInstallDisplayable.class.getName();
-
+  /**
+   * This should only be used internally
+   */
+  private static final int ACTION_NO_STATE = -1;
   @Getter private boolean shouldInstall;
   @Getter private MinimalAd minimalAd;
 
   private RollbackRepository rollbackRepository;
   //private Installer installManager;
 
+  private InstallManager installManager;
   private String md5;
   private String packageName;
-  private InstalledAccessor installedAccessor;
+  private InstalledRepository installedRepository;
   private Button installButton;
+  private WidgetState widgetState;
+  private GetAppMeta.App currentApp;
 
   public AppViewInstallDisplayable() {
     super();
   }
 
-  public AppViewInstallDisplayable(Installer installManager, GetApp getApp, MinimalAd minimalAd,
-      boolean shouldInstall, InstalledAccessor installedAccessor) {
+  public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
+      MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository) {
     super(getApp);
-    //this.installManager = installManager;
+    this.installManager = installManager;
     this.md5 = getApp.getNodes().getMeta().getData().getFile().getMd5sum();
     this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
+    currentApp = getApp.getNodes().getMeta().getData();
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
     this.rollbackRepository =
         new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
-    this.installedAccessor = installedAccessor;
+    this.installedRepository = installedRepository;
+    widgetState = new WidgetState(ACTION_NO_STATE);
   }
 
-  public static AppViewInstallDisplayable newInstance(GetApp getApp, Installer installManager,
-      MinimalAd minimalAd, boolean shouldInstall, InstalledAccessor installedAccessor) {
+  public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
+      MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedAccessor);
+        installedRepository);
   }
 
   public void buyApp(Context context, GetAppMeta.App app) {
@@ -71,22 +109,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       ((Payments) fragment).buyApp(app);
     }
   }
-
-  //public Observable<Void> update(Context context) {
-  //  return installManager.update(context, appId);
-  //}
-  //
-  //public Observable<Void> install(Context context) {
-  //  return installManager.install(context, appId);
-  //}
-  //
-  //public Observable<Void> uninstall(Context context) {
-  //  return installManager.uninstall(context, packageName);
-  //}
-  //
-  //public Observable<Void> downgrade(Context context) {
-  //  return installManager.downgrade(context, appId);
-  //}
 
   public void startInstallationProcess() {
     if (installButton != null) {
@@ -126,7 +148,55 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     return new Configs(1, true);
   }
 
-  public InstalledAccessor getInstalledAccessor() {
-    return installedAccessor;
+  public Observable<WidgetState> getState() {
+    return getInstalledAppObservable(currentApp, installedRepository).flatMap(widgetState -> {
+      if (widgetState.getButtonState() == ACTION_NO_STATE) {
+        return getInstalledAppObservable(currentApp, installedRepository);
+      } else {
+        return Observable.just(widgetState);
+      }
+    });
+  }
+
+  @NonNull private Observable<WidgetState> getInstalledAppObservable(GetAppMeta.App currentApp,
+      InstalledRepository installedRepository) {
+    return installedRepository.getAsList(currentApp.getPackageName()).map(installeds -> {
+      if (installeds != null && installeds.size() > 0) {
+        Installed installed = installeds.get(0);
+        if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
+          widgetState.setButtonState(ACTION_OPEN);
+        } else if (currentApp.getFile().getVercode() <= installed.getVersionCode()) {
+          widgetState.setButtonState(ACTION_DOWNGRADE);
+        } else if (currentApp.getFile().getVercode() >= installed.getVersionCode()) {
+          widgetState.setButtonState(ACTION_UPDATE);
+        }
+      } else {
+        widgetState.setButtonState(ACTION_INSTALL);
+      }
+      return widgetState;
+    });
+  }
+
+  @IntDef({
+      ACTION_INSTALL, ACTION_UPDATE, ACTION_DOWNGRADE, ACTION_OPEN, ACTION_INSTALLING,
+      ACTION_NO_STATE
+  })
+
+  @Retention(RetentionPolicy.SOURCE)
+
+  public @interface ButtonState {
+  }
+
+  public class WidgetState {
+    private @Setter(AccessLevel.PRIVATE) @ButtonState int buttonState;
+    private @Setter(AccessLevel.PRIVATE) @Getter @Nullable Progress<Download> progress;
+
+    public WidgetState(int buttonState) {
+      this.buttonState = buttonState;
+    }
+
+    public @ButtonState int getButtonState() {
+      return buttonState;
+    }
   }
 }

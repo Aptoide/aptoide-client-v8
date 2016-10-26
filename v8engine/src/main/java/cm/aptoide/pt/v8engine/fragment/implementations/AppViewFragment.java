@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -37,6 +38,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -45,6 +47,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -58,6 +61,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
@@ -73,6 +77,8 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -127,7 +133,7 @@ public class AppViewFragment extends GridRecyclerFragment
   //
   private MinimalAd minimalAd;
   // Stored to postpone ads logic
-  private Installer installManager;
+  private InstallManager installManager;
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
   private AppRepository appRepository;
@@ -149,7 +155,7 @@ public class AppViewFragment extends GridRecyclerFragment
   private String wUrl;
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
-  private InstalledAccessor installedAccessor;
+  private InstalledRepository installedRepository;
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
@@ -214,14 +220,17 @@ public class AppViewFragment extends GridRecyclerFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     permissionManager = new PermissionManager();
-    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
         productFactory);
     adRepository = new AdRepository();
-    installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    installedRepository = RepositoryFactory.getRepositoryFor(Installed.class);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -295,7 +304,7 @@ public class AppViewFragment extends GridRecyclerFragment
     GetAppMeta.Media media = app.getMedia();
 
     installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
-        openType == OpenType.OPEN_AND_INSTALL, installedAccessor);
+        openType == OpenType.OPEN_AND_INSTALL, installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -484,6 +493,15 @@ public class AppViewFragment extends GridRecyclerFragment
       if (item != null) {
         item.setVisible(appAction != AppAction.OPEN);
       }
+      if (appAction != AppAction.INSTALL) {
+        setUnInstallMenuOptionVisible(
+            () -> new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
+                .flatMap(success -> installManager.uninstall(getContext(), packageName))
+                .subscribe(aVoid -> {
+                }, throwable -> throwable.printStackTrace()));
+      } else {
+        setUnInstallMenuOptionVisible(null);
+      }
     });
 
     header.setup(getApp);
@@ -654,7 +672,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
   public Observable<AppAction> installAction() {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    return installedAccessor.getInstalledAsList(packageName).map(installedList -> {
+    return installedAccessor.getAsList(packageName).map(installedList -> {
       if (installedList != null && installedList.size() > 0) {
         Installed installed = installedList.get(0);
         if (app.getFile().getVercode() == installed.getVersionCode()) {
