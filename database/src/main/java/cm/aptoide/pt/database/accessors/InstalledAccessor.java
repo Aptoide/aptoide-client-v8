@@ -52,7 +52,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     return get(packageName).map(installed -> installed != null);
   }
 
-  public Observable<List<Installed>> getInstalledAsList(String packageName) {
+  public Observable<List<Installed>> getAsList(String packageName) {
     return Observable.fromCallable(() -> Database.get())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)

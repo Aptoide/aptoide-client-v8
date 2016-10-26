@@ -93,4 +93,8 @@ public class DownloadAccessor extends SimpleAccessor<Download> {
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
   }
+
+  public Observable<List<Download>> getAsList(String md5) {
+    return database.getAsList(Download.class, Download.MD5, md5);
+  }
 }
