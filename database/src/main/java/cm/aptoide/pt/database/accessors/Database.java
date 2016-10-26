@@ -14,8 +14,6 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import lombok.Cleanup;
 import rx.Observable;
@@ -186,6 +184,15 @@ public final class Database {
         .defaultIfEmpty(null);
   }
 
+  <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
+    return Observable.just(query.findAll())
+        .filter(realmObject -> realmObject != null)
+        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
+            RealmSchedulers.getScheduler()))
+        .flatMap(realmObject -> copyFromRealm(realmObject))
+        .defaultIfEmpty(null);
+  }
+
   public Observable<Long> count(Class clazz) {
     return getRealm().flatMap(realm -> Observable.just(realm.where(clazz).count())
         .unsubscribeOn(RealmSchedulers.getScheduler()));
@@ -210,6 +217,24 @@ public final class Database {
   public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Long value) {
     return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
         .flatMap(query -> findFirst(query));
+  }
+
+  public <E extends RealmObject> Observable<List<E>> getAsList(Class<E> clazz, String key,
+      String value) {
+    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+        .flatMap(query -> findAsList(query));
+  }
+
+  public <E extends RealmObject> Observable<List<E>> getAsList(Class<E> clazz, String key,
+      Integer value) {
+    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+        .flatMap(query -> findAsList(query));
+  }
+
+  public <E extends RealmObject> Observable<List<E>> getAsList(Class<E> clazz, String key,
+      Long value) {
+    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+        .flatMap(query -> findAsList(query));
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
