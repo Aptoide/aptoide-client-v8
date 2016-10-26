@@ -8,6 +8,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt">
 
+  <permission
+      android:name="${currentApplicationId}.permission.BILLING"
+      android:label="Make internal payments"
+      android:protectionLevel="normal"/>
+
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
   <uses-permission
@@ -109,6 +114,16 @@
         android:exported="false">
       <intent-filter>
         <action android:name="com.google.android.gms.iid.InstanceID"/>
+      </intent-filter>
+    </service>
+
+    <service
+        android:name="cm.aptoide.pt.iab.InAppBillingService"
+        android:exported="true"
+        android:permission="${currentApplicationId}.permission.BILLING">
+
+      <intent-filter>
+        <action android:name="${currentApplicationId}.iab.action.BIND"/>
       </intent-filter>
     </service>
   </application>
