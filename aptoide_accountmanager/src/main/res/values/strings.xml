@@ -6,7 +6,7 @@
   <string name="password">Password</string>
   <string name="link_device_webinstall">Link account with Webinstall</string>
   <string name="register">Sign Up</string>
-  <string name="setcredentials">Login</string>
+  <string name="login">Login</string>
   <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Please check your email and password.</string>
   <string name="unknown_error">Unknown Error</string>
@@ -66,7 +66,6 @@
         this limit increased please contact support at suport@aptoide.com or create more users tomorrow</string>
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
-  <string name="login_activity_title">Login</string>
   <string name="login_successful">Login successful</string>
   <string name="user_created">User Created</string>
   <!-- WIZARD -->

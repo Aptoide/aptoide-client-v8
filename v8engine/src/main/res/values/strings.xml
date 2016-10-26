@@ -163,7 +163,6 @@
   <string name="wizard_or_login"><u>or Login</u></string>
 
   <string name="you_need_to_be_logged_in">You need to be logged in</string>
-  <string name="login">Login</string>
   <string name="follow">Follow</string>
   <!--need translation-->
   <string name="followed">Following</string>
