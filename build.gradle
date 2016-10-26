@@ -59,7 +59,7 @@ ext {
   BUILD_TOOLS_VERSION = '23.0.3'
 
   //
-  // gradle build script dependecies versions
+  // gradle build script dependencies versions
   //
 
   // Google Android Support
@@ -67,7 +67,7 @@ ext {
   SUPPORT_ANNOTATIONS_LIB_VERSION = '24.2.0'
 
   // Google Play Services
-  PLAY_SERVICES_VERSION = '8.3.0'
+  PLAY_SERVICES_VERSION = '9.8.0'
 
   JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 

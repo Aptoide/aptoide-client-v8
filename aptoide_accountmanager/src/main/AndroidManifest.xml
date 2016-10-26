@@ -1,5 +1,5 @@
-<manifest package="cm.aptoide.accountmanager"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cm.aptoide.accountmanager">
 
   <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
   <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -10,7 +10,6 @@
 
   <application
       android:allowBackup="true"
-      android:label="@string/app_name"
       android:supportsRtl="true">
 
     <activity
@@ -22,7 +21,7 @@
     <activity
         android:name="com.facebook.FacebookActivity"
         android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-        android:label="@string/app_name"/>
+        />
 
     <activity android:name=".MyAccountActivity"/>
 

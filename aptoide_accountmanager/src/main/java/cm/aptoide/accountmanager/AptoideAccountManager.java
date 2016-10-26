@@ -94,7 +94,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * This variable indicates if the user is logged or not. It's used because in some cases the
    * account manager is not fast enough
    */
-  private static boolean isLogin = isLoggedIn();
+  private static boolean userIsLoggedIn = isLoggedIn();
   /**
    * private variables
    */
@@ -135,7 +135,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @param extras Extras to add on created intent (to login or register activity)
    */
   public static void openAccountManager(Context context, @Nullable Bundle extras) {
-    if (isLogin) {
+    if (userIsLoggedIn) {
       context.startActivity(new Intent(context, MyAccountActivity.class));
     } else {
       final Intent intent = new Intent(context, LoginActivity.class);
@@ -214,7 +214,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   @PackagePrivate static void logout(WeakReference<FragmentActivity> activityRef) {
     FacebookLoginUtils.logout();
     getInstance().removeLocalAccount();
-    isLogin = false;
+    userIsLoggedIn = false;
     if (activityRef != null) {
       Activity activity = activityRef.get();
       if (activity != null) {
@@ -468,23 +468,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @param matureSwitch Switch state
    */
   public static void updateMatureSwitch(boolean matureSwitch) {
-    Observable.fromCallable(() -> {
-      AccountManagerPreferences.setMatureSwitch(matureSwitch);
-      return matureSwitch;
-    }).doOnNext(matureSwitch1 -> {
-      if (isLogin) {
-        ChangeUserSettingsRequest.of(matureSwitch1)
-            .observe()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .doOnError(throwable -> {
-              Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
-            })
-            .subscribe();
-      }
-    }).doOnError(throwable -> {
-      Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
-    }).subscribe();
+    AccountManagerPreferences.setMatureSwitch(matureSwitch);
+    if (userIsLoggedIn) {
+      ChangeUserSettingsRequest.of(matureSwitch)
+          .observe(true) // bypass cache since we are "writing" a value
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnError(throwable -> {
+            Logger.e(TAG, "Unable to update mature switch to " + Boolean.toString(matureSwitch));
+            CrashReports.logException(throwable);
+          })
+          .subscribe();
+    }
   }
 
   /**
@@ -795,7 +790,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginSuccess() {
-    isLogin = true;
+    userIsLoggedIn = true;
     mCallback.onLoginSuccess();
   }
 
