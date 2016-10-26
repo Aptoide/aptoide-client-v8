@@ -11,10 +11,23 @@ package cm.aptoide.pt.v8engine;
 
 public class Progress<T> {
 
+  /**
+   * first state and when download is paused
+   */
   public static final int INACTIVE = 0;
+  /**
+   * when installation is done
+   */
   public static final int DONE = 1;
+  /**
+   * download is running or install manager is installing
+   */
   public static final int ACTIVE = 2;
+  /**
+   * when an error occurs
+   */
   public static final int ERROR = 4;
+
   private final T request;
   private final int max;
 
@@ -41,12 +54,20 @@ public class Progress<T> {
     return indeterminate;
   }
 
+  public void setIndeterminate(boolean indeterminate) {
+    this.indeterminate = indeterminate;
+  }
+
   public int getMax() {
     return max;
   }
 
   public int getCurrent() {
     return current;
+  }
+
+  public void setCurrent(int current) {
+    this.current = current;
   }
 
   public int getSpeed() {
@@ -57,19 +78,11 @@ public class Progress<T> {
     this.speed = speed;
   }
 
-  public void setIndeterminate(boolean indeterminate) {
-    this.indeterminate = indeterminate;
-  }
-
-  public void setCurrent(int current) {
-    this.current = current;
+  public int getState() {
+    return state;
   }
 
   public void setState(int state) {
     this.state = state;
-  }
-
-  public int getState() {
-    return state;
   }
 }
