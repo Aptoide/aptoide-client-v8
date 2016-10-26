@@ -68,17 +68,13 @@ public class StoreUtils {
     V7Url v7Url = new V7Url(url);
     Long storeId = v7Url.getStoreId();
     String storeName = v7Url.getStoreName();
-    String username;
-    String passwordSha1;
-
-    if (storeId == null && storeName == null) {
-      throw new IllegalArgumentException("Given url doesn't contain a StoreId or StoreName!");
-    }
 
     if (storeId != null) {
       return getStoreCredentials(storeId);
-    } else {
+    } else if (storeName != null) {
       return getStoreCredentials(storeName);
+    } else {
+      return new BaseRequestWithStore.StoreCredentials();
     }
   }
 
