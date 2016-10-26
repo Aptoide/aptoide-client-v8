@@ -149,7 +149,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public Observable<WidgetState> getState() {
-    return getInstalledAppObservable(currentApp, installedRepository).flatMap(widgetState -> {
+    return Observable.merge(getInstallationObservable(md5, installManager),
+        getInstalledAppObservable(currentApp, installedRepository)).flatMap(widgetState -> {
       if (widgetState.getButtonState() == ACTION_NO_STATE) {
         return getInstalledAppObservable(currentApp, installedRepository);
       } else {
@@ -173,6 +174,22 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       } else {
         widgetState.setButtonState(ACTION_INSTALL);
       }
+      return widgetState;
+    });
+  }
+
+  private Observable<WidgetState> getInstallationObservable(String md5,
+      InstallManager installManager) {
+    return installManager.getAsListInstallation(md5).map(progress -> {
+      if (progress != null && progress.getState() != Progress.DONE && (progress.getState()
+          == Progress.ACTIVE
+          || progress.getRequest().getOverallDownloadStatus() == Download.PAUSED)) {
+
+        widgetState.setButtonState(ACTION_INSTALLING);
+      } else {
+        widgetState.setButtonState(ACTION_NO_STATE);
+      }
+      widgetState.setProgress(progress);
       return widgetState;
     });
   }
