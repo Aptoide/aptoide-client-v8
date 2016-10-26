@@ -188,13 +188,13 @@ public class InstallManager {
 
           final int progressStatus;
           switch (download.getOverallDownloadStatus()) {
-            case Download.COMPLETED:
             case Download.PROGRESS:
             case Download.PENDING:
             case Download.IN_QUEUE:
             case Download.INVALID_STATUS:
               progressStatus = Progress.ACTIVE;
               break;
+            case Download.COMPLETED:
             case Download.PAUSED:
               progressStatus = Progress.INACTIVE;
               break;

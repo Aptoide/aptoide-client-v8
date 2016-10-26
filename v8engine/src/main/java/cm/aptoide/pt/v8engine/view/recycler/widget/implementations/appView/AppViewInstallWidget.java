@@ -398,16 +398,12 @@ import rx.subscriptions.CompositeSubscription;
   private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app) {
     switch (progress.getRequest().getOverallDownloadStatus()) {
       case Download.PAUSED: {
-        actionResume.setVisibility(View.VISIBLE);
-        actionPause.setVisibility(View.GONE);
+        updateDownloadProgress(progress);
         break;
       }
       case Download.IN_QUEUE:
       case Download.PROGRESS: {
-        actionResume.setVisibility(View.GONE);
-        actionPause.setVisibility(View.VISIBLE);
-        downloadProgress.setProgress(progress.getCurrent());
-        textProgress.setText(progress.getCurrent() + "%");
+        updateDownloadProgress(progress);
         break;
       }
       case Download.ERROR: {
@@ -425,6 +421,18 @@ import rx.subscriptions.CompositeSubscription;
         break;
       }
     }
+  }
+
+  private void updateDownloadProgress(@NonNull Progress<Download> progress) {
+    if (progress.getRequest().getOverallDownloadStatus() == Download.PAUSED) {
+      actionResume.setVisibility(View.VISIBLE);
+      actionPause.setVisibility(View.GONE);
+    } else {
+      actionResume.setVisibility(View.GONE);
+      actionPause.setVisibility(View.VISIBLE);
+    }
+    downloadProgress.setProgress(progress.getCurrent());
+    textProgress.setText(progress.getCurrent() + "%");
   }
 
   private void setupDownloadControls(GetAppMeta.App app, Progress<Download> progress,
