@@ -19,7 +19,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -41,7 +40,6 @@ import rx.Observable;
           return SecurePreferences.getUserAgent();
         }
       }))
-      .connectTimeout(2, TimeUnit.SECONDS)
       .build();
 
   private Location location;

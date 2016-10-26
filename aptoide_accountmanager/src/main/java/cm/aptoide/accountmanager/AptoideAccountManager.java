@@ -47,6 +47,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
 import java.util.List;
 import javax.security.auth.login.LoginException;
 import lombok.experimental.PackagePrivate;
@@ -561,6 +562,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }, e -> {
         if (e instanceof NetworkErrorException) {
           callback.onRegisterFail(R.string.unknown_error);
+        }
+        if (e instanceof SocketTimeoutException) {
+          AptoideAccountManager.loginUserCredentials(LoginMode.APTOIDE, email, password, null);
         }
         genericPleaseWaitDialog.dismiss();
         e.printStackTrace();

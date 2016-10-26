@@ -39,7 +39,7 @@ import rx.Observable;
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .flatMap(installation -> saveRollback(context, installation.getPackageName(),
-            Rollback.Action.UPDATE, installation.getIcon()))
+            Rollback.Action.UPDATE, installation.getIcon(), installation.getVersionName()))
         .flatMap(success -> defaultInstaller.update(context, md5));
   }
 
@@ -47,21 +47,23 @@ import rx.Observable;
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .flatMap(installation -> saveRollback(context, installation.getPackageName(),
-            Rollback.Action.DOWNGRADE, installation.getIcon()))
+            Rollback.Action.DOWNGRADE, installation.getIcon(), installation.getVersionName()))
         .flatMap(success -> defaultInstaller.downgrade(context, md5));
   }
 
-  @Override public Observable<Void> uninstall(Context context, String packageName) {
-    return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null).flatMap(
-        rollback -> defaultInstaller.uninstall(context, packageName));
+  @Override
+  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+    return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null, versionName).flatMap(
+        rollback -> defaultInstaller.uninstall(context, packageName, versionName));
   }
 
   private Observable<Void> saveRollback(Context context, String packageName, Rollback.Action action,
-      String icon) {
-    return rollbackFactory.createRollback(context, packageName, action, icon).map(rollback -> {
-      repository.save(rollback);
-      return null;
-    });
+      String icon, String versionName) {
+    return rollbackFactory.createRollback(context, packageName, action, icon, versionName)
+        .map(rollback -> {
+          repository.save(rollback);
+          return null;
+        });
   }
 
   private Observable<Void> saveRollback(RollbackInstallation installation, Rollback.Action action) {

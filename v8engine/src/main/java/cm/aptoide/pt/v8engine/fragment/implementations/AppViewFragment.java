@@ -259,12 +259,12 @@ public class AppViewFragment extends GridRecyclerFragment
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.getAll()
+        .flatMapIterable(list -> list)
+        .filter(store -> store != null && store.getStoreId() == storeId)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .flatMap(list -> storeAccessor.get(storeId)).observeOn(AndroidSchedulers.mainThread())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(store -> {
-          if (store != null) {
-            adapter.notifyDataSetChanged();
-          }
+          adapter.notifyDataSetChanged();
         });
 
     // ??

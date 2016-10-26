@@ -14,14 +14,13 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
+import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -63,8 +62,8 @@ public class InstallManager {
     aptoideDownloadManager.removeDownload(md5);
   }
 
-  public Observable<Void> uninstall(Context context, String packageName) {
-    return installer.uninstall(context, packageName);
+  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+    return installer.uninstall(context, packageName, versionName);
   }
 
   public Observable<Progress<Download>> getInstallations() {
@@ -158,6 +157,11 @@ public class InstallManager {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
+    if (installer instanceof RollbackInstaller) {
+      intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_ROLLBACK);
+    } else if (installer instanceof DefaultInstaller) {
+      intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
+    }
     context.startService(intent);
   }
 

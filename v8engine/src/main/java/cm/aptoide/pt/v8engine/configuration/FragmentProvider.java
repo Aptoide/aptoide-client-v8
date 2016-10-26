@@ -83,7 +83,7 @@ public interface FragmentProvider {
   Fragment newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode openMode);
 
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
-      String packageName);
+      String packageName, String storeTheme);
 
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);

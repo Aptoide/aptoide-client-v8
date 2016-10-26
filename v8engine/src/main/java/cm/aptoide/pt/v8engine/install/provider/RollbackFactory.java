@@ -27,7 +27,7 @@ import rx.schedulers.Schedulers;
    * @param context used to get app info context.getPackageManager().getPackageInfo()
    */
   public Observable<Rollback> createRollback(Context context, String packageName,
-      Rollback.Action action, @Nullable String icon) {
+      Rollback.Action action, @Nullable String icon, String versionName) {
 
     return Observable.fromCallable(() -> {
       PackageManager packageManager = context.getPackageManager();
@@ -39,6 +39,7 @@ import rx.schedulers.Schedulers;
       rollback.setAppName(AptoideUtils.SystemU.getApkLabel(info));
       rollback.setPackageName(info.packageName);
       rollback.setVersionCode(info.versionCode);
+      rollback.setVersionName(versionName);
       rollback.setTimestamp(System.currentTimeMillis());
       rollback.setMd5(AptoideUtils.AlgorithmU.computeMd5(info));
       if (!TextUtils.isEmpty(icon)) {
@@ -59,13 +60,13 @@ import rx.schedulers.Schedulers;
   public Rollback createRollback(RollbackInstallation installation, Rollback.Action action) {
     Rollback rollback = new Rollback();
     rollback.setMd5(installation.getId());
-    //rollback.setMd5(AptoideUtils.AlgorithmU.computeMd5(installation.getFile()));
     rollback.setAction(action.name());
     rollback.setAppName(installation.getAppName());
     rollback.setPackageName(installation.getPackageName());
     rollback.setConfirmed(false);
     rollback.setIcon(installation.getIcon());
     rollback.setVersionCode(installation.getVersionCode());
+    rollback.setVersionName(installation.getVersionName());
     rollback.setTimestamp(System.currentTimeMillis());
     return rollback;
   }

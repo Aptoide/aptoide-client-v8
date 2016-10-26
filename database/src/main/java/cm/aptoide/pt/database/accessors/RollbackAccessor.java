@@ -41,7 +41,7 @@ public class RollbackAccessor extends SimpleAccessor<Rollback> {
   }
 
   public void save(Rollback rollback) {
-    Database.save(rollback);
+    database.insert(rollback);
   }
 
   public Observable<Rollback> getNotConfirmedRollback(String packageName) {

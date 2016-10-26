@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.install.provider;
 
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.installer.InstallationProvider;
@@ -18,7 +19,7 @@ import rx.Observable;
  */
 @AllArgsConstructor public class DownloadInstallationProvider implements InstallationProvider {
 
-  private final DownloadServiceHelper downloadManager;
+  private final AptoideDownloadManager downloadManager;
 
   @Override public Observable<RollbackInstallation> getInstallation(String md5) {
     return downloadManager.getDownload(md5).first().flatMap(download -> {
