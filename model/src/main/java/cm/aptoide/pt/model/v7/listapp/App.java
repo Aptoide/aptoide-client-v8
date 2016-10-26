@@ -10,7 +10,6 @@ import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import java.util.List;
 import lombok.Data;
 
 /**
@@ -44,13 +43,6 @@ import lombok.Data;
 
       private float avg;
       private int total;
-      private List<Vote> votes;
-
-      @Data public static class Vote {
-
-        private int value;
-        private int count;
-      }
     }
   }
 }

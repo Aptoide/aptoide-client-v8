@@ -152,7 +152,8 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
     final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
-    versionName.setText(currentApp.getFile().getVername());
+    final String vername = currentApp.getFile().getVername();
+    versionName.setText(vername);
     otherVersions.setOnClickListener(v -> {
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
@@ -160,7 +161,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
       fragmentShower.pushFragmentV4(fragment);
     });
 
-    String packageName = currentApp.getPackageName();
+    final String packageName = currentApp.getPackageName();
 
     //@Cleanup Realm realm = DeprecatedDatabase.get();
     //Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
@@ -211,7 +212,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
             ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
               subscriptions.add(
                   new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
-                      .flatMap(success -> installManager.uninstall(getContext(), packageName))
+                      .flatMap(success -> installManager.uninstall(getContext(), packageName, vername))
                       .subscribe(aVoid -> {
                       }, throwable -> throwable.printStackTrace()));
             });

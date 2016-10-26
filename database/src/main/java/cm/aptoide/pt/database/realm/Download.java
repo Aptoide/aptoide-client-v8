@@ -28,6 +28,7 @@ public class Download extends RealmObject {
 
   public static final String DOWNLOAD_ID = "appId";
   public static final String MD5 = "md5";
+
   public static final int INVALID_STATUS = 0;
   public static final int COMPLETED = 1;
   public static final int BLOCK_COMPLETE = 2;
@@ -55,6 +56,7 @@ public class Download extends RealmObject {
   private int versionCode;
   private int action;
   private boolean scheduled;
+  private String versionName;
 
   public Download() {
   }
@@ -199,5 +201,13 @@ public class Download extends RealmObject {
 
   public @interface DownloadState {
 
+  }
+
+  public String getVersionName() {
+    return versionName;
+  }
+
+  public void setVersionName(String versionName) {
+    this.versionName = versionName;
   }
 }

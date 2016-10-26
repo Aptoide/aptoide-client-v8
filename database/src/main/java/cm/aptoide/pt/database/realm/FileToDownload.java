@@ -32,14 +32,16 @@ public class FileToDownload extends RealmObject {
   private @Download.DownloadState int status;
   private String fileName;
   @Getter private int versionCode;
+  @Getter private String versionName;
 
   public static FileToDownload createFileToDownload(String link, String altLink, String md5,
-      String fileName, int fileType, String packageName, int versionCode) {
+      String fileName, int fileType, String packageName, int versionCode, String versionName) {
     FileToDownload fileToDownload = new FileToDownload();
     fileToDownload.setLink(link);
     fileToDownload.setMd5(md5);
     fileToDownload.setAltLink(altLink);
     fileToDownload.versionCode = versionCode;
+    fileToDownload.versionName = versionName;
     if (!TextUtils.isEmpty(fileName)) {
       fileToDownload.setFileName(fileName);
     }

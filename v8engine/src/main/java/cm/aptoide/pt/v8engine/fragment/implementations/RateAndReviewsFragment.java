@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,9 @@ import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -64,9 +67,11 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   private static final String STORE_NAME = "store_name";
   private static final String APP_NAME = "app_name";
   private static final String REVIEW_ID = "review_id";
+  private static final String STORE_THEME = "store_theme";
   private long appId;
   private String packageName;
   private String storeName;
+  private String storeTheme;
   private String appName;
   private long reviewId;
   private TextView emptyData;
@@ -154,13 +159,14 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
       };
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
-      String packageName) {
+      String packageName, String storeTheme) {
     RateAndReviewsFragment fragment = new RateAndReviewsFragment();
     Bundle args = new Bundle();
     args.putLong(APP_ID, appId);
     args.putString(APP_NAME, appName);
     args.putString(STORE_NAME, storeName);
     args.putString(PACKAGE_NAME, packageName);
+    args.putString(STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
   }
@@ -189,6 +195,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     storeName = args.getString(STORE_NAME);
     appName = args.getString(APP_NAME);
     reviewId = args.getLong(REVIEW_ID, -1);
+    storeTheme = args.getString(STORE_THEME);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -358,6 +365,14 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 		});
 	}
 	*/
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+    }
+  }
 
   @NonNull
   private CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {

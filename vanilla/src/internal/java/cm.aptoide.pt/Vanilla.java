@@ -12,7 +12,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 /**
  * Created by neuro on 10-05-2016.
  */
-public class Aptoide extends AptoideBase {
+public class Vanilla extends AptoideBase {
 
   @Override public void onCreate() {
     clearAppDataOnNewBuild();

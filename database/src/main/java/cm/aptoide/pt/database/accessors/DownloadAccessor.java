@@ -46,14 +46,12 @@ public class DownloadAccessor extends SimpleAccessor<Download> {
     }, throwable -> throwable.printStackTrace());
   }
 
-  public Void save(Download download) {
-    Database.save(download);
-    return null;
+  public void save(Download download) {
+    database.insert(download);
   }
 
-  public Void save(List<Download> download) {
-    Database.save(download);
-    return null;
+  public void save(List<Download> download) {
+    database.insertAll(download);
   }
 
   public Observable<List<Download>> getRunningDownloads() {

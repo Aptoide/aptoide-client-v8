@@ -88,6 +88,6 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
   }
 
   public void save(Update update) {
-    Database.save(update);
+    database.insert(update);
   }
 }

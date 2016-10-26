@@ -26,6 +26,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
@@ -85,7 +86,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
       emailIntent.setType("message/rfc822");
 
-      emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@aptoide.com" });
+      emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {V8Engine.getConfiguration().getFeedbackEmail()});
 
       //String versionName = "";
       //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
