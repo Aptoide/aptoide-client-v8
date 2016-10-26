@@ -248,7 +248,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
           Observable.from(list)
-              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, storeCredentials,
+              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
+                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
                   countDownLatch, refresh, throwable -> countDownLatch.countDown(),
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail()));
 
@@ -281,8 +283,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
           Observable.from(list)
-              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, storeCredentials,
-                  countDownLatch, refresh, throwable -> finishLoading(throwable),
+              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
+                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(), countDownLatch,
+                  refresh, throwable -> finishLoading(throwable),
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail()));
 
           try {
