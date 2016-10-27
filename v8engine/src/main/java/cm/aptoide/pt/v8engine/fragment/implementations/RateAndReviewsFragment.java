@@ -200,7 +200,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(create);
+    fetchRating(refresh);
     fetchReviews();
   }
 

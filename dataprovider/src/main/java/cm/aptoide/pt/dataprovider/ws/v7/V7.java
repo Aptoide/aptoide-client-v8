@@ -44,7 +44,6 @@ import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
@@ -64,22 +63,19 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
   protected V7(B body, String baseHost) {
     super(Interfaces.class, new UserAgentGenerator() {
-          @Override public String generateUserAgent() {
-            return SecurePreferences.getUserAgent();
-          }
-        },
-        WebService.getDefaultConverter(), baseHost
-    );
+      @Override public String generateUserAgent() {
+        return SecurePreferences.getUserAgent();
+      }
+    }, WebService.getDefaultConverter(), baseHost);
     this.body = body;
   }
 
   protected V7(B body, Converter.Factory converterFactory, String baseHost) {
     super(Interfaces.class, new UserAgentGenerator() {
-          @Override public String generateUserAgent() {
-            return SecurePreferences.getUserAgent();
-          }
-        },
-        converterFactory, baseHost);
+      @Override public String generateUserAgent() {
+        return SecurePreferences.getUserAgent();
+      }
+    }, converterFactory, baseHost);
     this.body = body;
   }
 
