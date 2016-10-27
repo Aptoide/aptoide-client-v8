@@ -289,7 +289,7 @@ import rx.subscriptions.CompositeSubscription;
 
   private void showRootInstallWarningPopup(Context context) {
     if (installManager.showWarning()) {
-      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+      compositeSubscription.add(GenericDialogs.createGenericYesNoCancelMessage(context, null,
           AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
           .subscribe(eResponses -> {
             switch (eResponses) {
@@ -300,14 +300,15 @@ import rx.subscriptions.CompositeSubscription;
                 installManager.rootInstallAllowed(false);
                 break;
             }
-          });
+          }));
     }
   }
 
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message)
-        .subscribe(subscriber);
+    compositeSubscription.add(
+        GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message)
+            .subscribe(subscriber));
   }
 
   public View.OnClickListener installOrUpgradeListener(GetAppMeta.App app,
