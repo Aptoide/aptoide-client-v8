@@ -206,22 +206,6 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @Override public void onViewAttached() {
-    /*subscribe = AptoideDownloadManager.getInstance().getDownloads()
-        .map(downloads -> {
-					for (int i = 0; i < downloads.size(); i++) {
-						if (downloads.get(i).getAppId() == appID && (downloads.get(i).getOverallDownloadStatus()
-								== Download.PROGRESS
-								|| downloads.get(i).getOverallDownloadStatus() == Download.PAUSED)) {
-
-							return true;
-						}
-					}
-					return false;
-				})
-				.distinctUntilChanged()
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(showControllers -> {
-				}, throwable -> throwable.printStackTrace());*/
   }
 
   @Override public void onViewDetached() {

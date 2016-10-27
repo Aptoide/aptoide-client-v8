@@ -100,20 +100,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(getContext());
     });
-  }
 
-  private void setCardviewMargin(VideoDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void onViewAttached() {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
@@ -143,6 +130,20 @@ public class VideoWidget extends Widget<VideoDisplayable> {
             Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
       }));
     }
+  }
+
+  private void setCardviewMargin(VideoDisplayable displayable) {
+    CardView.LayoutParams layoutParams =
+        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
+            CardView.LayoutParams.WRAP_CONTENT);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 30);
+    cardView.setLayoutParams(layoutParams);
+  }
+
+  @Override public void onViewAttached() {
   }
 
   private void setAppNameToFirstLinkedApp() {

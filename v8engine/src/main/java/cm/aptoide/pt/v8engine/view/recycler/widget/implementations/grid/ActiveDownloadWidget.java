@@ -49,9 +49,7 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     this.displayable = displayable;
-  }
 
-  @Override public void onViewAttached() {
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
     }
@@ -63,6 +61,9 @@ import rx.subscriptions.CompositeSubscription;
         .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe((download) -> updateUi(download), throwable -> Logger.e(TAG, throwable)));
+  }
+
+  @Override public void onViewAttached() {
   }
 
   @Override public void onViewDetached() {

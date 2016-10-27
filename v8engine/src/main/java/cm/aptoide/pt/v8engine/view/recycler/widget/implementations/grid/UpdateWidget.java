@@ -124,9 +124,7 @@ import rx.subscriptions.CompositeSubscription;
     };
 
     updateRowRelativeLayout.setOnLongClickListener(longClickListener);
-  }
 
-  @Override public void onViewAttached() {
     subscriptions.add(RxView.clicks(updateButtonLayout)
         .flatMap(
             click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
@@ -142,6 +140,9 @@ import rx.subscriptions.CompositeSubscription;
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(shouldShow -> showProgress(shouldShow),
             throwable -> throwable.printStackTrace()));
+  }
+
+  @Override public void onViewAttached() {
   }
 
   @Override public void onViewDetached() {

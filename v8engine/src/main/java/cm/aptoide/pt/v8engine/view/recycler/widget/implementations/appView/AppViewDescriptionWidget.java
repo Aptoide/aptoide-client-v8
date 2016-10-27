@@ -62,9 +62,7 @@ import rx.subscriptions.CompositeSubscription;
       descriptionTextView.setText(R.string.description_not_available);
       readMoreBtn.setVisibility(View.GONE);
     }
-  }
 
-  @Override public void onViewAttached() {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
       if (!TextUtils.isEmpty(media.getDescription())) {
@@ -79,6 +77,9 @@ import rx.subscriptions.CompositeSubscription;
         readMoreBtn.setVisibility(View.GONE);
       }
     }
+  }
+
+  @Override public void onViewAttached() {
   }
 
   @Override public void onViewDetached() {
