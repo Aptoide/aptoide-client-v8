@@ -12,13 +12,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by trinkes on 8/5/16.
  */
-public class CommentsReadMoreWidget extends BaseWidget<CommentsReadMoreDisplayable> {
+public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> {
 
   private TextView readMoreButton;
 

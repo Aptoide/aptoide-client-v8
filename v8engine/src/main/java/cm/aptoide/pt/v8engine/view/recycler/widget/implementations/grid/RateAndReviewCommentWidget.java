@@ -32,8 +32,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,7 +41,7 @@ import java.util.Locale;
  * Created by sithengineer on 14/07/16.
  */
 @Displayables({ RateAndReviewCommentDisplayable.class }) public class RateAndReviewCommentWidget
-    extends BaseWidget<RateAndReviewCommentDisplayable> {
+    extends Widget<RateAndReviewCommentDisplayable> {
 
   public static final int FULL_COMMENTS_LIMIT = 3;
   private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
