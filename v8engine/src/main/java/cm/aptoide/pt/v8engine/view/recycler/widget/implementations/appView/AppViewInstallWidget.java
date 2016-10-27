@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.IntentFilter;
-import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -24,8 +24,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -37,10 +35,6 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureKeys;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -60,12 +54,8 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-
-import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -132,8 +122,6 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
   }
 
   @Override public void bindView(AppViewInstallDisplayable displayable) {
-    //displayable.setOnResumeAction(() -> onViewAttached());
-    //displayable.setOnPauseAction(() -> onViewDetached());
     displayable.setInstallButton(actionButton);
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
@@ -148,12 +136,10 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
     minimalAd = displayable.getMinimalAd();
     GetApp getApp = displayable.getPojo();
-    //appID = getApp.getNodes().getMeta().getData().getId();
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
     final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
-    final String vername = currentApp.getFile().getVername();
-    versionName.setText(vername);
+    versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
@@ -161,82 +147,43 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
       fragmentShower.pushFragmentV4(fragment);
     });
 
-    final String packageName = currentApp.getPackageName();
-
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    //Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
-
-    //check if the app is installed or has an update
-    //if (update != null) {
-    //	// app installed and has a pending update. setup update buttons
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-    //	actionButton.setText(R.string.update);
-    //	actionButton.setOnClickListener(installOrUpgradeListener(true, currentApp, getApp.getNodes().getVersions(), displayable));
-    //
-    //	// setup un-install button as visible in fragment menu
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-    //		displayable.uninstall(getContext(), currentApp).subscribe();
-    //	});
-    //} else if (update == null && installed != null) {
-    //
-    //	// app installed and does not have a pending update. we can show open or downgrade buttons here.
-    //	// it is a downgrade if the appview version is inferior to the installed version
-    //	// it is a open if the appview version is equal to the installed version
-    //
-    //	if (currentApp.getFile().getVercode() < installed.getVersionCode()) {
-    //		actionButton.setText(R.string.downgrade);
-    //		actionButton.setOnClickListener(downgradeListener(currentApp, displayable));
-    //	} else {
-    //		actionButton.setText(R.string.open);
-    //		actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
-    //	}
-    //
-    //	// setup un-install button as visible in fragment menu
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-    //		displayable.uninstall(getContext(), currentApp).subscribe();
-    //	});
-    //} else {
-    //	// app not installed
-    //	setupInstallOrBuyButton(displayable, getApp);
-    //
-    //	// setup un-install button as invisible in fragment menu
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-    //}
-
-    InstalledAccessor installedAccessor = displayable.getInstalledAccessor();
-    installedAccessor.get(packageName)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installed -> {
-          if (installed != null) {
-            ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-              subscriptions.add(
-                  new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
-                      .flatMap(success -> installManager.uninstall(getContext(), packageName, vername))
-                      .subscribe(aVoid -> {
-                      }, throwable -> throwable.printStackTrace()));
-            });
-            if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
+    subscriptions.add(
+        displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
+          switch (widgetState.getButtonState()) {
+            case AppViewInstallDisplayable.ACTION_INSTALLING:
+              if (widgetState.getProgress() != null) {
+                downloadProgress.setIndeterminate(widgetState.getProgress().isIndeterminate());
+                downloadStatusUpdate(widgetState.getProgress(), currentApp);
+                setDownloadBarVisible(true, displayable, widgetState.getProgress(), currentApp);
+                break;
+              }
+            case AppViewInstallDisplayable.ACTION_INSTALL:
+              //App not installed
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setupInstallOrBuyButton(displayable, getApp);
+              ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+              break;
+            case AppViewInstallDisplayable.ACTION_DOWNGRADE:
+              //downgrade
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setupActionButton(R.string.downgrade, downgradeListener(currentApp));
+              break;
+            case AppViewInstallDisplayable.ACTION_OPEN:
               //current installed version
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
               setupActionButton(R.string.open,
                   v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
-            } else if (currentApp.getFile().getVercode() > installed.getVersionCode()) {
+              break;
+            case AppViewInstallDisplayable.ACTION_UPDATE:
               //update
               isUpdate = true;
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
               setupActionButton(R.string.update,
                   installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(),
                       displayable));
-            } else {
-              //downgrade
-              setupActionButton(R.string.downgrade, downgradeListener(currentApp, displayable));
-            }
-          } else {
-            //app not installed
-            setupInstallOrBuyButton(displayable, getApp);
-            ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+              break;
           }
-        }, throwable -> throwable.printStackTrace());
-    checkOnGoingDownload(getApp, displayable);
+        }));
 
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
       notLatestAvailableText.setVisibility(View.GONE);
@@ -258,83 +205,11 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
     actionButton.setOnClickListener(onClickListener);
   }
 
-  @Override public void onViewAttached() {
-    /*subscribe = AptoideDownloadManager.getInstance().getDownloads()
-        .map(downloads -> {
-					for (int i = 0; i < downloads.size(); i++) {
-						if (downloads.get(i).getAppId() == appID && (downloads.get(i).getOverallDownloadStatus()
-								== Download.PROGRESS
-								|| downloads.get(i).getOverallDownloadStatus() == Download.PAUSED)) {
-
-							return true;
-						}
-					}
-					return false;
-				})
-				.distinctUntilChanged()
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(showControllers -> {
-				}, throwable -> throwable.printStackTrace());*/
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     actionButton.setOnClickListener(null);
     actionPause.setOnClickListener(null);
     actionCancel.setOnClickListener(null);
     subscriptions.clear();
-  }
-
-  public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    installManager.getInstallation(app.getMd5())
-        .firstOrDefault(null)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(progress -> {
-          if ((progress.getState() == Progress.ACTIVE)) {
-            setDownloadBarVisible(true);
-            setupDownloadControls(app, progress, displayable);
-            installManager.getInstallation(app.getMd5())
-                .observeOn(AndroidSchedulers.mainThread())
-                .takeUntil(installationProgress -> shouldContinueListenDownload(
-                    installationProgress.getState()))
-                .subscribe(onGoingDownload -> {
-                  manageDownload(progress, app);
-                }, err -> {
-                  Logger.e(TAG, err);
-                });
-          }
-        }, err -> {
-          if (!(err instanceof DownloadNotFoundException)) {
-            Logger.e(TAG, err);
-          }
-          // ignore because download does not exist
-        });
-
-    // FIXME: 22/08/16 sithengineer clean the following commented out code
-    //		downloadServiceHelper.getAllDownloads().firstOrDefault(Collections.emptyList()).subscribe(downloads -> {
-    //			for (Download download : downloads) {
-    //				int downloadStatus = download.getOverallDownloadStatus();
-    //				if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING ||
-    // downloadStatus ==
-    //						Download.PAUSED) && download
-    //						.getAppId() == app.getId()) {
-    //					setDownloadBarVisible(true);
-    //					setupDownloadControls(app, download, displayable);
-    //					downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
-    //						manageDownload(onGoingDownload, displayable, app);
-    //					}, err -> {
-    //						Logger.e(TAG, err);
-    //					});
-    //					return;
-    //				}
-    //			}
-    //		}, err -> {
-    //			Logger.e(TAG, err);
-    //		});
-  }
-
-  private boolean shouldContinueListenDownload(int downloadStatus) {
-    return downloadStatus != Progress.INACTIVE;
   }
 
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
@@ -372,8 +247,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
     }
   }
 
-  private View.OnClickListener downgradeListener(final GetAppMeta.App app,
-      AppViewInstallDisplayable displayable) {
+  private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
     return view -> {
       final Context context = view.getContext();
       ContextWrapper contextWrapper = (ContextWrapper) context;
@@ -392,46 +266,15 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
 
-                  //installManager.suWarningAndPermission();
-
                   DownloadFactory factory = new DownloadFactory();
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
-
-                  if (installManager.showWarning() ) {
-                    GenericDialogs.createGenericYesNoCancelMessage(context, null
-                        , AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog) )
-                        .subscribe(eResponses -> {
-                          switch (eResponses) {
-                            case YES:
-                              installManager.rootInstallAllowed(true);
-                              break;
-                            case NO:
-                              installManager.rootInstallAllowed(false);
-                              break;
-                          }
-                        });
-                  }
-
+                  showRootInstallWarningPopup(context);
                   subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
                       .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(progress -> {
-                        manageDownload(progress, app);
-                /*if (!setupDownloadControlsRunned) {
-                  // TODO: 09/09/16 refactor this
-                  setupDownloadControls(app, appDownload, displayable);
-                }*/
-
-                        //if (progress.isDone()) {
-                        //  //final String packageName = app.getPackageName();
-                        //  //final FileToDownload downloadedFile = progress.getFilesToDownload().get(0);
-                        //
-                        //  displayable.downgrade(getContext()).subscribe(aVoid -> {
-                        //  }, throwable -> throwable.printStackTrace());
-                        //}
-                      }, Throwable::printStackTrace));
-                  setupDownloadControls(app, new Progress<>(appDownload, true, 100, 0, 0, 0),
-                      displayable);
+                        Logger.d(TAG, "Installing");
+                      }, throwable -> Logger.e(TAG, throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -442,6 +285,23 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
         ShowMessage.asSnack(view, R.string.needs_permission_to_fs);
       });
     };
+  }
+
+  private void showRootInstallWarningPopup(Context context) {
+    if (installManager.showWarning()) {
+      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+          .subscribe(eResponses -> {
+            switch (eResponses) {
+              case YES:
+                installManager.rootInstallAllowed(true);
+                break;
+              case NO:
+                installManager.rootInstallAllowed(false);
+                break;
+            }
+          });
+    }
   }
 
   private void showMessageOKCancel(String message,
@@ -468,57 +328,22 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
         Analytics.DownloadComplete.installClicked(app.getId());
       }
 
-      //installManager.suWarningAndPermission();
-
-      DownloadFactory factory = new DownloadFactory();
-      Download appDownload = factory.create(app, downloadAction);
-
-      if (installManager.showWarning() ) {
-        GenericDialogs.createGenericYesNoCancelMessage(context, null
-            , AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog) )
-            .subscribe(eResponse -> {
-              switch (eResponse) {
-                case YES:
-                  installManager.rootInstallAllowed(true);
-                  break;
-                case NO:
-                  installManager.rootInstallAllowed(false);
-                  break;
-              }
-            });
-      }
+      showRootInstallWarningPopup(context);
 
       subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                  downloadAction)))
+                  downloadAction))).first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            manageDownload(progress, app);
+            ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
             }
-
             Logger.e(TAG, err);
           }));
-
-      //downloadServiceHelper.startDownload(permissionRequest, appDownload)
-      //    .observeOn(AndroidSchedulers.mainThread())
-      //    .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-      //        onGoingDownload.getOverallDownloadStatus()))
-      //    .subscribe(download -> {
-      //      manageDownload(download, displayable, app);
-      //    }, err -> {
-      //      if (err instanceof SecurityException) {
-      //        ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
-      //      }
-      //
-      //      Logger.e(TAG, err);
-      //    });
-      ShowMessage.asSnack(v, installOrUpgradeMsg);
-      setupDownloadControls(app, new Progress<>(appDownload, true, 100, 0, 0, 0), displayable);
     };
 
     findTrustedVersion(app, appVersions);
@@ -551,59 +376,33 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
     };
   }
 
-  @MainThread private void manageDownload(Progress<Download> progress, GetAppMeta.App app) {
-
+  private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app) {
     switch (progress.getRequest().getOverallDownloadStatus()) {
-
       case Download.PAUSED: {
         actionResume.setVisibility(View.VISIBLE);
         actionPause.setVisibility(View.GONE);
         break;
       }
-
       case Download.IN_QUEUE:
       case Download.PROGRESS: {
+        actionResume.setVisibility(View.GONE);
+        actionPause.setVisibility(View.VISIBLE);
         downloadProgress.setProgress(progress.getCurrent());
-        //textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) +
-        // "/s");
         textProgress.setText(progress.getCurrent() + "%");
         break;
       }
-
       case Download.ERROR: {
-        setDownloadBarVisible(false);
         break;
       }
 
       case Download.COMPLETED: {
         Analytics.DownloadComplete.downloadComplete(app);
         Analytics.SourceDownloadComplete.downloadComplete(app.getId(), app.getPackageName());
-        setDownloadBarVisible(false);
-
         if (!isUpdate) {
           if (minimalAd != null && minimalAd.getCpdUrl() != null) {
             DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
           }
         }
-
-        //install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
-        //  if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-        //    DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
-        //  }
-        //}).subscribe(success -> {
-        //  if (actionButton.getVisibility() == View.VISIBLE) {
-        //    setupActionButton(R.string.open,
-        //        v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
-        //
-        //    if (displayable.isVisible()) {
-        //      ((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(
-        //          () -> {
-        //            displayable.uninstall(ctx).subscribe(aVoid -> {
-        //            }, throwable -> throwable.printStackTrace());
-        //          });
-        //    }
-        //  }
-        //}, throwable -> throwable.printStackTrace());
         break;
       }
     }
@@ -615,13 +414,10 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
     actionCancel.setOnClickListener(view -> {
       installManager.removeInstallationFile(getContext(), md5);
-      setDownloadBarVisible(false);
     });
 
     actionPause.setOnClickListener(view -> {
       installManager.stopInstallation(getContext(), md5);
-      actionResume.setVisibility(View.VISIBLE);
-      actionPause.setVisibility(View.GONE);
     });
 
     actionResume.setOnClickListener(view -> {
@@ -634,33 +430,21 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
                   progress.getRequest().getAction())))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(downloadProgress -> {
-            if (actionPause.getVisibility() != View.VISIBLE) {
-              actionResume.setVisibility(View.GONE);
-              actionPause.setVisibility(View.VISIBLE);
-            }
-            manageDownload(downloadProgress, app);
+            Logger.d(TAG, "Installing");
           }, err -> {
             Logger.e(TAG, err);
           }));
     });
 
-    setDownloadBarVisible(true);
-    switch (progress.getState()) {
-      case Progress.INACTIVE:
-        downloadProgress.setProgress(progress.getCurrent());
-        textProgress.setText(progress.getCurrent() + "%");
-        actionResume.setVisibility(View.VISIBLE);
-        actionPause.setVisibility(View.GONE);
-      default:
-        actionResume.setVisibility(View.GONE);
-        actionPause.setVisibility(View.VISIBLE);
-    }
   }
 
-  private void setDownloadBarVisible(boolean visible) {
-    // TODO: 22/09/16 diogo.loureiro crashes on downgrade
+  private void setDownloadBarVisible(boolean visible, AppViewInstallDisplayable displayable,
+      Progress<Download> progress, GetAppMeta.App app) {
     installAndLatestVersionLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
     downloadProgressLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    if (visible) {
+      setupDownloadControls(app, progress, displayable);
+    }
   }
 
   /**

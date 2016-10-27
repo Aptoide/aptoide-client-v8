@@ -39,6 +39,13 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
     @Getter private final String username;
     @Getter private final String passwordSha1;
 
+    public StoreCredentials() {
+      this.name = null;
+      this.id = null;
+      this.username = null;
+      this.passwordSha1 = null;
+    }
+
     public StoreCredentials(Long id, String username, String passwordSha1) {
       this.name = null;
       this.id = id;

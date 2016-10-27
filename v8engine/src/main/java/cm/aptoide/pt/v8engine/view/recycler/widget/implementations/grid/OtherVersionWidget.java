@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -89,24 +90,26 @@ import java.util.Locale;
     }
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 
   private void setBadge(App app) {
     @DrawableRes int badgeResId;
 
-    switch (app.getFile().getMalware().getRank()) {
+    Malware.Rank rank = app.getFile().getMalware().getRank() == null ? Malware.Rank.UNKNOWN
+        : app.getFile().getMalware().getRank();
+    switch (rank) {
       case TRUSTED:
         badgeResId = R.drawable.ic_badge_trusted;
         break;
 
       case WARNING:
         badgeResId = R.drawable.ic_badge_warning;
+        break;
+
+      case CRITICAL:
+        badgeResId = R.drawable.ic_badge_critical;
         break;
 
       default:

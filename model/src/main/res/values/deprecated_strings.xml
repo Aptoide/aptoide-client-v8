@@ -90,75 +90,23 @@
   <string name="error_SYS_4">This call is not supported by the current API version</string>
   <string name="error_SYS_Billing">In-App Billing not supported in this device.</string>
 
-  <string name="sign_out">Sign Out</string>
-  <string name="logged_as">You are logged as:</string>
-
-  <string name="aptoide_description">Aptoide Official App Store</string>
-
   <string name="error_410">Sorry, the requested App was not found on this server.</string>
 
-  <!-- Main Pager entries -->
-  <string name="home_title">Home</string>
-  <string name="community">Community</string>
-  <string name="stores">Stores</string>
-  <string name="updates">Updates</string>
-  <string name="social_timeline">Social Timeline</string>
-  <string name="downloads">Downloads</string>
-
-
   <string name="please_wait">Please wait…</string>
-  <string name="login_or_register">Login or register</string>
-  <string name="one_account_allowed">Only one account allowed</string>
-  <string name="signing_in">Signing in…</string>
-  <string name="fields_cannot_empty">Please check your email and password.</string>
-  <string name="new_to_aptoide">New to %s? Create a free account</string>
-  <string name="forgot_passwd">Forgot password?</string>
-  <string name="error_occured">An error occurred. Please try again</string>
   <string name="simple_error_occured">An error occurred. </string>
-  <string name="or">- Or -</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
-  <string name="username">Email</string>
-  <string name="password">Password</string>
-  <string name="link_device_webinstall">Link account with Webinstall</string>
-  <string name="setcredentials">Login</string>
-  <string name="dont_have_an_account">Don\'t have an account? Sign up</string>
-  <string name="facebook_timeline_feature">Ooohhh… This feature only works with Facebook login and you’re logged in with another authentication</string>
-    <string name="facebook_tos">
-        • Share the apps you install with your Facebook friends in a Timeline inside Aptoide
-        \n\n• See, like and comment in the Timeline
-        \n\n• We never, never, never post on your Facebook wall. We respect your privacy
-    </string>
-  <string name="facebook_private_actions">This app will not post to Facebook</string>
-  <string name="facebook_timeline_login"> Do you want to Login with Facebook and try the Social Timeline?</string>
-  <string name="facebook_timeline_preview">Timeline Preview:</string>
-  <string name="whats_timeline">What is Aptoide Social Timeline?</string>
   <string name="feedback_subject">Subject</string>
     <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can get:
         \n\• Steps you have done
         \n\• Errors you are seeing</string>
   <string name="feedback_include_logs">Include ScreenShot and Logs</string>
-  <string name="feedback_not_valid">Please enter some valid Subject!</string>
   <string name="feedback_no_email">No email client installed!</string>
-  <string name="register">Sign Up</string>
-    <string name="password_validation_text">Password must be at least 8 characters and should have at least one letter and one number or special characters (!@#$%*)
-    </string>
-  <string name="about_aptoide_antimalware">Aptoide Anti-Malware platform analyses applications in run-time and disables potential threats across all stores. This system scans all the new application files from the stores and certificates them by comparison against other Android Marketplaces.</string>
   <string name="username_tip">Type your email</string>
-  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and Content Policy for Developers</string>
 
-  <string name="start_loading">Loading…</string>
   <string name="store_already_added">Store already added!</string>
-  <string name="subscribe_newrepo_alrt">Do you want to subscribe this store?\n\n</string>
   <string name="subscribe_store">Subscribe Store</string>
-  <string name="store_subscribed">Store %s subscribed</string>
-  <string name="subscribing">Subscribing %s store…</string>
-  <string name="create_store">Create store</string>
-  <string name="section">Section</string>
-
-  <string name="not_found">Not found</string>
-
 
   <!-- App permission -->
   <string name="permissions">See Permissions</string>
@@ -487,6 +435,7 @@
   <string name="warning">Warning</string>
   <string name="trusted_app">Trusted App</string>
   <string name="unknown">Unknown</string>
+  <string name="critical">Critical</string>
 
   <!-- New Badges V7 -->
   <string name="reason_third_party">We\'ve checked the app\'s signature and it matches with Google Play Store, so rest assured and enjoy the app.</string>

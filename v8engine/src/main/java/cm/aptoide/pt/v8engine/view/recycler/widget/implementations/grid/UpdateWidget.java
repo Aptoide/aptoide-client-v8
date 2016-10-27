@@ -124,9 +124,7 @@ import rx.subscriptions.CompositeSubscription;
     };
 
     updateRowRelativeLayout.setOnLongClickListener(longClickListener);
-  }
 
-  @Override public void onViewAttached() {
     subscriptions.add(RxView.clicks(updateButtonLayout)
         .flatMap(
             click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
@@ -144,7 +142,7 @@ import rx.subscriptions.CompositeSubscription;
             throwable -> throwable.printStackTrace()));
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     if (subscriptions != null && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();
     }

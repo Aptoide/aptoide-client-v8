@@ -89,6 +89,16 @@ public class InstallManager {
     return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
   }
 
+  public Observable<Progress<Download>> getAsListInstallation(String md5) {
+    return aptoideDownloadManager.getAsListDownload(md5).flatMap(downloads -> {
+      if (downloads.isEmpty()) {
+        return Observable.just(null);
+      } else {
+        return convertToProgress(downloads.get(0));
+      }
+    });
+  }
+
   public boolean isInstalling(Progress<Download> progress) {
     return isDownloading(progress) || (progress.getState() != Progress.DONE
         && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED);
@@ -178,13 +188,13 @@ public class InstallManager {
 
           final int progressStatus;
           switch (download.getOverallDownloadStatus()) {
-            case Download.COMPLETED:
             case Download.PROGRESS:
             case Download.PENDING:
             case Download.IN_QUEUE:
             case Download.INVALID_STATUS:
               progressStatus = Progress.ACTIVE;
               break;
+            case Download.COMPLETED:
             case Download.PAUSED:
               progressStatus = Progress.INACTIVE;
               break;

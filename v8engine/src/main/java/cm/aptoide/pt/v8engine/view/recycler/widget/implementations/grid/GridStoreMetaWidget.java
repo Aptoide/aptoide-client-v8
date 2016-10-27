@@ -105,11 +105,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     handleSubscriptionLogic(getStoreMeta);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 

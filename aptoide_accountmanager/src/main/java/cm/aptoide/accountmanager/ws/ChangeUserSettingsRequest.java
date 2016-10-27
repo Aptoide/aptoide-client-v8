@@ -7,8 +7,6 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.ArrayList;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -20,27 +18,23 @@ import rx.Observable;
   public static final String ACCESS_TOKEN = "access_token";
   public static final String ACTIVE = "active";
   public static final String INACTIVE = "inactive";
-  private ArrayList<String> list;
+
+  private final ArrayList<String> list;
   private boolean matureSwitch;
 
-  ChangeUserSettingsRequest() {
-    list = new ArrayList<>();
-  }
-
-  ChangeUserSettingsRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(httpClient, converterFactory);
+  private ChangeUserSettingsRequest() {
     list = new ArrayList<>();
   }
 
   public static ChangeUserSettingsRequest of(boolean matureSwitchStatus) {
-    ChangeUserSettingsRequest request =
-        new ChangeUserSettingsRequest();
+    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
     request.setMatureSwitch(matureSwitchStatus);
     return request;
   }
 
-  public void changeMatureSwitchSetting() {
+  private ArrayList<String> setupParameters() {
     list.add("matureswitch=" + (matureSwitch ? ACTIVE : INACTIVE));
+    return list;
   }
 
   @Override
@@ -51,16 +45,11 @@ import rx.Observable;
     ArrayList<String> parametersList = setupParameters();
     parameters.put("settings", TextUtils.join(",", parametersList));
 
-    if (AptoideAccountManager.getAccessToken() != null) {
-      parameters.put(ACCESS_TOKEN, AptoideAccountManager.getAccessToken());
+    final String accessToken = AptoideAccountManager.getAccessToken();
+    if (TextUtils.isEmpty(accessToken)) {
+      parameters.put(ACCESS_TOKEN, accessToken);
     }
 
-    // TODO: 5/6/16 trinkes check if access_token is valid
     return interfaces.changeUserSettings(parameters);
-  }
-
-  private ArrayList<String> setupParameters() {
-    changeMatureSwitchSetting();
-    return list;
   }
 }

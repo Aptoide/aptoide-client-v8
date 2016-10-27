@@ -75,20 +75,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
     }
-  }
 
-  private void setCardviewMargin(StoreLatestAppsDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void onViewAttached() {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
@@ -112,7 +99,18 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
     }
   }
 
-  @Override public void onViewDetached() {
+  private void setCardviewMargin(StoreLatestAppsDisplayable displayable) {
+    CardView.LayoutParams layoutParams =
+        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
+            CardView.LayoutParams.WRAP_CONTENT);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 30);
+    cardView.setLayoutParams(layoutParams);
+  }
+
+  @Override public void unbindView() {
     if (subscriptions != null) {
       subscriptions.unsubscribe();
       subscriptions = null;

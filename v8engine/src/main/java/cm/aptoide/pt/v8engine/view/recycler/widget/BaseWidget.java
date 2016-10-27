@@ -17,11 +17,7 @@ public abstract class BaseWidget<T extends Displayable> extends Widget<T> {
     super(itemView);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

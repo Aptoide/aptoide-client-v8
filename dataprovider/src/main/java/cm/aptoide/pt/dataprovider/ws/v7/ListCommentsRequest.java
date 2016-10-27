@@ -92,10 +92,11 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   @Override protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
+    //bypassCache is not used, for comments always get new data
     if (TextUtils.isEmpty(url)) {
-      return interfaces.listComments(body, bypassCache);
+      return interfaces.listComments(body, true);
     } else {
-      return interfaces.listComments(url, body, bypassCache);
+      return interfaces.listComments(url, body, true);
     }
   }
 

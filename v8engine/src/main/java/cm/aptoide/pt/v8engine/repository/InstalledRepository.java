@@ -31,6 +31,14 @@ import rx.Observable;
     return accessor.getAll();
   }
 
+  public Observable<List<Installed>> getAsList(String packageName) {
+    return accessor.getAsList(packageName);
+  }
+
+  public Observable<Installed> get(String packageName) {
+    return accessor.get(packageName);
+  }
+
   public void insert(Installed installed) {
     accessor.insert(installed);
   }

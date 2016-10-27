@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager.util;
 
+import cm.aptoide.pt.actions.UserData;
 import lombok.Data;
 
 /**
@@ -14,7 +15,7 @@ import lombok.Data;
  * <li>{@link #userAvatarRepo}</li>
  * <li>{@link #matureSwitch}</li>
  */
-@Data public class UserInfo {
+@Data public class UserCompleteData implements UserData {
 
   /**
    * User name it's usually the email address. It has to be unique

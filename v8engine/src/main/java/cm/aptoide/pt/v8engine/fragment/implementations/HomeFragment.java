@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserInfo;
+import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -234,11 +234,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userEmail.setVisibility(View.VISIBLE);
       userUsername.setVisibility(View.VISIBLE);
 
-      UserInfo userInfo = AptoideAccountManager.getUserInfo();
-      userEmail.setText(userInfo.getUserEmail());
-      userUsername.setText(userInfo.getUserName());
+      UserCompleteData userCompleteData = AptoideAccountManager.getUserData();
+      userEmail.setText(userCompleteData.getUserEmail());
+      userUsername.setText(userCompleteData.getUserName());
 
-      ImageLoader.loadWithCircleTransformAndPlaceHolder(userInfo.getUserAvatar(), userAvatarImage,
+      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(), userAvatarImage,
           R.drawable.user_account_white);
 
       //String userAvatarUri = userInfo.getUserAvatar();
@@ -260,6 +260,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
+
+    ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
   }
 
   //	@Override

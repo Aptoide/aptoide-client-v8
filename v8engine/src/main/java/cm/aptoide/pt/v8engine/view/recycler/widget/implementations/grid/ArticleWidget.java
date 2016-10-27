@@ -90,20 +90,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
     });
-  }
 
-  private void setCardviewMargin(ArticleDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void onViewAttached() {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
@@ -135,13 +122,24 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     }
   }
 
+  private void setCardviewMargin(ArticleDisplayable displayable) {
+    CardView.LayoutParams layoutParams =
+        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
+            CardView.LayoutParams.WRAP_CONTENT);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 30);
+    cardView.setLayoutParams(layoutParams);
+  }
+
   private void setAppNameToFirstLinkedApp() {
     if (!displayable.getRelatedToAppsList().isEmpty()) {
       appName = displayable.getRelatedToAppsList().get(0).getName();
     }
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     url.setOnClickListener(null);
     getAppButton.setOnClickListener(null);
     if (subscriptions != null) {

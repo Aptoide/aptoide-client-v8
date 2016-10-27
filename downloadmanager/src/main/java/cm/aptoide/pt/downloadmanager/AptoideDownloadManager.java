@@ -155,6 +155,20 @@ public class AptoideDownloadManager {
     }).takeUntil(storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
   }
 
+  public Observable<List<Download>> getAsListDownload(String md5) {
+    return downloadAccessor.getAsList(md5).map(downloads -> {
+      for (int i = 0; i < downloads.size(); i++) {
+        Download download = downloads.get(i);
+        if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED
+            && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING)) {
+          downloads.remove(i);
+          i--;
+        }
+      }
+      return downloads;
+    });
+  }
+
   public Observable<Download> getCurrentDownload() {
     return getDownloads().flatMapIterable(downloads -> downloads)
         .filter(downloads -> downloads.getOverallDownloadStatus() == Download.PROGRESS);

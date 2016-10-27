@@ -25,8 +25,9 @@ import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
-import cm.aptoide.accountmanager.util.UserInfo;
+import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
@@ -94,10 +95,10 @@ public class ToolboxContentProvider extends ContentProvider {
           throw new IllegalStateException("User not logged in.");
         case REPO:
 
-          final UserInfo userInfo = AptoideAccountManager.getUserInfo();
-          if (userInfo != null) {
+          final UserCompleteData userCompleteData = AptoideAccountManager.getUserData();
+          if (userCompleteData != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "userRepo" }, 1);
-            userRepoCursor.addRow(new Object[] { userInfo.getUserRepo() });
+            userRepoCursor.addRow(new Object[] { userCompleteData.getUserRepo() });
             return userRepoCursor;
           }
           throw new IllegalStateException("User not logged in.");
@@ -130,7 +131,7 @@ public class ToolboxContentProvider extends ContentProvider {
           throw new IllegalStateException("User not logged in.");
         case LOGIN_NAME:
 
-          final UserInfo userName = AptoideAccountManager.getUserInfo();
+          final UserData userName = AptoideAccountManager.getUserData();
           if (userName != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "loginName" }, 1);
             userRepoCursor.addRow(new Object[] { userName.getUserEmail() });

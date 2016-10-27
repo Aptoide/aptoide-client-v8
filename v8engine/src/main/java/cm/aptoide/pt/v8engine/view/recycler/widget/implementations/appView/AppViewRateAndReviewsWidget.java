@@ -114,7 +114,7 @@ import java.util.List;
     View.OnClickListener commentsOnClickListener = v -> {
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-              app.getPackageName()));
+              app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };
     readAllButton.setOnClickListener(commentsOnClickListener);
     commentsLayout.setOnClickListener(commentsOnClickListener);
@@ -129,10 +129,7 @@ import java.util.List;
     loadReviews();
   }
 
-  @Override public void onViewAttached() {
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
   }
 
   private void loadReviews() {

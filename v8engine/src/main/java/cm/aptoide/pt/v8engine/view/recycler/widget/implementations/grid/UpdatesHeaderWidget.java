@@ -9,15 +9,11 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.Progress;
@@ -116,11 +112,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     });
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     if (subscription != null) {
       subscription.unsubscribe();
     }

@@ -81,20 +81,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     storeName.setText(displayable.getStoreName());
     updateDate.setText(displayable.getTimeSinceLastUpdate(getContext()));
     errorText.setVisibility(View.GONE);
-  }
 
-  private void setCardviewMargin(AppUpdateDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void onViewAttached() {
     if (subscriptions == null) {
       subscriptions = new CompositeSubscription();
 
@@ -131,7 +118,18 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     }
   }
 
-  @Override public void onViewDetached() {
+  private void setCardviewMargin(AppUpdateDisplayable displayable) {
+    CardView.LayoutParams layoutParams =
+        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
+            CardView.LayoutParams.WRAP_CONTENT);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 30);
+    cardView.setLayoutParams(layoutParams);
+  }
+
+  @Override public void unbindView() {
     if (subscriptions != null) {
       subscriptions.unsubscribe();
       subscriptions = null;

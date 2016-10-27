@@ -33,11 +33,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     title.setVisibility(View.VISIBLE);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

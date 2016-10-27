@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
@@ -40,7 +41,11 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 
   v3accountManager() {
     super(Interfaces.class,
-        OkHttpClientFactory.getSingletonClient(AptoideAccountManager.getUserEmail()),
+        OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+          @Override public String generateUserAgent() {
+            return AptoideAccountManager.getUserEmail();
+          }
+        }),
         WebService.getDefaultConverter(),
         "https://webservices.aptoide.com/webservices/");
     this.map = new BaseBody();

@@ -62,9 +62,7 @@ import rx.subscriptions.CompositeSubscription;
       ImageLoader.load(downloadProgress.getRequest().getIcon(), appIcon);
     }
     status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
-  }
 
-  @Override public void onViewAttached() {
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
 
@@ -103,7 +101,7 @@ import rx.subscriptions.CompositeSubscription;
     }
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     if (subscriptions != null) {
       subscriptions.unsubscribe();
     }

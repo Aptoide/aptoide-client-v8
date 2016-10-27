@@ -130,11 +130,7 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }
