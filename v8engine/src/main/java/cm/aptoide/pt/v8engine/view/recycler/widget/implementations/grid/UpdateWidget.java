@@ -106,14 +106,14 @@ import rx.subscriptions.CompositeSubscription;
           .setNegativeButton(R.string.no, null)
           .setPositiveButton(R.string.yes, (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
-              updateRepository.setExcluded(packageName, true)
+              compositeSubscription.add(updateRepository.setExcluded(packageName, true)
                   .subscribe(success -> Logger.d(TAG,
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
                         ShowMessage.asSnack(getContext(), R.string.unknown_error);
                         Logger.e(TAG, throwable);
                         CrashReports.logException(throwable);
-                      });
+                      }));
             }
             dialog.dismiss();
           });
