@@ -7,28 +7,26 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_app_download_indicator"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:padding="5dp"
+    android:orientation="horizontal"
+    style="?attr/backgroundCard"
     >
-
-  <RelativeLayout
-      android:id="@+id/row_app_download_indicator"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="2dp"
-      android:layout_marginLeft="5dp"
-      android:layout_marginRight="5dp"
-      android:layout_marginTop="2dp"
-      android:padding="5dp"
-      style="?attr/backgroundCard"
-  >
 
     <ImageView
         android:id="@+id/app_icon"
-        android:layout_width="72dp"
         android:layout_height="72dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
@@ -37,31 +35,26 @@
         />
 
     <LinearLayout
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_weight="2"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_toEndOf="@+id/app_icon"
-        android:layout_toLeftOf="@+id/resume_download"
-        android:layout_toRightOf="@+id/app_icon"
-        android:layout_toStartOf="@+id/resume_download"
+        android:layout_margin="5dp"
         android:orientation="vertical"
         >
 
+      <!--
+          android:textAppearance="?android:attr/textAppearanceMedium"
+      -->
       <TextView
           android:id="@+id/app_name"
-          android:layout_width="fill_parent"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
-          android:text=""
-          android:textAppearance="?android:attr/textAppearanceMedium"
+          tools:text="Aplication Name"
+          android:textSize="@dimen/text_size_medium_large"
           />
-
 
       <RelativeLayout
           android:id="@+id/download_details_layout"
@@ -75,29 +68,35 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="128kbps"
             />
 
         <TextView
             android:id="@+id/eta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_marginStart="3dp"
-            android:layout_toEndOf="@id/speed"
-            android:layout_toLeftOf="@id/progress"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_toRightOf="@+id/speed"
-            android:layout_toStartOf="@+id/progress"
+            android:layout_toEndOf="@id/speed"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="30min"
             />
 
         <TextView
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/eta"
+            android:layout_toEndOf="@id/eta"
             android:layout_gravity="start"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="100%"
             />
       </RelativeLayout>
 
@@ -109,48 +108,48 @@
           android:gravity="start|center"
           android:maxLines="1"
           android:visibility="gone"
+          android:textSize="@dimen/text_size_medium"
           />
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/resume_download"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerVertical="true"
-        android:layout_margin="5dp"
-        android:layout_toStartOf="@+id/view"
-        android:layout_toLeftOf="@+id/view"
-        android:padding="5dp"
-        android:scaleType="center"
-        android:src="@drawable/media_play"
-        />
-    <View
-        android:id="@+id/view"
-        android:layout_width="1dip"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_margin="5dp"
-        android:layout_toStartOf="@+id/pause_cancel_button"
-        android:background="?attr/separatorColor"
-        />
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:orientation="horizontal"
+      >
 
     <!--android:background="?attr/icCancelDrawable"-->
     <ImageView
+        android:id="@+id/resume_download"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:src="@drawable/media_play"
+        android:contentDescription="@null"
+        android:layout_gravity="center"
+        />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_gravity="center"
+        android:background="?attr/separatorColor"
+        />
+    <ImageView
         android:id="@+id/pause_cancel_button"
         android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:contentDescription="@null"
-        android:foreground="?attr/selectableItemBackground"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
         android:padding="5dp"
-        android:scaleType="center"
+        android:foreground="?attr/selectableItemBackground"
         android:src="?attr/icCancelDrawable"
+        android:contentDescription="@null"
         />
-  </RelativeLayout>
+  </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

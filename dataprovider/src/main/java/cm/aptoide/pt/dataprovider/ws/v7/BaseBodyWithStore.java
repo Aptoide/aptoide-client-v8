@@ -16,8 +16,8 @@ import lombok.Setter;
 
   @Getter private final Long storeId;
   @Getter private final String storeName;
-  @Getter @Setter private final String storeUser;
-  @Getter @Setter private final String storePassSha1;
+  @Getter private final String storeUser;
+  @Getter private final String storePassSha1;
 
   public BaseBodyWithStore(BaseRequestWithStore.StoreCredentials storeCredentials) {
     this.storeId = storeCredentials.getId();

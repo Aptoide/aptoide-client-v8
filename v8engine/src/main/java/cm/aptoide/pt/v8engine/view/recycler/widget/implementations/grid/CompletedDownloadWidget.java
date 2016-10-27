@@ -32,14 +32,15 @@ import rx.subscriptions.CompositeSubscription;
 
   private static final String TAG = CompletedDownloadWidget.class.getSimpleName();
 
+  private CompositeSubscription subscriptions;
+  private Progress<Download> downloadProgress;
+  private CompletedDownloadDisplayable displayable;
+
   private TextView appName;
   private ImageView appIcon;
   private TextView status;
   private ImageView resumeDownloadButton;
   private ImageView cancelDownloadButton;
-  private CompositeSubscription subscriptions;
-  private Progress<Download> downloadProgress;
-  private CompletedDownloadDisplayable displayable;
 
   public CompletedDownloadWidget(View itemView) {
     super(itemView);
