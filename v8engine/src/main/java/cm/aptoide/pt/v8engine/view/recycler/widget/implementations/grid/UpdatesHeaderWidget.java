@@ -25,7 +25,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Upd
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
 import rx.Observable;
-import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 /**
@@ -36,7 +35,6 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   private static final String TAG = UpdatesHeaderWidget.class.getSimpleName();
   private TextView title;
   private Button more;
-  private Subscription subscription;
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
@@ -80,7 +78,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setOnClickListener((view) -> {
       ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-        subscription =
+        compositeSubscription.add(
             updateAccessor.getAll(false)
                 .first()
                 .observeOn(Schedulers.io())
@@ -97,10 +95,9 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                     .install(UpdatesHeaderWidget.this.getContext(), download))
                 .toList()
                 .flatMap(observables -> Observable.merge(observables))
-                .filter(downloading -> downloading.getState()== Progress.DONE)
-                .subscribe(
-                    aVoid -> Logger.i(TAG, "Update task completed"),
-                    throwable -> throwable.printStackTrace());
+                .filter(downloading -> downloading.getState() == Progress.DONE)
+                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                    throwable -> throwable.printStackTrace()));
       }, () -> {
       });
 
@@ -110,11 +107,5 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       getContext().sendBroadcast(intent);
       Analytics.Updates.updateAll();
     });
-  }
-
-  @Override public void unbindView() {
-    if (subscription != null) {
-      subscription.unsubscribe();
-    }
   }
 }
