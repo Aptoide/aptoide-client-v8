@@ -69,13 +69,15 @@ public class InstallWarningDialog {
 
   private void setRank(View contentView) {
     TextView badge = (TextView) contentView.findViewById(R.id.dialog_install_warning_rank_text);
-    if (rank == Malware.Rank.WARNING) {
-
-      badge.setText(R.string.warning);
-      badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_badge_warning, 0, 0, 0);
-    } else if (rank == Malware.Rank.UNKNOWN) {
+    if (rank == null || rank == Malware.Rank.UNKNOWN) {
       badge.setText(R.string.unknown);
       badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_badge_unknown, 0, 0, 0);
+    } else if (rank == Malware.Rank.WARNING) {
+      badge.setText(R.string.warning);
+      badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_badge_warning, 0, 0, 0);
+    } else if (rank == Malware.Rank.CRITICAL) {
+      badge.setText(R.string.critical);
+      badge.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_badge_critical, 0, 0, 0);
     }
   }
 

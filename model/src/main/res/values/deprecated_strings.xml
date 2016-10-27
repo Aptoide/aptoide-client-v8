@@ -435,6 +435,7 @@
   <string name="warning">Warning</string>
   <string name="trusted_app">Trusted App</string>
   <string name="unknown">Unknown</string>
+  <string name="critical">Critical</string>
 
   <!-- New Badges V7 -->
   <string name="reason_third_party">We\'ve checked the app\'s signature and it matches with Google Play Store, so rest assured and enjoy the app.</string>

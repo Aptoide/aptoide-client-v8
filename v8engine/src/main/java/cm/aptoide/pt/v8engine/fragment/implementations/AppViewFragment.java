@@ -823,7 +823,10 @@ public class AppViewFragment extends GridRecyclerFragment
 
       @DrawableRes int badgeResId = 0;
       @StringRes int badgeMessageId = 0;
-      switch (app.getFile().getMalware().getRank()) {
+
+      Malware.Rank rank = app.getFile().getMalware().getRank() == null ? Malware.Rank.UNKNOWN
+          : app.getFile().getMalware().getRank();
+      switch (rank) {
         case TRUSTED:
           badgeResId = R.drawable.ic_badge_trusted;
           badgeMessageId = R.string.appview_header_trusted_text;
@@ -832,6 +835,11 @@ public class AppViewFragment extends GridRecyclerFragment
         case WARNING:
           badgeResId = R.drawable.ic_badge_warning;
           badgeMessageId = R.string.warning;
+          break;
+
+        case CRITICAL:
+          badgeResId = R.drawable.ic_badge_critical;
+          badgeMessageId = R.string.critical;
           break;
 
         default:
