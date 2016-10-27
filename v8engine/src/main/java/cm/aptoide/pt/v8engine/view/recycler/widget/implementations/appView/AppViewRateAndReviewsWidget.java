@@ -129,9 +129,6 @@ import java.util.List;
     loadReviews();
   }
 
-  @Override public void onViewAttached() {
-  }
-
   @Override public void onViewDetached() {
   }
 

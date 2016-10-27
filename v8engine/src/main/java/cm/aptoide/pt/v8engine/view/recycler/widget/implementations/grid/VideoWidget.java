@@ -143,9 +143,6 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @Override public void onViewAttached() {
-  }
-
   private void setAppNameToFirstLinkedApp() {
     if (!displayable.getRelatedToAppsList().isEmpty()) {
       appName = displayable.getRelatedToAppsList().get(0).getName();

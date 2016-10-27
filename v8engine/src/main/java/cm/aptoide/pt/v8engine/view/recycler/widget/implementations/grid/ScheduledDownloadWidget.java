@@ -108,9 +108,6 @@ import rx.subscriptions.CompositeSubscription;
     }
   }
 
-  @Override public void onViewAttached() {
-  }
-
   @Override public void onViewDetached() {
     subscriptions.clear();
   }

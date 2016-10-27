@@ -40,10 +40,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     });
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
 
   }

@@ -79,10 +79,6 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
     url.setOnClickListener(null);
     getAppButton.setOnClickListener(null);

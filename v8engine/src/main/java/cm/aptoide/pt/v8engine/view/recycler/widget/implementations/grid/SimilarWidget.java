@@ -130,10 +130,6 @@ public class SimilarWidget extends Widget<SimilarDisplayable> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
 
   }

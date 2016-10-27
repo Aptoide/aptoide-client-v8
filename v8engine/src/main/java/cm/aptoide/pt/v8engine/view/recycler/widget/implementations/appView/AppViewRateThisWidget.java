@@ -86,10 +86,6 @@ import java.util.Locale;
     }
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
 
   }

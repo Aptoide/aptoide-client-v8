@@ -205,9 +205,6 @@ import rx.subscriptions.CompositeSubscription;
     actionButton.setOnClickListener(onClickListener);
   }
 
-  @Override public void onViewAttached() {
-  }
-
   @Override public void onViewDetached() {
     actionButton.setOnClickListener(null);
     actionPause.setOnClickListener(null);

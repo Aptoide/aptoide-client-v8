@@ -34,10 +34,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     writeCommentView.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
 
   }

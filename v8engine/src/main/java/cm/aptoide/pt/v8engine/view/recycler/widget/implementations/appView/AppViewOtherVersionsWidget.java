@@ -30,10 +30,6 @@ public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDispl
     // TODO
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
 
   }

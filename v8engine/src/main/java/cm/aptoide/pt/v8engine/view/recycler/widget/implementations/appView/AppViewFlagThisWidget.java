@@ -83,10 +83,6 @@ import java.util.Map;
     }
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
 
   }

@@ -32,8 +32,6 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
   public abstract void bindView(T displayable);
 
-  public abstract void onViewAttached();
-
   public abstract void onViewDetached();
 
   public FragmentActivity getContext() {

@@ -142,9 +142,6 @@ import rx.subscriptions.CompositeSubscription;
             throwable -> throwable.printStackTrace()));
   }
 
-  @Override public void onViewAttached() {
-  }
-
   @Override public void onViewDetached() {
     if (subscriptions != null && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();

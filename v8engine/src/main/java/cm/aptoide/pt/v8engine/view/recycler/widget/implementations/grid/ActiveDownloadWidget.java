@@ -63,9 +63,6 @@ import rx.subscriptions.CompositeSubscription;
         .subscribe((download) -> updateUi(download), throwable -> Logger.e(TAG, throwable)));
   }
 
-  @Override public void onViewAttached() {
-  }
-
   @Override public void onViewDetached() {
     if (subscriptions != null && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();

@@ -51,11 +51,6 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
     return displayables.size();
   }
 
-  @Override public void onViewAttachedToWindow(Widget holder) {
-    super.onViewAttachedToWindow(holder);
-    holder.onViewAttached();
-  }
-
   @Override public void onViewDetachedFromWindow(Widget holder) {
     super.onViewDetachedFromWindow(holder);
     holder.onViewDetached();

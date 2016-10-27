@@ -154,10 +154,6 @@ import java.util.Locale;
                 pojo.getStore().getName())));
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
 
   }

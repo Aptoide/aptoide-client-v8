@@ -65,10 +65,6 @@ import rx.subscriptions.CompositeSubscription;
     setupStoreInfo(displayable.getPojo());
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
   @Override public void onViewDetached() {
     subscription.clear();
   }
