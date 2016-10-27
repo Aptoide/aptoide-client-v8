@@ -139,7 +139,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     }
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     url.setOnClickListener(null);
     getAppButton.setOnClickListener(null);
     if (subscriptions != null) {

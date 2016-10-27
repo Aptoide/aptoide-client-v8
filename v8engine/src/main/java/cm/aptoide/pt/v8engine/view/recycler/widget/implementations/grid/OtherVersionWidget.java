@@ -90,7 +90,7 @@ import java.util.Locale;
     }
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 

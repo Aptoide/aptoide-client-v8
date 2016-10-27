@@ -31,7 +31,7 @@ public class ActiveDownloadsHeaderWidget extends Widget<ActiveDownloadsHeaderDis
     more.setOnClickListener(view -> displayable.pauseAllDownloads(getContext()));
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

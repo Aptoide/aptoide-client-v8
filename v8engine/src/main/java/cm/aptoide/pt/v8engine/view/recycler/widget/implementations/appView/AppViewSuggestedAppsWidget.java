@@ -55,6 +55,6 @@ import java.util.List;
     recyclerView.setAdapter(adapter);
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
   }
 }

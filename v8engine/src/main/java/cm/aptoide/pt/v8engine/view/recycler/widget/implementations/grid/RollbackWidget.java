@@ -126,7 +126,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
     });
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     if (compositeSubscription != null) {
       compositeSubscription.unsubscribe();
     }

@@ -32,7 +32,7 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
   public abstract void bindView(T displayable);
 
-  public abstract void onViewDetached();
+  public abstract void unbindView();
 
   public FragmentActivity getContext() {
     return (FragmentActivity) itemView.getContext();

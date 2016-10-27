@@ -50,7 +50,7 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     });
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

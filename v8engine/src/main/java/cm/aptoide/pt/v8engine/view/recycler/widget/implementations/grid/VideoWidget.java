@@ -149,7 +149,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     }
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     url.setOnClickListener(null);
     getAppButton.setOnClickListener(null);
     if (subscriptions != null) {

@@ -112,7 +112,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     });
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     if (subscription != null) {
       subscription.unsubscribe();
     }

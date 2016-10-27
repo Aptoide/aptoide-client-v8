@@ -48,7 +48,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     });
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

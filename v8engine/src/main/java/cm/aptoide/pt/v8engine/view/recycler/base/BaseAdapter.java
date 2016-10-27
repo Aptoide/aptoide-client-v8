@@ -53,7 +53,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
 
   @Override public void onViewDetachedFromWindow(Widget holder) {
     super.onViewDetachedFromWindow(holder);
-    holder.onViewDetached();
+    holder.unbindView();
   }
 
   public Displayable popDisplayable() {

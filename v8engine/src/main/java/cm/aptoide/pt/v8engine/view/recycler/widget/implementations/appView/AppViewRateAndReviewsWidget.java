@@ -129,7 +129,7 @@ import java.util.List;
     loadReviews();
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
   }
 
   private void loadReviews() {

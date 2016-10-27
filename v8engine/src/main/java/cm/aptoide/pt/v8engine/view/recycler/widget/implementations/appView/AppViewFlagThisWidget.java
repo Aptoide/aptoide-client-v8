@@ -83,7 +83,7 @@ import java.util.Map;
     }
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 

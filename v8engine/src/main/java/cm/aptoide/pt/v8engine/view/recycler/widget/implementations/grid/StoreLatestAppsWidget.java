@@ -110,7 +110,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     if (subscriptions != null) {
       subscriptions.unsubscribe();
       subscriptions = null;

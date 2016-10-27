@@ -79,7 +79,7 @@ import rx.subscriptions.CompositeSubscription;
     }
   }
 
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
     if (subscriptions != null) {
       subscriptions.unsubscribe();
       subscriptions = null;
