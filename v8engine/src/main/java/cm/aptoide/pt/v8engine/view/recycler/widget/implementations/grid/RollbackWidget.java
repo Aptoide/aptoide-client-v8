@@ -107,9 +107,10 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
             //only if the app is installed
             //ShowMessage.asSnack(view, R.string.uninstall_msg);
             ShowMessage.asSnack(view, R.string.uninstall);
-            displayable.uninstall(getContext(), displayable.getDownloadFromPojo())
-                .subscribe(uninstalled -> {
-                }, throwable -> throwable.printStackTrace());
+            compositeSubscription.add(
+                displayable.uninstall(getContext(), displayable.getDownloadFromPojo())
+                    .subscribe(uninstalled -> {
+                    }, throwable -> throwable.printStackTrace()));
             break;
 
           case UNINSTALL:
