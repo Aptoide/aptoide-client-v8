@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Class that represents a generic Widget. All widgets should extend this class.
@@ -17,6 +18,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHolder {
 
   private static final String TAG = Widget.class.getName();
+
+  protected CompositeSubscription compositeSubscription;
 
   public Widget(View itemView) {
     super(itemView);
@@ -32,13 +35,18 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
   public abstract void bindView(T displayable);
 
-  public abstract void unbindView();
+  public void unbindView() {
+    compositeSubscription.clear();
+  }
 
   public FragmentActivity getContext() {
     return (FragmentActivity) itemView.getContext();
   }
 
   public void internalBindView(T displayable) {
+    if (compositeSubscription == null) {
+      compositeSubscription = new CompositeSubscription();
+    }
     displayable.setVisible(true);
     bindView(displayable);
   }
