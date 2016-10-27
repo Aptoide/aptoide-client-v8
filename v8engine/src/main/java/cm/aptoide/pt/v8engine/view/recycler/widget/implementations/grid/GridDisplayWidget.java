@@ -68,7 +68,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
             //    installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
             //    event.getAction()));
             InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-            installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME)
+            compositeSubscription.add(installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME)
                 .subscribe(installedFacebook -> {
                   sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
@@ -76,7 +76,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
                 }, err -> {
                   Logger.e(TAG, err);
                   CrashReports.logException(err);
-                });
+                }));
             break;
           case twitch:
           case youtube:
