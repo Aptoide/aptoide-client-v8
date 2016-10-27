@@ -18,7 +18,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -30,7 +29,6 @@ import rx.subscriptions.CompositeSubscription;
   private Button readMoreBtn;
   private String storeName;
   private String storeTheme;
-  private CompositeSubscription subscriptions;
   private GetAppMeta.Media media;
   private GetAppMeta.App app;
 
@@ -51,7 +49,7 @@ import rx.subscriptions.CompositeSubscription;
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      subscriptions.add(RxView.clicks(readMoreBtn).subscribe(click -> {
+      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
         ((FragmentShower) getContext()).pushFragmentV4(
             DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
       }));
@@ -61,11 +59,9 @@ import rx.subscriptions.CompositeSubscription;
       readMoreBtn.setVisibility(View.GONE);
     }
 
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
       if (!TextUtils.isEmpty(media.getDescription())) {
         descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-        subscriptions.add(RxView.clicks(readMoreBtn).subscribe(click -> {
+        compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
           ((FragmentShower) getContext()).pushFragmentV4(
               DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
         }));
@@ -74,13 +70,5 @@ import rx.subscriptions.CompositeSubscription;
         descriptionTextView.setText(R.string.description_not_available);
         readMoreBtn.setVisibility(View.GONE);
       }
-    }
-  }
-
-  @Override public void unbindView() {
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
-    }
   }
 }

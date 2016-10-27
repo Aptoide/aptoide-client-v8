@@ -26,7 +26,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * created by SithEngineer
@@ -39,12 +38,9 @@ import rx.subscriptions.CompositeSubscription;
   private TextView appVersion;
   private CheckBox isSelected;
   private ProgressBar progressBarIsInstalling;
-  private CompositeSubscription subscriptions;
 
   public ScheduledDownloadWidget(View itemView) {
     super(itemView);
-
-    subscriptions = new CompositeSubscription();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -56,10 +52,6 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
-    if (subscriptions == null || subscriptions.isUnsubscribed()) {
-      subscriptions = new CompositeSubscription();
-    }
-
     Scheduled scheduled = displayable.getPojo();
     ImageLoader.load(scheduled.getIcon(), appIcon);
     appName.setText(scheduled.getName());
@@ -86,7 +78,7 @@ import rx.subscriptions.CompositeSubscription;
     Observable<Progress<Download>> installation =
         installManager.getInstallation(displayable.getPojo().getMd5());
 
-    subscriptions.add(installation.map(
+    compositeSubscription.add(installation.map(
         downloadProgress -> installManager.isInstalling(downloadProgress)
             || installManager.isPending(downloadProgress))
         .observeOn(AndroidSchedulers.mainThread())
@@ -106,9 +98,5 @@ import rx.subscriptions.CompositeSubscription;
     if (progressBarIsInstalling != null) {
       progressBarIsInstalling.setVisibility(isDownloading ? View.VISIBLE : View.GONE);
     }
-  }
-
-  @Override public void unbindView() {
-    subscriptions.clear();
   }
 }

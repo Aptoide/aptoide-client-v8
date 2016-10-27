@@ -55,7 +55,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -93,7 +92,6 @@ import rx.subscriptions.CompositeSubscription;
   //private DownloadServiceHelper downloadServiceHelper;
   private PermissionRequest permissionRequest;
   private InstallManager installManager;
-  private CompositeSubscription subscriptions;
   private boolean isUpdate;
 
   //private Subscription subscribe;
@@ -123,9 +121,6 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     displayable.setInstallButton(actionButton);
-    if (subscriptions == null || subscriptions.isUnsubscribed()) {
-      subscriptions = new CompositeSubscription();
-    }
 
     AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(getContext());
@@ -147,7 +142,7 @@ import rx.subscriptions.CompositeSubscription;
       fragmentShower.pushFragmentV4(fragment);
     });
 
-    subscriptions.add(
+    compositeSubscription.add(
         displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
           switch (widgetState.getButtonState()) {
             case AppViewInstallDisplayable.ACTION_INSTALLING:
@@ -203,13 +198,6 @@ import rx.subscriptions.CompositeSubscription;
   private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {
     actionButton.setText(text);
     actionButton.setOnClickListener(onClickListener);
-  }
-
-  @Override public void unbindView() {
-    actionButton.setOnClickListener(null);
-    actionPause.setOnClickListener(null);
-    actionCancel.setOnClickListener(null);
-    subscriptions.clear();
   }
 
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
@@ -269,7 +257,8 @@ import rx.subscriptions.CompositeSubscription;
                   DownloadFactory factory = new DownloadFactory();
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
                   showRootInstallWarningPopup(context);
-                  subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+                  compositeSubscription.add(
+                      new PermissionManager().requestDownloadAccess(permissionRequest)
                       .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(progress -> {
@@ -331,7 +320,7 @@ import rx.subscriptions.CompositeSubscription;
 
       showRootInstallWarningPopup(context);
 
-      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+      compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
@@ -423,7 +412,7 @@ import rx.subscriptions.CompositeSubscription;
 
     actionResume.setOnClickListener(view -> {
       PermissionManager permissionManager = new PermissionManager();
-      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+      compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
               (PermissionRequest) getContext()))
           .flatMap(success -> installManager.install(getContext(),

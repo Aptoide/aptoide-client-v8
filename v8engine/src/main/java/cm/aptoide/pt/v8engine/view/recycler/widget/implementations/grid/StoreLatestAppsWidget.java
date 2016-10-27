@@ -16,7 +16,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
 import java.util.Map;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 6/21/16.
@@ -32,7 +31,6 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
   private StoreLatestAppsDisplayable displayable;
   private Map<View, Long> apps;
   private Map<Long, String> appsPackages;
-  private CompositeSubscription subscriptions;
   private CardView cardView;
 
   public StoreLatestAppsWidget(View itemView) {
@@ -76,11 +74,8 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
     }
 
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
-
       for (View app : apps.keySet()) {
-        subscriptions.add(RxView.clicks(app).subscribe(click -> {
+        compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
           Analytics.AppsTimeline.clickOnCard("Latest Apps", appsPackages.get(apps.get(app)),
               Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
               Analytics.AppsTimeline.OPEN_APP_VIEW);
@@ -89,14 +84,13 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
         }));
       }
 
-      subscriptions.add(RxView.clicks(store).subscribe(click -> {
+    compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
         Analytics.AppsTimeline.clickOnCard("Latest Apps", Analytics.AppsTimeline.BLANK,
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.OPEN_STORE);
         ((FragmentShower) getContext()).pushFragmentV4(
             V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
       }));
-    }
   }
 
   private void setCardviewMargin(StoreLatestAppsDisplayable displayable) {
@@ -108,12 +102,5 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
         displayable.getMarginWidth(getContext(),
             getContext().getResources().getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void unbindView() {
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
-    }
   }
 }

@@ -16,7 +16,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/18/16.
@@ -31,7 +30,6 @@ import rx.subscriptions.CompositeSubscription;
   private TextView downloadProgressTv;
   private ImageView pauseCancelButton;
   private ImageView appIcon;
-  private CompositeSubscription subscriptions;
   private ActiveDownloadDisplayable displayable;
 
   public ActiveDownloadWidget(View itemView) {
@@ -50,23 +48,14 @@ import rx.subscriptions.CompositeSubscription;
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     this.displayable = displayable;
 
-    if (subscriptions == null || subscriptions.isUnsubscribed()) {
-      subscriptions = new CompositeSubscription();
-    }
-    subscriptions.add(RxView.clicks(pauseCancelButton)
+    compositeSubscription.add(RxView.clicks(pauseCancelButton)
         .subscribe(click -> displayable.pauseInstall(getContext())));
-    subscriptions.add(displayable.getDownload()
+    compositeSubscription.add(displayable.getDownload()
         .observeOn(Schedulers.computation())
         .distinctUntilChanged()
         .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe((download) -> updateUi(download), throwable -> Logger.e(TAG, throwable)));
-  }
-
-  @Override public void unbindView() {
-    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
-      subscriptions.unsubscribe();
-    }
   }
 
   private Void updateUi(Download download) {

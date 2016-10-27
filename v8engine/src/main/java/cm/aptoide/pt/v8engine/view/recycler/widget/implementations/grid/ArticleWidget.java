@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Art
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -35,7 +34,6 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private View url;
   private Button getAppButton;
   private CardView cardView;
-  private CompositeSubscription subscriptions;
   private View articleHeader;
   private ArticleDisplayable displayable;
   private TextView relatedTo;
@@ -91,10 +89,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
           Analytics.AppsTimeline.OPEN_ARTICLE);
     });
 
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
-
-      subscriptions.add(displayable.getRelatedToApplication()
+    compositeSubscription.add(displayable.getRelatedToApplication()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installeds -> {
             if (installeds != null && !installeds.isEmpty()) {
@@ -113,13 +108,12 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
             throwable.printStackTrace();
           }));
 
-      subscriptions.add(RxView.clicks(articleHeader).subscribe(click -> {
+    compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
         displayable.getDeveloperLink().launch(getContext());
         Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
             displayable.getArticleTitle(), displayable.getTitle(),
             Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
       }));
-    }
   }
 
   private void setCardviewMargin(ArticleDisplayable displayable) {
@@ -136,15 +130,6 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private void setAppNameToFirstLinkedApp() {
     if (!displayable.getRelatedToAppsList().isEmpty()) {
       appName = displayable.getRelatedToAppsList().get(0).getName();
-    }
-  }
-
-  @Override public void unbindView() {
-    url.setOnClickListener(null);
-    getAppButton.setOnClickListener(null);
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
     }
   }
 }

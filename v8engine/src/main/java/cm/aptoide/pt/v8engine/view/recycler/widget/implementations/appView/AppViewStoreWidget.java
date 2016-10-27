@@ -30,7 +30,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -43,12 +42,10 @@ import rx.subscriptions.CompositeSubscription;
   private TextView storeNumberUsersView;
   private Button followButton;
   private View storeLayout;
-  private CompositeSubscription subscription;
   private StoreRepository storeRepository;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
-    subscription = new CompositeSubscription();
     storeRepository = new StoreRepository(
         AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
   }
@@ -63,10 +60,6 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
     setupStoreInfo(displayable.getPojo());
-  }
-
-  @Override public void unbindView() {
-    subscription.clear();
   }
 
   private void setupStoreInfo(GetApp getApp) {
@@ -97,7 +90,7 @@ import rx.subscriptions.CompositeSubscription;
     storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),
         store.getAppearance().getTheme()));
 
-    subscription.add(storeRepository.isSubscribed(store.getId())
+    compositeSubscription.add(storeRepository.isSubscribed(store.getId())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(isSubscribed -> {
           if (isSubscribed) {

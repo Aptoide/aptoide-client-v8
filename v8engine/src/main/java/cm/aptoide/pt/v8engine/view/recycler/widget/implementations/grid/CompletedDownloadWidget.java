@@ -22,7 +22,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/18/16.
@@ -32,7 +31,6 @@ import rx.subscriptions.CompositeSubscription;
 
   private static final String TAG = CompletedDownloadWidget.class.getSimpleName();
 
-  private CompositeSubscription subscriptions;
   private Progress<Download> downloadProgress;
   private CompletedDownloadDisplayable displayable;
 
@@ -63,10 +61,7 @@ import rx.subscriptions.CompositeSubscription;
     }
     status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
 
-    if (subscriptions == null || subscriptions.isUnsubscribed()) {
-      subscriptions = new CompositeSubscription();
-
-      subscriptions.add(RxView.clicks(itemView)
+    compositeSubscription.add(RxView.clicks(itemView)
           .flatMap(click -> displayable.downloadStatus()
               .filter(status -> status == Download.COMPLETED)
               .flatMap(status -> displayable.installOrOpenDownload(getContext(),
@@ -75,7 +70,7 @@ import rx.subscriptions.CompositeSubscription;
           .subscribe(success -> {
           }, throwable -> throwable.printStackTrace()));
 
-      subscriptions.add(RxView.clicks(resumeDownloadButton)
+    compositeSubscription.add(RxView.clicks(resumeDownloadButton)
           .flatMap(click -> displayable.downloadStatus()
               .filter(status -> status == Download.PAUSED || status == Download.ERROR)
               .flatMap(status -> displayable.resumeDownload(getContext(),
@@ -84,10 +79,10 @@ import rx.subscriptions.CompositeSubscription;
           .subscribe(success -> {
           }, throwable -> throwable.printStackTrace()));
 
-      subscriptions.add(RxView.clicks(cancelDownloadButton)
+    compositeSubscription.add(RxView.clicks(cancelDownloadButton)
           .subscribe(click -> displayable.removeDownload(getContext())));
 
-      subscriptions.add(displayable.downloadStatus()
+    compositeSubscription.add(displayable.downloadStatus()
           .observeOn(Schedulers.computation())
           .sample(1, TimeUnit.SECONDS)
           .observeOn(AndroidSchedulers.mainThread())
@@ -98,12 +93,5 @@ import rx.subscriptions.CompositeSubscription;
               resumeDownloadButton.setVisibility(View.GONE);
             }
           }, throwable -> Logger.e(TAG, throwable)));
-    }
-  }
-
-  @Override public void unbindView() {
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-    }
   }
 }

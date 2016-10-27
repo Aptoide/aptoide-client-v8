@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Vid
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by jdandrade on 8/10/16.
@@ -33,7 +32,6 @@ public class VideoWidget extends Widget<VideoDisplayable> {
   private TextView videoTitle;
   private ImageView thumbnail;
   private View url;
-  private CompositeSubscription subscriptions;
   private Button getAppButton;
   private ImageView play_button;
   private FrameLayout media_layout;
@@ -101,10 +99,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
       displayable.getLink().launch(getContext());
     });
 
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
-
-      subscriptions.add(displayable.getRelatedToApplication()
+    compositeSubscription.add(displayable.getRelatedToApplication()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installeds -> {
             if (installeds != null && !installeds.isEmpty()) {
@@ -123,13 +118,12 @@ public class VideoWidget extends Widget<VideoDisplayable> {
             throwable.printStackTrace();
           }));
 
-      subscriptions.add(RxView.clicks(videoHeader).subscribe(click -> {
+    compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
         displayable.getBaseLink().launch(getContext());
         Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
             displayable.getVideoTitle(), displayable.getTitle(),
             Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
       }));
-    }
   }
 
   private void setCardviewMargin(VideoDisplayable displayable) {
@@ -146,15 +140,6 @@ public class VideoWidget extends Widget<VideoDisplayable> {
   private void setAppNameToFirstLinkedApp() {
     if (!displayable.getRelatedToAppsList().isEmpty()) {
       appName = displayable.getRelatedToAppsList().get(0).getName();
-    }
-  }
-
-  @Override public void unbindView() {
-    url.setOnClickListener(null);
-    getAppButton.setOnClickListener(null);
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
     }
   }
 }

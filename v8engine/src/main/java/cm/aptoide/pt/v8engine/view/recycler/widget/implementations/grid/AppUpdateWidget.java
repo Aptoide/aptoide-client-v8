@@ -22,7 +22,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 6/21/16.
@@ -34,7 +33,6 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
   private ImageView appIcon;
   private TextView appUpdate;
   private TextView updateButton;
-  private CompositeSubscription subscriptions;
   private TextView errorText;
   private AppUpdateDisplayable displayable;
   private ImageView storeImage;
@@ -82,10 +80,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     updateDate.setText(displayable.getTimeSinceLastUpdate(getContext()));
     errorText.setVisibility(View.GONE);
 
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
-
-      subscriptions.add(RxView.clicks(store).subscribe(click -> {
+    compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
         Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.OPEN_STORE);
@@ -93,17 +88,17 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
             V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
       }));
 
-      subscriptions.add(displayable.updateProgress()
+    compositeSubscription.add(displayable.updateProgress()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(downloadProgress -> updateInstallProgress(displayable, downloadProgress),
               throwable -> showDownloadError(displayable)));
 
-      subscriptions.add(RxView.clicks(appIcon).subscribe(click -> {
+    compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {
         ((FragmentShower) getContext()).pushFragmentV4(
             V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
       }));
 
-      subscriptions.add(RxView.clicks(updateButton).flatMap(click -> {
+    compositeSubscription.add(RxView.clicks(updateButton).flatMap(click -> {
         Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.UPDATE_APP);
@@ -115,7 +110,6 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
         return Observable.just(null);
       })).observeOn(AndroidSchedulers.mainThread()).subscribe(downloadProgress -> {
       }, throwable -> showDownloadError(displayable)));
-    }
   }
 
   private void setCardviewMargin(AppUpdateDisplayable displayable) {
@@ -127,13 +121,6 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
         displayable.getMarginWidth(getContext(),
             getContext().getResources().getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void unbindView() {
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
-    }
   }
 
   private Void showDownloadError(AppUpdateDisplayable displayable) {
