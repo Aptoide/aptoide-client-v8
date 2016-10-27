@@ -149,13 +149,17 @@ public class DisplayablesFactory {
 
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
+        if(apps.size() == 2) {
+          useBigBrick = false;
+        }
+
         if (useBigBrick) {
           displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag()).setFullRow());
 
           nrAppBricks++;
         }
 
-        if (!(useBigBrick && apps.size() <= 1)) {
+        if (apps.size() > 1) {
           for (int i = (useBigBrick ? 1 : 0); i < nrAppBricks; i++) {
             Displayable appDisplayablePojo =
                 new AppBrickDisplayable(apps.get(i), wsWidget.getTag());
