@@ -90,6 +90,12 @@ import rx.schedulers.Schedulers;
     updateAccessor.remove(packageName);
   }
 
+  public Observable<List<Update>> getNonExcludedUpdates() {
+    return updateAccessor.getAll()
+        .flatMap(
+            updates -> Observable.from(updates).filter(update -> !update.isExcluded()).toList());
+  }
+
   public Observable<Void> setExcluded(String packageName, boolean excluded) {
     return updateAccessor.get(packageName).first().map(update -> {
       update.setExcluded(excluded);
