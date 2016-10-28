@@ -1,5 +1,6 @@
 package cm.aptoide.pt.aptoidesdk.ads;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -15,6 +16,9 @@ import static android.content.ContentValues.TAG;
  */
 
 public class Aptoide {
+
+  private static Context context;
+
   public static App getApp(Ad ad) {
     return getAppObservable(ad).toBlocking().first();
   }
@@ -49,5 +53,18 @@ public class Aptoide {
 
   private static Observable<App> getAppObservable(long appId) {
     return GetAppRequest.of(appId, null).observe().map(App::fromGetApp);
+  }
+
+  public static Context getContext() {
+    if (context == null) {
+      throw new RuntimeException(
+          "Aptoide not integrated, did you forget to call Aptoide.integrate()?");
+    }
+
+    return context;
+  }
+
+  public static void integrate(Context context) {
+    Aptoide.context = context;
   }
 }

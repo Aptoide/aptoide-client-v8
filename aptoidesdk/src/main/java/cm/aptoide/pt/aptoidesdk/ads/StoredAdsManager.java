@@ -1,5 +1,6 @@
 package cm.aptoide.pt.aptoidesdk.ads;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -19,7 +20,7 @@ public class StoredAdsManager {
 
   private static final String TAG = StoredAdsManager.class.getSimpleName();
 
-  private static final StoredAdsManager instance = new StoredAdsManager();
+  private static StoredAdsManager instance;
 
   private static ObjectMapper objectMapper = new ObjectMapper();
   private static String ADS_REFERRERS_KEY = "AptoideSdkAdsReferrers";
@@ -28,12 +29,20 @@ public class StoredAdsManager {
 
   private Map<Long, Ad> ads;
 
-  protected StoredAdsManager() {
-    sharedPreferences = SecurePreferencesImplementation.getInstance();
+  protected StoredAdsManager(Context context) {
+    sharedPreferences = SecurePreferencesImplementation.getInstance(context);
     load();
   }
 
-  public static StoredAdsManager getInstance() {
+  public static StoredAdsManager getInstance(Context context) {
+    if (instance == null) {
+      synchronized (StoredAdsManager.class) {
+        if (instance == null) {
+          instance = new StoredAdsManager(context);
+        }
+      }
+    }
+
     return instance;
   }
 

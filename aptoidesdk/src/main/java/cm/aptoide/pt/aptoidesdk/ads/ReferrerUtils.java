@@ -124,7 +124,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
         }
 
         private void saveAd(Ad ad) {
-          StoredAdsManager.getInstance().addAd(ad);
+          StoredAdsManager.getInstance(Aptoide.getContext()).addAd(ad);
         }
 
         @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
