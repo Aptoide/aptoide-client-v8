@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor public class BaseBodyDecorator {
 
-  private final IdsRepository idsRepository;
+  private final IdsRepositoryImpl idsRepository;
 
   public BaseBody decorate(BaseBody baseBody, String accessToken) {
 

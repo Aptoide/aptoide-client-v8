@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.logger.Logger;
@@ -60,11 +60,12 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     //
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
@@ -79,11 +80,12 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc,
             username, password);

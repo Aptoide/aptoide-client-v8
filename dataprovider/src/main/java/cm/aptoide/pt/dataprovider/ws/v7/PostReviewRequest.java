@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -34,10 +34,11 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
     Body body = new Body(storeName, packageName, title, textBody, rating);
     return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
@@ -49,10 +50,11 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
     Body body = new Body(packageName, title, textBody, rating);
     return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }

@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -35,7 +35,7 @@ import rx.Observable;
 
   public static GetAppRequest of(String packageName, String storeName, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
@@ -47,7 +47,7 @@ import rx.Observable;
 
   public static GetAppRequest of(long appId, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -57,7 +57,7 @@ import rx.Observable;
 
   public static GetAppRequest ofMd5(String md5, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -68,7 +68,7 @@ import rx.Observable;
   public static GetAppRequest of(long appId, String storeName,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();

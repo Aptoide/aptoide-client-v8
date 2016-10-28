@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullReviews;
@@ -52,7 +52,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     String password = storeCredentials.getPasswordSha1();
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
@@ -63,7 +63,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   public static ListFullReviewsRequest ofAction(String url, boolean refresh, String accessToken,
       String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
         (Body) decorator.decorate(new Body(refresh), accessToken), BASE_HOST);
@@ -80,7 +80,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews,
       int maxComments, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
@@ -95,7 +95,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
       int maxReviews, String accessToken, String email) {
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     Body body = new Body(storeName, packageName, maxReviews, 0,

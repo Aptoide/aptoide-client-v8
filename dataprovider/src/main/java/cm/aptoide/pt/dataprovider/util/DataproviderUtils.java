@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.MinimalAdInterface;
 import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -56,7 +56,8 @@ public class DataproviderUtils {
 
     public static String parseMacros(@NonNull String clickUrl) {
 
-      IdsRepository idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(),
+      IdsRepositoryImpl idsRepository =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext());
 
       if (idsRepository.getAndroidId() != null) {

@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -52,7 +52,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken,
       String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     final Body baseBody = new Body();
@@ -63,7 +63,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
 
   public static ListStoresRequest ofAction(String url, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     return new ListStoresRequest(url.replace("listStores", ""),

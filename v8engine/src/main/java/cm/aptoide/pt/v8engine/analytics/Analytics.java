@@ -5,12 +5,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import cm.aptoide.pt.logger.Logger;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -51,9 +51,7 @@ public class Analytics {
 
 
   public static boolean checkBuildVariant() {
-    if (BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev"))
-      return true;
-    return false;
+    return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
   }
 
 
@@ -270,8 +268,8 @@ public class Analytics {
           }
         }
 
-        IdsRepository idsRepository =
-            new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        IdsRepositoryImpl idsRepository =
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext());
 
         String cpuid = idsRepository.getAptoideClientUUID();

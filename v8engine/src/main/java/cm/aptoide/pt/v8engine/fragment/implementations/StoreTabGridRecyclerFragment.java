@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
@@ -177,7 +177,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseGetAds(boolean refresh) {
-    GetAdsRequest.ofHomepageMore(new IdsRepository(SecurePreferencesImplementation.getInstance(),
+    GetAdsRequest.ofHomepageMore(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
       List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
 
@@ -257,7 +258,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                       wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
                   countDownLatch, refresh, throwable -> countDownLatch.countDown(),
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-                  new IdsRepository(SecurePreferencesImplementation.getInstance(),
+                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID()));
 
           try {
@@ -294,7 +295,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                       wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(), countDownLatch,
                   refresh, throwable -> finishLoading(throwable),
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-                  new IdsRepository(SecurePreferencesImplementation.getInstance(),
+                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID()));
 
           try {

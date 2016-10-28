@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -41,7 +41,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
       List<String> packages, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url,

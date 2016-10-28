@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 import android.content.pm.PackageInfo;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -50,8 +50,9 @@ import rx.schedulers.Schedulers;
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
       String email) {
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
     BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(

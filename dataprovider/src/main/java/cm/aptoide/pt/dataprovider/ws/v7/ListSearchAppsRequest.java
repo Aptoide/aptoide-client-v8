@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
@@ -38,7 +38,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, String accessToken,
       String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     List<String> stores = Collections.singletonList(storeName);
 
@@ -58,10 +58,11 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+    IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
@@ -77,7 +78,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
 
     if (addSubscribedStores) {

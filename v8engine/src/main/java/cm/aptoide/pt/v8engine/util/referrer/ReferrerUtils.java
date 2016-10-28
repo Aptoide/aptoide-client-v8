@@ -25,7 +25,7 @@ import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
@@ -177,7 +177,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
                 if (retries > 0) {
                   GetAdsRequest.ofSecondTry(packageName,
-                      new IdsRepository(SecurePreferencesImplementation.getInstance(),
+                      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                           DataProvider.getContext()).getAptoideClientUUID())
                       .observe()
                       .filter((getAdsResponse1) -> {

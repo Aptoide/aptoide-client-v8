@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -37,7 +37,7 @@ import rx.Observable;
 
   public static ListAppVersionsRequest of(String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(MAX_LIMIT);
@@ -46,7 +46,7 @@ import rx.Observable;
 
   public static ListAppVersionsRequest of(int limit, int offset, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body();
     body.setLimit(limit);
@@ -56,7 +56,7 @@ import rx.Observable;
 
   public static ListAppVersionsRequest of(String packageName, String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(MAX_LIMIT);
@@ -66,7 +66,7 @@ import rx.Observable;
   public static ListAppVersionsRequest of(String packageName, int limit, int offset,
       String accessToken, String email) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()));
     Body body = new Body(packageName);
     body.setLimit(limit);

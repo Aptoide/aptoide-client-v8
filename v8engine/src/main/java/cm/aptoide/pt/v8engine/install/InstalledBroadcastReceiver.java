@@ -19,7 +19,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -124,7 +124,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
             storeMinimalAdAccessor.remove(storeMinimalAd);
           } else {
             GetAdsRequest.ofSecondInstall(packageName,
-                new IdsRepository(SecurePreferencesImplementation.getInstance(),
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                     DataProvider.getContext()).getAptoideClientUUID())
                 .observe()
                 .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))

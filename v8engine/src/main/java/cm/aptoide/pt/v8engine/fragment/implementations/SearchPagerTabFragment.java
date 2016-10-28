@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -86,7 +86,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create) {
-      GetAdsRequest.ofSearch(query, new IdsRepository(SecurePreferencesImplementation.getInstance(),
+      GetAdsRequest.ofSearch(query,
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
         if (getAdsResponse.getAds().size() > 0) {
           refreshed = true;

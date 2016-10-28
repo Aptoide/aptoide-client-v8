@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -33,7 +33,7 @@ public class AdRepository {
 
   public Observable<MinimalAd> getAdFromAppView(String packageName, String storeName) {
     return GetAdsRequest.ofAppviewOrganic(packageName, storeName,
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID())
         .observe()
         .map(response -> response.getAds())
