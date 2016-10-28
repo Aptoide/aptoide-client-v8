@@ -5,11 +5,9 @@
 
 package cm.aptoide.pt.networkclient.okhttp.newCache;
 
-import okhttp3.Request;
-
 /**
  * Created by sithengineer on 27/04/16.
  */
-public interface KeyAlgorithm<T> {
-  String getKeyFrom(T type);
+public interface KeyAlgorithm<Tin, Tout> {
+  Tout getKeyFrom(Tin type);
 }

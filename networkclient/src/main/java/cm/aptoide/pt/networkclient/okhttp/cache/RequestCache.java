@@ -7,12 +7,11 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.text.TextUtilsCompat;
-import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
+import cm.aptoide.pt.networkclient.okhttp.newCache.Sha1KeyAlgorithm;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.disklrucache.DiskLruCache;
 import java.io.File;
@@ -23,7 +22,6 @@ import java.util.Calendar;
 import java.util.Date;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.http.HttpMethod;
 
 /**
  * @author Neurophobic Animal
@@ -48,7 +46,7 @@ public class RequestCache {
   private static final int TIMESTAMP_BUCKET_INDEX = 1;
   private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
 
-  private final KeyAlgorithm<Request> keyAlgorithm;
+  private final KeyAlgorithm<Request, String> keyAlgorithm;
 
   private final Object diskCacheLock = new Object();
   private boolean initialized;
@@ -58,7 +56,7 @@ public class RequestCache {
   // ctors
   //
 
-  private RequestCache(KeyAlgorithm<Request> keyAlgorithm) {
+  private RequestCache(KeyAlgorithm<Request, String> keyAlgorithm) {
 
     this.keyAlgorithm = keyAlgorithm;
 

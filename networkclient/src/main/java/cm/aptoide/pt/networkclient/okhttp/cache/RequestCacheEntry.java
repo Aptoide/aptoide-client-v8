@@ -81,8 +81,7 @@ public @Data class RequestCacheEntry {
 
   @Override public String toString() {
     try {
-      String data = new ObjectMapper().writeValueAsString(this);
-      return data;
+      return new ObjectMapper().writeValueAsString(this);
     } catch (JsonProcessingException e) {
       Logger.e(TAG, "", e);
     }
