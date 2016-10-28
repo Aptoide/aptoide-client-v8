@@ -7,11 +7,10 @@ package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.MinimalAdInterface;
 import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import java.io.IOException;
@@ -54,11 +53,7 @@ public class DataproviderUtils {
 
   public static class AdNetworksUtils {
 
-    public static String parseMacros(@NonNull String clickUrl) {
-
-      IdsRepositoryImpl idsRepository =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext());
+    public static String parseMacros(@NonNull String clickUrl, IdsRepository idsRepository) {
 
       if (idsRepository.getAndroidId() != null) {
         clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());

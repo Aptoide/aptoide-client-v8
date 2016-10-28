@@ -90,7 +90,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
           RelativeLayout.LayoutParams.MATCH_PARENT));
 
       AptoideUtils.ThreadU.runOnIoThread(() -> {
-        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl);
+        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl,
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()));
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
       });
