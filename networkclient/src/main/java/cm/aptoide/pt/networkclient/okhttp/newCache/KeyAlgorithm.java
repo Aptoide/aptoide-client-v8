@@ -3,13 +3,13 @@
  * Modified by SithEngineer on 27/04/2016.
  */
 
-package cm.aptoide.pt.networkclient.okhttp.cache;
+package cm.aptoide.pt.networkclient.okhttp.newCache;
 
 import okhttp3.Request;
 
 /**
  * Created by sithengineer on 27/04/16.
  */
-public interface KeyAlgorithm {
-  String getKeyFrom(Request request);
+public interface KeyAlgorithm<T> {
+  String getKeyFrom(T type);
 }

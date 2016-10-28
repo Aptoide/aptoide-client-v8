@@ -6,6 +6,7 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.IOException;
 import okhttp3.Request;
@@ -21,7 +22,7 @@ import okio.Buffer;
  * <li>URL</li>
  * </ol>
  */
-public class Sha1KeyAlgorithm implements KeyAlgorithm {
+public class Sha1KeyAlgorithm implements KeyAlgorithm<Request> {
 
   private static final String TAG = Sha1KeyAlgorithm.class.getName();
 
