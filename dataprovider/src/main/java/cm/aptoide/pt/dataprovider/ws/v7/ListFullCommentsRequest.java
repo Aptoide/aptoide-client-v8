@@ -37,13 +37,11 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
   }
 
   public static ListFullCommentsRequest of(long reviewId, int limit, String accessToken,
-      String email) {
+      String email, String aptoideClientUUID) {
     //
     //
     //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),

@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
@@ -30,7 +31,9 @@ import rx.Observable;
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
       String storeName) {
     return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken())
+        AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
       if (response != null && response.isOk()) {
@@ -48,7 +51,9 @@ import rx.Observable;
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, AptoideAccountManager.getAccessToken())
+    return GetAppRequest.of(packageName, storeName, AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
       if (response != null && response.isOk()) {
@@ -111,7 +116,9 @@ import rx.Observable;
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken())
+    return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
       if (response != null && response.isOk()) {

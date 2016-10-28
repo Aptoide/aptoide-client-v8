@@ -40,28 +40,29 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email,
+      String aptoideClientUUID) {
     Logger.d("lou", "of: A");
     ListCommentsRequest.url = url;
-    return of(reviewId, limit, storeName, storeCredentials, accessToken);
+    return of(reviewId, limit, storeName, storeCredentials, accessToken, aptoideClientUUID);
   }
 
   public static ListCommentsRequest of(long reviewId, int offset, int limit, String accessToken,
-      String email) {
+      String email, String aptoideClientUUID) {
     Logger.d("lou", "of: B");
-    ListCommentsRequest listCommentsRequest = of(reviewId, limit, accessToken, email);
+    ListCommentsRequest listCommentsRequest =
+        of(reviewId, limit, accessToken, email, aptoideClientUUID);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
 
-  public static ListCommentsRequest of(long reviewId, int limit, String accessToken, String email) {
+  public static ListCommentsRequest of(long reviewId, int limit, String accessToken, String email,
+      String aptoideClientUUID) {
     Logger.d("lou", "of: C");
     //
     //
     //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -72,16 +73,15 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest of(long reviewId, int limit, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
+      String aptoideClientUUID) {
     Logger.d("lou", "of: D");
     //
     //
     //
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),

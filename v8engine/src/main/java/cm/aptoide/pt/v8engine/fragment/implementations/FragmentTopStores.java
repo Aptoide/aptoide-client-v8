@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -65,7 +66,9 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
   private void fetchStores() {
     final ListStoresRequest listStoresRequest =
         ListStoresRequest.ofTopStores(offset, STORES_LIMIT_PER_REQUEST,
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID());
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
             errorRequestListener);

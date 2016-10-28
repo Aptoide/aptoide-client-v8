@@ -26,14 +26,12 @@ public class PostCommentRequest extends V7<BaseV7Response, PostCommentRequest.Bo
     super(body, baseHost);
   }
 
-  public static PostCommentRequest of(long reviewId, String text, String accessToken,
-      String email) {
+  public static PostCommentRequest of(long reviewId, String text, String accessToken, String email,
+      String aptoideClientUUID) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setComment/review_id/1/body/amazing%20review/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());

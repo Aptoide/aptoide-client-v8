@@ -36,10 +36,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, String storeName,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, String accessToken,
-      String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     List<String> stores = Collections.singletonList(storeName);
 
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
@@ -56,10 +54,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      String accessToken, String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
@@ -76,10 +72,9 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken, String email,
+      String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(

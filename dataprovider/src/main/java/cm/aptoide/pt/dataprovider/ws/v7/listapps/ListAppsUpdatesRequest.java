@@ -49,11 +49,11 @@ import rx.schedulers.Schedulers;
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
-      String email) {
+      String email, String aptoideClientUUID) {
     IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
-    BaseBodyDecorator decorator = new BaseBodyDecorator(idsRepository);
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
         new Body(getInstalledApks(), subscribedStoresIds, idsRepository.getAdvertisingId()),

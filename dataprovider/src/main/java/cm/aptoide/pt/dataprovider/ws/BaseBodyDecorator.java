@@ -1,18 +1,20 @@
 package cm.aptoide.pt.dataprovider.ws;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by diogoloureiro on 10/08/16.
  */
-@AllArgsConstructor public class BaseBodyDecorator {
+public class BaseBodyDecorator {
 
-  private final IdsRepositoryImpl idsRepository;
+  private final String aptoideClientUUID;
+
+  public BaseBodyDecorator(String aptoideClientUUID) {
+    this.aptoideClientUUID = aptoideClientUUID;
+  }
 
   public BaseBody decorate(BaseBody baseBody, String accessToken) {
 
@@ -21,7 +23,7 @@ import lombok.AllArgsConstructor;
       baseBody.setAccessToken(access_token);
     }
 
-    baseBody.setAptoideId(idsRepository.getAptoideClientUUID());
+    baseBody.setAptoideId(aptoideClientUUID);
     baseBody.setAptoideVercode(AptoideUtils.Core.getVerCode());
     baseBody.setCdn("pool");
     baseBody.setLang(Api.LANG);

@@ -23,6 +23,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
@@ -95,7 +96,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
           Observable.from(reviews)
               .forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(),
                   fullReview.getId(), 3, storeName, StoreUtils.getStoreCredentials(storeName),
-                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                      DataProvider.getContext()).getAptoideClientUUID())
                   .execute(listComments -> {
                 fullReview.setCommentList(listComments);
                 countDownLatch.countDown();
@@ -276,7 +279,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken()).execute(getApp -> {
+    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID()).execute(getApp -> {
       GetAppMeta.App data = getApp.getNodes().getMeta().getData();
       setupTitle(data.getName());
       setupRating(data);
@@ -292,7 +297,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   private void fetchReviews() {
     ListReviewsRequest of =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail());
+            AptoideAccountManager.getUserEmail(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID());
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of,
         listFullReviewsSuccessRequestListener, errorRequestListener);

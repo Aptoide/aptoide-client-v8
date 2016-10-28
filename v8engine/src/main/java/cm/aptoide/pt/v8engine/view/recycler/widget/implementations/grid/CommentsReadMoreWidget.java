@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.v8engine.R;
@@ -34,7 +35,9 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
     Review review = displayable.getPojo();
     compositeSubscription.add(RxView.clicks(readMoreButton).subscribe(aVoid -> {
       ListCommentsRequest.of(review.getId(), displayable.getNext(), 100,
-          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID())
           .execute(listComments -> displayable.getCommentAdder()
               .addComment(listComments.getDatalist().getList()));
     }));

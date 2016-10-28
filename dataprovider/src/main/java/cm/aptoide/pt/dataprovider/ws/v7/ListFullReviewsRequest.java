@@ -6,13 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -47,13 +44,12 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email,
+      String aptoideClientUUID) {
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
         username, password);
@@ -61,27 +57,24 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh, String accessToken,
-      String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
         (Body) decorator.decorate(new Body(refresh), accessToken), BASE_HOST);
   }
 
   public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
-      String email) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, email);
+      String email, String aptoideClientUUID) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, email,
+        aptoideClientUUID);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listFullReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
    */
   public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      int maxComments, String accessToken, String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh());
@@ -92,11 +85,9 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
    */
   public static ListFullReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken, String email) {
+      int maxReviews, String accessToken, String email, String aptoideClientUUID) {
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     Body body = new Body(storeName, packageName, maxReviews, 0,
         ManagerPreferences.getAndResetForceServerRefresh());

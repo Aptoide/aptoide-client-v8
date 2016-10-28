@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
@@ -170,7 +171,9 @@ import java.util.Locale;
       dialog.dismiss();
 
       PostCommentRequest.of(reviewId, commentOnReviewText, AptoideAccountManager.getAccessToken(),
-          AptoideAccountManager.getUserEmail())
+          AptoideAccountManager.getUserEmail(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID())
           .execute(response -> {
         dialog.dismiss();
         if (response.isOk()) {
@@ -199,7 +202,9 @@ import java.util.Locale;
   private void loadCommentsForThisReview(long reviewId, int limit,
       RateAndReviewsFragment.CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getUserEmail(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID())
         .execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
@@ -223,7 +228,9 @@ import java.util.Locale;
 
     if (AptoideAccountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
-          AptoideAccountManager.getUserEmail())
+          AptoideAccountManager.getUserEmail(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID())
           .execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
