@@ -7,6 +7,8 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.text.TextUtilsCompat;
+import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
@@ -20,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.internal.http.HttpMethod;
 
 /**
  * @author Neurophobic Animal
@@ -129,11 +132,16 @@ public class RequestCache {
     if (!initialized) {
       return response;
     }
+
+    // only cache 2xx requests
     if ((response.code() / 100) != 2) return response;
     //		String header = request.headers().get(BYPASS_HEADER_KEY);
     //		if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
     //			return response;
     //		}
+
+    // only cache post requests
+    //if(!"POST".equalsIgnoreCase(request.method())) return response;
 
     DiskLruCache.Editor editor = null;
     try {
