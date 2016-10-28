@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
@@ -13,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -36,17 +38,17 @@ import rx.Observable;
             DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getNodes().getMeta().getData().isPaid()) {
-          return addPayment(sponsored, response, refresh);
-        } else {
-          return Observable.just(response);
-        }
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app id " + appId));
-      }
-    });
+          if (response != null && response.isOk()) {
+            if (response.getNodes().getMeta().getData().isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app id " + appId));
+          }
+        });
   }
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
@@ -56,13 +58,13 @@ import rx.Observable;
             DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return addPayment(sponsored, response, refresh);
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app package" + packageName));
-      }
-    });
+          if (response != null && response.isOk()) {
+            return addPayment(sponsored, response, refresh);
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app package" + packageName));
+          }
+        });
   }
 
   public Observable<List<PaymentService>> getPaymentServices(long appId, boolean sponsored,
@@ -102,17 +104,15 @@ import rx.Observable;
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        AptoideAccountManager.getAccessToken())
-        .observe(refresh)
-        .flatMap(response -> {
-          if (response != null && response.isOk() && response.isPaid()) {
-            return Observable.just(response);
-          } else {
-            return Observable.error(new RepositoryItemNotFoundException(
-                "No paid app found for app id " + appId + " in store " +
-                    storeName));
-          }
-        });
+        AptoideAccountManager.getAccessToken()).observe(refresh).flatMap(response -> {
+      if (response != null && response.isOk() && response.isPaid()) {
+        return Observable.just(response);
+      } else {
+        return Observable.error(new RepositoryItemNotFoundException(
+            "No paid app found for app id " + appId + " in store " +
+                storeName));
+      }
+    });
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
@@ -121,12 +121,12 @@ import rx.Observable;
             DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return addPayment(sponsored, response, refresh);
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app md5" + md5));
-      }
-    });
+          if (response != null && response.isOk()) {
+            return addPayment(sponsored, response, refresh);
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app md5" + md5));
+          }
+        });
   }
 }

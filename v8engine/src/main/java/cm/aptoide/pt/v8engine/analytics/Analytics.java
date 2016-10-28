@@ -49,11 +49,9 @@ public class Analytics {
   private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
   private static boolean isFirstSession;
 
-
   public static boolean checkBuildVariant() {
     return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
   }
-
 
   /**
    * Verifica se as flags fornecidas constam em accepted.

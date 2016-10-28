@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -155,8 +157,7 @@ import java.util.List;
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
         AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
-        .execute(listReviews -> {
+            DataProvider.getContext()).getAptoideClientUUID()).execute(listReviews -> {
 
           List<Review> reviews = listReviews.getDatalist().getList();
           if (reviews == null || reviews.isEmpty()) {

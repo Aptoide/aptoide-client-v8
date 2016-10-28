@@ -8,10 +8,8 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.logger.Logger;
-import io.realm.Realm;
 import io.realm.RealmObject;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -71,12 +69,10 @@ public abstract class BaseTable {
       //			db.endTransaction();
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       Logger.e(TAG, e);
       //CrashReports.logException(e);
-    }
-    finally {
+    } finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();
       }

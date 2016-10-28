@@ -88,7 +88,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     if (create) {
       GetAdsRequest.ofSearch(query,
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
+              DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
         if (getAdsResponse.getAds().size() > 0) {
           refreshed = true;
           addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));

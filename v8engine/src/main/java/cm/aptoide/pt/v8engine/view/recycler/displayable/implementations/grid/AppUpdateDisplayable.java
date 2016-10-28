@@ -15,7 +15,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -63,9 +62,9 @@ import rx.Observable;
   }
 
   public Observable<Progress<Download>> update(Context context) {
-    if (installManager.showWarning() ) {
-      GenericDialogs.createGenericYesNoCancelMessage(context, null
-          , AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog) )
+    if (installManager.showWarning()) {
+      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
           .subscribe(eResponse -> {
             switch (eResponse) {
               case YES:

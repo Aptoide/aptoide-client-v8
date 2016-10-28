@@ -74,23 +74,23 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
     }
 
-      for (View app : apps.keySet()) {
-        compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
-          Analytics.AppsTimeline.clickOnCard("Latest Apps", appsPackages.get(apps.get(app)),
-              Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-              Analytics.AppsTimeline.OPEN_APP_VIEW);
-          ((FragmentShower) getContext()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
-        }));
-      }
+    for (View app : apps.keySet()) {
+      compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
+        Analytics.AppsTimeline.clickOnCard("Latest Apps", appsPackages.get(apps.get(app)),
+            Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+            Analytics.AppsTimeline.OPEN_APP_VIEW);
+        ((FragmentShower) getContext()).pushFragmentV4(
+            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
+      }));
+    }
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
-        Analytics.AppsTimeline.clickOnCard("Latest Apps", Analytics.AppsTimeline.BLANK,
-            Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-            Analytics.AppsTimeline.OPEN_STORE);
-        ((FragmentShower) getContext()).pushFragmentV4(
-            V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
-      }));
+      Analytics.AppsTimeline.clickOnCard("Latest Apps", Analytics.AppsTimeline.BLANK,
+          Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+          Analytics.AppsTimeline.OPEN_STORE);
+      ((FragmentShower) getContext()).pushFragmentV4(
+          V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
+    }));
   }
 
   private void setCardviewMargin(StoreLatestAppsDisplayable displayable) {

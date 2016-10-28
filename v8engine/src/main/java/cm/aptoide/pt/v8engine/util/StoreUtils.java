@@ -6,6 +6,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
@@ -16,6 +17,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,8 +91,7 @@ public class StoreUtils {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
         AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()),
-        successRequestListener,
+            DataProvider.getContext()).getAptoideClientUUID()), successRequestListener,
         errorRequestListener);
   }
 

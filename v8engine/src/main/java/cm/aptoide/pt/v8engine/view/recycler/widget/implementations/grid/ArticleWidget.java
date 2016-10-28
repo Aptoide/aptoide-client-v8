@@ -90,30 +90,30 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(installeds -> {
-            if (installeds != null && !installeds.isEmpty()) {
-              appName = installeds.get(0).getName();
-            } else {
-              setAppNameToFirstLinkedApp();
-            }
-            if (appName != null) {
-              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-            }
-          }, throwable -> {
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installeds -> {
+          if (installeds != null && !installeds.isEmpty()) {
+            appName = installeds.get(0).getName();
+          } else {
             setAppNameToFirstLinkedApp();
-            if (appName != null) {
-              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-            }
-            throwable.printStackTrace();
-          }));
+          }
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+          }
+        }, throwable -> {
+          setAppNameToFirstLinkedApp();
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+          }
+          throwable.printStackTrace();
+        }));
 
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
-        displayable.getDeveloperLink().launch(getContext());
-        Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
-            displayable.getArticleTitle(), displayable.getTitle(),
-            Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-      }));
+      displayable.getDeveloperLink().launch(getContext());
+      Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
+          displayable.getArticleTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+    }));
   }
 
   private void setCardviewMargin(ArticleDisplayable displayable) {

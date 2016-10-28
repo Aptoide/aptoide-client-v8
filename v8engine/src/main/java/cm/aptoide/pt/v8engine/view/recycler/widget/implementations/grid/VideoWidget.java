@@ -100,30 +100,30 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(installeds -> {
-            if (installeds != null && !installeds.isEmpty()) {
-              appName = installeds.get(0).getName();
-            } else {
-              setAppNameToFirstLinkedApp();
-            }
-            if (appName != null) {
-              relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
-            }
-          }, throwable -> {
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installeds -> {
+          if (installeds != null && !installeds.isEmpty()) {
+            appName = installeds.get(0).getName();
+          } else {
             setAppNameToFirstLinkedApp();
-            if (appName != null) {
-              relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
-            }
-            throwable.printStackTrace();
-          }));
+          }
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+          }
+        }, throwable -> {
+          setAppNameToFirstLinkedApp();
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+          }
+          throwable.printStackTrace();
+        }));
 
     compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
-        displayable.getBaseLink().launch(getContext());
-        Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
-            displayable.getVideoTitle(), displayable.getTitle(),
-            Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
-      }));
+      displayable.getBaseLink().launch(getContext());
+      Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
+          displayable.getVideoTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
+    }));
   }
 
   private void setCardviewMargin(VideoDisplayable displayable) {

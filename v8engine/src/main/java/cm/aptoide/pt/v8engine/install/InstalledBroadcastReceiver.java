@@ -191,11 +191,11 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
         Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
       }
 
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+      PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return;
-    }
+      if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
+        return;
+      }
 
       if (update != null) {
         if (packageInfo.versionCode >= update.getVersionCode()) {
@@ -214,7 +214,6 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
   /**
    * @param packageInfo packageInfo.
-   * @param packageName
    * @return true if packageInfo is null, false otherwise.
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {

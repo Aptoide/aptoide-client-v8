@@ -181,7 +181,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   private void caseGetAds(boolean refresh) {
     GetAdsRequest.ofHomepageMore(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
+            DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
       List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
 
       displayables = new LinkedList<>();
@@ -300,8 +300,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           Observable.from(list)
               .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
                   wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
-                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(), countDownLatch,
-                  refresh, throwable -> finishLoading(throwable),
+                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
+                  countDownLatch, refresh, throwable -> finishLoading(throwable),
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID()));

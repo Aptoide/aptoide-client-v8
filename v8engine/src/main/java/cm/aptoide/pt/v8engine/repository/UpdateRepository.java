@@ -6,9 +6,11 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -40,8 +42,7 @@ import rx.schedulers.Schedulers;
           if (!updates.isEmpty()) {
             // network fetch succeeded. remove local non-excluded updates
             // and save the new updates
-            return removeNonExcluded()
-                .flatMapIterable(aVoid -> updates)
+            return removeNonExcluded().flatMapIterable(aVoid -> updates)
                 .flatMap(app -> saveUpdate(app))
                 .toList();
           }
@@ -61,7 +62,7 @@ import rx.schedulers.Schedulers;
         return result.getList();
       }
       return Collections.<App>emptyList();
-    }).onErrorReturn(throwable -> Collections.emptyList() );
+    }).onErrorReturn(throwable -> Collections.emptyList());
   }
 
   @NonNull private Observable<Void> saveUpdate(App app) {
@@ -97,8 +98,7 @@ import rx.schedulers.Schedulers;
   }
 
   private Observable<Void> removeNonExcluded() {
-    return getStoredUpdates()
-        .first()
+    return getStoredUpdates().first()
         .flatMapIterable(list -> list)
         .doOnNext(update -> remove(update))
         .toList()

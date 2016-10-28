@@ -72,7 +72,8 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     //subscribedBool = DeprecatedDatabase.StoreQ.get(getStoreMeta.getData().getId(), realm) != null;
 
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    subscribedBool = storeAccessor.get(getStoreMeta.getData().getId()).toBlocking().firstOrDefault(null) != null;
+    subscribedBool =
+        storeAccessor.get(getStoreMeta.getData().getId()).toBlocking().firstOrDefault(null) != null;
 
     this.theme = StoreThemeEnum.get(getStoreMeta.getData().getAppearance().getTheme());
 

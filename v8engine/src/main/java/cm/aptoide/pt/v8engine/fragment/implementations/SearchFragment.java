@@ -19,9 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -173,8 +175,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID())
-          .execute(listSearchApps -> {
+              DataProvider.getContext()).getAptoideClientUUID()).execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {
@@ -190,8 +191,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID())
-          .execute(listSearchApps -> {
+              DataProvider.getContext()).getAptoideClientUUID()).execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {

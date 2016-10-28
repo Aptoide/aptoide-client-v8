@@ -97,8 +97,7 @@ public class RollbackFragment extends GridRecyclerFragment {
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
 
-    installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
   }
 
   @UiThread private void fetchRollbacks() {

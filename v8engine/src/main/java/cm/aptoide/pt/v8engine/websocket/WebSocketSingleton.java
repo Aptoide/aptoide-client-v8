@@ -144,8 +144,8 @@ public class WebSocketSingleton {
   public void connect() {
 
     if (web_socket_client == null) {
-      web_socket_client = new WebSocketClient(URI.create("ws://buzz.webservices.aptoide.com:9000"),
-              listener, null);
+      web_socket_client =
+          new WebSocketClient(URI.create("ws://buzz.webservices.aptoide.com:9000"), listener, null);
       web_socket_client.connect();
     }
     Logger.d(TAG, "OnConnecting");

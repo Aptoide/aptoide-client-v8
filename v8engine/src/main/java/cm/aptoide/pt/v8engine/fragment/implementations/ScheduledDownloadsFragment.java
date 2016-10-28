@@ -24,8 +24,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -41,11 +39,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sch
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
 /**
@@ -276,8 +271,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
-                downloadItem.getMd5()))
-        )
+                downloadItem.getMd5())))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(aVoid -> {
           Logger.i(TAG, "finished installing scheduled downloads");

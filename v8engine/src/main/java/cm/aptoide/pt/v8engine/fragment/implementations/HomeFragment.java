@@ -238,8 +238,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userEmail.setText(userCompleteData.getUserEmail());
       userUsername.setText(userCompleteData.getUserName());
 
-      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(), userAvatarImage,
-          R.drawable.user_account_white);
+      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(),
+          userAvatarImage, R.drawable.user_account_white);
 
       //String userAvatarUri = userInfo.getUserAvatar();
       //if (URLUtil.isValidUrl(userAvatarUri)) {

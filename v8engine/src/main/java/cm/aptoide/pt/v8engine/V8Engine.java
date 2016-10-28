@@ -119,13 +119,12 @@ public abstract class V8Engine extends DataProvider {
 
   private static void regenerateUserAgent() {
     SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
-        new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(), getContext()), new UserData() {
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        new UserData() {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
           }
-        }
-    ));
+        }));
   }
 
   public static void clearUserData() {
@@ -241,8 +240,7 @@ public abstract class V8Engine extends DataProvider {
                   @Override public String getUserEmail() {
                     return AptoideAccountManager.getUserEmail();
                   }
-                }
-                ));
+                }));
 
     // setupCurrentActivityListener();
 
