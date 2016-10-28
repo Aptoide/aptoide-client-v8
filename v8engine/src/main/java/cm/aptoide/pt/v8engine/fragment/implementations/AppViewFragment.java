@@ -44,7 +44,9 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -57,6 +59,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -622,7 +625,9 @@ public class AppViewFragment extends GridRecyclerFragment
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
 
-    return GetAdsRequest.ofAppviewSuggested(keywords).observe().map(getAdsResponse -> {
+    return GetAdsRequest.ofAppviewSuggested(keywords,
+        new IdsRepository(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID()).observe().map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {
         suggestedAds = getAdsResponse.getAds();
       }

@@ -7,10 +7,13 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -83,7 +86,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create) {
-      GetAdsRequest.ofSearch(query).execute(getAdsResponse -> {
+      GetAdsRequest.ofSearch(query, new IdsRepository(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
         if (getAdsResponse.getAds().size() > 0) {
           refreshed = true;
           addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));

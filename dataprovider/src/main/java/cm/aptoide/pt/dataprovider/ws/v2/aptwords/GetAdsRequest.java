@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -16,7 +15,6 @@ import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,9 +29,6 @@ import rx.Observable;
  */
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetAdsRequest
     extends Aptwords<GetAdsResponse> {
-
-  private static IdsRepository idsRepository =
-      new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
   private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
       .addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
@@ -50,21 +45,27 @@ import rx.Observable;
   private String repo;
   private String categories;
   private String excludedNetworks;
+  private String aptoideClientUUID;
 
-  private GetAdsRequest() {
+  private GetAdsRequest(String aptoideClientUUID) {
     super(client);
+    this.aptoideClientUUID = aptoideClientUUID;
   }
 
-  private static GetAdsRequest of(Location location, String keyword, Integer limit) {
-    return new GetAdsRequest().setLocation(location).setKeyword(keyword).setLimit(limit);
+  private static GetAdsRequest of(Location location, String keyword, Integer limit,
+      String aptoideClientUUID) {
+    return new GetAdsRequest(aptoideClientUUID).setLocation(location)
+        .setKeyword(keyword)
+        .setLimit(limit);
   }
 
-  private static GetAdsRequest of(Location location, Integer limit) {
-    return of(location, "__NULL__", limit);
+  private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID) {
+    return of(location, "__NULL__", limit, aptoideClientUUID);
   }
 
-  private static GetAdsRequest ofPackageName(Location location, String packageName) {
-    GetAdsRequest getAdsRequest = of(location, 1).setPackageName(packageName);
+  private static GetAdsRequest ofPackageName(Location location, String packageName,
+      String aptoideClientUUID) {
+    GetAdsRequest getAdsRequest = of(location, 1, aptoideClientUUID).setPackageName(packageName);
 
     // Add excluded networks
     if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
@@ -75,44 +76,45 @@ import rx.Observable;
     return getAdsRequest;
   }
 
-  public static GetAdsRequest ofHomepage() {
+  public static GetAdsRequest ofHomepage(String aptoideClientUUID) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, Type.ADS.getPerLineCount());
+    return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID);
   }
 
-  public static GetAdsRequest ofHomepageMore() {
+  public static GetAdsRequest ofHomepageMore(String aptoideClientUUID) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, 50);
+    return of(Location.homepage, 50, aptoideClientUUID);
   }
 
-  public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName) {
+  public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName,
+      String aptoideClientUUID) {
 
-    GetAdsRequest getAdsRequest = ofPackageName(Location.appview, packageName);
+    GetAdsRequest getAdsRequest = ofPackageName(Location.appview, packageName, aptoideClientUUID);
 
     getAdsRequest.setRepo(storeName);
 
     return getAdsRequest;
   }
 
-  public static GetAdsRequest ofAppviewSuggested(List<String> keywords) {
+  public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String aptoideClientUUID) {
 
-    GetAdsRequest getAdsRequest = of(Location.middleappview, 3);
+    GetAdsRequest getAdsRequest = of(Location.middleappview, 3, aptoideClientUUID);
 
     getAdsRequest.setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
 
     return getAdsRequest;
   }
 
-  public static GetAdsRequest ofSearch(String query) {
-    return of(Location.search, query, 1);
+  public static GetAdsRequest ofSearch(String query, String aptoideClientUUID) {
+    return of(Location.search, query, 1, aptoideClientUUID);
   }
 
-  public static GetAdsRequest ofSecondInstall(String packageName) {
-    return ofPackageName(Location.secondinstall, packageName);
+  public static GetAdsRequest ofSecondInstall(String packageName, String aptoideClientUUID) {
+    return ofPackageName(Location.secondinstall, packageName, aptoideClientUUID);
   }
 
-  public static GetAdsRequest ofSecondTry(String packageName) {
-    return ofPackageName(Location.secondtry, packageName);
+  public static GetAdsRequest ofSecondTry(String packageName, String aptoideClientUUID) {
+    return ofPackageName(Location.secondtry, packageName, aptoideClientUUID);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -122,7 +124,7 @@ import rx.Observable;
 
     parameters.put("q", Api.Q);
     parameters.put("lang", Api.LANG);
-    parameters.put("cpuid", idsRepository.getAptoideClientUUID());
+    parameters.put("cpuid", aptoideClientUUID);
     parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
     parameters.put("location", "native-aptoide:" + location);
     parameters.put("type", "1-3");
