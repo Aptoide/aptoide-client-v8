@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion 25
+  buildToolsVersion "25.0.0"
+
+  defaultConfig {
+    minSdkVersion 15
+    targetSdkVersion 25
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  packagingOptions {
+    //    Optimize please :)
+    pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+    pickFirst 'META-INF/DEPENDENCIES.txt'
+    pickFirst 'META-INF/DEPENDENCIES'
+    pickFirst 'META-INF/LICENSE.txt'
+    pickFirst 'META-INF/LICENSE'
+    pickFirst 'META-INF/NOTICE.txt'
+    pickFirst 'META-INF/NOTICE'
+    pickFirst 'META-INF/MANIFEST.MF'
+    pickFirst 'META-INF/LGPL2.1'
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  compile 'com.android.support:appcompat-v7:25.0.0'
+  testCompile 'junit:junit:4.12'
+
+  compile project(':aptoidesdk')
+}
