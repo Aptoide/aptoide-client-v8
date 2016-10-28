@@ -112,11 +112,6 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer);
               } else {
-                //@Cleanup Realm realm = DeprecatedDatabase.get();
-                //DeprecatedDatabase.save(
-                //    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
-                //        minimalAd.getAdId()), realm);
-
                 saveAd(ad);
               }
 
@@ -235,7 +230,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
     return referrer;
   }
 
-  private static void broadcastReferrer(String packageName, String referrer) {
+  public static void broadcastReferrer(String packageName, String referrer) {
     Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
     i.setPackage(packageName);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {

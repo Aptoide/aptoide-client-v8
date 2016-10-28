@@ -95,4 +95,20 @@ public class StoredAdsManager {
       }
     }
   }
+
+  public Ad removeAd(String packageName) {
+    Ad ad = ads.remove(getAdId(packageName));
+    save();
+    return ad;
+  }
+
+  private Long getAdId(String packageName) {
+    for (Map.Entry<Long, Ad> adEntry : ads.entrySet()) {
+      if (adEntry.getValue().data.packageName.equals(packageName)) {
+        return adEntry.getKey();
+      }
+    }
+
+    return null;
+  }
 }
