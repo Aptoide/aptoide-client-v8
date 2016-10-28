@@ -6,14 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -64,9 +61,6 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
@@ -83,9 +77,6 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     String password = storeCredentials.getPasswordSha1();
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc,
             username, password);

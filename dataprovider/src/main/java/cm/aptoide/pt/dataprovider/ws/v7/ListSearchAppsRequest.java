@@ -5,12 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -56,9 +53,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       String accessToken, String email, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(

@@ -5,13 +5,10 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,9 +40,6 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
     Body body = new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
 
     return new ListFullCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);

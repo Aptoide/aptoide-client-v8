@@ -5,11 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -32,9 +29,6 @@ public class PostCommentRequest extends V7<BaseV7Response, PostCommentRequest.Bo
     //  http://ws75-primary.aptoide.com/api/7/setComment/review_id/1/body/amazing%20review/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
     Body body = new Body(reviewId, text);
     return new PostCommentRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
