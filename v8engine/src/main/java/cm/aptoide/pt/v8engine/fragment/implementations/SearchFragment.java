@@ -150,7 +150,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private void executeSearchRequests() {
+  protected void executeSearchRequests(String storeName) {
     Analytics.Search.searchTerm(query);
 
     if (storeName != null) {
@@ -321,7 +321,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
-      executeSearchRequests();
+      executeSearchRequests(storeName);
     } else {
       handleFinishLoading();
     }
