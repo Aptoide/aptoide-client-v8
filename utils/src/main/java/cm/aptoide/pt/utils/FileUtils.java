@@ -15,7 +15,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 5/18/16.
@@ -33,6 +35,9 @@ public class FileUtils {
    */
   public FileUtils(@Nullable Action1<String> sendFileMoveEvent) {
     this.sendFileMoveEvent = sendFileMoveEvent;
+  }
+
+  public FileUtils() {
   }
 
   public static boolean fileExists(String path) {
@@ -103,6 +108,28 @@ public class FileUtils {
     return false;
   }
 
+  public long deleteDir(File dir) {
+    if (dir == null) {
+      throw new RuntimeException("The file to be deleted can't be null");
+    }
+    long size = 0;
+    if (dir.isDirectory()) {
+      String[] children = dir.list() == null ? new String[0] : dir.list();
+      for (String child : children) {
+        size += deleteDir(new File(dir, child));
+      }
+    } else {
+      size += dir.length();
+    }
+    if (!dir.exists() || dir.delete()) {
+      return size;
+    } else {
+      throw new RuntimeException("Something went wrong while deleting the file "
+          + dir.getPath()
+          + " (if the is the file a directory, is it empty?");
+    }
+  }
+
   /**
    * Method used to copy files from <code>inputPath</code> to <code>outputPath</code> <p>If any
    * exception occurs,
@@ -124,6 +151,32 @@ public class FileUtils {
     } else if (sendFileMoveEvent != null) {
       sendFileMoveEvent.call(MOVE);
     }
+  }
+
+  public Observable<Long> deleteFolder(File... folders) {
+    return Observable.from(folders)
+        .observeOn(Schedulers.io())
+        .flatMap(filePath -> Observable.fromCallable(() -> {
+          long size = deleteDir(filePath);
+          Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
+          return size;
+        }).onErrorResumeNext(throwable -> Observable.empty()))
+        .toList()
+        .map(deletedSizes -> {
+          long size = 0;
+          for (int i = 0; i < deletedSizes.size(); i++) {
+            size += deletedSizes.get(i);
+          }
+          return size;
+        });
+  }
+
+  public Observable<Long> deleteFolder(String... folders) {
+    File[] files = new File[folders.length];
+    for (int i = 0; i < folders.length; i++) {
+      files[i] = new File(folders[i]);
+    }
+    return deleteFolder(files);
   }
 
   /**

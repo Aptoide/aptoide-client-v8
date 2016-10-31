@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,22 +33,35 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
 import java.io.File;
 import java.text.DecimalFormat;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by fabio on 26-10-2015.
@@ -67,26 +79,39 @@ public class SettingsFragment extends PreferenceFragmentCompat
   protected Toolbar toolbar;
   private boolean unlocked = false;
   private Context context;
+  private FileUtils fileUtils;
+  private CompositeSubscription subscriptions;
+  private InstallManager installManager;
+  private String[] dataAndConfigFolders;
+  private String[] cacheFolders;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
   }
 
-  static public boolean deleteDirectory(File path) {
-    if (path.exists()) {
-      File[] files = path.listFiles();
-      if (files == null) {
-        return true;
-      }
-      for (File file : files) {
-        if (file.isDirectory()) {
-          deleteDirectory(file);
-        } else {
-          file.delete();
-        }
-      }
+  @Override public void onDestroyView() {
+    subscriptions.clear();
+    super.onDestroyView();
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    fileUtils = new FileUtils();
+    subscriptions = new CompositeSubscription();
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
+    File file = new File(Application.getContext().getCacheDir().getParent());
+    dataAndConfigFolders = new String[file.list().length + 1];
+    dataAndConfigFolders[0] = Application.getConfiguration().getCachePath();
+    for (int i = 0; i < file.list().length; i++) {
+      dataAndConfigFolders[i + 1] = file.getPath() + "/" + file.list()[i];
     }
-    return true;
+    cacheFolders = new String[] {
+        Application.getContext().getCacheDir().getPath(),
+        Application.getConfiguration().getImagesCachePath()
+    };
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -210,9 +235,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
     findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
           @Override public boolean onPreferenceClick(Preference preference) {
-            if (unlocked) {
-              new DeleteDir().execute(new File(icon_path));
-            }
+            ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+            subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
+                getString(R.string.storage_dialog_title),
+                getString(R.string.clear_cache_dialog_message))
+                .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
+                .doOnNext(eResponse -> dialog.show())
+                .flatMap(eResponse -> deleteFolder(cacheFolders))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(() -> dialog.dismiss())
+                .subscribe(deletedSize -> {
+                  deleteFilesSuccessMessage(deletedSize);
+                }, throwable -> {
+                  deleteFilesErrorMessage(throwable);
+                }));
             return false;
           }
         });
@@ -220,9 +256,29 @@ public class SettingsFragment extends PreferenceFragmentCompat
     findPreference(SettingsConstants.CLEAR_RANK).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
           @Override public boolean onPreferenceClick(Preference preference) {
-            if (unlocked) {
-              new DeleteDir().execute(new File(aptoide_path));
-            }
+            //if (unlocked) {
+            ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+            subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
+                getString(R.string.storage_dialog_title),
+                getString(R.string.remove_config_dialog_message))
+                .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
+                .doOnNext(eResponse -> dialog.show())
+                .flatMap(eResponse -> deleteFolder(dataAndConfigFolders))
+                .doOnNext(deletedSize -> {
+                  PreferenceManager.getDefaultSharedPreferences(getContext())
+                      .edit()
+                      .clear()
+                      .apply();
+                  V8Engine.clearUserData();
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(() -> dialog.dismiss())
+                .subscribe(deletedSize -> {
+                  Logger.d(TAG, "onPreferenceClick: " + deletedSize);
+                  deleteFilesSuccessMessage(deletedSize);
+                }, throwable -> {
+                  deleteFilesErrorMessage(throwable);
+                }));
             return false;
           }
         });
@@ -347,6 +403,37 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
+  private void deleteFilesErrorMessage(Throwable throwable) {
+    if (throwable instanceof DownloadIsRunningException) {
+      ShowMessage.asSnack(SettingsFragment.this, R.string.download_is_running_error);
+    } else {
+      ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
+      throwable.printStackTrace();
+    }
+  }
+
+  private void deleteFilesSuccessMessage(Long deletedSize) {
+    ShowMessage.asSnack(SettingsFragment.this,
+        AptoideUtils.StringU.getFormattedString(R.string.freed_space,
+            AptoideUtils.StringU.formatBytes(deletedSize)));
+  }
+
+  private Observable<Long> deleteFolder(String... folders) {
+    return installManager.getInstallationsAsList()
+        .first()
+        .flatMapIterable(progresses -> progresses)
+        .filter(progress -> progress.getState() == Progress.ACTIVE)
+        .toList()
+        .map(progresses -> progresses != null && progresses.size() > 0)
+        .flatMap(isDownload -> {
+          if (isDownload) {
+            return Observable.error(new DownloadIsRunningException());
+          } else {
+            return fileUtils.deleteFolder(folders);
+          }
+        });
+  }
+
   private void redrawSizes(Double[] size) {
     final Context ctx = getContext();
     if (!Build.DEVICE.equals(AptoideUtils.SystemU.JOLLA_ALIEN_DEVICE)) {
@@ -402,67 +489,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  public class DeleteDir extends AsyncTask<File, Void, Void> {
-
-    ProgressDialog pd;
-
-    @Override protected Void doInBackground(File... params) {
-      deleteDirectory(params[0]);
-      return null;
-    }
-
-    @Override protected void onPreExecute() {
-      super.onPreExecute();
-      pd = new ProgressDialog(context);
-      pd.setMessage(getString(R.string.please_wait));
-      pd.show();
-    }
-
-    @Override protected void onPostExecute(Void result) {
-      super.onPostExecute(result);
-      pd.dismiss();
-      ShowMessage.asSnack(getView(), getString(R.string.clear_cache_sucess));
-      new GetDirSize().execute(new File(aptoide_path), new File(icon_path));
-    }
-  }
-
-  public class GetDirSize extends AsyncTask<File, Void, Double[]> {
-
-    double getDirSize(File dir) {
-      double size = 0;
-      try {
-        if (dir.isFile()) {
-          size = dir.length();
-        } else {
-          File[] subFiles = dir.listFiles();
-          for (File file : subFiles) {
-            if (file.isFile()) {
-              size += file.length();
-            } else {
-              size += this.getDirSize(file);
-            }
-          }
-        }
-      } catch (Exception e) {
-        Logger.printException(e);
-        CrashReports.logException(e);
-      }
-      return size;
-    }
-
-    @Override protected Double[] doInBackground(File... dir) {
-      Double[] sizes = new Double[2];
-
-      for (int i = 0; i != sizes.length; i++) {
-        sizes[i] = this.getDirSize(dir[i]) / 1024 / 1024;
-      }
-      return sizes;
-    }
-
-    @Override protected void onPostExecute(Double[] result) {
-      super.onPostExecute(result);
-      redrawSizes(result);
-      unlocked = true;
-    }
+  class DownloadIsRunningException extends RuntimeException {
   }
 }

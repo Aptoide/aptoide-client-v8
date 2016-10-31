@@ -53,6 +53,10 @@ public class ShowMessage {
     asSnack(fragment.getView(), msg);
   }
 
+  public static void asSnack(Fragment fragment, @StringRes int msg) {
+    asSnack(fragment.getView(), msg);
+  }
+
   public static void asToast(Context context, String msg) {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
   }

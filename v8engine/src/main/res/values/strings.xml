@@ -275,5 +275,12 @@
   <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
 
   <string name="displayable_social_timeline_similar_to">similar to %1$s</string>
+  <string name="download_is_running_error">Download is running, please wait until download finishes.</string>
+  <string name="freed_space">%s MB freed</string>
+  <string name="storage_dialog_title">Clear Aptoide Storage</string>
+  <string name="clear_cache_dialog_message">This will clear all cached files</string>
+  <string name="remove_config_dialog_message">This will clear all your local configurations</string>
+  <string name="clear_data_settings_summary">Deletes all images, apk downloaded, database, icons,…</string>
+  <string name="clear_cache_summary">Deletes icons, images and webservice data</string>
 
 </resources>
