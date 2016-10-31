@@ -2,10 +2,12 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,22 +24,23 @@ import lombok.Getter;
   @Getter private String storeName;
   @Getter private String avatarUrl;
   @Getter private List<LatestApp> latestApps;
-
   private DateCalculator dateCalculator;
+
   private Date date;
+  private TimelineMetricsManager timelineMetricsManager;
 
   public StoreLatestAppsDisplayable() {
   }
 
   public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps,
-      DateCalculator dateCalculator) {
+      DateCalculator dateCalculator, TimelineMetricsManager timelineMetricsManager) {
     final List<LatestApp> latestApps = new ArrayList<>();
     for (App app : storeLatestApps.getApps()) {
       latestApps.add(new LatestApp(app.getId(), app.getIcon(), app.getPackageName()));
     }
     return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(),
         storeLatestApps.getStore().getAvatar(), latestApps, dateCalculator,
-        storeLatestApps.getLatestUpdate());
+        storeLatestApps.getLatestUpdate(), timelineMetricsManager);
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -64,6 +67,10 @@ import lombok.Getter;
     } else {
       return (int) (width * 0.1); // 10 % margins if portrait
     }
+  }
+
+  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
+    timelineMetricsManager.sendEvent(data, eventName);
   }
 
   @EqualsAndHashCode @AllArgsConstructor public static class LatestApp {

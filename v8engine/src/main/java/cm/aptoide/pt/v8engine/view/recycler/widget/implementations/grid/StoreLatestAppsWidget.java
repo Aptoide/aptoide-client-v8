@@ -6,10 +6,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -22,6 +24,7 @@ import java.util.Map;
  */
 public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 
+  private final String cardType = "Latest Apps";
   private final LayoutInflater inflater;
   private TextView title;
   private TextView subtitle;
@@ -76,18 +79,32 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 
     for (View app : apps.keySet()) {
       compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
-        Analytics.AppsTimeline.clickOnCard("Latest Apps", appsPackages.get(apps.get(app)),
-            Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-            Analytics.AppsTimeline.OPEN_APP_VIEW);
+        String packageName = appsPackages.get(apps.get(app));
+        Analytics.AppsTimeline.clickOnCard(cardType, packageName, Analytics.AppsTimeline.BLANK,
+            displayable.getStoreName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
+        displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+            .cardType(cardType)
+            .source(AptoideAnalytics.SOURCE_APTOIDE)
+            .specific(SendEventRequest.Body.Specific.builder()
+                .app(packageName)
+                .store(displayable.getStoreName())
+                .build())
+            .build(), AptoideAnalytics.OPEN_APP);
         ((FragmentShower) getContext()).pushFragmentV4(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
       }));
     }
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
-      Analytics.AppsTimeline.clickOnCard("Latest Apps", Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .specific(
+              SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
+          .build(), AptoideAnalytics.OPEN_STORE);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));

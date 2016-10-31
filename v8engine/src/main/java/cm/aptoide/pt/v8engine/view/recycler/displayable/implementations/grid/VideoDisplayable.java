@@ -8,12 +8,14 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -41,21 +43,21 @@ import rx.schedulers.Schedulers;
   private Date date;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
-  private AccessorFactory accessorFactory;
+  private TimelineMetricsManager timelineMetricsManager;
 
   public VideoDisplayable() {
   }
 
   public static VideoDisplayable from(Video video, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      AccessorFactory accessorFactory) {
+      TimelineMetricsManager timelineMetricsManager) {
     long appId = 0;
     return new VideoDisplayable(video.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
         video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, video.getApps(),
-        video.getDate(), dateCalculator, spannableFactory, accessorFactory);
+        video.getDate(), dateCalculator, spannableFactory, timelineMetricsManager);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -80,10 +82,6 @@ import rx.schedulers.Schedulers;
   public String getTimeSinceLastUpdate(Context context) {
     return dateCalculator.getTimeSinceDate(context, date);
   }
-
-  //public boolean isGetApp() {
-  //  return appName != null && appId != 0;
-  //}
 
   public Spannable getAppText(Context context, String appName) {
     return spannableFactory.createStyleSpan(
@@ -117,5 +115,9 @@ import rx.schedulers.Schedulers;
     } else {
       return (int) (width * 0.1);
     }
+  }
+
+  public void sendOpenVideoEvent(SendEventRequest.Body.Data data, String eventName) {
+    timelineMetricsManager.sendEvent(data, eventName);
   }
 }

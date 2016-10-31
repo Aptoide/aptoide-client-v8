@@ -10,12 +10,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -28,6 +30,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
 
+  private final String cardType = "App Update";
   private TextView appName;
   private TextView appVersion;
   private ImageView appIcon;
@@ -81,9 +84,15 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     errorText.setVisibility(View.GONE);
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
-      Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
+      Analytics.AppsTimeline.clickOnCard(cardType, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .specific(
+              SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
+          .build(), AptoideAnalytics.OPEN_STORE);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
@@ -94,14 +103,26 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
             throwable -> showDownloadError(displayable)));
 
     compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .specific(
+              SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
+          .build(), AptoideAnalytics.OPEN_APP);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     }));
 
     compositeSubscription.add(RxView.clicks(updateButton).flatMap(click -> {
-      Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
+      Analytics.AppsTimeline.clickOnCard(cardType, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.UPDATE_APP);
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .specific(
+              SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
+          .build(), AptoideAnalytics.UPDATE_APP);
       return displayable.requestPermission(getContext())
           .flatMap(success -> displayable.update(getContext()));
     }).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {

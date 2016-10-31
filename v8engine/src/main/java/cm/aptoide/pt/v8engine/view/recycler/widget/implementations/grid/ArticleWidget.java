@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -26,6 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class ArticleWidget extends Widget<ArticleDisplayable> {
 
+  private final String cardType = "Article";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -39,6 +42,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private TextView relatedTo;
 
   private String appName;
+  private String packageName;
 
   public ArticleWidget(View itemView) {
     super(itemView);
@@ -84,9 +88,17 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 
     url.setOnClickListener(v -> {
       displayable.getLink().launch(getContext());
-      Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
+      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_ARTICLE);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -94,6 +106,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
         .subscribe(installeds -> {
           if (installeds != null && !installeds.isEmpty()) {
             appName = installeds.get(0).getName();
+            packageName = installeds.get(0).getPackageName();
           } else {
             setAppNameToFirstLinkedApp();
           }
@@ -110,9 +123,17 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
 
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
       displayable.getDeveloperLink().launch(getContext());
-      Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getDeveloperLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_BLOG);
     }));
   }
 

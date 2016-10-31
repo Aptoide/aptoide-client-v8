@@ -13,9 +13,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -26,6 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class VideoWidget extends Widget<VideoDisplayable> {
 
+  private String cardType = "Video";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -39,8 +42,8 @@ public class VideoWidget extends Widget<VideoDisplayable> {
   private VideoDisplayable displayable;
   private View videoHeader;
   private TextView relatedTo;
-
   private String appName;
+  private String packageName;
 
   public VideoWidget(View itemView) {
     super(itemView);
@@ -74,7 +77,6 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
-    //relatedTo.setText(displayable.getAppRelatedText(getContext()));
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       media_layout.setForeground(
@@ -83,20 +85,18 @@ public class VideoWidget extends Widget<VideoDisplayable> {
       media_layout.setForeground(getContext().getResources().getDrawable(R.color.overlay_black));
     }
 
-    //if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
-    //  getAppButton.setVisibility(View.VISIBLE);
-    //  getAppButton.setText(displayable.getAppText(getContext()));
-    //  getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-    //      V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
-    //}
-
-    //		CustomTabsHelper.getInstance()
-    //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
-
     media_layout.setOnClickListener(v -> {
-      Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(getContext());
+      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_VIDEO);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -104,6 +104,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
         .subscribe(installeds -> {
           if (installeds != null && !installeds.isEmpty()) {
             appName = installeds.get(0).getName();
+            packageName = installeds.get(0).getPackageName();
           } else {
             setAppNameToFirstLinkedApp();
           }
@@ -120,9 +121,17 @@ public class VideoWidget extends Widget<VideoDisplayable> {
 
     compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
       displayable.getBaseLink().launch(getContext());
-      Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
+      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getBaseLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_CHANNEL);
     }));
   }
 
