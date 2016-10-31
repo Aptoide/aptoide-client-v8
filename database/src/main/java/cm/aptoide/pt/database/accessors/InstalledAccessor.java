@@ -30,7 +30,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAllSorted(Sort sort) {
-    return Observable.fromCallable(() -> Database.get())
+    return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
             .findAllSorted(Installed.NAME, sort)
             .asObservable()
@@ -53,7 +53,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAsList(String packageName) {
-    return Observable.fromCallable(() -> Database.get())
+    return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .findAll()
@@ -64,7 +64,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> get(String[] apps) {
-    return Observable.fromCallable(() -> Database.get())
+    return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
             .in(Installed.PACKAGE_NAME, apps)
             .findAll()
