@@ -12,6 +12,7 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
@@ -181,7 +182,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   private void caseGetAds(boolean refresh) {
     GetAdsRequest.ofHomepageMore(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
+            DataProvider.getContext()).getAptoideClientUUID(),
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
+        .execute(getAdsResponse -> {
       List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
 
       displayables = new LinkedList<>();
@@ -265,7 +268,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   countDownLatch, refresh, throwable -> countDownLatch.countDown(),
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                      DataProvider.getContext()).getAptoideClientUUID()));
+                      DataProvider.getContext()).getAptoideClientUUID(),
+                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -304,7 +308,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   countDownLatch, refresh, throwable -> finishLoading(throwable),
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                      DataProvider.getContext()).getAptoideClientUUID()));
+                      DataProvider.getContext()).getAptoideClientUUID(),
+                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()));
 
           try {
             countDownLatch.await();

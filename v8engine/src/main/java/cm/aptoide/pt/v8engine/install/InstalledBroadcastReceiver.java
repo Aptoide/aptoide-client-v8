@@ -125,7 +125,8 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
           } else {
             GetAdsRequest.ofSecondInstall(packageName,
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID())
+                    DataProvider.getContext()).getAptoideClientUUID(),
+                DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
                 .observe()
                 .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
                 .observeOn(AndroidSchedulers.mainThread())

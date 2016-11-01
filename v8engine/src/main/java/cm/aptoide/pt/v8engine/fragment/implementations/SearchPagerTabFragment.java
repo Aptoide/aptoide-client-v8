@@ -9,6 +9,7 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -88,7 +89,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     if (create) {
       GetAdsRequest.ofSearch(query,
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).execute(getAdsResponse -> {
+              DataProvider.getContext()).getAptoideClientUUID(),
+          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
+          .execute(getAdsResponse -> {
         if (getAdsResponse.getAds().size() > 0) {
           refreshed = true;
           addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));

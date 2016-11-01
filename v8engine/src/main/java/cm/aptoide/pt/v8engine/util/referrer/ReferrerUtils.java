@@ -180,7 +180,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                 if (retries > 0) {
                   GetAdsRequest.ofSecondTry(packageName,
                       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                          DataProvider.getContext()).getAptoideClientUUID())
+                          DataProvider.getContext()).getAptoideClientUUID(),
+                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
                       .observe()
                       .filter((getAdsResponse1) -> {
                         Boolean hasAds = hasAds(getAdsResponse1);
