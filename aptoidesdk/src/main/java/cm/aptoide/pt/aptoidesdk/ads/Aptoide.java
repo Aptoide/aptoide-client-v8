@@ -3,8 +3,10 @@ package cm.aptoide.pt.aptoidesdk.ads;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.aptoidesdk.entities.App;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.concurrent.Callable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -18,6 +20,7 @@ import static android.content.ContentValues.TAG;
 public class Aptoide {
 
   private static Context context;
+  private static String aptoideClientUUID;
 
   public static App getApp(Ad ad) {
     return getAppObservable(ad).toBlocking().first();
@@ -44,7 +47,9 @@ public class Aptoide {
   }
 
   private static Observable<App> getAppObservable(String packageName, String storeName) {
-    return GetAppRequest.of(packageName, storeName, null).observe().map(App::fromGetApp);
+    return GetAppRequest.of(packageName, storeName, null, aptoideClientUUID)
+        .observe()
+        .map(App::fromGetApp);
   }
 
   public static App getApp(long appId) {
@@ -52,7 +57,7 @@ public class Aptoide {
   }
 
   private static Observable<App> getAppObservable(long appId) {
-    return GetAppRequest.of(appId, null).observe().map(App::fromGetApp);
+    return GetAppRequest.of(appId, null, aptoideClientUUID).observe().map(App::fromGetApp);
   }
 
   public static Context getContext() {
@@ -66,5 +71,8 @@ public class Aptoide {
 
   public static void integrate(Context context) {
     Aptoide.context = context;
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
+        context).getAptoideClientUUID();
   }
 }

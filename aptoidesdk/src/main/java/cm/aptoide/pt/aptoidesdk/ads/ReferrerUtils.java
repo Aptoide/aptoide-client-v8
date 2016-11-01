@@ -20,12 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -84,7 +86,8 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
           RelativeLayout.LayoutParams.MATCH_PARENT));
 
       AptoideUtils.ThreadU.runOnIoThread(() -> {
-        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl);
+        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl,
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context), context));
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
       });
@@ -164,7 +167,10 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
               try {
 
                 if (retries > 0) {
-                  GetAdsRequest.ofSecondTry(packageName)
+                  GetAdsRequest.ofSecondTry(packageName,
+                      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
+                          context).getAptoideClientUUID(),
+                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context))
                       .observe()
                       .filter((getAdsResponse1) -> {
                         Boolean hasAds = hasAds(getAdsResponse1);
