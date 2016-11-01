@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import java.util.List;
 import rx.Observable;
 
@@ -36,7 +37,7 @@ public class AdRepository {
     return GetAdsRequest.ofAppviewOrganic(packageName, storeName,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
         .observe()
         .map(response -> response.getAds())
         .flatMap(ads -> {

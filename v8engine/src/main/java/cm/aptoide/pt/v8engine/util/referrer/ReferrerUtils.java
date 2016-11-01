@@ -34,6 +34,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -181,7 +182,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                   GetAdsRequest.ofSecondTry(packageName,
                       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                           DataProvider.getContext()).getAptoideClientUUID(),
-                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
+                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                          V8Engine.getContext()))
                       .observe()
                       .filter((getAdsResponse1) -> {
                         Boolean hasAds = hasAds(getAdsResponse1);

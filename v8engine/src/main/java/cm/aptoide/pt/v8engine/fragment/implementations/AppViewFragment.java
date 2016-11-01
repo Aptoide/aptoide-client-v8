@@ -628,7 +628,7 @@ public class AppViewFragment extends GridRecyclerFragment
     return GetAdsRequest.ofAppviewSuggested(keywords,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
         .observe()
         .map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {

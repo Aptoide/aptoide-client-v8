@@ -16,6 +16,7 @@ import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -90,7 +91,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       GetAdsRequest.ofSearch(query,
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(),
-          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
+          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
           .execute(getAdsResponse -> {
         if (getAdsResponse.getAds().size() > 0) {
           refreshed = true;

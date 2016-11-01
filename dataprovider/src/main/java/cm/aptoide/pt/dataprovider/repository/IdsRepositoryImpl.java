@@ -64,7 +64,7 @@ import lombok.AllArgsConstructor;
 
     String gaid = null;
 
-    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()) {
+    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
       try {
         gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
       } catch (Exception e) {

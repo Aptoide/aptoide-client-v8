@@ -33,6 +33,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
@@ -183,7 +184,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     GetAdsRequest.ofHomepageMore(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable())
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
         .execute(getAdsResponse -> {
       List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
 
@@ -269,7 +270,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
-                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()));
+                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                      V8Engine.getContext())));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -309,7 +311,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
-                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()));
+                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                      V8Engine.getContext())));
 
           try {
             countDownLatch.await();
