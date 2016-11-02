@@ -6,7 +6,9 @@ import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.concurrent.Callable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -19,7 +21,6 @@ import static android.content.ContentValues.TAG;
 
 public class Aptoide {
 
-  private static Context context;
   private static String aptoideClientUUID;
 
   public static App getApp(Ad ad) {
@@ -61,18 +62,25 @@ public class Aptoide {
   }
 
   public static Context getContext() {
-    if (context == null) {
+    if (AptoideUtils.getContext() == null) {
       throw new RuntimeException(
           "Aptoide not integrated, did you forget to call Aptoide.integrate()?");
     }
 
-    return context;
+    return AptoideUtils.getContext();
   }
 
   public static void integrate(Context context) {
-    Aptoide.context = context;
+    AptoideUtils.setContext(context);
+    setUserAgent();
 
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
         context).getAptoideClientUUID();
+  }
+
+  private static void setUserAgent() {
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        () -> null));
   }
 }
