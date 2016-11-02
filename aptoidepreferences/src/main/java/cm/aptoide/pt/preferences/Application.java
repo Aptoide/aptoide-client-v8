@@ -6,6 +6,7 @@
 package cm.aptoide.pt.preferences;
 
 import android.content.Context;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Getter;
 
 /**
@@ -13,13 +14,16 @@ import lombok.Getter;
  */
 public abstract class Application extends android.app.Application {
 
-  @Getter protected static Context context;
   @Getter private static AptoidePreferencesConfiguration configuration;
+
+  public static Context getContext() {
+    return AptoideUtils.getContext();
+  }
 
   @Override public void onCreate() {
     super.onCreate();
 
-    context = this;
+    AptoideUtils.setContext(this);
     configuration = createConfiguration();
   }
 
