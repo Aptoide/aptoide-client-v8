@@ -132,7 +132,7 @@ public class DisplayableWidgetMapping {
     parseMappings(createMapping());
   }
 
-  DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+  public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
       Class<? extends Displayable> displayableClass) {
     this.displayableClass = displayableClass;
     this.widgetClass = widgetClass;
@@ -142,14 +142,14 @@ public class DisplayableWidgetMapping {
     return instance;
   }
 
-  private void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
+  protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable().getViewLayout(),
           displayableWidgetMapping);
     }
   }
 
-  private List<DisplayableWidgetMapping> createMapping() {
+  protected List<DisplayableWidgetMapping> createMapping() {
 
     LinkedList<DisplayableWidgetMapping> displayableWidgetMappings = new LinkedList<>();
 
@@ -333,5 +333,29 @@ public class DisplayableWidgetMapping {
       Logger.e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
     }
+  }
+
+  /**
+   * needed in the partners to get the displayableClass
+   * @return displayableClass
+   */
+  public Class<? extends Displayable> getDisplayableClass() {
+    return displayableClass;
+  }
+
+  /**
+   * needed in the partners to get the widgetClass
+   * @return widgetClass
+   */
+  public Class<? extends Widget> getWidgetClass() {
+    return widgetClass;
+  }
+
+  /**
+   * needed in partners to add it's own displayables/widgets
+   * @return Map of widgets and displayables
+   */
+  public Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
+    return viewTypeMapping;
   }
 }
