@@ -35,6 +35,9 @@ public class FileUtils {
     this.sendFileMoveEvent = sendFileMoveEvent;
   }
 
+  public FileUtils() {
+  }
+
   public static boolean fileExists(String path) {
     return !TextUtils.isEmpty(path) && new File(path).exists();
   }
@@ -114,8 +117,8 @@ public class FileUtils {
    * @param fileName Name of the file to be copied
    */
   public void copyFile(String inputPath, String outputPath, String fileName) {
-    if (!fileExists(inputPath)) {
-      throw new RuntimeException("Input file doesn't exists");
+    if (!fileExists(inputPath + fileName)) {
+      throw new RuntimeException("Input file(" + inputPath + fileName + ") doesn't exists");
     }
 
     File file = new File(inputPath + fileName);
