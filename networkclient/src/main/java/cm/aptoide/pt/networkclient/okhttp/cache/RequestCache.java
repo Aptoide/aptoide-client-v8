@@ -11,7 +11,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
-import cm.aptoide.pt.networkclient.okhttp.newCache.Sha1KeyAlgorithm;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.disklrucache.DiskLruCache;
 import java.io.File;

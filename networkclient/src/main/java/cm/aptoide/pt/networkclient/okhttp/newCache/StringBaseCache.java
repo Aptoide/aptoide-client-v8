@@ -6,7 +6,7 @@ package cm.aptoide.pt.networkclient.okhttp.newCache;
 
 abstract class StringBaseCache<K, V> extends Cache<K, V, String> {
 
-  public StringBaseCache(KeyAlgorithm<K, String> keyAlgorithm) {
+  StringBaseCache(KeyAlgorithm<K, String> keyAlgorithm) {
     super(keyAlgorithm);
   }
 
@@ -45,10 +45,7 @@ abstract class StringBaseCache<K, V> extends Cache<K, V, String> {
       throw new UnsupportedOperationException("Initialize cache using init() first");
     }
     String keyAsString = keyAlgorithm.getKeyFrom(key);
-    if(contains(keyAsString)) {
-      return isValid(keyAsString);
-    }
-    return false;
+    return (contains(keyAsString) && isValid(keyAsString));
   }
 
   abstract boolean isValid(String key);

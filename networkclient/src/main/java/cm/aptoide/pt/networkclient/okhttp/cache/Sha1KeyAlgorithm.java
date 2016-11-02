@@ -3,9 +3,10 @@
  * Modified by SithEngineer on 09/06/2016.
  */
 
-package cm.aptoide.pt.networkclient.okhttp.newCache;
+package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.IOException;
 import okhttp3.Request;

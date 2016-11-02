@@ -9,5 +9,5 @@ package cm.aptoide.pt.networkclient.okhttp.newCache;
  * Created by sithengineer on 27/04/16.
  */
 public interface KeyAlgorithm<Tin, Tout> {
-  Tout getKeyFrom(Tin type);
+  Tout getKeyFrom(Tin data);
 }
