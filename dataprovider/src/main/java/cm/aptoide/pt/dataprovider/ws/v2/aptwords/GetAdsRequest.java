@@ -188,12 +188,13 @@ import rx.Observable;
     return null;
   }
 
-  private enum Location {
+  public enum Location {
     homepage,
     appview,
     middleappview,
     search,
     secondinstall,
-    secondtry
+    secondtry,
+    aptoidesdk
   }
 }
