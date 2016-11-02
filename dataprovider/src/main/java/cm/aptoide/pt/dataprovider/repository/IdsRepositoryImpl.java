@@ -11,7 +11,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import cm.aptoide.pt.actions.GenerateClientId;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
@@ -107,7 +106,7 @@ import lombok.AllArgsConstructor;
     String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
 
     if (androidId == null) {
-      androidId = Settings.Secure.getString(DataProvider.getContext().getContentResolver(),
+      androidId = Settings.Secure.getString(context.getContentResolver(),
           Settings.Secure.ANDROID_ID);
       setAndroidId(androidId);
     }
