@@ -6,7 +6,6 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
@@ -15,7 +14,6 @@ import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
-import java.util.Locale;
 
 /**
  * Created by sithengineer on 12/05/16.
@@ -47,8 +45,7 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion = 8075;
 
-      schema.get("Scheduled")
-          .removeField("appId");
+      schema.get("Scheduled").removeField("appId");
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -80,11 +77,10 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       // this leads to the removal of some Scheduled updates
 
       String previous_md5 = "";
-      for (DynamicRealmObject dynamicRealmObject :
-          realm.where("Scheduled").findAllSorted("md5")) {
+      for (DynamicRealmObject dynamicRealmObject : realm.where("Scheduled").findAllSorted("md5")) {
 
         String current_md5 = dynamicRealmObject.getString("md5");
-        if(TextUtils.equals(previous_md5, current_md5)){
+        if (TextUtils.equals(previous_md5, current_md5)) {
           dynamicRealmObject.deleteFromRealm();
         }
         previous_md5 = current_md5;
@@ -92,11 +88,6 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       scheduledSchema.removeField("md5");
       scheduledSchema.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
-
-      scheduledSchema.addPrimaryKey("packageName");
-      scheduledSchema.addField("appAction", String.class);
-
-      schema.get("FileToDownload").removePrimaryKey();
 
       realm.where(Update.class.getSimpleName())
           //.equalTo(Update.LABEL, "").or()
@@ -109,12 +100,56 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     //  Migrate from version 2 (8077) to version 3 (8078)
+    // (re)create (Store)MinimalAd schema
     if (oldVersion == 8077) {
-      RealmObjectSchema downloadSchema = schema.get("Download");
-      downloadSchema.addField("versionName", String.class);
 
-      RealmObjectSchema fileToDownloadSchema = schema.get("FileToDownload");
-      fileToDownloadSchema.addField("versionName", String.class);
+      RealmObjectSchema scheduledSchema = schema.get("Scheduled");
+      scheduledSchema.removePrimaryKey();
+      scheduledSchema.addPrimaryKey("packageName");
+      if (!scheduledSchema.hasField("appAction")) {
+        scheduledSchema.addField("appAction", String.class);
+      }
+
+      //schema.get("FileToDownload").removePrimaryKey();
+
+      // the old schema is removed because we know that no other entity points to this one
+      if (schema.contains("StoreMinimalAd")) {
+        schema.remove("StoreMinimalAd");
+      }
+      if (schema.contains("MinimalAd")) {
+        schema.remove("MinimalAd");
+      }
+
+      RealmObjectSchema minimalAdSchema = schema.create("MinimalAd");
+      minimalAdSchema.addField("description", String.class)
+          .addField("packageName", String.class)
+          .addField("networkId", Long.class)
+          .addField("clickUrl", String.class)
+          .addField("cpcUrl", String.class)
+          .addField("cpdUrl", String.class)
+          .addField("appId", Long.class)
+          .addField("adId", Long.class)
+          .addField("cpiUrl", String.class)
+          .addField("name", String.class)
+          .addField("iconPath", String.class);
+
+      RealmObjectSchema downloadSchema = schema.get("Download");
+
+      if (!downloadSchema.hasField("packageName")) {
+        downloadSchema.addField("packageName", String.class);
+      }
+
+      if (!downloadSchema.hasField("versionCode")) {
+        downloadSchema.addField("versionCode", int.class);
+      }
+
+      if (!downloadSchema.hasField("action")) {
+        downloadSchema.addField("action", int.class);
+      }
+
+      if (!downloadSchema.hasField("scheduled")) {
+        downloadSchema.addField("scheduled", boolean.class);
+      }
 
       oldVersion++;
 

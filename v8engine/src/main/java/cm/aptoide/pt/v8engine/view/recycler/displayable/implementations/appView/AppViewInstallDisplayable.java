@@ -59,7 +59,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
    * The current app is installing
    */
   public static final int ACTION_INSTALLING = 4;
-  private static final String TAG = AppViewInstallDisplayable.class.getName();
+  private static final String TAG = AppViewInstallDisplayable.class.getSimpleName();
   /**
    * This should only be used internally
    */
@@ -149,12 +149,11 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public Observable<WidgetState> getState() {
-    return Observable.merge(getInstallationObservable(md5, installManager),
-        getInstalledAppObservable(currentApp, installedRepository)).flatMap(widgetState -> {
-      if (widgetState.getButtonState() == ACTION_NO_STATE) {
+    return getInstallationObservable(md5, installManager).flatMap(state -> {
+      if (state.getButtonState() == ACTION_NO_STATE) {
         return getInstalledAppObservable(currentApp, installedRepository);
       } else {
-        return Observable.just(widgetState);
+        return Observable.just(state);
       }
     });
   }

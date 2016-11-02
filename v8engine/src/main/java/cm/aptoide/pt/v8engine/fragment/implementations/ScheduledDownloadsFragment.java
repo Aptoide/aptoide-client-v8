@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
@@ -52,6 +54,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
   public static final String OPEN_MODE = "openMode";
   private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
+  private InstallManager installManager;
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;
@@ -71,6 +74,14 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     bundle.putSerializable(OPEN_MODE, openMode);
     scheduledDownloadsFragment.setArguments(bundle);
     return scheduledDownloadsFragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -177,7 +188,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
       ArrayList<ScheduledDownloadDisplayable> displayables =
           new ArrayList<>(scheduledDownloadList.size());
       for (final Scheduled scheduledDownload : scheduledDownloadList) {
-        displayables.add(new ScheduledDownloadDisplayable(scheduledDownload));
+        displayables.add(new ScheduledDownloadDisplayable(scheduledDownload, installManager));
       }
       setDisplayables(displayables);
     }

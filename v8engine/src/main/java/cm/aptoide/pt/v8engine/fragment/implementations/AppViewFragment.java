@@ -444,19 +444,19 @@ public class AppViewFragment extends GridRecyclerFragment
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
       subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> finishLoading(throwable));
     } else if (!TextUtils.isEmpty(md5)) {
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> {
@@ -468,9 +468,9 @@ public class AppViewFragment extends GridRecyclerFragment
     } else {
       Logger.d(TAG, "loading app info using app package name");
       subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> {
@@ -490,23 +490,26 @@ public class AppViewFragment extends GridRecyclerFragment
     }
 
     // useful data for the schedule updates menu option
-    installAction().observeOn(AndroidSchedulers.mainThread()).subscribe(appAction -> {
-      AppViewFragment.this.appAction = appAction;
-      MenuItem item = menu.findItem(R.id.menu_schedule);
-      if (item != null) {
-        item.setVisible(appAction != AppAction.OPEN);
-      }
-      if (appAction != AppAction.INSTALL) {
-        setUnInstallMenuOptionVisible(
-            () -> new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
+    installAction().observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(appAction -> {
+          AppViewFragment.this.appAction = appAction;
+          MenuItem item = menu.findItem(R.id.menu_schedule);
+          if (item != null) {
+            item.setVisible(appAction != AppAction.OPEN);
+          }
+          if (appAction != AppAction.INSTALL) {
+            setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
+                (PermissionRequest) getContext())
                 .flatMap(success -> installManager.uninstall(getContext(), packageName,
                     app.getFile().getVername()))
+                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .subscribe(aVoid -> {
                 }, throwable -> throwable.printStackTrace()));
-      } else {
-        setUnInstallMenuOptionVisible(null);
-      }
-    });
+          } else {
+            setUnInstallMenuOptionVisible(null);
+          }
+        });
 
     header.setup(getApp);
     setupDisplayables(getApp);
@@ -517,6 +520,7 @@ public class AppViewFragment extends GridRecyclerFragment
       GenericDialogs.createGenericOkCancelMessage(getContext(),
           Application.getConfiguration().getMarketName(),
           getContext().getString(R.string.installapp_alrt, appName))
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(new SimpleSubscriber<GenericDialogs.EResponse>() {
             @Override public void onNext(GenericDialogs.EResponse eResponse) {
               super.onNext(eResponse);
@@ -631,12 +635,12 @@ public class AppViewFragment extends GridRecyclerFragment
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
         .observe()
         .map(getAdsResponse -> {
-      if (AdRepository.validAds(getAdsResponse)) {
-        suggestedAds = getAdsResponse.getAds();
-      }
+          if (AdRepository.validAds(getAdsResponse)) {
+            suggestedAds = getAdsResponse.getAds();
+          }
 
-      return getApp1;
-    });
+          return getApp1;
+        });
   }
 
   @Override public void scroll(Position position) {
