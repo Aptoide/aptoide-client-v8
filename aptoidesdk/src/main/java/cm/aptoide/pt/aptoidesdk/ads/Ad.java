@@ -2,20 +2,18 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 24-10-2016.
  */
 @Accessors(chain = true) public class Ad {
-  @Getter final long timestamp;
+  final long timestamp;
   final long id;
   final Clicks clicks;
   final Network network;
   final Data data;
-  @Getter @Setter String referrer;
+  String referrer;
 
   public Ad(long timestamp, long id, Clicks clicks, Network network, Data data) {
     this.timestamp = timestamp;

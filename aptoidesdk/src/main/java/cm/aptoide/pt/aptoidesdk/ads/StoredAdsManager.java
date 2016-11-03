@@ -99,7 +99,7 @@ public class StoredAdsManager {
 
     while (iterator.hasNext()) {
       Ad ad = iterator.next();
-      if (System.currentTimeMillis() - ad.getTimestamp() > AD_EXPIRATION_IN_MILLIS) {
+      if (System.currentTimeMillis() - ad.timestamp > AD_EXPIRATION_IN_MILLIS) {
         iterator.remove();
       }
     }
