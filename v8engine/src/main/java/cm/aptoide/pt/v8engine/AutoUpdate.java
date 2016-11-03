@@ -151,6 +151,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
               .flatMap(success -> installManager.install(activity,
                   downloadFactory.create(autoUpdateInfo)))
               .filter(progress -> !isDownloading(progress))
+              .first()
               .subscribe(progress -> {
                 if (progress.getState() == Progress.ERROR) {
                   ShowMessage.asSnack(activity, R.string.error_SYS_1);
