@@ -53,7 +53,7 @@ import rx.Observable;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
   }
 
-  private static GetAdsRequest of(Location location, String keyword, Integer limit,
+  public static GetAdsRequest of(Location location, String keyword, Integer limit,
       String aptoideClientUUID, boolean googlePlayServicesAvailable) {
     return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable).setLocation(location)
         .setKeyword(keyword)
@@ -188,12 +188,13 @@ import rx.Observable;
     return null;
   }
 
-  private enum Location {
+  public enum Location {
     homepage,
     appview,
     middleappview,
     search,
     secondinstall,
-    secondtry
+    secondtry,
+    aptoidesdk
   }
 }
