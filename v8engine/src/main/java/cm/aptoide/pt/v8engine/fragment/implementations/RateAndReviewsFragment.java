@@ -47,6 +47,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
@@ -113,7 +114,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
             e.printStackTrace();
           }
           AptoideUtils.ThreadU.runOnUiThread(() -> {
-            int index = 0;
+            int index = -1;
             int count = 0;
             for (final Review review : reviews) {
               displayables.add(new RateAndReviewCommentDisplayable(
@@ -156,8 +157,11 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
               }
               count++;
             }
+            checkAndRemoveProgressBarDisplayable();
             addDisplayables(displayables);
-            getLayoutManager().scrollToPosition(getAdapter().getReviewPosition(index));
+            if (index >= 0) {
+              getLayoutManager().scrollToPosition(getAdapter().getReviewPosition(index));
+            }
           });
         });
       };
@@ -495,5 +499,15 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     public abstract void addComment(List<Comment> comments);
 
     public abstract void collapseComments();
+  }
+
+  private void checkAndRemoveProgressBarDisplayable() {
+    for (int i = 0; i < adapter.getItemCount(); i++) {
+      Displayable displayable = adapter.getDisplayable(i);
+      if (displayable instanceof ProgressBarDisplayable) {
+        adapter.removeDisplayable(i);
+        adapter.notifyItemRemoved(i);
+      }
+    }
   }
 }
