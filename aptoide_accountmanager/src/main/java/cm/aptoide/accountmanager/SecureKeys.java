@@ -22,6 +22,7 @@ class SecureKeys {
   public static final String QUEUE_NAME = "queueName";
   public static final String USER_AVATAR = "useravatar";
   public static final String USER_REPO = "userRepo";
+  public static final String USER_ID = "userId";
   public static final String REPO_AVATAR = "storeAvatar";
   public static final String REPO_THEME = "storeTheme";
 }
