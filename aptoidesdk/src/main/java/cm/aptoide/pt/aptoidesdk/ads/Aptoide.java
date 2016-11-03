@@ -3,12 +3,14 @@ package cm.aptoide.pt.aptoidesdk.ads;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.aptoidesdk.entities.App;
+import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.List;
 import java.util.concurrent.Callable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -21,6 +23,7 @@ import static android.content.ContentValues.TAG;
 
 public class Aptoide {
 
+  private static final GetAdsProxy getAdsProxy = new GetAdsProxy();
   private static String aptoideClientUUID;
 
   public static App getApp(Ad ad) {
@@ -82,5 +85,25 @@ public class Aptoide {
     SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
         () -> null));
+  }
+
+  public static List<Ad> getAds(int limit, boolean mature) {
+    getAdsProxy.getAds(limit, mature, aptoideClientUUID);
+    return null;
+  }
+
+  public static List<Ad> getAds(int limit, List<String> keyword) {
+    getAdsProxy.getAds(limit, aptoideClientUUID, keyword);
+    return null;
+  }
+
+  public static List<Ad> getAds(int limit, boolean mature, List<String> keyword) {
+    getAdsProxy.getAds(limit, mature, aptoideClientUUID, keyword);
+    return null;
+  }
+
+  public static List<Ad> getAds(int limit) {
+    getAdsProxy.getAds(limit, aptoideClientUUID);
+    return null;
   }
 }
