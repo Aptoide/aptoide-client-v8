@@ -3,7 +3,9 @@ package cm.aptoide.pt.aptoidesdk.ads;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.aptoidesdk.entities.App;
+import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
+import cm.aptoide.pt.aptoidesdk.proxys.ListSearchAppsProxy;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -24,6 +26,7 @@ import static android.content.ContentValues.TAG;
 public class Aptoide {
 
   private static final GetAdsProxy getAdsProxy = new GetAdsProxy();
+  private static final ListSearchAppsProxy listSearchAppsProxy = new ListSearchAppsProxy();
   private static String aptoideClientUUID;
 
   public static App getApp(Ad ad) {
@@ -105,5 +108,9 @@ public class Aptoide {
   public static List<Ad> getAds(int limit) {
     getAdsProxy.getAds(limit, aptoideClientUUID);
     return null;
+  }
+
+  public static List<SearchResult> search(String query) {
+    return listSearchAppsProxy.search(query, aptoideClientUUID);
   }
 }
