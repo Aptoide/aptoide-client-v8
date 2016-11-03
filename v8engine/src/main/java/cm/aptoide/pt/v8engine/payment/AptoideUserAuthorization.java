@@ -6,8 +6,9 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.util.UserCompleteData;
 import javax.security.auth.login.LoginException;
-import okio.Buffer;
+import okio.ByteString;
 
 /**
  * Created by marcelobenites on 20/10/16.
@@ -15,16 +16,10 @@ import okio.Buffer;
 public class AptoideUserAuthorization implements UserAuthorization {
 
   @Override public String getUserAuthorization() throws LoginException {
-    final Buffer buffer = new Buffer();
-    try {
-      String userEmail = AptoideAccountManager.getUserEmail();
-      if (userEmail != null) {
-        buffer.write(userEmail.getBytes());
-        return buffer.md5().hex().substring(0, 30);
-      }
-      throw new LoginException("Aptoide user not logged in. Can not generate user authorization.");
-    } finally {
-      buffer.close();
+    if (AptoideAccountManager.isLoggedIn()) {
+      UserCompleteData userInfo = AptoideAccountManager.getUserData();
+      return ByteString.of(userInfo.getId().getBytes()).base64();
     }
+    throw new LoginException("Aptoide user not logged in. Can not generate user authorization.");
   }
 }
