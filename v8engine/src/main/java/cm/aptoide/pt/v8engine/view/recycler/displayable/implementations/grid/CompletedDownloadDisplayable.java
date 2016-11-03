@@ -59,7 +59,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
   }
 
   public void removeDownload(Context context) {
-    installManager.removeInstallationFile(context, getPojo().getRequest().getMd5());
+    installManager.removeInstallationFile(getPojo().getRequest().getMd5());
   }
 
   public Observable<Integer> downloadStatus() {

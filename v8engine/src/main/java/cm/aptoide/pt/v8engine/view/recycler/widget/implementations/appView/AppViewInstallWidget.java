@@ -340,7 +340,6 @@ import rx.subscriptions.CompositeSubscription;
     PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
 
-
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.SourceDownloadComplete.installClicked(app.getId());
@@ -353,7 +352,8 @@ import rx.subscriptions.CompositeSubscription;
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                  downloadAction))).first()
+                  downloadAction)))
+          .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             ShowMessage.asSnack(v, installOrUpgradeMsg);
@@ -440,7 +440,7 @@ import rx.subscriptions.CompositeSubscription;
     String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      installManager.removeInstallationFile(getContext(), md5);
+      installManager.removeInstallationFile(md5);
     });
 
     actionPause.setOnClickListener(view -> {
@@ -462,7 +462,6 @@ import rx.subscriptions.CompositeSubscription;
             Logger.e(TAG, err);
           }));
     });
-
   }
 
   private void setDownloadBarVisible(boolean visible, AppViewInstallDisplayable displayable,
