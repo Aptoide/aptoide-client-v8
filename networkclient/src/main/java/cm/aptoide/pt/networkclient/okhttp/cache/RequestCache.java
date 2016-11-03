@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
+import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.disklrucache.DiskLruCache;
@@ -28,9 +29,9 @@ import okhttp3.Response;
  */
 public class RequestCache {
 
-  public static final String BYPASS_HEADER_KEY = "Bypass-Cache";
-  public static final String BYPASS_HEADER_VALUE = "true";
-  public static final String BYPASS_HEADER_FALSE_VALUE = "false";
+  //public static final String BYPASS_HEADER_KEY = "Bypass-Cache";
+  //public static final String BYPASS_HEADER_VALUE = "true";
+  //public static final String BYPASS_HEADER_FALSE_VALUE = "false";
 
   private static final String TAG = RequestCache.class.getName();
 
@@ -179,8 +180,9 @@ public class RequestCache {
       DiskLruCache.Snapshot snapshot = null;
       try {
 
-        String header = request.headers().get(BYPASS_HEADER_KEY);
-        if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
+        String header = request.headers().get(PostCacheInterceptor.BYPASS_HEADER_KEY);
+        if (header != null && header.equalsIgnoreCase(
+            PostCacheInterceptor.BYPASS_HEADER_VALUE)) {
           return null;
         }
         final String reqKey = keyAlgorithm.getKeyFrom(request);

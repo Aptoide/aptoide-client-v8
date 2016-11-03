@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import okhttp3.Headers;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -79,10 +81,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
 
       for(String headerValue : cacheControlHeaders) {
         if(headerValue.startsWith("max-age") || headerValue.startsWith("s-maxage")) {
-          int seconds = Integer.parseInt(
-              headerValue.substring(headerValue.lastIndexOf('=')+1, headerValue.length()),
-              10
-          );
+          int seconds = extractNumber(headerValue);
           return seconds;
         }
       }
@@ -90,6 +89,16 @@ public class L2Cache extends StringBaseCache<Request, Response> {
       Logger.e(TAG, e);
     }
 
+    return 0;
+  }
+
+  private final Pattern pattern = Pattern.compile("\\d+"); // 1 or more digits
+  private int extractNumber(String value) {
+    Matcher matcher = pattern.matcher(value);
+    if(matcher.find()) {
+      String group = matcher.group(matcher.groupCount());
+      return Integer.parseInt(group);
+    }
     return 0;
   }
 
