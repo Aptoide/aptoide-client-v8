@@ -39,6 +39,7 @@ import rx.Observable;
       .build();
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
+  private String excludedPackage;
   private Location location;
   private String keyword;
   private Integer limit;
@@ -104,12 +105,13 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable) {
+      boolean googlePlayServicesAvailable, String excludedPackage) {
 
     GetAdsRequest getAdsRequest =
         of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable);
 
-    getAdsRequest.setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
+    getAdsRequest.setExcludedPackage(excludedPackage)
+        .setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
 
     return getAdsRequest;
   }
@@ -185,7 +187,7 @@ import rx.Observable;
     //			excludedAds.add(excludedAd.getPackageName());
     //		}
 
-    return null;
+    return excludedPackage;
   }
 
   public enum Location {

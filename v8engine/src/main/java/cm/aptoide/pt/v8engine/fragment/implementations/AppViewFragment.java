@@ -632,15 +632,14 @@ public class AppViewFragment extends GridRecyclerFragment
     return GetAdsRequest.ofAppviewSuggested(keywords,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
-        .observe()
-        .map(getAdsResponse -> {
-          if (AdRepository.validAds(getAdsResponse)) {
-            suggestedAds = getAdsResponse.getAds();
-          }
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
+        getApp1.getNodes().getMeta().getData().getPackageName()).observe().map(getAdsResponse -> {
+      if (AdRepository.validAds(getAdsResponse)) {
+        suggestedAds = getAdsResponse.getAds();
+      }
 
-          return getApp1;
-        });
+      return getApp1;
+    });
   }
 
   @Override public void scroll(Position position) {
