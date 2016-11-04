@@ -6,9 +6,9 @@ import lombok.Data;
 /**
  * Created by neuro on 21-10-2016.
  */
-@Data
-public class SearchResult {
+@Data public class SearchResult {
 
+  private long id;
   private String name;
   private String packageName;
   private long size;
