@@ -13,6 +13,8 @@ public abstract class Cache<K, V, Tout> {
 
   abstract void put(K key, V value);
   abstract V get(K key);
+  public abstract void remove(K key);
   abstract boolean contains(K key);
   abstract boolean isValid(K key);
+  public abstract void destroy();
 }

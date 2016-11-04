@@ -17,6 +17,7 @@ android {
   defaultConfig {
     minSdkVersion 9
     consumerProguardFiles "proguard-rules.txt"
+    testInstrumentationRunner    "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -64,6 +65,8 @@ dependencies {
   //
   // from remote repos
   //
+
+  androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
 
   testCompile "junit:junit:${JUNIT_VERSION}"
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"

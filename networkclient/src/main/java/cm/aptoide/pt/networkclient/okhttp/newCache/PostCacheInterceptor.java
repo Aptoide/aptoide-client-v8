@@ -21,38 +21,47 @@ public class PostCacheInterceptor implements Interceptor {
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
-    Request request = chain.request();
+    final Request originalRequest = chain.request();
+    final Request toReturnRequest = originalRequest.newBuilder()
+        .method(originalRequest.method(), originalRequest.body())
+        .build();
+    final Request toKeepRequest = originalRequest.newBuilder()
+        .method(originalRequest.method(), originalRequest.body())
+        .build();
 
     // we only intercept and cache POST requests
-    if(!request.method().equalsIgnoreCase("POST")) {
-      return chain.proceed(request);
+    if (!originalRequest.method().equalsIgnoreCase("POST")) {
+      return chain.proceed(toReturnRequest);
     }
 
     // we shouldn't cache the response if the client explicitly asked us not to
-    Headers headers = request.headers();
-    if(headers.size()>0) {
-      for(String bypassCacheHeaderValue : headers.values(BYPASS_HEADER_KEY)){
-        if(bypassCacheHeaderValue.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
-          return chain.proceed(request);
+    Headers headers = originalRequest.headers();
+    if (headers.size() > 0) {
+      for (String bypassCacheHeaderValue : headers.values(BYPASS_HEADER_KEY)) {
+        if (bypassCacheHeaderValue.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
+          return chain.proceed(toReturnRequest);
         }
       }
     }
 
     // try to hit the cache to get the response
-    if(cache.contains(request)) {
-      Response cachedResponse = cache.get(request);
-      if(cachedResponse!=null) {
-        Logger.v(TAG, String.format("cache hit '%s'", request.url()));
+    if (cache.contains(originalRequest)) {
+      Response cachedResponse = cache.get(toKeepRequest);
+      if (cachedResponse != null) {
+        Logger.v(TAG, String.format("cache hit '%s'", originalRequest.url()));
         return cachedResponse;
       }
 
-      Logger.v(TAG, String.format("cache hit but with null result '%s'", request.url()));
+      Logger.v(TAG, String.format("cache hit but with null result '%s'", originalRequest.url()));
     }
 
     // in case of a cache miss, go to the network
-    Logger.v(TAG, String.format("cache miss '%s'", request.url()));
-    Response response = chain.proceed(request);
-    cache.put(request, response);
+    Logger.v(TAG, String.format("cache miss '%s'", originalRequest.url()));
+    Response response = chain.proceed(toReturnRequest);
+    cache.put(originalRequest,
+        response.newBuilder().headers(response.headers()).body(response.body())
+            .build()
+    );
     return response;
   }
 }

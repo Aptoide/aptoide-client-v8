@@ -1,12 +1,9 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 29/06/2016.
- */
-
 package cm.aptoide.pt.networkclient;
 
+import android.support.test.runner.AndroidJUnit4;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
+import cm.aptoide.pt.networkclient.okhttp.newCache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -17,7 +14,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.internal.DiskLruCache;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,19 +27,23 @@ import static org.junit.Assert.fail;
 
 //@RunWith(RobolectricGradleTestRunner.class)
 //@Config(constants = BuildConfig.class, sdk = 16)
-public class DiskLruUnitTest {
 
-  private static final String TAG = DiskLruCache.class.getName();
+//@RunWith(MockitoJUnitRunner.class)
 
-  private static RequestCache cache;
+@RunWith(AndroidJUnit4.class)
+public class L2CacheUnitTest {
+
+  private static final String TAG = L2CacheUnitTest.class.getName();
+
+  private static L2Cache cache;
   private static Request request;
   private static Response response;
 
   private static Vector<Request> usedRequests;
 
-  //	@BeforeClass
+  @BeforeClass
   public static void init() {
-    cache = new RequestCache();
+    cache = new L2Cache(new Sha1KeyAlgorithm());
     usedRequests = new Vector<>(2);
 
     final String requestData = "limit=1";
@@ -67,7 +72,7 @@ public class DiskLruUnitTest {
     response = responseBuilder.build();
   }
 
-  //	@AfterClass
+  @AfterClass
   public static void destroy() {
     cache.destroy();
     usedRequests.clear();
@@ -77,17 +82,18 @@ public class DiskLruUnitTest {
     response = null;
   }
 
-  //	@Before
+  @Before
   public void emptyCacheBeforeEachTest() {
     for (Request req : usedRequests) {
       cache.remove(req);
     }
   }
 
-  //	@Test
+  @Test
   public void putShouldNotBeNull() {
     usedRequests.add(request);
-    Response resp1 = cache.put(request, response);
+    cache.put(request, response);
+    Response resp1 = cache.get(request);
 
     Charset charset = Charset.forName("UTF-8");
     try {
@@ -100,10 +106,11 @@ public class DiskLruUnitTest {
     }
   }
 
-  //	@Test
+  @Test
   public void simpleGet() throws IOException {
     usedRequests.add(request);
-    Response cachedResponse = cache.put(request, response);
+    cache.put(request, response);
+    Response cachedResponse = cache.get(request);
 
     String expectedResponseBodyData =
         cachedResponse.body().source().readString(Charset.forName("UTF-8"));
@@ -122,7 +129,7 @@ public class DiskLruUnitTest {
     }
   }
 
-  //	@Test
+  @Test
   public void cacheControlInvalidatedResponse() throws InterruptedException {
     Response response2 = response.newBuilder().header("Cache-Control", "max-age=0").build();
 
@@ -136,7 +143,7 @@ public class DiskLruUnitTest {
     assertNull("stored response after put() should be null due to cache control", resp2);
   }
 
-  //	@Test
+  @Test
   public void cacheControlBypassCache() {
     Request request2 = request.newBuilder()
         .header(PostCacheInterceptor.BYPASS_HEADER_KEY, PostCacheInterceptor.BYPASS_HEADER_VALUE)
@@ -150,7 +157,7 @@ public class DiskLruUnitTest {
     assertNull("stored response after put() should be null due to cache bypass", resp2);
   }
 
-  //	@Test
+  @Test
   public void dontCacheErrorResponse() {
     Response response2 = response.newBuilder().code(501).build();
 

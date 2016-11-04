@@ -24,12 +24,12 @@ abstract class StringBaseCache<K, V> extends Cache<K, V, String> {
       throw new UnsupportedOperationException("Initialize cache using init() first");
     }
     if(isValid(key)){
-      return get(keyAlgorithm.getKeyFrom(key));
+      return get(keyAlgorithm.getKeyFrom(key), key);
     }
     return null;
   }
 
-  abstract V get(String key);
+  abstract V get(String keyString, K keyObject);
 
   @Override public boolean contains(K key) {
     if (keyAlgorithm == null) {
@@ -49,4 +49,13 @@ abstract class StringBaseCache<K, V> extends Cache<K, V, String> {
   }
 
   abstract boolean isValid(String key);
+
+  @Override public void remove(K key) {
+    if (keyAlgorithm == null) {
+      throw new UnsupportedOperationException("Initialize cache using init() first");
+    }
+    remove(keyAlgorithm.getKeyFrom(key));
+  }
+
+  abstract void remove(String key);
 }

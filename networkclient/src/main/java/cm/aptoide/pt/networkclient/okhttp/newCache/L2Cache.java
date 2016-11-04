@@ -44,7 +44,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
   private AtomicInteger persistenceCounter = new AtomicInteger(0);
 
   // can't be final due to de-serialization
-  private ConcurrentHashMap<String, ResponseWrapper> cache;
+  private ConcurrentHashMap<String, ResponseCacheEntry> cache;
 
   public L2Cache(KeyAlgorithm<Request, String> keyAlgorithm) {
     super(keyAlgorithm);
@@ -58,10 +58,15 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     }
   }
 
+  @Override public void destroy() {
+    persist();
+    cache.clear();
+  }
+
   @Override void put(String key, Response response) {
     int seconds = shouldCacheUntil(response);
     if(seconds>=1){
-      cache.put(key, new ResponseWrapper(response, seconds));
+      cache.put(key, new ResponseCacheEntry(response, seconds));
     }
   }
 
@@ -102,26 +107,30 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     return 0;
   }
 
-  @Override Response get(String key) {
-    ResponseWrapper response = cache.get(key);
+  @Override Response get(String key, Request request) {
+    ResponseCacheEntry response = cache.get(key);
 
     if(persistenceCounter.incrementAndGet()>=MAX_COUNT && response!=null && !isPersisting){
-      isPersisting = true;
-
-      // remove invalid entries
-      removeInvalid();
-
-      // store in disk
-      store();
-
-      int value;
-      do {
-        value = persistenceCounter.get();
-      } while (persistenceCounter.compareAndSet(value, 0));
-
-      isPersisting = false;
+      persist();
     }
-    return response.getResponse();
+    return response.getResponse(request);
+  }
+
+  private void persist() {
+    isPersisting = true;
+
+    // remove invalid entries
+    removeInvalid();
+
+    // store in disk
+    store();
+
+    int value;
+    do {
+      value = persistenceCounter.get();
+    } while (persistenceCounter.compareAndSet(value, 0));
+
+    isPersisting = false;
   }
 
   @Override boolean contains(String key) {
@@ -129,18 +138,24 @@ public class L2Cache extends StringBaseCache<Request, Response> {
   }
 
   @Override public boolean isValid(String key) {
-    ResponseWrapper cachedResponse = contains(key) ? cache.get(key) : null;
+    ResponseCacheEntry cachedResponse = contains(key) ? cache.get(key) : null;
     if(cachedResponse!=null) {
       return cachedResponse.isValid();
     }
     return false;
   }
 
+  @Override void remove(String key) {
+    if(contains(key)) {
+      cache.remove(key);
+    }
+  }
+
   /**
    * clean invalid cache entries
    */
   private void removeInvalid() {
-    for(Map.Entry<String, ResponseWrapper> cacheEntry : cache.entrySet()){
+    for(Map.Entry<String, ResponseCacheEntry> cacheEntry : cache.entrySet()){
       if(!cacheEntry.getValue().isValid()) {
         cache.remove(cacheEntry.getKey());
       }
@@ -168,24 +183,6 @@ public class L2Cache extends StringBaseCache<Request, Response> {
       cache = objectMapper.readValue(new File(Environment.getDataDirectory(), CACHE_FILE_NAME), cache.getClass());
     } catch (IOException e) {
       Logger.e(TAG, e);
-    }
-  }
-
-  private static final class ResponseWrapper {
-    private final long validity;
-    private final Response response;
-
-    ResponseWrapper(Response response, int secondsToPersist) {
-      this.response = response;
-      this.validity = System.currentTimeMillis() + (secondsToPersist*1000);
-    }
-
-    public boolean isValid() {
-      return System.currentTimeMillis() <= validity;
-    }
-
-    public Response getResponse() {
-      return response;
     }
   }
 }

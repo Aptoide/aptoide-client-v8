@@ -10,9 +10,11 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
-import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
+import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.newCache.ResponseCacheEntry;
 import cm.aptoide.pt.utils.AptoideUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.disklrucache.DiskLruCache;
 import java.io.File;
 import java.io.IOException;
@@ -148,8 +150,8 @@ public class RequestCache {
       synchronized (diskCacheLock) {
         editor = diskLruCache.edit(reqKey);
         // create cache entry building from the previous response so that we don't modify it
-        RequestCacheEntry cacheEntry = new RequestCacheEntry(response);
-        editor.set(DATA_BUCKET_INDEX, cacheEntry.toString());
+        ResponseCacheEntry cacheEntry = new ResponseCacheEntry(response, 0);
+        editor.set(DATA_BUCKET_INDEX, new ObjectMapper().writeValueAsString(cacheEntry));
         editor.set(TIMESTAMP_BUCKET_INDEX, SIMPLE_DATE_FORMAT.format(new Date()));
         editor.commit();
 
@@ -197,7 +199,8 @@ public class RequestCache {
         if (snapshot == null) return null;
 
         String data = snapshot.getString(DATA_BUCKET_INDEX);
-        RequestCacheEntry cacheEntry = RequestCacheEntry.fromString(data);
+        ResponseCacheEntry cacheEntry =
+            new ObjectMapper().readValue(data, ResponseCacheEntry.class);
         // create response using the previous cloned request so that we don't modify it
         Response response = cacheEntry.getResponse(request);
 
