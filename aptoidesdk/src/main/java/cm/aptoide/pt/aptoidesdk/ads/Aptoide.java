@@ -33,6 +33,10 @@ public class Aptoide {
     return getAppObservable(ad).toBlocking().first();
   }
 
+  public static App getApp(SearchResult searchResult) {
+    return getAppObservable(searchResult.getId()).toBlocking().first();
+  }
+
   public static Observable<App> getAppObservable(Ad ad) {
     return getAppObservable(ad.data.appId).map(app -> {
       Observable.fromCallable(handleAds(ad)).subscribeOn(Schedulers.io()).subscribe(t -> {
@@ -90,6 +94,11 @@ public class Aptoide {
         () -> null));
   }
 
+  public static List<Ad> getAds(int limit) {
+    getAdsProxy.getAds(limit, aptoideClientUUID);
+    return null;
+  }
+
   public static List<Ad> getAds(int limit, boolean mature) {
     getAdsProxy.getAds(limit, mature, aptoideClientUUID);
     return null;
@@ -100,17 +109,16 @@ public class Aptoide {
     return null;
   }
 
-  public static List<Ad> getAds(int limit, boolean mature, List<String> keyword) {
+  public static List<Ad> getAds(int limit, List<String> keyword, boolean mature) {
     getAdsProxy.getAds(limit, mature, aptoideClientUUID, keyword);
     return null;
   }
 
-  public static List<Ad> getAds(int limit) {
-    getAdsProxy.getAds(limit, aptoideClientUUID);
-    return null;
+  public static List<SearchResult> searchApps(String query) {
+    return listSearchAppsProxy.search(query, aptoideClientUUID);
   }
 
-  public static List<SearchResult> search(String query) {
-    return listSearchAppsProxy.search(query, aptoideClientUUID);
+  public static List<SearchResult> searchApps(String query, String storeName) {
+    return listSearchAppsProxy.search(query, storeName, aptoideClientUUID);
   }
 }
