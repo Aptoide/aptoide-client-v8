@@ -6,9 +6,6 @@ retrolambda {
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-
 android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
@@ -16,7 +13,7 @@ android {
   defaultConfig {
     minSdkVersion 9
 
-    configureFabric delegate, localProperties.FABRIC_API_KEY
+    configureFabric delegate, project.FABRIC_API_KEY
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 

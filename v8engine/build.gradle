@@ -10,9 +10,6 @@ retrolambda {
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-
 android {
 
   // Websockets
@@ -45,24 +42,24 @@ android {
     release {
       minifyEnabled false
       shrinkResources false
-      configureFlurry delegate, localProperties.FLURRY_KEY
-      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
-      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
-      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
-          localProperties.SIXPACK_PASSWORD, localProperties.SIXPACK_URL
-      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      configureFlurry delegate, project.FLURRY_KEY
+      configureLocalytics delegate, project.LOCALYTICS_RELEASE_KEY
+      configurePayPal delegate, project.PAYPAL_KEY, project.PAYPAL_ENVIRONMENT_LIVE
+      configureSixpackCredentials delegate, project.SIXPACK_USER,
+          project.SIXPACK_PASSWORD, project.SIXPACK_URL
+      def googleSenderId = project.GOOGLE_SENDER_ID
       buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
 
     debug {
       minifyEnabled false
       shrinkResources false
-      configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
-      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
-      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
-      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
-          localProperties.SIXPACK_PASSWORD, localProperties.SIXPACK_URL
-      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      configureFlurry delegate, project.FLURRY_DEBUG_KEY
+      configureLocalytics delegate, project.LOCALYTICS_DEBUG_KEY
+      configurePayPal delegate, project.PAYPAL_KEY, project.PAYPAL_ENVIRONMENT_MOCK
+      configureSixpackCredentials delegate, project.SIXPACK_USER,
+          project.SIXPACK_PASSWORD, project.SIXPACK_URL
+      def googleSenderId = project.GOOGLE_SENDER_ID
       buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
   }

@@ -10,10 +10,7 @@ retrolambda {
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-
-def gmsServerId = localProperties.GMS_SERVER_ID
+def gmsServerId = project.GMS_SERVER_ID
 android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
@@ -32,7 +29,7 @@ android {
     buildConfigField BOOLEAN, GMS_CONFIGURED, (gmsServerId != null).toString()
     buildConfigField STRING, GMS_SERVER_ID, "\"" + gmsServerId.toString() + "\""
 
-    def facebookAppId = localProperties.FACEBOOK_APP_ID
+    def facebookAppId = project.FACEBOOK_APP_ID
     def facebookAppIdExists = facebookAppId != null
     buildConfigField BOOLEAN, FACEBOOK_CONFIGURED, facebookAppIdExists.toString()
     facebookAppId = facebookAppIdExists ? facebookAppId.toString() : "0"
