@@ -97,11 +97,6 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
 
-    compositeSubscription.add(displayable.updateProgress()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(downloadProgress -> updateInstallProgress(displayable, downloadProgress),
-            throwable -> showDownloadError(displayable)));
-
     compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(cardType)
@@ -130,6 +125,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
       Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
       return Observable.just(null);
     })).observeOn(AndroidSchedulers.mainThread()).subscribe(downloadProgress -> {
+      updateInstallProgress(displayable, downloadProgress);
     }, throwable -> showDownloadError(displayable)));
   }
 
