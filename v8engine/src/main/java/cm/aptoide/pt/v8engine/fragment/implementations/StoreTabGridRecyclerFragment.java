@@ -184,7 +184,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     GetAdsRequest.ofHomepageMore(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
+        DataProvider.getConfiguration().getPartnerId())
         .execute(getAdsResponse -> {
       List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
 
@@ -271,7 +272,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext())));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -312,7 +313,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext())));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
 
           try {
             countDownLatch.await();

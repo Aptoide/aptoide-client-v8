@@ -37,7 +37,8 @@ public class AdRepository {
     return GetAdsRequest.ofAppviewOrganic(packageName, storeName,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
+        DataProvider.getConfiguration().getPartnerId())
         .observe()
         .map(response -> response.getAds())
         .flatMap(ads -> {

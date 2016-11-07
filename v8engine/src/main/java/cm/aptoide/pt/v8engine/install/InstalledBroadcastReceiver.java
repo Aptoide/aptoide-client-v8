@@ -128,7 +128,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                     DataProvider.getContext()).getAptoideClientUUID(),
                 DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                    V8Engine.getContext()))
+                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId())
                 .observe()
                 .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
                 .observeOn(AndroidSchedulers.mainThread())

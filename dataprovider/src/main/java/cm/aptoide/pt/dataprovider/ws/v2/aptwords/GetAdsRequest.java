@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -39,6 +38,7 @@ import rx.Observable;
       .build();
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
+  private final String oemid;
   private String excludedPackage;
   private Location location;
   private String keyword;
@@ -48,28 +48,32 @@ import rx.Observable;
   private String categories;
   private String excludedNetworks;
 
-  private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable) {
+  private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable,
+      String oemid) {
     super(client);
     this.aptoideClientUUID = aptoideClientUUID;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
+    this.oemid = oemid;
   }
 
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable) {
-    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable).setLocation(location)
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
+    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid).setLocation(
+        location)
         .setKeyword(keyword)
         .setLimit(limit);
   }
 
   private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable) {
-    return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable);
+      boolean googlePlayServicesAvailable, String oemid) {
+    return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable, oemid);
   }
 
   private static GetAdsRequest ofPackageName(Location location, String packageName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
     GetAdsRequest getAdsRequest =
-        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable).setPackageName(packageName);
+        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid).setPackageName(
+            packageName);
 
     // Add excluded networks
     if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
@@ -81,23 +85,23 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofHomepage(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable) {
+      boolean googlePlayServicesAvailable, String oemid) {
     // TODO: 09-06-2016 neuro limit based on max colums
     return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
-        googlePlayServicesAvailable);
+        googlePlayServicesAvailable, oemid);
   }
 
   public static GetAdsRequest ofHomepageMore(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable) {
+      boolean googlePlayServicesAvailable, String oemid) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, 50, aptoideClientUUID, googlePlayServicesAvailable);
+    return of(Location.homepage, 50, aptoideClientUUID, googlePlayServicesAvailable, oemid);
   }
 
   public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
 
     GetAdsRequest getAdsRequest = ofPackageName(Location.appview, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable);
+        googlePlayServicesAvailable, oemid);
 
     getAdsRequest.setRepo(storeName);
 
@@ -105,10 +109,10 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String excludedPackage) {
+      boolean googlePlayServicesAvailable, String excludedPackage, String oemid) {
 
     GetAdsRequest getAdsRequest =
-        of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable);
+        of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable, oemid);
 
     getAdsRequest.setExcludedPackage(excludedPackage)
         .setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
@@ -117,20 +121,20 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofSearch(String query, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable) {
-    return of(Location.search, query, 1, aptoideClientUUID, googlePlayServicesAvailable);
+      boolean googlePlayServicesAvailable, String oemid) {
+    return of(Location.search, query, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid);
   }
 
   public static GetAdsRequest ofSecondInstall(String packageName, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable) {
+      boolean googlePlayServicesAvailable, String oemid) {
     return ofPackageName(Location.secondinstall, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable);
+        googlePlayServicesAvailable, oemid);
   }
 
   public static GetAdsRequest ofSecondTry(String packageName, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable) {
+      boolean googlePlayServicesAvailable, String oemid) {
     return ofPackageName(Location.secondtry, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable);
+        googlePlayServicesAvailable, oemid);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -146,7 +150,7 @@ import rx.Observable;
     parameters.put("type", "1-3");
     parameters.put("partners", "1-3,5-10");
     parameters.put("keywords", keyword);
-    parameters.put("oemid", DataProvider.getConfiguration().getPartnerId());
+    parameters.put("oemid", oemid);
 
     if (googlePlayServicesAvailable) {
       parameters.put("flag", "gms");

@@ -633,7 +633,8 @@ public class AppViewFragment extends GridRecyclerFragment
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-        getApp1.getNodes().getMeta().getData().getPackageName()).observe().map(getAdsResponse -> {
+        getApp1.getNodes().getMeta().getData().getPackageName(),
+        DataProvider.getConfiguration().getPartnerId()).observe().map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {
         suggestedAds = getAdsResponse.getAds();
       }
