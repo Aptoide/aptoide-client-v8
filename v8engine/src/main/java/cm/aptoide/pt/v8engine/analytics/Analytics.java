@@ -24,12 +24,14 @@ import com.localytics.android.Localytics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
 
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppViewViewedFrom.containsUnwantedValues;
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
 /**
@@ -46,6 +48,14 @@ public class Analytics {
   private static final int LOCALYTICS = 1 << 0;
   private static final int FLURRY = 1 << 1;
   private static final int FABRIC = 1 << 2;
+  private static final String[] unwantedValuesList = {
+      "ads-highlighted", "apps-group-trending", "apps-group-local-top-apps",
+      "timeline-your-friends-installs", "apps-group-latest-applications",
+      "apps-group-top-apps-in-this-store", "apps-group-aptoide-publishers",
+      "stores-group-top-stores", "stores-group-featured-stores", "reviews-group-reviews",
+      "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
+      "apps-group-editors-choice"
+  };
   private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
   private static boolean isFirstSession;
 
@@ -769,7 +779,9 @@ public class Analytics {
         map.put(PACKAGE_NAME, app.getPackageName());
         map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
 
-        track(EVENT_NAME, map, ALL);
+        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
+          track(EVENT_NAME, map, ALL);
+        }
 
         if (checkBuildVariant()) {
           Bundle parameters = new Bundle();
@@ -958,7 +970,10 @@ public class Analytics {
           }
         }
         Logger.d("teste", "appViewOpenFrom: " + map);
-        track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
+
+        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
+          track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
+        }
 
         if (checkBuildVariant()) {
           Bundle parameters = new Bundle();
@@ -970,6 +985,16 @@ public class Analytics {
         }
       }
       STEPS.clear();
+    }
+
+    protected static boolean containsUnwantedValues(String source) {
+      String[] sourceArray = source.split("_");
+      for (String step : sourceArray) {
+        if (Arrays.asList(unwantedValuesList).contains(step)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {
