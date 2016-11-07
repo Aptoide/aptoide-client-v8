@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.networkclient.okhttp.newCache;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -16,13 +17,12 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 import okio.BufferedSource;
 
 public @Data class ResponseCacheEntry {
 
   private static final String DEFAULT_CHARSET = "UTF-8";
-
-  private static final String TAG = ResponseCacheEntry.class.getName();
 
   // response data
   private int code;
@@ -35,38 +35,35 @@ public @Data class ResponseCacheEntry {
   // meta data
   private long validity;
 
-  public ResponseCacheEntry() { }
+  public ResponseCacheEntry() {
+  }
 
   public ResponseCacheEntry(Response response, int secondsToPersist) {
 
-    this.validity = System.currentTimeMillis() + (secondsToPersist*1000);
-
-    final ResponseBody responseBody = response.body();
+    this.validity = System.currentTimeMillis() + (secondsToPersist * 1000);
 
     this.code = response.code();
     this.message = response.message();
     this.protocol = response.protocol().toString();
     this.headers = response.headers().toMultimap();
+
+    final ResponseBody responseBody = response.body();
     this.bodyMediaType = responseBody.contentType().toString();
 
     Charset charset = Charset.forName(DEFAULT_CHARSET);
     charset = responseBody.contentType().charset(charset);
 
-    BufferedSource source = null;
     try {
-      source = responseBody.source();
-      this.body = source.readString(charset);
-    } catch (IOException e) {
+      // snippet taken from https://github.com/square/okhttp/blob/master/okhttp-logging-interceptor/src/main/java/okhttp3/logging/HttpLoggingInterceptor.java
+      BufferedSource source = responseBody.source();
+      source.request(Long.MAX_VALUE);
+      Buffer buffer = source.buffer();
+      this.body = buffer.clone().readString(charset);
+    } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      try {
-        source.close();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
     }
   }
-
+  //@JsonIgnore
   public Response getResponse(Request request) {
     Response.Builder builder = new Response.Builder();
 
@@ -95,7 +92,8 @@ public @Data class ResponseCacheEntry {
     return builder.build();
   }
 
-  public boolean isValid() {
+  @JsonIgnore
+  boolean isValid() {
     return System.currentTimeMillis() <= validity;
   }
 }

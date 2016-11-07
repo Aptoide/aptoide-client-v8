@@ -1,7 +1,8 @@
 package cm.aptoide.pt.networkclient.okhttp.newCache;
 
-import android.os.Environment;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +37,10 @@ cache-response-directive =
 public class L2Cache extends StringBaseCache<Request, Response> {
   private static final String TAG = L2Cache.class.getName();
 
-  private static final String CACHE_FILE_NAME = "aptoide.cache";
+  private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String CACHE_CONTROL_HEADER = "Cache-Control";
 
-  private static final int MAX_COUNT = 60;
+  private static final int MAX_COUNT = 15;
   private volatile boolean isPersisting = false;
   private AtomicInteger persistenceCounter = new AtomicInteger(0);
 
@@ -74,13 +75,13 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     try{
       Headers headers = response.headers();
       if(headers.size()<=0) {
-        Logger.w(TAG, "not caching the response due to empty headers");
+        Logger.d(TAG, "not caching the response due to empty headers");
         return 0;
       }
 
       List<String> cacheControlHeaders = headers.values(CACHE_CONTROL_HEADER);
       if(cacheControlHeaders.size()<=0) {
-        Logger.w(TAG, "not caching the response due to empty Cache-Control header");
+        Logger.d(TAG, "not caching the response due to empty Cache-Control header");
         return 0;
       }
 
@@ -123,7 +124,11 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     removeInvalid();
 
     // store in disk
-    store();
+    try{
+      store();
+    } catch (IOException e) {
+      Logger.e(TAG, e);
+    }
 
     int value;
     do {
@@ -165,24 +170,21 @@ public class L2Cache extends StringBaseCache<Request, Response> {
   /**
    * snapshots current cache to avoid concurrent modifications and persists it
    */
-  private void store() {
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.writeValue(new File(Environment.getDataDirectory(), CACHE_FILE_NAME), cache);
-    } catch (IOException e) {
-      Logger.e(TAG, e);
-    }
+  private void store() throws IOException {
+    File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
+
+    String debug = new ObjectMapper().writeValueAsString(cache);
+
+    new ObjectMapper().writeValue(cacheFile, cache);
+    Logger.d(TAG, "Stored cache file");
   }
 
   /**
    * loads data from file to memory
    */
-  private void load() {
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      cache = objectMapper.readValue(new File(Environment.getDataDirectory(), CACHE_FILE_NAME), cache.getClass());
-    } catch (IOException e) {
-      Logger.e(TAG, e);
-    }
+  private void load() throws IOException {
+    File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
+    cache = new ObjectMapper().readValue(cacheFile,  new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>(){});
+    Logger.d(TAG, "Loaded cache file");
   }
 }
