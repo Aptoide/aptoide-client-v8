@@ -170,7 +170,8 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
                   GetAdsRequest.ofSecondTry(packageName,
                       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
                           context).getAptoideClientUUID(),
-                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context))
+                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context),
+                      Aptoide.getOemid())
                       .observe()
                       .filter((getAdsResponse1) -> {
                         Boolean hasAds = hasAds(getAdsResponse1);

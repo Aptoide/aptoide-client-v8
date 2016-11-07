@@ -16,7 +16,8 @@ public class GetAdsProxy {
 
   public void getAds(int limit, boolean mature, String aptoideClientUUID) {
     GetAdsRequest.of(ADS_LOCATION, DEFAULT_KEYWORD, limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()))
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()),
+        Aptoide.getOemid())
         .observe()
         .first();
   }

@@ -43,7 +43,8 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
       GetAdsRequest.ofSecondInstall(packageName,
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), Aptoide.getContext())
               .getAptoideClientUUID(),
-          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()))
+          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()),
+          Aptoide.getOemid())
           .observe()
           .map(getAdsResponse -> Ad.from(getAdsResponse.getAds().get(0)))
           .observeOn(AndroidSchedulers.mainThread())

@@ -28,6 +28,12 @@ public class Aptoide {
   private static final GetAdsProxy getAdsProxy = new GetAdsProxy();
   private static final ListSearchAppsProxy listSearchAppsProxy = new ListSearchAppsProxy();
   private static String aptoideClientUUID;
+  private static String oemid;
+  private static String MISSED_INTEGRATION_MESSAGE =
+      "Aptoide not integrated, did you forget to call Aptoide.integrate()?";
+
+  private Aptoide() {
+  }
 
   public static App getApp(Ad ad) {
     return getAppObservable(ad).toBlocking().first();
@@ -73,18 +79,27 @@ public class Aptoide {
 
   public static Context getContext() {
     if (AptoideUtils.getContext() == null) {
-      throw new RuntimeException(
-          "Aptoide not integrated, did you forget to call Aptoide.integrate()?");
+      throw new RuntimeException(MISSED_INTEGRATION_MESSAGE);
     }
 
     return AptoideUtils.getContext();
   }
 
-  public static void integrate(Context context) {
+  public static String getOemid() {
+    if (AptoideUtils.getContext() == null) {
+      throw new RuntimeException(MISSED_INTEGRATION_MESSAGE);
+    }
+
+    return oemid;
+  }
+
+  public static void integrate(Context context, String oemid) {
     AptoideUtils.setContext(context);
     setUserAgent();
 
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
+    Aptoide.oemid = oemid;
+    Aptoide.aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
         context).getAptoideClientUUID();
   }
 
