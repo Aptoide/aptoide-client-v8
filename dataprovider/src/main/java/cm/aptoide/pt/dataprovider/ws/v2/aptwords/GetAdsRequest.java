@@ -150,7 +150,7 @@ import rx.Observable;
     parameters.put("type", "1-3");
     parameters.put("partners", "1-3,5-10");
     parameters.put("keywords", keyword);
-    parameters.put("oemid", oemid);
+    parameters.put("oem_id", oemid);
 
     if (googlePlayServicesAvailable) {
       parameters.put("flag", "gms");
