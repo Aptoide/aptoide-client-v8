@@ -440,7 +440,7 @@ import rx.subscriptions.CompositeSubscription;
     String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      installManager.removeInstallationFile(md5);
+      installManager.removeInstallationFile(md5, getContext());
     });
 
     actionPause.setOnClickListener(view -> {
