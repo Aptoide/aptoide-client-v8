@@ -12,8 +12,6 @@ android {
 
   defaultConfig {
     minSdkVersion 9
-
-    configureFabric delegate, project.FABRIC_API_KEY
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
@@ -29,10 +27,6 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
-}
-
-void configureFabric(androidDelegate, key) {
-  androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
 }
 
 dependencies {

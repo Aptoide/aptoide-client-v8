@@ -10,31 +10,15 @@ retrolambda {
   //defaultMethods true
 }
 
-def gmsServerId = project.GMS_SERVER_ID
 android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
 
-  def GMS_CONFIGURED = "GMS_CONFIGURED"
-  def GMS_SERVER_ID = "GMS_SERVER_ID"
-  def TRUE = "true"
-  def FALSE = "false"
-  def BOOLEAN = "boolean"
-  def STRING = "String"
-  def FACEBOOK_CONFIGURED = "FACEBOOK_CONFIGURED"
-
   defaultConfig {
     minSdkVersion 15
 
-    buildConfigField BOOLEAN, GMS_CONFIGURED, (gmsServerId != null).toString()
-    buildConfigField STRING, GMS_SERVER_ID, "\"" + gmsServerId.toString() + "\""
-
-    def facebookAppId = project.FACEBOOK_APP_ID
-    def facebookAppIdExists = facebookAppId != null
-    buildConfigField BOOLEAN, FACEBOOK_CONFIGURED, facebookAppIdExists.toString()
-    facebookAppId = facebookAppIdExists ? facebookAppId.toString() : "0"
-    resValue "string", "facebook_app_id", "\"" + facebookAppId + "\""
-
+    buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
+    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
     consumerProguardFiles "proguard-rules.txt"
   }
 
