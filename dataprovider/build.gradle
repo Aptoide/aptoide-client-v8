@@ -10,6 +10,9 @@ retrolambda {
   //defaultMethods true
 }
 
+Properties localProperties = new Properties()
+localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
+
 android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
@@ -24,6 +27,17 @@ android {
   }
 
   publishNonDefault true
+
+  productFlavors {
+    dev {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + localProperties.APTOIDE_WEB_SERVICES_DEVELOPMENT_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + localProperties.APTOIDE_WEB_SERVICES_DEVELOPMENT_HOST + "\""
+    }
+    prod {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + localProperties.APTOIDE_WEB_SERVICES_PRODUCTION_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + localProperties.APTOIDE_WEB_SERVICES_PRODUCTION_HOST + "\""
+    }
+  }
 
   buildTypes {
     release {

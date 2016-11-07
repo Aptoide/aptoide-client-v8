@@ -14,7 +14,6 @@ Properties localProperties = new Properties()
 localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 def gmsServerId = localProperties.GMS_SERVER_ID
-
 android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
@@ -47,6 +46,11 @@ android {
   }
 
   publishNonDefault true
+
+  productFlavors {
+    dev
+    prod
+  }
 
   buildTypes {
     release {
@@ -84,8 +88,8 @@ dependencies {
   debugCompile project(path: ':utilsdesign', configuration: 'debug')
   releaseCompile project(path: ':utilsdesign', configuration: 'release')
 
-  debugCompile project(path: ':dataprovider', configuration: 'debug')
-  releaseCompile project(path: ':dataprovider', configuration: 'release')
+  devCompile project(path: ':dataprovider', configuration: 'devDebug')
+  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
 
   //
   // custom libs in folders

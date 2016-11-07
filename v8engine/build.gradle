@@ -36,6 +36,11 @@ android {
 
   publishNonDefault true
 
+  productFlavors {
+    dev
+    prod
+  }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -116,8 +121,11 @@ dependencies {
   debugCompile project(path: ':database', configuration: 'debug')
   releaseCompile project(path: ':database', configuration: 'release')
 
-  debugCompile project(path: ':dataprovider', configuration: 'debug')
-  releaseCompile project(path: ':dataprovider', configuration: 'release')
+  devCompile project(path: ':dataprovider', configuration: 'devDebug')
+  devCompile project(path: ':aptoide_accountmanager', configuration: 'devDebug')
+
+  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
 
   debugCompile project(path: ':utils', configuration: 'debug')
   releaseCompile project(path: ':utils', configuration: 'release')
@@ -127,9 +135,6 @@ dependencies {
 
   debugCompile project(path: ':crashreports', configuration: 'debug')
   releaseCompile project(path: ':crashreports', configuration: 'release')
-
-  debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
-  releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
 
   debugCompile project(path: ':imageloader', configuration: 'debug')
   releaseCompile project(path: ':imageloader', configuration: 'release')
