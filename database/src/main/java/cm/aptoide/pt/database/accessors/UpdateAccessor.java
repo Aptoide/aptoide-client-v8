@@ -79,6 +79,7 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
           return Observable.just(update!=null);
         }))
         .unsubscribeOn(RealmSchedulers.getScheduler())
+        .map(update -> update != null)
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
   }
