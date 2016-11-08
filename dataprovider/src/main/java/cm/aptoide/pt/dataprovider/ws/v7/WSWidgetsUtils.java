@@ -25,7 +25,8 @@ public class WSWidgetsUtils {
 
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
-      boolean refresh, Action1<Throwable> action1, String accessToken, String email) {
+      boolean refresh, Action1<Throwable> action1, String accessToken, String email,
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -37,33 +38,39 @@ public class WSWidgetsUtils {
       switch (wsWidget.getType()) {
         case APPS_GROUP:
           ioScheduler(
-              ListAppsRequest.ofAction(url, storeCredentials, accessToken, email).observe(refresh))
+              ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUUID)
+                  .observe(refresh))
               .subscribe(
               listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
           break;
         case STORES_GROUP:
-          ioScheduler(
-              ListStoresRequest.ofAction(url, accessToken, email).observe(refresh)).subscribe(
+          ioScheduler(ListStoresRequest.ofAction(url, accessToken, email, aptoideClientUUID)
+              .observe(refresh)).subscribe(
               listStores -> setObjectView(wsWidget, countDownLatch, listStores), action1);
           break;
         case DISPLAYS:
-          ioScheduler(GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email)
+          ioScheduler(GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
+              aptoideClientUUID)
               .observe(refresh))
               .subscribe(
               getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays),
               action1);
           break;
         case ADS:
-          ioScheduler(GetAdsRequest.ofHomepage().observe()).subscribe(
+          ioScheduler(
+              GetAdsRequest.ofHomepage(aptoideClientUUID, googlePlayServicesAvailable, oemid)
+              .observe()).subscribe(
               getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse), action1);
           break;
         case STORE_META:
-          ioScheduler(GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email)
+          ioScheduler(GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email,
+              aptoideClientUUID)
               .observe(refresh)).subscribe(
               getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta), action1);
           break;
         case REVIEWS_GROUP:
-          ioScheduler(ListFullReviewsRequest.ofAction(url, refresh, accessToken, email)
+          ioScheduler(
+              ListFullReviewsRequest.ofAction(url, refresh, accessToken, email, aptoideClientUUID)
               .observe(refresh)).subscribe(
               reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;

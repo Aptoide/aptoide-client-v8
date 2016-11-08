@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -24,14 +25,13 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
@@ -41,11 +41,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sch
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
 /**
@@ -57,6 +54,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
   public static final String OPEN_MODE = "openMode";
   private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
+  private InstallManager installManager;
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;
@@ -76,6 +74,14 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     bundle.putSerializable(OPEN_MODE, openMode);
     scheduledDownloadsFragment.setArguments(bundle);
     return scheduledDownloadsFragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -182,7 +188,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
       ArrayList<ScheduledDownloadDisplayable> displayables =
           new ArrayList<>(scheduledDownloadList.size());
       for (final Scheduled scheduledDownload : scheduledDownloadList) {
-        displayables.add(new ScheduledDownloadDisplayable(scheduledDownload));
+        displayables.add(new ScheduledDownloadDisplayable(scheduledDownload, installManager));
       }
       setDisplayables(displayables);
     }
@@ -276,8 +282,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
-                downloadItem.getMd5()))
-        )
+                downloadItem.getMd5())))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(aVoid -> {
           Logger.i(TAG, "finished installing scheduled downloads");

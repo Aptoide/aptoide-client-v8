@@ -62,36 +62,36 @@ import rx.schedulers.Schedulers;
     status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
-          .flatMap(click -> displayable.downloadStatus()
-              .filter(status -> status == Download.COMPLETED)
-              .flatMap(status -> displayable.installOrOpenDownload(getContext(),
-                  (PermissionRequest) getContext())))
-          .retry()
-          .subscribe(success -> {
-          }, throwable -> throwable.printStackTrace()));
+        .flatMap(click -> displayable.downloadStatus()
+            .filter(status -> status == Download.COMPLETED)
+            .flatMap(status -> displayable.installOrOpenDownload(getContext(),
+                (PermissionRequest) getContext())))
+        .retry()
+        .subscribe(success -> {
+        }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
-          .flatMap(click -> displayable.downloadStatus()
-              .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-              .flatMap(status -> displayable.resumeDownload(getContext(),
-                  (PermissionRequest) getContext())))
-          .retry()
-          .subscribe(success -> {
-          }, throwable -> throwable.printStackTrace()));
+        .flatMap(click -> displayable.downloadStatus()
+            .filter(status -> status == Download.PAUSED || status == Download.ERROR)
+            .flatMap(status -> displayable.resumeDownload(getContext(),
+                (PermissionRequest) getContext())))
+        .retry()
+        .subscribe(success -> {
+        }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(cancelDownloadButton)
-          .subscribe(click -> displayable.removeDownload(getContext())));
+        .subscribe(click -> displayable.removeDownload(getContext())));
 
     compositeSubscription.add(displayable.downloadStatus()
-          .observeOn(Schedulers.computation())
-          .sample(1, TimeUnit.SECONDS)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(downloadStatus -> {
-            if (downloadStatus == Download.PAUSED || downloadStatus == Download.ERROR) {
-              resumeDownloadButton.setVisibility(View.VISIBLE);
-            } else {
-              resumeDownloadButton.setVisibility(View.GONE);
-            }
-          }, throwable -> Logger.e(TAG, throwable)));
+        .observeOn(Schedulers.computation())
+        .sample(1, TimeUnit.SECONDS)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(downloadStatus -> {
+          if (downloadStatus == Download.PAUSED || downloadStatus == Download.ERROR) {
+            resumeDownloadButton.setVisibility(View.VISIBLE);
+          } else {
+            resumeDownloadButton.setVisibility(View.GONE);
+          }
+        }, throwable -> Logger.e(TAG, throwable)));
   }
 }

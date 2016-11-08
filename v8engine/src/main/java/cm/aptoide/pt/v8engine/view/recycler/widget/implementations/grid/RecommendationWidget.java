@@ -10,12 +10,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -32,6 +34,7 @@ import okhttp3.Response;
  */
 public class RecommendationWidget extends Widget<RecommendationDisplayable> {
 
+  private final String cardType = "Recommendation";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -87,9 +90,17 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
     cardContent.setOnClickListener(view -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard("Recommendation", displayable.getPackageName(),
+      Analytics.AppsTimeline.clickOnCard(cardType, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(getContext()),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .specific(SendEventRequest.Body.Specific.builder()
+              .app(displayable.getPackageName())
+              .based_on(displayable.getSimilarAppPackageName())
+              .build())
+          .build(), AptoideAnalytics.OPEN_APP);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     });

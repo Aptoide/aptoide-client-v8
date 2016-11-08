@@ -156,6 +156,9 @@ import rx.android.schedulers.AndroidSchedulers;
               //App not installed
               setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
               setupInstallOrBuyButton(displayable, getApp);
+              if (widgetState.getProgress() != null) {
+                downloadStatusUpdate(widgetState.getProgress(), currentApp);
+              }
               ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
               break;
             case AppViewInstallDisplayable.ACTION_DOWNGRADE:
@@ -259,11 +262,11 @@ import rx.android.schedulers.AndroidSchedulers;
                   showRootInstallWarningPopup(context);
                   compositeSubscription.add(
                       new PermissionManager().requestDownloadAccess(permissionRequest)
-                      .flatMap(success -> installManager.install(getContext(), appDownload))
-                      .observeOn(AndroidSchedulers.mainThread())
-                      .subscribe(progress -> {
-                        Logger.d(TAG, "Installing");
-                      }, throwable -> Logger.e(TAG, throwable)));
+                          .flatMap(success -> installManager.install(getContext(), appDownload))
+                          .observeOn(AndroidSchedulers.mainThread())
+                          .subscribe(progress -> {
+                            Logger.d(TAG, "Installing");
+                          }, throwable -> Logger.e(TAG, throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -311,7 +314,6 @@ import rx.android.schedulers.AndroidSchedulers;
     PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
 
-
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.SourceDownloadComplete.installClicked(app.getId());
@@ -324,7 +326,8 @@ import rx.android.schedulers.AndroidSchedulers;
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                  downloadAction))).first()
+                  downloadAction)))
+          .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             ShowMessage.asSnack(v, installOrUpgradeMsg);
@@ -425,7 +428,6 @@ import rx.android.schedulers.AndroidSchedulers;
             Logger.e(TAG, err);
           }));
     });
-
   }
 
   private void setDownloadBarVisible(boolean visible, AppViewInstallDisplayable displayable,

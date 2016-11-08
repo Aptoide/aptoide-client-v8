@@ -19,8 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -147,14 +150,16 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private void executeSearchRequests() {
+  protected void executeSearchRequests(String storeName) {
     Analytics.Search.searchTerm(query);
 
     if (storeName != null) {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
+              AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -168,8 +173,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
-          .execute(listSearchApps -> {
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID()).execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {
@@ -183,8 +189,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
-          .execute(listSearchApps -> {
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID()).execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {
@@ -240,7 +247,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private void subscribedButtonListener() {
+  protected void subscribedButtonListener() {
     selectedButton = 0;
     viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
@@ -249,7 +256,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     everywhereButton.setBackgroundResource(0);
   }
 
-  private void everywhereButtonListener() {
+  protected void everywhereButtonListener() {
     selectedButton = 1;
     viewPager.setCurrentItem(1);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
@@ -314,7 +321,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
-      executeSearchRequests();
+      executeSearchRequests(storeName);
     } else {
       handleFinishLoading();
     }

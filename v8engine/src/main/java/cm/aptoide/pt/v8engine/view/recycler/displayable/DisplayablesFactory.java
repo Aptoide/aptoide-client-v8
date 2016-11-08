@@ -149,7 +149,7 @@ public class DisplayablesFactory {
 
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
-        if(apps.size() == 2) {
+        if (apps.size() == 2) {
           useBigBrick = false;
         }
 

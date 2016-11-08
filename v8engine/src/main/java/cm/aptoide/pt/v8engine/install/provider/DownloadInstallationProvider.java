@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.install.provider;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.installer.InstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;

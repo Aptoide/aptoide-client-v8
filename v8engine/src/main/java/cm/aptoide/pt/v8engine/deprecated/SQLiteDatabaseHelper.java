@@ -123,7 +123,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     //  logException(ex);
     //}
 
-    try{
+    try {
       new Downloads().migrate(AccessorFactory.getAccessorFor(Download.class));
     } catch (Exception ex) {
       logException(ex);

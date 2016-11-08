@@ -219,9 +219,9 @@ public class AdultDialog extends DialogFragment {
     return buildAreYouAdultDialog(getActivity(), new DialogInterface.OnClickListener() {
       @Override public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-              SecurePreferences.setAdultSwitch(true);
-            }
-          }
-        });
+          SecurePreferences.setAdultSwitch(true);
+        }
+      }
+    });
   }
 }

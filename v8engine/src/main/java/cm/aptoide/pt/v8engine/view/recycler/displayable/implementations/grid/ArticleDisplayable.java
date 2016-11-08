@@ -8,12 +8,14 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -41,26 +43,21 @@ import rx.schedulers.Schedulers;
   private Date date;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
-  private AccessorFactory accessorFactory;
+  private TimelineMetricsManager timelineMetricsManager;
 
   public ArticleDisplayable() {
   }
 
   public static ArticleDisplayable from(Article article, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      AccessorFactory accessorFactory) {
-    //String appName = null;
+      TimelineMetricsManager timelineMetricsManager) {
     long appId = 0;
-    //if (article.getApps() != null && article.getApps().size() > 0) {
-    //  appName = article.getApps().get(0).getName();
-    //  appId = article.getApps().get(0).getId();
-    //}
     return new ArticleDisplayable(article.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
         article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, article.getApps(),
-        article.getDate(), dateCalculator, spannableFactory, accessorFactory);
+        article.getDate(), dateCalculator, spannableFactory, timelineMetricsManager);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -114,6 +111,10 @@ import rx.schedulers.Schedulers;
     return spannableFactory.createColorSpan(
         context.getString(R.string.displayable_social_timeline_article_related_to, appName),
         ContextCompat.getColor(context, R.color.appstimeline_grey), appName);
+  }
+
+  public void sendOpenArticleEvent(SendEventRequest.Body.Data data, String eventName) {
+    timelineMetricsManager.sendEvent(data, eventName);
   }
 
   @Override public int getViewLayout() {

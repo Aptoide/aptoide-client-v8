@@ -36,21 +36,19 @@ import rx.Observable;
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getUserEmail())
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            if (response.getInAppBillingAvailable().isAvailable()) {
-              return Observable.just(null);
-            } else {
-              return Observable.error(
-                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-            }
-          } else {
-            return Observable.error(
-                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-          }
-        });
+        AptoideAccountManager.getUserEmail()).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        if (response.getInAppBillingAvailable().isAvailable()) {
+          return Observable.just(null);
+        } else {
+          return Observable.error(
+              new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+        }
+      } else {
+        return Observable.error(
+            new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+      }
+    });
   }
 
   public Observable<List<SKU>> getSKUs(int apiVersion, String packageName, List<String> skuList,

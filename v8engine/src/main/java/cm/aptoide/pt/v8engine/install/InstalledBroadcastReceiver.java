@@ -18,10 +18,14 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
@@ -120,7 +124,11 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
             DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
             storeMinimalAdAccessor.remove(storeMinimalAd);
           } else {
-            GetAdsRequest.ofSecondInstall(packageName)
+            GetAdsRequest.ofSecondInstall(packageName,
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                    DataProvider.getContext()).getAptoideClientUUID(),
+                DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId())
                 .observe()
                 .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -186,11 +194,11 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
         Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
       }
 
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+      PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return;
-    }
+      if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
+        return;
+      }
 
       if (update != null) {
         if (packageInfo.versionCode >= update.getVersionCode()) {
@@ -209,7 +217,6 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
   /**
    * @param packageInfo packageInfo.
-   * @param packageName
    * @return true if packageInfo is null, false otherwise.
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {

@@ -50,12 +50,10 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
 
         return chain.proceed(request);
       }
-    })
-        .addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
-          @Override public String generateUserAgent() {
-            return AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
-          }
-        }))
-        .build();
+    }).addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
+      }
+    })).build();
   }
 }

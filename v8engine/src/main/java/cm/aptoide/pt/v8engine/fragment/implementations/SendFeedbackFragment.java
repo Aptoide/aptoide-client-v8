@@ -86,7 +86,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
       emailIntent.setType("message/rfc822");
 
-      emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {V8Engine.getConfiguration().getFeedbackEmail()});
+      emailIntent.putExtra(Intent.EXTRA_EMAIL,
+          new String[] { V8Engine.getConfiguration().getFeedbackEmail() });
 
       //String versionName = "";
       //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);

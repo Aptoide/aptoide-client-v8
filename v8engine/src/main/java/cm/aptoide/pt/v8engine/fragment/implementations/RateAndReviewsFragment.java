@@ -23,6 +23,8 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
@@ -32,6 +34,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -44,6 +47,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
@@ -95,8 +99,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
           Observable.from(reviews)
               .forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(),
                   fullReview.getId(), 3, storeName, StoreUtils.getStoreCredentials(storeName),
-                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
-                  .execute(listComments -> {
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                      DataProvider.getContext()).getAptoideClientUUID()).execute(listComments -> {
                 fullReview.setCommentList(listComments);
                 countDownLatch.countDown();
               }, e -> countDownLatch.countDown()));
@@ -109,7 +114,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
             e.printStackTrace();
           }
           AptoideUtils.ThreadU.runOnUiThread(() -> {
-            int index = 0;
+            int index = -1;
             int count = 0;
             for (final Review review : reviews) {
               displayables.add(new RateAndReviewCommentDisplayable(
@@ -152,8 +157,11 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
               }
               count++;
             }
+            checkAndRemoveProgressBarDisplayable();
             addDisplayables(displayables);
-            getLayoutManager().scrollToPosition(getAdapter().getReviewPosition(index));
+            if (index >= 0) {
+              getLayoutManager().scrollToPosition(getAdapter().getReviewPosition(index));
+            }
           });
         });
       };
@@ -276,7 +284,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken()).execute(getApp -> {
+    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID()).execute(getApp -> {
       GetAppMeta.App data = getApp.getNodes().getMeta().getData();
       setupTitle(data.getName());
       setupRating(data);
@@ -292,7 +302,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   private void fetchReviews() {
     ListReviewsRequest of =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail());
+            AptoideAccountManager.getUserEmail(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID());
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(), of,
         listFullReviewsSuccessRequestListener, errorRequestListener);
@@ -487,5 +499,15 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     public abstract void addComment(List<Comment> comments);
 
     public abstract void collapseComments();
+  }
+
+  private void checkAndRemoveProgressBarDisplayable() {
+    for (int i = 0; i < adapter.getItemCount(); i++) {
+      Displayable displayable = adapter.getDisplayable(i);
+      if (displayable instanceof ProgressBarDisplayable) {
+        adapter.removeDisplayable(i);
+        adapter.notifyItemRemoved(i);
+      }
+    }
   }
 }

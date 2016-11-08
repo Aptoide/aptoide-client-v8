@@ -48,9 +48,7 @@ public class DownloadFactory {
         createFileList(appToDownload.getMd5(), appToDownload.getPackageName(),
             appToDownload.getFile().getPath(), appToDownload.getFile().getMd5sum(),
             appToDownload.getObb(), appToDownload.getFile().getPathAlt(),
-            appToDownload.getFile().getVercode(), appToDownload.getFile().getVername()
-        )
-    );
+            appToDownload.getFile().getVercode(), appToDownload.getFile().getVername()));
 
     return download;
   }

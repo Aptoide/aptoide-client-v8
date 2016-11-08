@@ -232,5 +232,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(
         @Body SetReviewRatingRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/addEvent/name={name}/action={action}/context={context}")
+    Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
+        @Path(value = "action") String action, @Path(value = "context") String context,
+        @Body SendEventRequest.Body body);
   }
 }

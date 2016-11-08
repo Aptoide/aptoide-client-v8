@@ -118,6 +118,7 @@
       android:layout_height="match_parent"
       android:layout_weight="1"
       android:orientation="horizontal"
+      android:gravity="right"
       >
 
     <!--android:background="?attr/icCancelDrawable"-->
@@ -130,6 +131,7 @@
         android:src="@drawable/media_play"
         android:contentDescription="@null"
         android:layout_gravity="center"
+        tools:visibility="gone"
         />
 
     <View

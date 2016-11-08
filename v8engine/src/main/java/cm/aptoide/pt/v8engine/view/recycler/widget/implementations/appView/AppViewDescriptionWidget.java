@@ -59,16 +59,16 @@ import com.jakewharton.rxbinding.view.RxView;
       readMoreBtn.setVisibility(View.GONE);
     }
 
-      if (!TextUtils.isEmpty(media.getDescription())) {
-        descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-        compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-          ((FragmentShower) getContext()).pushFragmentV4(
-              DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
-        }));
-      } else {
-        // only show "default" description if the app doesn't have one
-        descriptionTextView.setText(R.string.description_not_available);
-        readMoreBtn.setVisibility(View.GONE);
-      }
+    if (!TextUtils.isEmpty(media.getDescription())) {
+      descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
+      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
+        ((FragmentShower) getContext()).pushFragmentV4(
+            DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
+      }));
+    } else {
+      // only show "default" description if the app doesn't have one
+      descriptionTextView.setText(R.string.description_not_available);
+      readMoreBtn.setVisibility(View.GONE);
+    }
   }
 }

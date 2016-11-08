@@ -17,4 +17,19 @@ import lombok.EqualsAndHashCode;
 @Data @EqualsAndHashCode(callSuper = true) public class ListAppsUpdates extends BaseV7Response {
 
   private List<App> list;
+
+  /*
+   * fixme
+   * <p>this hack is to prevent updates from not being emited.</p>
+   *
+   * When a ListAppsUpdates request is made,
+   * the request is broken down to 3 different listAppsUpdates (blocks of 50 apps) and
+   * then the respective answers are being merged and shown to us as a result.
+   * The requests info are not being merged into the final answer and
+   * isOk is always returning false
+   *
+   */
+  @Override public boolean isOk() {
+    return (super.isOk() || list != null);
+  }
 }

@@ -44,7 +44,9 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -57,6 +59,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -441,19 +444,19 @@ public class AppViewFragment extends GridRecyclerFragment
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
       subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> finishLoading(throwable));
     } else if (!TextUtils.isEmpty(md5)) {
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> {
@@ -465,9 +468,9 @@ public class AppViewFragment extends GridRecyclerFragment
     } else {
       Logger.d(TAG, "loading app info using app package name");
       subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> {
@@ -487,23 +490,26 @@ public class AppViewFragment extends GridRecyclerFragment
     }
 
     // useful data for the schedule updates menu option
-    installAction().observeOn(AndroidSchedulers.mainThread()).subscribe(appAction -> {
-      AppViewFragment.this.appAction = appAction;
-      MenuItem item = menu.findItem(R.id.menu_schedule);
-      if (item != null) {
-        item.setVisible(appAction != AppAction.OPEN);
-      }
-      if (appAction != AppAction.INSTALL) {
-        setUnInstallMenuOptionVisible(
-            () -> new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
+    installAction().observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(appAction -> {
+          AppViewFragment.this.appAction = appAction;
+          MenuItem item = menu.findItem(R.id.menu_schedule);
+          if (item != null) {
+            item.setVisible(appAction != AppAction.OPEN);
+          }
+          if (appAction != AppAction.INSTALL) {
+            setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
+                (PermissionRequest) getContext())
                 .flatMap(success -> installManager.uninstall(getContext(), packageName,
                     app.getFile().getVername()))
+                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .subscribe(aVoid -> {
                 }, throwable -> throwable.printStackTrace()));
-      } else {
-        setUnInstallMenuOptionVisible(null);
-      }
-    });
+          } else {
+            setUnInstallMenuOptionVisible(null);
+          }
+        });
 
     header.setup(getApp);
     setupDisplayables(getApp);
@@ -514,6 +520,7 @@ public class AppViewFragment extends GridRecyclerFragment
       GenericDialogs.createGenericOkCancelMessage(getContext(),
           Application.getConfiguration().getMarketName(),
           getContext().getString(R.string.installapp_alrt, appName))
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(new SimpleSubscriber<GenericDialogs.EResponse>() {
             @Override public void onNext(GenericDialogs.EResponse eResponse) {
               super.onNext(eResponse);
@@ -622,7 +629,12 @@ public class AppViewFragment extends GridRecyclerFragment
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
 
-    return GetAdsRequest.ofAppviewSuggested(keywords).observe().map(getAdsResponse -> {
+    return GetAdsRequest.ofAppviewSuggested(keywords,
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID(),
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
+        getApp1.getNodes().getMeta().getData().getPackageName(),
+        DataProvider.getConfiguration().getPartnerId()).observe().map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {
         suggestedAds = getAdsResponse.getAds();
       }

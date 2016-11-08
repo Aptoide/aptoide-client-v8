@@ -9,11 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 
 /**

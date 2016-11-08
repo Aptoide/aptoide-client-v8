@@ -29,7 +29,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
@@ -119,13 +119,12 @@ public abstract class V8Engine extends DataProvider {
 
   private static void regenerateUserAgent() {
     SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
-        new IdsRepository(
-            SecurePreferencesImplementation.getInstance(), getContext()), new UserData() {
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        new UserData() {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
           }
-        }
-    ));
+        }));
   }
 
   public static void clearUserData() {
@@ -236,13 +235,12 @@ public abstract class V8Engine extends DataProvider {
         .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
             downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
-                new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
                 new UserData() {
                   @Override public String getUserEmail() {
                     return AptoideAccountManager.getUserEmail();
                   }
-                }
-                ));
+                }));
 
     // setupCurrentActivityListener();
 
@@ -272,7 +270,7 @@ public abstract class V8Engine extends DataProvider {
 
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
-        () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
   }
 

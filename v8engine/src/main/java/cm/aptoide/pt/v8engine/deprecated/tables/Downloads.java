@@ -3,15 +3,11 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.FileUtils;
-import io.realm.Realm;
 import io.realm.RealmList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by sithengineer on 29/09/16.
@@ -52,13 +48,14 @@ public class Downloads {
         long fileSize = downloadFile.length();
 
         // only migrate APKs
-        if ((MAX_SIZE_CACHE > (cacheSum + fileSize)) && downloadFile.getName().endsWith(".apk") && downloadFile.renameTo(
-            new File(newPathToDownloads, downloadFile.getName()))) {
+        if ((MAX_SIZE_CACHE > (cacheSum + fileSize))
+            && downloadFile.getName().endsWith(".apk")
+            && downloadFile.renameTo(new File(newPathToDownloads, downloadFile.getName()))) {
           cacheSum += fileSize;
           saveDbEntry(downloadFile, downloadAccessor);
         } else {
           // cache has filled, delete file
-          if(!downloadFile.delete()){
+          if (!downloadFile.delete()) {
             downloadFile.deleteOnExit();
           }
         }

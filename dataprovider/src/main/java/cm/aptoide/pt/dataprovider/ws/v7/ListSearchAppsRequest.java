@@ -5,12 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -36,10 +33,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, String storeName,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, String accessToken,
-      String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     List<String> stores = Collections.singletonList(storeName);
 
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
@@ -56,12 +51,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
+      String accessToken, String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(
@@ -75,10 +66,9 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken, String email,
+      String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest((Body) decorator.decorate(

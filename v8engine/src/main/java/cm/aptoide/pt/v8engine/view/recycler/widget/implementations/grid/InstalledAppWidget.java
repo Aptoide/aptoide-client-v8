@@ -18,10 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -132,8 +135,9 @@ import java.util.Locale;
 
       dialog.dismiss();
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
-          .execute(response -> {
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID()).execute(response -> {
         if (response.isOk()) {
           Logger.d(TAG, "review added");
           ShowMessage.asSnack(labelTextView, R.string.review_success);

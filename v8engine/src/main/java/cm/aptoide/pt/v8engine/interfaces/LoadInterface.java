@@ -13,7 +13,8 @@ import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
  */
 public interface LoadInterface {
   /**
-   * @param create flags that the fragment is being created for the first time. Will be set to false
+   * @param create flags that the fragment is being created for the first time. Will be set to
+   * false
    * on {@link BaseLoaderFragment#onStop()}.
    * @param refresh flags that the fragment should refresh it's state, reload data from network and
    * refresh its state.

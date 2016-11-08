@@ -5,14 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,10 +38,8 @@ import rx.Observable;
   }
 
   public static GetStoreRequest of(StoreCredentials storeCredentials, StoreContext storeContext,
-      String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      String accessToken, String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
@@ -53,10 +48,8 @@ import rx.Observable;
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      String accessToken, String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
