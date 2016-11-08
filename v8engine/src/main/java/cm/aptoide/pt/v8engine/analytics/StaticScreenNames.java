@@ -10,5 +10,5 @@ package cm.aptoide.pt.v8engine.analytics;
  */
 public class StaticScreenNames {
 
-	public static final String MAIN_ACTIVITY = "Main Activity";
+  public static final String MAIN_ACTIVITY = "Main Activity";
 }

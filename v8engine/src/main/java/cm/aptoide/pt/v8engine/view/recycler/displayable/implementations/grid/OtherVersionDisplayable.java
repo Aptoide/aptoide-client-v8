@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -15,24 +14,18 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class OtherVersionDisplayable extends DisplayablePojo<App> {
 
-	public OtherVersionDisplayable() {
-	}
+  public OtherVersionDisplayable() {
+  }
 
-	public OtherVersionDisplayable(App pojo) {
-		super(pojo);
-	}
+  public OtherVersionDisplayable(App pojo) {
+    super(pojo);
+  }
 
-	public OtherVersionDisplayable(App pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  @Override public int getViewLayout() {
+    return R.layout.other_version_row;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.OTHER_VERSION_ROW;
-	}
-
-	@Override
-	public int getViewLayout() {
-		return R.layout.other_version_row;
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="toolbarTheme" format="reference"/>
-    <attr name="customButton" format="reference"/>
-    <attr name="customButtonWhite" format="reference"/>
-    <attr name="backgroundCard" format="reference"/>
+  <attr name="toolbarTheme" format="reference"/>
+  <attr name="customButton" format="reference"/>
+  <attr name="customButtonWhite" format="reference"/>
+  <attr name="backgroundCard" format="reference"/>
 </resources>

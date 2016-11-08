@@ -5,50 +5,54 @@
   -->
 
 <RelativeLayout android:id="@+id/brick_app_item"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     >
 
-    <ImageView
-        android:id="@+id/featured_graphic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@null"/>
+  <ImageView
+      android:id="@+id/featured_graphic"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:adjustViewBounds="true"
+      android:contentDescription="@null"
+      />
 
-    <RelativeLayout
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="50dp"
+      android:layout_alignParentBottom="true"
+      android:background="@drawable/gradient_black"
+      android:gravity="bottom"
+      android:orientation="horizontal"
+      android:padding="4dp"
+      >
+
+    <TextView
+        android:id="@+id/app_name"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/gradient_black"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:padding="4dp">
-
-        <TextView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="1.5dp"
-            android:text="Little Commander worl world II"
-            android:textColor="?attr/inverseTextColor"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="1.5dp"
+        android:text="Little Commander worl world II"
+        android:textColor="?attr/inverseTextColor"
+        />
 
 
-        <RatingBar
-            android:id="@+id/ratingbar"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/app_name"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="3dp"
-            android:clickable="false"
-            android:isIndicator="true"
-            android:numStars="5"/>
+    <RatingBar
+        android:id="@+id/ratingbar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/app_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="3dp"
+        android:clickable="false"
+        android:isIndicator="true"
+        android:numStars="5"
+        />
 
-    </RelativeLayout>
+  </RelativeLayout>
 
 </RelativeLayout>

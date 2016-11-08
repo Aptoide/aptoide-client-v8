@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.listeners;
 
 import android.support.v7.widget.RecyclerView;
-
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import rx.Observable;
 
@@ -10,11 +9,11 @@ import rx.Observable;
  */
 public final class RxEndlessRecyclerView {
 
-	public static Observable<Void> loadMore(RecyclerView recyclerView, BaseAdapter adapter) {
-		return Observable.create(new EndlessRecyclerViewLoadMoreOnSubscribe(recyclerView, adapter));
-	}
+  private RxEndlessRecyclerView() {
+    new AssertionError("No instances!");
+  }
 
-	private RxEndlessRecyclerView() {
-		new AssertionError("No instances!");
-	}
+  public static Observable<Void> loadMore(RecyclerView recyclerView, BaseAdapter adapter) {
+    return Observable.create(new EndlessRecyclerViewLoadMoreOnSubscribe(recyclerView, adapter));
+  }
 }

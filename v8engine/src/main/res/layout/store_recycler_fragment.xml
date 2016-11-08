@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/store_recycler_coordinator_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    >
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonLayout">
-        <Button
-            android:id="@+id/add_more_stores"
-            style="?attr/customButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="Add more stores"/>
+  <include layout="@layout/partial_view_incl_no_network"/>
 
-            <include layout="@layout/recycler_fragment"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                android:layout_above="@id/add_more_stores"/>
-    </RelativeLayout>
+  <include layout="@layout/partial_view_error"/>
 
-</LinearLayout>
+  <include layout="@layout/partial_view_progress_bar"/>
+
+  <include
+      layout="@layout/recycler_fragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+  <!--<android.support.design.widget.FloatingActionButton-->
+  <!--android:id="@+id/fabAddStore"-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:layout_margin="@dimen/fab_margin"-->
+  <!--android:src="@drawable/ic_add"-->
+  <!--android:translationY="-60dp"-->
+  <!--android:layout_gravity="right|bottom"-->
+  <!--/>-->
+</android.support.design.widget.CoordinatorLayout>

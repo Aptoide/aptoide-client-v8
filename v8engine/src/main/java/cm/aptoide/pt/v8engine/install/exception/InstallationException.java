@@ -5,16 +5,18 @@
 
 package cm.aptoide.pt.v8engine.install.exception;
 
+import cm.aptoide.pt.utils.BaseException;
+
 /**
  * Created by marcelobenites on 7/20/16.
  */
-public class InstallationException extends Exception {
+public class InstallationException extends BaseException {
 
-	public InstallationException(String detailMessage) {
-		super(detailMessage);
-	}
+  public InstallationException(String detailMessage) {
+    super(detailMessage);
+  }
 
-	public InstallationException(Throwable throwable) {
-		super(throwable);
-	}
+  public InstallationException(Throwable throwable) {
+    super(throwable);
+  }
 }

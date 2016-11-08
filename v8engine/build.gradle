@@ -2,19 +2,12 @@
  * Copyright (c) 2016.
  * Modified by SithEngineer on 24/08/2016.
  */
-
 apply plugin: 'com.android.library'
-apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-    jvmArgs '-noverify'
-    //defaultMethods true
-}
 
-crashlytics {
-    enableNdk true
-    androidNdkOut 'src/main/obj'
-    androidNdkLibsOut 'src/main/libs'
+retrolambda {
+  jvmArgs '-noverify'
+  //defaultMethods true
 }
 
 Properties localProperties = new Properties()
@@ -22,165 +15,203 @@ localProperties.load(new FileInputStream(project.file("../../aptoideProperties/l
 
 android {
 
-    // Websockets
-    useLibrary 'org.apache.http.legacy'
+  // Websockets
+  useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
 
-    defaultConfig {
-        minSdkVersion 15
-        configureFabric delegate, localProperties.FABRIC_API_KEY
-        consumerProguardFiles "proguard-rules.txt"
+  defaultConfig {
+    minSdkVersion 15
+    consumerProguardFiles "proguard-rules.txt"
+    //testInstrumentationRunner "cm.aptoide.pt.v8engine.MultidexAndroidJunitRunner"
+
+    // Enabling multidex support.
+    multiDexEnabled true
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  publishNonDefault true
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      shrinkResources false
+      configureFlurry delegate, localProperties.FLURRY_KEY
+      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
+      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
+      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
+          localProperties.SIXPACK_PASSWORD
+      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
 
-    lintOptions {
-        abortOnError false
+    debug {
+      minifyEnabled false
+      shrinkResources false
+      configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
+      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
+      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
+      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
+          localProperties.SIXPACK_PASSWORD
+      def googleSenderId = localProperties.GOOGLE_SENDER_ID
+      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
+  }
 
-    publishNonDefault true
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            shrinkResources false
-            configureFlurry delegate, localProperties.FLURRY_KEY
-            configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
-        }
-
-        debug {
-            minifyEnabled false
-            shrinkResources false
-            configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
-            configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
-        }
+  sourceSets {
+    main {
+      res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
     }
+  }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    sourceSets {
-        main {
-            res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
-        }
-    }
-
-    dexOptions {
-        incremental true
-    }
 }
 
-void configureFabric(androidDelegate, key) {
-    androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
+void configureSixpackCredentials(androidDelegate, user, password) {
+  boolean userExists = user != null
+  boolean passwordExists = password != null
+
+  androidDelegate.buildConfigField "String", "SIXPACK_USER",
+      "\"" + (userExists ? user.toString() : "") + "\""
+  androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD",
+      "\"" + (passwordExists ? password.toString() : "") + "\""
 }
 
 void configureFlurry(androidDelegate, key) {
-    boolean keyExists = key != null
-    androidDelegate.buildConfigField "boolean", "FLURRY_CONFIGURED", keyExists.toString()
-    androidDelegate.buildConfigField "String", "FLURRY_KEY", "\"" + key.toString() + "\""
+  boolean keyExists = key != null
+  androidDelegate.buildConfigField "boolean", "FLURRY_CONFIGURED", keyExists.toString()
+  androidDelegate.buildConfigField "String", "FLURRY_KEY", "\"" + key.toString() + "\""
 }
 
 void configureLocalytics(androidDelegate, key) {
-    boolean keyExists = key != null
-    androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
-    androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists? key : ""]
+  boolean keyExists = key != null
+  androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
+}
+
+void configurePayPal(androidDelegate, key, environment) {
+  boolean configurationExists = (key != null && environment != null)
+  androidDelegate.buildConfigField "String", "PAYPAL_KEY",
+      "\"" + (configurationExists ? key.toString() : "") + "\""
+  androidDelegate.buildConfigField "String", "PAYPAL_ENVIRONMENT",
+      "\"" + (configurationExists ? environment.toString() : "") + "\""
 }
 
 dependencies {
 
-    //
-    // inter-projects dependencies
-    //
+  //
+  // inter-projects dependencies
+  //
 
-    debugCompile project(path: ':database', configuration: 'debug')
-    releaseCompile project(path: ':database', configuration: 'release')
+  debugCompile project(path: ':database', configuration: 'debug')
+  releaseCompile project(path: ':database', configuration: 'release')
 
-    debugCompile project(path: ':dataprovider', configuration: 'debug')
-    releaseCompile project(path: ':dataprovider', configuration: 'release')
+  debugCompile project(path: ':dataprovider', configuration: 'debug')
+  releaseCompile project(path: ':dataprovider', configuration: 'release')
 
-    debugCompile project(path: ':utils', configuration: 'debug')
-    releaseCompile project(path: ':utils', configuration: 'release')
+  debugCompile project(path: ':utils', configuration: 'debug')
+  releaseCompile project(path: ':utils', configuration: 'release')
 
-    debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
-    releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
+  debugCompile project(path: ':utilsdesign', configuration: 'debug')
+  releaseCompile project(path: ':utilsdesign', configuration: 'release')
 
-    debugCompile project(path: ':imageloader', configuration: 'debug')
-    releaseCompile project(path: ':imageloader', configuration: 'release')
+  debugCompile project(path: ':crashreports', configuration: 'debug')
+  releaseCompile project(path: ':crashreports', configuration: 'release')
 
-    debugCompile project(path: ':downloadmanager', configuration: 'debug')
-    releaseCompile project(path: ':downloadmanager', configuration: 'release')
+  debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
+  releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
 
-    //
-    // custom libs in folders
-    //
+  debugCompile project(path: ':imageloader', configuration: 'debug')
+  releaseCompile project(path: ':imageloader', configuration: 'release')
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  debugCompile project(path: ':downloadmanager', configuration: 'debug')
+  releaseCompile project(path: ':downloadmanager', configuration: 'release')
 
-    //
-    // from remote repos
-    //
+  //
+  // custom libs in folders
+  //
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //noinspection GradleDependency
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
-    //noinspection GradleDependency
-    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
+  //
+  // from remote repos
+  //
 
-    provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Testing-only dependencies
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  // Force usage of support annotations in the test app, since it is internally used by the runner module.
+  androidTestCompile ("com.android.support.test:runner:${RUNNER_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestCompile ("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
 
-    compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
+  compile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile ("com.android.support:support-v4:${SUPPORT_LIB_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
 
-    compile "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
-    // If you want pre-written Activities and Fragments you can subclass as providers
-    compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:preference-v7:23.4.0"
+  //noinspection GradleDependency
+  compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+  //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
 
-    //    Apagar
-    compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
-    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
-    // for leak detection
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
-    //http://stackoverflow.com/questions/36762834/getting-errors-on-building-in-android-studio-2
-    debugCompile 'com.squareup.haha:haha:2.0.3'
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+  compile "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
 
-    // Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
-        transitive = true
-    }
-    /*
-    // NDK Kit
-    compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.2@aar') {
-        transitive = true
-    }
-    */
+  compile "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
+  // If you want pre-written Activities and Fragments you can subclass as providers
+  compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
 
-    // paypal SDK
-    compile ("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}"){
-        exclude group: 'io.card'
-    }
+  compile "eu.chainfire:libsuperuser:${SUPER_USER_LIB_VERSION}"
 
-    // Localytics sdk
-    compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
+  //    Apagar
+  compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
+  compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
+
+  // for leak detection
+  debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+  //http://stackoverflow.com/questions/36762834/getting-errors-on-building-in-android-studio-2
+  debugCompile 'com.squareup.haha:haha:2.0.3'
+  releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+  testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+
+  // paypal SDK
+  compile("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
+    exclude group: 'io.card'
+  }
+
+  // Localytics sdk
+  compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
+  //Only used by localytics
+  compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
+  compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
 
     // Flurry Android sdk
     compile "com.flurry.android:analytics:${FLURRY_VERSION}"

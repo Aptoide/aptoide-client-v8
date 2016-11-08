@@ -5,48 +5,43 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import java.io.IOException;
-
 import cm.aptoide.pt.iab.InAppBillingSerializer;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.model.v3.PaidApp;
+import java.io.IOException;
 import lombok.AllArgsConstructor;
 
 /**
  * Created by marcelobenites on 8/25/16.
  */
-@AllArgsConstructor
-public class PurchaseFactory {
+@AllArgsConstructor public class PurchaseFactory {
 
-	private final InAppBillingSerializer serializer;
+  private final InAppBillingSerializer serializer;
 
-	public Purchase create(InAppBillingPurchasesResponse.InAppBillingPurchase purchase, String purchaseSignature) {
-		return new Purchase() {
+  public Purchase create(InAppBillingPurchasesResponse.InAppBillingPurchase purchase,
+      String purchaseSignature) {
+    return new Purchase() {
 
-			@Override
-			public String getData() throws IOException {
-				return serializer.serializePurchase(purchase);
-			}
+      @Override public String getData() throws IOException {
+        return serializer.serializePurchase(purchase);
+      }
 
-			@Override
-			public String getSignature() {
-				return purchaseSignature;
-			}
-		};
-	}
+      @Override public String getSignature() {
+        return purchaseSignature;
+      }
+    };
+  }
 
-	public Purchase create(GetApkInfoJson.Payment payment) {
-		return new Purchase() {
+  public Purchase create(PaidApp app) {
+    return new Purchase() {
 
-			@Override
-			public String getData() {
-				return null;
-			}
+      @Override public String getData() {
+        return app.getPath().getStringPath();
+      }
 
-			@Override
-			public String getSignature() {
-				return null;
-			}
-		};
-	}
+      @Override public String getSignature() {
+        return null;
+      }
+    };
+  }
 }

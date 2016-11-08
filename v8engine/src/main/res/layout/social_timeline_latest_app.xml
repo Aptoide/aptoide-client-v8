@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:id="@+id/social_timeline_latest_app"
-             android:background="@android:color/transparent"
-             tools:src="@drawable/icon_brand_aptoide"
-             tools:ignore="contentDescription"
-             android:scaleType="fitCenter"
-             android:layout_margin="6dp"
-             android:layout_width="56dp"
-             android:layout_height="56dp"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/social_timeline_latest_app"
+    android:background="@android:color/transparent"
+    tools:src="@drawable/icon_brand_aptoide"
+    tools:ignore="contentDescription"
+    android:scaleType="fitCenter"
+    android:layout_margin="6dp"
+    android:layout_width="56dp"
+    android:layout_height="56dp"
+    />

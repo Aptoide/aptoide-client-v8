@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated;
@@ -9,121 +9,142 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-
-import com.crashlytics.android.Crashlytics;
-
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.v8engine.deprecated.tables.Downloads;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
-import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
-import cm.aptoide.pt.v8engine.deprecated.tables.Updates;
-import io.realm.Realm;
 
 /**
  * Created by sithengineer on 24/08/16.
  */
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
-	private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-	private static final int DATABASE_VERSION = 43;
+  private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
+  private static final int DATABASE_VERSION = 55;
+  private Throwable agregateExceptions;
 
-	private Throwable agregateExceptions;
+  public SQLiteDatabaseHelper(Context context) {
+    super(context, "aptoide.db", null, DATABASE_VERSION);
+  }
 
-	public SQLiteDatabaseHelper(Context context) {
-		super(context, "aptoide.db", null, DATABASE_VERSION);
-	}
+  @Override public void onCreate(SQLiteDatabase db) {
+    Logger.w(TAG, "onCreate() called");
 
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-		Logger.w(TAG, "onCreate() called");
-		// do nothing here.
-	}
+    // do nothing here.
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
+  }
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Logger.w(TAG, "onUpgrade() called with: " + "oldVersion = [" + oldVersion + "], newVersion = [" + newVersion + "]");
-		migrate(db);
-	}
+  @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    Logger.w(TAG, "onUpgrade() called with: "
+        + "oldVersion = ["
+        + oldVersion
+        + "], newVersion = ["
+        + newVersion
+        + "]");
 
-	@Override
-	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		super.onDowngrade(db, oldVersion, newVersion);
-		Logger.w(TAG, "onDowngrade() called with: " + "oldVersion = [" + oldVersion + "], newVersion = [" + newVersion + "]");
-		migrate(db);
-	}
+    migrate(db);
 
-	/**
-	 * migrate from whole SQLite db from V7 to V8 Realm db
-	 */
-	private void migrate(SQLiteDatabase db) {
-		if (!ManagerPreferences.needsDbMigration()) {
-			return;
-		}
-		Logger.w(TAG, "Migrating database started....");
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
 
-		Realm realm = Database.get();
-		realm.beginTransaction();
-		realm.deleteAll();
-		realm.commitTransaction();
+    SecurePreferences.setWizardAvailable(true);
+  }
 
-		try {
-			new Repo().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
-		}
+  @Override public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    super.onDowngrade(db, oldVersion, newVersion);
+    Logger.w(TAG, "onDowngrade() called with: "
+        + "oldVersion = ["
+        + oldVersion
+        + "], newVersion = ["
+        + newVersion
+        + "]");
+    migrate(db);
 
-		try {
-			new Excluded().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
-		}
+    ManagerPreferences.setNeedsSqliteDbMigration(false);
+  }
 
-		try {
-			new Installed().migrate(db, realm); // X
-		} catch (Exception ex) {
-			logException(ex);
-		}
+  /**
+   * migrate from whole SQLite db from V7 to V8 Realm db
+   */
+  private void migrate(SQLiteDatabase db) {
+    if (!ManagerPreferences.needsSqliteDbMigration()) {
+      return;
+    }
+    Logger.w(TAG, "Migrating database started....");
 
-		try {
-			new Rollback().migrate(db, realm);
-		} catch (Exception ex) {
-			logException(ex);
-		}
+    try {
+      new Repo().migrate(db, AccessorFactory.getAccessorFor(Store.class));
+    } catch (Exception ex) {
+      logException(ex);
+    }
 
-		try {
-			new Scheduled().migrate(db, realm); // X
-		} catch (Exception ex) {
-			logException(ex);
-		}
+    try {
+      new Excluded().migrate(db, AccessorFactory.getAccessorFor(Update.class));
+    } catch (Exception ex) {
+      logException(ex);
+    }
 
-		try {
-			new Updates().migrate(db, realm); // despite the migration, this data should be recreated upon app startup
-		} catch (Exception ex) {
-			logException(ex);
-		}
+    // recreated upon app install
+    //try {
+    //  new Installed().migrate(db,
+    //      AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Installed.class)); // X
+    //} catch (Exception ex) {
+    //  logException(ex);
+    //}
 
-		// table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
-		// table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
+    try {
+      new Rollback().migrate(db,
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Rollback.class));
+    } catch (Exception ex) {
+      logException(ex);
+    }
 
-		if(agregateExceptions!=null) {
-			Crashlytics.logException(agregateExceptions);
-		}
+    try {
+      new Scheduled().migrate(db,
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Scheduled.class)); // X
+    } catch (Exception ex) {
+      logException(ex);
+    }
 
-		ManagerPreferences.setNeedsDbMigration(false);
-		Logger.w(TAG, "Migrating database finished with success.");
-	}
+    // Updates table has changed. The new one has column label the old one doesn't.
+    // The updates are going to be obtained from ws
+    //try {
+    //  new Updates().migrate(db, realm);
+    //  // despite the migration, this data should be recreated upon app startup
+    //} catch (Exception ex) {
+    //  logException(ex);
+    //}
 
-	private void logException(Exception ex) {
-		Logger.e(TAG, ex);
+    try {
+      new Downloads().migrate(AccessorFactory.getAccessorFor(Download.class));
+    } catch (Exception ex) {
+      logException(ex);
+    }
 
-		if(agregateExceptions==null) {
-			agregateExceptions = ex;
-		}else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			agregateExceptions.addSuppressed(ex);
-		}
-	}
+    // table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
+    // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
+
+    if (agregateExceptions != null) {
+      CrashReports.logException(agregateExceptions);
+    }
+    Logger.w(TAG, "Migrating database finished.");
+  }
+
+  private void logException(Exception ex) {
+    Logger.e(TAG, ex);
+
+    if (agregateExceptions == null) {
+      agregateExceptions = ex;
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      agregateExceptions.addSuppressed(ex);
+    }
+  }
 }

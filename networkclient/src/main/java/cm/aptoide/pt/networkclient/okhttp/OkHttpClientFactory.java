@@ -5,18 +5,11 @@
 
 package cm.aptoide.pt.networkclient.okhttp;
 
+import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
 import java.io.File;
-import java.io.IOException;
-
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.BuildConfig;
-import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
 import okhttp3.Cache;
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Factory for OkHttp Clients creation.
@@ -26,60 +19,63 @@ import okhttp3.Response;
  */
 public class OkHttpClientFactory {
 
-	private static final String TAG = OkHttpClientFactory.class.getName();
-	private static OkHttpClient httpClientInstance;
+  private static final String TAG = OkHttpClientFactory.class.getName();
+  private static OkHttpClient httpClientInstance;
 
-	public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize, Interceptor interceptor) {
-		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+  public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
+      Interceptor interceptor, UserAgentGenerator userAgentGenerator) {
+    OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
-		//		if (BuildConfig.DEBUG) {
-		//			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
-		//		}
+    //		if (BuildConfig.DEBUG) {
+    //			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
+    //		}
 
-		return clientBuilder
-				.cache(new Cache(cacheDirectory, cacheMaxSize)) // 10 MiB
-				.addInterceptor(interceptor)
-				.build();
-	}
+    clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
 
-	public static OkHttpClient newClient() {
-		return new OkHttpClient.Builder().build();
-	}
+    clientBuilder.addInterceptor(interceptor);
 
-	public static OkHttpClient getSingletonClient() {
-		if (httpClientInstance == null) {
-			httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor());
-		}
-		return httpClientInstance;
-	}
+    clientBuilder.addInterceptor(new UserAgentInterceptor(userAgentGenerator));
 
-	private static final class AptoideCacheInterceptor implements Interceptor {
+    return clientBuilder.build();
+  }
 
-		private final String TAG = OkHttpClientFactory.TAG + "." + AptoideCacheInterceptor.class
-				.getSimpleName();
+  public static OkHttpClient newClient(UserAgentGenerator userAgentGenerator) {
+    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(userAgentGenerator)).build();
+  }
 
-		private final RequestCache customCache = new RequestCache();
+  /**
+   * @return an {@link OkHttpClient} instance
+   */
+  public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator) {
+    if (httpClientInstance == null) {
+      httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new PostCacheInterceptor(),
+          userAgentGenerator);
+    }
+    return httpClientInstance;
+  }
 
-		@Override
-		public Response intercept(Chain chain) throws IOException {
-			Request request = chain.request();
-			Response response = customCache.get(request);
+  /*
+  private static final class AptoideCacheInterceptor implements Interceptor {
 
-			HttpUrl httpUrl = request.url();
-			if (response != null) {
+    private final String TAG = AptoideCacheInterceptor.class.getSimpleName();
 
-				if(BuildConfig.DEBUG) {
-					Logger.v(TAG, String.format("cache hit '%s'", request.url()));
-				}
+    private final RequestCache customCache = new RequestCache();
 
-				return response;
-			}
+    @Override public Response intercept(Chain chain) throws IOException {
+      Request request = chain.request();
+      Response response = customCache.get(request);
 
-			if(BuildConfig.DEBUG) {
-				Logger.v(TAG, String.format("cache miss '%s'", request.url()));
-			}
+      HttpUrl httpUrl = request.url();
+      if (response != null) {
 
-			return customCache.put(request, chain.proceed(request));
-		}
-	}
+        Logger.v(TAG, String.format("cache hit '%s'", httpUrl));
+        return response;
+      } else {
+
+        Logger.v(TAG, String.format("cache miss '%s'", httpUrl));
+        return customCache.put(request, chain.proceed(request));
+      }
+    }
+  }
+  */
 }

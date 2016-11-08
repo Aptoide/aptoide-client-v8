@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -16,27 +15,27 @@ import lombok.Getter;
  */
 public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.EventImage> {
 
-	@Getter private String storeTheme;
+  @Getter private String storeTheme;
+  @Getter private String tag;
 
-	public GridDisplayDisplayable() {
-	}
+  public GridDisplayDisplayable() {
+  }
 
-	public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo) {
-		super(pojo);
-	}
+  public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo) {
+    super(pojo);
+  }
 
-	public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme) {
-		super(pojo);
-		this.storeTheme = storeTheme;
-	}
+  public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme, String tag) {
+    super(pojo);
+    this.storeTheme = storeTheme;
+    this.tag = tag;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.DISPLAYS;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_display;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_display;
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(2, true);
+  }
 }

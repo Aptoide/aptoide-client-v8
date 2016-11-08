@@ -12,54 +12,58 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/separator_horizontal"/>
+  <include layout="@layout/separator_horizontal"/>
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="8dp">
+  <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="5dp"
+      android:layout_marginTop="5dp"
+      android:gravity="center"
+      android:orientation="horizontal"
+      android:padding="8dp"
+      >
 
-        <TextView
-            style="?android:attr/textAppearanceSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="120dp"
-            android:padding="10dp"
-            android:text="@string/appview_rate_this_app_text"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textStyle="bold"/>
-
-        <RatingBar
-            android:id="@+id/ratingbar_appview"
-            style="@style/RatingBarLargeSelectable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="false"
-            android:numStars="5"
-            android:progressTint="@color/yellow"
-            android:secondaryProgressTint="@color/yellow"
-            android:stepSize="1"/>
-
-    </LinearLayout>
-
-    <include layout="@layout/separator_horizontal"/>
-
-    <include layout="@layout/appview_flags_layout"/>
-
-    <include
-        android:id="@+id/manual_reviewed_message_layout"
-        layout="@layout/app_manual_reviewed_message_layout"/>
-
-    <include
-        layout="@layout/appview_rating_indicator"
+    <TextView
+        style="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="120dp"
+        android:padding="10dp"
+        android:text="@string/appview_rate_this_app_text"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textStyle="bold"
         />
+
+    <RatingBar
+        android:id="@+id/ratingbar_appview"
+        style="@style/RatingBarLargeSelectable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:progressTint="@color/yellow"
+        android:secondaryProgressTint="@color/yellow"
+        android:stepSize="1"
+        />
+
+  </LinearLayout>
+
+  <include layout="@layout/separator_horizontal"/>
+
+  <include layout="@layout/appview_flags_layout"/>
+
+  <include
+      android:id="@+id/manual_reviewed_message_layout"
+      layout="@layout/app_manual_reviewed_message_layout"
+      />
+
+  <include
+      layout="@layout/appview_rating_indicator"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      />
 
 
 </LinearLayout>

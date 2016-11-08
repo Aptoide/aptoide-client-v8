@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 02/06/2016.
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="credits">
+    \tAptoide Team:\n\n
+    \t\t <a href="http://www.aptoide.com/page/about">http://www.aptoide.com/page/about</a> \n\n
+
+    \tSource code &amp; contributions:\n\n
+    \t\t <a href="https://github.com/aptoide">https://github.com/aptoide</a> \n\n
+
+    \tThank you to our Translators Team:\n\n
+
+     Albanian: Eni Çuçka \n
+     Arabic: Esraa Abdullah | Zuheir Sharafeldin | Ahmed Sami | ذوالفقار الزاملي | Yassine Nacer | Manaa Alshihe | Mohamed Gorrab | Omarioamriky | Ahmed Teailab | Ali\n
+     Asturian: Enol P.\n
+     Bosnian/Serbian: Rijad Spahic | Toni Grubisic\n
+     Burmese: Nyein Chan\n
+     Catalan: Francisco Villalba Segarra | Marc Bres Gil \n
+     Central Khmer: Sreang Sreng\n
+     Chinese (Hong Kong): Ivanniu\n
+     Croatian: Rijad Spahic | Toni Grubisic | Roko Jurjevic\n
+     Chinese: ChuChangMing | Junying Li | Theodore Wte | Xue Yao\n
+     Czech: Zanna Blinova | Michal Čihař | Jirka Daněk | Jan Krumpholc\n
+     Dutch: Shane Kloosterman | Jehan Bont | Ismail Gürol Celiktas | Stefan de Jong | Nathan Follens\n
+     Estonian: Kristjan Räts | Kristjan Räts\n
+     Filipino: Melvin Melchor A. Leal\n
+     Finnish: Sami “6sto” Kuusisto | Allu Saarinen\n
+     French: Ldm Public | Guillaume NV | Ultrapeer | Damien Mallard | Alexis Bonvin | Dominique Baume | Ldm Public\n
+     Georgian: Sandro Kakabadze \n
+     German: Alexander Dommnich | Manuel Stroh | Marlon Bruske | Benny La | Simon Grabert | Robert Reep | Martin Nehrdich | Michael Mayer | Lionel Wyser | Kevin Pang\n
+     Greek: Basileios Pitas \n
+     Hebrew: שלו מויאל  | David Liron | shiranbfree | Yaron Shahrabani\n
+     Hindi: Gaurav | Amar Singh \n
+     Indonesian: Adi Juarsa | Asep Muhajir\n
+     Italian: Gabriele Dal Pino | Elisa Bruno | Rapper Skull | Arshdeep Singh | Pavo Baxter | Gabry Carne | Simili Giuseppe | Damiano Chiacchiaretta \n
+     Japanese: Nana Wakasugi | Naofum\n
+     Korean: JCKim | KevinPark\n
+     Kurdish: Rasti K5\n
+     Lao: Vilaphonh Chanthalavong\n
+     Lithuanian: Saulius Pranckevicius | Titus Virbickas | Ruta Sipkauskaite | Tadas Preisegolavicius\n
+     Malay: Tan Say Lee\n
+     Persian:  Mehrdad Allahkarami \n
+     Polish: Michał VonFlynee | Trurl | Artur Stempkowski | Stanislaw | Tomasz Gregorczyk \n
+     Portuguese (Brazil): Tobias Alencastro | Caio Fonseca | Juanito Silva | Paulo Henrique | Marchus Santos | Maurilio Filho | Edu Salgado \n
+     Portuguese (Portugal): Joao Redondo | Tomé Mendes Ligia de Paula Santos\n
+     Romanian: Munteanu Ovidiu | Heim Bogdan | Tudor Bobei \n
+     Russian: Anton Tkachenko | Leonid Bogolubov | Kanat Yesseyev | Ligia de Paula Santos | Sergey Kudelin | Dmitry\n
+     Simplified Chinese: ivanniu | YFdyh000\n
+     Spanish: Ana Barrera | Ronnie Simon | jvnski | Denis Arroyabe | Francisco Villalba Segarra | Jorge Conde | Pablo Cardozo | Luis Orellana | Guillermo Mas Coll\n
+     Thai: Duangkarn\n
+     Turkish: Ultrapeer | Zeynal Zeynalov | Emre Tosunkaya | Nataliia\n
+     Ukrainian: Nataliia\n
+     Vietnamese: Nguyen Minh Tri\n
+
+ 	</string>
+
+</resources>

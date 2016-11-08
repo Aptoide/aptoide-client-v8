@@ -9,70 +9,66 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import cm.aptoide.pt.v8engine.fragment.implementations.SearchPagerTabFragment;
-
 /**
  * Created by neuro on 28-04-2016.
  */
 public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
-	private final String query;
-	private final boolean hasSubscribedResults;
-	private final boolean hasEverywhereResults;
-	private String storeName;
+  private final String query;
+  private final boolean hasSubscribedResults;
+  private final boolean hasEverywhereResults;
+  private String storeName;
 
-	public SearchPagerAdapter(FragmentManager fm, String query, boolean hasSubscribedResults, boolean
-			hasEverywhereResults) {
-		super(fm);
-		this.query = query;
-		this.hasSubscribedResults = hasSubscribedResults;
-		this.hasEverywhereResults = hasEverywhereResults;
-	}
+  public SearchPagerAdapter(FragmentManager fm, String query, boolean hasSubscribedResults,
+      boolean hasEverywhereResults) {
+    super(fm);
+    this.query = query;
+    this.hasSubscribedResults = hasSubscribedResults;
+    this.hasEverywhereResults = hasEverywhereResults;
+  }
 
-	public SearchPagerAdapter(FragmentManager fm, String query, String storeName) {
-		this(fm, query, false, false);
-		this.storeName = storeName;
-	}
+  public SearchPagerAdapter(FragmentManager fm, String query, String storeName) {
+    this(fm, query, false, false);
+    this.storeName = storeName;
+  }
 
-	@Override
-	public Fragment getItem(int position) {
-		if (storeName != null) {
-			return SearchPagerTabFragment.newInstance(query, storeName);
-		} else {
-			if (getCount() > 1) {
-				if (position == 0) {
-					return SearchPagerTabFragment.newInstance(query, true);
-				} else if (position == 1) {
-					return SearchPagerTabFragment.newInstance(query, false);
-				} else {
-					throw new IllegalArgumentException("SearchPagerAdapter should have 2 and only 2 pages!");
-				}
-			} else {
-				if (hasSubscribedResults) {
-					return SearchPagerTabFragment.newInstance(query, true);
-				} else {
-					return SearchPagerTabFragment.newInstance(query, false);
-				}
-			}
-		}
-	}
+  @Override public Fragment getItem(int position) {
+    if (storeName != null) {
+      return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, storeName);
+    } else {
+      if (getCount() > 1) {
+        if (position == 0) {
+          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, true);
+        } else if (position == 1) {
+          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, false);
+        } else {
+          throw new IllegalArgumentException("SearchPagerAdapter should have 2 and only 2 pages!");
+        }
+      } else {
+        if (hasSubscribedResults) {
+          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, true);
+        } else {
+          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, false);
+        }
+      }
+    }
+  }
 
-	@Override
-	public int getCount() {
-		if (storeName != null) {
-			return 1;
-		} else {
-			int count = 0;
+  @Override public int getCount() {
+    if (storeName != null) {
+      return 1;
+    } else {
+      int count = 0;
 
-			if (hasSubscribedResults) {
-				count++;
-			}
+      if (hasSubscribedResults) {
+        count++;
+      }
 
-			if (hasEverywhereResults) {
-				count++;
-			}
+      if (hasEverywhereResults) {
+        count++;
+      }
 
-			return count;
-		}
-	}
+      return count;
+    }
+  }
 }

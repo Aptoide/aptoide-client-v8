@@ -8,14 +8,12 @@ package cm.aptoide.pt.v8engine.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-
+import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.view.View;
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-
-import cm.aptoide.pt.v8engine.presenter.Presenter;
-import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 
 /**
@@ -23,58 +21,51 @@ import rx.Observable;
  */
 public abstract class ActivityView extends RxAppCompatActivity implements View {
 
-	private Presenter presenter;
+  private Presenter presenter;
 
-	@NonNull
-	@Override
-	public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull Event event) {
-		return RxLifecycle.bindUntilEvent(getLifecycle(), event);
-	}
+  @NonNull @Override public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull Event event) {
+    return RxLifecycle.bindUntilEvent(getLifecycle(), event);
+  }
 
-	@Override
-	public Context getContext() {
-		return this;
-	}
+  @Override public Context getContext() {
+    return this;
+  }
 
-	@Override
-	public Observable<Event> getLifecycle() {
-		return lifecycle().map(event -> {
-			return convertToEvent(event);
-		});
-	}
+  @Override public Observable<Event> getLifecycle() {
+    return lifecycle().map(event -> {
+      return convertToEvent(event);
+    });
+  }
 
-	@Override
-	public void attachPresenter(Presenter presenter, Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			presenter.restoreState(savedInstanceState);
-		}
-		this.presenter = presenter;
-		this.presenter.present();
-	}
+  @Override public void attachPresenter(Presenter presenter, Bundle savedInstanceState) {
+    if (savedInstanceState != null) {
+      presenter.restoreState(savedInstanceState);
+    }
+    this.presenter = presenter;
+    this.presenter.present();
+  }
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		presenter.saveState(outState);
-		super.onSaveInstanceState(outState);
-	}
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    presenter.saveState(outState);
+    super.onSaveInstanceState(outState);
+  }
 
-	@NonNull
-	private Event convertToEvent(ActivityEvent event) {
-		switch (event) {
-			case CREATE:
-				return Event.CREATE;
-			case START:
-				return Event.START;
-			case RESUME:
-				return Event.RESUME;
-			case PAUSE:
-				return Event.PAUSE;
-			case STOP:
-				return Event.STOP;
-			case DESTROY:
-				return Event.DESTROY;
-			default:
-				throw new IllegalStateException("Unrecognized event: " + event.name());
-		}
-	}
+  @NonNull private Event convertToEvent(ActivityEvent event) {
+    switch (event) {
+      case CREATE:
+        return Event.CREATE;
+      case START:
+        return Event.START;
+      case RESUME:
+        return Event.RESUME;
+      case PAUSE:
+        return Event.PAUSE;
+      case STOP:
+        return Event.STOP;
+      case DESTROY:
+        return Event.DESTROY;
+      default:
+        throw new IllegalStateException("Unrecognized event: " + event.name());
+    }
+  }
 }

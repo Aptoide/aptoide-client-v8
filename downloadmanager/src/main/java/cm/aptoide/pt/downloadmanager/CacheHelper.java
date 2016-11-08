@@ -1,36 +1,60 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 02/09/2016.
+ */
+
 package cm.aptoide.pt.downloadmanager;
 
-import java.io.File;
-
-import cm.aptoide.pt.database.Database;
+import android.text.format.DateUtils;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
-import io.realm.Realm;
-import io.realm.RealmResults;
 import io.realm.Sort;
-import lombok.Cleanup;
+import java.io.File;
+import lombok.AllArgsConstructor;
 
 /**
  * Created by trinkes on 7/7/16.
  */
-public class CacheHelper {
+@AllArgsConstructor public class CacheHelper implements CacheManager {
 
-	public static void cleanCache(DownloadSettingsInterface settingsInterface, String cacheDirPath) {
-		long maxCacheSize = settingsInterface.getMaxCacheSize() * 1024 * 1024 * 8;
-		@Cleanup
-		Realm realm = Database.get();
-		RealmResults<Download> allSorted = realm.where(Download.class).findAllSorted("timeStamp", Sort.ASCENDING);
+  private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
+  public static String TAG = CacheHelper.class.getSimpleName();
+  private DownloadAccessor downloadAccessor;
+  private DownloadSettingsInterface dirSettings;
 
-		int i = 0;
-		while (i < allSorted.size() - 1 && FileUtils.dirSize(new File(cacheDirPath)) > maxCacheSize) {
-			Download download = allSorted.get(i);
-			for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-				FileUtils.removeFile(fileToDownload.getFilePath());
-			}
-			Database.delete(download, realm);
-			i++;
-		}
-	}
+  public void cleanCache() {
+    long maxCacheSize = dirSettings.getMaxCacheSize() * VALUE_TO_CONVERT_MB_TO_BYTES;
+    String cacheDirPath = dirSettings.getDownloadDir();
+    long now = System.currentTimeMillis();
+
+    downloadAccessor.getAllSorted(Sort.ASCENDING).first().map(downloads -> {
+      int i = 0;
+      while (i < downloads.size() - 1
+          && FileUtils.dirSize(new File(cacheDirPath)) > maxCacheSize
+          && (now - downloads.get(i).getTimeStamp()) > DateUtils.HOUR_IN_MILLIS) {
+
+        Download download = downloads.get(i);
+        for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+          if (!(fileToDownload.getFileType() == FileToDownload.OBB
+              && download.getOverallDownloadStatus() == Download.COMPLETED)) {
+            FileUtils.removeFile(fileToDownload.getFilePath());
+          }
+        }
+        downloadAccessor.delete(download.getMd5());
+        i++;
+      }
+      return i;
+    }).subscribe(numberDeletedFiles -> {
+      if (numberDeletedFiles > 0) {
+        Logger.d(TAG, "Cache cleaned: " + numberDeletedFiles);
+      } else {
+        Logger.d(TAG, "Cache not cleaned");
+      }
+    }, throwable -> throwable.printStackTrace());
+  }
 }

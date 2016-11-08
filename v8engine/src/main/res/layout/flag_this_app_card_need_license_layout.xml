@@ -5,31 +5,35 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
 
-    <ImageView
-        android:layout_width="@dimen/appview_frags_size"
-        android:layout_height="@dimen/appview_frags_size"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/key"/>
+  <ImageView
+      android:layout_width="@dimen/appview_frags_size"
+      android:layout_height="@dimen/appview_frags_size"
+      android:layout_gravity="center_horizontal"
+      android:src="@drawable/key"
+      />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/flag_this_app_need_licence"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="@dimen/text_size_small"/>
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:text="@string/flag_this_app_need_licence"
+      android:textColor="?android:attr/textColorSecondary"
+      android:textSize="@dimen/text_size_small"
+      />
 
-    <TextView
-        android:id="@+id/number_licence_flags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="0"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="@dimen/text_size_small"/>
+  <TextView
+      android:id="@+id/number_licence_flags"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:text="0"
+      android:textColor="?android:attr/textColorSecondary"
+      android:textSize="@dimen/text_size_small"
+      />
 
 </LinearLayout>

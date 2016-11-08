@@ -15,20 +15,19 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridStoreDisplayable extends DisplayablePojo<Store> {
 
-	public GridStoreDisplayable(Store pojo) {
-		super(pojo);
-	}
+  public GridStoreDisplayable(Store pojo) {
+    super(pojo);
+  }
 
-	public GridStoreDisplayable() {
-	}
+  public GridStoreDisplayable() {
+  }
 
-	@Override
-	public Type getType() {
-		return Type.STORES_GROUP;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_store;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_store;
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(Type.STORES_GROUP.getDefaultPerLineCount(),
+        Type.STORES_GROUP.isFixedPerLineCount());
+  }
 }

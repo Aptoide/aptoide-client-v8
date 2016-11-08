@@ -1,23 +1,22 @@
-<manifest package="cm.aptoide.pt.downloadmanager"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cm.aptoide.pt.downloadmanager">
 
-    <application
-        android:allowBackup="true"
-        android:label="@string/app_name"
-        android:supportsRtl="true">
+  <application
+      android:allowBackup="true"
+      android:supportsRtl="true">
 
-        <receiver
-            android:name=".NotificationEventReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="cm.aptoide.downloadmanager.action.pause"/>
-                <action android:name="cm.aptoide.downloadmanager.action.open"/>
-                <action android:name="cm.aptoide.downloadmanager.action.resume"/>
-            </intent-filter>
-        </receiver>
-        <service
-            android:name=".DownloadService"
-            android:exported="false"/>
-    </application>
+    <receiver
+        android:name=".NotificationEventReceiver"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="cm.aptoide.downloadmanager.action.pause"/>
+        <action android:name="cm.aptoide.downloadmanager.action.open"/>
+        <action android:name="cm.aptoide.downloadmanager.action.resume"/>
+      </intent-filter>
+    </receiver>
+    <service
+        android:name=".DownloadService"
+        android:exported="false"/>
+  </application>
 
 </manifest>

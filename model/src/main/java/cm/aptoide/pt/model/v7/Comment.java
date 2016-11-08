@@ -6,28 +6,23 @@
 package cm.aptoide.pt.model.v7;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.Date;
-
 import lombok.Data;
 
 /**
  * Created by neuro on 04-07-2016.
  */
-@Data
-public class Comment {
+@Data public class Comment {
 
-	private long id;
-	private String body;
-	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
-	private Date added;
-	private User user;
-	private long parentReview;
+  private long id;
+  private String body;
+  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date added;
+  private User user;
+  private long parentReview;
 
-	@Data
-	public static class User {
+  @Data public static class User {
 
-		private String name;
-		private String avatar;
-	}
+    private String name;
+    private String avatar;
+  }
 }

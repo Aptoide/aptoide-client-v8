@@ -9,10 +9,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-
-import com.trello.rxlifecycle.LifecycleTransformer;
-
 import cm.aptoide.pt.v8engine.presenter.Presenter;
+import com.trello.rxlifecycle.LifecycleTransformer;
 import rx.Observable;
 
 /**
@@ -20,28 +18,25 @@ import rx.Observable;
  */
 public interface View {
 
-	@NonNull
-	@CheckResult
-	<T> LifecycleTransformer<T> bindUntilEvent(@NonNull View.Event event);
+  @NonNull @CheckResult <T> LifecycleTransformer<T> bindUntilEvent(@NonNull View.Event event);
 
-	Observable<Event> getLifecycle();
+  Observable<Event> getLifecycle();
 
-	Context getContext();
+  Context getContext();
 
-	void attachPresenter(Presenter presenter, Bundle savedInstanceState);
+  void attachPresenter(Presenter presenter, Bundle savedInstanceState);
 
-	// TODO: Make it simple. We need to abstract implementation details (e.g. Activity and Fragment life cycle events).
-	enum Event {
-		ATTACH,
-		CREATE,
-		CREATE_VIEW,
-		START,
-		RESUME,
-		PAUSE,
-		STOP,
-		DESTROY_VIEW,
-		DESTROY,
-		DETACH
-	}
-	
+  // TODO: Make it simple. We need to abstract implementation details (e.g. Activity and Fragment life cycle events).
+  enum Event {
+    ATTACH,
+    CREATE,
+    CREATE_VIEW,
+    START,
+    RESUME,
+    PAUSE,
+    STOP,
+    DESTROY_VIEW,
+    DESTROY,
+    DETACH
+  }
 }

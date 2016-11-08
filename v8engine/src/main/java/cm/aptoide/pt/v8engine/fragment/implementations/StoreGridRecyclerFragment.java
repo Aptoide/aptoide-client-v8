@@ -14,90 +14,79 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
+import cm.aptoide.pt.v8engine.util.Translator;
 
 /**
  * Created by neuro on 10-05-2016.
  */
 public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
-	public static StoreGridRecyclerFragment newInstance(Event event, String
-			title, String theme) {
-		Bundle args = buildBundle(event, title, theme);
+  public static StoreGridRecyclerFragment newInstance(Event event, String title, String storeTheme,
+      String tag) {
+    Bundle args = buildBundle(event, title, storeTheme, tag);
+    StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
 
-		StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
-		fragment.setArguments(args);
-		return fragment;
-	}
+  public static StoreGridRecyclerFragment newInstance(Event event, String title) {
+    Bundle args = buildBundle(event, title);
 
-	public static StoreGridRecyclerFragment newInstance(Event event, String
-			title) {
-		Bundle args = buildBundle(event, title);
+    StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
 
-		StoreGridRecyclerFragment fragment = new StoreGridRecyclerFragment();
-		fragment.setArguments(args);
-		return fragment;
-	}
+  @Override public void setupToolbar() {
+    // It's not calling super cause it does nothing in the middle class}
+    // StoreTabGridRecyclerFragment.
+    if (toolbar != null) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).getSupportActionBar()
+          .setTitle(Translator.translate(title));
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    }
+  }
 
-	@Override
-	public void setupToolbar() {
-		// It's not calling super cause it does nothing in the middle class}
-		// StoreTabGridRecyclerFragment.
-		if (toolbar != null) {
-			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
-			((AppCompatActivity) getActivity()).getSupportActionBar()
-					.setDisplayHomeAsUpEnabled(true);
-			toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-		}
-	}
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_empty, menu);
-	}
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			getActivity().onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+  @Override public int getContentViewId() {
+    return R.layout.recycler_swipe_fragment_with_toolbar;
+  }
 
-	@Override
-	public int getContentViewId() {
-		return R.layout.recycler_swipe_fragment_with_toolbar;
-	}
+  @Override public void setupViews() {
+    super.setupViews();
+    setupToolbar();
+    setHasOptionsMenu(true);
+  }
 
-	@Override
-	public void setupViews() {
-		super.setupViews();
-		setupToolbar();
-		setHasOptionsMenu(true);
-	}
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+  }
 
-	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-	}
-
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
-			savedInstanceState) {
-		if(storeTheme != null) {
-			ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-			ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-		}
-		return super.onCreateView(inflater, container, savedInstanceState);
-	}
-
-
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    if (storeTheme != null) {
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+    }
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
 }

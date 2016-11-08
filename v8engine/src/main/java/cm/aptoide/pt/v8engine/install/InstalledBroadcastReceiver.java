@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.install;
@@ -9,22 +9,29 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.util.Log;
-
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
-import io.realm.Realm;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -32,139 +39,221 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
-	private static final String TAG = "InstalledReceiver";
-	private Realm realm;
+  private static final String TAG = "InstalledReceiver";
+  private RollbackRepository repository;
+  private InstalledRepository installedRepository;
+  private UpdateRepository updatesRepository;
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		loadRealm();
+  @Override public void onReceive(Context context, Intent intent) {
+    repository = new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+    installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
+    updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
+        AccessorFactory.getAccessorFor(Store.class));
 
-		String action = intent.getAction();
-		String packageName = intent.getData().getEncodedSchemeSpecificPart();
+    String action = intent.getAction();
+    String packageName = intent.getData().getEncodedSchemeSpecificPart();
 
-		if(!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false))
-			return;
-		Logger.d(TAG, "Action : " + action);
+    confirmAction(packageName, action);
 
-		switch (action) {
-			case Intent.ACTION_PACKAGE_ADDED:
-				onPackageAdded(packageName);
-				break;
-			case Intent.ACTION_PACKAGE_REPLACED:
-				onPackageReplaced(packageName, context);
-				break;
-			case Intent.ACTION_PACKAGE_REMOVED:
-				onPackageRemoved(packageName);
-				break;
-		}
+    if (!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
+        Intent.EXTRA_REPLACING, false)) {
+      return;
+    }
+    Logger.d(TAG, "Action : " + action);
 
-		closeRealm();
-	}
+    switch (action) {
+      case Intent.ACTION_PACKAGE_ADDED:
+        onPackageAdded(packageName);
+        break;
+      case Intent.ACTION_PACKAGE_REPLACED:
+        onPackageReplaced(packageName);
+        break;
+      case Intent.ACTION_PACKAGE_REMOVED:
+        onPackageRemoved(packageName);
+        break;
+    }
+  }
 
-	private void loadRealm() {
-		if (realm == null) {
-			realm = Database.get();
-		}
-	}
+  private boolean shouldConfirmRollback(Rollback rollback, String action) {
+    return rollback != null && ((rollback.getAction().equals(Rollback.Action.INSTALL.name())
+        && action.equals(Intent.ACTION_PACKAGE_ADDED))
+        || (rollback.getAction()
+        .equals(Rollback.Action.UNINSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_REMOVED))
+        || (rollback.getAction().equals(Rollback.Action.UPDATE.name()) && action.equals(
+        Intent.ACTION_PACKAGE_REPLACED))
+        || (rollback.getAction().equals(Rollback.Action.DOWNGRADE.name()) && action.equals(
+        Intent.ACTION_PACKAGE_ADDED)));
+  }
 
-	private void closeRealm() {
-		if (realm != null) {
-			realm.close();
-		}
-	}
+  protected void onPackageAdded(String packageName) {
+    Logger.d(TAG, "Package added: " + packageName);
 
-	protected void onPackageAdded(String packageName) {
-		Log.d(TAG, "Package added: " + packageName);
+    //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
+    //if(rollback != null) {
+    //	String trustedBadge = rollback.getTrustedBadge();
+    //	Analytics.ApplicationInstall.installed(packageName, trustedBadge);
+    //}
 
-		Rollback rollback = Database.RollbackQ.get(packageName,Rollback.Action.INSTALL,realm);
-		if(rollback != null) {
-			String packageNameFromRollbackQ = rollback.getPackageName();
-			String trustedBadge = rollback.getTrustedBadge();
-			Analytics.ApplicationInstall.installed(packageName, trustedBadge);
-		}
+    databaseOnPackageAdded(packageName);
+    checkAndBroadcastReferrer(packageName);
+  }
 
-		databaseOnPackageAdded(packageName);
-		checkAndBroadcastReferrer(packageName);
-	}
+  private void checkAndBroadcastReferrer(String packageName) {
+    //StoredMinimalAd storedMinimalAd = DeprecatedDatabase.ReferrerQ.get(packageName, realm);
+    //if (storedMinimalAd != null) {
+    //  ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer());
+    //  DataproviderUtils.AdNetworksUtils.knockCpi(storedMinimalAd);
+    //  DeprecatedDatabase.delete(storedMinimalAd, realm);
+    //} else {
+    //  GetAdsRequest.ofSecondInstall(packageName)
+    //      .observe()
+    //      .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+    //      .observeOn(AndroidSchedulers.mainThread())
+    //      .doOnNext(
+    //          minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
+    //      .onErrorReturn(throwable1 -> new MinimalAd())
+    //      .subscribe();
+    //}
 
-	private void checkAndBroadcastReferrer(String packageName) {
-		StoredMinimalAd storedMinimalAd = Database.ReferrerQ.get(packageName, realm);
-		if (storedMinimalAd != null) {
-			ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer());
-			DataproviderUtils.AdNetworksUtils.knockCpi(storedMinimalAd);
-			Database.delete(storedMinimalAd, realm);
-		} else {
-			GetAdsRequest.ofSecondInstall(packageName)
-					.observe()
-					.map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
-					.observeOn(AndroidSchedulers.mainThread())
-					.doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true)).onErrorReturn(throwable1 -> new MinimalAd())
-					.subscribe();
-		}
-	}
+    StoreMinimalAdAccessor storeMinimalAdAccessor =
+        AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    Subscription unManagedSubscription =
+        storeMinimalAdAccessor.get(packageName).subscribe(storeMinimalAd -> {
+          if (storeMinimalAd != null) {
+            ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
+            DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+            storeMinimalAdAccessor.remove(storeMinimalAd);
+          } else {
+            GetAdsRequest.ofSecondInstall(packageName,
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                    DataProvider.getContext()).getAptoideClientUUID(),
+                DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId())
+                .observe()
+                .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(
+                    minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
+                        true))
+                .onErrorReturn(throwable1 -> new MinimalAd())
+                .subscribe();
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
+  }
 
-	protected void onPackageReplaced(String packageName, Context context) {
-		Log.d(TAG, "Packaged replaced: " + packageName);
+  protected void onPackageReplaced(String packageName) {
+    Logger.d(TAG, "Packaged replaced: " + packageName);
+    databaseOnPackageReplaced(packageName);
+  }
 
-		databaseOnPackageReplaced(packageName, context);
-	}
+  protected void onPackageRemoved(String packageName) {
+    Logger.d(TAG, "Packaged removed: " + packageName);
+    databaseOnPackageRemoved(packageName);
+  }
 
-	protected void onPackageRemoved(String packageName) {
-		Log.d(TAG, "Packaged removed: " + packageName);
+  private void databaseOnPackageAdded(String packageName) {
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-		databaseOnPackageRemoved(packageName);
-	}
+    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
+      return;
+    }
 
-	private void databaseOnPackageAdded(String packageName) {
-		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    //DeprecatedDatabase.save(new Installed(packageInfo), realm);
+    installedRepository.insert(new Installed(packageInfo));
 
-		Database.save(new Installed(packageInfo, V8Engine.getContext().getPackageManager()), realm);
+    //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.INSTALL);
+    //if (rollback != null) {
+    //	confirmAction(packageName, Rollback.Action.INSTALL);
+    //}
+  }
 
-		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.INSTALL, realm);
-		if (rollback != null) {
-			confirmAction(packageName, Rollback.Action.INSTALL);
-		}
-	}
+  private void databaseOnPackageReplaced(String packageName) {
+    //Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
+    //if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
+    //  Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+    //}
+    //
+    //PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
+    //if (checkAndLogNullPackageInfo(packageInfo)) {
+    //  return;
+    //}
+    //
+    //if (update != null) {
+    //  if (packageInfo.versionCode >= update.getVersionCode()) {
+    //    DeprecatedDatabase.delete(update, realm);
+    //  }
+    //}
+    //
+    //DeprecatedDatabase.save(new Installed(packageInfo), realm);
 
-	private void databaseOnPackageReplaced(String packageName, Context context) {
-		Update update = Database.UpdatesQ.get(packageName, realm);
+    Subscription unManagedSubscription = updatesRepository.get(packageName).subscribe(update -> {
+      if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
+        Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
+      }
 
-		if(update != null && update.getPackageName() != null && update.getTrustedBadge() != null){
-			Analytics.ApplicationInstall.replaced(packageName, update.getTrustedBadge());
-		}
+      PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-		PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
-		if (update != null) {
-			if (packageInfo.versionCode >= update.getVersionCode()) {
-				Database.delete(update, realm);
-			}
-		}
+      if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
+        return;
+      }
 
-		Database.save(new Installed(packageInfo, context.getPackageManager()), realm);
+      if (update != null) {
+        if (packageInfo.versionCode >= update.getVersionCode()) {
+          updatesRepository.remove(update);
+        }
+      }
 
-		confirmAction(packageName, Rollback.Action.UPDATE);
-	}
+      installedRepository.insert(new Installed(packageInfo));
+    }, err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
 
-	private void databaseOnPackageRemoved(String packageName) {
-		Database.InstalledQ.delete(packageName, realm);
-		Database.UpdatesQ.delete(packageName, realm);
+    //confirmAction(packageName, Rollback.Action.UPDATE);
+  }
 
-		Rollback rollback = Database.RollbackQ.get(packageName, Rollback.Action.DOWNGRADE, realm);
-		if (rollback != null) {
-			confirmAction(packageName, Rollback.Action.DOWNGRADE);
-			Analytics.ApplicationInstall.downgraded(packageName, rollback.getTrustedBadge());
-		} else {
-			rollback = Database.RollbackQ.get(packageName, Rollback.Action.UNINSTALL, realm);
-			if (rollback != null) {
-				confirmAction(packageName, Rollback.Action.UNINSTALL);
-			}
-		}
-	}
+  /**
+   * @param packageInfo packageInfo.
+   * @return true if packageInfo is null, false otherwise.
+   */
+  private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {
+    if (packageInfo == null) {
+      CrashReports.logException(
+          new IllegalArgumentException("PackageName null for package " + packageName));
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-	private void confirmAction(String packageName, Rollback.Action action) {
-		Rollback rollback = Database.RollbackQ.get(packageName, action, realm);
-		if (rollback != null) {
-			rollback.confirm(realm);
-		}
-	}
+  private void databaseOnPackageRemoved(String packageName) {
+    //DeprecatedDatabase.InstalledQ.delete(packageName, realm);
+    //DeprecatedDatabase.UpdatesQ.delete(packageName, realm);
+
+    installedRepository.remove(packageName);
+    updatesRepository.remove(packageName);
+
+    //Rollback rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.DOWNGRADE);
+    //if (rollback != null) {
+    //	confirmAction(packageName, Rollback.Action.DOWNGRADE);
+    //	Analytics.ApplicationInstall.downgraded(packageName, rollback.getTrustedBadge());
+    //} else {
+    //	rollback = DeprecatedDatabase.RollbackQ.get(realm, packageName, Rollback.Action.UNINSTALL);
+    //	if (rollback != null) {
+    //		confirmAction(packageName, Rollback.Action.UNINSTALL);
+    //	}
+    //}
+  }
+
+  private void confirmAction(String packageName, String action) {
+    repository.getNotConfirmedRollback(packageName)
+        .first()
+        .filter(rollback -> shouldConfirmRollback(rollback, action))
+        .subscribe(rollback -> {
+          repository.confirmRollback(rollback);
+        }, throwable -> throwable.printStackTrace());
+  }
 }

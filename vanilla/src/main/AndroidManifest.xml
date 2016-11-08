@@ -4,37 +4,128 @@
   ~ Modified by SithEngineer on 27/06/2016.
   -->
 
-<manifest package="cm.aptoide.pt"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cm.aptoide.pt">
 
-    <application
-        android:name=".Aptoide"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AptoideThemeDefault"
-        tools:replace="theme"
-        >
+  <permission
+      android:name="${currentApplicationId}.permission.BILLING"
+      android:label="Make internal payments"
+      android:protectionLevel="normal"/>
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-        <service android:name="cm.aptoide.accountmanager.services.AccountAuthenticatorService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator"/>
-        </service>
+  <uses-permission
+      android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
-        <provider
-            android:exported="true"
-            android:authorities="${toolboxProviderAuthority}"
-            android:name="cm.aptoide.pt.v8engine.toolbox.ToolboxContentProvider"/>
-    </application>
+  <permission
+      android:name="${currentApplicationId}.permission.C2D_MESSAGE"
+      android:protectionLevel="signature"/>
+  <uses-permission
+      android:name="${currentApplicationId}.permission.C2D_MESSAGE"/>
+
+  <application
+      android:name=".Vanilla"
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:supportsRtl="true"
+      android:theme="@style/AptoideThemeDefault"
+      tools:replace="theme"
+      >
+
+    <activity android:name=".v8engine.MainActivityFragment">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <data android:scheme="amp${LOCALYTICS_APP_KEY}"/>
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+      </intent-filter>
+    </activity>
+
+    <meta-data
+        android:name="LOCALYTICS_APP_KEY"
+        android:value="${LOCALYTICS_APP_KEY}"/>
+
+    <receiver
+        android:name="com.localytics.android.ReferralReceiver"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER"/>
+      </intent-filter>
+    </receiver>
+
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="${fabricApiKey}" />
+
+    <meta-data
+        android:name="com.facebook.sdk.ApplicationId"
+        android:value="@string/facebook_app_id"/>
+
+    <service android:name="cm.aptoide.accountmanager.services.AccountAuthenticatorService">
+      <intent-filter>
+        <action android:name="android.accounts.AccountAuthenticator"/>
+      </intent-filter>
+      <meta-data
+          android:name="android.accounts.AccountAuthenticator"
+          android:resource="@xml/authenticator"/>
+    </service>
+
+    <provider
+        android:name="cm.aptoide.pt.v8engine.toolbox.ToolboxContentProvider"
+        android:authorities="${toolboxProviderAuthority}"
+        android:exported="true"
+        />
+
+    <provider
+        android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+        android:authorities="${suggestionProviderAuthority}"
+        android:exported="false"
+        />
+
+    <receiver
+        android:name="com.google.android.gms.gcm.GcmReceiver"
+        android:exported="true"
+        android:permission="com.google.android.c2dm.permission.SEND">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+        <category android:name="${currentApplicationId}"/>
+      </intent-filter>
+    </receiver>
+
+    <service
+        android:name="com.localytics.android.GcmListenerService"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+      </intent-filter>
+    </service>
+
+    <activity android:name="com.localytics.android.PushTrackingActivity"/>
+
+    <service
+        android:name="com.localytics.android.InstanceIDListenerService"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.android.gms.iid.InstanceID"/>
+      </intent-filter>
+    </service>
+
+    <service
+        android:name="cm.aptoide.pt.iab.InAppBillingService"
+        android:exported="true"
+        android:permission="${currentApplicationId}.permission.BILLING">
+
+      <intent-filter>
+        <action android:name="${currentApplicationId}.iab.action.BIND"/>
+      </intent-filter>
+    </service>
+  </application>
 
 </manifest>

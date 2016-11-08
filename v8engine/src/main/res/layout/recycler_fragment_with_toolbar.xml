@@ -11,24 +11,24 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-    <include layout="@layout/app_bar_layout"/>
+  <include layout="@layout/app_bar_layout"/>
 
-    <include layout="@layout/partial_view_incl_no_network"/>
+  <include layout="@layout/partial_view_incl_no_network"/>
 
-    <include layout="@layout/partial_view_error"/>
+  <include layout="@layout/partial_view_error"/>
 
-    <include layout="@layout/partial_view_progress_bar"/>
+  <include layout="@layout/partial_view_progress_bar"/>
 
-    <android.support.v7.widget.RecyclerView
+  <android.support.v7.widget.RecyclerView
 
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:clipToPadding="false"
-        android:paddingLeft="@dimen/recycler_margin"
-        android:paddingRight="@dimen/recycler_margin"
-        />
+      android:id="@+id/recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:clipToPadding="false"
+      android:paddingLeft="@dimen/recycler_margin"
+      android:paddingRight="@dimen/recycler_margin"
+      />
 
 </FrameLayout>
 

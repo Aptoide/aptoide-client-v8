@@ -6,32 +6,36 @@
 package cm.aptoide.pt.handlers;
 
 import android.view.View;
-
 import java.lang.ref.WeakReference;
 
 /**
  * Created by sithengineer on 06/05/16.
  */
-public abstract class ExtendedView<T>{
+public abstract class ExtendedView<T> {
 
-	private WeakReference<T> weakReference;
+  private WeakReference<T> weakReference;
 
-	public ExtendedView(T ref) {
-		weakReference = new WeakReference<>(ref);
-	}
+  public ExtendedView(T ref) {
+    weakReference = new WeakReference<>(ref);
+  }
 
-	public class OnClickListener implements View.OnClickListener {
+  public class OnClickListener implements View.OnClickListener {
 
-		@Override
-		public void onClick(View v) {
-			T ref = weakReference.get();
-			if(ref!=null) onClickReference(v, ref);
-			else onNullReference(v);
-		}
+    @Override public void onClick(View v) {
+      T ref = weakReference.get();
+      if (ref != null) {
+        onClickReference(v, ref);
+      } else {
+        onNullReference(v);
+      }
+    }
 
-		public void onClickReference(View v, T ref){}
-		public void onNullReference(View v){}
-	}
+    public void onClickReference(View v, T ref) {
+    }
+
+    public void onNullReference(View v) {
+    }
+  }
 
 	/*
 

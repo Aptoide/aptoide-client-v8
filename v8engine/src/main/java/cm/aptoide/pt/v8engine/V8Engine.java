@@ -1,49 +1,64 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.flurry.android.FlurryAgent;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
-import java.util.Collections;
-import java.util.List;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.PRNGFixes;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
+import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
+import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
-import io.fabric.sdk.android.Fabric;
-import io.realm.Realm;
-import lombok.Cleanup;
+import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
+import com.flurry.android.FlurryAgent;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+import java.util.Collections;
+import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -52,229 +67,298 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V8Engine extends DataProvider {
 
-	private static final String TAG = V8Engine.class.getName();
+  private static final String TAG = V8Engine.class.getName();
 
-	@Getter static DownloadService downloadService;
-	private RefWatcher refWatcher;
+  @Getter static DownloadService downloadService;
+  @Getter private static FragmentProvider fragmentProvider;
+  @Getter private static ActivityProvider activityProvider;
+  @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
+  private RefWatcher refWatcher;
+  @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
-	public static void loadStores() {
+  public static void loadStores() {
 
-		AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
-			@Cleanup Realm realm = Database.get();
-			for (Subscription subscription : subscriptions) {
-				Store store = new Store();
+    AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
 
-				store.setDownloads(Long.parseLong(subscription.getDownloads()));
-				store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar());
-				store.setStoreId(subscription.getId().longValue());
-				store.setStoreName(subscription.getName());
-				store.setTheme(subscription.getTheme());
+      if (subscriptions.size() > 0) {
+        for (Subscription subscription : subscriptions) {
+          Store store = new Store();
 
-				realm.beginTransaction();
-				realm.copyToRealmOrUpdate(store);
-				realm.commitTransaction();
-			}
+          store.setDownloads(Long.parseLong(subscription.getDownloads()));
+          store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
+              : subscription.getAvatar());
+          store.setStoreId(subscription.getId().longValue());
+          store.setStoreName(subscription.getName());
+          store.setTheme(subscription.getTheme());
 
-			DataproviderUtils.checkUpdates();
-		});
-	}
+          ((StoreAccessor) AccessorFactory.getAccessorFor(Store.class)).insert(store);
+        }
+      } else {
+        addDefaultStore();
+      }
 
-	public static void loadUserData() {
-		loadStores();
-	}
+      checkUpdates();
+    }, e -> {
+      Logger.e(TAG, e);
+      //CrashReports.logException(e);
+    });
+  }
 
-	public static void clearUserData() {
-		clearStores();
-	}
+  private static void checkUpdates() {
+    UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+    repository.getUpdates(true)
+        .first()
+        .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
+  }
 
-	private static void clearStores() {
-		@Cleanup Realm realm = Database.get();
-		realm.beginTransaction();
-		realm.delete(Store.class);
-		realm.commitTransaction();
+  public static void loadUserData() {
+    loadStores();
+    regenerateUserAgent();
+  }
 
-		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
-	}
+  private static void regenerateUserAgent() {
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        new UserData() {
+          @Override public String getUserEmail() {
+            return AptoideAccountManager.getUserEmail();
+          }
+        }));
+  }
 
-	public static RefWatcher getRefWatcher(Context context) {
-		V8Engine app = (V8Engine) context.getApplicationContext();
-		return app.refWatcher;
-	}
+  public static void clearUserData() {
+    AccessorFactory.getAccessorFor(Store.class).removeAll();
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
+    regenerateUserAgent();
+  }
 
-	@Override
-	public void onCreate() {
-		long l = System.currentTimeMillis();
-		AptoideUtils.setContext(this);
+  public static RefWatcher getRefWatcher(Context context) {
+    V8Engine app = (V8Engine) context.getApplicationContext();
+    return app.refWatcher;
+  }
 
-		//
-		// super
-		//
-		super.onCreate();
+  private static void addDefaultStore() {
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
+        null);
+  }
 
-		Database.initialize(this);
+  @Override public void onCreate() {
+    CrashReports.setup(this);
+    try {
+      PRNGFixes.apply();
+    } catch (Exception e) {
+      Logger.e(TAG, "onCreate: " + e);
+      CrashReports.logException(e);
+    }
+    long l = System.currentTimeMillis();
+    AptoideUtils.setContext(this);
+    fragmentProvider = createFragmentProvider();
+    activityProvider = createActivityProvider();
+    displayableWidgetMapping = createDisplayableWidgetMapping();
 
-		generateAptoideUUID().subscribe();
+    //
+    // super
+    //
+    super.onCreate();
 
-		SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
-		Analytics.LocalyticsSessionControl.firstSession(sPref);
-		Analytics.Lifecycle.Application.onCreate(this);
+    //if (BuildConfig.DEBUG) {
+    //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
+    //}
 
-		new FlurryAgent.Builder()
-				.withLogEnabled(false)
-				.build(this, BuildConfig.FLURRY_KEY);
+    Database.initialize(this);
 
-		if (BuildConfig.DEBUG) {
-			refWatcher = LeakCanary.install(this);
-			//registerActivityLifecycleCallbacks(new LeakCAnaryActivityWatcher(refWatcher));
-			Log.w(TAG, "LeakCanary installed");
-		} else {
-			refWatcher = RefWatcher.DISABLED;
-		}
+    generateAptoideUUID().subscribe();
 
-		if (SecurePreferences.isFirstRun()) {
-			loadInstalledApps().doOnNext(o -> {
-				if (AptoideAccountManager.isLoggedIn()) {
-					if (!SecurePreferences.isUserDataLoaded()) {
-						loadUserData();
-						SecurePreferences.setUserDataLoaded();
-					}
-				} else {
-					generateAptoideUUID().subscribe(success -> addDefaultStore());
-				}
-				//			    SecurePreferences.setFirstRun(false);    //jdandrade - Disabled this line so i could run first run wizard.
-			}).subscribe();
-		}
+    regenerateUserAgent();
 
-		final int appSignature = SecurityUtils.checkAppSignature(this);
-		if (appSignature != SecurityUtils.VALID_APP_SIGNATURE) {
-			Logger.e(TAG, "app signature is not valid!");
-		}
+    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
+    intentFilter.addAction(AptoideAccountManager.LOGOUT);
+    this.registerReceiver(new BroadcastReceiver() {
+      @Override public void onReceive(Context context, Intent intent) {
+      }
+    }, intentFilter);
 
-		if (SecurityUtils.checkEmulator()) {
-			Logger.w(TAG, "application is running on an emulator");
-		}
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
+    Analytics.LocalyticsSessionControl.firstSession(sPref);
+    Analytics.Lifecycle.Application.onCreate(this);
+    Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
+    new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
 
-		if (SecurityUtils.checkDebuggable(this)) {
-			Logger.w(TAG, "application has debug flag active");
-		}
+    if (BuildConfig.DEBUG) {
+      refWatcher = LeakCanary.install(this);
+      //registerActivityLifecycleCallbacks(new LeakCAnaryActivityWatcher(refWatcher));
+      Logger.w(TAG, "LeakCanary installed");
+    } else {
+      refWatcher = RefWatcher.DISABLED;
+    }
 
-		setupCrashlytics();
+    if (SecurePreferences.isFirstRun()) {
+      PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+      loadInstalledApps().doOnNext(o -> {
+        if (AptoideAccountManager.isLoggedIn()) {
 
-		AptoideDownloadManager.getInstance().init(this, new DownloadNotificationActionsActionsInterface(), new DownloadManagerSettingsI());
+          if (!SecurePreferences.isUserDataLoaded()) {
+            loadUserData();
+            SecurePreferences.setUserDataLoaded();
+          }
+        } else {
+          generateAptoideUUID().subscribe(success -> addDefaultStore());
+        }
+        SecurePreferences.setFirstRun(false);
+      }).subscribe();
 
-		// setupCurrentActivityListener();
+      // load picture, name and email
+      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
+        Logger.v(TAG, "hello " + userData.getUsername());
+      }, e -> {
+        Logger.e(TAG, e);
+      });
+    }
 
-		if (BuildConfig.DEBUG) {
-			setupStrictMode();
-			Log.w(TAG, "StrictMode setup");
-		}
+    final int appSignature = SecurityUtils.checkAppSignature(this);
+    if (appSignature != SecurityUtils.VALID_APP_SIGNATURE) {
+      Logger.e(TAG, "app signature is not valid!");
+    }
 
-		// this will trigger the migration if needed
-		// FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
-		SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
-		db.close();
+    if (SecurityUtils.checkEmulator()) {
+      Logger.w(TAG, "application is running on an emulator");
+    }
 
-		Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
-	}
+    if (SecurityUtils.checkDebuggable(this)) {
+      Logger.w(TAG, "application has debug flag active");
+    }
 
-	Observable<String> generateAptoideUUID() {
-		return Observable.fromCallable(() ->
-				new IdsRepository(SecurePreferencesImplementation.getInstance(), this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
-	}
+    final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
+    final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
+    AptoideDownloadManager.getInstance()
+        .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
+            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
+            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
+                new UserData() {
+                  @Override public String getUserEmail() {
+                    return AptoideAccountManager.getUserEmail();
+                  }
+                }));
 
-	private void setupCrashlytics() {
-		Crashlytics crashlyticsKit = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(!BuildConfig.FABRIC_CONFIGURED).build()).build();
-		Fabric.with(this, crashlyticsKit);
-	}
+    // setupCurrentActivityListener();
 
-	//
-	// Strict Mode
-	//
+    //if (BuildConfig.DEBUG) {
+    //  setupStrictMode();
+    //  Logger.w(TAG, "StrictMode setup")
 
-	private void addDefaultStore() {
-		StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> DataproviderUtils.checkUpdates(), null);
-	}
+    // this will trigger the migration if needed
+    // FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
+    SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
+    db.close();
 
-	//
-	// Leak Canary
-	//
+    Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+  }
 
-	private Observable<?> loadInstalledApps() {
-		return Observable.fromCallable(() -> {
-			@Cleanup Realm realm = Database.get();
-			Database.dropTable(Installed.class, realm);
-			// FIXME: 15/07/16 sithengineer to fred -> try this instead to avoid re-creating the table: realm.delete(Installed.class);
+  protected FragmentProvider createFragmentProvider() {
+    return new FragmentProviderImpl();
+  }
 
-			List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
-			Log.d(TAG, "Found " + installedApps.size() + " user installed apps.");
+  protected ActivityProvider createActivityProvider() {
+    return new ActivityProviderImpl();
+  }
 
-			// Installed apps are inserted in database based on their firstInstallTime. Older comes first.
-			Collections.sort(installedApps, (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
+  protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
+    return DisplayableWidgetMapping.getInstance();
+  }
 
-			for (PackageInfo packageInfo : installedApps) {
-				Installed installed = new Installed(packageInfo, getPackageManager());
-				Database.save(installed, realm);
-			}
-			return null;
-		}).subscribeOn(Schedulers.io());
+  Observable<String> generateAptoideUUID() {
+    return Observable.fromCallable(
+        () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
+  }
 
-	}
+  private Observable<?> loadInstalledApps() {
+    return Observable.fromCallable(() -> {
+      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+      installedAccessor.removeAll();
 
-	private void setupStrictMode() {
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
-				.detectDiskWrites()
-				.detectNetwork()   // or .detectAll() for all detectable problems
-				.penaltyLog()
-				.build());
+      List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
+      Logger.d(TAG, "Found " + installedApps.size() + " user installed apps.");
 
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
-				.detectLeakedClosableObjects()
-				.penaltyLog()
-				.penaltyDeath()
-				.build());
-	}
+      // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
+      Collections.sort(installedApps,
+          (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
-	//	private static class LeakCAnaryActivityWatcher implements ActivityLifecycleCallbacks {
-	//
-	//		private final RefWatcher refWatcher;
-	//
-	//		private LeakCAnaryActivityWatcher(RefWatcher refWatcher) {
-	//			this.refWatcher = refWatcher;
-	//		}
-	//
-	//		@Override
-	//		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-	//
-	//		}
-	//
-	//		@Override
-	//		public void onActivityStarted(Activity activity) {
-	//
-	//		}
-	//
-	//		@Override
-	//		public void onActivityResumed(Activity activity) {
-	//
-	//		}
-	//
-	//		@Override
-	//		public void onActivityPaused(Activity activity) {
-	//
-	//		}
-	//
-	//		@Override
-	//		public void onActivityStopped(Activity activity) {
-	//
-	//		}
-	//
-	//		@Override
-	//		public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-	//
-	//		}
-	//
-	//		@Override
-	//		public void onActivityDestroyed(Activity activity) {
-	//			refWatcher.watch(activity);
-	//		}
-	//	}
+      for (PackageInfo packageInfo : installedApps) {
+        Installed installed = new Installed(packageInfo);
+        installedAccessor.insert(installed);
+      }
+      return null;
+    }).subscribeOn(Schedulers.io());
+  }
+
+  //
+  // Strict Mode
+  //
+
+  private void setupStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
+        .detectDiskWrites()
+        .detectNetwork()   // or .detectAll() for all detectable problems
+        .penaltyLog()
+        .build());
+
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects()
+        .penaltyLog()
+        .penaltyDeath()
+        .build());
+  }
+
+  //	private static class LeakCAnaryActivityWatcher implements ActivityLifecycleCallbacks {
+  //
+  //		private final RefWatcher refWatcher;
+  //
+  //		private LeakCAnaryActivityWatcher(RefWatcher refWatcher) {
+  //			this.refWatcher = refWatcher;
+  //		}
+  //
+  //		@Override
+  //		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+  //
+  //		}
+  //
+  //		@Override
+  //		public void onActivityStarted(Activity activity) {
+  //
+  //		}
+  //
+  //		@Override
+  //		public void onActivityResumed(Activity activity) {
+  //
+  //		}
+  //
+  //		@Override
+  //		public void onActivityPaused(Activity activity) {
+  //
+  //		}
+  //
+  //		@Override
+  //		public void onActivityStopped(Activity activity) {
+  //
+  //		}
+  //
+  //		@Override
+  //		public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+  //
+  //		}
+  //
+  //		@Override
+  //		public void onActivityDestroyed(Activity activity) {
+  //			refWatcher.watch(activity);
+  //		}
+  //	}
+
+  @Override protected TokenInvalidator getTokenInvalidator() {
+    return AptoideAccountManager::invalidateAccessToken;
+  }
 }

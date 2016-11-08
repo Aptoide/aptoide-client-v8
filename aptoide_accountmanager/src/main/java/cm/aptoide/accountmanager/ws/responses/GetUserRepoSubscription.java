@@ -6,7 +6,6 @@
 package cm.aptoide.accountmanager.ws.responses;
 
 import java.util.List;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,11 +15,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 // FIXME Warning: Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If
 // this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
-@Data
-public class GetUserRepoSubscription extends GenericResponseV3 {
+@Data public class GetUserRepoSubscription extends GenericResponseV3 {
 
-	private String status;
-	private List<Subscription> subscription;
+  private String status;
+  private List<Subscription> subscription;
 }
 
 

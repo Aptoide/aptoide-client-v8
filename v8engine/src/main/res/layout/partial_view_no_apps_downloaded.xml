@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_apps_downloaded"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:visibility="gone"
+    tools:visibility="visible"
+    >
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <ImageView
+        android:id="@+id/error_image"
+        android:layout_width="219.3dp"
+        android:layout_height="234dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/error3"
+        />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22.7dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginStart="44dp"
+        android:gravity="center_horizontal"
+        >
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/fragment_download_no_connection"
+        style="?android:textAppearanceMedium"
+        android:textColor="?attr/customColor"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:textSize="17.4sp"
+        tools:targetApi="jelly_bean"
+        />
+
+    <TextView
+        android:id="@+id/error_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/error_text"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/fragment_download_no_connection_subtitle"
+        style="?android:textAppearanceMedium"
+        android:fontFamily="sans-serif"
+        android:textSize="17.4sp"
+        tools:targetApi="jelly_bean"
+        />
+    </RelativeLayout>
+  </LinearLayout>
+</ScrollView>

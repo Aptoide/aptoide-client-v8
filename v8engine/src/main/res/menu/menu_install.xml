@@ -5,14 +5,14 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <item
-        android:id="@+id/menu_install"
-        android:title="@string/install"
-        app:showAsAction="ifRoom"
-        tools:visible="true"
-        />
+  <item
+      android:id="@+id/menu_install"
+      android:title="@string/install"
+      app:showAsAction="ifRoom"
+      tools:visible="true"
+      />
 
 </menu>

@@ -4,15 +4,15 @@
   ~ Modified by SithEngineer on 08/07/2016.
   -->
 <selector>
-    <item>
-        <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <gradient
-                android:angle="90"
-                android:endColor="@color/black_gradient_end"
-                android:startColor="@color/black_gradient_start"
-                android:type="linear"
-                />
-        </shape>
-    </item>
+  <item>
+    <shape xmlns:android="http://schemas.android.com/apk/res/android">
+      <gradient
+          android:angle="90"
+          android:endColor="@color/black_gradient_end"
+          android:startColor="@color/black_gradient_start"
+          android:type="linear"
+          />
+    </shape>
+  </item>
 </selector>
 

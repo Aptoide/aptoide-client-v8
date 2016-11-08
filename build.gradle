@@ -4,133 +4,133 @@
  */
 
 buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url 'http://maven.localytics.com/public'}
-        mavenLocal()
-        dependencies {
-            classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
-        }
-    }
+  repositories {
+    jcenter()
+    mavenLocal()
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.3'
-        //classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
-        //classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
-        classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-
-        classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-
-        classpath 'io.fabric.tools:gradle:1.21.6'
-        classpath 'io.realm:realm-gradle-plugin:1.2.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+      classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     }
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:2.2.2'
+    classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
+    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
-    // Exclude the version that the android plugin depends on.
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
+    classpath 'me.tatarka:gradle-retrolambda:3.3.0'
+    classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+
+    classpath 'io.realm:realm-gradle-plugin:1.2.0'
+  }
+
+  // Exclude the version that the android plugin depends on.
+  configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 
 allprojects {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url 'http://maven.localytics.com/public'}
-
-    }
+  repositories {
+    jcenter()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'http://maven.localytics.com/public' }
+  }
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+  delete rootProject.buildDir
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+  gradleVersion = '3.1'
+  distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
 ext {
 
-    //JW stands for Jake Wharton
+  //JW stands for Jake Wharton
 
-    APPLICATION_ID = 'cm.aptoide.pt'
+  APPLICATION_ID = 'cm.aptoide.pt'
 
-    //
-    // gradle build script vars
-    //
-    TARGET_SDK_VERSION = 23
-    COMPILE_SDK_VERSION = 23
-    USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
-    BUILD_TOOLS_VERSION = '23.0.3'
+  //
+  // gradle build script vars
+  //
+  TARGET_SDK_VERSION = 23
+  COMPILE_SDK_VERSION = 23
+  USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
+  BUILD_TOOLS_VERSION = '23.0.3'
 
-    //
-    // gradle build script dependecies versions
-    //
+  //
+  // gradle build script dependencies versions
+  //
 
-    // Google Android Support
-    SUPPORT_LIB_VERSION = '23.4.0'
+  // Google Android Support
+  SUPPORT_LIB_VERSION = '24.2.0'
+  SUPPORT_ANNOTATIONS_LIB_VERSION = '24.2.0'
 
-    // Google Play Services
-    PLAY_SERVICES_VERSION = '8.3.0'
+  // Google Play Services
+  PLAY_SERVICES_VERSION = '9.8.0'
 
-    JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
+  JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 
-    MULTIDEX_VERSION = '1.0.1'
+  MULTIDEX_VERSION = '1.0.1'
 
-    // Rx
-    RXJAVA_VERSION = '1.1.6'
-    RXANDROID_VERSION = '1.2.1'
-    JW_RX_BINDING_VERSION = '0.4.0'
-    RXJAVA_PROGUARD_RULES_VERSION = '1.1.6.0'
-    TRELLO_RX_LIFECYCLE_VERSION = '0.6.1'
+  // Rx
+  RXJAVA_VERSION = '1.1.6'
+  RXANDROID_VERSION = '1.2.1'
+  JW_RX_BINDING_VERSION = '0.4.0'
+  RXJAVA_PROGUARD_RULES_VERSION = '1.1.6.0'
+  TRELLO_RX_LIFECYCLE_VERSION = '0.6.1'
 
-    // Retrofit
-    RETROFIT_VERSION = '2.0.2'
+  // Retrofit
+  RETROFIT_VERSION = '2.1.0'
 
-    // Test
-    MOCK_WEB_SERVER_VERSION = '3.3.1'
-    JUNIT_VERSION = '4.12'
-    MOCKITO_CORE_VERSION = '1.10.19'
-    ROBOELECTRIC_VERSION = '3.0'
+  // Test
+  MOCK_WEB_SERVER_VERSION = '3.4.1'
+  JUNIT_VERSION = '4.12'
+  MOCKITO_CORE_VERSION = '1.10.19'
+  ROBOELECTRIC_VERSION = '3.1.1'
+  EXPRESSO_VERSION = '2.2.2'
+  RUNNER_VERSION = '0.5'
+  RULES_VERSION = '0.5'
+  POWER_MOCK_CORE_VERSION = '1.6.2'
 
-    // Leak Canary
-    LEAK_CANARY_VERSION = '1.4-beta2'
+  // Leak Canary
+  LEAK_CANARY_VERSION = '1.5'
 
-    // Debug only
-    //STETHO_VERSION = '1.3.1'
+  // Debug only
+  //STETHO_VERSION = '1.3.1'
 
-    // Lombok plugin
-    LOMBOK_VERSION = '1.16.8'
+  // Lombok plugin
+  LOMBOK_VERSION = '1.16.8'
 
-    JACKSON_ANNOTATIONS_VERSION = '2.7.3'
+  JACKSON_ANNOTATIONS_VERSION = '2.8.3'
 
-    // Material tab strip
-    MATERIAL_TAB_STRIP_VERSION = '1.1.0'
+  // Material tab strip
+  MATERIAL_TAB_STRIP_VERSION = '1.1.0'
 
-    // https://github.com/JakeWharton/DiskLruCache
-    JW_LRU_CACHE_VERSION = '2.0.2'
+  // https://github.com/JakeWharton/DiskLruCache
+  JW_LRU_CACHE_VERSION = '2.0.2'
 
-    // Glide
-    GLIDE_VERSION = '3.7.0'
+  // Glide
+  GLIDE_VERSION = '3.7.0'
 
-    // Facebook Android SDK
-    FACEBOOK_ANDROID_SDK_VERSION = '4.11.0'
+  // Facebook Android SDK
+  FACEBOOK_ANDROID_SDK_VERSION = '4.16.1'
 
-    // File Downloader lib
-    FILE_DOWNLOADER_VERSION = '0.3.2'
+  // File Downloader lib
+  FILE_DOWNLOADER_VERSION = '1.2.1'
 
-    // rounded image lib
-    //ROUNDED_IMG_LIB = '2.2.1'
+  // rounded image lib
+  //ROUNDED_IMG_LIB = '2.2.1'
 
-    PAYPAL_SDK = '2.14.4'
+  PAYPAL_SDK = '2.15.0'
 
-    // Localytics Android SDK
-    LOCALYTICS_VERSION = '4.0.1'
+  SUPER_USER_LIB_VERSION = '1.0.0.+'
 
-    // Flurry Android SDK
-    FLURRY_VERSION = '6.3.1'
+  // Localytics Android SDK
+  LOCALYTICS_VERSION = '4.1.0'
+
+  // Flurry Android SDK
+  FLURRY_VERSION = '6.4.2'
+
+  CRASHLYTICS_VERSION = '2.6.5'
 }

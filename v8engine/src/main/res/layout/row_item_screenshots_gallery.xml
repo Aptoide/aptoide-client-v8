@@ -11,25 +11,27 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:gravity="center">
+    android:gravity="center"
+    >
 
-    <ImageView
-        android:id="@+id/screenshot_image_item"
-        android:layout_width="wrap_content"
-        android:layout_height="240dp"
-        android:layout_gravity="center"
-        android:layout_marginRight="4dp"
-        android:adjustViewBounds="true"
-        android:maxHeight="240dp"
-        tools:src="@drawable/ic_action_about"
-        />
+  <ImageView
+      android:id="@+id/screenshot_image_item"
+      android:layout_width="wrap_content"
+      android:layout_height="240dp"
+      android:layout_gravity="center"
+      android:layout_marginRight="4dp"
+      android:adjustViewBounds="true"
+      android:maxHeight="240dp"
+      tools:src="@drawable/ic_action_about"
+      />
 
-    <ImageView
-        android:id="@+id/play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/btn_movie_play_normal"
-        android:visibility="gone" />
+  <ImageView
+      android:id="@+id/play_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:src="@drawable/btn_movie_play_normal"
+      android:visibility="gone"
+      />
 
 </FrameLayout>

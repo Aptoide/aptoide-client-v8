@@ -12,78 +12,79 @@
     android:orientation="vertical"
     >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            />
-
-    </android.support.design.widget.AppBarLayout>
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/app_bar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="?android:actionBarSize"
+      >
 
     <include
-        layout="@layout/partial_view_incl_no_network"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        tools:visibility="gone"
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
         />
+
+  </android.support.design.widget.AppBarLayout>
+
+  <include
+      layout="@layout/partial_view_incl_no_network"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_below="@id/app_bar_layout"
+      android:layout_gravity="center_horizontal"
+      android:visibility="gone"
+      tools:visibility="gone"
+      />
+
+  <include
+      layout="@layout/partial_view_error"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_below="@id/app_bar_layout"
+      android:layout_gravity="center_horizontal"
+      android:visibility="gone"
+      tools:visibility="gone"
+      />
+
+  <!-- is this necessary ?? -->
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/app_bar_layout"
+      >
 
     <include
-        layout="@layout/partial_view_error"
+        layout="@layout/partial_view_progress_bar"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        tools:visibility="gone"
-        />
-
-    <!-- is this necessary ?? -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
-        >
-
-        <include
-            layout="@layout/partial_view_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/empty_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
-        android:padding="@dimen/label_padding"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:visibility="gone"
-        tools:text="@string/no_excluded_updates_msg"
-        tools:visibility="gone"
-        />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout"
-        android:clipToPadding="false"
-        android:paddingLeft="@dimen/recycler_margin"
-        android:paddingRight="@dimen/recycler_margin"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone"
         tools:visibility="visible"
         />
+  </RelativeLayout>
+
+  <TextView
+      android:id="@+id/empty_data"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/app_bar_layout"
+      android:padding="@dimen/label_padding"
+      android:textAlignment="center"
+      android:textSize="16sp"
+      android:visibility="gone"
+      tools:text="@string/no_excluded_updates_msg"
+      tools:visibility="gone"
+      />
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/app_bar_layout"
+      android:clipToPadding="false"
+      android:paddingLeft="@dimen/recycler_margin"
+      android:paddingRight="@dimen/recycler_margin"
+      android:visibility="gone"
+      tools:visibility="visible"
+      />
 
 </RelativeLayout>

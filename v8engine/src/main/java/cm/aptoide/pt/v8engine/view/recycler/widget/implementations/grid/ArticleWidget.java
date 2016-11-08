@@ -5,132 +5,152 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.Browser;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.jakewharton.rxbinding.view.RxView;
-
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.subscriptions.CompositeSubscription;
+import com.jakewharton.rxbinding.view.RxView;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 6/17/16.
  */
 public class ArticleWidget extends Widget<ArticleDisplayable> {
 
-	private TextView title;
-	private TextView subtitle;
-	private ImageView image;
-	private TextView articleTitle;
-	private ImageView thumbnail;
-	private View url;
-	private Button getAppButton;
-	private CardView cardView;
-	private CompositeSubscription subscriptions;
-	private View articleHeader;
-	private ArticleDisplayable displayable;
-	private TextView relatedTo;
+  private final String cardType = "Article";
+  private TextView title;
+  private TextView subtitle;
+  private ImageView image;
+  private TextView articleTitle;
+  private ImageView thumbnail;
+  private View url;
+  private Button getAppButton;
+  private CardView cardView;
+  private View articleHeader;
+  private ArticleDisplayable displayable;
+  private TextView relatedTo;
 
-	public ArticleWidget(View itemView) {
-		super(itemView);
-	}
+  private String appName;
+  private String packageName;
 
-	@Override
-	protected void assignViews(View itemView) {
-		title = (TextView)itemView.findViewById(R.id.card_title);
-		subtitle = (TextView)itemView.findViewById(R.id.card_subtitle);
-		image = (ImageView) itemView.findViewById(R.id.card_image);
-		articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
-		thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
-		url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-		getAppButton = (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
-		cardView = (CardView) itemView.findViewById(R.id.card);
-		articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
-		relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-	}
+  public ArticleWidget(View itemView) {
+    super(itemView);
+  }
 
-	@Override
-	public void bindView(ArticleDisplayable displayable) {
-		this.displayable = displayable;
-		title.setText(displayable.getTitle());
-		subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
-		articleTitle.setText(displayable.getArticleTitle());
-		setCardviewMargin(displayable);
-		ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-		ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+  @Override protected void assignViews(View itemView) {
+    title = (TextView) itemView.findViewById(R.id.card_title);
+    subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
+    image = (ImageView) itemView.findViewById(R.id.card_image);
+    articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
+    thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
+    url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
+    getAppButton =
+        (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
+    cardView = (CardView) itemView.findViewById(R.id.card);
+    articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
+    relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+  }
 
-		relatedTo.setText(displayable.getAppRelatedToText(getContext()));
+  @Override public void bindView(ArticleDisplayable displayable) {
+    this.displayable = displayable;
+    title.setText(displayable.getTitle());
+    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    Typeface typeFace =
+        Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
+    articleTitle.setTypeface(typeFace);
+    articleTitle.setText(displayable.getArticleTitle());
+    setCardviewMargin(displayable);
+    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
-		if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
-			getAppButton.setVisibility(View.VISIBLE);
-			getAppButton.setText(displayable.getAppText(getContext()));
-			getAppButton.setOnClickListener(view -> ((FragmentShower) getContext())
-					.pushFragmentV4(AppViewFragment.newInstance(displayable.getAppId())));
-		}
-		//		else {
-		//			getAppButton.setVisibility(View.GONE);
-		//		}
+    //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
 
-		url.setOnClickListener(v -> {
-			openInBrowser(displayable.getUrl());
-			Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
-					.AppsTimeline
-					.OPEN_ARTICLE);
-		});
-	}
+    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
+      getAppButton.setVisibility(View.VISIBLE);
+      getAppButton.setText(displayable.getAppText(getContext(), appName));
+      getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
+          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
+    }
 
-	private void setCardviewMargin(ArticleDisplayable displayable) {
-		CardView.LayoutParams layoutParams = new CardView.LayoutParams(
-				CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
-		layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources().getConfiguration().orientation),0,displayable
-				.getMarginWidth
-						(getContext(), getContext().getResources().getConfiguration().orientation),30);
-		cardView.setLayoutParams(layoutParams);
-	}
+    //		CustomTabsHelper.getInstance()
+    //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
 
-	private void openInBrowser(String url) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		Bundle bundle = new Bundle();
-		bundle.putString("Referer", "http://m.aptoide.com");
-		intent.putExtra(Browser.EXTRA_HEADERS, bundle);
-		getContext().startActivity(intent);
-	}
+    url.setOnClickListener(v -> {
+      displayable.getLink().launch(getContext());
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+          displayable.getArticleTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_ARTICLE);
+      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_ARTICLE);
+    });
 
-	@Override
-	public void onViewAttached() {
-		if (subscriptions == null) {
-			subscriptions = new CompositeSubscription();
+    compositeSubscription.add(displayable.getRelatedToApplication()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installeds -> {
+          if (installeds != null && !installeds.isEmpty()) {
+            appName = installeds.get(0).getName();
+            packageName = installeds.get(0).getPackageName();
+          } else {
+            setAppNameToFirstLinkedApp();
+          }
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+          }
+        }, throwable -> {
+          setAppNameToFirstLinkedApp();
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+          }
+          throwable.printStackTrace();
+        }));
 
-			subscriptions.add(RxView.clicks(articleHeader)
-					.subscribe(click -> {
-						openInBrowser(displayable.getBaseUrl());
-						Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(), Analytics
-								.AppsTimeline
-								.OPEN_ARTICLE_HEADER);
-					}));
-		}
-	}
+    compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
+      displayable.getDeveloperLink().launch(getContext());
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+          displayable.getArticleTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getDeveloperLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_BLOG);
+    }));
+  }
 
-	@Override
-	public void onViewDetached() {
-		url.setOnClickListener(null);
-		getAppButton.setOnClickListener(null);
-		if (subscriptions != null) {
-			subscriptions.unsubscribe();
-			subscriptions = null;
-		}
-	}
+  private void setCardviewMargin(ArticleDisplayable displayable) {
+    CardView.LayoutParams layoutParams =
+        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
+            CardView.LayoutParams.WRAP_CONTENT);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 30);
+    cardView.setLayoutParams(layoutParams);
+  }
+
+  private void setAppNameToFirstLinkedApp() {
+    if (!displayable.getRelatedToAppsList().isEmpty()) {
+      appName = displayable.getRelatedToAppsList().get(0).getName();
+    }
+  }
 }

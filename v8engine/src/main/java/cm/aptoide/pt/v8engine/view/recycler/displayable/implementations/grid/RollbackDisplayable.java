@@ -6,13 +6,12 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
@@ -22,42 +21,51 @@ import rx.Observable;
  */
 public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
-	private InstallManager installManager;
+  private Installer installManager;
 
-	public RollbackDisplayable() { }
+  public RollbackDisplayable() {
+  }
 
-	public RollbackDisplayable(InstallManager installManager, Rollback pojo) {
-		this(installManager, pojo, false);
-	}
+  public RollbackDisplayable(Installer installManager, Rollback pojo) {
+    this(installManager, pojo, false);
+  }
 
-	public RollbackDisplayable(InstallManager installManager, Rollback pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-		this.installManager = installManager;
-	}
+  private RollbackDisplayable(Installer installManager, Rollback pojo, boolean fixedPerLineCount) {
+    super(pojo);
+    this.installManager = installManager;
+  }
 
-	public Download getDownloadFromPojo() {
-		return new DownloadFactory().create(getPojo());
-	}
+  public Download getDownloadFromPojo() {
+    return new DownloadFactory().create(getPojo());
+  }
 
-	@Override
-	public Type getType() {
-		return Type.ROLLBACK;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.rollback_row;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.rollback_row;
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 
-	public Observable<Void> install(Context context, PermissionRequest permissionRequest, long appId) {
-		return installManager.install(context, permissionRequest, appId);
-	}
+  public void install(FragmentShower context) {
+    openAppview(context);
+  }
 
-	public Observable<Void> uninstall(Context context, Download appDownload) {
-		return installManager.uninstall(context, appDownload.getFilesToDownload().get(0).getPackageName());
-	}
+  public Observable<Void> uninstall(Context context, Download appDownload) {
+    return installManager.uninstall(context,
+        appDownload.getFilesToDownload().get(0).getPackageName(), appDownload.getVersionName());
+  }
 
-	public Observable<Void> downgrade(Context context, PermissionRequest permissionRequest, Download currentDownload, long previousAppId) {
-		return Observable.concat(uninstall(context, currentDownload).ignoreElements(), install(context, permissionRequest, previousAppId));
-	}
+  public void downgrade(FragmentShower context) {
+    openAppview(context);
+  }
+
+  public void update(FragmentShower context) {
+    openAppview(context);
+  }
+
+  public void openAppview(FragmentShower fragmentShower) {
+    fragmentShower.pushFragmentV4(
+        V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
+  }
 }

@@ -5,11 +5,10 @@
 
 package cm.aptoide.accountmanager.ws;
 
-import java.util.HashMap;
-
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,44 +20,42 @@ import rx.Observable;
 /**
  * Created by trinkes on 4/29/16.
  */
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true)
-public class CreateUserRequest extends v3accountManager<OAuth> {
+@Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class CreateUserRequest
+    extends v3accountManager<OAuth> {
 
-	private String password;
-	private String email;
-	private String name;
+  private String password;
+  private String email;
+  private String name;
 
-	public CreateUserRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
-		super(httpClient, converterFactory);
-	}
+  CreateUserRequest(){ }
 
-	public static CreateUserRequest of(String email, String password) {
-		return new CreateUserRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter()).setEmail(email).setName("").setPassword(password);
-	}
+  CreateUserRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(httpClient, converterFactory);
+  }
 
+  public static CreateUserRequest of(String email, String password) {
+    return new CreateUserRequest().setEmail(email).setName("").setPassword(password);
+  }
 
+  @Override
+  protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
-	@Override
-	protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<String, String>();
 
-		HashMap<String, String> parameters = new HashMap<String, String>();
+    String passhash;
+    passhash = AptoideUtils.AlgorithmU.computeSha1(password);
+    parameters.put("mode", "json");
+    parameters.put("email", email);
+    parameters.put("passhash", passhash);
 
-		String passhash;
-		passhash = AptoideUtils.AlgorithmU.computeSha1(password);
-			parameters.put("mode", "json");
-			parameters.put("email", email);
-			parameters.put("passhash", passhash);
+    // TODO: 4/29/16 trinkes check aptoide oem id
+    //        if(Aptoide.getConfiguration().getExtraId().length()>0){
+    //            parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
+    //        }
 
-			// TODO: 4/29/16 trinkes check aptoide oem id
-//        if(Aptoide.getConfiguration().getExtraId().length()>0){
-//            parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
-//        }
+    parameters.put("hmac",
+        AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
 
-		parameters.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name,
-					"bazaar_hmac"));
-
-		return interfaces.createUser(parameters);
-	}
+    return interfaces.createUser(parameters);
+  }
 }

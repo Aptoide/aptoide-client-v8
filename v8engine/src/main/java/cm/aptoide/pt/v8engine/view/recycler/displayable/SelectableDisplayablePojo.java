@@ -10,24 +10,20 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
  */
 public abstract class SelectableDisplayablePojo<T> extends DisplayablePojo<T> {
 
-	private boolean selected;
+  private boolean selected;
 
-	public SelectableDisplayablePojo() {
-	}
+  public SelectableDisplayablePojo() {
+  }
 
-	public SelectableDisplayablePojo(T pojo) {
-		super(pojo);
-	}
+  public SelectableDisplayablePojo(T pojo) {
+    super(pojo);
+  }
 
-	public SelectableDisplayablePojo(T pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  public boolean isSelected() {
+    return selected;
+  }
 
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
+  public void setSelected(boolean selected) {
+    this.selected = selected;
+  }
 }

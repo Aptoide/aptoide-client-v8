@@ -13,32 +13,34 @@ import android.content.pm.Signature;
  */
 public class ToolboxSecurityManager {
 
-	private final PackageManager packageManager;
+  private final PackageManager packageManager;
 
-	public ToolboxSecurityManager(PackageManager packageManager) {
-		this.packageManager = packageManager;
-	}
+  public ToolboxSecurityManager(PackageManager packageManager) {
+    this.packageManager = packageManager;
+  }
 
-	public boolean checkSignature(int uid, String signature, String packageName) {
-		final String uidPackageName = getPackageName(uid);
-		return signature.equals(getSignature(uidPackageName)) && packageName.equals(uidPackageName);
-	}
+  public boolean checkSignature(int uid, String signature, String packageName) {
+    final String uidPackageName = getPackageName(uid);
+    return signature.equals(getSignature(uidPackageName)) && packageName.equals(uidPackageName);
+  }
 
-	private String getSignature(String packageName) {
-		try {
-			final Signature[] signatures = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures;
-			if (signatures != null) {
-				return signatures[0].toCharsString();
-			}
-		} catch (PackageManager.NameNotFoundException ignored) {}
-		return null;
-	}
+  private String getSignature(String packageName) {
+    try {
+      final Signature[] signatures =
+          packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures;
+      if (signatures != null) {
+        return signatures[0].toCharsString();
+      }
+    } catch (PackageManager.NameNotFoundException ignored) {
+    }
+    return null;
+  }
 
-	private String getPackageName(int uid) {
-		final String[] packagesForUid = packageManager.getPackagesForUid(uid);
-		if (packagesForUid != null) {
-			return packagesForUid[0];
-		}
-		return null;
-	}
+  private String getPackageName(int uid) {
+    final String[] packagesForUid = packageManager.getPackagesForUid(uid);
+    if (packagesForUid != null) {
+      return packagesForUid[0];
+    }
+    return null;
+  }
 }

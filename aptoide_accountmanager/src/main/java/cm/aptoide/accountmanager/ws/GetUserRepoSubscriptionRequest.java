@@ -5,12 +5,11 @@
 
 package cm.aptoide.accountmanager.ws;
 
-import java.util.HashMap;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -20,21 +19,24 @@ import rx.Observable;
  */
 public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepoSubscription> {
 
-	protected GetUserRepoSubscriptionRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
-		super(httpClient, converterFactory);
-	}
+  GetUserRepoSubscriptionRequest() { }
 
-	public static GetUserRepoSubscriptionRequest of() {
-		return new GetUserRepoSubscriptionRequest(OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter());
-	}
+  GetUserRepoSubscriptionRequest(OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(httpClient, converterFactory);
+  }
 
-	@Override
-	protected Observable<GetUserRepoSubscription> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		HashMap<String, String> parameters = new HashMap<>();
+  public static GetUserRepoSubscriptionRequest of() {
+    return new GetUserRepoSubscriptionRequest();
+  }
 
-		parameters.put("mode", "json");
-		parameters.put("access_token", AptoideAccountManager.getAccessToken());
+  @Override protected Observable<GetUserRepoSubscription> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
-		return interfaces.getUserRepos(parameters);
-	}
+    parameters.put("mode", "json");
+    parameters.put("access_token", AptoideAccountManager.getAccessToken());
+
+    return interfaces.getUserRepos(parameters);
+  }
 }

@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ScreenshotsAdapter;
@@ -19,44 +18,31 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created by sithengineer on 11/05/16.
  */
-@Displayables({AppViewScreenshotsDisplayable.class})
-public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayable> {
+@Displayables({ AppViewScreenshotsDisplayable.class }) public class AppViewScreenshotsWidget
+    extends Widget<AppViewScreenshotsDisplayable> {
 
-	private RecyclerView mediaList;
+  private RecyclerView mediaList;
 
-	public AppViewScreenshotsWidget(View itemView) {
-		super(itemView);
-	}
+  public AppViewScreenshotsWidget(View itemView) {
+    super(itemView);
+  }
 
-	@Override
-	protected void assignViews(View itemView) {
-		mediaList = (RecyclerView) itemView.findViewById(R.id.screenshots_list);
-	}
+  @Override protected void assignViews(View itemView) {
+    mediaList = (RecyclerView) itemView.findViewById(R.id.screenshots_list);
+  }
 
-	@Override
-	public void bindView(AppViewScreenshotsDisplayable displayable) {
-		final GetAppMeta.Media media = displayable.getPojo().getMedia();
-		//		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(6), (DividerItemDecoration.RIGHT | DividerItemDecoration
-		// .BOTTOM))
-		//		);
-		mediaList.setLayoutManager(new LinearLayoutManager(
-				itemView.getContext(), LinearLayoutManager.HORIZONTAL, false)
-		);
-		mediaList.setNestedScrollingEnabled(false); // because otherwise the AppBar won't be collapsed
-		mediaList.setAdapter(
-				new ScreenshotsAdapter(media)
-		);
-	}
+  @Override public void bindView(AppViewScreenshotsDisplayable displayable) {
+    final GetAppMeta.Media media = displayable.getPojo().getMedia();
+    //		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(6), (DividerItemDecoration.RIGHT | DividerItemDecoration
+    // .BOTTOM))
+    //		);
+    mediaList.setLayoutManager(
+        new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+    mediaList.setNestedScrollingEnabled(false); // because otherwise the AppBar won't be collapsed
+    mediaList.setAdapter(new ScreenshotsAdapter(media));
+  }
 
-	@Override
-	public void onViewAttached() {
+  @Override public void unbindView() {
 
-	}
-
-	@Override
-	public void onViewDetached() {
-
-	}
-
-
+  }
 }

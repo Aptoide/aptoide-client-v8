@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations;
 
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
@@ -14,20 +13,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 public class ProgressBarDisplayable extends Displayable {
 
-	public ProgressBarDisplayable() {
-	}
+  public ProgressBarDisplayable() {
+  }
 
-	public ProgressBarDisplayable(boolean fixedPerLineCount) {
-		super(fixedPerLineCount);
-	}
+  @Override public int getViewLayout() {
+    return R.layout.row_progress_bar;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.PROGRESS_DISPLAYABLE;
-	}
-
-	@Override
-	public int getViewLayout() {
-		return R.layout.row_progress_bar;
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 }

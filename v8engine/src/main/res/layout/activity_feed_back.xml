@@ -1,63 +1,71 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="?attr/toolbarTheme"
+        />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="?attr/toolbarTheme"/>
+  </android.support.design.widget.AppBarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/activity_vertical_margin"
+      android:paddingLeft="@dimen/activity_horizontal_margin"
+      android:paddingRight="@dimen/activity_horizontal_margin"
+      android:paddingTop="@dimen/activity_vertical_margin"
+      tools:context=".FeedBackActivity"
+      >
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/FeedBackSubject"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".FeedBackActivity">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:hint="@string/feedback_subject"
+        android:inputType="textEmailAddress"
+        android:singleLine="true"
+        />
 
-        <EditText
-            android:id="@+id/FeedBackSubject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:hint="@string/feedback_subject"
-            android:inputType="textEmailAddress"
-            android:singleLine="true"/>
+    <EditText
+        android:id="@+id/FeedBacktext"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="@string/feedback_to_write2"
+        />
 
-        <EditText
-            android:id="@+id/FeedBacktext"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="@string/feedback_to_write2"/>
+    <CheckBox
+        android:id="@+id/FeedBackCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/feedback_include_logs"
+        android:textColor="?android:attr/textColorSecondary"
+        />
 
-        <CheckBox
-            android:id="@+id/FeedBackCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/feedback_include_logs"
-            android:textColor="?android:attr/textColorSecondary"/>
+    <Button
+        android:id="@+id/FeedBackSendButton"
+        style="?attr/customButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/feedback_send_button"
+        />
 
-        <Button
-            android:id="@+id/FeedBackSendButton"
-            style="?attr/customButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/feedback_send_button"/>
-
-    </LinearLayout>
+  </LinearLayout>
 
 </LinearLayout>

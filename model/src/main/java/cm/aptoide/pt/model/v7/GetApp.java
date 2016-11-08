@@ -12,16 +12,13 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by hsousa on 28/10/15.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class GetApp extends BaseV7Response {
+@Data @EqualsAndHashCode(callSuper = true) public class GetApp extends BaseV7Response {
 
-	private Nodes nodes;
+  private Nodes nodes;
 
-	@Data
-	public static class Nodes {
+  @Data public static class Nodes {
 
-		private GetAppMeta meta;
-		private ListAppVersions versions;
-	}
+    private GetAppMeta meta;
+    private ListAppVersions versions;
+  }
 }

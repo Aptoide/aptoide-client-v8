@@ -1,15 +1,10 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.database.realm.Store;
-import io.realm.Realm;
-import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -19,42 +14,50 @@ import retrofit2.Converter;
  */
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
-	public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-	}
+  private static final String TAG = BaseRequestWithStore.class.getName();
 
-	protected static StoreCredentials getStore(Long storeId) {
-		@Cleanup Realm realm = Database.get();
+  public BaseRequestWithStore(B body, String baseHost) {
+    super(body, baseHost);
+  }
 
-		if (storeId != null) {
-			Store store = Database.StoreQ.get(storeId, realm);
-			if (store != null) {
-				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-			}
-		}
-		return new StoreCredentials();
-	}
+  public BaseRequestWithStore(B body, Converter.Factory converterFactory, String baseHost) {
+    super(body, converterFactory, baseHost);
+  }
 
-	protected static StoreCredentials getStore(String storeName) {
-		@Cleanup Realm realm = Database.get();
-		if (storeName != null) {
-			Store store = Database.StoreQ.get(storeName, realm);
-			if (store != null) {
-				return new StoreCredentials(store.getUsername(), store.getPasswordSha1());
-			}
-		}
-		return new StoreCredentials();
-	}
+  public BaseRequestWithStore(B body, OkHttpClient httpClient, String baseHost) {
+    super(body, httpClient, baseHost);
+  }
 
-	@AllArgsConstructor
-	public static class StoreCredentials {
+  public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
+      String baseHost) {
+    super(body, httpClient, converterFactory, baseHost);
+  }
 
-		@Getter private final String username;
-		@Getter private final String passwordSha1;
+  public static class StoreCredentials {
+    @Getter private final Long id;
+    @Getter private final String name;
+    @Getter private final String username;
+    @Getter private final String passwordSha1;
 
-		public StoreCredentials() {
-			username = null;
-			passwordSha1 = null;
-		}
-	}
+    public StoreCredentials() {
+      this.name = null;
+      this.id = null;
+      this.username = null;
+      this.passwordSha1 = null;
+    }
+
+    public StoreCredentials(Long id, String username, String passwordSha1) {
+      this.name = null;
+      this.id = id;
+      this.username = username;
+      this.passwordSha1 = passwordSha1;
+    }
+
+    public StoreCredentials(String name, String username, String passwordSha1) {
+      this.id = null;
+      this.name = name;
+      this.username = username;
+      this.passwordSha1 = passwordSha1;
+    }
+  }
 }

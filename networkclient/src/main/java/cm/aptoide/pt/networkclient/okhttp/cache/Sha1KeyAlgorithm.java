@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import java.io.IOException;
-
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.io.IOException;
 import okhttp3.Request;
 import okio.Buffer;
 
@@ -22,42 +22,40 @@ import okio.Buffer;
  * <li>URL</li>
  * </ol>
  */
-public class Sha1KeyAlgorithm implements KeyAlgorithm {
+public class Sha1KeyAlgorithm implements KeyAlgorithm<Request, String> {
 
-	private static final String TAG = Sha1KeyAlgorithm.class.getName();
+  private static final String TAG = Sha1KeyAlgorithm.class.getName();
 
-	@Override
-	public String getKeyFrom(Request request)  {
-		try {
-			final Buffer bodyBuffer = new Buffer();
-			final Request clonedRequest = request.newBuilder().build();
+  @Override public String getKeyFrom(Request request) {
+    try {
+      final Buffer bodyBuffer = new Buffer();
+      final Request clonedRequest = request.newBuilder().build();
 
-			String requestIdentifier;
+      String requestIdentifier;
 
-			if (clonedRequest.body() != null && clonedRequest.body().contentLength() > 0) {
-				// best scenario: use request body as key
-				clonedRequest.body().writeTo(bodyBuffer);
-				requestIdentifier = clonedRequest.url().toString() + bodyBuffer.readUtf8();
-			} else {
-				// no body to use as key. use query string params if they exist or
-				// in the worst case the url itself
-				requestIdentifier = clonedRequest.url().toString();
-			}
+      if (clonedRequest.body() != null && clonedRequest.body().contentLength() > 0) {
+        // best scenario: use request body as key
+        clonedRequest.body().writeTo(bodyBuffer);
+        requestIdentifier = clonedRequest.url().toString() + bodyBuffer.readUtf8();
+      } else {
+        // no body to use as key. use query string params if they exist or
+        // in the worst case the url itself
+        requestIdentifier = clonedRequest.url().toString();
+      }
 
-//			final MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-//			messageDigest.update(requestIdentifier.getBytes("UTF-8"));
-//			byte[] bytes = messageDigest.digest();
-//			final StringBuilder buffer = new StringBuilder();
-//			for (byte b : bytes) {
-//				buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-//			}
-//			return buffer.toString();
-			return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
-		}
-		catch (IOException e) {
-			Logger.e(TAG, "getKeyFrom(Request)", e);
-		}
+      //			final MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+      //			messageDigest.update(requestIdentifier.getBytes("UTF-8"));
+      //			byte[] bytes = messageDigest.digest();
+      //			final StringBuilder buffer = new StringBuilder();
+      //			for (byte b : bytes) {
+      //				buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+      //			}
+      //			return buffer.toString();
+      return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
+    } catch (IOException e) {
+      Logger.e(TAG, "getKeyFrom(Request)", e);
+    }
 
-		return null;
-	}
+    return null;
+  }
 }

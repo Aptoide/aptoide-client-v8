@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
-
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
@@ -18,37 +17,30 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created by neuro on 11-05-2016.
  */
-@Displayables({AddMoreStoresDisplayable.class})
-public class AddMoreStoresWidget extends Widget<AddMoreStoresDisplayable> {
+@Displayables({ AddMoreStoresDisplayable.class }) public class AddMoreStoresWidget
+    extends Widget<AddMoreStoresDisplayable> {
 
-	private Button addMoreStores;
+  private Button addMoreStores;
 
-	public AddMoreStoresWidget(View itemView) {
-		super(itemView);
-	}
+  public AddMoreStoresWidget(View itemView) {
+    super(itemView);
+  }
 
-	@Override
-	protected void assignViews(View itemView) {
-		addMoreStores = (Button) itemView.findViewById(R.id.add_more_stores);
-	}
+  @Override protected void assignViews(View itemView) {
+    addMoreStores = (Button) itemView.findViewById(R.id.add_more_stores);
+  }
 
-	@Override
-	public void bindView(AddMoreStoresDisplayable displayable) {
-		addMoreStores.setOnClickListener(v -> {
-			if (itemView.getContext() instanceof FragmentActivity) {
-				new AddStoreDialog().show(((FragmentActivity) itemView.getContext())
-						.getSupportFragmentManager(), "addStoreDialog");
-			}
-		});
-	}
+  @Override public void bindView(AddMoreStoresDisplayable displayable) {
+    addMoreStores.setOnClickListener(v -> {
+      if (itemView.getContext() instanceof FragmentActivity) {
+        new AddStoreDialog().show(
+            ((FragmentActivity) itemView.getContext()).getSupportFragmentManager(),
+            "addStoreDialog");
+      }
+    });
+  }
 
-	@Override
-	public void onViewAttached() {
+  @Override public void unbindView() {
 
-	}
-
-	@Override
-	public void onViewDetached() {
-
-	}
+  }
 }

@@ -7,53 +7,53 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item
-        android:id="@+id/navigation_item_my_account"
-        android:icon="?attr/icMyAccountDrawable"
-        android:title="@string/my_account"/>
+  <item
+      android:id="@+id/navigation_item_my_account"
+      android:icon="?attr/icMyAccountDrawable"
+      android:title="@string/my_account"/>
 
-    <item
-        android:id="@+id/navigation_item_rollback"
-        android:icon="?attr/icRollbackDrawable"
-        android:title="@string/rollback"/>
-    <item
-        android:id="@+id/navigation_item_setting_scheduled_downloads"
-        android:icon="?attr/icScheduledDrawable"
-        android:title="@string/setting_schdwntitle"/>
-    <item
-        android:id="@+id/navigation_item_excluded_updates"
-        android:icon="?attr/icExcludedUpdatesDrawable"
-        android:title="@string/excluded_updates"/>
-    <item
-        android:id="@+id/navigation_item_settings"
-        android:icon="?attr/icSettingsDrawable"
-        android:title="@string/settings"/>
+  <item
+      android:id="@+id/navigation_item_rollback"
+      android:icon="?attr/icRollbackDrawable"
+      android:title="@string/rollback"/>
+  <item
+      android:id="@+id/navigation_item_setting_scheduled_downloads"
+      android:icon="?attr/icScheduledDrawable"
+      android:title="@string/setting_schdwntitle"/>
+  <item
+      android:id="@+id/navigation_item_excluded_updates"
+      android:icon="?attr/icExcludedUpdatesDrawable"
+      android:title="@string/excluded_updates"/>
+  <item
+      android:id="@+id/navigation_item_settings"
+      android:icon="?attr/icSettingsDrawable"
+      android:title="@string/settings"/>
 
-    <item
-        android:id="@+id/navigation_item_backup_apps"
-        android:icon="@drawable/ic_action_backup_custom"
-        android:title="@string/backup_apps"/>
+  <item
+      android:id="@+id/navigation_item_backup_apps"
+      android:icon="@drawable/ic_action_backup_custom"
+      android:title="@string/backup_apps"/>
 
 
-    <group>
-        <item android:title="@string/drawer_social_media_title">
-            <menu>
-                <item
-                    android:id="@+id/navigation_item_facebook"
-                    android:icon="@drawable/ic_action_facebook"
-                    android:title="@string/facebook"/>
-                <item
-                    android:id="@+id/navigation_item_twitter"
-                    android:icon="@drawable/ic_action_twitter"
-                    android:title="@string/twitter"/>
-            </menu>
-        </item>
-    </group>
+  <group>
+    <item android:title="@string/drawer_social_media_title">
+      <menu>
+        <item
+            android:id="@+id/navigation_item_facebook"
+            android:icon="@drawable/ic_action_facebook"
+            android:title="@string/facebook"/>
+        <item
+            android:id="@+id/navigation_item_twitter"
+            android:icon="@drawable/ic_action_twitter"
+            android:title="@string/twitter"/>
+      </menu>
+    </item>
+  </group>
 
-    <item
-        android:id="@+id/send_feedback"
-        android:icon="?attr/icSendFeedbackDrawable"
-        android:title="@string/feedback_send_button"/>
+  <item
+      android:id="@+id/send_feedback"
+      android:icon="?attr/icSendFeedbackDrawable"
+      android:title="@string/feedback_send_button"/>
 
 
 </menu>

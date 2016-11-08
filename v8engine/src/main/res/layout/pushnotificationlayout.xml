@@ -1,55 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
 
-    <ImageView
-        android:id="@+id/PushNotificationImageView"
+  <ImageView
+      android:id="@+id/PushNotificationImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:scaleType="centerCrop"
+      />
+
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:background="@color/transparent_black"
+      android:padding="10dp"
+      >
+
+    <TextView
+        android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:scaleType="centerCrop"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/icon"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        />
 
-
-    <RelativeLayout
+    <TextView
+        android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/transparent_black"
-        android:padding="10dp">
+        android:layout_below="@+id/text1"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/icon"
+        android:autoLink="all"
+        android:scrollbars="vertical"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/white"
+        android:textStyle="italic"
+        />
 
-        <TextView
-            android:id="@+id/text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/icon"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text1"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/icon"
-            android:autoLink="all"
-            android:scrollbars="vertical"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/white"
-            android:textStyle="italic"/>
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_centerVertical="true"/>
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        />
+  </RelativeLayout>
 
 </FrameLayout>

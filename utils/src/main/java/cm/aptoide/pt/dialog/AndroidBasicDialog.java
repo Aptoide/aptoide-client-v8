@@ -7,13 +7,14 @@ package cm.aptoide.pt.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import cm.aptoide.pt.utils.R;
 import rx.functions.Action0;
 
@@ -23,109 +24,149 @@ import rx.functions.Action0;
 // TODO: 16/08/16 sithengineer Instead of being a wrapper for the AlertDialog, this should be a extension of AlertDialog and AlertDialog.Builder
 public class AndroidBasicDialog {
 
-	private AlertDialog.Builder builder;
-	private AlertDialog alertDialog;
+  private AlertDialog.Builder builder;
+  private AlertDialog alertDialog;
 
-	private TextView title;
-	private TextView message;
-	private Button positive;
-	private Button negative;
+  private View view;
+  private Button positive;
+  private Button negative;
 
-	private AndroidBasicDialog(Context context) {
-		this.builder = new AlertDialog.Builder(context);
-		View view = LayoutInflater.from(context).inflate(R.layout.dialog_basic, null);
-		builder.setView(view);
-		bindView(view);
-	}
+  private TextView title;
+  private TextView message;
 
-	public static AndroidBasicDialog build(Context context) {
-		AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context);
-		androidBasicDialog.getCreatedDialog();
-		return androidBasicDialog;
-	}
+  private AndroidBasicDialog(Context context, @LayoutRes int dialogLayout) {
+    this.builder = new AlertDialog.Builder(context);
+    this.view = LayoutInflater.from(context).inflate(dialogLayout, null, false);
+    builder.setView(view);
+    bindView();
+  }
 
-	private void bindView(View view) {
-		title = (TextView) view.findViewById(R.id.title);
-		message = (TextView) view.findViewById(R.id.message);
-		positive = (Button) view.findViewById(R.id.positive_button);
-		negative = (Button) view.findViewById(R.id.negative_button);
-	}
+  private AndroidBasicDialog(Context context, View dialogLayout) {
+    this.view = dialogLayout;
+    this.builder = new AlertDialog.Builder(context);
+    builder.setView(dialogLayout);
+    bindView();
+  }
 
-	public AndroidBasicDialog setPositiveButton(@StringRes int title, View.OnClickListener listener) {
-		positive.setVisibility(View.VISIBLE);
-		positive.setOnClickListener(listener);
-		positive.setText(title);
-		return this;
-	}
+  public static AndroidBasicDialog build(Context context) {
+    AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context, R.layout.dialog_basic);
+    androidBasicDialog.getCreatedDialog();
+    return androidBasicDialog;
+  }
 
-	public AndroidBasicDialog setPositiveButton(String title, View.OnClickListener listener) {
-		positive.setVisibility(View.VISIBLE);
-		positive.setOnClickListener(listener);
-		positive.setText(title);
-		return this;
-	}
+  public static AndroidBasicDialog build(Context context, @LayoutRes int dialogLayout) {
+    AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context, dialogLayout);
+    androidBasicDialog.getCreatedDialog();
+    return androidBasicDialog;
+  }
 
-	public AndroidBasicDialog setNegativeButton(@StringRes int title, View.OnClickListener listener) {
-		negative.setVisibility(View.VISIBLE);
-		negative.setOnClickListener(listener);
-		negative.setText(title);
-		return this;
-	}
+  public static AndroidBasicDialog build(Context context, View dialogLayout) {
+    AndroidBasicDialog androidBasicDialog = new AndroidBasicDialog(context, dialogLayout);
+    androidBasicDialog.getCreatedDialog();
+    return androidBasicDialog;
+  }
 
-	public AndroidBasicDialog setNegativeButton(String title, View.OnClickListener listener) {
-		negative.setVisibility(View.VISIBLE);
-		negative.setOnClickListener(listener);
-		negative.setText(title);
-		return this;
-	}
+  private void bindView() {
+    positive = (Button) view.findViewById(R.id.positive_button);
+    negative = (Button) view.findViewById(R.id.negative_button);
+    title = (TextView) view.findViewById(R.id.title);
+    message = (TextView) view.findViewById(R.id.message);
+  }
 
-	public AndroidBasicDialog setMessage(@StringRes int message) {
-		this.message.setText(message);
-		this.message.setVisibility(View.VISIBLE);
-		return this;
-	}
+  public AndroidBasicDialog setPositiveButton(@StringRes int title, View.OnClickListener listener) {
+    positive.setVisibility(View.VISIBLE);
+    positive.setOnClickListener(listener);
+    positive.setText(title);
+    return this;
+  }
 
-	public AndroidBasicDialog setMessage(String message) {
-		this.message.setText(message);
-		this.message.setVisibility(View.VISIBLE);
-		return this;
-	}
+  public AndroidBasicDialog setPositiveButton(String title, View.OnClickListener listener) {
+    positive.setVisibility(View.VISIBLE);
+    positive.setOnClickListener(listener);
+    positive.setText(title);
+    return this;
+  }
 
-	public AndroidBasicDialog setTitle(@StringRes int title) {
-		this.title.setText(title);
-		this.title.setVisibility(View.VISIBLE);
-		return this;
-	}
+  public AndroidBasicDialog setPositiveButton(@StringRes int title) {
+    return setPositiveButton(title, v -> alertDialog.dismiss());
+  }
 
-	public AndroidBasicDialog setTitle(String title) {
-		this.title.setText(title);
-		this.title.setVisibility(View.VISIBLE);
-		return this;
-	}
+  public AndroidBasicDialog setNegativeButton(@StringRes int title, View.OnClickListener listener) {
+    negative.setVisibility(View.VISIBLE);
+    negative.setOnClickListener(listener);
+    negative.setText(title);
+    return this;
+  }
 
-	public void dismiss() {
-		if (alertDialog == null) {
-			throw new IllegalStateException("Alert dialog wasn't shown");
-		}
-		alertDialog.dismiss();
-	}
+  public AndroidBasicDialog setNegativeButton(String title, View.OnClickListener listener) {
+    negative.setVisibility(View.VISIBLE);
+    negative.setOnClickListener(listener);
+    negative.setText(title);
+    return this;
+  }
 
-	public void show() {
-		getCreatedDialog();
-		alertDialog.show();
-	}
+  public AndroidBasicDialog setMessage(@StringRes int message) {
+    if (this.message != null) {
+      this.message.setText(message);
+      this.message.setVisibility(View.VISIBLE);
+    }
+    return this;
+  }
 
-	public void setOnCancelListener(Action0 action) {
-		alertDialog.setOnCancelListener(dialog -> {
-			action.call();
-			dialog.dismiss();
-		});
-	}
+  public AndroidBasicDialog setMessage(String message) {
+    if (this.message != null) {
+      this.message.setText(message);
+      this.message.setVisibility(View.VISIBLE);
+    }
+    return this;
+  }
 
-	public Dialog getCreatedDialog() {
-		if (alertDialog == null) {
-			alertDialog = this.builder.create();
-		}
-		return alertDialog;
-	}
+  public AndroidBasicDialog setTitle(@StringRes int title) {
+    if (this.title != null) {
+      this.title.setText(title);
+      this.title.setVisibility(View.VISIBLE);
+    }
+    return this;
+  }
+
+  public AndroidBasicDialog setTitle(String title) {
+    if (this.title != null) {
+      this.title.setText(title);
+      this.title.setVisibility(View.VISIBLE);
+    }
+    return this;
+  }
+
+  public void dismiss() {
+    if (alertDialog == null) {
+      throw new IllegalStateException("Alert dialog wasn't shown");
+    }
+    alertDialog.dismiss();
+  }
+
+  public void show() {
+    getCreatedDialog();
+    if (!alertDialog.isShowing()) {
+      alertDialog.show();
+    }
+  }
+
+  public void setOnCancelListener(Action0 action) {
+    alertDialog.setOnCancelListener(dialog -> {
+      action.call();
+      dialog.dismiss();
+    });
+  }
+
+  public AndroidBasicDialog setIcon(@DrawableRes int icon) {
+    alertDialog.setIcon(icon);
+    return this;
+  }
+
+  public Dialog getCreatedDialog() {
+    if (alertDialog == null) {
+      alertDialog = this.builder.create();
+    }
+    return alertDialog;
+  }
 }

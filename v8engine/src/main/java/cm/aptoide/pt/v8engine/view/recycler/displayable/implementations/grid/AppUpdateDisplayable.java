@@ -10,21 +10,22 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-
-import java.util.Date;
-
+import android.text.TextUtils;
+import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
@@ -32,115 +33,141 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor
-public class AppUpdateDisplayable extends Displayable {
+@AllArgsConstructor public class AppUpdateDisplayable extends Displayable {
 
-	@Getter private String appIconUrl;
-	@Getter private String storeIconUrl;
-	@Getter private String storeName;
+  @Getter private String appIconUrl;
+  @Getter private String storeIconUrl;
+  @Getter private String storeName;
 
-	private Date dateUpdated;
-	private String appVersionName;
-	private SpannableFactory spannableFactory;
-	private String appName;
-	@Getter private String packageName;
-	private Download download;
-	private DownloadServiceHelper downloadManager;
-	private InstallManager installManager;
-	private DateCalculator dateCalculator;
-	private long appId;
+  private Date dateUpdated;
+  private String appVersionName;
+  private SpannableFactory spannableFactory;
+  private String appName;
+  @Getter private String packageName;
+  private Download download;
+  private DateCalculator dateCalculator;
+  private long appId;
+  private InstallManager installManager;
+  private PermissionManager permissionManager;
+  private TimelineMetricsManager timelineMetricsManager;
 
-	public AppUpdateDisplayable() {
-	}
+  public AppUpdateDisplayable() {
+  }
 
-	public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-	                                        DownloadServiceHelper downloadManager, InstallManager installManager, DateCalculator dateCalculator) {
-		return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getUpdated(),
-				appUpdate.getFile().getVername(), spannableFactory,	appUpdate.getName(), appUpdate.getPackageName(), downloadFactory
-				.create(appUpdate), downloadManager, installManager, dateCalculator, appUpdate.getId());
-	}
+  public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
+      DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
+      PermissionManager permissionManager, TimelineMetricsManager timelineMetricsManager) {
+    return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(),
+        appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
+        spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
+        downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
+        appUpdate.getId(), installManager, permissionManager, timelineMetricsManager);
+  }
 
-	public Observable<Boolean> isInstalled() {
-		return installManager.isInstalled(download.getAppId());
-	}
+  public Observable<Progress<Download>> update(Context context) {
+    if (installManager.showWarning()) {
+      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+          .subscribe(eResponse -> {
+            switch (eResponse) {
+              case YES:
+                installManager.rootInstallAllowed(true);
+                break;
+              case NO:
+                installManager.rootInstallAllowed(false);
+                break;
+            }
+          });
+    }
+    return installManager.install(context, download);
+  }
 
-	public Observable<Void> install(Context context) {
-		return installManager.install(context, (PermissionRequest) context, download.getAppId());
-	}
+  public Observable<Progress<Download>> updateProgress() {
+    return installManager.getInstallations()
+        .filter(downloadProgress -> (!TextUtils.isEmpty(downloadProgress.getRequest().getMd5())
+            && downloadProgress.getRequest().getMd5().equals(download.getMd5())));
+  }
 
-	public Observable<Download> download(PermissionRequest permissionRequest) {
-		return downloadManager.startDownload(permissionRequest, download);
-	}
+  public int getMarginWidth(Context context, int orientation) {
+    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
+      return 0;
+    }
 
-	public Observable<Integer> downloadStatus() {
-		return downloadManager.getDownload(download.getAppId())
-				.map(storedDownload -> storedDownload.getOverallDownloadStatus())
-				.onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
-	}
+    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
 
-	public int getMarginWidth(Context context, int orientation){
-		if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-			return 0;
-		}
+    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      return (int) (width * 0.2);
+    } else {
+      return (int) (width * 0.1);
+    }
+  }
 
-		int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
+  public Spannable getAppTitle(Context context) {
+    return spannableFactory.createColorSpan(appName, ContextCompat.getColor(context, R.color.black),
+        appName);
+  }
 
-		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			return (int)(width * 0.2);
-		} else {
-			return (int)(width * 0.1);
-		}
-	}
+  public String getTimeSinceLastUpdate(Context context) {
+    return dateCalculator.getTimeSinceDate(context, dateUpdated);
+  }
 
-	public Spannable getAppTitle(Context context) {
-		return spannableFactory.createColorSpan(appName, ContextCompat.getColor(context, R.color.black), appName);
-	}
+  public Spannable getHasUpdateText(Context context) {
+    final String update = context.getString(R.string.displayable_social_timeline_app_update);
+    return spannableFactory.createStyleSpan(
+        context.getString(R.string.displayable_social_timeline_app_has_update, update),
+        Typeface.BOLD, update);
+  }
 
-	public String getTimeSinceLastUpdate(Context context) {
-		return dateCalculator.getTimeSinceDate(context, dateUpdated);
-	}
+  public Spannable getVersionText(Context context) {
+    return spannableFactory.createStyleSpan(
+        context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName),
+        Typeface.BOLD, appVersionName);
+  }
 
-	public Spannable getHasUpdateText(Context context) {
-		final String update = context.getString(R.string.displayable_social_timeline_app_update);
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_has_update, update),
-				ContextCompat.getColor(context, R.color.card_store_title), update);
-	}
+  public Spannable getUpdateAppText(Context context) {
+    String application = context.getString(R.string.appstimeline_update_app);
+    return spannableFactory.createStyleSpan(
+        context.getString(R.string.displayable_social_timeline_app_update_button, application),
+        Typeface.NORMAL, application);
+  }
 
-	public Spannable getVersionText(Context context) {
-		return spannableFactory.createColorSpan(context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName),
-				ContextCompat.getColor(context, R.color.black), appVersionName);
-	}
+  public String getCompletedText(Context context) {
+    return context.getString(R.string.displayable_social_timeline_app_update_updated);
+  }
 
-	public Spannable getUpdateAppText(Context context) {
-		String application = context.getString(R.string.displayable_social_timeline_app_update_application);
-		return spannableFactory.createStyleSpan(context.getString(R.string.displayable_social_timeline_app_update_button,
-				application), Typeface.BOLD, application);
-	}
+  public String getUpdatingText(Context context) {
+    return context.getString(R.string.displayable_social_timeline_app_update_updating);
+  }
 
-	public String getCompletedText(Context context) {
-		return context.getString(R.string.displayable_social_timeline_app_update_updated);
-	}
+  public String getUpdateErrorText(Context context) {
+    return context.getString(R.string.displayable_social_timeline_app_update_error);
+  }
 
-	public String getUpdatingText(Context context) {
-		return context.getString(R.string.displayable_social_timeline_app_update_updating);
-	}
+  @Override public int getViewLayout() {
+    return R.layout.displayable_social_timeline_app_update;
+  }
 
-	public String getUpdateErrorText(Context context) {
-		return context.getString(R.string.displayable_social_timeline_app_update_error);
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
 
-	@Override
-	public Type getType() {
-		return Type.SOCIAL_TIMELINE;
-	}
+  public long getAppId() {
+    return appId;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_social_timeline_app_update;
-	}
+  public Observable<Void> requestPermission(Context context) {
+    return permissionManager.requestExternalStoragePermission(((PermissionRequest) context));
+  }
 
-	public long getAppId() {
-		return appId;
-	}
+  public boolean isInstalling(Progress<Download> downloadProgress) {
+    return installManager.isInstalling(downloadProgress);
+  }
 
+  public boolean isDownloading(Progress<Download> downloadProgress) {
+    return installManager.isDownloading(downloadProgress);
+  }
+
+  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
+    timelineMetricsManager.sendEvent(data, eventName);
+  }
 }

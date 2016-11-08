@@ -17,75 +17,79 @@
     android:paddingStart="0dp"
     >
 
-    <!-- comments -->
+  <!-- comments -->
 
-    <RelativeLayout
-        android:id="@+id/more_layout"
-        style="@style/focusableRowBackground"
+  <RelativeLayout
+      android:id="@+id/more_layout"
+      style="@style/focusableRowBackground"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="50dp"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="50dp"
-        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:gravity="center_vertical"
+        android:text="@string/comments"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="?colorPrimary"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/write_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/border_grey"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         >
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="4dp"
-            android:gravity="center_vertical"
-            android:text="@string/comments"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="?colorPrimary"/>
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:paddingRight="4dp"
+          android:src="?attr/icAppviewsPencil"
+          />
 
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:text="@string/write_a_comment"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="11sp"
+          />
 
-        <LinearLayout
-            android:id="@+id/write_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/border_grey"
-            android:orientation="horizontal"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp">
+    </LinearLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingRight="4dp"
-                android:src="?attr/icAppviewsPencil"/>
+  </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/write_a_comment"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="11sp"/>
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <!-- see more button -->
-    <TextView
-        android:id="@+id/see_more_comments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/backgroundMain"
-        android:drawablePadding="15dp"
-        android:drawableRight="@drawable/ic_see_more_comments"
-        android:gravity="right"
-        android:paddingBottom="10dp"
-        android:paddingRight="13dp"
-        android:paddingTop="15dp"
-        android:text="@string/see_more"
-        android:textAllCaps="true"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        />
+  <!-- see more button -->
+  <TextView
+      android:id="@+id/see_more_comments"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/backgroundMain"
+      android:drawablePadding="15dp"
+      android:drawableRight="@drawable/ic_see_more_comments"
+      android:gravity="right"
+      android:paddingBottom="10dp"
+      android:paddingRight="13dp"
+      android:paddingTop="15dp"
+      android:text="@string/see_more"
+      android:textAllCaps="true"
+      android:textSize="12sp"
+      android:textStyle="bold"
+      />
 
 </LinearLayout>

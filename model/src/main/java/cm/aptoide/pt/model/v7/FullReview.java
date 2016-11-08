@@ -6,18 +6,18 @@
 package cm.aptoide.pt.model.v7;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by sithengineer on 02/08/16.
  */
-@Data
-public class FullReview extends Review {
+@EqualsAndHashCode(callSuper = true)
+@Data public class FullReview extends Review {
 
-	private AppData data;
+  private AppData data;
 
-	@Data
-	public static class AppData {
+  @Data public static class AppData {
 
-		private GetAppMeta.App app;
-	}
+    private GetAppMeta.App app;
+  }
 }

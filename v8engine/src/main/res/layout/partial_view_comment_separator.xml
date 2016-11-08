@@ -13,4 +13,5 @@
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp"
     android:layout_margin="5dp"
-    tools:showIn="@layout/displayable_app_view_comments"/>
+    tools:showIn="@layout/displayable_app_view_comments"
+    />

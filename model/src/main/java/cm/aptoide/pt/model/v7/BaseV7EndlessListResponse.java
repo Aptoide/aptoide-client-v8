@@ -6,29 +6,30 @@
 package cm.aptoide.pt.model.v7;
 
 import java.util.List;
-
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by sithengineer on 18/08/16.
  */
-@Data
-public class BaseV7EndlessListResponse<T> extends BaseV7EndlessResponse {
+@EqualsAndHashCode(callSuper = true)
+@Data public class BaseV7EndlessListResponse<T> extends BaseV7EndlessResponse {
 
-	private List<T> list;
+  private List<T> list;
 
-	@Override
-	public int getCurrentSize() {
-		return list != null ? list.size() : 0;
-	}
+  public BaseV7EndlessListResponse() {
+    super(false);
+  }
 
-	@Override
-	public int getNextSize() {
-		return list != null ? NEXT_STEP : 0;
-	}
+  @Override public int getTotal() {
+    return list != null ? list.size() : 0;
+  }
 
-	@Override
-	public boolean hasData() {
-		return list != null;
-	}
+  @Override public int getNextSize() {
+    return list != null ? NEXT_STEP : 0;
+  }
+
+  @Override public boolean hasData() {
+    return list != null;
+  }
 }

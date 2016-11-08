@@ -6,763 +6,760 @@
 
 <resources>
 
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:buttonStyle">?attr/customButton</item>
-
-        <item name="android:windowBackground">@color/background_window</item>
-        <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
-
-        <item name="colorPrimary">@color/aptoide_orange</item>
-        <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
-        <item name="colorAccent">@color/aptoide_color_focused</item>
-        <item name="customColor">@color/aptoide_orange</item>
-
-        <!--toolbar-->
-        <item name="toolbarTheme">@style/Toolbar</item>
-
-        <!--for settings preference theme -->
-        <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
-
-        <!--background-->
-        <item name="backgroundMain">@color/white</item>
-        <item name="backgroundSecondary">@color/light_custom_gray</item>
-        <item name="backgroundInverse">@android:color/black</item>
-        <item name="backgroundTabs">@android:color/transparent</item>
-        <item name="backgroundWidgetSecondary">@android:color/transparent</item>
-        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
-        <item name="backgroundCardColor">@color/white</item>
-        <item name="appviewRatingCardBarckground">@drawable/black_card</item>
-        <item name="backgroundHomeSeparator">@color/background_window</item>
-        <item name="backgroundAddStoreButton">@android:color/white</item>
-        <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-
-
-        <!--text-->
-        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
-        <item name="android:textColorSecondary">@android:color/tertiary_text_light</item>
-        <item name="tertiaryTextColor">@android:color/black</item>
-        <item name="inverseTextColor">@android:color/white</item>
-        <item name="storesTextColor">@color/white</item>
-        <item name="appviewRatingCardTextColor">@color/white</item>
-
-
-        <!--widgets-->
-        <item name="colorButtonNormal">@color/default_color</item>
-        <item name="customButton">@style/WidgetButtonCustomAptoide</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
-        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
-        <item name="customRowForeground">@style/customRowStyle</item>
-        <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
-        <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
-        <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
-        <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
-        <item name="titleLabelStyle">@style/titleLabel</item>
-        <item name="separatorColor">@color/lighter_custom_gray</item>
-
-
-        <!--recycler-->
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="sectionListView.sectionTextViewPadding">2dip</item>
-        <item name="sectionListView.sectionTextViewTextColor">@android:color/black</item>
-        <item name="sectionListView.sectionTextViewTextSize">18dip</item>
-        <item name="sectionListView.sectionItemPadding">2dip</item>
-        <item name="sectionListView.sectionItemBackground">@null</item>
-        <item name="sectionListView.listTextViewPadding">2dip</item>
-        <item name="sectionListView.listTextViewTextColor">@android:color/black</item>
-        <item name="sectionListView.listTextViewTextSize">22dip</item>
-        <item name="sectionListView.listItemPadding">2dip</item>
-        <item name="sectionListView.listItemBackground">@drawable/list_selector_background</item>
-
-        <!--icons-->
-        <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
-        <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
-        <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
-        <item name="icEmailDrawable">@drawable/ic_email</item>
-        <item name="icCancelDrawable">@drawable/close</item>
-        <item name="icPlayDrawable">@drawable/play</item>
-        <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
-        <item name="icUpdateDrawable">@drawable/ic_action_update</item>
-        <item name="icAboutDrawable">@drawable/ic_action_about</item>
-        <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
-        <item name="icLikeDrawable">@drawable/ic_action_good</item>
-        <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
-        <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
-        <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
-        <item name="icErrorDrawable">@drawable/close</item>
-        <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
-        <item name="icRollbackDrawable">@drawable/ic_action_time</item>
-        <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
-        <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
-        <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
-        <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
-        <item name="icRevertDrawable">@drawable/ic_action_undo</item>
-        <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
-        <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
-        <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow</item>
-        <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
-        <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
-        <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
-        <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
-        <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
-        <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
-        <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
-        <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
-        <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
-        <item name="icAppviewsPencil">@drawable/ic_pencil</item>
-    </style>
-
-    <style name="AptoideThemeDefault" parent="AppBaseTheme">
-    </style>
-
-
-    <style name="AppBaseThemeTransparent" parent="AppBaseTheme">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:backgroundDimEnabled">false</item>
-    </style>
-
-    <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
-
-        <item name="colorPrimary">@color/aptoide_orange</item>
-        <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
-        <item name="colorAccent">@color/aptoide_color_focused</item>
-        <item name="customColor">@color/aptoide_orange</item>
-
-        <!--toolbar-->
-        <item name="toolbarTheme">@style/ToolbarDark</item>
-
-        <!--for settings preference theme -->
-        <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
-
-        <!--background-->
-        <item name="backgroundMain">@color/black</item>
-        <item name="backgroundSecondary">@color/dark_gray</item>
-        <item name="backgroundInverse">@android:color/white</item>
-        <item name="backgroundTabs">@color/dark_gray</item>
-        <item name="backgroundWidgetSecondary">@android:color/transparent</item>
-        <item name="backgroundCard">@style/backgroundCardStyleDark</item>
-        <item name="backgroundCardColor">@color/black</item>
-        <item name="appviewRatingCardBarckground">@drawable/dark_card</item>
-        <item name="backgroundHomeSeparator">@color/background_window</item>
-        <item name="backgroundAddStoreButton">@android:color/white</item>
-        <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-
-        <!--text-->
-        <item name="android:textColorPrimary">@android:color/primary_text_dark</item>
-        <item name="android:textColorSecondary">@android:color/tertiary_text_light</item>
-        <item name="tertiaryTextColor">@android:color/white</item>
-        <item name="inverseTextColor">@android:color/black</item>
-        <item name="storesTextColor">@color/white</item>
-        <item name="appviewRatingCardTextColor">@color/white</item>
-
-
-        <!--widgets-->
-        <item name="colorButtonNormal">@color/default_color</item>
-        <item name="customButton">@style/WidgetButtonCustomAptoide</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
-        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
-        <item name="customRowForeground">@style/customRowStyle</item>
-        <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
-        <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
-        <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
-        <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
-        <item name="titleLabelStyle">@style/titleLabel</item>
-        <item name="separatorColor">@color/light_custom_gray</item>
-
-
-        <!--recycler-->
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="sectionListView.sectionTextViewPadding">2dip</item>
-        <item name="sectionListView.sectionTextViewTextColor">@android:color/black</item>
-        <item name="sectionListView.sectionTextViewTextSize">18dip</item>
-        <item name="sectionListView.sectionItemPadding">2dip</item>
-        <item name="sectionListView.sectionItemBackground">@null</item>
-        <item name="sectionListView.listTextViewPadding">2dip</item>
-        <item name="sectionListView.listTextViewTextColor">@android:color/black</item>
-        <item name="sectionListView.listTextViewTextSize">22dip</item>
-        <item name="sectionListView.listItemPadding">2dip</item>
-        <item name="sectionListView.listItemBackground">@drawable/list_selector_background</item>
-
-
-        <!--icons-->
-        <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
-        <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
-        <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
-        <item name="icEmailDrawable">@drawable/ic_email</item>
-        <item name="icCancelDrawable">@drawable/ic_action_cancel_dark</item>
-        <item name="icPlayDrawable">@drawable/ic_action_play</item>
-        <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
-        <item name="icUpdateDrawable">@drawable/ic_action_update</item>
-        <item name="icAboutDrawable">@drawable/ic_action_about</item>
-        <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
-        <item name="icLikeDrawable">@drawable/ic_action_good</item>
-        <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
-        <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
-        <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
-        <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
-        <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
-        <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
-        <item name="icScheduledDrawable">@drawable/ic_drawer_schedule_light</item>
-        <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
-        <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
-        <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
-        <item name="icRevertDrawable">@drawable/ic_action_undo</item>
-        <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
-        <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
-        <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow</item>
-        <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
-        <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
-        <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
-        <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
-        <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
-        <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
-        <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
-        <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
-        <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
-        <item name="icAppviewsPencil">@drawable/ic_pencil</item>
-
-
-    </style>
-
-    <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
-    </style>
-
-    <!-- Non-default themes -->
-
-    <style name="AptoideThemeDefaultGrey" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/grey</item>
-        <item name="colorPrimaryDark">@color/grey_700</item>
-        <item name="colorAccent">@color/grey_700</item>
-        <item name="colorButtonNormal">@color/grey</item>
-        <item name="customColor">@color/grey</item>
-
-        <item name="customButton">@style/WidgetButtonCustomGrey</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
-
-        <item name="toolbarTheme">@style/ToolbarGreyTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultGreyDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/grey</item>
-        <item name="colorPrimaryDark">@color/grey_700</item>
-        <item name="colorAccent">@color/grey_700</item>
-        <item name="colorButtonNormal">@color/grey</item>
-        <item name="customColor">@color/grey</item>
-
-        <item name="customButton">@style/WidgetButtonCustomGrey</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
-        <item name="android:windowBackground">@color/transparent_black</item>
-
-        <item name="toolbarTheme">@style/ToolbarGrey</item>
-    </style>
-
-
-    <style name="AptoideThemeDefaultSilver" parent="AptoideThemeDefaultGrey">
-    </style>
-
-    <style name="AptoideThemeDefaultSilverDark" parent="AptoideThemeDefaultGreyDark">
-    </style>
-
-    <style name="AptoideThemeDefaultDimgray" parent="AptoideThemeDefaultGrey">
-    </style>
-
-    <style name="AptoideThemeDefaultDimgrayDark" parent="AptoideThemeDefaultGreyDark">
-    </style>
-
-
-
-    <style name="AptoideThemeDefaultTeal" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/teal</item>
-        <item name="colorPrimaryDark">@color/teal_700</item>
-        <item name="colorAccent">@color/teal_700</item>
-        <item name="colorButtonNormal">@color/teal</item>
-        <item name="customColor">@color/teal</item>
-
-        <item name="customButton">@style/WidgetButtonCustomTeal</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
-
-        <item name="toolbarTheme">@style/ToolbarTealTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultTealDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/teal</item>
-        <item name="colorPrimaryDark">@color/teal_700</item>
-        <item name="colorAccent">@color/teal_700</item>
-        <item name="colorButtonNormal">@color/teal</item>
-        <item name="customColor">@color/teal</item>
-
-        <item name="customButton">@style/WidgetButtonCustomTeal</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarTeal</item>
-
-    </style>
-
-    <style name="AptoideThemeDefaultSlategray" parent="AptoideThemeDefaultTeal">
-    </style>
-
-    <style name="AptoideThemeDefaultSlategrayDark" parent="AptoideThemeDefaultTealDark">
-    </style>
-
-    <style name="AptoideThemeDefaultBrown" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/brown</item>
-        <item name="colorPrimaryDark">@color/brown_700</item>
-        <item name="colorAccent">@color/brown_700</item>
-        <item name="colorButtonNormal">@color/brown</item>
-        <item name="customColor">@color/brown</item>
-
-        <item name="customButton">@style/WidgetButtonCustomBrown</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBrown</item>
-
-        <item name="toolbarTheme">@style/ToolbarBrownTransparent</item>
-
-    </style>
-
-    <style name="AptoideThemeDefaultBrownDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/brown</item>
-        <item name="colorPrimaryDark">@color/brown_700</item>
-        <item name="colorAccent">@color/brown_700</item>
-        <item name="colorButtonNormal">@color/brown</item>
-        <item name="customColor">@color/brown</item>
-
-        <item name="customButton">@style/WidgetButtonCustomBrown</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBrown</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarBrown</item>
-
-    </style>
-
-    <style name="AptoideThemeDefaultMaroon" parent="AptoideThemeDefaultBrown">
-    </style>
-
-    <style name="AptoideThemeDefaultMaroonDark" parent="AptoideThemeDefaultBrownDark">
-    </style>
-
-    <style name="AptoideThemeDefaultBluegrey" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/bluegrey</item>
-        <item name="colorPrimaryDark">@color/bluegrey_700</item>
-        <item name="colorAccent">@color/bluegrey_700</item>
-        <item name="colorButtonNormal">@color/bluegrey</item>
-        <item name="customColor">@color/bluegrey</item>
-
-        <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
-
-        <item name="toolbarTheme">@style/ToolbarBluegreyTransparent</item>
-
-    </style>
-
-    <style name="AptoideThemeDefaultBluegreyDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/bluegrey</item>
-        <item name="colorPrimaryDark">@color/bluegrey_700</item>
-        <item name="colorAccent">@color/bluegrey_700</item>
-        <item name="colorButtonNormal">@color/bluegrey</item>
-        <item name="customColor">@color/bluegrey</item>
-
-        <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarBluegrey</item>
-
-    </style>
-
-
-    <style name="AptoideThemeDefaultMidnight" parent="AptoideThemeDefaultBluegrey">
-    </style>
-
-    <style name="AptoideThemeDefaultMidnightDark" parent="AptoideThemeDefaultBluegreyDark">
-    </style>
-
-
-    <style name="AptoideThemeDefaultLightgreen" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/lightgreen</item>
-        <item name="colorPrimaryDark">@color/lightgreen_700</item>
-        <item name="colorAccent">@color/lightgreen_700</item>
-        <item name="colorButtonNormal">@color/lightgreen</item>
-        <item name="customColor">@color/lightgreen</item>
-
-        <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
-
-        <item name="toolbarTheme">@style/ToolbarLightgreenTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultLightgreenDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/lightgreen</item>
-        <item name="colorPrimaryDark">@color/lightgreen_700</item>
-        <item name="colorAccent">@color/lightgreen_700</item>
-        <item name="colorButtonNormal">@color/lightgreen</item>
-        <item name="customColor">@color/lightgreen</item>
-
-        <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarLightgreen</item>
-    </style>
-
-    <style name="AptoideThemeDefaultSpringgreen" parent="AptoideThemeDefaultLightgreen">
-    </style>
-
-    <style name="AptoideThemeDefaultSpringgreenDark" parent="AptoideThemeDefaultLightgreenDark">
-    </style>
-
-
-
-    <style name="AptoideThemeDefaultLightblue" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/lightblue</item>
-        <item name="colorPrimaryDark">@color/lightblue_700</item>
-        <item name="colorAccent">@color/lightblue_700</item>
-        <item name="colorButtonNormal">@color/lightblue</item>
-        <item name="customColor">@color/lightblue</item>
-
-        <item name="customButton">@style/WidgetButtonCustomLightblue</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
-
-        <item name="toolbarTheme">@style/ToolbarLightblueTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultLightblueDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/lightblue</item>
-        <item name="colorPrimaryDark">@color/lightblue_700</item>
-        <item name="colorAccent">@color/lightblue_700</item>
-        <item name="colorButtonNormal">@color/lightblue</item>
-        <item name="customColor">@color/lightblue</item>
-
-        <item name="customButton">@style/WidgetButtonCustomLightblue</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarLightblue</item>
-    </style>
-
-
-    <style name="AptoideThemeDefaultLightsky" parent="AptoideThemeDefaultLightblue">
-    </style>
-
-    <style name="AptoideThemeDefaultLightskyDark" parent="AptoideThemeDefaultLightblueDark">
-    </style>
-
-    <style name="AptoideThemeDefaultHappyblue" parent="AptoideThemeDefaultLightblue">
-    </style>
-
-    <style name="AptoideThemeDefaultHappyblueDark" parent="AptoideThemeDefaultLightblueDark">
-    </style>
-
-
-    <style name="AptoideThemeDefaultAmber" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/amber</item>
-        <item name="colorPrimaryDark">@color/amber_700</item>
-        <item name="colorAccent">@color/amber_700</item>
-        <item name="colorButtonNormal">@color/amber</item>
-        <item name="customColor">@color/amber</item>
-
-        <item name="customButton">@style/WidgetButtonCustomAmber</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
-
-        <item name="toolbarTheme">@style/ToolbarAmberTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultAmberDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/amber</item>
-        <item name="colorPrimaryDark">@color/amber_700</item>
-        <item name="colorAccent">@color/amber_700</item>
-        <item name="colorButtonNormal">@color/amber</item>
-        <item name="customColor">@color/amber</item>
-
-        <item name="customButton">@style/WidgetButtonCustomAmber</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
-        <item name="android:windowBackground">@color/transparent_black</item>
-
-        <item name="toolbarTheme">@style/ToolbarAmber</item>
-    </style>
-
-    <style name="AptoideThemeDefaultGold" parent="AptoideThemeDefaultAmber">
-    </style>
-
-    <style name="AptoideThemeDefaultGoldDark" parent="AptoideThemeDefaultAmberDark">
-    </style>
-
-    <style name="AptoideThemeDefaultYellow" parent="AptoideThemeDefaultAmber">
-    </style>
-
-    <style name="AptoideThemeDefaultYellowDark" parent="AptoideThemeDefaultAmberDark">
-    </style>
-
-    <style name="AptoideThemeDefaultLime" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/lime</item>
-        <item name="colorPrimaryDark">@color/lime_700</item>
-        <item name="colorAccent">@color/lime_700</item>
-        <item name="colorButtonNormal">@color/lime</item>
-        <item name="customColor">@color/lime</item>
-
-        <item name="customButton">@style/WidgetButtonCustomLime</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
-
-        <item name="toolbarTheme">@style/ToolbarLimeTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultLimeDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/lime</item>
-        <item name="colorPrimaryDark">@color/lime_700</item>
-        <item name="colorAccent">@color/lime_700</item>
-        <item name="colorButtonNormal">@color/lime</item>
-        <item name="customColor">@color/lime</item>
-
-        <item name="customButton">@style/WidgetButtonCustomLime</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarLime</item>
-    </style>
-
-
-    <style name="AptoideThemeDefaultGreenapple" parent="AptoideThemeDefaultLime">
-
-    </style>
-
-    <style name="AptoideThemeDefaultGreenappleDark" parent="AptoideThemeDefaultLimeDark">
-    </style>
-
-
-    <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/orange_700</item>
-        <item name="colorAccent">@color/orange_700</item>
-        <item name="colorButtonNormal">@color/orange</item>
-        <item name="customColor">@color/orange</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomOrange</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideOrange</item>
-
-        <item name="toolbarTheme">@style/ToolbarOrangeTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultOrangeDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/orange_700</item>
-        <item name="colorAccent">@color/orange_700</item>
-        <item name="colorButtonNormal">@color/orange</item>
-        <item name="customColor">@color/orange</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomOrange</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideOrange</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarOrange</item>
-    </style>
-
-    <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/pink</item>
-        <item name="colorPrimaryDark">@color/pink_700</item>
-        <item name="colorAccent">@color/pink_700</item>
-        <item name="colorButtonNormal">@color/pink</item>
-        <item name="customColor">@color/pink</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomPink</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoidePink</item>
-
-        <item name="toolbarTheme">@style/ToolbarPinkTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultPinkDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/pink</item>
-        <item name="colorPrimaryDark">@color/pink_700</item>
-        <item name="colorAccent">@color/pink_700</item>
-        <item name="colorButtonNormal">@color/pink</item>
-        <item name="customColor">@color/pink</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomPink</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoidePink</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarPink</item>
-
-    </style>
-
-
-    <style name="AptoideThemeDefaultIndigo" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/indigo</item>
-        <item name="colorPrimaryDark">@color/indigo_700</item>
-        <item name="colorAccent">@color/indigo_700</item>
-        <item name="colorButtonNormal">@color/indigo</item>
-        <item name="customColor">@color/indigo</item>
-
-        <item name="customButton">@style/WidgetButtonCustomIndigo</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
-
-        <item name="toolbarTheme">@style/ToolbarIndigoTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultIndigoDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/indigo</item>
-        <item name="colorPrimaryDark">@color/indigo_700</item>
-        <item name="colorAccent">@color/indigo_700</item>
-        <item name="colorButtonNormal">@color/indigo</item>
-        <item name="customColor">@color/indigo</item>
-
-        <item name="customButton">@style/WidgetButtonCustomIndigo</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarIndigo</item>
-    </style>
-
-
-    <!-- v6 Blue theme updated to v7 Indigo -->
-    <style name="AptoideThemeDefaultBlue" parent="AptoideThemeDefaultIndigo">
-    </style>
-
-    <style name="AptoideThemeDefaultBlueDark" parent="AptoideThemeDefaultIndigoDark">
-    </style>
-
-
-    <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/red</item>
-        <item name="colorPrimaryDark">@color/red_700</item>
-        <item name="colorAccent">@color/red_700</item>
-        <item name="colorButtonNormal">@color/red</item>
-        <item name="customColor">@color/red</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomRed</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideRed</item>
-
-        <item name="toolbarTheme">@style/ToolbarRedTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultRedDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/red</item>
-        <item name="colorPrimaryDark">@color/red_700</item>
-        <item name="colorAccent">@color/red_700</item>
-        <item name="colorButtonNormal">@color/red</item>
-        <item name="customColor">@color/red</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomRed</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideRed</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarRed</item>
-    </style>
-
-    <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/green</item>
-        <item name="colorPrimaryDark">@color/green_700</item>
-        <item name="colorAccent">@color/green_700</item>
-        <item name="colorButtonNormal">@color/green</item>
-        <item name="customColor">@color/green</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomGreen</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGreen</item>
-
-        <item name="toolbarTheme">@style/ToolbarGreenTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultGreenDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/green</item>
-        <item name="colorPrimaryDark">@color/green_700</item>
-        <item name="colorAccent">@color/green_700</item>
-        <item name="colorButtonNormal">@color/green</item>
-        <item name="customColor">@color/green</item>
-
-        <!-- widgets -->
-        <item name="customButton">@style/WidgetButtonCustomGreen</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGreen</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarGreen</item>
-    </style>
-
-
-    <!-- v6 SeaGreen theme updated to Green theme -->
-    <style name="AptoideThemeDefaultSeagreen" parent="AptoideThemeDefaultGreen">
-    </style>
-
-    <style name="AptoideThemeDefaultSeagreenDark" parent="AptoideThemeDefaultGreenDark">
-    </style>
-
-
-
-    <style name="AptoideThemeDefaultDeepPurple" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/deeppurple</item>
-        <item name="colorPrimaryDark">@color/deeppurple_700</item>
-        <item name="colorAccent">@color/deeppurple_700</item>
-        <item name="colorButtonNormal">@color/deeppurple</item>
-        <item name="customColor">@color/deeppurple</item>
-
-        <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
-
-        <item name="toolbarTheme">@style/ToolbarDeeppurpleTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultDeepPurpleDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/deeppurple</item>
-        <item name="colorPrimaryDark">@color/deeppurple_700</item>
-        <item name="colorAccent">@color/deeppurple_700</item>
-        <item name="colorButtonNormal">@color/deeppurple</item>
-        <item name="customColor">@color/deeppurple</item>
-
-        <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarDeeppurple</item>
-    </style>
-
-    <style name="AptoideThemeDefaultMagenta" parent="AptoideThemeDefaultDeepPurple">
-    </style>
-
-    <style name="AptoideThemeDefaultMagentaDark" parent="AptoideThemeDefaultDeepPurpleDark">
-    </style>
-
-    <style name="AptoideThemeDefaultBlack" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/black</item>
-        <item name="colorButtonNormal">@color/black</item>
-        <item name="customColor">@color/black</item>
-
-        <item name="customButton">@style/WidgetButtonCustomBlack</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
-
-        <item name="toolbarTheme">@style/ToolbarBlackTransparent</item>
-    </style>
-
-    <style name="AptoideThemeDefaultBlackDark" parent="AppBaseThemeDark">
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/black</item>
-        <item name="colorButtonNormal">@color/black</item>
-        <item name="customColor">@color/black</item>
-
-        <item name="customButton">@style/WidgetButtonCustomBlack</item>
-        <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
-
-        <item name="android:windowBackground">@color/transparent_black</item>
-        <item name="toolbarTheme">@style/ToolbarBlack</item>
-    </style>
+  <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <item name="android:buttonStyle">?attr/customButton</item>
+
+    <item name="android:windowBackground">@color/background_window</item>
+    <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
+
+    <item name="colorPrimary">@color/aptoide_orange</item>
+    <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
+    <item name="colorAccent">@color/aptoide_color_focused</item>
+    <item name="customColor">@color/aptoide_orange</item>
+
+    <!--toolbar-->
+    <item name="toolbarTheme">@style/Toolbar</item>
+
+    <!--for settings preference theme -->
+    <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
+
+    <!--background-->
+    <item name="backgroundMain">@color/white</item>
+    <item name="backgroundSecondary">@color/light_custom_gray</item>
+    <item name="backgroundInverse">@android:color/black</item>
+    <item name="backgroundTabs">@android:color/transparent</item>
+    <item name="backgroundWidgetSecondary">@android:color/transparent</item>
+    <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+    <item name="backgroundCardColor">@color/white</item>
+    <item name="appviewRatingCardBarckground">@drawable/black_card</item>
+    <item name="backgroundHomeSeparator">@color/background_window</item>
+    <item name="backgroundAddStoreButton">@android:color/white</item>
+    <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
+
+
+    <!--text-->
+    <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+    <item name="android:textColorSecondary">@android:color/tertiary_text_light</item>
+    <item name="tertiaryTextColor">@android:color/black</item>
+    <item name="inverseTextColor">@android:color/white</item>
+    <item name="storesTextColor">@color/white</item>
+    <item name="appviewRatingCardTextColor">@color/white</item>
+
+
+    <!--widgets-->
+    <item name="colorButtonNormal">@color/default_color</item>
+    <item name="customButton">@style/WidgetButtonCustomAptoide</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
+    <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+    <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+    <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
+    <item name="customRowForeground">@style/customRowStyle</item>
+    <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
+    <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
+    <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
+    <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
+    <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
+    <item name="titleLabelStyle">@style/titleLabel</item>
+    <item name="separatorColor">@color/lighter_custom_gray</item>
+
+
+    <!--recycler-->
+    <item name="android:cacheColorHint">@android:color/transparent</item>
+    <item name="sectionListView.sectionTextViewPadding">2dip</item>
+    <item name="sectionListView.sectionTextViewTextColor">@android:color/black</item>
+    <item name="sectionListView.sectionTextViewTextSize">18dip</item>
+    <item name="sectionListView.sectionItemPadding">2dip</item>
+    <item name="sectionListView.sectionItemBackground">@null</item>
+    <item name="sectionListView.listTextViewPadding">2dip</item>
+    <item name="sectionListView.listTextViewTextColor">@android:color/black</item>
+    <item name="sectionListView.listTextViewTextSize">22dip</item>
+    <item name="sectionListView.listItemPadding">2dip</item>
+    <item name="sectionListView.listItemBackground">@drawable/list_selector_background</item>
+
+    <!--icons-->
+    <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
+    <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
+    <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
+    <item name="icEmailDrawable">@drawable/ic_email</item>
+    <item name="icCancelDrawable">@drawable/cross</item>
+    <item name="icPlayDrawable">@drawable/media_play</item>
+    <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
+    <item name="icUpdateDrawable">@drawable/ic_action_update</item>
+    <item name="icAboutDrawable">@drawable/ic_action_about</item>
+    <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
+    <item name="icLikeDrawable">@drawable/ic_action_good</item>
+    <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
+    <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
+    <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
+    <item name="icErrorDrawable">@drawable/cross</item>
+    <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
+    <item name="icRollbackDrawable">@drawable/ic_action_time</item>
+    <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
+    <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
+    <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
+    <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
+    <item name="icRevertDrawable">@drawable/ic_action_undo</item>
+    <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
+    <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
+    <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow</item>
+    <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
+    <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
+    <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
+    <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
+    <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
+    <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
+    <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
+    <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
+    <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
+    <item name="icAppviewsPencil">@drawable/ic_pencil</item>
+  </style>
+
+  <style name="AptoideThemeDefault" parent="AppBaseTheme">
+  </style>
+
+
+  <style name="AppBaseThemeTransparent" parent="AppBaseTheme">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsFloating">false</item>
+    <item name="android:backgroundDimEnabled">false</item>
+  </style>
+
+  <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
+
+    <item name="colorPrimary">@color/aptoide_orange</item>
+    <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
+    <item name="colorAccent">@color/aptoide_color_focused</item>
+    <item name="customColor">@color/aptoide_orange</item>
+
+    <!--toolbar-->
+    <item name="toolbarTheme">@style/ToolbarDark</item>
+
+    <!--for settings preference theme -->
+    <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
+
+    <!--background-->
+    <item name="backgroundMain">@color/black</item>
+    <item name="backgroundSecondary">@color/dark_gray</item>
+    <item name="backgroundInverse">@android:color/white</item>
+    <item name="backgroundTabs">@color/dark_gray</item>
+    <item name="backgroundWidgetSecondary">@android:color/transparent</item>
+    <item name="backgroundCard">@style/backgroundCardStyleDark</item>
+    <item name="backgroundCardColor">@color/black</item>
+    <item name="appviewRatingCardBarckground">@drawable/dark_card</item>
+    <item name="backgroundHomeSeparator">@color/background_window</item>
+    <item name="backgroundAddStoreButton">@android:color/white</item>
+    <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
+
+    <!--text-->
+    <item name="android:textColorPrimary">@android:color/primary_text_dark</item>
+    <item name="android:textColorSecondary">@android:color/tertiary_text_light</item>
+    <item name="tertiaryTextColor">@android:color/white</item>
+    <item name="inverseTextColor">@android:color/black</item>
+    <item name="storesTextColor">@color/white</item>
+    <item name="appviewRatingCardTextColor">@color/white</item>
+
+
+    <!--widgets-->
+    <item name="colorButtonNormal">@color/default_color</item>
+    <item name="customButton">@style/WidgetButtonCustomAptoide</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
+    <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+    <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+    <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
+    <item name="customRowForeground">@style/customRowStyle</item>
+    <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
+    <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
+    <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
+    <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
+    <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
+    <item name="titleLabelStyle">@style/titleLabel</item>
+    <item name="separatorColor">@color/light_custom_gray</item>
+
+
+    <!--recycler-->
+    <item name="android:cacheColorHint">@android:color/transparent</item>
+    <item name="sectionListView.sectionTextViewPadding">2dip</item>
+    <item name="sectionListView.sectionTextViewTextColor">@android:color/black</item>
+    <item name="sectionListView.sectionTextViewTextSize">18dip</item>
+    <item name="sectionListView.sectionItemPadding">2dip</item>
+    <item name="sectionListView.sectionItemBackground">@null</item>
+    <item name="sectionListView.listTextViewPadding">2dip</item>
+    <item name="sectionListView.listTextViewTextColor">@android:color/black</item>
+    <item name="sectionListView.listTextViewTextSize">22dip</item>
+    <item name="sectionListView.listItemPadding">2dip</item>
+    <item name="sectionListView.listItemBackground">@drawable/list_selector_background</item>
+
+
+    <!--icons-->
+    <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
+    <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
+    <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
+    <item name="icEmailDrawable">@drawable/ic_email</item>
+    <item name="icCancelDrawable">@drawable/ic_action_cancel_dark</item>
+    <item name="icPlayDrawable">@drawable/ic_action_play</item>
+    <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
+    <item name="icUpdateDrawable">@drawable/ic_action_update</item>
+    <item name="icAboutDrawable">@drawable/ic_action_about</item>
+    <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
+    <item name="icLikeDrawable">@drawable/ic_action_good</item>
+    <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
+    <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
+    <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
+    <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
+    <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
+    <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
+    <item name="icScheduledDrawable">@drawable/ic_drawer_schedule_light</item>
+    <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
+    <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
+    <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
+    <item name="icRevertDrawable">@drawable/ic_action_undo</item>
+    <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
+    <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
+    <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow</item>
+    <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
+    <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
+    <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
+    <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
+    <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
+    <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
+    <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
+    <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
+    <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
+    <item name="icAppviewsPencil">@drawable/ic_pencil</item>
+
+
+  </style>
+
+  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
+  </style>
+
+  <!-- Non-default themes -->
+
+  <style name="AptoideThemeDefaultGrey" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/grey</item>
+    <item name="colorPrimaryDark">@color/grey_700</item>
+    <item name="colorAccent">@color/grey_700</item>
+    <item name="colorButtonNormal">@color/grey</item>
+    <item name="customColor">@color/grey</item>
+
+    <item name="customButton">@style/WidgetButtonCustomGrey</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
+
+    <item name="toolbarTheme">@style/ToolbarGreyTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultGreyDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/grey</item>
+    <item name="colorPrimaryDark">@color/grey_700</item>
+    <item name="colorAccent">@color/grey_700</item>
+    <item name="colorButtonNormal">@color/grey</item>
+    <item name="customColor">@color/grey</item>
+
+    <item name="customButton">@style/WidgetButtonCustomGrey</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
+    <item name="android:windowBackground">@color/transparent_black</item>
+
+    <item name="toolbarTheme">@style/ToolbarGrey</item>
+  </style>
+
+
+  <style name="AptoideThemeDefaultSilver" parent="AptoideThemeDefaultGrey">
+  </style>
+
+  <style name="AptoideThemeDefaultSilverDark" parent="AptoideThemeDefaultGreyDark">
+  </style>
+
+  <style name="AptoideThemeDefaultDimgray" parent="AptoideThemeDefaultGrey">
+  </style>
+
+  <style name="AptoideThemeDefaultDimgrayDark" parent="AptoideThemeDefaultGreyDark">
+  </style>
+
+
+  <style name="AptoideThemeDefaultTeal" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/teal</item>
+    <item name="colorPrimaryDark">@color/teal_700</item>
+    <item name="colorAccent">@color/teal_700</item>
+    <item name="colorButtonNormal">@color/teal</item>
+    <item name="customColor">@color/teal</item>
+
+    <item name="customButton">@style/WidgetButtonCustomTeal</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
+
+    <item name="toolbarTheme">@style/ToolbarTealTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultTealDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/teal</item>
+    <item name="colorPrimaryDark">@color/teal_700</item>
+    <item name="colorAccent">@color/teal_700</item>
+    <item name="colorButtonNormal">@color/teal</item>
+    <item name="customColor">@color/teal</item>
+
+    <item name="customButton">@style/WidgetButtonCustomTeal</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarTeal</item>
+
+  </style>
+
+  <style name="AptoideThemeDefaultSlategray" parent="AptoideThemeDefaultTeal">
+  </style>
+
+  <style name="AptoideThemeDefaultSlategrayDark" parent="AptoideThemeDefaultTealDark">
+  </style>
+
+  <style name="AptoideThemeDefaultBrown" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/brown</item>
+    <item name="colorPrimaryDark">@color/brown_700</item>
+    <item name="colorAccent">@color/brown_700</item>
+    <item name="colorButtonNormal">@color/brown</item>
+    <item name="customColor">@color/brown</item>
+
+    <item name="customButton">@style/WidgetButtonCustomBrown</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBrown</item>
+
+    <item name="toolbarTheme">@style/ToolbarBrownTransparent</item>
+
+  </style>
+
+  <style name="AptoideThemeDefaultBrownDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/brown</item>
+    <item name="colorPrimaryDark">@color/brown_700</item>
+    <item name="colorAccent">@color/brown_700</item>
+    <item name="colorButtonNormal">@color/brown</item>
+    <item name="customColor">@color/brown</item>
+
+    <item name="customButton">@style/WidgetButtonCustomBrown</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBrown</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarBrown</item>
+
+  </style>
+
+  <style name="AptoideThemeDefaultMaroon" parent="AptoideThemeDefaultBrown">
+  </style>
+
+  <style name="AptoideThemeDefaultMaroonDark" parent="AptoideThemeDefaultBrownDark">
+  </style>
+
+  <style name="AptoideThemeDefaultBluegrey" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/bluegrey</item>
+    <item name="colorPrimaryDark">@color/bluegrey_700</item>
+    <item name="colorAccent">@color/bluegrey_700</item>
+    <item name="colorButtonNormal">@color/bluegrey</item>
+    <item name="customColor">@color/bluegrey</item>
+
+    <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
+
+    <item name="toolbarTheme">@style/ToolbarBluegreyTransparent</item>
+
+  </style>
+
+  <style name="AptoideThemeDefaultBluegreyDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/bluegrey</item>
+    <item name="colorPrimaryDark">@color/bluegrey_700</item>
+    <item name="colorAccent">@color/bluegrey_700</item>
+    <item name="colorButtonNormal">@color/bluegrey</item>
+    <item name="customColor">@color/bluegrey</item>
+
+    <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarBluegrey</item>
+
+  </style>
+
+
+  <style name="AptoideThemeDefaultMidnight" parent="AptoideThemeDefaultBluegrey">
+  </style>
+
+  <style name="AptoideThemeDefaultMidnightDark" parent="AptoideThemeDefaultBluegreyDark">
+  </style>
+
+
+  <style name="AptoideThemeDefaultLightgreen" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/lightgreen</item>
+    <item name="colorPrimaryDark">@color/lightgreen_700</item>
+    <item name="colorAccent">@color/lightgreen_700</item>
+    <item name="colorButtonNormal">@color/lightgreen</item>
+    <item name="customColor">@color/lightgreen</item>
+
+    <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
+
+    <item name="toolbarTheme">@style/ToolbarLightgreenTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultLightgreenDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/lightgreen</item>
+    <item name="colorPrimaryDark">@color/lightgreen_700</item>
+    <item name="colorAccent">@color/lightgreen_700</item>
+    <item name="colorButtonNormal">@color/lightgreen</item>
+    <item name="customColor">@color/lightgreen</item>
+
+    <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarLightgreen</item>
+  </style>
+
+  <style name="AptoideThemeDefaultSpringgreen" parent="AptoideThemeDefaultLightgreen">
+  </style>
+
+  <style name="AptoideThemeDefaultSpringgreenDark" parent="AptoideThemeDefaultLightgreenDark">
+  </style>
+
+
+  <style name="AptoideThemeDefaultLightblue" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/lightblue</item>
+    <item name="colorPrimaryDark">@color/lightblue_700</item>
+    <item name="colorAccent">@color/lightblue_700</item>
+    <item name="colorButtonNormal">@color/lightblue</item>
+    <item name="customColor">@color/lightblue</item>
+
+    <item name="customButton">@style/WidgetButtonCustomLightblue</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
+
+    <item name="toolbarTheme">@style/ToolbarLightblueTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultLightblueDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/lightblue</item>
+    <item name="colorPrimaryDark">@color/lightblue_700</item>
+    <item name="colorAccent">@color/lightblue_700</item>
+    <item name="colorButtonNormal">@color/lightblue</item>
+    <item name="customColor">@color/lightblue</item>
+
+    <item name="customButton">@style/WidgetButtonCustomLightblue</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarLightblue</item>
+  </style>
+
+
+  <style name="AptoideThemeDefaultLightsky" parent="AptoideThemeDefaultLightblue">
+  </style>
+
+  <style name="AptoideThemeDefaultLightskyDark" parent="AptoideThemeDefaultLightblueDark">
+  </style>
+
+  <style name="AptoideThemeDefaultHappyblue" parent="AptoideThemeDefaultLightblue">
+  </style>
+
+  <style name="AptoideThemeDefaultHappyblueDark" parent="AptoideThemeDefaultLightblueDark">
+  </style>
+
+
+  <style name="AptoideThemeDefaultAmber" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/amber</item>
+    <item name="colorPrimaryDark">@color/amber_700</item>
+    <item name="colorAccent">@color/amber_700</item>
+    <item name="colorButtonNormal">@color/amber</item>
+    <item name="customColor">@color/amber</item>
+
+    <item name="customButton">@style/WidgetButtonCustomAmber</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
+
+    <item name="toolbarTheme">@style/ToolbarAmberTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultAmberDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/amber</item>
+    <item name="colorPrimaryDark">@color/amber_700</item>
+    <item name="colorAccent">@color/amber_700</item>
+    <item name="colorButtonNormal">@color/amber</item>
+    <item name="customColor">@color/amber</item>
+
+    <item name="customButton">@style/WidgetButtonCustomAmber</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
+    <item name="android:windowBackground">@color/transparent_black</item>
+
+    <item name="toolbarTheme">@style/ToolbarAmber</item>
+  </style>
+
+  <style name="AptoideThemeDefaultGold" parent="AptoideThemeDefaultAmber">
+  </style>
+
+  <style name="AptoideThemeDefaultGoldDark" parent="AptoideThemeDefaultAmberDark">
+  </style>
+
+  <style name="AptoideThemeDefaultYellow" parent="AptoideThemeDefaultAmber">
+  </style>
+
+  <style name="AptoideThemeDefaultYellowDark" parent="AptoideThemeDefaultAmberDark">
+  </style>
+
+  <style name="AptoideThemeDefaultLime" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/lime</item>
+    <item name="colorPrimaryDark">@color/lime_700</item>
+    <item name="colorAccent">@color/lime_700</item>
+    <item name="colorButtonNormal">@color/lime</item>
+    <item name="customColor">@color/lime</item>
+
+    <item name="customButton">@style/WidgetButtonCustomLime</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
+
+    <item name="toolbarTheme">@style/ToolbarLimeTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultLimeDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/lime</item>
+    <item name="colorPrimaryDark">@color/lime_700</item>
+    <item name="colorAccent">@color/lime_700</item>
+    <item name="colorButtonNormal">@color/lime</item>
+    <item name="customColor">@color/lime</item>
+
+    <item name="customButton">@style/WidgetButtonCustomLime</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarLime</item>
+  </style>
+
+
+  <style name="AptoideThemeDefaultGreenapple" parent="AptoideThemeDefaultLime">
+
+  </style>
+
+  <style name="AptoideThemeDefaultGreenappleDark" parent="AptoideThemeDefaultLimeDark">
+  </style>
+
+
+  <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/orange</item>
+    <item name="colorPrimaryDark">@color/orange_700</item>
+    <item name="colorAccent">@color/orange_700</item>
+    <item name="colorButtonNormal">@color/orange</item>
+    <item name="customColor">@color/orange</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomOrange</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideOrange</item>
+
+    <item name="toolbarTheme">@style/ToolbarOrangeTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultOrangeDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/orange</item>
+    <item name="colorPrimaryDark">@color/orange_700</item>
+    <item name="colorAccent">@color/orange_700</item>
+    <item name="colorButtonNormal">@color/orange</item>
+    <item name="customColor">@color/orange</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomOrange</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideOrange</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarOrange</item>
+  </style>
+
+  <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/pink</item>
+    <item name="colorPrimaryDark">@color/pink_700</item>
+    <item name="colorAccent">@color/pink_700</item>
+    <item name="colorButtonNormal">@color/pink</item>
+    <item name="customColor">@color/pink</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomPink</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoidePink</item>
+
+    <item name="toolbarTheme">@style/ToolbarPinkTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultPinkDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/pink</item>
+    <item name="colorPrimaryDark">@color/pink_700</item>
+    <item name="colorAccent">@color/pink_700</item>
+    <item name="colorButtonNormal">@color/pink</item>
+    <item name="customColor">@color/pink</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomPink</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoidePink</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarPink</item>
+
+  </style>
+
+
+  <style name="AptoideThemeDefaultIndigo" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/indigo</item>
+    <item name="colorPrimaryDark">@color/indigo_700</item>
+    <item name="colorAccent">@color/indigo_700</item>
+    <item name="colorButtonNormal">@color/indigo</item>
+    <item name="customColor">@color/indigo</item>
+
+    <item name="customButton">@style/WidgetButtonCustomIndigo</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
+
+    <item name="toolbarTheme">@style/ToolbarIndigoTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultIndigoDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/indigo</item>
+    <item name="colorPrimaryDark">@color/indigo_700</item>
+    <item name="colorAccent">@color/indigo_700</item>
+    <item name="colorButtonNormal">@color/indigo</item>
+    <item name="customColor">@color/indigo</item>
+
+    <item name="customButton">@style/WidgetButtonCustomIndigo</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarIndigo</item>
+  </style>
+
+
+  <!-- v6 Blue theme updated to v7 Indigo -->
+  <style name="AptoideThemeDefaultBlue" parent="AptoideThemeDefaultIndigo">
+  </style>
+
+  <style name="AptoideThemeDefaultBlueDark" parent="AptoideThemeDefaultIndigoDark">
+  </style>
+
+
+  <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/red</item>
+    <item name="colorPrimaryDark">@color/red_700</item>
+    <item name="colorAccent">@color/red_700</item>
+    <item name="colorButtonNormal">@color/red</item>
+    <item name="customColor">@color/red</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomRed</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideRed</item>
+
+    <item name="toolbarTheme">@style/ToolbarRedTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultRedDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/red</item>
+    <item name="colorPrimaryDark">@color/red_700</item>
+    <item name="colorAccent">@color/red_700</item>
+    <item name="colorButtonNormal">@color/red</item>
+    <item name="customColor">@color/red</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomRed</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideRed</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarRed</item>
+  </style>
+
+  <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/green</item>
+    <item name="colorPrimaryDark">@color/green_700</item>
+    <item name="colorAccent">@color/green_700</item>
+    <item name="colorButtonNormal">@color/green</item>
+    <item name="customColor">@color/green</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomGreen</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGreen</item>
+
+    <item name="toolbarTheme">@style/ToolbarGreenTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultGreenDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/green</item>
+    <item name="colorPrimaryDark">@color/green_700</item>
+    <item name="colorAccent">@color/green_700</item>
+    <item name="colorButtonNormal">@color/green</item>
+    <item name="customColor">@color/green</item>
+
+    <!-- widgets -->
+    <item name="customButton">@style/WidgetButtonCustomGreen</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGreen</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarGreen</item>
+  </style>
+
+
+  <!-- v6 SeaGreen theme updated to Green theme -->
+  <style name="AptoideThemeDefaultSeagreen" parent="AptoideThemeDefaultGreen">
+  </style>
+
+  <style name="AptoideThemeDefaultSeagreenDark" parent="AptoideThemeDefaultGreenDark">
+  </style>
+
+
+  <style name="AptoideThemeDefaultDeepPurple" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/deeppurple</item>
+    <item name="colorPrimaryDark">@color/deeppurple_700</item>
+    <item name="colorAccent">@color/deeppurple_700</item>
+    <item name="colorButtonNormal">@color/deeppurple</item>
+    <item name="customColor">@color/deeppurple</item>
+
+    <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
+
+    <item name="toolbarTheme">@style/ToolbarDeeppurpleTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultDeepPurpleDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/deeppurple</item>
+    <item name="colorPrimaryDark">@color/deeppurple_700</item>
+    <item name="colorAccent">@color/deeppurple_700</item>
+    <item name="colorButtonNormal">@color/deeppurple</item>
+    <item name="customColor">@color/deeppurple</item>
+
+    <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarDeeppurple</item>
+  </style>
+
+  <style name="AptoideThemeDefaultMagenta" parent="AptoideThemeDefaultDeepPurple">
+  </style>
+
+  <style name="AptoideThemeDefaultMagentaDark" parent="AptoideThemeDefaultDeepPurpleDark">
+  </style>
+
+  <style name="AptoideThemeDefaultBlack" parent="AppBaseTheme">
+    <item name="colorPrimary">@color/black</item>
+    <item name="colorPrimaryDark">@color/black</item>
+    <item name="colorAccent">@color/black</item>
+    <item name="colorButtonNormal">@color/black</item>
+    <item name="customColor">@color/black</item>
+
+    <item name="customButton">@style/WidgetButtonCustomBlack</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
+
+    <item name="toolbarTheme">@style/ToolbarBlackTransparent</item>
+  </style>
+
+  <style name="AptoideThemeDefaultBlackDark" parent="AppBaseThemeDark">
+    <item name="colorPrimary">@color/black</item>
+    <item name="colorPrimaryDark">@color/black</item>
+    <item name="colorAccent">@color/black</item>
+    <item name="colorButtonNormal">@color/black</item>
+    <item name="customColor">@color/black</item>
+
+    <item name="customButton">@style/WidgetButtonCustomBlack</item>
+    <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
+
+    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="toolbarTheme">@style/ToolbarBlack</item>
+  </style>
 
 </resources>

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,135 +15,156 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 
 /**
  * Created by sithengineer on 28/06/16.
  */
 public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
-	private static final String TAG = DescriptionFragment.class.getSimpleName();
+  private static final String TAG = DescriptionFragment.class.getSimpleName();
 
-	private static final String APP_ID = "app_id";
-	private boolean hasAppId = false;
-	private long appId;
-	private TextView emptyData;
-	private TextView descriptionContainer;
+  private static final String APP_ID = "app_id";
+  private static final String STORE_NAME = "store_name";
+  private static final String STORE_THEME = "store_theme";
+  private boolean hasAppId = false;
+  private long appId;
+  private TextView emptyData;
+  private TextView descriptionContainer;
+  private String storeName;
+  private String storeTheme;
 
-	public static DescriptionFragment newInstance(long appId) {
-		DescriptionFragment fragment = new DescriptionFragment();
-		Bundle args = new Bundle();
-		args.putLong(APP_ID, appId);
-		fragment.setArguments(args);
-		return fragment;
-	}
+  public static DescriptionFragment newInstance(long appId, String storeName, String storeTheme) {
+    DescriptionFragment fragment = new DescriptionFragment();
+    Bundle args = new Bundle();
+    args.putLong(APP_ID, appId);
+    args.putString(STORE_NAME, storeName);
+    args.putString(STORE_THEME, storeTheme);
+    fragment.setArguments(args);
+    return fragment;
+  }
 
-	@Override
-	public void loadExtras(Bundle args) {
-		super.loadExtras(args);
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
 
-		if (args.containsKey(APP_ID)) {
-			appId = args.getLong(APP_ID, -1);
-			hasAppId = true;
-		}
-	}
+    if (args.containsKey(APP_ID)) {
+      appId = args.getLong(APP_ID, -1);
+      hasAppId = true;
+    }
 
-	@Override
-	protected int getViewToShowAfterLoadingId() {
-		return R.id.data_container;
-	}
+    if (args.containsKey(STORE_NAME)) {
+      storeName = args.getString(STORE_NAME);
+    }
 
-	@Override
-	public void load(boolean refresh, Bundle savedInstanceState) {
-		if (hasAppId) {
-			Logger.d(TAG, "App Description should refresh? " + refresh);
-			GetAppRequest.of(appId).execute(getApp -> {
-				setupAppDescription(getApp);
-				setupTitle(getApp);
-				finishLoading();
-			}, refresh);
-		} else {
-			Logger.e(TAG, "App id unavailable");
-			setDataUnavailable();
-		}
-	}
+    if (args.containsKey(STORE_THEME)) {
+      storeTheme = args.getString(STORE_THEME);
+    }
+  }
 
-	@Override
-	public void setupToolbar() {
-		super.setupToolbar();
-		if (toolbar != null) {
-			ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-			bar.setDisplayHomeAsUpEnabled(true);
-		}
-	}
+  @Override protected int getViewToShowAfterLoadingId() {
+    return R.id.data_container;
+  }
 
-	@Override
-	public void bindViews(View view) {
-		super.bindViews(view);
-		emptyData = (TextView) view.findViewById(R.id.empty_data);
-		descriptionContainer = (TextView) view.findViewById(R.id.data_container);
-		setHasOptionsMenu(true);
-	}
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    if (hasAppId) {
+      GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
+          AptoideAccountManager.getAccessToken(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID()).execute(getApp -> {
+        setupAppDescription(getApp);
+        setupTitle(getApp);
+        finishLoading();
+      }, false);
+    } else {
+      Logger.e(TAG, "App id unavailable");
+      setDataUnavailable();
+    }
+  }
 
-	private void setupTitle(GetApp getApp) {
-		try {
-			String appName = getApp.getNodes().getMeta().getData().getName();
-			if (!TextUtils.isEmpty(appName)) {
-				if (toolbar != null) {
-					ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-					bar.setTitle(appName);
-					return;
-				}
-			}
-		} catch (NullPointerException e) {
-			Logger.e(TAG, e);
-		}
-		setDataUnavailable();
-	}
+  @Override public void setupToolbar() {
+    super.setupToolbar();
+    if (toolbar != null) {
+      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+      if (bar != null) {
+        ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+        bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
+            .getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+      }
+    }
+  }
 
-	private void setupAppDescription(GetApp getApp) {
-		try {
-			GetAppMeta.Media media = getApp.getNodes().getMeta().getData().getMedia();
-			if (!TextUtils.isEmpty(media.getDescription())) {
-				descriptionContainer.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-				return;
-			}
-		} catch (NullPointerException e) {
-			Logger.e(TAG, e);
-		}
-		setDataUnavailable();
-	}
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    emptyData = (TextView) view.findViewById(R.id.empty_data);
+    descriptionContainer = (TextView) view.findViewById(R.id.data_container);
+    setHasOptionsMenu(true);
+  }
 
-	private void setDataUnavailable() {
-		emptyData.setVisibility(View.VISIBLE);
-		descriptionContainer.setVisibility(View.GONE);
-	}
+  private void setupTitle(GetApp getApp) {
+    try {
+      String appName = getApp.getNodes().getMeta().getData().getName();
+      if (!TextUtils.isEmpty(appName)) {
+        if (toolbar != null) {
+          ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+          bar.setTitle(appName);
+          return;
+        }
+      }
+    } catch (NullPointerException e) {
+      CrashReports.logException(e);
+      Logger.e(TAG, e);
+    }
+    setDataUnavailable();
+  }
 
-	@Override
-	public int getContentViewId() {
-		return R.layout.fragment_app_view_description;
-	}
+  private void setupAppDescription(GetApp getApp) {
+    try {
+      GetAppMeta.Media media = getApp.getNodes().getMeta().getData().getMedia();
+      if (!TextUtils.isEmpty(media.getDescription())) {
+        descriptionContainer.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
+        return;
+      }
+    } catch (NullPointerException e) {
+      CrashReports.logException(e);
+      Logger.e(TAG, e);
+    }
+    setDataUnavailable();
+  }
 
-	@Override
-	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_empty, menu);
-	}
+  private void setDataUnavailable() {
+    emptyData.setVisibility(View.VISIBLE);
+    descriptionContainer.setVisibility(View.GONE);
+  }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == android.R.id.home) {
-			getActivity().onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+  @Override public int getContentViewId() {
+    return R.layout.fragment_app_view_description;
+  }
+
+  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
 }

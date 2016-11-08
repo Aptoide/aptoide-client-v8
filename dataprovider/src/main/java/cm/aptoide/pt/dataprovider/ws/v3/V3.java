@@ -5,69 +5,130 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import java.util.Map;
-
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
-import cm.aptoide.pt.model.v3.GetApkInfoJson;
+import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import java.io.IOException;
+import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 21/07/16.
  */
-public abstract class V3<U> extends WebService<V3.Interfaces,U> {
+public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
-	protected static final String BASE_HOST = "http://webservices.aptoide.com/webservices/3/";
+  protected static final String BASE_HOST = "http://webservices.aptoide.com/webservices/3/";
+  protected final BaseBody map;
+  private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
+  private boolean accessTokenRetry = false;
 
-	protected V3(String baseHost) {
-		super(Interfaces.class, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), baseHost);
-	}
+  protected V3(String baseHost) {
+    this(baseHost, new BaseBody());
+  }
 
-	interface Interfaces {
+  protected V3(String baseHost, BaseBody baseBody) {
+    super(Interfaces.class,
+        OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+          @Override public String generateUserAgent() {
+            return SecurePreferences.getUserAgent();
+          }
+        }),
+        WebService.getDefaultConverter(), baseHost);
+    this.map = baseBody;
+  }
 
-		@POST("getPushNotifications")
-		@FormUrlEncoded
-		Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap Map<String,String> arg, @Header(RequestCache.BYPASS_HEADER_KEY) boolean
-				bypassCache);
+  @NonNull public static String getErrorMessage(BaseV3Response response) {
+    final StringBuilder builder = new StringBuilder();
+    if (response != null) {
+      for (ErrorResponse error : response.getErrors()) {
+        builder.append(error.msg);
+        builder.append(". ");
+      }
+      if (builder.length() == 0) {
+        builder.append("Server failed with empty error list.");
+      }
+    } else {
+      builder.append("Server returned null response.");
+    }
+    return builder.toString();
+  }
 
-		@POST("addApkFlag")
-		@FormUrlEncoded
-		Observable<GenericResponseV2> addApkFlag(@FieldMap Map<String,String> arg, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+  @Override public Observable<U> observe(boolean bypassCache) {
+    return super.observe(bypassCache).onErrorResumeNext(throwable -> {
+      if (throwable instanceof HttpException) {
+        try {
 
-		@POST("getApkInfo")
-		@FormUrlEncoded
-		Observable<GetApkInfoJson> getApkInfo(@FieldMap Map<String, String> args, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+          GenericResponseV3 genericResponseV3 =
+              (GenericResponseV3) converterFactory.responseBodyConverter(GenericResponseV3.class,
+                  null, null).convert(((HttpException) throwable).response().errorBody());
 
-		@POST("processInAppBilling")
-		@FormUrlEncoded
-		Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(@FieldMap Map<String,String> args);
+          if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
 
-		@POST("processInAppBilling")
-		@FormUrlEncoded
-		Observable<InAppBillingSkuDetailsResponse> getInAppBillingSkuDetails(@FieldMap Map<String,String> args);
+            if (!accessTokenRetry) {
+              accessTokenRetry = true;
+              return DataProvider.invalidateAccessToken()
+                  .flatMap(s -> {
+                    this.map.setAccess_token(s);
+                    return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
+                  });
+            }
+          } else {
+            return Observable.error(
+                new AptoideWsV3Exception(throwable).setBaseResponse(genericResponseV3));
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      return Observable.error(throwable);
+    }).observeOn(AndroidSchedulers.mainThread());
+  }
 
-		@POST("processInAppBilling")
-		@FormUrlEncoded
-		Observable<InAppBillingPurchasesResponse> getInAppBillingPurchases(@FieldMap Map<String,String> args);
+  interface Interfaces {
 
-		@POST("processInAppBilling")
-		@FormUrlEncoded
-		Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap Map<String,String> args);
+    @POST("getPushNotifications") @FormUrlEncoded
+    Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-		@POST("checkProductPayment")
-		@FormUrlEncoded
-		Observable<PaymentResponse> checkProductPayment(@FieldMap Map<String,String> args);
-	}
+    @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
+        @FieldMap BaseBody arg, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("processInAppBilling") @FormUrlEncoded
+    Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(@FieldMap BaseBody args);
+
+    @POST("processInAppBilling") @FormUrlEncoded
+    Observable<InAppBillingSkuDetailsResponse> getInAppBillingSkuDetails(@FieldMap BaseBody args);
+
+    @POST("processInAppBilling") @FormUrlEncoded
+    Observable<InAppBillingPurchasesResponse> getInAppBillingPurchases(@FieldMap BaseBody args);
+
+    @POST("processInAppBilling") @FormUrlEncoded
+    Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
+
+    @POST("checkProductPayment") @FormUrlEncoded Observable<PaymentResponse> checkProductPayment(
+        @FieldMap BaseBody args);
+  }
 }

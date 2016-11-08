@@ -4,73 +4,83 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:paddingBottom="10dp"
-             android:paddingTop="15dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    android:paddingTop="15dp"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
 
     <LinearLayout
+        android:id="@+id/flags_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="5"
+        >
 
-        <LinearLayout
-            android:id="@+id/flags_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:weightSum="5">
-
-            <include
-                layout="@layout/flag_this_app_card_good_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+      <include
+          layout="@layout/flag_this_app_card_good_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          />
 
 
-            <include
-                layout="@layout/flag_this_app_card_need_license_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+      <include
+          layout="@layout/flag_this_app_card_need_license_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          />
 
 
-            <include
-                layout="@layout/flag_this_app_card_fake_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+      <include
+          layout="@layout/flag_this_app_card_fake_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          />
 
 
-            <include
-                layout="@layout/flag_this_app_card_freeze_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+      <include
+          layout="@layout/flag_this_app_card_freeze_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          />
 
 
-            <include
-                layout="@layout/flag_this_app_card_virus_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/btn_flag_this_app"
-                style="?attr/customButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/flag_this_app_button_text"
-                android:textAllCaps="false"/>
-        </FrameLayout>
+      <include
+          layout="@layout/flag_this_app_card_virus_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+      <Button
+          android:id="@+id/btn_flag_this_app"
+          style="?attr/customButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/flag_this_app_button_text"
+          android:textAllCaps="false"
+          />
+    </FrameLayout>
+
+  </LinearLayout>
 </FrameLayout>

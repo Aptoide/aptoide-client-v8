@@ -11,19 +11,20 @@
     android:layout_height="match_parent"
     >
 
-    <include layout="@layout/store_activity"/>
+  <include layout="@layout/store_activity"/>
 
-    <!-- The navigation drawer -->
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="?attr/backgroundMain"
-        android:saveEnabled="true"
-        app:headerLayout="@layout/drawer_header"
-        app:itemTextColor="?attr/tertiaryTextColor"
-        app:menu="@menu/menu_drawer"/>
+  <!-- The navigation drawer -->
+  <android.support.design.widget.NavigationView
+      android:id="@+id/nav_view"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      android:background="?attr/backgroundMain"
+      android:saveEnabled="true"
+      app:headerLayout="@layout/drawer_header"
+      app:itemTextColor="?attr/tertiaryTextColor"
+      app:menu="@menu/menu_drawer"
+      />
 
 
 </android.support.v4.widget.DrawerLayout>

@@ -2,34 +2,39 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize">
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/app_bar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="?android:actionBarSize"
+      >
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"/>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        />
 
-    </android.support.design.widget.AppBarLayout>
+  </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/app_bar_layout"
+      >
+
+    <include layout="@layout/partial_view_incl_no_network"/>
+
+    <include layout="@layout/partial_view_error"/>
+
+    <include layout="@layout/partial_view_progress_bar"/>
+
+    <WebView
+        android:id="@+id/social_fragment_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout">
-
-        <include layout="@layout/partial_view_incl_no_network"/>
-
-        <include layout="@layout/partial_view_error"/>
-
-        <include layout="@layout/partial_view_progress_bar"/>
-
-        <WebView
-            android:id="@+id/social_fragment_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"/>
-    </FrameLayout>
+        android:visibility="gone"
+        />
+  </FrameLayout>
 </RelativeLayout>

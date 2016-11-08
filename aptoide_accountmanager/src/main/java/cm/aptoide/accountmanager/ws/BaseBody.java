@@ -5,14 +5,14 @@
 
 package cm.aptoide.accountmanager.ws;
 
-import java.util.HashMap;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 
 /**
  * Created by neuro on 18-05-2016.
  */
-public class BaseBody extends HashMap<String, String> {
+public class BaseBody extends HashMapNotNull<String, String> {
 
-	public void setAccess_token(String token) {
-		put("access_token", token);
-	}
+  public void setAccess_token(String token) {
+    put("access_token", token);
+  }
 }

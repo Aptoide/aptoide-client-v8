@@ -7,125 +7,151 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_app_download_indicator"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:padding="5dp"
+    android:orientation="horizontal"
+    style="?attr/backgroundCard"
+    >
 
-    <RelativeLayout
-        android:id="@+id/row_app_download_indicator"
-        style="?attr/backgroundCard"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_height="72dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@null"
+        android:src="@android:drawable/sym_def_app_icon"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="2dp"
-        android:padding="5dp">
+        android:layout_weight="2"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        >
 
+      <!--
+          android:textAppearance="?android:attr/textAppearanceMedium"
+      -->
+      <TextView
+          android:id="@+id/app_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="1"
+          tools:text="Aplication Name"
+          android:textSize="@dimen/text_size_medium_large"
+          />
 
-        <ImageView
-            android:id="@+id/app_icon"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@null"
-            android:src="@android:drawable/sym_def_app_icon"/>
+      <RelativeLayout
+          android:id="@+id/download_details_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          >
 
-        <LinearLayout
-            android:layout_width="0dip"
+        <TextView
+            android:id="@+id/speed"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="128kbps"
+            />
+
+        <TextView
+            android:id="@+id/eta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/resume_download"
-            android:layout_toRightOf="@+id/app_icon"
-            android:orientation="vertical">
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/speed"
+            android:layout_toEndOf="@id/speed"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="30min"
+            />
 
-            <TextView
-                android:id="@+id/app_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/eta"
+            android:layout_toEndOf="@id/eta"
+            android:layout_gravity="start"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="100%"
+            />
+      </RelativeLayout>
 
+      <TextView
+          android:id="@+id/app_error"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:gravity="start|center"
+          android:maxLines="1"
+          android:visibility="gone"
+          android:textSize="@dimen/text_size_medium"
+          />
 
-            <RelativeLayout
-                android:id="@+id/download_details_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/speed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:orientation="horizontal"
+      android:gravity="right"
+      >
 
-                <TextView
-                    android:id="@+id/eta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_toLeftOf="@+id/progress"
-                    android:layout_toRightOf="@+id/speed"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+    <!--android:background="?attr/icCancelDrawable"-->
+    <ImageView
+        android:id="@+id/resume_download"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:src="@drawable/media_play"
+        android:contentDescription="@null"
+        android:layout_gravity="center"
+        tools:visibility="gone"
+        />
 
-                <TextView
-                    android:id="@+id/progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="left"/>
-            </RelativeLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_gravity="center"
+        android:background="?attr/separatorColor"
+        />
+    <ImageView
+        android:id="@+id/pause_cancel_button"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:src="?attr/icCancelDrawable"
+        android:contentDescription="@null"
+        />
+  </LinearLayout>
 
-            <TextView
-                android:id="@+id/app_error"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="left|center"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:visibility="gone"/>
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/resume_download"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/view"
-            android:background="@drawable/play"/>
-        <View
-            android:id="@+id/view"
-            android:layout_width="1dip"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="12dp"
-            android:layout_toLeftOf="@+id/pause_cancel_button"
-            android:background="?attr/separatorColor"/>
-
-        <!--android:background="?attr/icCancelDrawable"-->
-        <ImageView
-            android:id="@+id/pause_cancel_button"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:background="?attr/icCancelDrawable"
-            android:contentDescription="@null"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="15dp"/>
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

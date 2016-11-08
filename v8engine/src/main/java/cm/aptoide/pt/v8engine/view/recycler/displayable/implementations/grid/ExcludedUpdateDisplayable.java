@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -15,34 +14,28 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class ExcludedUpdateDisplayable extends DisplayablePojo<Update> {
 
-	private boolean selected;
+  private boolean selected;
 
-	public ExcludedUpdateDisplayable() {
-	}
+  public ExcludedUpdateDisplayable() {
+  }
 
-	public ExcludedUpdateDisplayable(Update pojo) {
-		super(pojo);
-	}
+  public ExcludedUpdateDisplayable(Update pojo) {
+    super(pojo);
+  }
 
-	public ExcludedUpdateDisplayable(Update pojo, boolean fixedPerLineCount) {
-		super(pojo, fixedPerLineCount);
-	}
+  @Override public int getViewLayout() {
+    return R.layout.row_excluded_update;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.EXCLUDED_UPDATE;
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.row_excluded_update;
-	}
+  public boolean isSelected() {
+    return selected;
+  }
 
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
+  public void setSelected(boolean selected) {
+    this.selected = selected;
+  }
 }

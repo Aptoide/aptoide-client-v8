@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.view.View;
-
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewOtherVersionsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -15,32 +14,23 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 /**
  * Created by sithengineer on 04/05/16.
  */
-@Deprecated
-@Displayables({AppViewOtherVersionsDisplayable.class})
+@Deprecated @Displayables({ AppViewOtherVersionsDisplayable.class })
 public class AppViewOtherVersionsWidget extends Widget<AppViewOtherVersionsDisplayable> {
 
-	public AppViewOtherVersionsWidget(View itemView) {
-		super(itemView);
-	}
+  public AppViewOtherVersionsWidget(View itemView) {
+    super(itemView);
+  }
 
-	@Override
-	protected void assignViews(View itemView) {
+  @Override protected void assignViews(View itemView) {
 
-	}
+  }
 
-	@Override
-	public void bindView(AppViewOtherVersionsDisplayable displayable) {
-		final GetApp pojo = displayable.getPojo();
-		// TODO
-	}
+  @Override public void bindView(AppViewOtherVersionsDisplayable displayable) {
+    final GetApp pojo = displayable.getPojo();
+    // TODO
+  }
 
-	@Override
-	public void onViewAttached() {
+  @Override public void unbindView() {
 
-	}
-
-	@Override
-	public void onViewDetached() {
-
-	}
+  }
 }

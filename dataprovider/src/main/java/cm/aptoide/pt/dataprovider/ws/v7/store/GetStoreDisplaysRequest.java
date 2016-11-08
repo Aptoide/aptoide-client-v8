@@ -5,19 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
@@ -27,52 +19,39 @@ import rx.Observable;
 /**
  * Created by neuro on 22-04-2016.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class GetStoreDisplaysRequest extends BaseRequestWithStore<GetStoreDisplays, GetStoreDisplaysRequest.Body> {
+@Data @EqualsAndHashCode(callSuper = true) public class GetStoreDisplaysRequest
+    extends BaseRequestWithStore<GetStoreDisplays, GetStoreDisplaysRequest.Body> {
 
-	private String url;
+  private String url;
 
-	public GetStoreDisplaysRequest(String url, Body body, OkHttpClient httpClient, Converter.Factory converterFactory, String baseHost) {
-		super(body, httpClient, converterFactory, baseHost);
-		this.url = url;
-	}
+  GetStoreDisplaysRequest(String url, Body body, String baseHost) {
+    super(body, baseHost);
+    this.url = url;
+  }
 
-	public static GetStoreDisplaysRequest ofAction(String url) {
-		BaseBodyDecorator decorator = new BaseBodyDecorator(new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()),SecurePreferencesImplementation.getInstance());
+  GetStoreDisplaysRequest(String url, Body body, OkHttpClient httpClient,
+      Converter.Factory converterFactory, String baseHost) {
+    super(body, httpClient, converterFactory, baseHost);
+    this.url = url;
+  }
 
-		V7Url v7Url = new V7Url(url).remove("getStoreDisplays");
-		Long storeId = v7Url.getStoreId();
-		final StoreCredentials store;
-		final Body body;
-		if (storeId != null) {
-			body = new Body(storeId);
-			store = getStore(storeId);
-		} else {
-			String storeName = v7Url.getStoreName();
-			body = new Body(storeName);
-			store = getStore(storeName);
-		}
-		body.setStoreUser(store.getUsername());
-		body.setStorePassSha1(store.getPasswordSha1());
-		return new GetStoreDisplaysRequest(v7Url.get(), (Body) decorator.decorate(body), OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(),
-				BASE_HOST);
-	}
+  public static GetStoreDisplaysRequest ofAction(String url, StoreCredentials storeCredentials,
+      String accessToken, String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-	@Override
-	protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-		return interfaces.getStoreDisplays(url, body, bypassCache);
-	}
+    return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays").get(),
+        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
+  }
 
-	@EqualsAndHashCode(callSuper = true)
-	public static class Body extends BaseBodyWithStore {
+  @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    return interfaces.getStoreDisplays(url, body, bypassCache);
+  }
 
-		public Body(Long storeId) {
-			super(storeId);
-		}
+  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
 
-		public Body(String storeName) {
-			super(storeName);
-		}
-	}
+    public Body(StoreCredentials storeCredentials) {
+      super(storeCredentials);
+    }
+  }
 }

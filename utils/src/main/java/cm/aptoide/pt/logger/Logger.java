@@ -6,86 +6,81 @@
 package cm.aptoide.pt.logger;
 
 import android.util.Log;
-
-import cm.aptoide.pt.utils.BuildConfig;
+import lombok.Setter;
 
 /**
  * Aptoide default logger.
  */
 public class Logger {
 
-	public static final boolean DBG = BuildConfig.DEBUG;
+  @Setter private static boolean DBG;
 
-	/**
-	 * Prints the stacktrace
-	 *
-	 * @param e exception to log.
-	 */
-	public static void printException(Throwable e) {
-		if (DBG && e != null) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * Prints the stacktrace
+   *
+   * @param e exception to log.
+   */
+  public static void printException(Throwable e) {
+    if (e != null) {
+      e.printStackTrace();
+    }
+  }
 
-	public static void i(Object object, String msg) {
-		i(object.getClass().getSimpleName(), msg);
-	}
+  public static void v(String tag, String msg) {
+    if (DBG) {
+      Log.v(tag, msg);
+    }
+  }
 
-	public static void i(Class clz, String msg) {
-		i(clz.getSimpleName(), msg);
-	}
+  public static void v(String tag, String msg, Throwable tr) {
+    if (DBG) {
+      Log.v(tag, msg, tr);
+    }
+  }
 
-	public static void i(String TAG, String msg) {
-		if (DBG) {
-			Log.i(TAG, msg);
-		}
-	}
+  public static void d(String tag, String msg) {
+    if (DBG) {
+      Log.d(tag, msg);
+    }
+  }
 
-	public static void w(String TAG, String msg) {
-		if (DBG) {
-			Log.w(TAG, msg);
-		}
-	}
+  public static void d(String tag, String msg, Throwable tr) {
+    if (DBG) {
+      Log.d(tag, msg, tr);
+    }
+  }
 
-	public static void w(String TAG, String msg, Throwable tr) {
-		if (DBG) {
-			Log.w(TAG, msg, tr);
-		}
-	}
+  public static void i(Object object, String msg) {
+    i(object.getClass().getSimpleName(), msg);
+  }
 
-	public static void d(String TAG, String msg) {
-		if (DBG) {
-			Log.d(TAG, msg);
-		}
-	}
+  public static void i(Class clz, String msg) {
+    i(clz.getSimpleName(), msg);
+  }
 
-	public static void e(String TAG, String msg) {
-		if (DBG) {
-			Log.e(TAG, msg);
-		}
-	}
+  public static void i(String tag, String msg) {
+    if (DBG) {
+      Log.i(tag, msg);
+    }
+  }
 
-	public static void e(String TAG, Throwable tr) {
-		if (DBG) {
-			Log.e(TAG, "", tr);
-		}
-	}
+  public static void w(String TAG, String msg) {
+    Log.w(TAG, msg);
+  }
 
-	public static void e(String TAG, String msg, Throwable tr) {
-		if (DBG) {
-			Log.e(TAG, msg, tr);
-		}
-	}
+  public static void w(String TAG, String msg, Throwable tr) {
+    Log.w(TAG, msg, tr);
+  }
 
-	public static void v(String TAG, String msg) {
-		if (DBG) {
-			Log.v(TAG, msg);
-		}
-	}
+  public static void e(String TAG, String msg) {
+    Log.e(TAG, msg);
+  }
 
-	public static void v(String TAG, String msg, Throwable tr) {
-		if (DBG) {
-			Log.v(TAG, msg, tr);
-		}
-	}
+  public static void e(String TAG, Throwable tr) {
+    Log.e(TAG, "", tr);
+  }
+
+  public static void e(String TAG, String msg, Throwable tr) {
+    Log.e(TAG, msg, tr);
+  }
 }

@@ -5,14 +5,13 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
-import java.util.Map;
-
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -23,28 +22,29 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-	private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
-	protected final IdsRepository idsRepository;
+  private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
 
-	public Aptwords(IdsRepository idsRepository) {
-		super(Interfaces.class, OkHttpClientFactory.getSingletonClient(), WebService.getDefaultConverter(), BASE_URL);
-		this.idsRepository = idsRepository;
-	}
+  Aptwords() {
+    super(Interfaces.class,
+        OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+          @Override public String generateUserAgent() {
+            return SecurePreferences.getUserAgent();
+          }
+        }),
+        WebService.getDefaultConverter(), BASE_URL);
+  }
 
-	protected Aptwords(OkHttpClient httpClient, Converter.Factory factory, IdsRepository idsRepository) {
-		super(Interfaces.class, httpClient, factory, BASE_URL);
-		this.idsRepository = idsRepository;
-	}
+  Aptwords(OkHttpClient httpClient) {
+    super(Interfaces.class, httpClient, WebService.getDefaultConverter(), BASE_URL);
+  }
 
+  interface Interfaces {
 
-	interface Interfaces {
+    @POST("getAds") @FormUrlEncoded Observable<GetAdsResponse> getAds(
+        @FieldMap HashMapNotNull<String, String> arg);
 
-		@POST("getAds")
-		@FormUrlEncoded
-		Observable<GetAdsResponse> getAds(@FieldMap Map<String,String> arg);
-
-		@POST("registerAdReferer")
-		@FormUrlEncoded
-		Observable<RegisterAdRefererRequest.DefaultResponse> load(@FieldMap Map<String,String> arg);
-	}
+    @POST("registerAdReferer") @FormUrlEncoded
+    Observable<RegisterAdRefererRequest.DefaultResponse> load(
+        @FieldMap HashMapNotNull<String, String> arg);
+  }
 }

@@ -12,9 +12,8 @@ import lombok.Data;
  * <p>
  * This class was simply called "Error" in v6
  */
-@Data
-public class ErrorResponse {
+@Data public class ErrorResponse {
 
-	public String code;
-	public String msg;
+  public String code;
+  public String msg;
 }

@@ -5,20 +5,20 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/menu_restore_updates"
-        android:title="@string/restore_updates"
-        app:showAsAction="ifRoom"/>
+  <item
+      android:id="@+id/menu_restore_updates"
+      android:title="@string/restore_updates"
+      app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_select_all"
-        android:title="@string/menu_select_all"
-        app:showAsAction="never"/>
+  <item
+      android:id="@+id/menu_select_all"
+      android:title="@string/menu_select_all"
+      app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/menu_select_none"
-        android:title="@string/menu_select_none"
-        app:showAsAction="never"/>
+  <item
+      android:id="@+id/menu_select_none"
+      android:title="@string/menu_select_none"
+      app:showAsAction="never"/>
 </menu>

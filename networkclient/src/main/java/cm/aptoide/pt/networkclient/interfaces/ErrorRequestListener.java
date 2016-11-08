@@ -10,5 +10,5 @@ package cm.aptoide.pt.networkclient.interfaces;
  */
 public interface ErrorRequestListener {
 
-	void onError(Throwable e);
+  void onError(Throwable e);
 }

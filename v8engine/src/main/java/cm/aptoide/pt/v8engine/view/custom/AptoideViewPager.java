@@ -10,35 +10,33 @@ import android.view.MotionEvent;
  */
 public class AptoideViewPager extends ViewPager {
 
-	private boolean enabled = true;
+  private boolean enabled = true;
 
-	public AptoideViewPager(Context context) {
-		super(context);
-	}
+  public AptoideViewPager(Context context) {
+    super(context);
+  }
 
-	public AptoideViewPager(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+  public AptoideViewPager(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent event) {
-		if (this.enabled) {
-			return super.onInterceptTouchEvent(event);
-		}
+  @Override public boolean onInterceptTouchEvent(MotionEvent event) {
+    if (this.enabled) {
+      return super.onInterceptTouchEvent(event);
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (this.enabled) {
-			return super.onTouchEvent(event);
-		}
+  @Override public boolean onTouchEvent(MotionEvent event) {
+    if (this.enabled) {
+      return super.onTouchEvent(event);
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	public void setPagingEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+  public void setPagingEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
 }

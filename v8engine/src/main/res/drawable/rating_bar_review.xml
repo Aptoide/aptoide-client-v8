@@ -5,13 +5,13 @@
   -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@android:id/background"
-        android:drawable="@drawable/white_star_review"/>
-    <item
-        android:id="@android:id/secondaryProgress"
-        android:drawable="@drawable/white_star_review"/>
-    <item
-        android:id="@android:id/progress"
-        android:drawable="@drawable/yellow_star_review"/>
+  <item
+      android:id="@android:id/background"
+      android:drawable="@drawable/white_star_review"/>
+  <item
+      android:id="@android:id/secondaryProgress"
+      android:drawable="@drawable/white_star_review"/>
+  <item
+      android:id="@android:id/progress"
+      android:drawable="@drawable/yellow_star_review"/>
 </layer-list>

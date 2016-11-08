@@ -1,8 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Type;
+import android.content.Context;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
@@ -12,26 +11,27 @@ import lombok.Getter;
  */
 public class ActiveDownloadsHeaderDisplayable extends Displayable {
 
-	private static final String TAG = ActiveDownloadsHeaderDisplayable.class.getSimpleName();
-	@Getter private String label;
-	@Getter private DownloadServiceHelper downloadManager;
+  private static final String TAG = ActiveDownloadsHeaderDisplayable.class.getSimpleName();
+  @Getter private String label;
+  private InstallManager installManager;
 
-	public ActiveDownloadsHeaderDisplayable() {
-	}
+  public ActiveDownloadsHeaderDisplayable() {
+  }
 
-	public ActiveDownloadsHeaderDisplayable(String label, DownloadServiceHelper downloadManager) {
-		this.label = label;
-		this.downloadManager = downloadManager;
-		Logger.d(TAG, "ActiveDownloadsHeaderDisplayable() called with: " + "label = [" + label + "], downloadManager = [" + downloadManager + "]");
-	}
+  public ActiveDownloadsHeaderDisplayable(String label, InstallManager installManager) {
+    this.label = label;
+    this.installManager = installManager;
+  }
 
-	@Override
-	public Type getType() {
-		return Type.ACTIVE_DOWNLOAD_HEADER;
-	}
+  @Override public int getViewLayout() {
+    return R.layout.active_downloads_header_row;
+  }
 
-	@Override
-	public int getViewLayout() {
-		return R.layout.active_downloads_header_row;
-	}
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
+
+  public void pauseAllDownloads(Context context) {
+    installManager.stopAllInstallations(context);
+  }
 }

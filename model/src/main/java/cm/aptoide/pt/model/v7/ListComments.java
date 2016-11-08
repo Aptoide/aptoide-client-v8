@@ -6,10 +6,11 @@
 package cm.aptoide.pt.model.v7;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by sithengineer on 20/07/16.
  */
-@Data
-public class ListComments extends BaseV7EndlessDatalistResponse<Comment> {
+@EqualsAndHashCode(callSuper = true)
+@Data public class ListComments extends BaseV7EndlessDatalistResponse<Comment> {
 }

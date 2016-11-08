@@ -6,11 +6,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.support.annotation.LayoutRes;
-
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import lombok.Getter;
 
 /**
  * Created by sithengineer on 28/04/16.
@@ -19,21 +19,22 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class GridAppDisplayable extends DisplayablePojo<App> {
 
-	public GridAppDisplayable() {
-	}
+  @Getter private String tag;
 
-	public GridAppDisplayable(App pojo) {
-		super(pojo);
-	}
+  public GridAppDisplayable() {
+  }
 
-	@Override
-	public Type getType() {
-		return Type.APPS_GROUP;
-	}
+  public GridAppDisplayable(App pojo, String tag) {
+    super(pojo);
+    this.tag = tag;
+  }
 
-	@LayoutRes
-	@Override
-	public int getViewLayout() {
-		return R.layout.displayable_grid_app;
-	}
+  @LayoutRes @Override public int getViewLayout() {
+    return R.layout.displayable_grid_app;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(Type.APPS_GROUP.getDefaultPerLineCount(),
+        Type.APPS_GROUP.isFixedPerLineCount());
+  }
 }

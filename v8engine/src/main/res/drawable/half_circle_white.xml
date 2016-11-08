@@ -10,15 +10,15 @@
     android:drawable="@drawable/round_circle_white"
     android:gravity="center"
     >
-    <shape
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:shape="oval">
-        <solid android:color="@color/white"/>
-        <corners
-            android:bottomLeftRadius="16dp"
-            android:bottomRightRadius="16dp"
-            android:topLeftRadius="16dp"
-            android:topRightRadius="16dp"
-            />
-    </shape>
+  <shape
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:shape="oval">
+    <solid android:color="@color/white"/>
+    <corners
+        android:bottomLeftRadius="16dp"
+        android:bottomRightRadius="16dp"
+        android:topLeftRadius="16dp"
+        android:topRightRadius="16dp"
+        />
+  </shape>
 </clip>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified by SithEngineer on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.fragment;
@@ -12,110 +12,123 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.trello.rxlifecycle.components.support.RxFragment;
-
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
-import io.realm.Realm;
+import com.trello.rxlifecycle.components.support.RxFragment;
 import rx.functions.Action0;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class SupportV4BaseFragment extends RxFragment implements UiComponentBasics, PermissionRequest {
+public abstract class SupportV4BaseFragment extends RxFragment
+    implements UiComponentBasics, PermissionRequest {
 
-	private final String TAG = getClass().getSimpleName();
-	protected Realm realm;
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    if (getArguments() != null) {
+      loadExtras(getArguments());
+    }
+    CrashReports.ScreenUtils.getInstance().incrementNumberOfScreens();
+  }
 
-		if (getArguments() != null) {
-			loadExtras(getArguments());
-		}
-	}
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupViews();
+  }
 
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		bindViews(view);
-		setupViews();
-	}
+  @Override public void onDestroy() {
+    super.onDestroy();
+    CrashReports.ScreenUtils.getInstance().decrementNumberOfScreens();
+  }
 
-	@Override
-	public void onDestroyView() {
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    return inflater.inflate(getContentViewId(), container, false);
+  }
 
-		realm.close();
-		realm = null;
+  /**
+   * Called after onCreate. This is where arguments should be loaded.
+   *
+   * @param args {@link #getArguments()}
+   */
+  @Override public void loadExtras(Bundle args) {
+    // optional method
+  }
 
-		super.onDestroyView();
-	}
+  /**
+   * Setup previously binded views.
+   */
+  public abstract void setupViews();
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  @Override public void setupToolbar() {
+    // optional method
+  }
 
-		realm = Database.get();
+  @TargetApi(Build.VERSION_CODES.M)
+  public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(
+          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionRequest.class.getName());
+    }
+  }
 
-		return inflater.inflate(getContentViewId(), container, false);
-	}
+  @TargetApi(Build.VERSION_CODES.M)
+  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
+          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionRequest.class.getName());
+    }
+  }
 
-	/**
-	 * Called after onCreate. This is where arguments should be loaded.
-	 *
-	 * @param args {@link #getArguments()}
-	 */
-	@Override
-	public void loadExtras(Bundle args) {
-		// optional method
-	}
+  @TargetApi(Build.VERSION_CODES.M)
+  public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted,
+          toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionRequest.class.getName());
+    }
+  }
 
-	/**
-	 * Setup previously binded views.
-	 */
-	public abstract void setupViews();
+  @TargetApi(Build.VERSION_CODES.M) public void requestAccessToAccounts(boolean forceShowRationale,
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale,
+          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionRequest.class.getName());
+    }
+  }
 
-	@Override
-	public void setupToolbar() {
-		// optional method
-	}
+  public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionRequest) this.getActivity()).requestDownloadAccess(toRunWhenAccessIsGranted,
+          toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionRequest.class.getName());
+    }
+  }
 
-	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
-		try {
-			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
-		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
-		}
-	}
-
-	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToExternalFileSystem(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0
-			toRunWhenAccessIsDenied) {
-		try {
-			((PermissionRequest) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
-		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
-		}
-	}
-
-	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
-		try {
-			((PermissionRequest) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
-		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
-		}
-	}
-
-	@TargetApi(Build.VERSION_CODES.M)
-	public void requestAccessToAccounts(boolean forceShowRationale, @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
-		try {
-			((PermissionRequest) this.getActivity()).requestAccessToAccounts(forceShowRationale, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
-		} catch (ClassCastException e) {
-			throw new IllegalStateException("Containing activity of this fragment must implement " + PermissionRequest.class.getName());
-		}
-	}
+  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      CrashReports.ScreenUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
+    }
+  }
 }

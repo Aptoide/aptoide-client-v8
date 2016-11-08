@@ -5,64 +5,64 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by marcelobenites on 8/18/16.
  */
-public class Price implements Parcelable {
+public class Price {
 
-	public static final Creator<Price> CREATOR = new Creator<Price>() {
-		@Override
-		public Price createFromParcel(Parcel in) {
-			return new Price(in);
-		}
+  private final double amount;
+  private final String currency;
+  private final double taxRate;
 
-		@Override
-		public Price[] newArray(int size) {
-			return new Price[size];
-		}
-	};
+  public Price(double amount, String currency, double taxRate) {
+    this.amount = amount;
+    this.currency = currency;
+    this.taxRate = taxRate;
+  }
 
-	private final double price;
-	private final String currency;
-	private final double taxRate;
+  public double getAmount() {
+    return amount;
+  }
 
-	public Price(double price, String currency, double taxRate) {
-		this.price = price;
-		this.currency = currency;
-		this.taxRate = taxRate;
-	}
+  public String getCurrency() {
+    return currency;
+  }
 
-	protected Price(Parcel in) {
-		price = in.readDouble();
-		currency = in.readString();
-		taxRate = in.readDouble();
-	}
+  public double getTaxRate() {
+    return taxRate;
+  }
 
-	public double getPrice() {
-		return price;
-	}
+  @Override public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
-	public String getCurrency() {
-		return currency;
-	}
+    final Price price1 = (Price) o;
 
-	public double getTaxRate() {
-		return taxRate;
-	}
+    if (Double.compare(price1.amount, amount) != 0) {
+      return false;
+    }
+    if (Double.compare(price1.taxRate, taxRate) != 0) {
+      return false;
+    }
+    if (!currency.equals(price1.currency)) {
+      return false;
+    }
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+    return true;
+  }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-
-		dest.writeDouble(price);
-		dest.writeString(currency);
-		dest.writeDouble(taxRate);
-	}
+  @Override public int hashCode() {
+    int result;
+    long temp;
+    temp = Double.doubleToLongBits(amount);
+    result = (int) (temp ^ (temp >>> 32));
+    result = 31 * result + currency.hashCode();
+    temp = Double.doubleToLongBits(taxRate);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
+  }
 }

@@ -5,98 +5,58 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PaymentConfirmation implements Parcelable {
+public class PaymentConfirmation {
 
-	public static final Creator<PaymentConfirmation> CREATOR = new Creator<PaymentConfirmation>() {
-		@Override
-		public PaymentConfirmation createFromParcel(Parcel in) {
-			return new PaymentConfirmation(in);
-		}
+  private final String paymentConfirmationId;
+  private final int paymentId;
+  private final Product product;
+  private final Price price;
 
-		@Override
-		public PaymentConfirmation[] newArray(int size) {
-			return new PaymentConfirmation[size];
-		}
-	};
+  public PaymentConfirmation(String paymentConfirmationId, int paymentId, Product product,
+      Price price) {
+    this.paymentConfirmationId = paymentConfirmationId;
+    this.paymentId = paymentId;
+    this.product = product;
+    this.price = price;
+  }
 
-	private final String paymentConfirmationId;
-	private final int paymentId;
-	private final Product product;
-	private final Price price;
+  public Product getProduct() {
+    return product;
+  }
 
-	public PaymentConfirmation(String paymentConfirmationId, int paymentId, Product product, Price price) {
-		this.paymentConfirmationId = paymentConfirmationId;
-		this.paymentId = paymentId;
-		this.product = product;
-		this.price = price;
-	}
+  public String getPaymentConfirmationId() {
+    return paymentConfirmationId;
+  }
 
-	protected PaymentConfirmation(Parcel in) {
-		paymentConfirmationId = in.readString();
-		paymentId = in.readInt();
-		product = in.readParcelable(Product.class.getClassLoader());
-		price = in.readParcelable(Price.class.getClassLoader());
-	}
+  public int getPaymentId() {
+    return paymentId;
+  }
 
-	public Product getProduct() {
-		return product;
-	}
+  public Price getPrice() {
+    return price;
+  }
 
-	public String getPaymentConfirmationId() {
-		return paymentConfirmationId;
-	}
+  @Override public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
-	public int getPaymentId() {
-		return paymentId;
-	}
+    final PaymentConfirmation that = (PaymentConfirmation) o;
 
-	public Price getPrice() {
-		return price;
-	}
+    if (!paymentConfirmationId.equals(that.paymentConfirmationId)) {
+      return false;
+    }
 
-	public static Creator<PaymentConfirmation> getCREATOR() {
-		return CREATOR;
-	}
+    return true;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		final PaymentConfirmation that = (PaymentConfirmation) o;
-
-		if (!paymentConfirmationId.equals(that.paymentConfirmationId)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return paymentConfirmationId.hashCode();
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(paymentConfirmationId);
-		dest.writeInt(paymentId);
-		dest.writeParcelable(product, flags);
-		dest.writeParcelable(price, flags);
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+  @Override public int hashCode() {
+    return paymentConfirmationId.hashCode();
+  }
 }

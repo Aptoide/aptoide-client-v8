@@ -9,84 +9,82 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Locale;
-
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import java.util.Locale;
 
 /**
  * created by SithEngineer
  */
-public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
+public class RowReviewWidget extends Widget<RowReviewDisplayable> {
 
-	//private final EnumStoreTheme theme;
-	//private boolean isCommunity;
-	public ImageView appIcon;
-	public TextView rating;
-	public TextView appName;
-	public ImageView avatar;
-	public TextView reviewer;
-	public TextView reviewBody;
-	public FrameLayout score;
-	
-	public RowReviewWidget(View itemView) {
-		super(itemView);
-	}
+  //private final EnumStoreTheme theme;
+  //private boolean isCommunity;
+  public ImageView appIcon;
+  public TextView rating;
+  public TextView appName;
+  public ImageView avatar;
+  public TextView reviewer;
+  public TextView reviewBody;
+  public FrameLayout score;
 
-	@Override
-	protected void assignViews(View itemView) {
-		appIcon = (ImageView )itemView.findViewById(R.id.app_icon);
-		rating = (TextView )itemView.findViewById(R.id.rating);
-		appName = (TextView )itemView.findViewById(R.id.app_name);
-		avatar = (ImageView )itemView.findViewById(R.id.avatar);
-		reviewer = (TextView )itemView.findViewById(R.id.reviewer);
-		reviewBody = (TextView )itemView.findViewById(R.id.description);
-		score = (FrameLayout )itemView.findViewById(R.id.score);
-	}
+  public RowReviewWidget(View itemView) {
+    super(itemView);
+  }
 
-	@Override
-	public void bindView(RowReviewDisplayable displayable) {
+  @Override protected void assignViews(View itemView) {
+    appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
+    rating = (TextView) itemView.findViewById(R.id.rating);
+    appName = (TextView) itemView.findViewById(R.id.app_name);
+    avatar = (ImageView) itemView.findViewById(R.id.avatar);
+    reviewer = (TextView) itemView.findViewById(R.id.reviewer);
+    reviewBody = (TextView) itemView.findViewById(R.id.description);
+    score = (FrameLayout) itemView.findViewById(R.id.score);
+  }
 
-		FullReview review = displayable.getPojo();
-		GetAppMeta.App app = review.getData().getApp();
+  @Override public void bindView(RowReviewDisplayable displayable) {
 
-		if (app != null) {
-			appName.setText(app.getName());
-			ImageLoader.load(app.getIcon(), appIcon);
-		} else {
-			appName.setVisibility(View.INVISIBLE);
-			appIcon.setVisibility(View.INVISIBLE);
-		}
+    FullReview review = displayable.getPojo();
+    GetAppMeta.App app = review.getData().getApp();
 
-		reviewBody.setText(review.getBody());
-		reviewer.setText(AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, review.getUser().getName()));
+    if (app != null) {
+      appName.setText(app.getName());
+      ImageLoader.load(app.getIcon(), appIcon);
+    } else {
+      appName.setVisibility(View.INVISIBLE);
+      appIcon.setVisibility(View.INVISIBLE);
+    }
 
-		//rating.setText(AptoideUtils.StringUtils.getRoundedValueFromDouble(appItem.rating));
-		rating.setText(String.format(Locale.getDefault(), "%d", (long)review.getStats().getRating()));
-		ImageLoader.load(review.getUser().getAvatar(), avatar);
+    reviewBody.setText(review.getBody());
+    reviewer.setText(
+        AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, review.getUser().getName()));
 
-		//        ReviewViewHolder holder = (ReviewViewHolder) viewHolder;
-//		final ReviewRowItem appItem = (ReviewRowItem) displayable;
-//		final Context context = itemView.getContext();
-//
-//		if(theme != null) {
-//			@ColorInt
-//			int color = context.getResources().getColor(theme.getStoreHeader());
-//			score.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-//		}
+    //rating.setText(AptoideUtils.StringUtils.getRoundedValueFromDouble(appItem.rating));
+    rating.setText(String.format(Locale.getDefault(), "%d", (long) review.getStats().getRating()));
+    ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
+        avatar, R.drawable.layer_1);
 
-		itemView.setOnClickListener(v -> {
-			((FragmentShower) getContext()).pushFragmentV4(RateAndReviewsFragment.newInstance(app.getId(), app.getName(), app.getStore()
-					.getName(), app.getPackageName(), review.getId()));
-		});
+    //        ReviewViewHolder holder = (ReviewViewHolder) viewHolder;
+    //		final ReviewRowItem appItem = (ReviewRowItem) displayable;
+    //		final Context context = itemView.getContext();
+    //
+    //		if(theme != null) {
+    //			@ColorInt
+    //			int color = context.getResources().getColor(theme.getStoreHeader());
+    //			score.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+    //		}
 
-	}
+    itemView.setOnClickListener(v -> {
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
+              app.getPackageName(), review.getId()));
+    });
+  }
 }

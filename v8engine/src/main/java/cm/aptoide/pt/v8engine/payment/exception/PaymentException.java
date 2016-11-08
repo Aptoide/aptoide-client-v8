@@ -5,16 +5,18 @@
 
 package cm.aptoide.pt.v8engine.payment.exception;
 
+import cm.aptoide.pt.utils.BaseException;
+
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PaymentException extends Exception {
-	
-	public PaymentException(String message) {
-		super(message);
-	}
+public class PaymentException extends BaseException {
 
-	public PaymentException(Throwable throwable) {
-		super(throwable);
-	}
+  public PaymentException(String message) {
+    super(message);
+  }
+
+  public PaymentException(Throwable throwable) {
+    super(throwable);
+  }
 }
