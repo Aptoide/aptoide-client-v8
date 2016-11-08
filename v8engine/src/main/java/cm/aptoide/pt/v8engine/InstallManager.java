@@ -58,6 +58,7 @@ public class InstallManager {
   }
 
   public void removeInstallationFile(String md5, Context context) {
+    stopInstallation(context, md5);
     aptoideDownloadManager.removeDownload(md5);
   }
 
@@ -75,7 +76,7 @@ public class InstallManager {
   public Observable<List<Progress<Download>>> getInstallationsAsList() {
     return aptoideDownloadManager.getDownloads()
         .observeOn(Schedulers.io())
-        .flatMap(downloadList -> Observable.from(downloadList)
+        .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(download -> convertToProgress(download))
             .toList());
   }
