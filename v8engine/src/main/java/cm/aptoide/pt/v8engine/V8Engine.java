@@ -53,6 +53,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -68,6 +69,7 @@ public abstract class V8Engine extends DataProvider {
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   private RefWatcher refWatcher;
+  @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
   public static void loadStores() {
 
