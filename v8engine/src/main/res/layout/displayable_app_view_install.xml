@@ -143,6 +143,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/versions_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -169,6 +170,7 @@
 
       <include
           layout="@layout/separator_vertical"
+          android:id="@+id/version_separator_vertical"
           android:layout_width="1dp"
           android:layout_height="match_parent"
           android:layout_marginEnd="14dp"
@@ -178,6 +180,7 @@
           />
 
       <LinearLayout
+          android:id="@+id/latest_version_layout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_marginEnd="10dp"
