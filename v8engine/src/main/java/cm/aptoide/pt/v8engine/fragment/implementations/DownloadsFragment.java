@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/15/16.
@@ -44,7 +43,6 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   private static final String TAG = DownloadsFragment.class.getSimpleName();
   private List<Displayable> activeDisplayablesList = new LinkedList<>();
   private List<Displayable> completedDisplayablesList = new LinkedList<>();
-  private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private List<Progress<Download>> oldDownloadsList;
 
@@ -64,12 +62,12 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    subscriptions = new CompositeSubscription();
     installManager.getInstallationsAsList()
         .observeOn(Schedulers.computation())
         .first()
         .map(downloads -> sortDownloads(downloads))
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(downloads -> updateUi(downloads), Throwable::printStackTrace);
 
     installManager.getInstallationsAsList()
@@ -86,13 +84,6 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     Collections.sort(progressList, (lhs, rhs) -> Long.valueOf(lhs.getRequest().getTimeStamp())
         .compareTo(rhs.getRequest().getTimeStamp()) * -1);
     return progressList;
-  }
-
-  @Override public void onDestroyView() {
-    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
-      subscriptions.clear();
-    }
-    super.onDestroyView();
   }
 
   @Override public int getContentViewId() {
