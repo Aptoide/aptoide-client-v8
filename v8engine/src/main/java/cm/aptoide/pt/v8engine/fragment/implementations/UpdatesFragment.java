@@ -66,54 +66,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    fetchUpdates();
-    fetchInstalled();
-    // FIXME: 26/10/2016 sithengineer doing concurrent calls with the load(...) and reload() methods
-    // TODO: 26/10/2016 sithengineer use ONLY the repositories for updates (1st) and installed (2nd)
-    // the repositories are responsible to decide to hit the network (with cache hit or miss), store
-    // new data and return all the stored data. the chaining of calls to the repositories will solve
-    // all this problems including the swipe-to-refresh.
-  }
-
-  @Override public void reload() {
-    super.reload();
-
-    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
-    UpdateRepository updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
-    storeRepository.count()
-        .first()
-        .flatMap(numberStores -> {
-          if (numberStores <= 0) {
-            return Observable.error(new RepositoryItemNotFoundException("no stores added"));
-          } else {
-            return Observable.just(numberStores);
-          }
-        })
-        .flatMap(numberStores -> updateRepository.getUpdates(true))
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(updates -> {
-          if (updates.size() == 0) {
-            finishLoading();
-            ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
-          } else if (updates.size() == updatesDisplayablesList.size() - 1) {
-            ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
-          }
-        }, throwable -> {
-          if (throwable instanceof RepositoryItemNotFoundException) {
-            ShowMessage.asSnack(getView(), R.string.add_store);
-          } else {
-            Logger.e(TAG, throwable);
-            CrashReports.logException(throwable);
-          }
-          finishLoading();
-        });
-  }
-
-  private void fetchUpdates() {
-    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    updateAccessor.getAllSorted(false)
+    fetchUpdates()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(updates -> {
@@ -141,21 +94,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           Logger.printException(ex);
           CrashReports.logException(ex);
         });
-  }
 
-  private void fetchInstalled() {
-    final UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    final InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.getAllSorted()
-        .flatMap(
-            // hack to make stream of changes complete inside this observable
-            listItems -> Observable.from(listItems)
-                .doOnNext(listItem -> { Logger.v(TAG, "original " + listItem.getPackageName()); })
-                .flatMap(item -> filterUpdates(updateAccessor, item))
-                .doOnNext(listItem -> { Logger.v(TAG, "filter updates " + listItem.getPackageName()); })
-                .filter(item -> !item.isSystemApp())
-                .doOnNext(listItem -> { Logger.v(TAG, "isSystemApp " + listItem.getPackageName()); })
-                .toList()) // filter for installed apps in updates
+    fetchInstalled()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedApps -> {
@@ -173,6 +113,72 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           CrashReports.logException(err);
           finishLoading();
         });
+
+    // FIXME: 26/10/2016 sithengineer doing concurrent calls with the load(...) and reload() methods
+    // TODO: 26/10/2016 sithengineer use ONLY the repositories for updates (1st) and installed (2nd)
+    // the repositories are responsible to decide to hit the network (with cache hit or miss), store
+    // new data and return all the stored data. the chaining of calls to the repositories will solve
+    // all this problems including the swipe-to-refresh.
+  }
+
+  @Override public void reload() {
+    super.reload();
+
+    reloadData()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(updates -> {
+          if (updates.size() == 0) {
+            finishLoading();
+            ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
+          } else if (updates.size() == updatesDisplayablesList.size() - 1) {
+            ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
+          }
+        }, throwable -> {
+          if (throwable instanceof RepositoryItemNotFoundException) {
+            ShowMessage.asSnack(getView(), R.string.add_store);
+          } else {
+            Logger.e(TAG, throwable);
+            CrashReports.logException(throwable);
+          }
+          finishLoading();
+        });
+  }
+
+  private Observable<List<Update>> reloadData() {
+    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
+    UpdateRepository updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+    return  storeRepository.count()
+        .first()
+        .flatMap(numberStores -> {
+          if (numberStores <= 0) {
+            return Observable.error(new RepositoryItemNotFoundException("no stores added"));
+          } else {
+            return Observable.just(numberStores);
+          }
+        })
+        .flatMap(numberStores -> updateRepository.getUpdates(true))
+        .first();
+  }
+
+  private Observable<List<Update>> fetchUpdates() {
+    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    return updateAccessor.getAllSorted(false);
+  }
+
+  private Observable<List<Installed>> fetchInstalled() {
+    final UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    final InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    return installedAccessor.getAllSorted()
+        .flatMap(
+            // hack to make stream of changes complete inside this observable
+            listItems -> Observable.from(listItems)
+                .doOnNext(listItem -> { Logger.v(TAG, "original " + listItem.getPackageName()); })
+                .flatMap(item -> filterUpdates(updateAccessor, item))
+                .doOnNext(listItem -> { Logger.v(TAG, "filter updates " + listItem.getPackageName()); })
+                .filter(item -> !item.isSystemApp())
+                .doOnNext(listItem -> { Logger.v(TAG, "isSystemApp " + listItem.getPackageName()); })
+                .toList()); // filter for installed apps in updates
   }
 
   private Observable<Installed> filterUpdates(UpdateAccessor updateAccessor, Installed item) {
