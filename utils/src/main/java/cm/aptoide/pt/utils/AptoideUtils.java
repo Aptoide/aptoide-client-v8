@@ -788,7 +788,7 @@ public class AptoideUtils {
           (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
       final NetworkInfo info = manager.getActiveNetworkInfo();
 
-      if (info.getTypeName() != null) {
+      if (info != null && info.getTypeName() != null) {
         switch (info.getType()) {
           case TYPE_ETHERNET:
             return "ethernet";

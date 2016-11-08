@@ -406,7 +406,7 @@ import rx.android.schedulers.AndroidSchedulers;
     String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      installManager.removeInstallationFile(getContext(), md5);
+      installManager.removeInstallationFile(md5, getContext());
     });
 
     actionPause.setOnClickListener(view -> {
