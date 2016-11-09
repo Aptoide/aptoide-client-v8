@@ -26,6 +26,18 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  packagingOptions {
+    pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+    pickFirst 'META-INF/DEPENDENCIES.txt'
+    pickFirst 'META-INF/DEPENDENCIES'
+    pickFirst 'META-INF/LICENSE.txt'
+    pickFirst 'META-INF/LICENSE'
+    pickFirst 'META-INF/NOTICE.txt'
+    pickFirst 'META-INF/NOTICE'
+    pickFirst 'META-INF/MANIFEST.MF'
+    pickFirst 'META-INF/LGPL2.1'
+  }
 }
 
 dependencies {
