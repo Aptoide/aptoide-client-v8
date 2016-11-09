@@ -36,33 +36,29 @@ import rx.Observable;
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getUserEmail())
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            if (response.getInAppBillingAvailable().isAvailable()) {
-              return Observable.just(null);
-            } else {
-              return Observable.error(
-                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-            }
-          } else {
-            return Observable.error(
-                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-          }
-        });
+        AptoideAccountManager.getUserEmail()).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        if (response.getInAppBillingAvailable().isAvailable()) {
+          return Observable.just(null);
+        } else {
+          return Observable.error(
+              new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+        }
+      } else {
+        return Observable.error(
+            new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+      }
+    });
   }
 
   public Observable<List<SKU>> getSKUs(int apiVersion, String packageName, List<String> skuList,
       String type) {
-    return getSKUListDetails(apiVersion, packageName, skuList, type).flatMap(details -> {
-      final PaymentService paymentService = details.getPaymentServices().get(0);
-      return Observable.from(details.getPublisherResponse().getDetailList())
-          .map(detail -> new SKU(detail.getProductId(), detail.getType(), detail.getPrice(),
-              paymentService.getCurrency(), (long) (paymentService.getPrice() * 1000000),
-              detail.getTitle(), detail.getDescription()))
-          .toList();
-    });
+    return getSKUListDetails(apiVersion, packageName, skuList, type).flatMap(
+        details -> Observable.from(details.getPublisherResponse().getDetailList())
+            .map(detail -> new SKU(detail.getProductId(), detail.getType(), detail.getPrice(),
+                detail.getCurrency(), (long) (detail.getPriceAmount() * 1000000), detail.getTitle(),
+                detail.getDescription()))
+            .toList());
   }
 
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
