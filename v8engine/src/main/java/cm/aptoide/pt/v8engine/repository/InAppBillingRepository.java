@@ -53,14 +53,12 @@ import rx.Observable;
 
   public Observable<List<SKU>> getSKUs(int apiVersion, String packageName, List<String> skuList,
       String type) {
-    return getSKUListDetails(apiVersion, packageName, skuList, type).flatMap(details -> {
-      final PaymentService paymentService = details.getPaymentServices().get(0);
-      return Observable.from(details.getPublisherResponse().getDetailList())
-          .map(detail -> new SKU(detail.getProductId(), detail.getType(), detail.getPrice(),
-              paymentService.getCurrency(), (long) (paymentService.getPrice() * 1000000),
-              detail.getTitle(), detail.getDescription()))
-          .toList();
-    });
+    return getSKUListDetails(apiVersion, packageName, skuList, type).flatMap(
+        details -> Observable.from(details.getPublisherResponse().getDetailList())
+            .map(detail -> new SKU(detail.getProductId(), detail.getType(), detail.getPrice(),
+                detail.getCurrency(), (long) (detail.getPriceAmount() * 1000000), detail.getTitle(),
+                detail.getDescription()))
+            .toList());
   }
 
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
