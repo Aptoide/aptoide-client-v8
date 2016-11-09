@@ -2,12 +2,15 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import cm.aptoide.pt.aptoidesdk.BuildConfig;
+import cm.aptoide.pt.aptoidesdk.misc.ObjectMapperFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,7 +25,8 @@ public class StoredAdsManager {
 
   private static StoredAdsManager instance;
 
-  private static ObjectMapper objectMapper = new ObjectMapper();
+  private static ObjectMapper objectMapper =
+      ObjectMapperFactory.getInstance().createDefaultObjectMapper();
   private static String ADS_REFERRERS_KEY = "AptoideSdkAdsReferrers";
   private static double AD_EXPIRATION_IN_MILLIS = 5 * 60 * 1000;
   private SharedPreferences sharedPreferences;
@@ -119,5 +123,25 @@ public class StoredAdsManager {
     }
 
     return null;
+  }
+
+  public void reload() {
+    if (!BuildConfig.DEBUG) {
+      throw new RuntimeException("reload() not allowed in production!");
+    }
+    load();
+  }
+
+  public int size() {
+    return ads.size();
+  }
+
+  public Collection<Ad> getAll() {
+    return ads.values();
+  }
+
+  public void clear() {
+    ads.clear();
+    save();
   }
 }
