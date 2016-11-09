@@ -1,13 +1,16 @@
 package cm.aptoide.pt.aptoidesdk.ads;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 24-10-2016.
  */
-@Accessors(chain = true) public class Ad {
+@EqualsAndHashCode @Accessors(chain = true) public class Ad {
   final long timestamp;
   final long id;
   final Clicks clicks;
@@ -15,7 +18,9 @@ import lombok.experimental.Accessors;
   final Data data;
   String referrer;
 
-  public Ad(long timestamp, long id, Clicks clicks, Network network, Data data) {
+  @JsonCreator public Ad(@JsonProperty("timestamp") long timestamp, @JsonProperty("id") long id,
+      @JsonProperty("clicks") Clicks clicks, @JsonProperty("network") Network network,
+      @JsonProperty("data") Data data) {
     this.timestamp = timestamp;
     this.id = id;
     this.clicks = clicks;
@@ -33,22 +38,29 @@ import lombok.experimental.Accessors;
     return new Ad(System.currentTimeMillis(), adId, clicks, network, data);
   }
 
-  public String getName() {
+  @JsonIgnore public String getName() {
     return data.name;
   }
 
-  public String getIconPath() {
+  @JsonIgnore public String getIconPath() {
     return data.icon;
   }
 
-  public long getSize() {
+  @JsonIgnore public long getSize() {
     return data.size;
   }
 
-  @AllArgsConstructor static class Network {
+  @EqualsAndHashCode static class Network {
     final int id;
     final String clickUrl;
     final String impressionUrl;
+
+    public Network(@JsonProperty("id") int id, @JsonProperty("clickUrl") String clickUrl,
+        @JsonProperty("impressionUrl") String impressionUrl) {
+      this.id = id;
+      this.clickUrl = clickUrl;
+      this.impressionUrl = impressionUrl;
+    }
 
     public static Network fromGetAds(GetAdsResponse.Ad ad) {
       int adId = ad.getPartner().getInfo().getId();
@@ -59,10 +71,18 @@ import lombok.experimental.Accessors;
     }
   }
 
-  @AllArgsConstructor static class Clicks {
+  @EqualsAndHashCode static class Clicks {
     final String cpcUrl;
     final String cpiUrl;
     final String cpdUrl;
+
+    @JsonCreator
+    public Clicks(@JsonProperty("cpcUrl") String cpcUrl, @JsonProperty("cpiUrl") String cpiUrl,
+        @JsonProperty("cpdUrl") String cpdUrl) {
+      this.cpcUrl = cpcUrl;
+      this.cpiUrl = cpiUrl;
+      this.cpdUrl = cpdUrl;
+    }
 
     public static Clicks fromGetAds(GetAdsResponse.Ad ad) {
       String cpcUrl = ad.getInfo().getCpcUrl();
@@ -73,12 +93,23 @@ import lombok.experimental.Accessors;
     }
   }
 
-  @AllArgsConstructor static class Data {
+  @EqualsAndHashCode static class Data {
     final long appId;
     final String packageName;
     final String name;
     final String icon;
     final long size;
+
+    @JsonCreator
+    public Data(@JsonProperty("appId") long appId, @JsonProperty("packageName") String packageName,
+        @JsonProperty("name") String name, @JsonProperty("icon") String icon,
+        @JsonProperty("size") long size) {
+      this.appId = appId;
+      this.packageName = packageName;
+      this.name = name;
+      this.icon = icon;
+      this.size = size;
+    }
 
     public static Data fromGetAds(GetAdsResponse.Ad ad) {
       GetAdsResponse.Data data = ad.getData();
