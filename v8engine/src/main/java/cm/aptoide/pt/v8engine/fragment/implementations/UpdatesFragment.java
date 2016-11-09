@@ -8,6 +8,12 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.trello.rxlifecycle.FragmentEvent;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -35,9 +41,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Ins
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
-import java.util.LinkedList;
-import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -173,11 +176,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         .flatMap(
             // hack to make stream of changes complete inside this observable
             listItems -> Observable.from(listItems)
-                .doOnNext(listItem -> { Logger.v(TAG, "original " + listItem.getPackageName()); })
                 .flatMap(item -> filterUpdates(updateAccessor, item))
-                .doOnNext(listItem -> { Logger.v(TAG, "filter updates " + listItem.getPackageName()); })
                 .filter(item -> !item.isSystemApp())
-                .doOnNext(listItem -> { Logger.v(TAG, "isSystemApp " + listItem.getPackageName()); })
                 .toList()); // filter for installed apps in updates
   }
 
