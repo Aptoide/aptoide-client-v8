@@ -14,6 +14,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,33 +36,32 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
 
     List<Review> reviews = listFullReviews.getDatalist().getList();
     List<Displayable> displayables = new LinkedList<>();
-    final String aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+    final String aptoideClientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID();
 
-    Observable.from(reviews).flatMap(
-        review ->
-          ListCommentsRequest.of( // fetch the list of comments for each review
-              review.getComments().getView(),
-              review.getId(),
-              3,
-              fragment.storeName,
-              StoreUtils.getStoreCredentials(fragment.storeName),
-              AptoideAccountManager.getAccessToken(),
-              AptoideAccountManager.getUserEmail(),
-              aptoideClientUuid
-          ).observe().subscribeOn(Schedulers.io()).map( // parallel I/O split point
-              listComments -> {
-                review.setCommentList(listComments);
-                return review;
-              }
-          )
-    ).toList().observeOn(AndroidSchedulers.mainThread()).subscribe(reviewList->{
-      // parallel I/O merge point
-      addRateAndReviewDisplayables(reviews, displayables);
-    }, err -> {
-      CrashReports.logException(err);
-      Logger.e(TAG, err);
-    });
+    Observable.from(reviews)
+        .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review
+            review.getComments().getView(), review.getId(), 3, fragment.storeName,
+            StoreUtils.getStoreCredentials(fragment.storeName),
+            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+            aptoideClientUuid)
+            .observe()
+            .subscribeOn(Schedulers.io()) // parallel I/O split point
+            .map(
+                listComments -> {
+                  review.setCommentList(listComments);
+                  return review;
+                }))
+        .toList() // parallel I/O merge point
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(fragment.bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(reviewList -> {
+          addRateAndReviewDisplayables(reviews, displayables);
+        }, err -> {
+          CrashReports.logException(err);
+          Logger.e(TAG, err);
+        });
   }
 
   private void addRateAndReviewDisplayables(List<Review> reviews, List<Displayable> displayables) {
