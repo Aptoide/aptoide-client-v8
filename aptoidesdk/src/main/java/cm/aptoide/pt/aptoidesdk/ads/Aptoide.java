@@ -7,9 +7,9 @@ import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.aptoidesdk.parser.Parsers;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
+import cm.aptoide.pt.aptoidesdk.proxys.GetAppProxy;
 import cm.aptoide.pt.aptoidesdk.proxys.ListSearchAppsProxy;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -30,6 +30,7 @@ public class Aptoide {
 
   private static final GetAdsProxy getAdsProxy = new GetAdsProxy();
   private static final ListSearchAppsProxy listSearchAppsProxy = new ListSearchAppsProxy();
+  private static final GetAppProxy getAppProxy = new GetAppProxy();
   private static String aptoideClientUUID;
   private static String oemid;
   private static String MISSED_INTEGRATION_MESSAGE =
@@ -46,7 +47,7 @@ public class Aptoide {
     return getAppObservable(searchResult.getId()).toBlocking().first();
   }
 
-  public static Observable<App> getAppObservable(Ad ad) {
+  private static Observable<App> getAppObservable(Ad ad) {
     return getAppObservable(ad.data.appId).map(app -> {
       handleAds(ad).subscribe(t -> {
       }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
@@ -69,9 +70,9 @@ public class Aptoide {
   }
 
   private static Observable<App> getAppObservable(String packageName, String storeName) {
-    return GetAppRequest.of(packageName, storeName, null, aptoideClientUUID)
-        .observe()
-        .map(App::fromGetApp);
+    return getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
+        .map(App::fromGetApp)
+        .onErrorReturn(throwable -> null);
   }
 
   public static App getApp(long appId) {
@@ -79,7 +80,9 @@ public class Aptoide {
   }
 
   private static Observable<App> getAppObservable(long appId) {
-    return GetAppRequest.of(appId, null, aptoideClientUUID).observe().map(App::fromGetApp);
+    return getAppProxy.getApp(appId, aptoideClientUUID)
+        .map(App::fromGetApp)
+        .onErrorReturn(throwable -> null);
   }
 
   public static Context getContext() {
