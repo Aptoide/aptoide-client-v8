@@ -39,7 +39,7 @@ android {
   publishNonDefault true
 
   productFlavors {
-    dev
+    internal
     prod
   }
 
@@ -81,8 +81,8 @@ dependencies {
   debugCompile project(path: ':database', configuration: 'debug')
   releaseCompile project(path: ':database', configuration: 'release')
 
-  devCompile project(path: ':dataprovider', configuration: 'devDebug')
-  devCompile project(path: ':aptoide_accountmanager', configuration: 'devDebug')
+  internalCompile project(path: ':dataprovider', configuration: 'internalDebug')
+  internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalDebug')
 
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')

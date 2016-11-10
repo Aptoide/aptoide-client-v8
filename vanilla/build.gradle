@@ -87,7 +87,7 @@ android {
 
   productFlavors {
 
-    dev {
+    internal {
       minSdkVersion 21
 
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
@@ -103,7 +103,7 @@ android {
                               currentApplicationId       : "cm.aptoide.pt.internal"]
     }
 
-    nightly {
+    dev {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
 
@@ -183,9 +183,9 @@ android {
 
 dependencies {
 
-  nightlyCompile project(path: ':v8engine', configuration: 'prodRelease')
+  devCompile project(path: ':v8engine', configuration: 'prodRelease')
   prodCompile project(path: ':v8engine', configuration: 'prodRelease')
-  devCompile project(path: ':v8engine', configuration: 'devDebug')
+  internalCompile project(path: ':v8engine', configuration: 'internalDebug')
 
   // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"

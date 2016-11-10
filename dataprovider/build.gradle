@@ -26,7 +26,7 @@ android {
   publishNonDefault true
 
   productFlavors {
-    dev {
+    internal {
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SCHEME + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_HOST + "\""
     }

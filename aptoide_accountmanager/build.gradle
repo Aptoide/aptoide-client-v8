@@ -29,7 +29,7 @@ android {
   publishNonDefault true
 
   productFlavors {
-    dev
+    internal
     prod
   }
 
@@ -69,7 +69,7 @@ dependencies {
   debugCompile project(path: ':utilsdesign', configuration: 'debug')
   releaseCompile project(path: ':utilsdesign', configuration: 'release')
 
-  devCompile project(path: ':dataprovider', configuration: 'devDebug')
+  internalCompile project(path: ':dataprovider', configuration: 'internalDebug')
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
 
   //
