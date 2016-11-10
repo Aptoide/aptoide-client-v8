@@ -35,7 +35,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static cm.aptoide.pt.dataprovider.util.DataproviderUtils.knock;
@@ -277,14 +276,12 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
     return ad != null && ad.network != null && ad.network.impressionUrl != null;
   }
 
-  static Observable<List<Ad>> parseAds(Observable<GetAdsResponse> getAdsResponseObservable) {
-    return getAdsResponseObservable.flatMap(getAdsResponse -> {
-      LinkedList<Ad> ads = new LinkedList<>();
-      for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
-        ads.add(Ad.from(ad));
-      }
+  static List<Ad> parse(GetAdsResponse getAdsResponse) {
+    LinkedList<Ad> ads = new LinkedList<>();
+    for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
+      ads.add(Ad.from(ad));
+    }
 
-      return Observable.from(ads).toList();
-    }).onErrorReturn(throwable -> new LinkedList<>());
+    return ads;
   }
 }

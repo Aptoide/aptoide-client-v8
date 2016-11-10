@@ -117,25 +117,33 @@ public class Aptoide {
   }
 
   public static List<Ad> getAds(int limit) {
-    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, aptoideClientUUID))
+    return getAdsProxy.getAds(limit, aptoideClientUUID)
+        .map(ReferrerUtils::parse)
+        .onErrorReturn(throwable -> new LinkedList<>())
         .toBlocking()
         .first();
   }
 
   public static List<Ad> getAds(int limit, boolean mature) {
-    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, mature, aptoideClientUUID))
+    return getAdsProxy.getAds(limit, mature, aptoideClientUUID)
+        .map(ReferrerUtils::parse)
+        .onErrorReturn(throwable -> new LinkedList<>())
         .toBlocking()
         .first();
   }
 
   public static List<Ad> getAds(int limit, List<String> keyword) {
-    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, aptoideClientUUID, keyword))
+    return getAdsProxy.getAds(limit, aptoideClientUUID, keyword)
+        .map(ReferrerUtils::parse)
+        .onErrorReturn(throwable -> new LinkedList<>())
         .toBlocking()
         .first();
   }
 
   public static List<Ad> getAds(int limit, List<String> keyword, boolean mature) {
-    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, mature, aptoideClientUUID, keyword))
+    return getAdsProxy.getAds(limit, mature, aptoideClientUUID, keyword)
+        .map(ReferrerUtils::parse)
+        .onErrorReturn(throwable -> new LinkedList<>())
         .toBlocking()
         .first();
   }
