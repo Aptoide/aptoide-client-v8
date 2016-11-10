@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 09/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
+package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -33,8 +33,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.List;
@@ -142,7 +140,7 @@ import java.util.Locale;
   }
 
   private void showCommentPopup(final long reviewId, String appName,
-      RateAndReviewsFragment.CommentAdder commentAdder) {
+      CommentAdder commentAdder) {
     final Context ctx = getContext();
     final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_comment_on_review, null);
 
@@ -201,7 +199,7 @@ import java.util.Locale;
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit,
-      RateAndReviewsFragment.CommentAdder commentAdder) {
+      CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
         AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
