@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import cm.aptoide.pt.model.v7.timeline.Feature;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -41,7 +42,7 @@ import lombok.Getter;
       appName = feature.getApps().get(0).getName();
       appId = feature.getApps().get(0).getId();
     }
-    return new FeatureDisplayable(R.mipmap.ic_launcher,
+    return new FeatureDisplayable(Application.getConfiguration().getIcon(),
         R.string.fragment_social_timeline_aptoide_team, feature.getThumbnailUrl(), feature.getUrl(),
         appId, appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
   }
