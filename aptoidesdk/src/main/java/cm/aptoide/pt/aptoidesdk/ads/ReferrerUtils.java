@@ -29,11 +29,13 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static cm.aptoide.pt.dataprovider.util.DataproviderUtils.knock;
@@ -237,7 +239,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
     return referrer;
   }
 
-  public static void broadcastReferrer(String packageName, String referrer) {
+  static void broadcastReferrer(String packageName, String referrer) {
     Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
     i.setPackage(packageName);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
@@ -249,23 +251,23 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }
 
-  public static void knockCpc(Ad minimalAd) {
+  static void knockCpc(Ad minimalAd) {
     // TODO: 28-07-2016 Baikova clicked on ad.
     knock(minimalAd.clicks.cpcUrl);
   }
 
-  public static void knockCpd(Ad minimalAd) {
+  static void knockCpd(Ad minimalAd) {
     // TODO: 28-07-2016 Baikova clicked on download button.
     knock(minimalAd.clicks.cpdUrl);
   }
 
-  public static void knockCpi(Ad minimalAd) {
+  static void knockCpi(Ad minimalAd) {
     // TODO: 28-07-2016 Baikova ad installed.
     knock(minimalAd.clicks.cpiUrl);
   }
 
   // FIXME: 29-07-2016 neuro so wrong...
-  public static void knockImpression(Ad ad) {
+  static void knockImpression(Ad ad) {
     if (isImpressionUrlPresent(ad)) {
       knock(ad.network.impressionUrl);
     }
@@ -273,5 +275,16 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
 
   private static boolean isImpressionUrlPresent(Ad ad) {
     return ad != null && ad.network != null && ad.network.impressionUrl != null;
+  }
+
+  static Observable<List<Ad>> parseAds(Observable<GetAdsResponse> getAdsResponseObservable) {
+    return getAdsResponseObservable.flatMap(getAdsResponse -> {
+      LinkedList<Ad> ads = new LinkedList<>();
+      for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
+        ads.add(Ad.from(ad));
+      }
+
+      return Observable.from(ads).toList();
+    }).onErrorReturn(throwable -> new LinkedList<>());
   }
 }

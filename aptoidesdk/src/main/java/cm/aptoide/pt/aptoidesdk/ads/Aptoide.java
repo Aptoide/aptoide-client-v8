@@ -2,6 +2,7 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
@@ -13,8 +14,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
-import java.util.concurrent.Callable;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
@@ -44,19 +45,21 @@ public class Aptoide {
   }
 
   public static Observable<App> getAppObservable(Ad ad) {
-    return getAppObservable(ad.data.appId).map(app -> {
-      Observable.fromCallable(handleAds(ad)).subscribeOn(Schedulers.io()).subscribe(t -> {
+    return getAppObservable(ad.data.appId).observeOn(AndroidSchedulers.mainThread()).map(app -> {
+      handleAds(ad).subscribe(t -> {
       }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
       return app;
     });
   }
 
-  @NonNull private static Callable<Object> handleAds(Ad ad) {
-    return () -> {
+  @NonNull private static Observable<Object> handleAds(Ad ad) {
+    return Observable.fromCallable(() -> {
       ReferrerUtils.knockCpc(ad);
-      ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false);
-      return null;
-    };
+      return new Object();
+    })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(o -> ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false));
   }
 
   public static App getApp(String packageName, String storeName) {
@@ -100,7 +103,9 @@ public class Aptoide {
     Aptoide.oemid = oemid;
     Aptoide.aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
-        context).getAptoideClientUUID();
+            context).getAptoideClientUUID();
+
+    Logger.setDBG(BuildConfig.DEBUG);
   }
 
   private static void setUserAgent() {
@@ -115,8 +120,9 @@ public class Aptoide {
   }
 
   public static List<Ad> getAds(int limit, boolean mature) {
-    getAdsProxy.getAds(limit, mature, aptoideClientUUID);
-    return null;
+    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, mature, aptoideClientUUID))
+        .toBlocking()
+        .first();
   }
 
   public static List<Ad> getAds(int limit, List<String> keyword) {
