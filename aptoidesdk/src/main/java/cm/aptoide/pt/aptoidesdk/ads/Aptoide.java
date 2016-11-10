@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
+import cm.aptoide.pt.aptoidesdk.parser.Parsers;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
 import cm.aptoide.pt.aptoidesdk.proxys.ListSearchAppsProxy;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -13,6 +14,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,7 +47,7 @@ public class Aptoide {
   }
 
   public static Observable<App> getAppObservable(Ad ad) {
-    return getAppObservable(ad.data.appId).observeOn(AndroidSchedulers.mainThread()).map(app -> {
+    return getAppObservable(ad.data.appId).map(app -> {
       handleAds(ad).subscribe(t -> {
       }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
       return app;
@@ -139,10 +141,18 @@ public class Aptoide {
   }
 
   public static List<SearchResult> searchApps(String query) {
-    return listSearchAppsProxy.search(query, aptoideClientUUID);
+    return listSearchAppsProxy.search(query, aptoideClientUUID)
+        .map(Parsers::parse)
+        .onErrorReturn(throwable -> new LinkedList<>())
+        .toBlocking()
+        .first();
   }
 
   public static List<SearchResult> searchApps(String query, String storeName) {
-    return listSearchAppsProxy.search(query, storeName, aptoideClientUUID);
+    return listSearchAppsProxy.search(query, storeName, aptoideClientUUID)
+        .map(Parsers::parse)
+        .onErrorReturn(throwable -> new LinkedList<>())
+        .toBlocking()
+        .first();
   }
 }

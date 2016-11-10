@@ -27,7 +27,7 @@ import lombok.Data;
     this.downloads = downloads;
   }
 
-  public static SearchResult fromSearchAppsApp(ListSearchApps.SearchAppsApp searchAppsApp) {
+  public static SearchResult from(ListSearchApps.SearchAppsApp searchAppsApp) {
 
     long id = searchAppsApp.getId();
     String name = searchAppsApp.getName();
