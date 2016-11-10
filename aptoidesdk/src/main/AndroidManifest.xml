@@ -7,6 +7,14 @@
       android:supportsRtl="true"
       >
 
+    <receiver android:name=".ads.SdkInstalledBroadcastReceiver">
+      <intent-filter android:priority="999">
+        <action android:name="android.intent.action.PACKAGE_ADDED"/>
+
+        <data android:scheme="package"/>
+      </intent-filter>
+    </receiver>
+
   </application>
 
 </manifest>

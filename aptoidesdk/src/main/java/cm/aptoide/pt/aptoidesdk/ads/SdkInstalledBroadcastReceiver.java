@@ -22,13 +22,19 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
     String action = intent.getAction();
     String packageName = intent.getData().getEncodedSchemeSpecificPart();
 
+    Logger.d(TAG,
+        String.format("SdkInstalledBroadcastReceiver invoked with action %s for packageName %s.",
+            action, packageName));
+
     switch (action) {
       case Intent.ACTION_PACKAGE_ADDED:
         checkAndBroadcastReferrer(packageName);
         break;
       case Intent.ACTION_PACKAGE_REPLACED:
+        // Not listening yet
         break;
       case Intent.ACTION_PACKAGE_REMOVED:
+        // Not listening yet
         break;
     }
   }
