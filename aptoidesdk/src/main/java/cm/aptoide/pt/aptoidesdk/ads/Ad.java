@@ -4,7 +4,9 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -50,17 +52,11 @@ import lombok.experimental.Accessors;
     return data.size;
   }
 
-  @EqualsAndHashCode static class Network {
-    final int id;
-    final String clickUrl;
-    final String impressionUrl;
-
-    public Network(@JsonProperty("id") int id, @JsonProperty("clickUrl") String clickUrl,
-        @JsonProperty("impressionUrl") String impressionUrl) {
-      this.id = id;
-      this.clickUrl = clickUrl;
-      this.impressionUrl = impressionUrl;
-    }
+  @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode @lombok.Data @Accessors(chain = true)
+  static class Network {
+    int id;
+    String clickUrl;
+    String impressionUrl;
 
     public static Network fromGetAds(GetAdsResponse.Ad ad) {
       int adId = ad.getPartner().getInfo().getId();
