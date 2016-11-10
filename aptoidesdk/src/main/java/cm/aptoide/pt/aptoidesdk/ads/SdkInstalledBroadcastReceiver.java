@@ -41,10 +41,11 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
       ReferrerUtils.knockCpi(ad);
     } else {
       GetAdsRequest.ofSecondInstall(packageName,
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), Aptoide.getContext())
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              RxAptoide.getContext())
               .getAptoideClientUUID(),
-          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()),
-          Aptoide.getOemid())
+          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+          RxAptoide.getOemid())
           .observe()
           .map(getAdsResponse -> Ad.from(getAdsResponse.getAds().get(0)))
           .observeOn(AndroidSchedulers.mainThread())
@@ -56,6 +57,6 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
   }
 
   private Ad getAndRemoveStoredAd(String packageName) {
-    return StoredAdsManager.getInstance(Aptoide.getContext()).removeAd(packageName);
+    return StoredAdsManager.getInstance(RxAptoide.getContext()).removeAd(packageName);
   }
 }

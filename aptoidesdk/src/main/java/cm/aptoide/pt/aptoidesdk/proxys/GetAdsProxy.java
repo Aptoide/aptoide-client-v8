@@ -1,6 +1,6 @@
 package cm.aptoide.pt.aptoidesdk.proxys;
 
-import cm.aptoide.pt.aptoidesdk.ads.Aptoide;
+import cm.aptoide.pt.aptoidesdk.ads.RxAptoide;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -19,29 +19,29 @@ public class GetAdsProxy {
 
   public Observable<GetAdsResponse> getAds(int limit, boolean mature, String aptoideClientUUID) {
     return GetAdsRequest.of(ADS_LOCATION, DEFAULT_KEYWORD, limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()),
-        Aptoide.getOemid()).observe();
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        RxAptoide.getOemid()).observe();
   }
 
   public Observable<GetAdsResponse> getAds(int limit, String aptoideClientUUID,
       List<String> keywords) {
     return GetAdsRequest.of(ADS_LOCATION,
         AptoideUtils.StringU.join(keywords, ",") + "," + "__null__", limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()),
-        Aptoide.getOemid()).observe();
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        RxAptoide.getOemid()).observe();
   }
 
   public Observable<GetAdsResponse> getAds(int limit, boolean mature, String aptoideClientUUID,
       List<String> keywords) {
     return GetAdsRequest.of(ADS_LOCATION,
         AptoideUtils.StringU.join(keywords, ",") + "," + "__null__", limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()),
-        Aptoide.getOemid()).observe();
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        RxAptoide.getOemid()).observe();
   }
 
   public Observable<GetAdsResponse> getAds(int limit, String aptoideClientUUID) {
     return GetAdsRequest.of(ADS_LOCATION, DEFAULT_KEYWORD, limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(Aptoide.getContext()),
-        Aptoide.getOemid()).observe();
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        RxAptoide.getOemid()).observe();
   }
 }

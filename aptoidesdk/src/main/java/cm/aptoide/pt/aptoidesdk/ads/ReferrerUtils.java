@@ -128,7 +128,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
         }
 
         private void saveAd(Ad ad) {
-          StoredAdsManager.getInstance(Aptoide.getContext()).addAd(ad);
+          StoredAdsManager.getInstance(RxAptoide.getContext()).addAd(ad);
         }
 
         @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -172,7 +172,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
                       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
                           context).getAptoideClientUUID(),
                       DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context),
-                      Aptoide.getOemid())
+                      RxAptoide.getOemid())
                       .observe()
                       .filter((getAdsResponse1) -> {
                         Boolean hasAds = hasAds(getAdsResponse1);
