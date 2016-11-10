@@ -9,24 +9,33 @@ import lombok.Data;
 @Data
 public class App {
 
-  private long id;
-  private String name;
-  private String packageName;
-  private String iconPath;
-  private String featuredGraphicPath;
+  private final long id;
+  private final String name;
+  private final String packageName;
+  private final String iconPath;
+  private final String featuredGraphicPath;
 
-  private int vername;
-  private String vercode;
+  private final int vercode;
+  private final String vername;
 
-  private Store store;
-  private File file;
+  private final Store store;
+  private final File file;
 
   public static App fromGetApp(GetApp getApp) {
-    App app = new App();
 
-    // TODO: 04-11-2016 neuro 
-    app.name = getApp.getNodes().getMeta().getData().getName();
+    long id = getApp.getNodes().getMeta().getData().getId();
+    String name = getApp.getNodes().getMeta().getData().getName();
+    String packageName = getApp.getNodes().getMeta().getData().getPackageName();
+    String iconPath = getApp.getNodes().getMeta().getData().getIcon();
+    String featuredGraphicPath = getApp.getNodes().getMeta().getData().getGraphic();
 
-    return app;
+    int vercode = getApp.getNodes().getMeta().getData().getFile().getVercode();
+    String vername = getApp.getNodes().getMeta().getData().getFile().getVername();
+
+    Store store = Store.from(getApp.getNodes().getMeta().getData().getStore());
+    File file = File.from(getApp.getNodes().getMeta().getData().getFile());
+
+    return new App(id, name, packageName, iconPath, featuredGraphicPath, vercode, vername, store,
+        file);
   }
 }

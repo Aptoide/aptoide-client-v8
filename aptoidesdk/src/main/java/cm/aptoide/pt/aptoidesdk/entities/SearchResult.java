@@ -8,13 +8,13 @@ import lombok.Data;
  */
 @Data public class SearchResult {
 
-  private long id;
-  private String name;
-  private String packageName;
-  private long size;
-  private String iconPath;
-  private String storeName;
-  private long downloads;
+  private final long id;
+  private final String name;
+  private final String packageName;
+  private final long size;
+  private final String iconPath;
+  private final String storeName;
+  private final long downloads;
 
   public SearchResult(long id, String name, String packageName, long size, String iconPath,
       String storeName, long downloads) {
