@@ -35,7 +35,11 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, String accessToken,
       String email, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    List<String> stores = Collections.singletonList(storeName);
+
+    List<String> stores = null;
+    if (storeName != null) {
+      stores = Collections.singletonList(storeName);
+    }
 
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
