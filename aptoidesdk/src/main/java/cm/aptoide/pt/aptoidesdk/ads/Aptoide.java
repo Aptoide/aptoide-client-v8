@@ -115,8 +115,9 @@ public class Aptoide {
   }
 
   public static List<Ad> getAds(int limit) {
-    getAdsProxy.getAds(limit, aptoideClientUUID);
-    return null;
+    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, aptoideClientUUID))
+        .toBlocking()
+        .first();
   }
 
   public static List<Ad> getAds(int limit, boolean mature) {
@@ -126,13 +127,15 @@ public class Aptoide {
   }
 
   public static List<Ad> getAds(int limit, List<String> keyword) {
-    getAdsProxy.getAds(limit, aptoideClientUUID, keyword);
-    return null;
+    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, aptoideClientUUID, keyword))
+        .toBlocking()
+        .first();
   }
 
   public static List<Ad> getAds(int limit, List<String> keyword, boolean mature) {
-    getAdsProxy.getAds(limit, mature, aptoideClientUUID, keyword);
-    return null;
+    return ReferrerUtils.parseAds(getAdsProxy.getAds(limit, mature, aptoideClientUUID, keyword))
+        .toBlocking()
+        .first();
   }
 
   public static List<SearchResult> searchApps(String query) {
