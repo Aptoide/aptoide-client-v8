@@ -57,7 +57,6 @@ public class InstallService extends Service {
   private AptoideDownloadManager downloadManager;
 
   private CompositeSubscription subscriptions;
-
   private Notification notification;
   private Installer rollbackInstaller;
   private Installer defaultInstaller;

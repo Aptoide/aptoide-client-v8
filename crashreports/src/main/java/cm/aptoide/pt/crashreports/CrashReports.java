@@ -39,6 +39,11 @@ public class CrashReports {
    * @param throwable exception you want to send
    */
   public static void logException(Throwable throwable) {
+    if (!Fabric.isInitialized()) {
+      Logger.w(TAG, "Fabric not initialized.");
+      return;
+    }
+
     Crashlytics.setString("Language", language);
     Crashlytics.logException(throwable);
     Logger.d(TAG, "logException: " + throwable.toString());
@@ -51,6 +56,11 @@ public class CrashReports {
    * @param value value you want associated with the key
    */
   public static void logString(String key, String value) {
+    if (!Fabric.isInitialized()) {
+      Logger.w(TAG, "Fabric not initialized.");
+      return;
+    }
+
     Crashlytics.setString(key, value);
     Logger.d(TAG, "logString : key: " + key + " , value: " + value);
   }
@@ -63,6 +73,11 @@ public class CrashReports {
    * @param message message you want to send
    */
   public static void logMessage(int priority, String tag, String message) {
+    if (!Fabric.isInitialized()) {
+      Logger.w(TAG, "Fabric not initialized.");
+      return;
+    }
+
     Crashlytics.log(priority, tag, message);
     Logger.d(TAG, "logPriorityString: " + priority + " , " + tag + " , " + message);
   }

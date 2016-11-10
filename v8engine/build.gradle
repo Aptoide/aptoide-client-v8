@@ -213,6 +213,11 @@ dependencies {
   compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
   compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
 
-  // Flurry Android sdk
-  compile "com.flurry.android:analytics:${FLURRY_VERSION}"
+    // Flurry Android sdk
+    compile "com.flurry.android:analytics:${FLURRY_VERSION}"
+
+    // Remote install
+    compile 'org.slf4j:slf4j-simple:1.7.21'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'org.jmdns:jmdns:3.5.1'
 }

@@ -31,6 +31,8 @@ import lombok.EqualsAndHashCode;
 
     @JsonProperty("productId") private String productId;
     private String price;
+    @JsonProperty("price_amount") private float priceAmount;
+    private String currency;
     private String title;
     private String description;
     private String type;

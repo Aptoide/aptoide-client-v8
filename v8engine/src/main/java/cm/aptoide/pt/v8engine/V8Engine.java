@@ -21,7 +21,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -58,6 +57,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -73,6 +73,7 @@ public abstract class V8Engine extends DataProvider {
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   private RefWatcher refWatcher;
+  @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
   public static void loadStores() {
 
@@ -214,6 +215,8 @@ public abstract class V8Engine extends DataProvider {
       }, e -> {
         Logger.e(TAG, e);
       });
+    } else {
+      loadInstalledApps().subscribe();
     }
 
     final int appSignature = SecurityUtils.checkAppSignature(this);
@@ -276,22 +279,27 @@ public abstract class V8Engine extends DataProvider {
 
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      installedAccessor.removeAll();
+      // remove the current installed apps
+      AccessorFactory.getAccessorFor(Installed.class).removeAll();
 
+      // get the installed apps
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
-      Logger.d(TAG, "Found " + installedApps.size() + " user installed apps.");
+      Logger.v(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
       Collections.sort(installedApps,
           (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
-      for (PackageInfo packageInfo : installedApps) {
-        Installed installed = new Installed(packageInfo);
-        installedAccessor.insert(installed);
-      }
-      return null;
-    }).subscribeOn(Schedulers.io());
+      // return sorted installed apps
+      return installedApps;
+    })  // transform installation package into Installed table entry and save all the data
+        .flatMapIterable(list -> list)
+        .map(packageInfo -> new Installed(packageInfo))
+        .toList()
+        .doOnNext(list -> {
+          AccessorFactory.getAccessorFor(Installed.class).insertAll(list);
+        })
+        .subscribeOn(Schedulers.io());
   }
 
   //
