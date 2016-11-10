@@ -13,6 +13,7 @@ import android.text.Spannable;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Similar;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
@@ -65,7 +66,7 @@ import lombok.Getter;
       abTestingURL = similar.getAb().getConversion().getUrl();
     }
 
-    return new SimilarDisplayable(R.mipmap.ic_launcher,
+    return new SimilarDisplayable(Application.getConfiguration().getIcon(),
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         similar.getRecommendedApp().getId(), similar.getRecommendedApp().getPackageName(),
         similar.getRecommendedApp().getName(), similar.getRecommendedApp().getIcon(), abTestingURL,
