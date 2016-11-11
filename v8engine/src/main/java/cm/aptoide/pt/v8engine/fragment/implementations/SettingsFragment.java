@@ -37,6 +37,7 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -156,6 +157,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     } else {
       matureChkBox.setChecked(false);
     }
+
+    //set AppStore name
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+        Application.getConfiguration().getMarketName()));
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+        Application.getConfiguration().getMarketName()));
 
     findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
