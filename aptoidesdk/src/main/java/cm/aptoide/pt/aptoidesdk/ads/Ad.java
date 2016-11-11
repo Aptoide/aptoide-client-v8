@@ -40,14 +40,24 @@ import lombok.experimental.Accessors;
     return new Ad(System.currentTimeMillis(), adId, clicks, network, data);
   }
 
+  /**
+   * @return the name of this app.
+   */
   @JsonIgnore public String getName() {
     return data.name;
   }
 
+  /**
+   *
+   * @return the path ot the icon of this app.
+   */
   @JsonIgnore public String getIconPath() {
     return data.icon;
   }
 
+  /**
+   * @return the size of this app.
+   */
   @JsonIgnore public long getSize() {
     return data.size;
   }
