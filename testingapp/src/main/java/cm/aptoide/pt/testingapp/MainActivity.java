@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             StringBuilder sb = new StringBuilder();
             for (Ad i : l) {
-                sb.append("name of ad: " + i.getName() + "\n");
+                sb.append("ad name: " + i.getName() + "\n");
             }
             tv.setText(sb.toString());
         }
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             StringBuilder sb = new StringBuilder();
             for (SearchResult i : l) {
-                sb.append("name of app: " + i.getName() + "\n");
+                sb.append("search: app name: " + i.getName() + "\n");
             }
             tv.setText(sb.toString());
         }
