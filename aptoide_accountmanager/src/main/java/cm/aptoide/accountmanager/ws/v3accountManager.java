@@ -14,7 +14,7 @@ import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
-import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
@@ -97,19 +97,19 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
   interface Interfaces {
 
     @FormUrlEncoded @POST("3/oauth2Authentication")
-    @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<OAuth> oauth2Authentication(@FieldMap HashMapNotNull<String, String> args);
 
     @FormUrlEncoded @POST("3/getUserInfo")
-    @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<CheckUserCredentialsJson> getUserInfo(@FieldMap HashMapNotNull<String, String> args);
 
     @POST("3/createUser") @FormUrlEncoded
-    @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<OAuth> createUser(@FieldMap HashMapNotNull<String, String> args);
 
     @POST("3/changeUserSettings") @FormUrlEncoded
-    @Headers({ RequestCache.BYPASS_HEADER_KEY + ":" + RequestCache.BYPASS_HEADER_VALUE })
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<ChangeUserSettingsResponse> changeUserSettings(
         @FieldMap HashMapNotNull<String, String> args);
 

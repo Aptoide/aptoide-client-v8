@@ -7,6 +7,7 @@ package cm.aptoide.pt.networkclient;
 
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;
@@ -23,9 +24,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-/**
- * @author SithEngineer
- */
 //@RunWith(RobolectricGradleTestRunner.class)
 //@Config(constants = BuildConfig.class, sdk = 16)
 public class DiskLruUnitTest {
@@ -141,7 +139,7 @@ public class DiskLruUnitTest {
   //	@Test
   public void cacheControlBypassCache() {
     Request request2 = request.newBuilder()
-        .header(RequestCache.BYPASS_HEADER_KEY, RequestCache.BYPASS_HEADER_VALUE)
+        .header(PostCacheInterceptor.BYPASS_HEADER_KEY, PostCacheInterceptor.BYPASS_HEADER_VALUE)
         .build();
 
     usedRequests.add(request2);

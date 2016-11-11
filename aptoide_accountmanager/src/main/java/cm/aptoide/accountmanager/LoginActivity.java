@@ -152,10 +152,12 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   }
 
   @Override public void onLoginSuccess() {
+    ShowMessage.asToast(this, R.string.login_successful);
     finish();
-    if (openMyAccountOnLoginSuccess) {
-      AptoideAccountManager.openAccountManager(this);
-    }
+    //Trello - Login
+    //if (openMyAccountOnLoginSuccess) {
+    //  AptoideAccountManager.openAccountManager(this);
+    //}
   }
 
   @Override public void onLoginFail(String reason) {

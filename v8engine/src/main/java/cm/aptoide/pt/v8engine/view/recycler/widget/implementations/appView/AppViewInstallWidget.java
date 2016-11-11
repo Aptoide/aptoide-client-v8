@@ -156,6 +156,9 @@ import rx.android.schedulers.AndroidSchedulers;
               //App not installed
               setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
               setupInstallOrBuyButton(displayable, getApp);
+              if (widgetState.getProgress() != null) {
+                downloadStatusUpdate(widgetState.getProgress(), currentApp);
+              }
               ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
               break;
             case AppViewInstallDisplayable.ACTION_DOWNGRADE:
@@ -323,7 +326,8 @@ import rx.android.schedulers.AndroidSchedulers;
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                  downloadAction))).first()
+                  downloadAction)))
+          .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             ShowMessage.asSnack(v, installOrUpgradeMsg);
@@ -402,7 +406,7 @@ import rx.android.schedulers.AndroidSchedulers;
     String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      installManager.removeInstallationFile(getContext(), md5);
+      installManager.removeInstallationFile(md5, getContext());
     });
 
     actionPause.setOnClickListener(view -> {

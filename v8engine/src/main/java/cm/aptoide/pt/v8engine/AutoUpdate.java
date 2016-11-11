@@ -124,6 +124,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   }
 
   private void requestUpdateSelf(final AutoUpdateInfo autoUpdateInfo) {
+
+    V8Engine.setAutoUpdateWasCalled(true);
+
     ContextThemeWrapper wrapper = new ContextThemeWrapper(activity,
         activity.obtainStyledAttributes(new int[] { R.attr.alertDialog }).getResourceId(0, 0));
     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper);
@@ -151,6 +154,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
               .flatMap(success -> installManager.install(activity,
                   downloadFactory.create(autoUpdateInfo)))
               .filter(progress -> !isDownloading(progress))
+              .first()
               .subscribe(progress -> {
                 if (progress.getState() == Progress.ERROR) {
                   ShowMessage.asSnack(activity, R.string.error_SYS_1);

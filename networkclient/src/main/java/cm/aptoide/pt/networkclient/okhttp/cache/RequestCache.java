@@ -10,7 +10,11 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.BuildConfig;
+import cm.aptoide.pt.networkclient.okhttp.newCache.KeyAlgorithm;
+import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.newCache.ResponseCacheEntry;
 import cm.aptoide.pt.utils.AptoideUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.disklrucache.DiskLruCache;
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +31,9 @@ import okhttp3.Response;
  */
 public class RequestCache {
 
-  public static final String BYPASS_HEADER_KEY = "Bypass-Cache";
-  public static final String BYPASS_HEADER_VALUE = "true";
-  public static final String BYPASS_HEADER_FALSE_VALUE = "false";
+  //public static final String BYPASS_HEADER_KEY = "Bypass-Cache";
+  //public static final String BYPASS_HEADER_VALUE = "true";
+  //public static final String BYPASS_HEADER_FALSE_VALUE = "false";
 
   private static final String TAG = RequestCache.class.getName();
 
@@ -44,7 +48,7 @@ public class RequestCache {
   private static final int TIMESTAMP_BUCKET_INDEX = 1;
   private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
 
-  private final KeyAlgorithm keyAlgorithm;
+  private final KeyAlgorithm<Request, String> keyAlgorithm;
 
   private final Object diskCacheLock = new Object();
   private boolean initialized;
@@ -54,7 +58,7 @@ public class RequestCache {
   // ctors
   //
 
-  public RequestCache(KeyAlgorithm keyAlgorithm) {
+  private RequestCache(KeyAlgorithm<Request, String> keyAlgorithm) {
 
     this.keyAlgorithm = keyAlgorithm;
 
@@ -129,11 +133,16 @@ public class RequestCache {
     if (!initialized) {
       return response;
     }
+
+    // only cache 2xx requests
     if ((response.code() / 100) != 2) return response;
     //		String header = request.headers().get(BYPASS_HEADER_KEY);
     //		if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
     //			return response;
     //		}
+
+    // only cache post requests
+    //if(!"POST".equalsIgnoreCase(request.method())) return response;
 
     DiskLruCache.Editor editor = null;
     try {
@@ -141,8 +150,8 @@ public class RequestCache {
       synchronized (diskCacheLock) {
         editor = diskLruCache.edit(reqKey);
         // create cache entry building from the previous response so that we don't modify it
-        RequestCacheEntry cacheEntry = new RequestCacheEntry(response);
-        editor.set(DATA_BUCKET_INDEX, cacheEntry.toString());
+        ResponseCacheEntry cacheEntry = new ResponseCacheEntry(response, 0);
+        editor.set(DATA_BUCKET_INDEX, new ObjectMapper().writeValueAsString(cacheEntry));
         editor.set(TIMESTAMP_BUCKET_INDEX, SIMPLE_DATE_FORMAT.format(new Date()));
         editor.commit();
 
@@ -173,8 +182,9 @@ public class RequestCache {
       DiskLruCache.Snapshot snapshot = null;
       try {
 
-        String header = request.headers().get(BYPASS_HEADER_KEY);
-        if (header != null && header.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
+        String header = request.headers().get(PostCacheInterceptor.BYPASS_HEADER_KEY);
+        if (header != null && header.equalsIgnoreCase(
+            PostCacheInterceptor.BYPASS_HEADER_VALUE)) {
           return null;
         }
         final String reqKey = keyAlgorithm.getKeyFrom(request);
@@ -189,7 +199,8 @@ public class RequestCache {
         if (snapshot == null) return null;
 
         String data = snapshot.getString(DATA_BUCKET_INDEX);
-        RequestCacheEntry cacheEntry = RequestCacheEntry.fromString(data);
+        ResponseCacheEntry cacheEntry =
+            new ObjectMapper().readValue(data, ResponseCacheEntry.class);
         // create response using the previous cloned request so that we don't modify it
         Response response = cacheEntry.getResponse(request);
 

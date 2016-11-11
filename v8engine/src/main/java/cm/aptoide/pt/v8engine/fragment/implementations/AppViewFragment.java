@@ -70,6 +70,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
+import cm.aptoide.pt.v8engine.dialog.RemoteInstallDialog;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -415,6 +416,9 @@ public class AppViewFragment extends GridRecyclerFragment
     } else if (i == R.id.menu_uninstall && unInstallAction != null) {
       unInstallAction.call();
       return true;
+    } else if (i == R.id.menu_remote_install){
+	    android.support.v4.app.DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+	    newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
     }
 
     return super.onOptionsItemSelected(item);
@@ -632,15 +636,15 @@ public class AppViewFragment extends GridRecyclerFragment
     return GetAdsRequest.ofAppviewSuggested(keywords,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()))
-        .observe()
-        .map(getAdsResponse -> {
-          if (AdRepository.validAds(getAdsResponse)) {
-            suggestedAds = getAdsResponse.getAds();
-          }
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
+        getApp1.getNodes().getMeta().getData().getPackageName(),
+        DataProvider.getConfiguration().getPartnerId()).observe().map(getAdsResponse -> {
+      if (AdRepository.validAds(getAdsResponse)) {
+        suggestedAds = getAdsResponse.getAds();
+      }
 
-          return getApp1;
-        });
+      return getApp1;
+    });
   }
 
   @Override public void scroll(Position position) {

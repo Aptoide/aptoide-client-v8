@@ -41,6 +41,14 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  packagingOptions {
+    exclude 'mockito-extensions/org.mockito.plugins.MockMaker'
+  }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
+
 }
 
 dependencies {
@@ -65,9 +73,12 @@ dependencies {
   // from remote repos
   //
 
+  testCompile "com.android.support.test:testing-support-lib:0.1"
+
   testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
-  testCompile "com.squareup.okhttp3:mockwebserver:${MOCKWEBSERVER_VERSION}"
+  //testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
