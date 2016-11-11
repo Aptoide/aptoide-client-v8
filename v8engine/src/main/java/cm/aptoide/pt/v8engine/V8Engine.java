@@ -14,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
@@ -34,6 +35,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -55,7 +57,9 @@ import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import java.io.File;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
 import rx.Observable;
@@ -66,12 +70,13 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V8Engine extends DataProvider {
 
+  public static final long MONTH_CACHE_TIME = DateUtils.DAY_IN_MILLIS * 30;
   private static final String TAG = V8Engine.class.getName();
-
   @Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
+  @Getter static private CacheHelper cacheHelper;
   private RefWatcher refWatcher;
 
   public static void loadStores() {
@@ -231,9 +236,20 @@ public abstract class V8Engine extends DataProvider {
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
+    List<CacheHelper.FolderToManage> folders = new LinkedList<>();
+
+    String cachePath = Application.getConfiguration().getCachePath();
+
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath), DateUtils.HOUR_IN_MILLIS));
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), MONTH_CACHE_TIME));
+    folders.add(
+        new CacheHelper.FolderToManage(new File(getCacheDir() + "image_manager_disk_cache/"),
+            MONTH_CACHE_TIME));
+
+    cacheHelper = new CacheHelper(settingsInterface, folders);
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
-            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
+            downloadAccessor, cacheHelper,
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
                 new UserData() {
@@ -242,6 +258,15 @@ public abstract class V8Engine extends DataProvider {
                   }
                 }));
 
+    cacheHelper.cleanCache()
+        .flatMap(cleaned -> AptoideDownloadManager.getInstance()
+            .invalidateDatabase()
+            .map(success -> cleaned))
+        .subscribe(cleanedSize -> Logger.d(TAG,
+            "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
     // setupCurrentActivityListener();
 
     //if (BuildConfig.DEBUG) {

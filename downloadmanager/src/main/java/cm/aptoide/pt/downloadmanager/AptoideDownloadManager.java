@@ -327,4 +327,16 @@ public class AptoideDownloadManager {
       }
     }
   }
+
+  public Observable<Void> invalidateDatabase() {
+    return getDownloads().first()
+        .flatMapIterable(downloads -> downloads)
+        .filter(download -> getStateIfFileExists(download) == Download.FILE_MISSING)
+        .map(download -> {
+          downloadAccessor.delete(download.getMd5());
+          return null;
+        })
+        .toList()
+        .flatMap(success -> Observable.just(null));
+  }
 }
