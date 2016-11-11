@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="default_color">#e17117</color>
+    <color name="aptoide_orange">@color/default_color</color>
+    <color name="aptoide_color_focused">#e55c1b</color>
+
+</resources>
