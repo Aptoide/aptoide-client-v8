@@ -74,13 +74,14 @@ import lombok.Getter;
         similar.getTimestamp(), dateCalculator, spannableFactory, timelineMetricsManager);
   }
 
-  public String getTitle(Context context) {
-    return context.getString(titleResource);
+  public String getTitle() {
+    return AptoideUtils.StringU.getFormattedString(titleResource,
+        Application.getConfiguration().getMarketName());
   }
 
   public Spannable getStyledTitle(Context context) {
-    String aptoide = "Aptoide";
-    return spannableFactory.createColorSpan(context.getString(titleResource),
+    String aptoide = Application.getConfiguration().getMarketName();
+    return spannableFactory.createColorSpan(getTitle(),
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
   }
 
