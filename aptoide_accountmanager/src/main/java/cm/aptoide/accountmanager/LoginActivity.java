@@ -22,6 +22,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 4/18/16.
@@ -43,6 +44,8 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   private boolean openMyAccountOnLoginSuccess;
   private boolean setSkipButton;
 
+  private CompositeSubscription subscriptions;
+
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     if (setSkipButton) {
       menu.add(0, 0, 0, R.string.wizard_skip).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -54,6 +57,8 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    subscriptions = new CompositeSubscription();
 
     FacebookSdk.sdkInitialize(getApplicationContext());
     setContentView(getLayoutId());
@@ -87,6 +92,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   }
 
   @Override protected void onDestroy() {
+    subscriptions.clear();
     super.onDestroy();
   }
 
@@ -94,6 +100,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
     forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
     forgotPassword.setText(forgetString);
+    // FIXME: 11/11/2016 Avoid redirecting the user to outside of the app
     forgotPassword.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         Intent passwordRecovery = new Intent(Intent.ACTION_VIEW,
@@ -152,12 +159,14 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   }
 
   @Override public void onLoginSuccess() {
-    ShowMessage.asToast(this, R.string.login_successful);
-    finish();
-    //Trello - Login
-    //if (openMyAccountOnLoginSuccess) {
-    //  AptoideAccountManager.openAccountManager(this);
-    //}
+    subscriptions.add(
+      ShowMessage.asObservableSnack(this, R.string.login_successful)
+          .subscribe(visibility -> {
+        if(visibility==ShowMessage.DISMISSED) {
+          LoginActivity.this.finish();
+        }
+      })
+    );
   }
 
   @Override public void onLoginFail(String reason) {
