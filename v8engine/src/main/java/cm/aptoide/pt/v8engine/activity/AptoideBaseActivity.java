@@ -17,17 +17,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.SettingsFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import lombok.Getter;
@@ -296,7 +296,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
           if (eResponse == GenericDialogs.EResponse.YES) {
             if (AptoideBaseActivity.this instanceof FragmentShower) {
               ((FragmentShower) AptoideBaseActivity.this).pushFragmentV4(
-                  SettingsFragment.newInstance());
+                  V8Engine.getFragmentProvider().newSettingsFragment());
             } else {
               Logger.e(AptoideBaseActivity.class.getSimpleName(), new IllegalArgumentException(
                   "The Fragment should be an instance of the " + "Activity Context"));

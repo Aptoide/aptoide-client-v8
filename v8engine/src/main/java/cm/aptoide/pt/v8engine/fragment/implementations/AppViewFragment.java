@@ -30,17 +30,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.accessors.RollbackAccessor;
+import cm.aptoide.pt.database.accessors.ScheduledAccessor;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -51,21 +58,18 @@ import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.install.InstallManager;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.RollbackInstallManager;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackActionFactory;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
@@ -73,6 +77,7 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -88,10 +93,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import io.realm.Realm;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Cleanup;
 import lombok.Getter;
 import rx.Observable;
 import rx.Subscription;
@@ -120,7 +123,6 @@ public class AppViewFragment extends GridRecyclerFragment
   // vars
   //
   private AppViewHeader header;
-  //	private GetAppMeta.App app;
   private long appId;
   private String packageName;
   private OpenType openType;
@@ -131,10 +133,9 @@ public class AppViewFragment extends GridRecyclerFragment
   //
   private MinimalAd minimalAd;
   // Stored to postpone ads logic
-  private Installer installManager;
+  private InstallManager installManager;
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
-  private DownloadServiceHelper downloadManager;
   private AppRepository appRepository;
   private ProductFactory productFactory;
   private Subscription subscription;
@@ -152,6 +153,9 @@ public class AppViewFragment extends GridRecyclerFragment
   private Menu menu;
   private String appName;
   private String wUrl;
+  private GetAppMeta.App app;
+  private AppAction appAction = AppAction.OPEN;
+  private InstalledRepository installedRepository;
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
@@ -215,23 +219,18 @@ public class AppViewFragment extends GridRecyclerFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    downloadManager =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-
     permissionManager = new PermissionManager();
-    DownloadInstallationProvider installationProvider =
-        new DownloadInstallationProvider(downloadManager);
-
-    installManager = new RollbackInstallManager(
-        new InstallManager(permissionManager, getContext().getPackageManager(),
-            installationProvider), RepositoryFactory.getRepositoryFor(Rollback.class),
-        new RollbackActionFactory(), installationProvider);
+    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
         productFactory);
     adRepository = new AdRepository();
+    installedRepository = RepositoryFactory.getRepositoryFor(Installed.class);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -252,21 +251,45 @@ public class AppViewFragment extends GridRecyclerFragment
   }
 
   private void setupObservables(GetApp getApp) {
+
+    // ??
+
+    final long storeId = getApp.getNodes().getMeta().getData().getStore().getId();
+
     // For stores subscription
-    DeprecatedDatabase.StoreQ.getAll(realm)
-        .asObservable()
+    //DeprecatedDatabase.StoreQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(stores -> {
+    //      if (DeprecatedDatabase.StoreQ.get(storeId, realm) != null) {
+    //        adapter.notifyDataSetChanged();
+    //      }
+    //    });
+
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.getAll()
+        .flatMapIterable(list -> list)
+        .filter(store -> store != null && store.getStoreId() == storeId)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(stores -> {
-          if (DeprecatedDatabase.StoreQ.get(
-              getApp.getNodes().getMeta().getData().getStore().getId(), realm) != null) {
-            adapter.notifyDataSetChanged();
-          }
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(store -> {
+          adapter.notifyDataSetChanged();
         });
 
+    // ??
+
     // For install actions
-    DeprecatedDatabase.RollbackQ.getAll(realm)
-        .asObservable()
+    //DeprecatedDatabase.RollbackQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(rollbacks -> {
+    //      adapter.notifyDataSetChanged();
+    //    });
+
+    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    rollbackAccessor.getAll()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
         });
@@ -281,7 +304,7 @@ public class AppViewFragment extends GridRecyclerFragment
     GetAppMeta.Media media = app.getMedia();
 
     installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
-        openType == OpenType.OPEN_AND_INSTALL, AccessorFactory.getAccessorFor(Installed.class));
+        openType == OpenType.OPEN_AND_INSTALL, installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -372,10 +395,16 @@ public class AppViewFragment extends GridRecyclerFragment
       shareApp(appName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      realm.beginTransaction();
-      realm.copyToRealmOrUpdate(scheduled);
-      realm.commitTransaction();
+
+      scheduled = Scheduled.from(app, appAction);
+
+      //@Cleanup Realm realm = DeprecatedDatabase.get();
+      //realm.beginTransaction();
+      //realm.copyToRealmOrUpdate(scheduled);
+      //realm.commitTransaction();
+
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      scheduledAccessor.insert(scheduled);
 
       String str = this.getString(R.string.added_to_scheduled);
       ShowMessage.asSnack(this.getView(), str);
@@ -411,20 +440,20 @@ public class AppViewFragment extends GridRecyclerFragment
 
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, create, sponsored, storeName)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+      subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> finishLoading(throwable));
     } else if (!TextUtils.isEmpty(md5)) {
       subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> {
@@ -436,9 +465,9 @@ public class AppViewFragment extends GridRecyclerFragment
     } else {
       Logger.d(TAG, "loading app info using app package name");
       subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .flatMap(getApp -> manageOrganicAds(getApp))
           .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(getApp -> {
             setupAppView(getApp);
           }, throwable -> {
@@ -451,13 +480,33 @@ public class AppViewFragment extends GridRecyclerFragment
   }
 
   private void setupAppView(GetApp getApp) {
+    app = getApp.getNodes().getMeta().getData();
+    updateLocalVars(app);
     if (storeTheme == null) {
       storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
     }
 
     // useful data for the schedule updates menu option
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    scheduled = Scheduled.from(app);
+    installAction()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(appAction -> {
+      AppViewFragment.this.appAction = appAction;
+      MenuItem item = menu.findItem(R.id.menu_schedule);
+      if (item != null) {
+        item.setVisible(appAction != AppAction.OPEN);
+      }
+      if (appAction != AppAction.INSTALL) {
+        setUnInstallMenuOptionVisible(
+            () -> new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
+                .flatMap(success -> installManager.uninstall(getContext(), packageName))
+                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+                .subscribe(aVoid -> {
+                }, throwable -> throwable.printStackTrace()));
+      } else {
+        setUnInstallMenuOptionVisible(null);
+      }
+    });
 
     header.setup(getApp);
     setupDisplayables(getApp);
@@ -468,6 +517,7 @@ public class AppViewFragment extends GridRecyclerFragment
       GenericDialogs.createGenericOkCancelMessage(getContext(),
           Application.getConfiguration().getMarketName(),
           getContext().getString(R.string.installapp_alrt, appName))
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(new SimpleSubscriber<GenericDialogs.EResponse>() {
             @Override public void onNext(GenericDialogs.EResponse eResponse) {
               super.onNext(eResponse);
@@ -482,6 +532,15 @@ public class AppViewFragment extends GridRecyclerFragment
           });
     }
     finishLoading();
+  }
+
+  private void updateLocalVars(GetAppMeta.App app) {
+    appId = app.getId();
+    packageName = app.getPackageName();
+    storeName = app.getStore().getName();
+    storeTheme = app.getStore().getAppearance().getTheme();
+    md5 = app.getMd5();
+    appName = app.getName();
   }
 
   private void showHideMenus(boolean visible) {
@@ -513,7 +572,8 @@ public class AppViewFragment extends GridRecyclerFragment
     V8Engine.getRefWatcher(getContext()).watch(this);
 
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
   }
 
@@ -613,6 +673,28 @@ public class AppViewFragment extends GridRecyclerFragment
   public void setupShare(GetApp app) {
     appName = app.getNodes().getMeta().getData().getName();
     wUrl = app.getNodes().getMeta().getData().getUrls().getW();
+  }
+
+  public Observable<AppAction> installAction() {
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    return installedAccessor.getAsList(packageName).map(installedList -> {
+      if (installedList != null && installedList.size() > 0) {
+        Installed installed = installedList.get(0);
+        if (app.getFile().getVercode() == installed.getVersionCode()) {
+          //current installed version
+          return AppAction.OPEN;
+        } else if (app.getFile().getVercode() > installed.getVersionCode()) {
+          //update
+          return AppAction.UPDATE;
+        } else {
+          //downgrade
+          return AppAction.DOWNGRADE;
+        }
+      } else {
+        //app not installed
+        return AppAction.INSTALL;
+      }
+    });
   }
 
   private enum BundleKeys {
@@ -740,13 +822,16 @@ public class AppViewFragment extends GridRecyclerFragment
 			});
 			*/
 
-      fileSize.setText(AptoideUtils.StringU.formatBits(app.getSize()));
+      fileSize.setText(AptoideUtils.StringU.formatBytes(app.getSize()));
 
       downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
 
       @DrawableRes int badgeResId = 0;
       @StringRes int badgeMessageId = 0;
-      switch (app.getFile().getMalware().getRank()) {
+
+      Malware.Rank rank = app.getFile().getMalware().getRank() == null ? Malware.Rank.UNKNOWN
+          : app.getFile().getMalware().getRank();
+      switch (rank) {
         case TRUSTED:
           badgeResId = R.drawable.ic_badge_trusted;
           badgeMessageId = R.string.appview_header_trusted_text;
@@ -755,6 +840,11 @@ public class AppViewFragment extends GridRecyclerFragment
         case WARNING:
           badgeResId = R.drawable.ic_badge_warning;
           badgeMessageId = R.string.warning;
+          break;
+
+        case CRITICAL:
+          badgeResId = R.drawable.ic_badge_critical;
+          badgeMessageId = R.string.critical;
           break;
 
         default:
@@ -771,7 +861,6 @@ public class AppViewFragment extends GridRecyclerFragment
           app.getFile().getMalware().getRank().name());
       Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(),
           app.getDeveloper().getName(), app.getFile().getMalware().getRank().name());
-      Analytics.SourceViewedApplication.view(app.getPackageName());
 
       final Malware malware = app.getFile().getMalware();
       badge.setOnClickListener(v -> {

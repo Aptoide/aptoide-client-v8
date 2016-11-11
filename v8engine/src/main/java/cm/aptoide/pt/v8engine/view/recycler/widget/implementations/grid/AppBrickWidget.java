@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -38,7 +38,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     itemView.setOnClickListener(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(
-          AppViewFragment.newInstance(displayable.getPojo().getId()));
+          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getPojo().getId()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           displayable.getPojo().getPackageName(), true);
     });

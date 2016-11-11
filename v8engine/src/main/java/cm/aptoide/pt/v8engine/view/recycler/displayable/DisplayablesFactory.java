@@ -12,7 +12,6 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
@@ -20,13 +19,14 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
@@ -150,8 +150,7 @@ public class DisplayablesFactory {
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
         if (useBigBrick) {
-          displayables.add(
-              new AppBrickDisplayable(apps.get(0), wsWidget.getTag()).setDefaultPerLineCount(1));
+          displayables.add(new AppBrickDisplayable(apps.get(0), wsWidget.getTag()).setFullRow());
 
           nrAppBricks++;
         }
@@ -171,7 +170,7 @@ public class DisplayablesFactory {
       }
 
       for (App app : apps) {
-        displayables.add(DisplayableType.newDisplayable(Type.APPS_GROUP_LIST, app));
+        displayables.add(new GridAppListDisplayable(app));
       }
     } else {
       if (apps.size() > 0) {
@@ -195,9 +194,7 @@ public class DisplayablesFactory {
     List<Displayable> tmp = new ArrayList<>(stores.size());
     for (Store store : stores) {
 
-      DisplayablePojo<Store> diplayable =
-          (DisplayablePojo<Store>) DisplayableType.newDisplayable(Type.STORES_GROUP);
-      diplayable.setPojo(store);
+      GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
       tmp.add(diplayable);
     }
     return new DisplayableGroup(tmp);
@@ -219,18 +216,10 @@ public class DisplayablesFactory {
       if (Event.Name.facebook.equals(name)
           || Event.Name.twitch.equals(name)
           || Event.Name.youtube.equals(name)) {
-        displayablePojo.setDefaultPerLineCount(1);
+        displayablePojo.setFullRow();
       }
       tmp.add(displayablePojo);
     }
     return new DisplayableGroup(tmp);
-  }
-
-  private static Displayable getHeader(Object viewObject) {
-    GetStoreWidgets.WSWidget header = (GetStoreWidgets.WSWidget) viewObject;
-    DisplayablePojo<GetStoreWidgets.WSWidget> displayable =
-        (DisplayablePojo<GetStoreWidgets.WSWidget>) DisplayableType.newDisplayable(Type.HEADER_ROW);
-    displayable.setPojo(header);
-    return displayable;
   }
 }

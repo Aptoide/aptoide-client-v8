@@ -10,17 +10,16 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import io.realm.RealmObject;
 
 /**
  * Created by sithengineer on 24/08/16.
  *
  * see method "getStartupInstalled()" in class "AptoideDatabase.java" from v7 code to understand
- * the
- * reason why of this code
+ * the reason why of this code
  */
 public final class Installed extends BaseTable {
 

@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -29,6 +30,8 @@ import rx.subscriptions.CompositeSubscription;
   private TextView descriptionTextView;
   private Button readMoreBtn;
   private String storeName;
+  private String storeTheme;
+  private Subscription buttonSubscription;
   private CompositeSubscription subscriptions;
   private GetAppMeta.Media media;
   private GetAppMeta.App app;
@@ -46,6 +49,19 @@ import rx.subscriptions.CompositeSubscription;
     this.app = displayable.getPojo().getNodes().getMeta().getData();
     this.media = app.getMedia();
     this.storeName = app.getStore().getName();
+    this.storeTheme = app.getStore().getAppearance().getTheme();
+
+    if (!TextUtils.isEmpty(media.getDescription())) {
+      descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
+      buttonSubscription = RxView.clicks(readMoreBtn).subscribe(click -> {
+        ((FragmentShower) getContext()).pushFragmentV4(
+            DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
+      });
+    } else {
+      // only show "default" description if the app doesn't have one
+      descriptionTextView.setText(R.string.description_not_available);
+      readMoreBtn.setVisibility(View.GONE);
+    }
   }
 
   @Override public void onViewAttached() {
@@ -55,7 +71,7 @@ import rx.subscriptions.CompositeSubscription;
         descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
         subscriptions.add(RxView.clicks(readMoreBtn).subscribe(click -> {
           ((FragmentShower) getContext()).pushFragmentV4(
-              DescriptionFragment.newInstance(app.getId(), storeName));
+              DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
         }));
       } else {
         // only show "default" description if the app doesn't have one

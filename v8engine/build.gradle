@@ -24,6 +24,10 @@ android {
   defaultConfig {
     minSdkVersion 15
     consumerProguardFiles "proguard-rules.txt"
+    //testInstrumentationRunner "cm.aptoide.pt.v8engine.MultidexAndroidJunitRunner"
+
+    // Enabling multidex support.
+    multiDexEnabled true
   }
 
   lintOptions {
@@ -75,10 +79,10 @@ void configureSixpackCredentials(androidDelegate, user, password) {
   boolean userExists = user != null
   boolean passwordExists = password != null
 
-  if (userExists && passwordExists) {
-    androidDelegate.buildConfigField "String", "SIXPACK_USER", "\"" + user.toString() + "\""
-    androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + password.toString() + "\""
-  }
+  androidDelegate.buildConfigField "String", "SIXPACK_USER",
+      "\"" + (userExists ? user.toString() : "") + "\""
+  androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD",
+      "\"" + (passwordExists ? password.toString() : "") + "\""
 }
 
 void configureFlurry(androidDelegate, key) {
@@ -90,19 +94,14 @@ void configureFlurry(androidDelegate, key) {
 void configureLocalytics(androidDelegate, key) {
   boolean keyExists = key != null
   androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
-  androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists ? key : ""]
 }
 
 void configurePayPal(androidDelegate, key, environment) {
   boolean configurationExists = (key != null && environment != null)
-  if (!configurationExists || !(environment.equals("sandbox") || environment.equals("live") ||
-      environment.equals("mock"))) {
-    throw new InvalidUserDataException(
-        "Invalid PayPal configuration provided. Provide a valid key and environment (live, mock, sandbox)")
-  }
-  androidDelegate.buildConfigField "String", "PAYPAL_KEY", "\"" + key.toString() + "\""
+  androidDelegate.buildConfigField "String", "PAYPAL_KEY",
+      "\"" + (configurationExists ? key.toString() : "") + "\""
   androidDelegate.buildConfigField "String", "PAYPAL_ENVIRONMENT",
-      "\"" + environment.toString() + "\""
+      "\"" + (configurationExists ? environment.toString() : "") + "\""
 }
 
 dependencies {
@@ -119,6 +118,12 @@ dependencies {
 
   debugCompile project(path: ':utils', configuration: 'debug')
   releaseCompile project(path: ':utils', configuration: 'release')
+
+  debugCompile project(path: ':utilsdesign', configuration: 'debug')
+  releaseCompile project(path: ':utilsdesign', configuration: 'release')
+
+  debugCompile project(path: ':crashreports', configuration: 'debug')
+  releaseCompile project(path: ':crashreports', configuration: 'release')
 
   debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
   releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
@@ -139,15 +144,30 @@ dependencies {
   // from remote repos
   //
 
+  // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  // Force usage of support annotations in the test app, since it is internally used by the runner module.
+  androidTestCompile ("com.android.support.test:runner:${RUNNER_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestCompile ("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
 
+  compile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
   //noinspection GradleDependency
-  compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+  compile ("com.android.support:support-v4:${SUPPORT_LIB_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
-  compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+  compile "com.android.support:preference-v7:23.4.0"
   //noinspection GradleDependency
   compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
@@ -166,7 +186,7 @@ dependencies {
   // If you want pre-written Activities and Fragments you can subclass as providers
   compile "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
 
-  compile 'eu.chainfire:libsuperuser:1.0.0.+'
+  compile "eu.chainfire:libsuperuser:${SUPER_USER_LIB_VERSION}"
 
   //    Apagar
   compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"

@@ -14,11 +14,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.CrashReports;
 import java.util.Locale;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
@@ -27,7 +27,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by trinkes on 5/18/16.
  */
-public class DownloadService extends Service {
+@Deprecated public class DownloadService extends Service {
 
   public static final int NOTIFICATION_ID = 8;
   private static final String TAG = DownloadService.class.getSimpleName();
@@ -81,7 +81,7 @@ public class DownloadService extends Service {
             String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
             try {
               startDownload(md5);
-            }catch (DownloadNotFoundException e) {
+            } catch (DownloadNotFoundException e) {
               Logger.e(TAG, e);
               CrashReports.logException(e);
             }
@@ -95,7 +95,7 @@ public class DownloadService extends Service {
         if (download != null) {
           try {
             startDownload(download.getMd5());
-          }catch (DownloadNotFoundException e) {
+          } catch (DownloadNotFoundException e) {
             Logger.e(TAG, e);
             CrashReports.logException(e);
           }

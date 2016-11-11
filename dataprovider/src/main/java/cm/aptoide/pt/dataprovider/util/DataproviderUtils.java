@@ -6,25 +6,16 @@
 package cm.aptoide.pt.dataprovider.util;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.model.MinimalAdInterface;
+import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import io.realm.Realm;
 import java.io.IOException;
 import java.util.Date;
-import lombok.Cleanup;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -37,32 +28,6 @@ import okhttp3.Response;
 public class DataproviderUtils {
 
   private static final String TAG = DataproviderUtils.class.getName();
-
-  public static void checkUpdates() {
-    checkUpdates(null);
-  }
-
-  public static void checkUpdates(
-      @Nullable SuccessRequestListener<ListAppsUpdates> successRequestListener) {
-    @Cleanup Realm realm1 = DeprecatedDatabase.get();
-    if (DeprecatedDatabase.StoreQ.getAll(realm1).size() == 0) {
-      return;
-    }
-
-    ListAppsUpdatesRequest.of().execute(listAppsUpdates -> {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      for (App app : listAppsUpdates.getList()) {
-        Update update = DeprecatedDatabase.UpdatesQ.get(app.getPackageName(), realm);
-        if (update == null || !update.isExcluded()) {
-          DeprecatedDatabase.save(new Update(app), realm);
-        }
-      }
-
-      if (successRequestListener != null) {
-        successRequestListener.call(listAppsUpdates);
-      }
-    }, Throwable::printStackTrace, true);
-  }
 
   /**
    * Execute a simple request (knock at the door) to the given URL.
@@ -109,17 +74,17 @@ public class DataproviderUtils {
           .isGooglePlayServicesAvailable(DataProvider.getContext()) == ConnectionResult.SUCCESS;
     }
 
-    public static void knockCpc(MinimalAd minimalAd) {
+    public static void knockCpc(MinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova clicked on ad.
       knock(minimalAd.getCpcUrl());
     }
 
-    public static void knockCpd(MinimalAd minimalAd) {
+    public static void knockCpd(MinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova clicked on download button.
       knock(minimalAd.getCpdUrl());
     }
 
-    public static void knockCpi(StoredMinimalAd minimalAd) {
+    public static void knockCpi(StoredMinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova ad installed.
       knock(minimalAd.getCpiUrl());
     }

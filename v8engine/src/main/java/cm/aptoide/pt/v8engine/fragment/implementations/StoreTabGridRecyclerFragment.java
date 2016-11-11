@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -24,14 +26,12 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
-import cm.aptoide.pt.v8engine.view.recycler.DisplayableType;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
@@ -39,6 +39,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Adu
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.ArrayList;
@@ -148,7 +149,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListStores(String url, boolean refresh) {
-    ListStoresRequest listStoresRequest = ListStoresRequest.ofAction(url);
+    ListStoresRequest listStoresRequest =
+        ListStoresRequest.ofAction(url, AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail());
     Action1<ListStores> listStoresAction = listStores -> {
 
       // Load sub nodes
@@ -156,7 +159,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
       displayables = new LinkedList<>();
       for (Store store : list) {
-        displayables.add(DisplayableType.newDisplayable(Type.STORES_GROUP, store));
+        displayables.add(new GridStoreDisplayable(store));
       }
 
       addDisplayables(displayables);
@@ -182,11 +185,15 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       addDisplayables(displayables);
     }, e -> finishLoading());
 
+    //Highlighted should have pull to refresh
     //getView().findViewById(R.id.swipe_container).setEnabled(false);
   }
 
-  private void caseListApps(String url, boolean refresh) {
-    ListAppsRequest listAppsRequest = ListAppsRequest.ofAction(url);
+  private void caseListApps(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
+      boolean refresh) {
+    ListAppsRequest listAppsRequest =
+        ListAppsRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail());
     Action1<ListApps> listAppsAction = listApps -> {
 
       // Load sub nodes
@@ -227,8 +234,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  private Subscription caseGetStore(String url, boolean refresh) {
-    return GetStoreRequest.ofAction(url)
+  private Subscription caseGetStore(String url,
+      BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
+    return GetStoreRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken(),
+        AptoideAccountManager.getUserEmail())
         .observe(refresh)
         .observeOn(Schedulers.io())
         .subscribe(getStore -> {
@@ -239,8 +248,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
           Observable.from(list)
-              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh,
-                  throwable -> countDownLatch.countDown()));
+              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
+                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
+                  countDownLatch, refresh, throwable -> countDownLatch.countDown(),
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail()));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -258,8 +270,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         }, throwable -> finishLoading(throwable));
   }
 
-  private Subscription caseGetStoreWidgets(String url, boolean refresh) {
-    return GetStoreWidgetsRequest.ofAction(url)
+  private Subscription caseGetStoreWidgets(String url,
+      BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
+    return GetStoreWidgetsRequest.ofAction(url, storeCredentials,
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
         .observe(refresh)
         .observeOn(Schedulers.io())
         .subscribe(getStoreWidgets -> {
@@ -269,8 +283,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
           Observable.from(list)
-              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget, countDownLatch, refresh,
-                  throwable -> finishLoading(throwable)));
+              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
+                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(), countDownLatch,
+                  refresh, throwable -> finishLoading(throwable),
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail()));
 
           try {
             countDownLatch.await();
@@ -303,26 +320,26 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
       switch (name) {
         case listApps:
-          caseListApps(url, create);
+          caseListApps(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
         case getStore:
-          caseGetStore(url, create);
+          caseGetStore(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
         case getStoreWidgets:
-          caseGetStoreWidgets(url, create);
+          caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
         case listReviews:
-          caseListReviews(url, create);
+          caseListReviews(url, refresh);
           break;
         //		break;
         //	case getApkComments:
         //todo
         //		break;
         case getAds:
-          caseGetAds(create);
+          caseGetAds(refresh);
           break;
         case listStores:
-          caseListStores(url, create);
+          caseListStores(url, refresh);
           break;
       }
     } else {
@@ -335,7 +352,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListReviews(String url, boolean refresh) {
-    ListFullReviewsRequest listFullReviewsRequest = ListFullReviewsRequest.ofAction(url, refresh);
+    ListFullReviewsRequest listFullReviewsRequest =
+        ListFullReviewsRequest.ofAction(url, refresh, AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail());
     Action1<ListFullReviews> listFullReviewsAction = (listFullReviews -> {
       if (listFullReviews != null
           && listFullReviews.getDatalist() != null

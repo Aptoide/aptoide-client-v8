@@ -26,24 +26,33 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.UserInfo;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.FragmentEvent;
 import lombok.Getter;
 import lombok.Setter;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -61,6 +70,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   private BadgeView updatesBadge;
   @Getter @Setter private Event.Name desiredViewPagerItem = null;
   private ChangeTabReceiver receiver;
+  private UpdateRepository updateRepository;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -73,6 +83,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+  }
+
   private void setupNavigationView() {
     if (mNavigationView != null) {
       mNavigationView.setItemIconTintList(null);
@@ -82,13 +97,17 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         if (itemId == R.id.navigation_item_my_account) {
           AptoideAccountManager.openAccountManager(getContext());
         } else if (itemId == R.id.navigation_item_rollback) {
-          ((FragmentShower) getActivity()).pushFragmentV4(RollbackFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newRollbackFragment());
         } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-          ((FragmentShower) getActivity()).pushFragmentV4(ScheduledDownloadsFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
         } else if (itemId == R.id.navigation_item_excluded_updates) {
-          ((FragmentShower) getActivity()).pushFragmentV4(ExcludedUpdatesFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
         } else if (itemId == R.id.navigation_item_settings) {
-          ((FragmentShower) getActivity()).pushFragmentV4(SettingsFragment.newInstance());
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newSettingsFragment());
         } else if (itemId == R.id.navigation_item_facebook) {
           openFacebook();
         } else if (itemId == R.id.navigation_item_twitter) {
@@ -107,25 +126,42 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openBackupApps() {
-    Installed installedBackupApps =
-        DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
-    if (installedBackupApps == null) {
-      FragmentUtils.replaceFragmentV4(this.getActivity(),
-          AppViewFragment.newInstance(BACKUP_APPS_PACKAGE_NAME,
-              AppViewFragment.OpenType.OPEN_ONLY));
-    } else {
-      Intent i =
-          getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-      startActivity(i);
-    }
+    //Installed installedBackupApps =
+    //    DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
+    //if (installedBackupApps == null) {
+    //  FragmentUtils.replaceFragmentV4(this.getActivity(),
+    //      V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
+    //          AppViewFragment.OpenType.OPEN_ONLY));
+    //} else {
+    //  Intent i =
+    //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
+    //  startActivity(i);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    Subscription unManagedSubscription = installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installed -> {
+          if (installed == null) {
+            FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()
+                .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
+          } else {
+            Intent i = getContext().getPackageManager()
+                .getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
+            startActivity(i);
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
   }
 
   private void startFeedbackFragment() {
     String downloadFolderPath = Application.getConfiguration().getCachePath();
     String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    ((FragmentShower) getActivity()).pushFragmentV4(
-        SendFeedbackFragment.newInstance(downloadFolderPath + screenshotFileName));
+    ((FragmentShower) getActivity()).pushFragmentV4(V8Engine.getFragmentProvider()
+        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
   }
 
   private void openTwitter() {
@@ -135,24 +171,53 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openFacebook() {
-    Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
-    openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
-        getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
-            AptoideUtils.SocialLinksU.getFacebookPageURL(
-                installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-                APTOIDE_FACEBOOK_LINK)));
+    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
+    //openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
+    //    getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
+    //        AptoideUtils.SocialLinksU.getFacebookPageURL(
+    //            installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+    //            APTOIDE_FACEBOOK_LINK)));
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    Subscription unManagedSubscription = installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installedFacebook -> {
+          openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
+              getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
+                  AptoideUtils.SocialLinksU.getFacebookPageURL(
+                      installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+                      APTOIDE_FACEBOOK_LINK)));
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
       Uri uriToOpenApp) {
-    Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    if (installedFacebook == null) {
-      ((FragmentShower) getActivity()).pushFragmentV4(
-          SocialFragment.newInstance(socialUrl, pageTitle));
-    } else {
-      Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
-      getContext().startActivity(sharingIntent);
-    }
+    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+    //if (installedFacebook == null) {
+    //  ((FragmentShower) getActivity()).pushFragmentV4(
+    //      V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+    //} else {
+    //  Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
+    //  getContext().startActivity(sharingIntent);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    Subscription unManagedSubscription = installedAccessor.get(packageName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installedFacebook -> {
+          if (installedFacebook == null) {
+            ((FragmentShower) getActivity()).pushFragmentV4(
+                V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+          } else {
+            Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
+            getContext().startActivity(sharingIntent);
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
+        });
   }
 
   @Override public void bindViews(View view) {
@@ -181,7 +246,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userUsername.setText(userInfo.getUserName());
 
       ImageLoader.loadWithCircleTransformAndPlaceHolder(userInfo.getUserAvatar(), userAvatarImage,
-          R.drawable.ic_user_icon);
+          R.drawable.user_account_white);
 
       //String userAvatarUri = userInfo.getUserAvatar();
       //if (URLUtil.isValidUrl(userAvatarUri)) {
@@ -202,7 +267,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
-    userAvatarImage.setImageResource(R.drawable.ic_user_icon);
   }
 
   //	@Override
@@ -225,7 +289,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   @Override protected void setupViewPager() {
     super.setupViewPager();
 
-    StorePagerAdapter adapter = (StorePagerAdapter) mViewPager.getAdapter();
+    StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
     int count = adapter.getCount();
     for (int i = 0; i < count; i++) {
       if (Event.Name.myUpdates.equals(adapter.getEventName(i))) {
@@ -235,16 +299,25 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       }
     }
 
-    DeprecatedDatabase.UpdatesQ.getAll(realm, false)
-        .asObservable()
+    //DeprecatedDatabase.UpdatesQ.getAll(realm, false)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(updates -> {
+    //      refreshUpdatesBadge(updates.size());
+    //    });
+
+    updateRepository.getNonExcludedUpdates()
+        .map(updates -> updates.size())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(updates -> {
-          refreshUpdatesBadge(updates.size());
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
         });
 
     if (desiredViewPagerItem != null) {
       if (adapter.containsEventName(desiredViewPagerItem)) {
-        mViewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
+        viewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
       }
     }
   }
@@ -321,11 +394,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     @Override public void onReceive(Context context, Intent intent) {
       Event.Name tabToChange = (Event.Name) intent.getSerializableExtra(SET_TAB_EVENT);
       if (tabToChange != null) {
-        StorePagerAdapter storePagerAdapter = mViewPager.getAdapter() instanceof StorePagerAdapter
-            ? ((StorePagerAdapter) mViewPager.getAdapter()) : null;
+        StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
+            ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
         if (storePagerAdapter != null) {
-          mViewPager.setCurrentItem(
-              ((StorePagerAdapter) mViewPager.getAdapter()).getEventNamePosition(tabToChange));
+          viewPager.setCurrentItem(
+              ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
         }
       }
     }

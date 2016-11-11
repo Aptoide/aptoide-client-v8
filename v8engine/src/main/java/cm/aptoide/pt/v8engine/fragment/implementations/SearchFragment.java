@@ -18,14 +18,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
 
 /**
@@ -89,7 +92,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected void setupViewPager() {
-    mViewPager.setPagingEnabled(false);
+    viewPager.setPagingEnabled(false);
 
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();
@@ -103,7 +106,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
         if (s.length() > 1) {
           FragmentUtils.replaceFragmentV4(((FragmentActivity) getContext()),
-              SearchFragment.newInstance(s, storeName));
+              V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
         }
       });
     }
@@ -149,7 +152,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
     if (storeName != null) {
       shouldFinishLoading = true;
-      ListSearchAppsRequest of = ListSearchAppsRequest.of(query, storeName);
+      ListSearchAppsRequest of =
+          ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
+              AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -162,7 +167,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
         }
       }, e -> finishLoading());
     } else {
-      ListSearchAppsRequest.of(query, true, onlyTrustedApps).execute(listSearchApps -> {
+      ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+          .execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {
@@ -175,7 +182,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
 
       // Other stores
-      ListSearchAppsRequest.of(query, false, onlyTrustedApps).execute(listSearchApps -> {
+      ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+          .execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {
@@ -233,7 +242,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   private void subscribedButtonListener() {
     selectedButton = 0;
-    mViewPager.setCurrentItem(0);
+    viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
     subscribedButton.setTextColor(getResources().getColor(R.color.white));
     everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
@@ -242,7 +251,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   private void everywhereButtonListener() {
     selectedButton = 1;
-    mViewPager.setCurrentItem(1);
+    viewPager.setCurrentItem(1);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
     everywhereButton.setTextColor(getResources().getColor(R.color.white));
     subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));

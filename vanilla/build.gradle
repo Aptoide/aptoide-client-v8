@@ -14,7 +14,15 @@ buildscript {
  * Modified by SithEngineer on 29/07/2016.
  */
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+
+Properties localProperties = new Properties()
+localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
+def fabricApiKey = localProperties.FABRIC_API_KEY
+def fabricConfigured = fabricApiKey != null
+
+if (fabricConfigured) {
+  apply plugin: 'io.fabric'
+}
 apply plugin: 'android-command'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
@@ -26,8 +34,6 @@ retrolambda {
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
 
 android {
 
@@ -68,7 +74,14 @@ android {
     manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider",
                             suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider",
                             currentApplicationId       : "cm.aptoide.pt",
-                            fabricApiKey               : localProperties.FABRIC_API_KEY]
+                            fabricApiKey               : fabricConfigured ?
+                                localProperties.FABRIC_API_KEY : ""]
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
+
+    // Enabling multidex support.
+    multiDexEnabled true
   }
 
   lintOptions {
@@ -115,13 +128,14 @@ android {
       Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "PROD_VERSION_CODE")
       versionCode value
-      versionName "8.0.0.7"
+      versionName "8.0.1.0"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
   }
 
   buildTypes {
     release {
+      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
@@ -129,12 +143,12 @@ android {
     }
 
     debug {
+      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
       ext.enableCrashlytics = false
       multiDexEnabled true
       zipAlignEnabled false
       minifyEnabled false
       shrinkResources false
-      signingConfig signingConfigs.release
     }
   }
 
@@ -182,7 +196,7 @@ android {
   }
 
   dexOptions {
-    javaMaxHeapSize "4g"
+    javaMaxHeapSize "2g"
   }
 }
 
@@ -193,23 +207,42 @@ dependencies {
   //
 
   debugCompile project(path: ':v8engine', configuration: 'debug')
+//  {
+//    exclude(group:"com.android.support", name:"multidex")
+//  }
+
   releaseCompile project(path: ':v8engine', configuration: 'release')
+//  {
+//    exclude(group:"com.android.support", name:"multidex")
+//  }
 
   //
   // custom libs in folders
   //
 
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  //compile fileTree(dir: 'libs', include: ['*.jar'])
 
   //
   // from remote repos
   //
 
+  // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  // Multi Dex support
-  compile "com.android.support:multidex:${MULTIDEX_VERSION}"
+  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  // Force usage of support annotations in the test app, since it is internally used by the runner module.
+  androidTestCompile ("com.android.support.test:runner:${RUNNER_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestCompile ("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
+
+  compile ("com.android.support:multidex:${MULTIDEX_VERSION}"){
+    exclude group:"com.android.support", module:"support-annotations"
+  }
 }
 
 //class VersionCodeFileUpdateTask extends DefaultTask {
@@ -279,4 +312,10 @@ if (propFile.canRead()) {
 } else {
   println 'signing.properties not found'
   android.buildTypes.release.signingConfig = null
+}
+
+void configureLocalytics(androidDelegate, key) {
+  boolean keyExists = key != null
+  androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
+  androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists ? key : ""]
 }

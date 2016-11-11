@@ -12,8 +12,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -45,7 +45,8 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     ratingBar.setRating(app.getStats().getRating().getAvg());
     itemView.setOnClickListener(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      ((FragmentShower) v.getContext()).pushFragmentV4(AppViewFragment.newInstance(app.getId()));
+      ((FragmentShower) v.getContext()).pushFragmentV4(
+          V8Engine.getFragmentProvider().newAppViewFragment(app.getId()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           app.getPackageName(), false);
     });

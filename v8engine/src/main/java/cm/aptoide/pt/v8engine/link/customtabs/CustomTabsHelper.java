@@ -66,6 +66,21 @@ public class CustomTabsHelper {
     return null;
   }
 
+  /**
+   * <p>Launches specified url in a Chrome Custom Tab using no warm-up.</p>
+   * <p>Referrers are injected into the intent before launching.</p>
+   * <p>If the device/Android version doesn't support Chrome Custom Tabs,
+   * it will launch the intent for the user to choose where he wants to open the url.</p>
+   *
+   * <p>The Custom Chrome tab is customized with an orange Action Bar,
+   * a Share Url option (share intent),
+   * an enter/exit slide animation and
+   * a overflow menu item ("Open in App"), that allows user to open the url in a native application
+   * that can handle those kind of urls (excluding browsers).</p>
+   *
+   * @param url Url to be launched in the Custom Chrome Tab
+   * @param context Context
+   */
   public void openInChromeCustomTab(String url, Context context) {
     CustomTabsIntent.Builder builder = getBuilder(context);
     CustomTabsIntent customTabsIntent = builder.build();
@@ -73,17 +88,22 @@ public class CustomTabsHelper {
     customTabsIntent.launchUrl((Activity) context, Uri.parse(url));
   }
 
+  /**
+   * Injects Referrers to the intent so they can be extracted by the url source.
+   * This way the url source can see that we are generating traffic to their page.
+   */
   private void addRefererHttpHeader(Context context, CustomTabsIntent customTabsIntent) {
     Bundle httpHeaders = new Bundle();
     httpHeaders.putString("Referer", "http://m.aptoide.com");
     customTabsIntent.intent.putExtra(Browser.EXTRA_HEADERS, httpHeaders);
+    customTabsIntent.intent.getExtras();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-      customTabsIntent.intent.putExtra(Intent.EXTRA_REFERRER,
-          Uri.parse(Intent.URI_ANDROID_APP_SCHEME + "//" + context.getPackageName()));
+      customTabsIntent.intent.putExtra(Intent.EXTRA_REFERRER_NAME,
+          "android-app://" + context.getPackageName() + "/");
     }
   }
 
-  @NonNull public CustomTabsIntent.Builder getBuilder(Context context) {
+  @NonNull private CustomTabsIntent.Builder getBuilder(Context context) {
     Intent openInNativeIntent = new Intent(V8Engine.getContext(), CustomTabNativeReceiver.class);
     PendingIntent pendingIntent =
         PendingIntent.getBroadcast(V8Engine.getContext(), 0, openInNativeIntent, 0);

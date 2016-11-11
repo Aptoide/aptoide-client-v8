@@ -6,13 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import android.os.Build;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import rx.Observable;
 
@@ -27,8 +24,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   private String success;
 
   private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success) {
-    super(new IdsRepository(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()));
+    super();
     this.adId = adId;
     this.appId = appId;
     this.success = (success ? "1" : "0");
@@ -36,18 +32,18 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     extractAndSetTracker(clickUrl);
   }
 
-  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl,
-      boolean success) {
+  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success,
+      String email) {
     return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
   }
 
-  public static RegisterAdRefererRequest of(GetAdsResponse.Ad ad, boolean success) {
+  public static RegisterAdRefererRequest of(GetAdsResponse.Ad ad, boolean success, String email) {
     long appId = ad.getData().getId();
     long adId = ad.getInfo().getAdId();
     String clickUrl =
         DataproviderUtils.AdNetworksUtils.parseMacros(ad.getPartner().getData().getClickUrl());
 
-    return of(adId, appId, clickUrl, success);
+    return of(adId, appId, clickUrl, success, email);
   }
 
   public void execute() {

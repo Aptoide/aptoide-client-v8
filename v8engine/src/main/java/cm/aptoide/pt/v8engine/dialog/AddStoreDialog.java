@@ -14,18 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.FragmentTopStores;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 
 /**
@@ -33,8 +32,6 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
  * use File | Settings |
  * File Templates.
  */
-
-// // TODO: 19-05-2016 neuro IMPORTS TODOS MARADOS!
 public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
@@ -70,13 +67,15 @@ public class AddStoreDialog extends DialogFragment {
           ((EditText) view.findViewById(R.id.edit_store_uri)).getText().toString();
       if (givenStoreName.length() > 0) {
         AddStoreDialog.this.storeName = givenStoreName;
+        AptoideUtils.SystemU.hideKeyboard(getActivity());
         getStore(givenStoreName);
         showLoadingDialog();
       }
     });
 
     view.findViewById(R.id.button_top_stores).setOnClickListener(v -> {
-      ((MainActivityFragment) getActivity()).pushFragmentV4(FragmentTopStores.newInstance());
+      ((MainActivityFragment) getActivity()).pushFragmentV4(
+          V8Engine.getFragmentProvider().newFragmentTopStores());
       if (isAdded()) {
         dismiss();
       }
@@ -103,21 +102,22 @@ public class AddStoreDialog extends DialogFragment {
         BaseV7Response.Error error = baseResponse.getError();
         if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
           DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-              .this, PRIVATE_STORE_REQUEST_CODE, storeName);
-          dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+              .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
+          dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
         } else {
-          ShowMessage.asSnack(getView(), error.getDescription());
+          ShowMessage.asSnack(getActivity(), error.getDescription());
         }
         dismissLoadingDialog();
       } else {
         dismissLoadingDialog();
-        Toast.makeText(V8Engine.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+        ShowMessage.asSnack(getActivity(), R.string.error_occured);
       }
     }, storeName);
   }
 
   private GetStoreMetaRequest buildRequest(String storeName) {
-    return GetStoreMetaRequest.of(storeName);
+    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail());
   }
 
   private void showLoadingDialog() {

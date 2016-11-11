@@ -22,11 +22,12 @@ public class GridStoreDisplayable extends DisplayablePojo<Store> {
   public GridStoreDisplayable() {
   }
 
-  @Override public Type getType() {
-    return Type.STORES_GROUP;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_store;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(Type.STORES_GROUP.getDefaultPerLineCount(),
+        Type.STORES_GROUP.isFixedPerLineCount());
   }
 }

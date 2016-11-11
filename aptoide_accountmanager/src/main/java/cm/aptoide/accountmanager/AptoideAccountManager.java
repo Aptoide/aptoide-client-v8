@@ -7,7 +7,9 @@ package cm.aptoide.accountmanager;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
 import android.accounts.NetworkErrorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -38,18 +40,17 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.actions.GenerateClientId;
-import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
-import io.fabric.sdk.android.services.common.Crash;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
 import java.util.List;
 import javax.security.auth.login.LoginException;
 import lombok.experimental.PackagePrivate;
@@ -93,7 +94,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * This variable indicates if the user is logged or not. It's used because in some cases the
    * account manager is not fast enough
    */
-  private static boolean isLogin = isLoggedIn();
+  private static boolean userIsLoggedIn = isLoggedIn();
   /**
    * private variables
    */
@@ -134,7 +135,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @param extras Extras to add on created intent (to login or register activity)
    */
   public static void openAccountManager(Context context, @Nullable Bundle extras) {
-    if (isLogin) {
+    if (userIsLoggedIn) {
       context.startActivity(new Intent(context, MyAccountActivity.class));
     } else {
       final Intent intent = new Intent(context, LoginActivity.class);
@@ -192,8 +193,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public static boolean isLoggedIn() {
-    AccountManager manager =
-        android.accounts.AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
     return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
   }
 
@@ -214,7 +214,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   @PackagePrivate static void logout(WeakReference<FragmentActivity> activityRef) {
     FacebookLoginUtils.logout();
     getInstance().removeLocalAccount();
-    isLogin = false;
+    userIsLoggedIn = false;
     if (activityRef != null) {
       Activity activity = activityRef.get();
       if (activity != null) {
@@ -229,10 +229,21 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private static @Nullable String getRefreshToken() {
     String refreshToken = AccountManagerPreferences.getRefreshToken();
+
     if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
       refreshToken = getUserStringFromAndroidAccountManager(SecureKeys.REFRESH_TOKEN);
       AccountManagerPreferences.setRefreshToken(refreshToken);
     }
+
+    if(refreshToken==null  || TextUtils.isEmpty(refreshToken)) {
+      try{
+        refreshToken = getRefreshTokenFromAccountManager(); // as it is done in V7
+        AccountManagerPreferences.setRefreshToken(refreshToken);
+      } catch (Exception e) {
+        Logger.e(TAG, e);
+      }
+    }
+
     return refreshToken;
   }
 
@@ -257,8 +268,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (userAccount == null) {
       Account[] accounts = accountManager.getAccounts();
       for (final Account account : accounts) {
-        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail()) && TextUtils.equals(
-            account.type, Constants.ACCOUNT_TYPE)) {
+        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail())
+            && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
           userAccount = account;
           break;
         }
@@ -274,6 +285,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
     return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
+  }
+
+  private static @Nullable String getRefreshTokenFromAccountManager()
+      throws AuthenticatorException, OperationCanceledException, IOException {
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    String refreshToken = manager
+        .blockingGetAuthToken(accountsByType[0], Constants.AUTHTOKEN_TYPE_FULL_ACCESS, false);
+    return refreshToken;
   }
 
   @Nullable public static LoginMode getLoginMode() {
@@ -297,14 +317,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
     }
     return userName;
-  }
-
-  public static UserData getUserData () {
-    return new UserData() {
-      @Override public String getEmail() {
-        return getUserEmail();
-      }
-    };
   }
 
   /**
@@ -456,23 +468,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @param matureSwitch Switch state
    */
   public static void updateMatureSwitch(boolean matureSwitch) {
-    Observable.fromCallable(() -> {
-      AccountManagerPreferences.setMatureSwitch(matureSwitch);
-      return matureSwitch;
-    }).doOnNext(matureSwitch1 -> {
-      if (isLogin) {
-        ChangeUserSettingsRequest.of(matureSwitch1)
-            .observe()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .doOnError(throwable -> {
-              Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
-            })
-            .subscribe();
-      }
-    }).doOnError(throwable -> {
-      Logger.e(TAG, "updateMatureSwitch: " + throwable.toString());
-    }).subscribe();
+    AccountManagerPreferences.setMatureSwitch(matureSwitch);
+    if (userIsLoggedIn) {
+      ChangeUserSettingsRequest.of(matureSwitch)
+          .observe(true) // bypass cache since we are "writing" a value
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnError(throwable -> {
+            Logger.e(TAG, "Unable to update mature switch to " + Boolean.toString(matureSwitch));
+            CrashReports.logException(throwable);
+          })
+          .subscribe();
+    }
   }
 
   /**
@@ -505,12 +512,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       throw new IllegalThreadStateException("This method shouldn't be called on ui thread.");
     }
     String refreshToken = getRefreshToken();
-    final String[] stringToReturn = { "" };
-    getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
-        .subscribe((token) -> {
-          stringToReturn[0] = token;
-        });
-    return stringToReturn[0];
+    //final String[] stringToReturn = { "" };
+    //stringToReturn[0] =
+    //    getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
+    //        .first();
+    //return stringToReturn[0];
+    return getNewAccessTokenFromRefreshToken(refreshToken, getOnErrorAction(context)).toBlocking()
+        .first();
   }
 
   private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
@@ -572,6 +580,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }, e -> {
         if (e instanceof NetworkErrorException) {
           callback.onRegisterFail(R.string.unknown_error);
+        }
+        if (e instanceof SocketTimeoutException) {
+          AptoideAccountManager.loginUserCredentials(LoginMode.APTOIDE, email, password, null);
         }
         genericPleaseWaitDialog.dismiss();
         e.printStackTrace();
@@ -677,7 +688,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     return refreshUserInfoData().doOnNext(AptoideAccountManager::saveUserInfo);
   }
 
-  public static Observable<CheckUserCredentialsJson > refreshUserInfoData() {
+  public static Observable<CheckUserCredentialsJson> refreshUserInfoData() {
     return CheckUserCredentialsRequest.of(getAccessToken())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
@@ -689,8 +700,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   private void removeLocalAccount() {
-    AccountManager manager =
-        android.accounts.AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
+    AccountManager manager = AccountManager.get(cm.aptoide.pt.preferences.Application.getContext());
     Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
     for (Account account : accounts) {
       if (Build.VERSION.SDK_INT >= 22) {
@@ -765,13 +775,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
-      refreshAndSaveUserInfoData().subscribe(
-          userData -> {
+      refreshAndSaveUserInfoData().subscribe(userData -> {
 
-          }, e -> {
-            Logger.e(TAG, e);
-          }
-      );
+      }, e -> {
+        Logger.e(TAG, e);
+      });
       toReturn = true;
     }
     return toReturn;
@@ -782,7 +790,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginSuccess() {
-    isLogin = true;
+    userIsLoggedIn = true;
     mCallback.onLoginSuccess();
   }
 

@@ -28,6 +28,13 @@ public class ManagerPreferences {
     return Preferences.get().getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, false);
   }
 
+  /**
+   * @return true when updates should include system apps
+   */
+  public static boolean getUpdatesSystemAppsKey() {
+    return Preferences.get().getBoolean(ManagedKeys.UPDATES_SYSTEM_APPS_KEY, false);
+  }
+
   public static int getLastPushNotificationId() {
     return Preferences.get().getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
   }
@@ -97,7 +104,7 @@ public class ManagerPreferences {
 
   public static boolean needsSqliteDbMigration() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.PREF_NEEDS_SQLITE_DB_MIGRATION, false);
+        .getBoolean(ManagedKeys.PREF_NEEDS_SQLITE_DB_MIGRATION, true);
   }
 
   public static void setNeedsSqliteDbMigration(boolean migrationNeeded) {
@@ -110,5 +117,44 @@ public class ManagerPreferences {
   public static boolean isUpdateNotificationEnable() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.PREF_SHOW_UPDATE_NOTIFICATION, true);
+  }
+
+  public static boolean allowRootInstallation() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, false);
+  }
+
+  public static String getForceCountry() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getString(ManagedKeys.FORCE_COUNTRY, "");
+  }
+
+  public static void setForceCountry(String forcedCountry) {
+    Preferences.get().edit().putString(ManagedKeys.FORCE_COUNTRY, forcedCountry).apply();
+  }
+
+  public static boolean isDebug() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.DEBUG, false);
+  }
+
+  public static void setDebug(boolean debug) {
+    Preferences.get().edit().putBoolean(ManagedKeys.DEBUG, debug).apply();
+  }
+
+  public static void setNotificationType(String notificationType) {
+    Preferences.get().edit().putString(ManagedKeys.NOTIFICATION_TYPE, notificationType).apply();
+  }
+
+  public static String getNotificationType() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getString(ManagedKeys.NOTIFICATION_TYPE, "");
+  }
+
+  public static void setAllowRootInstallation(boolean allowRootInstallation) {
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, allowRootInstallation)
+        .apply();
   }
 }

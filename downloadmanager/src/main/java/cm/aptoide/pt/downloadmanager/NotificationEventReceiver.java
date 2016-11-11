@@ -13,7 +13,7 @@ import android.text.TextUtils;
 /**
  * Created by trinkes on 6/23/16.
  */
-public class NotificationEventReceiver extends BroadcastReceiver {
+@Deprecated public class NotificationEventReceiver extends BroadcastReceiver {
 
   private static final String TAG = NotificationEventReceiver.class.getSimpleName();
 

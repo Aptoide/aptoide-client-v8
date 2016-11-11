@@ -12,25 +12,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.ShowMessage;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import io.realm.Realm;
 import java.util.Locale;
-import lombok.Cleanup;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -43,9 +43,14 @@ import lombok.Cleanup;
   private TextView storeNumberUsersView;
   private Button followButton;
   private View storeLayout;
+  private CompositeSubscription subscription;
+  private StoreRepository storeRepository;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
+    subscription = new CompositeSubscription();
+    storeRepository = new StoreRepository(
+        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
   }
 
   @Override protected void assignViews(View itemView) {
@@ -65,7 +70,7 @@ import lombok.Cleanup;
   }
 
   @Override public void onViewDetached() {
-
+    subscription.clear();
   }
 
   private void setupStoreInfo(GetApp getApp) {
@@ -96,23 +101,24 @@ import lombok.Cleanup;
     storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),
         store.getAppearance().getTheme()));
 
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    boolean subscribed = DeprecatedDatabase.StoreQ.get(store.getId(), realm) != null;
-
-    if (subscribed) {
-      //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
-      //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
-      followButton.setText(R.string.followed);
-      followButton.setOnClickListener(
-          new Listeners().newOpenStoreListener(itemView, store.getName(),
-              store.getAppearance().getTheme()));
-    } else {
-      //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
-      //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-      followButton.setText(R.string.appview_follow_store_button_text);
-      followButton.setOnClickListener(
-          new Listeners().newSubscribeStoreListener(itemView, store.getName()));
-    }
+    subscription.add(storeRepository.isSubscribed(store.getId())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribed -> {
+          if (isSubscribed) {
+            //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
+            //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
+            followButton.setText(R.string.followed);
+            followButton.setOnClickListener(
+                new Listeners().newOpenStoreListener(itemView, store.getName(),
+                    store.getAppearance().getTheme()));
+          } else {
+            //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
+            //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
+            followButton.setText(R.string.appview_follow_store_button_text);
+            followButton.setOnClickListener(
+                new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+          }
+        }));
   }
 
   private static class Listeners {
@@ -121,7 +127,7 @@ import lombok.Cleanup;
         String storeTheme) {
       return v -> {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            StoreFragment.newInstance(storeName, storeTheme));
+            V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
       };
     }
 

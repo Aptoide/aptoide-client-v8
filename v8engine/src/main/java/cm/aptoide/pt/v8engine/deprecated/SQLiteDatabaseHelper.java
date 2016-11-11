@@ -9,24 +9,19 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
-import cm.aptoide.pt.database.accessors.UpdatesAccessor;
+import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.v8engine.deprecated.tables.Downloads;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
-import cm.aptoide.pt.v8engine.deprecated.tables.Installed;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
-import cm.aptoide.pt.v8engine.deprecated.tables.Updates;
-import io.realm.Realm;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 /**
  * Created by sithengineer on 24/08/16.
@@ -34,8 +29,7 @@ import java.io.FileOutputStream;
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 44;
-
+  private static final int DATABASE_VERSION = 55;
   private Throwable agregateExceptions;
 
   public SQLiteDatabaseHelper(Context context) {
@@ -56,6 +50,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + "], newVersion = ["
         + newVersion
         + "]");
+
     migrate(db);
 
     ManagerPreferences.setNeedsSqliteDbMigration(false);
@@ -85,47 +80,54 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     }
     Logger.w(TAG, "Migrating database started....");
 
-    Realm realm = DeprecatedDatabase.get();
-    realm.beginTransaction();
-    realm.deleteAll();
-    realm.commitTransaction();
-
     try {
-      new Repo().migrate(db, realm);
+      new Repo().migrate(db, AccessorFactory.getAccessorFor(Store.class));
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
-      new Excluded().migrate(db, realm);
+      new Excluded().migrate(db, AccessorFactory.getAccessorFor(Update.class));
+    } catch (Exception ex) {
+      logException(ex);
+    }
+
+    // recreated upon app install
+    //try {
+    //  new Installed().migrate(db,
+    //      AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Installed.class)); // X
+    //} catch (Exception ex) {
+    //  logException(ex);
+    //}
+
+    try {
+      new Rollback().migrate(db,
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Rollback.class));
     } catch (Exception ex) {
       logException(ex);
     }
 
     try {
-      new Installed().migrate(db, realm); // X
+      new Scheduled().migrate(db,
+          AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Scheduled.class)); // X
     } catch (Exception ex) {
       logException(ex);
     }
 
-    try {
-      new Rollback().migrate(db, realm);
-    } catch (Exception ex) {
-      logException(ex);
-    }
-
-    try {
-      new Scheduled().migrate(db, realm); // X
-    } catch (Exception ex) {
-      logException(ex);
-    }
-
+    // Updates table has changed. The new one has column label the old one doesn't.
+    // The updates are going to be obtained from ws
     //try {
     //  new Updates().migrate(db, realm);
     //  // despite the migration, this data should be recreated upon app startup
     //} catch (Exception ex) {
     //  logException(ex);
     //}
+
+    try{
+      new Downloads().migrate(AccessorFactory.getAccessorFor(Download.class));
+    } catch (Exception ex) {
+      logException(ex);
+    }
 
     // table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade

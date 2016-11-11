@@ -13,17 +13,18 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
@@ -33,20 +34,26 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
+import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
+import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import io.realm.Realm;
 import java.util.Collections;
 import java.util.List;
-import lombok.Cleanup;
 import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -58,12 +65,15 @@ public abstract class V8Engine extends DataProvider {
   private static final String TAG = V8Engine.class.getName();
 
   @Getter static DownloadService downloadService;
+  @Getter private static FragmentProvider fragmentProvider;
+  @Getter private static ActivityProvider activityProvider;
+  @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   private RefWatcher refWatcher;
+  @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
   public static void loadStores() {
 
     AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
 
       if (subscriptions.size() > 0) {
         for (Subscription subscription : subscriptions) {
@@ -76,20 +86,27 @@ public abstract class V8Engine extends DataProvider {
           store.setStoreName(subscription.getName());
           store.setTheme(subscription.getTheme());
 
-          realm.beginTransaction();
-          realm.copyToRealmOrUpdate(store);
-          realm.commitTransaction();
+          ((StoreAccessor) AccessorFactory.getAccessorFor(Store.class)).insert(store);
         }
       } else {
         addDefaultStore();
       }
 
-
-      DataproviderUtils.checkUpdates();
+      checkUpdates();
     }, e -> {
       Logger.e(TAG, e);
       //CrashReports.logException(e);
     });
+  }
+
+  private static void checkUpdates() {
+    UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+    repository.getUpdates(true)
+        .first()
+        .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
   }
 
   public static void loadUserData() {
@@ -97,15 +114,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   public static void clearUserData() {
-    clearStores();
-  }
-
-  private static void clearStores() {
-    @Cleanup Realm realm = DeprecatedDatabase.get();
-    realm.beginTransaction();
-    realm.delete(Store.class);
-    realm.commitTransaction();
-
+    AccessorFactory.getAccessorFor(Store.class).removeAll();
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
   }
 
@@ -115,8 +124,8 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void addDefaultStore() {
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(),
-        getStoreMeta -> DataproviderUtils.checkUpdates(), null);
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
+        null);
   }
 
   @Override public void onCreate() {
@@ -129,6 +138,9 @@ public abstract class V8Engine extends DataProvider {
     }
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
+    fragmentProvider = createFragmentProvider();
+    activityProvider = createActivityProvider();
+    displayableWidgetMapping = createDisplayableWidgetMapping();
 
     //
     // super
@@ -139,15 +151,18 @@ public abstract class V8Engine extends DataProvider {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-    DeprecatedDatabase.initialize(this);
     Database.initialize(this);
 
     generateAptoideUUID().subscribe();
 
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
+        new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
+        AptoideAccountManager.getUserEmail()));
+
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
-
+    Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
 
     if (BuildConfig.DEBUG) {
@@ -179,6 +194,8 @@ public abstract class V8Engine extends DataProvider {
       }, e -> {
         Logger.e(TAG, e);
       });
+    } else {
+      loadInstalledApps().subscribe();
     }
 
     final int appSignature = SecurityUtils.checkAppSignature(this);
@@ -197,25 +214,17 @@ public abstract class V8Engine extends DataProvider {
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
     AptoideDownloadManager.getInstance()
-        .init(
-            this,
-            new DownloadNotificationActionsActionsInterface(),
-            settingsInterface,
-            downloadAccessor,
-            new CacheHelper(downloadAccessor, settingsInterface),
-            new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(
+        .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
+            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
+            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
-                AptoideAccountManager.getUserData()
-            )
-        );
+                AptoideAccountManager.getUserEmail()));
 
     // setupCurrentActivityListener();
 
-    if (BuildConfig.DEBUG) {
-      setupStrictMode();
-      Logger.w(TAG, "StrictMode setup");
-    }
+    //if (BuildConfig.DEBUG) {
+    //  setupStrictMode();
+    //  Logger.w(TAG, "StrictMode setup")
 
     // this will trigger the migration if needed
     // FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
@@ -225,9 +234,17 @@ public abstract class V8Engine extends DataProvider {
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
-  //
-  // Strict Mode
-  //
+  protected FragmentProvider createFragmentProvider() {
+    return new FragmentProviderImpl();
+  }
+
+  protected ActivityProvider createActivityProvider() {
+    return new ActivityProviderImpl();
+  }
+
+  protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
+    return DisplayableWidgetMapping.getInstance();
+  }
 
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
@@ -235,29 +252,34 @@ public abstract class V8Engine extends DataProvider {
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
   }
 
-  //
-  // Leak Canary
-  //
-
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {
-      @Cleanup Realm realm = DeprecatedDatabase.get();
-      DeprecatedDatabase.dropTable(Installed.class, realm);
+      // remove the current installed apps
+      AccessorFactory.getAccessorFor(Installed.class).removeAll();
 
+      // get the installed apps
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
-      Logger.d(TAG, "Found " + installedApps.size() + " user installed apps.");
+      Logger.v(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
       Collections.sort(installedApps,
           (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
-      for (PackageInfo packageInfo : installedApps) {
-        Installed installed = new Installed(packageInfo);
-        DeprecatedDatabase.save(installed, realm);
-      }
-      return null;
-    }).subscribeOn(Schedulers.io());
+      // return sorted installed apps
+      return installedApps;
+    })  // transform installation package into Installed table entry and save all the data
+        .flatMapIterable(list -> list)
+        .map(packageInfo -> new Installed(packageInfo))
+        .toList()
+        .doOnNext(list -> {
+          AccessorFactory.getAccessorFor(Installed.class).insertAll(list);
+        })
+        .subscribeOn(Schedulers.io());
   }
+
+  //
+  // Strict Mode
+  //
 
   private void setupStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
@@ -316,4 +338,8 @@ public abstract class V8Engine extends DataProvider {
   //			refWatcher.watch(activity);
   //		}
   //	}
+
+  @Override protected TokenInvalidator getTokenInvalidator() {
+    return AptoideAccountManager::invalidateAccessToken;
+  }
 }

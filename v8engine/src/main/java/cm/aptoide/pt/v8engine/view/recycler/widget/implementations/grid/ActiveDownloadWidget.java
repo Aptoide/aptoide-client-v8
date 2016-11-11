@@ -49,16 +49,14 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     this.displayable = displayable;
-    displayable.setOnPauseAction(() -> onViewDetached());
-    displayable.setOnResumeAction(() -> onViewAttached());
   }
 
   @Override public void onViewAttached() {
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
     }
-    subscriptions.add(
-        RxView.clicks(pauseCancelButton).subscribe(click -> displayable.pauseInstall()));
+    subscriptions.add(RxView.clicks(pauseCancelButton)
+        .subscribe(click -> displayable.pauseInstall(getContext())));
     subscriptions.add(displayable.getDownload()
         .observeOn(Schedulers.computation())
         .distinctUntilChanged()
@@ -86,7 +84,7 @@ import rx.subscriptions.CompositeSubscription;
     }
     downloadProgressTv.setText(download.getOverallProgress() + "%");
     downloadSpeedTv.setText(
-        String.valueOf(AptoideUtils.StringU.formatBits((long) download.getDownloadSpeed())));
+        String.valueOf(AptoideUtils.StringU.formatBytes((long) download.getDownloadSpeed())));
     return null;
   }
 }

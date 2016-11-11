@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.IntentFilter;
-import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -23,13 +23,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.MinimalAd;
+import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -38,14 +37,16 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.ShowMessage;
 import cm.aptoide.pt.utils.SimpleSubscriber;
+import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.SearchFragment;
+import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
@@ -53,7 +54,6 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -90,8 +90,9 @@ import rx.subscriptions.CompositeSubscription;
   private MinimalAd minimalAd;
 
   private App trustedVersion;
-  private DownloadServiceHelper downloadServiceHelper;
+  //private DownloadServiceHelper downloadServiceHelper;
   private PermissionRequest permissionRequest;
+  private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private boolean isUpdate;
 
@@ -121,101 +122,68 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @Override public void bindView(AppViewInstallDisplayable displayable) {
-    //displayable.setOnResumeAction(() -> onViewAttached());
-    //displayable.setOnPauseAction(() -> onViewDetached());
     displayable.setInstallButton(actionButton);
     if (subscriptions == null || subscriptions.isUnsubscribed()) {
       subscriptions = new CompositeSubscription();
     }
-    downloadServiceHelper =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), new PermissionManager());
+
+    AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
+    downloadManager.initDownloadService(getContext());
+    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(downloadManager, installer,
+        AccessorFactory.getAccessorFor(Download.class),
+        AccessorFactory.getAccessorFor(Installed.class));
+
     minimalAd = displayable.getMinimalAd();
     GetApp getApp = displayable.getPojo();
-    //appID = getApp.getNodes().getMeta().getData().getId();
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
     final FragmentShower fragmentShower = ((FragmentShower) getContext());
 
     versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
-      OtherVersionsFragment fragment =
-          OtherVersionsFragment.newInstance(currentApp.getName(), currentApp.getIcon(),
+      Fragment fragment = V8Engine.getFragmentProvider()
+          .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
       fragmentShower.pushFragmentV4(fragment);
     });
 
-    String packageName = currentApp.getPackageName();
-
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    //Update update = DeprecatedDatabase.UpdatesQ.get(packageName, realm);
-
-    //check if the app is installed or has an update
-    //if (update != null) {
-    //	// app installed and has a pending update. setup update buttons
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-    //	actionButton.setText(R.string.update);
-    //	actionButton.setOnClickListener(installOrUpgradeListener(true, currentApp, getApp.getNodes().getVersions(), displayable));
-    //
-    //	// setup un-install button as visible in fragment menu
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-    //		displayable.uninstall(getContext(), currentApp).subscribe();
-    //	});
-    //} else if (update == null && installed != null) {
-    //
-    //	// app installed and does not have a pending update. we can show open or downgrade buttons here.
-    //	// it is a downgrade if the appview version is inferior to the installed version
-    //	// it is a open if the appview version is equal to the installed version
-    //
-    //	if (currentApp.getFile().getVercode() < installed.getVersionCode()) {
-    //		actionButton.setText(R.string.downgrade);
-    //		actionButton.setOnClickListener(downgradeListener(currentApp, displayable));
-    //	} else {
-    //		actionButton.setText(R.string.open);
-    //		actionButton.setOnClickListener(v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
-    //	}
-    //
-    //	// setup un-install button as visible in fragment menu
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-    //		displayable.uninstall(getContext(), currentApp).subscribe();
-    //	});
-    //} else {
-    //	// app not installed
-    //	setupInstallOrBuyButton(displayable, getApp);
-    //
-    //	// setup un-install button as invisible in fragment menu
-    //	((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-    //}
-
-    InstalledAccessor installedAccessor = displayable.getInstalledAccessor();
-    installedAccessor.get(packageName)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installed -> {
-          if (installed != null) {
-            ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(() -> {
-              displayable.uninstall(getContext()).subscribe(aVoid -> {
-              }, throwable -> throwable.printStackTrace());
-            });
-            if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
+    subscriptions.add(
+        displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
+          switch (widgetState.getButtonState()) {
+            case AppViewInstallDisplayable.ACTION_INSTALLING:
+              if (widgetState.getProgress() != null) {
+                downloadProgress.setIndeterminate(widgetState.getProgress().isIndeterminate());
+                downloadStatusUpdate(widgetState.getProgress(), currentApp);
+                setDownloadBarVisible(true, displayable, widgetState.getProgress(), currentApp);
+                break;
+              }
+            case AppViewInstallDisplayable.ACTION_INSTALL:
+              //App not installed
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setupInstallOrBuyButton(displayable, getApp);
+              ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+              break;
+            case AppViewInstallDisplayable.ACTION_DOWNGRADE:
+              //downgrade
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setupActionButton(R.string.downgrade, downgradeListener(currentApp));
+              break;
+            case AppViewInstallDisplayable.ACTION_OPEN:
               //current installed version
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
               setupActionButton(R.string.open,
                   v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
-            } else if (currentApp.getFile().getVercode() > installed.getVersionCode()) {
+              break;
+            case AppViewInstallDisplayable.ACTION_UPDATE:
               //update
               isUpdate = true;
+              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
               setupActionButton(R.string.update,
                   installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(),
                       displayable));
-            } else {
-              //downgrade
-              setupActionButton(R.string.downgrade, downgradeListener(currentApp, displayable));
-            }
-          } else {
-            //app not installed
-            setupInstallOrBuyButton(displayable, getApp);
-            ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+              break;
           }
-        }, throwable -> throwable.printStackTrace());
-    checkOnGoingDownload(getApp, displayable);
+        }));
 
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
       notLatestAvailableText.setVisibility(View.GONE);
@@ -260,69 +228,7 @@ import rx.subscriptions.CompositeSubscription;
     actionButton.setOnClickListener(null);
     actionPause.setOnClickListener(null);
     actionCancel.setOnClickListener(null);
-    //subscribe.unsubscribe();
-  }
-
-  public void checkOnGoingDownload(GetApp getApp, AppViewInstallDisplayable displayable) {
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    String md5 = app.getFile().getMd5sum();
-    downloadServiceHelper.getDownload(md5)
-        .firstOrDefault(null)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(download -> {
-          int downloadStatus = download.getOverallDownloadStatus();
-          if ((downloadStatus == Download.PROGRESS
-              || downloadStatus == Download.IN_QUEUE
-              || downloadStatus == Download.PENDING
-              ||
-              downloadStatus == Download.PAUSED)) {
-            setDownloadBarVisible(true);
-            setupDownloadControls(app, download, displayable);
-            downloadServiceHelper.getDownload(md5)
-                .observeOn(AndroidSchedulers.mainThread())
-                .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-                    onGoingDownload.getOverallDownloadStatus()))
-                .subscribe(onGoingDownload -> {
-                  manageDownload(onGoingDownload, displayable, app);
-                }, err -> {
-                  Logger.e(TAG, err);
-                });
-          }
-        }, err -> {
-          if (!(err instanceof DownloadNotFoundException)) {
-            Logger.e(TAG, err);
-          }
-          // ignore because download does not exist
-        });
-
-    // FIXME: 22/08/16 sithengineer clean the following commented out code
-    //		downloadServiceHelper.getAllDownloads().firstOrDefault(Collections.emptyList()).subscribe(downloads -> {
-    //			for (Download download : downloads) {
-    //				int downloadStatus = download.getOverallDownloadStatus();
-    //				if ((downloadStatus == Download.PROGRESS || downloadStatus == Download.IN_QUEUE || downloadStatus == Download.PENDING ||
-    // downloadStatus ==
-    //						Download.PAUSED) && download
-    //						.getAppId() == app.getId()) {
-    //					setDownloadBarVisible(true);
-    //					setupDownloadControls(app, download, displayable);
-    //					downloadServiceHelper.getDownload(app.getId()).subscribe(onGoingDownload -> {
-    //						manageDownload(onGoingDownload, displayable, app);
-    //					}, err -> {
-    //						Logger.e(TAG, err);
-    //					});
-    //					return;
-    //				}
-    //			}
-    //		}, err -> {
-    //			Logger.e(TAG, err);
-    //		});
-  }
-
-  private boolean shouldContinueListenDownload(int downloadStatus) {
-    return downloadStatus != Download.PROGRESS
-        && downloadStatus != Download.INVALID_STATUS
-        && downloadStatus != Download.PENDING
-        && downloadStatus != Download.IN_QUEUE;
+    subscriptions.clear();
   }
 
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
@@ -360,8 +266,7 @@ import rx.subscriptions.CompositeSubscription;
     }
   }
 
-  private View.OnClickListener downgradeListener(final GetAppMeta.App app,
-      AppViewInstallDisplayable displayable) {
+  private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
     return view -> {
       final Context context = view.getContext();
       ContextWrapper contextWrapper = (ContextWrapper) context;
@@ -379,28 +284,16 @@ import rx.subscriptions.CompositeSubscription;
                 if (eResponse == GenericDialogs.EResponse.YES) {
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
+
                   DownloadFactory factory = new DownloadFactory();
-                  Download appDownload = factory.create(app);
-                  downloadServiceHelper.startDownload(permissionRequest, appDownload)
+                  Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
+                  showRootInstallWarningPopup(context);
+                  subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
+                      .flatMap(success -> installManager.install(getContext(), appDownload))
                       .observeOn(AndroidSchedulers.mainThread())
-                      .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-                          onGoingDownload.getOverallDownloadStatus()))
-                      .subscribe(download -> {
-                        manageDownload(download, displayable, app);
-                /*if (!setupDownloadControlsRunned) {
-                  // TODO: 09/09/16 refactor this
-                  setupDownloadControls(app, appDownload, displayable);
-                }*/
-
-                        if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-                          //final String packageName = app.getPackageName();
-                          //final FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-
-                          displayable.downgrade(getContext()).subscribe(aVoid -> {
-                          }, throwable -> throwable.printStackTrace());
-                        }
-                      });
-                  setupDownloadControls(app, appDownload, displayable);
+                      .subscribe(progress -> {
+                        Logger.d(TAG, "Installing");
+                      }, throwable -> Logger.e(TAG, throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -413,6 +306,23 @@ import rx.subscriptions.CompositeSubscription;
     };
   }
 
+  private void showRootInstallWarningPopup(Context context) {
+    if (installManager.showWarning()) {
+      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
+          .subscribe(eResponses -> {
+            switch (eResponses) {
+              case YES:
+                installManager.rootInstallAllowed(true);
+                break;
+              case NO:
+                installManager.rootInstallAllowed(false);
+                break;
+            }
+          });
+    }
+  }
+
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
     GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message)
@@ -423,33 +333,36 @@ import rx.subscriptions.CompositeSubscription;
       ListAppVersions appVersions, AppViewInstallDisplayable displayable) {
 
     final Context context = getContext();
+
     @StringRes final int installOrUpgradeMsg =
         this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
+    int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
+    PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
 
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.SourceDownloadComplete.installClicked(app.getId());
+        Analytics.DownloadComplete.installClicked(app.getId());
       }
 
-      DownloadFactory factory = new DownloadFactory();
-      Download appDownload = factory.create(app);
+      showRootInstallWarningPopup(context);
 
-      downloadServiceHelper.startDownload(permissionRequest, appDownload)
+      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+          .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
+          .flatMap(success -> installManager.install(getContext(),
+              new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
+                  downloadAction)))
+          .first()
           .observeOn(AndroidSchedulers.mainThread())
-          .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-              onGoingDownload.getOverallDownloadStatus()))
-          .subscribe(download -> {
-            manageDownload(download, displayable, app);
+          .subscribe(progress -> {
+            ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
             }
-
             Logger.e(TAG, err);
-          });
-      ShowMessage.asSnack(v, installOrUpgradeMsg);
-      setupDownloadControls(app, appDownload, displayable);
+          }));
     };
 
     findTrustedVersion(app, appVersions);
@@ -459,10 +372,10 @@ import rx.subscriptions.CompositeSubscription;
       Fragment fragment;
       if (hasTrustedVersion) {
         // go to app view of the trusted version
-        fragment = AppViewFragment.newInstance(trustedVersion.getId());
+        fragment = V8Engine.getFragmentProvider().newAppViewFragment(trustedVersion.getId());
       } else {
         // search for a trusted version
-        fragment = SearchFragment.newInstance(app.getName(), true);
+        fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
       ((FragmentShower) context).pushFragmentV4(fragment);
     };
@@ -482,118 +395,82 @@ import rx.subscriptions.CompositeSubscription;
     };
   }
 
-  @MainThread private void manageDownload(Download download, AppViewInstallDisplayable displayable,
-      GetAppMeta.App app) {
-
-    Context ctx = getContext();
-
-    switch (download.getOverallDownloadStatus()) {
-
+  private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app) {
+    switch (progress.getRequest().getOverallDownloadStatus()) {
       case Download.PAUSED: {
-        actionResume.setVisibility(View.VISIBLE);
-        actionPause.setVisibility(View.GONE);
+        updateDownloadProgress(progress);
         break;
       }
-
       case Download.IN_QUEUE:
       case Download.PROGRESS: {
-        downloadProgress.setProgress(download.getOverallProgress());
-        //textProgress.setText(download.getOverallProgress() + "% - " + AptoideUtils.StringU.formatBits((long) download.getSpeed()) +
-        // "/s");
-        textProgress.setText(download.getOverallProgress() + "%");
+        updateDownloadProgress(progress);
         break;
       }
-
       case Download.ERROR: {
-        setDownloadBarVisible(false);
         break;
       }
 
       case Download.COMPLETED: {
         Analytics.DownloadComplete.downloadComplete(app);
         Analytics.SourceDownloadComplete.downloadComplete(app.getId(), app.getPackageName());
-        setDownloadBarVisible(false);
-
-        Observable<Void> install;
-        if (isUpdate) {
-          install = displayable.update(ctx);
-        } else {
-          install = displayable.install(ctx);
-        }
-
-        install.observeOn(AndroidSchedulers.mainThread()).doOnNext(success -> {
+        if (!isUpdate) {
           if (minimalAd != null && minimalAd.getCpdUrl() != null) {
             DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
           }
-        }).subscribe(success -> {
-          if (actionButton.getVisibility() == View.VISIBLE) {
-            setupActionButton(R.string.open,
-                v -> AptoideUtils.SystemU.openApp(app.getPackageName()));
-
-            if (displayable.isVisible()) {
-              ((AppMenuOptions) ((FragmentShower) ctx).getLastV4()).setUnInstallMenuOptionVisible(
-                  () -> {
-                    displayable.uninstall(ctx).subscribe(aVoid -> {
-                    }, throwable -> throwable.printStackTrace());
-                  });
-            }
-          }
-        }, throwable -> throwable.printStackTrace());
+        }
         break;
       }
     }
   }
 
-  private void setupDownloadControls(GetAppMeta.App app, Download download,
+  private void updateDownloadProgress(@NonNull Progress<Download> progress) {
+    if (progress.getRequest().getOverallDownloadStatus() == Download.PAUSED) {
+      actionResume.setVisibility(View.VISIBLE);
+      actionPause.setVisibility(View.GONE);
+    } else {
+      actionResume.setVisibility(View.GONE);
+      actionPause.setVisibility(View.VISIBLE);
+    }
+    downloadProgress.setProgress(progress.getCurrent());
+    textProgress.setText(progress.getCurrent() + "%");
+  }
+
+  private void setupDownloadControls(GetAppMeta.App app, Progress<Download> progress,
       AppViewInstallDisplayable displayable) {
-    String md5 = app.getFile().getMd5sum();
+    String md5 = app.getMd5();
 
     actionCancel.setOnClickListener(view -> {
-      downloadServiceHelper.removeDownload(md5);
-      setDownloadBarVisible(false);
+      installManager.removeInstallationFile(md5, getContext());
     });
 
     actionPause.setOnClickListener(view -> {
-      downloadServiceHelper.pauseDownload(md5);
-      actionResume.setVisibility(View.VISIBLE);
-      actionPause.setVisibility(View.GONE);
+      installManager.stopInstallation(getContext(), md5);
     });
 
     actionResume.setOnClickListener(view -> {
-      downloadServiceHelper.startDownload(permissionRequest, download)
+      PermissionManager permissionManager = new PermissionManager();
+      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+          .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
+              (PermissionRequest) getContext()))
+          .flatMap(success -> installManager.install(getContext(),
+              new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
+                  progress.getRequest().getAction())))
           .observeOn(AndroidSchedulers.mainThread())
-          //the first state will be "onPause" and we don't wanna listen it
-          .skip(1)
-          .takeUntil(onGoingDownload -> shouldContinueListenDownload(
-              onGoingDownload.getOverallDownloadStatus()))
-          .subscribe(onGoingDownload -> {
-            if (actionPause.getVisibility() != View.VISIBLE) {
-              actionResume.setVisibility(View.GONE);
-              actionPause.setVisibility(View.VISIBLE);
-            }
-            manageDownload(onGoingDownload, displayable, app);
+          .subscribe(downloadProgress -> {
+            Logger.d(TAG, "Installing");
           }, err -> {
             Logger.e(TAG, err);
-          });
+          }));
     });
-
-    setDownloadBarVisible(true);
-    switch (download.getOverallDownloadStatus()) {
-      case Download.PAUSED:
-        downloadProgress.setProgress(download.getOverallProgress());
-        textProgress.setText(download.getOverallProgress() + "%");
-        actionResume.setVisibility(View.VISIBLE);
-        actionPause.setVisibility(View.GONE);
-      default:
-        actionResume.setVisibility(View.GONE);
-        actionPause.setVisibility(View.VISIBLE);
-    }
   }
 
-  private void setDownloadBarVisible(boolean visible) {
-    // TODO: 22/09/16 diogo.loureiro crashes on downgrade
+  private void setDownloadBarVisible(boolean visible, AppViewInstallDisplayable displayable,
+      Progress<Download> progress, GetAppMeta.App app) {
     installAndLatestVersionLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
     downloadProgressLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    if (visible) {
+      setupDownloadControls(app, progress, displayable);
+    }
   }
 
   /**

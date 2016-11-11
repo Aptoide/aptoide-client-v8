@@ -10,6 +10,19 @@
     android:gravity="bottom"
     android:orientation="vertical"
     >
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="30dp"
+      android:layout_marginStart="30dp"
+      android:layout_marginTop="20dp"
+      android:drawableLeft="@android:drawable/ic_menu_info_details"
+      android:gravity="center"
+      android:text="@string/about_us"
+      android:textSize="@dimen/text_size_large"
+      android:textStyle="bold"
+      />
 
   <TextView
       android:id="@+id/title"

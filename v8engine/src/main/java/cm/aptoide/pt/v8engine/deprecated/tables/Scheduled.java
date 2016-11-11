@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.deprecated.tables;
 
 import android.database.Cursor;
+import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
 
 /**
@@ -34,12 +35,16 @@ public class Scheduled extends BaseTable {
   @Override public RealmObject convert(Cursor cursor) {
     cm.aptoide.pt.database.realm.Scheduled realmObject =
         new cm.aptoide.pt.database.realm.Scheduled();
-    realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
     realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
+    realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE_NAME)));
     realmObject.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
     realmObject.setVersionName(cursor.getString(cursor.getColumnIndex(COLUMN_VERSION_NAME)));
     realmObject.setStoreName(cursor.getString(cursor.getColumnIndex(COLUMN_REPO)));
     realmObject.setIcon(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
+
+    String cleanIconPath =
+        AptoideUtils.IconSizeU.cleanImageUrl(cursor.getString(cursor.getColumnIndex(COLUMN_ICON)));
+    realmObject.setIcon(cleanIconPath);
     return realmObject;
   }
 }

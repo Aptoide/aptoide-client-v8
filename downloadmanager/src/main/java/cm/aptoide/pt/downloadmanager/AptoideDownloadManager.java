@@ -43,6 +43,7 @@ public class AptoideDownloadManager {
   static public final int PROGRESS_MAX_VALUE = 100;
   private static final String TAG = AptoideDownloadManager.class.getSimpleName();
   private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
+
   /***********
    * Paths
    *****************/
@@ -56,7 +57,7 @@ public class AptoideDownloadManager {
   private boolean isPausing = false;
   @Getter(AccessLevel.MODULE) private DownloadNotificationActionsInterface
       downloadNotificationActionsInterface;
-  @Getter(AccessLevel.MODULE) private DownloadSettingsInterface settingsInterface;
+  @Getter private DownloadSettingsInterface settingsInterface;
   private DownloadAccessor downloadAccessor;
   private CacheManager cacheHelper;
   private FileUtils fileUtils;
@@ -72,7 +73,7 @@ public class AptoideDownloadManager {
     return instance;
   }
 
-  void initDownloadService(Context context) {
+  public void initDownloadService(Context context) {
     AptoideDownloadManager.context = context;
     createDownloadDirs();
   }
@@ -92,7 +93,7 @@ public class AptoideDownloadManager {
    * message.
    */
   public Observable<Download> startDownload(Download download) throws IllegalArgumentException {
-    return getDownloadStatus(download.getMd5()).flatMap(status -> {
+    return getDownloadStatus(download.getMd5()).first().flatMap(status -> {
       if (status == Download.COMPLETED) {
         return Observable.just(download);
       } else {
@@ -152,6 +153,20 @@ public class AptoideDownloadManager {
         return Observable.just(download);
       }
     }).takeUntil(storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
+  }
+
+  public Observable<List<Download>> getAsListDownload(String md5) {
+    return downloadAccessor.getAsList(md5).map(downloads -> {
+      for (int i = 0; i < downloads.size(); i++) {
+        Download download = downloads.get(i);
+        if (download == null || (download.getOverallDownloadStatus() == Download.COMPLETED
+            && getInstance().getStateIfFileExists(download) == Download.FILE_MISSING)) {
+          downloads.remove(i);
+          i--;
+        }
+      }
+      return downloads;
+    });
   }
 
   public Observable<Download> getCurrentDownload() {
@@ -223,10 +238,14 @@ public class AptoideDownloadManager {
 
   @NonNull @Download.DownloadState private int getStateIfFileExists(Download downloadToCheck) {
     @Download.DownloadState int downloadStatus = Download.COMPLETED;
-    for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
-      if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
-        downloadStatus = Download.FILE_MISSING;
-        break;
+    if (downloadToCheck.getOverallDownloadStatus() == Download.PROGRESS) {
+      downloadStatus = Download.PROGRESS;
+    } else {
+      for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
+        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
+          downloadStatus = Download.FILE_MISSING;
+          break;
+        }
       }
     }
     return downloadStatus;

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -19,7 +18,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -35,12 +33,8 @@ import rx.Observable;
   private static IdsRepository idsRepository =
       new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
 
-  private static OkHttpClient client = new OkHttpClient.Builder().readTimeout(2, TimeUnit.SECONDS)
-      .addInterceptor(new UserAgentInterceptor(
-          AptoideUtils.NetworkUtils.getDefaultUserAgent(idsRepository,
-              AptoideAccountManager.getUserData())))
-      .connectTimeout(2, TimeUnit.SECONDS)
-      .build();
+  private static OkHttpClient client = new OkHttpClient.Builder().addInterceptor(
+      new UserAgentInterceptor(SecurePreferences.getUserAgent())).build();
 
   private Location location;
   private String keyword;

@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -31,7 +33,7 @@ public abstract class BaseTable {
     return null;
   }
 
-  public void migrate(SQLiteDatabase db, Realm realm) {
+  public void migrate(SQLiteDatabase db, Accessor<RealmObject> accessor) {
     Cursor cursor = null;
     try {
 
@@ -54,20 +56,27 @@ public abstract class BaseTable {
         converted = convert(cursor);
         if (converted != null) objs.add(converted);
       }
-      if (objs.size() > 0) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(objs);
-        realm.commitTransaction();
+      if (objs.size() > 0 && accessor != null) {
+        accessor.insertAll(objs);
+      }
+
+      if (accessor == null) {
+        throw new RuntimeException("Accessor ir null for table " + tableName);
       }
 
       // delete migrated table
-      // FIXME: 29/08/16 sithengineer uncomment the following lines when migration script is stable
+      // TODO: 29/08/16 sithengineer uncomment the following lines when migration script is stable
       //			db.beginTransaction();
       //			db.execSQL(DROP_TABLE_SQL + tableName);
       //			db.endTransaction();
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
-    } finally {
+    }
+    catch (Exception e) {
+      Logger.e(TAG, e);
+      //CrashReports.logException(e);
+    }
+    finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();
       }

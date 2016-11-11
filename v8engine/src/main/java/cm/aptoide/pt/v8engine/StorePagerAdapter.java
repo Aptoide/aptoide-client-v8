@@ -11,12 +11,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
-import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.LatestReviewsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 import cm.aptoide.pt.v8engine.util.Translator;
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -98,10 +92,10 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     Event event = tab.getEvent();
     switch (event.getName()) {
       case getUserTimeline:
-        return AppsTimelineFragment.newInstance(event.getAction());
+        return V8Engine.getFragmentProvider().newAppsTimelineFragment(event.getAction());
       default:
-        return StoreTabGridRecyclerFragment.newInstance(event, tab.getLabel(), storeTheme,
-            tab.getTag());
+        return V8Engine.getFragmentProvider()
+            .newStoreTabGridRecyclerFragment(event, tab.getLabel(), storeTheme, tab.getTag());
     }
   }
 
@@ -109,18 +103,29 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     return availableEventsMap.containsKey(name);
   }
 
+  /**
+   * Returns the position of an Event, given a name.
+   *
+   * @param name name of the Event {@link Event.Name}
+   * @return returns a positive integer 0...X if there is an Event with requested name, else returns
+   * -1.
+   */
   public Integer getEventNamePosition(Event.Name name) {
-    return availableEventsMap.get(name);
+    final Integer integer = availableEventsMap.get(name);
+    if (integer  == null) {
+      return -1;
+    }
+    return integer;
   }
 
   private Fragment caseClient(Event event) {
     switch (event.getName()) {
       case myStores:
-        return SubscribedStoresFragment.newInstance();
+        return V8Engine.getFragmentProvider().newSubscribedStoresFragment();
       case myUpdates:
-        return UpdatesFragment.newInstance();
+        return V8Engine.getFragmentProvider().newUpdatesFragment();
       case myDownloads:
-        return DownloadsFragment.newInstance();
+        return V8Engine.getFragmentProvider().newDownloadsFragment();
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
@@ -130,7 +135,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private Fragment caseV3(Event event) {
     switch (event.getName()) {
       case getReviews:
-        return LatestReviewsFragment.newInstance(storeId);
+        return V8Engine.getFragmentProvider().newLatestReviewsFragment(storeId);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");

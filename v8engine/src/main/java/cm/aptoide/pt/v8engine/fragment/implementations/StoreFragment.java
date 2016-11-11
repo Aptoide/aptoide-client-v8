@@ -10,7 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +21,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.StoreUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
@@ -30,12 +31,14 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import com.astuetz.PagerSlidingTabStrip;
 import com.trello.rxlifecycle.FragmentEvent;
@@ -98,7 +101,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    if (storeTheme != null) {
+    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
   }
@@ -106,7 +109,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get("default"));
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
   }
 
@@ -127,7 +131,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
-      GetStoreRequest.of(storeName, storeContext)
+      GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
+          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -142,8 +147,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
                   || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
                   baseResponse.getError().getCode())) {
                 DialogFragment dialogFragment =
-                    PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName);
-                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                    (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
+                if (dialogFragment == null) {
+                  dialogFragment =
+                      PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
+                          true);
+                  dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                }
               }
             } else {
               finishLoading(throwable);
@@ -159,32 +169,57 @@ public class StoreFragment extends BasePagerToolbarFragment {
     pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
 
     if (pagerSlidingTabStrip != null) {
-      pagerSlidingTabStrip.setViewPager(mViewPager);
+      pagerSlidingTabStrip.setViewPager(viewPager);
     }
-    floatingActionButton.setOnClickListener(v -> new AddStoreDialog().show(
-        ((FragmentActivity) getContext()).getSupportFragmentManager(), "addStoreDialog"));
 
-    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    /*
+     *  Click on tab listener
+     */
+    StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
+    pagerSlidingTabStrip.setOnTabReselectedListener(position -> {
+      if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+          if (fragment != null && fragment instanceof AppsTimelineFragment) {
+            ((AppsTimelineFragment) fragment).goToTop();
+          }
+        }
       }
+    });
 
+    /*
+     *  On Orientation change keep the fab up on subscribed stores
+     */
+    if (viewPager.getCurrentItem() == adapter.getEventNamePosition(Event.Name.myStores)) {
+      FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+      floatingActionButton.setOnClickListener(
+          v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
+      floatingActionButton.show();
+    } else {
+      floatingActionButton.hide();
+    }
+
+    /* Be careful maintaining this code
+     * this affects both the main ViewPager when we open app
+     * and the ViewPager inside the StoresView
+     */
+    viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
-        StorePagerAdapter adapter = (StorePagerAdapter) mViewPager.getAdapter();
+        StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
+
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
-        }
-
-        if (Integer.valueOf(position).equals(adapter.getEventNamePosition(Event.Name.myStores))) {
-          floatingActionButton.show();
-        } else if (floatingActionButton.getVisibility() == View.VISIBLE) {
           floatingActionButton.hide();
+          floatingActionButton.setOnClickListener(null);
+        } else if (Integer.valueOf(position)
+            .equals(adapter.getEventNamePosition(Event.Name.myStores))) {
+          FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+          floatingActionButton.setOnClickListener(
+              v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
+          floatingActionButton.show();
+        } else {
+          floatingActionButton.hide();
+          floatingActionButton.setOnClickListener(null);
         }
-      }
-
-      @Override public void onPageScrollStateChanged(int state) {
-
       }
     });
 

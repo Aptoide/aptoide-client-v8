@@ -23,4 +23,5 @@ import lombok.EqualsAndHashCode;
   private String lang;
   private boolean mature;
   private String q;
+  private String country;
 }

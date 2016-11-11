@@ -6,7 +6,6 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
@@ -15,7 +14,6 @@ import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
-import java.util.Locale;
 
 /**
  * Created by sithengineer on 12/05/16.
@@ -32,10 +30,6 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
   @Override public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
-    Logger.w(TAG,
-        String.format(Locale.ROOT, "realm database migration from version %d to %d", oldVersion,
-            newVersion));
-
     // During a migration, a DynamicRealm is exposed. A DynamicRealm is an untyped variant of a normal Realm, but
     // with the same object creation and query capabilities.
     // A DynamicRealm uses Strings instead of Class references because the Classes might not even exist or have been
@@ -46,17 +40,12 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     // DynamicRealm exposes an editable schema
     RealmSchema schema = realm.getSchema();
 
-    //  Migrate from version 0 (<=8075) to version 1 (8076):
-    //    ~ PK in Download changed from a long called "id" to a String called "md5"
-    //    + boolean "isDownloading" in Scheduled
-    //    - long appId in FileToDownload
-    //    ~ set "md5" as PK in FileToDownload
+    //  Migrate from version 0 (<=8075) to version 1 (8076)
     if (oldVersion <= 8075) {
 
       oldVersion = 8075;
 
-      schema.get("Scheduled")
-          .removeField("appId");
+      schema.get("Scheduled").removeField("appId");
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -66,49 +55,105 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       realm.delete("Download");
       realm.delete("FileToDownload");
 
-      schema.get("FileToDownload")
-          .removeField("appId")
-          .addPrimaryKey("md5");
+      schema.get("FileToDownload").removeField("appId").addPrimaryKey("md5");
 
       schema.get("Download")
           .removeField("appId")
           .addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 
       oldVersion++;
+
+      Logger.w(TAG, "DB migrated to version " + oldVersion);
     }
 
     //  Migrate from version 1 (8076) to version 2 (8077)
-    if(oldVersion == 8076) {
-      RealmObjectSchema schemaFile = schema.get("Scheduled");
-      if(schemaFile.hasPrimaryKey()){
-        schemaFile.removePrimaryKey();
+    if (oldVersion == 8076) {
+      RealmObjectSchema scheduledSchema = schema.get("Scheduled");
+      if (scheduledSchema.hasPrimaryKey()) {
+        scheduledSchema.removePrimaryKey();
       }
 
       // remove entries with duplicated MD5 fields
       // this leads to the removal of some Scheduled updates
 
       String previous_md5 = "";
-      for (DynamicRealmObject dynamicRealmObject :
-          realm.where("Scheduled").findAllSorted("md5")) {
+      for (DynamicRealmObject dynamicRealmObject : realm.where("Scheduled").findAllSorted("md5")) {
 
         String current_md5 = dynamicRealmObject.getString("md5");
-        if(TextUtils.equals(previous_md5, current_md5)){
+        if (TextUtils.equals(previous_md5, current_md5)) {
           dynamicRealmObject.deleteFromRealm();
         }
         previous_md5 = current_md5;
       }
 
-      schemaFile.removeField("md5");
-      schemaFile.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
+      scheduledSchema.removeField("md5");
+      scheduledSchema.addField("md5", String.class, FieldAttribute.PRIMARY_KEY);
 
       realm.where(Update.class.getSimpleName())
           //.equalTo(Update.LABEL, "").or()
           //.isNull(Update.LABEL)
-          .findAll()
-          .deleteAllFromRealm();
+          .findAll().deleteAllFromRealm();
 
       oldVersion++;
+
+      Logger.w(TAG, "DB migrated to version " + oldVersion);
     }
 
+    //  Migrate from version 2 (8077) to version 3 (8078)
+    // (re)create (Store)MinimalAd schema
+    if (oldVersion == 8077) {
+
+      RealmObjectSchema scheduledSchema = schema.get("Scheduled");
+      scheduledSchema.removePrimaryKey();
+      scheduledSchema.addPrimaryKey("packageName");
+      if (!scheduledSchema.hasField("appAction")) {
+        scheduledSchema.addField("appAction", String.class);
+      }
+
+      //schema.get("FileToDownload").removePrimaryKey();
+
+      // the old schema is removed because we know that no other entity points to this one
+      if (schema.contains("StoreMinimalAd")) {
+        schema.remove("StoreMinimalAd");
+      }
+      if (schema.contains("MinimalAd")) {
+        schema.remove("MinimalAd");
+      }
+
+      RealmObjectSchema minimalAdSchema = schema.create("MinimalAd");
+      minimalAdSchema.addField("description", String.class)
+          .addField("packageName", String.class)
+          .addField("networkId", Long.class)
+          .addField("clickUrl", String.class)
+          .addField("cpcUrl", String.class)
+          .addField("cpdUrl", String.class)
+          .addField("appId", Long.class)
+          .addField("adId", Long.class)
+          .addField("cpiUrl", String.class)
+          .addField("name", String.class)
+          .addField("iconPath", String.class);
+
+      RealmObjectSchema downloadSchema = schema.get("Download");
+
+      if (!downloadSchema.hasField("packageName")) {
+        downloadSchema.addField("packageName", String.class);
+      }
+
+      if (!downloadSchema.hasField("versionCode")) {
+        downloadSchema.addField("versionCode", int.class);
+      }
+
+      if (!downloadSchema.hasField("action")) {
+        downloadSchema.addField("action", int.class);
+      }
+
+      if (!downloadSchema.hasField("scheduled")) {
+        downloadSchema.addField("scheduled", boolean.class);
+      }
+
+      oldVersion++;
+
+      Logger.w(TAG, "DB migrated to version " + oldVersion);
+    }
   }
 }

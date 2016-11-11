@@ -13,17 +13,19 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
+import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
-import cm.aptoide.pt.v8engine.install.InstallManager;
+import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -37,18 +39,21 @@ import org.xml.sax.ext.DefaultHandler2;
 
 public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo> {
 
+  private static final String TAG = AutoUpdate.class.getSimpleName();
   private final String url = Application.getConfiguration().getAutoUpdateUrl();
-
   private AptoideBaseActivity activity;
-  private InstallManager installManager;
+  private Installer installer;
   private DownloadFactory downloadFactory;
-  private DownloadServiceHelper downloadManager;
+  private AptoideDownloadManager downloadManager;
   private ProgressDialog dialog;
+  private PermissionManager permissionManager;
 
-  public AutoUpdate(AptoideBaseActivity activity, InstallManager installManager,
-      DownloadFactory downloadFactory, DownloadServiceHelper downloadManager) {
+  public AutoUpdate(AptoideBaseActivity activity, Installer installer,
+      DownloadFactory downloadFactory, AptoideDownloadManager downloadManager,
+      PermissionManager permissionManager) {
     this.activity = activity;
-    this.installManager = installManager;
+    this.installer = installer;
+    this.permissionManager = permissionManager;
     this.downloadFactory = downloadFactory;
     this.downloadManager = downloadManager;
   }
@@ -119,6 +124,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   }
 
   private void requestUpdateSelf(final AutoUpdateInfo autoUpdateInfo) {
+
+    V8Engine.setAutoUpdateWasCalled(true);
+
     ContextThemeWrapper wrapper = new ContextThemeWrapper(activity,
         activity.obtainStyledAttributes(new int[] { R.attr.alertDialog }).getResourceId(0, 0));
     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper);
@@ -134,40 +142,28 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           dialog = new ProgressDialog(activity);
           dialog.setMessage(activity.getString(R.string.retrieving_update));
           dialog.show();
-          downloadManager.startDownload(activity, downloadFactory.create(autoUpdateInfo))
-              .subscribe(download -> {
-                if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-                  if (activity.is_resumed() && this.dialog.isShowing()) {
-                    this.dialog.dismiss();
-                  }
-                  if (autoUpdateInfo.md5 != null) {
-                    try {
-                      FileToDownload downloadedFile = download.getFilesToDownload().get(0);
-                      Logger.d("Aptoide", "requestUpdateSelf: " + downloadedFile.getFilePath());
-                      File apk = new File(downloadedFile.getFilePath());
-                      String updateFileMd5 = AptoideUtils.AlgorithmU.computeMd5(apk);
-                      if (autoUpdateInfo.md5.equalsIgnoreCase(updateFileMd5)) {
-                        installManager.install(activity, activity, download.getMd5())
-                            .toBlocking()
-                            .subscribe();
-                      } else {
-                        Logger.d("Aptoide", autoUpdateInfo.md5 + " VS " + updateFileMd5);
-                        throw new Exception(autoUpdateInfo.md5 + " VS " + updateFileMd5);
-                      }
-                    } catch (Exception e) {
-                      e.printStackTrace();
-                      Logger.d("Aptoide-Auto-Update",
-                          "Update package checksum failed!  Keeping current version.");
-                      CrashReports.logException(e);
-                      if (this.dialog.isShowing()) {
-                        this.dialog.dismiss();
-                      }
-                    }
-                  }
+
+          InstallManager installManager =
+              new InstallManager(AptoideDownloadManager.getInstance(), installer,
+                  AccessorFactory.getAccessorFor(Download.class),
+                  AccessorFactory.getAccessorFor(Installed.class));
+
+          permissionManager.requestDownloadAccess(activity)
+              .flatMap(
+                  permissionGranted -> permissionManager.requestExternalStoragePermission(activity))
+              .flatMap(success -> installManager.install(activity,
+                  downloadFactory.create(autoUpdateInfo)))
+              .filter(progress -> !isDownloading(progress))
+              .first()
+              .subscribe(progress -> {
+                if (progress.getState() == Progress.ERROR) {
+                  ShowMessage.asSnack(activity, R.string.error_SYS_1);
                 }
+                dismissDialog();
               }, throwable -> {
                 throwable.printStackTrace();
                 CrashReports.logException(throwable);
+                dismissDialog();
               });
 
           //FlurryAgent.logEvent("Auto_Update_Clicked_On_Yes_Button"); TODO include
@@ -182,10 +178,25 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     }
   }
 
+  private boolean isDownloading(Progress<Download> progress) {
+    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
+        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest().getOverallDownloadStatus() == Download.INVALID_STATUS
+        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+  }
+
+  private void dismissDialog() {
+    if (this.dialog.isShowing()) {
+      this.dialog.dismiss();
+    }
+  }
+
   public static class AutoUpdateInfo {
 
     public String md5;
     public int vercode;
+    public String packageName;
+    public int appId;
     public String path;
     public int minsdk = 0;
     public int minAptoideVercode = 0;
@@ -222,6 +233,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
       } else if (localName.equals("minAptVercode")) {
         info.minAptoideVercode = Integer.parseInt(sb.toString());
       }
+      info.packageName = activity.getPackageName();
     }
 
     @Override public void characters(char[] ch, int start, int length) throws SAXException {

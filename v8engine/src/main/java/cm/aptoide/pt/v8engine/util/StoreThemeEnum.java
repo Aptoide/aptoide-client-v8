@@ -197,6 +197,7 @@ public enum StoreThemeEnum {
 
     StoreThemeEnum theme;
     try {
+      s = s.replace("-", "");
       theme = valueOf("APTOIDE_STORE_THEME_" + s.toUpperCase());
     } catch (Exception e) {
       theme = APTOIDE_STORE_THEME_DEFAULT;

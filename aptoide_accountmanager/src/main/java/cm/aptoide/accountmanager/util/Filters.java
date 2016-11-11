@@ -5,7 +5,7 @@
 
 package cm.aptoide.accountmanager.util;
 
-import cm.aptoide.pt.utils.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReports;
 
 public class Filters {
 

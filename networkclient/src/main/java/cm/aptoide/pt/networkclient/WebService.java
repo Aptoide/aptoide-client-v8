@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.actions.GenerateClientId;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -47,13 +45,13 @@ public abstract class WebService<T, U> {
   private final OkHttpClient httpClient;
 
   private Retrofit retrofit;
-  private Observable<T> service;
 
-  protected WebService(Class<T> clazz, GenerateClientId idGenerator, UserData userData, Converter.Factory converterFactory, String baseHost) {
+  protected WebService(Class<T> clazz, String userAgent, Converter.Factory converterFactory,
+      String baseHost) {
     this.converterFactory = converterFactory;
     this.clazz = clazz;
     this.baseHost = baseHost;
-    this.httpClient = OkHttpClientFactory.getSingletonClient(idGenerator, userData);
+    this.httpClient = OkHttpClientFactory.getSingletonClient(userAgent);
   }
 
   protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -64,7 +62,7 @@ public abstract class WebService<T, U> {
     this.baseHost = baseHost;
   }
 
-  public static Converter.Factory getDefaultConverter() {
+  protected static Converter.Factory getDefaultConverter() {
     if (defaultConverterFactory == null) {
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -80,15 +78,11 @@ public abstract class WebService<T, U> {
     return defaultConverterFactory;
   }
 
-  protected Observable<T> getService() {
-    return service == null ? createServiceObservable() : service;
-  }
-
-  private Observable<T> createServiceObservable() {
+  protected Observable<T> createServiceObservable() {
     return Observable.fromCallable(this::createService);
   }
 
-  protected T createService() {
+  private T createService() {
     return getRetrofit(httpClient, converterFactory, RxJavaCallAdapterFactory.create(),
         baseHost).create(clazz);
   }
@@ -112,11 +106,11 @@ public abstract class WebService<T, U> {
     return loadDataFromNetwork(t, bypassCache);
   }
 
-  protected void onLoadDataFromNetwork() {
+  private void onLoadDataFromNetwork() {
   }
 
   public Observable<U> observe(boolean bypassCache) {
-    return getService().flatMap(response -> prepareAndLoad(response, bypassCache))
+    return createServiceObservable().flatMap(response -> prepareAndLoad(response, bypassCache))
         .subscribeOn(Schedulers.io());
   }
 
@@ -143,7 +137,7 @@ public abstract class WebService<T, U> {
         .subscribe(successRequestListener::call, errorRequestListener::onError);
   }
 
-  protected ErrorRequestListener defaultErrorRequestListener() {
+  private ErrorRequestListener defaultErrorRequestListener() {
 
     return (Throwable e) -> {
       // TODO: Implementar

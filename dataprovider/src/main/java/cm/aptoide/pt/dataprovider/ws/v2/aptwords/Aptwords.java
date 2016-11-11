@@ -5,12 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import okhttp3.OkHttpClient;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -24,9 +23,9 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
   private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
 
-  Aptwords(IdsRepository idsRepository) {
+  Aptwords() {
     super(Interfaces.class,
-        OkHttpClientFactory.getSingletonClient(idsRepository, AptoideAccountManager.getUserData()),
+        OkHttpClientFactory.getSingletonClient(SecurePreferences.getUserAgent()),
         WebService.getDefaultConverter(), BASE_URL);
   }
 

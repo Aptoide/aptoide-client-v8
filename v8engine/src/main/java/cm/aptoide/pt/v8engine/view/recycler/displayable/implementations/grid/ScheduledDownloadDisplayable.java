@@ -5,17 +5,13 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ProgressBar;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePojo;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * created by SithEngineer
@@ -23,38 +19,22 @@ import lombok.Setter;
 public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Scheduled> {
 
   private static final String TAG = ScheduledDownloadDisplayable.class.getSimpleName();
-
-  @Getter @Setter private ProgressBar progressBarIsInstalling;
-
-  @Getter @Setter private CheckBox isSelected;
+  @Getter private InstallManager installManager;
 
   public ScheduledDownloadDisplayable() {
   }
 
-  public ScheduledDownloadDisplayable(Scheduled pojo) {
+  public ScheduledDownloadDisplayable(Scheduled pojo, InstallManager installManager) {
     super(pojo);
-  }
-
-  public ScheduledDownloadDisplayable(Scheduled pojo, boolean fixedPerLineCount) {
-    super(pojo, fixedPerLineCount);
-  }
-
-  @Override public Type getType() {
-    return Type.SCHEDULED_DOWNLOAD;
+    this.installManager = installManager;
   }
 
   @Override public int getViewLayout() {
     return R.layout.displayable_scheduled_download_row;
   }
 
-  public void updateUi(boolean isDownloading) {
-    if (isSelected != null) {
-      isSelected.setVisibility(isDownloading ? View.GONE : View.VISIBLE);
-    }
-
-    if (progressBarIsInstalling != null) {
-      progressBarIsInstalling.setVisibility(isDownloading ? View.VISIBLE : View.GONE);
-    }
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 
   public void removeFromDatabase() {

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -13,22 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
-import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -51,6 +35,8 @@ import rx.subscriptions.CompositeSubscription;
 
   public ScheduledDownloadWidget(View itemView) {
     super(itemView);
+
+    subscriptions = new CompositeSubscription();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -77,49 +63,29 @@ import rx.subscriptions.CompositeSubscription;
 
     isSelected.setChecked(displayable.isSelected());
     itemView.setOnClickListener(v -> isSelected.setChecked(!isSelected.isChecked()));
-
-    displayable.setProgressBarIsInstalling(progressBarIsInstalling);
-    displayable.setIsSelected(isSelected);
-
-    displayable.updateUi(scheduled.isDownloading());
-  }
-
-  private void handleLoaderLogic(ScheduledDownloadDisplayable displayable) {
-    PermissionManager permissionManager = new PermissionManager();
-    DownloadServiceHelper downloadServiceHelper =
-        new DownloadServiceHelper(AptoideDownloadManager.getInstance(), permissionManager);
-
-    //DownloadAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Download.class);
-    subscriptions.add(downloadServiceHelper.getAllDownloads()
-        .flatMapIterable(downloads -> downloads)
-        .filter(download -> isCurrentScheduled(displayable, download))
+    subscriptions.add(displayable.getInstallManager()
+        .getAsListInstallation(displayable.getPojo().getMd5())
+        .map(progress -> progress != null && progress.getState() == Progress.ACTIVE)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(this::changeLoaderStatus));
+        .subscribe(isDownloading -> {
+          updateUi(isDownloading);
+        }));
   }
 
-  private boolean isCurrentScheduled(ScheduledDownloadDisplayable displayable, Download download) {
-    return TextUtils.equals(download.getMd5(), displayable.getPojo().getMd5());
-  }
+  public void updateUi(boolean isDownloading) {
+    if (isSelected != null) {
+      isSelected.setVisibility(isDownloading ? View.GONE : View.VISIBLE);
+    }
 
-  private void changeLoaderStatus(Download download) {
-    if (download.getOverallDownloadStatus() == Download.PROGRESS
-        || download.getOverallDownloadStatus() == Download.IN_QUEUE) {
-      if (progressBarIsInstalling.getVisibility() != View.VISIBLE) {
-        progressBarIsInstalling.setVisibility(View.VISIBLE);
-      }
-    } else {
-      if (progressBarIsInstalling.getVisibility() == View.VISIBLE
-          || download.getOverallDownloadStatus() == Download.PAUSED) {
-        progressBarIsInstalling.setVisibility(View.GONE);
-      }
+    if (progressBarIsInstalling != null) {
+      progressBarIsInstalling.setVisibility(isDownloading ? View.VISIBLE : View.GONE);
     }
   }
 
   @Override public void onViewAttached() {
-
   }
 
   @Override public void onViewDetached() {
-
+    subscriptions.clear();
   }
 }

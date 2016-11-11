@@ -55,9 +55,6 @@ dependencies {
   debugCompile project(path: ':model', configuration: 'debug')
   releaseCompile project(path: ':model', configuration: 'release')
 
-  debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
-  releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
-
   debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
   releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
 
@@ -66,9 +63,6 @@ dependencies {
 
   debugCompile project(path: ':utils', configuration: 'debug')
   releaseCompile project(path: ':utils', configuration: 'release')
-
-  debugCompile project(path: ':database', configuration: 'debug')
-  releaseCompile project(path: ':database', configuration: 'release')
 
   //
   // custom libs in folders

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -15,11 +14,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class ScheduleDownloadDisplayable extends DisplayablePojo<GetApp> {
 
-  @Override public Type getType() {
-    return Type.SCHEDULED_DOWNLOAD;
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_scheduled_download;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
   }
 }

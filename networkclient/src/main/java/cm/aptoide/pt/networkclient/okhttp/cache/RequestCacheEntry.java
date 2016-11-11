@@ -6,7 +6,7 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -74,7 +74,7 @@ public @Data class RequestCacheEntry {
     try {
       return new ObjectMapper().readValue(data, RequestCacheEntry.class);
     } catch (IOException e) {
-      Log.e(TAG, "", e);
+      Logger.e(TAG, "", e);
     }
     return null;
   }
@@ -84,7 +84,7 @@ public @Data class RequestCacheEntry {
       String data = new ObjectMapper().writeValueAsString(this);
       return data;
     } catch (JsonProcessingException e) {
-      Log.e(TAG, "", e);
+      Logger.e(TAG, "", e);
     }
     return null;
   }

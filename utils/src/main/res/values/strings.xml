@@ -4,7 +4,6 @@
   -->
 
 <resources>
-  <string name="app_name">Utils</string>
   <string name="please_wait">Please wait…</string>
   <string name="continue_option">Continue</string>
 
@@ -16,9 +15,7 @@
   <string name="WidgetProvider_timestamp_minutes_ago">%s minutes ago</string>
   <string name="WidgetProvider_timestamp_just_now">Just now</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s weeks ago</string>
-  <string name="WidgetProvider_timestamp_week_ago">%s week ago</string>
   <string name="WidgetProvider_timestamp_week_ago2">1 week ago</string>
-  <string name="WidgetProvider_timestamp_this_week">This week</string>
   <string name="WidgetProvider_timestamp_days_ago">%s days ago</string>
   <string name="WidgetProvider_timestamp_month_ago">1 month ago</string>
   <string name="WidgetProvider_timestamp_months_ago">%s months ago</string>

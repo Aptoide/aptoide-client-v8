@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -23,8 +24,6 @@ import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestAppsTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -232,7 +231,7 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest("", server.url("/").toString(), "1234", "ABC", 1, "bla", "PT-BR",
-            "MyQ", 5, true, 0, Collections.emptyList());
+            "MyQ", 5, true, 0, Collections.emptyList(), "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -253,7 +252,8 @@ public class GetUserTimelineRequestIntegrationTest {
                 Arrays.asList(getVote(5, 1), getVote(4, 0), getVote(3, 0), getVote(2, 0),
                     getVote(1, 1)))), getStore(15, "apps", "http://pool.img.aptoide" +
                     ".com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar" + ".jpg", null, null,
-                getAppearance("Aptoide Official App Store", "default"),
+                getAppearance("Aptoide Official App Store",
+                    DataProvider.getConfiguration().getDefaultTheme()),
                 getStats(15, 15, 1000944445)))));
     testSubscriber.assertValue(
         getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 milliseconds",
@@ -275,7 +275,7 @@ public class GetUserTimelineRequestIntegrationTest {
     String avatar = "http://pool.img.aptoide.com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar.jpg";
     String added = "2010-11-04 12:21:52";
     String modified = "2010-11-04 12:21:52";
-    String theme = "default";
+    String theme = DataProvider.getConfiguration().getDefaultTheme();
     String description = "Aptoide Official App Store";
     int apps = 168747;
     int subscribers = 143460;
@@ -391,7 +391,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -482,7 +483,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -559,7 +561,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -603,7 +606,8 @@ public class GetUserTimelineRequestIntegrationTest {
 
     final GetUserTimelineRequest request =
         getGetUserTimelineRequest(server.url("/").toString(), server.url("/").toString(), "1234",
-            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList());
+            "ABC", 1, "bla", "PT-BR", "MyQ", 5, true, 0, Collections.emptyList(),
+            "user@aptoide.com");
 
     TestSubscriber<GetUserTimeline> testSubscriber = new TestSubscriber<>();
     request.observe().subscribe(testSubscriber);
@@ -708,8 +712,9 @@ public class GetUserTimelineRequestIntegrationTest {
 
   @NonNull private GetUserTimelineRequest getGetUserTimelineRequest(String url, String baseHost,
       String aptoideId, String accessToken, int aptoideVercode, String cdn, String language,
-      String q, Integer limit, boolean mature, int offset, List<String> packages) {
-    return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(limit, offset, packages), baseHost);
+      String q, Integer limit, boolean mature, int offset, List<String> packages, String email) {
+    return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(limit, offset, packages),
+        baseHost);
   }
 
   @NonNull

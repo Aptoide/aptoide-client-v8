@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.BaseBody;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import rx.Observable;
 
@@ -20,14 +18,14 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
   }
 
   public static InAppBillingConsumeRequest of(int apiVersion, String packageName,
-      String purchaseToken) {
+      String purchaseToken, String accessToken, String email) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabconsume");
     args.put("purchasetoken", purchaseToken);
-    args.put("access_token", AptoideAccountManager.getAccessToken());
+    args.put("access_token", accessToken);
     return new InAppBillingConsumeRequest(BASE_HOST, args);
   }
 

@@ -14,7 +14,7 @@ import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
@@ -82,8 +82,8 @@ public class RowReviewWidget extends BaseWidget<RowReviewDisplayable> {
     //		}
 
     itemView.setOnClickListener(v -> {
-      ((FragmentShower) getContext()).pushFragmentV4(
-          RateAndReviewsFragment.newInstance(app.getId(), app.getName(), app.getStore().getName(),
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), review.getId()));
     });
   }

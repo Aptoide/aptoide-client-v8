@@ -7,7 +7,6 @@ package cm.aptoide.accountmanager.ws;
 
 import android.content.Context;
 import android.os.Build;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.AccountManagerUtils;
 import cm.aptoide.accountmanager.util.Filters;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
@@ -15,6 +14,7 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.Locale;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -59,7 +59,8 @@ import rx.Observable;
    */
   public static CheckUserCredentialsRequest of(String accessToken) {
     CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application.getContext(),
-        OkHttpClientFactory.getSingletonClient(null, AptoideAccountManager.getUserData()), WebService.getDefaultConverter());
+        OkHttpClientFactory.getSingletonClient(SecurePreferences.getUserAgent()),
+        WebService.getDefaultConverter());
     request.setToken(accessToken);
     return request;
   }

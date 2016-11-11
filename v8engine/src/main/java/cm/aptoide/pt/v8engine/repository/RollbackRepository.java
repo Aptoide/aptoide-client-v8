@@ -5,15 +5,9 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import cm.aptoide.pt.database.accessors.DeprecatedDatabase;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Cleanup;
 import rx.Observable;
 
 /**
@@ -21,7 +15,7 @@ import rx.Observable;
  */
 @AllArgsConstructor public class RollbackRepository implements Repository {
 
-  private RollbackAccessor accessor;
+  private final RollbackAccessor accessor;
 
   /*
 
@@ -129,6 +123,7 @@ import rx.Observable;
     rollback.setConfirmed(true);
     save(rollback);
   }
+
   public void save(Rollback rollback) {
     accessor.save(rollback);
   }
