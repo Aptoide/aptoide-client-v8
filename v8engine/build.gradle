@@ -27,9 +27,6 @@ android {
     buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
     buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
     buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_KEY + "\""
-    buildConfigField "String", "BOACOMPRA_API_HOST", "\"" + project.BOACOMPRA_API_HOST + "\""
-    buildConfigField "String", "BOACOMPRA_SECRET_KEY", "\"" + project.BOACOMPRA_SECRET_KEY + "\""
-    buildConfigField "int", "BOACOMPRA_MERCHANT_ID", project.BOACOMPRA_MERCHANT_ID
   }
 
   lintOptions {
@@ -49,7 +46,6 @@ android {
       shrinkResources false
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
-      buildConfigField "int", "BOACOMPRA_TEST_MODE", project.BOACOMPRA_TEST_MODE_DISABLED
     }
 
     debug {
@@ -57,7 +53,6 @@ android {
       shrinkResources false
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_MOCK + "\""
-      buildConfigField "int", "BOACOMPRA_TEST_MODE", project.BOACOMPRA_TEST_MODE_ENABLED
     }
   }
 

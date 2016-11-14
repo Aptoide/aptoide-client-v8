@@ -7,13 +7,12 @@ package cm.aptoide.pt.v8engine.payment;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.v8engine.BuildConfig;
-import cm.aptoide.pt.v8engine.payment.providers.boacompra.BoaCompraAuthorization;
 import cm.aptoide.pt.v8engine.payment.providers.boacompra.BoaCompraPayment;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalConverter;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
 /**
@@ -33,17 +32,13 @@ public class PaymentFactory {
                 paymentService.getTaxRate()), getPayPalConfiguration(), getPaymentConverter(),
             product, paymentService.getTypes().get(0).getLabel());
       case BOACOMPRA:
-        return new BoaCompraPayment(BuildConfig.BOACOMPRA_API_HOST, getBoaCompraAuthorization(),
-            new AptoideUserAuthorization());
+        return new BoaCompraPayment(context, paymentService.getId(), paymentService.getShortName(),
+            product, getPrice(paymentService.getPrice(), paymentService.getCurrency(),
+            paymentService.getTaxRate()), paymentService.getName(), RepositoryFactory.getPaymentRepository(context));
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());
     }
-  }
-
-  @NonNull private BoaCompraAuthorization getBoaCompraAuthorization() {
-    return new BoaCompraAuthorization(BuildConfig.BOACOMPRA_SECRET_KEY,
-        BuildConfig.BOACOMPRA_MERCHANT_ID);
   }
 
   @NonNull private Price getPrice(double price, String currency, double taxRate) {
@@ -59,9 +54,5 @@ public class PaymentFactory {
     configuration.environment(BuildConfig.PAYPAL_ENVIRONMENT);
     configuration.clientId(BuildConfig.PAYPAL_KEY);
     return configuration;
-  }
-
-  private LocalBroadcastManager getLocalBroadcastManager(Context context) {
-    return LocalBroadcastManager.getInstance(context);
   }
 }

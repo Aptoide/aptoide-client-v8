@@ -36,6 +36,7 @@ import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
@@ -87,19 +88,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
-
-    // TODO Repository Factory, Presenter Factory
-    final NetworkOperatorManager operatorManager =
-        new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
-    final ProductFactory productFactory = new ProductFactory();
-    final PaymentManager paymentManager = new PaymentManager(
-        new PaymentRepository(new AppRepository(operatorManager, productFactory),
-            new InAppBillingRepository(operatorManager, productFactory),
-            new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE)),
-            productFactory, new PurchaseFactory(new InAppBillingSerializer()), new PaymentFactory(),
-            AccessorFactory.getAccessorFor(PaymentConfirmation.class)));
-
-    attachPresenter(new PaymentPresenter(this, paymentManager, product), savedInstanceState);
+    attachPresenter(
+        new PaymentPresenter(this, new PaymentManager(RepositoryFactory.getPaymentRepository(this)),
+            product), savedInstanceState);
   }
 
   @Override public void dismiss(Purchase purchase) {

@@ -36,7 +36,9 @@
     <activity
         android:name=".activity.PaymentActivity"
         android:theme="@style/AppBaseThemeTransparent"/>
+
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
+    <activity android:name=".payment.providers.boacompra.BoaCompraAuthorizationActivity"/>
 
     <activity
         android:name=".receivers.DeepLinkIntentReceiver"
