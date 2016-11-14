@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.util;
 
 import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
-import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -20,22 +19,26 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 7/7/16.
  */
 public class CacheHelper implements CacheManager {
-  private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
+  public static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();
   private final List<FolderToManage> foldersToCleanPath;
-  private DownloadSettingsInterface dirSettings;
+  private final FileUtils fileUtils;
+  private long maxCacheSize;
 
-  public CacheHelper(DownloadSettingsInterface dirSettings,
-      List<FolderToManage> foldersToCleanPath) {
-    this.dirSettings = dirSettings;
+  /**
+   * @param maxCacheSize max cache size in MB
+   */
+  public CacheHelper(long maxCacheSize, List<FolderToManage> foldersToCleanPath,
+      FileUtils fileUtils) {
     this.foldersToCleanPath = foldersToCleanPath;
+    this.maxCacheSize = maxCacheSize * VALUE_TO_CONVERT_MB_TO_BYTES;
+    this.fileUtils = fileUtils;
   }
 
   public Observable<Long> cleanCache() {
     long now = System.currentTimeMillis();
     return Observable.just(foldersToCleanPath)
-        .filter(folderToManages -> shouldClean(folderToManages,
-            dirSettings.getMaxCacheSize() * VALUE_TO_CONVERT_MB_TO_BYTES))
+        .filter(folderToManages -> shouldClean(folderToManages, maxCacheSize))
         .flatMapIterable(folders -> folders)
         .filter(folder -> folder.getFolder().exists())
         .map(folder -> removeOldFiles(folder.getFolder(), folder.getCacheTime(), now))
@@ -54,7 +57,7 @@ public class CacheHelper implements CacheManager {
   private boolean shouldClean(List<FolderToManage> foldersToCleanPath, long maxCacheSize) {
     long cacheSize = 0;
     for (int i = 0; i < foldersToCleanPath.size(); i++) {
-      cacheSize += FileUtils.dirSize(this.foldersToCleanPath.get(i).getFolder());
+      cacheSize += fileUtils.dirSize(this.foldersToCleanPath.get(i).getFolder());
     }
     return cacheSize > maxCacheSize;
   }
@@ -73,7 +76,7 @@ public class CacheHelper implements CacheManager {
         if (file.isDirectory()) {
           deletedSize += removeFilesFromDir(timeToCache, now, deletedSize, file);
         } else {
-          deletedSize += removeFile(timeToCache, now, deletedSize, file);
+          deletedSize += removeFile(timeToCache, now, file);
         }
       }
     }
@@ -93,13 +96,14 @@ public class CacheHelper implements CacheManager {
   /**
    * check if the ttl of the file was reached and delete it if it was
    */
-  private long removeFile(long timeToCache, long now, long deletedSize, File file) {
+  private long removeFile(long timeToCache, long now, File file) {
+    long deletedSize = 0;
     if ((now - file.lastModified()) > timeToCache) {
       long fileSize = file.length();
       Logger.d(TAG, "removeFile: " + file.getAbsolutePath());
       //update deleted size if file was deleted
       if (file.delete()) {
-        deletedSize += fileSize;
+        deletedSize = fileSize;
       }
     }
     return deletedSize;

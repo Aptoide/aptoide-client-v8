@@ -249,7 +249,7 @@ public abstract class V8Engine extends DataProvider {
         new CacheHelper.FolderToManage(new File(getCacheDir() + "image_manager_disk_cache/"),
             MONTH_CACHE_TIME));
 
-    cacheHelper = new CacheHelper(settingsInterface, folders);
+    cacheHelper = new CacheHelper(settingsInterface.getMaxCacheSize(), folders, new FileUtils());
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
             downloadAccessor, cacheHelper,

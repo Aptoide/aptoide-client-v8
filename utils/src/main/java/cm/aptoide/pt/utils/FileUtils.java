@@ -57,29 +57,6 @@ public class FileUtils {
     }
   }
 
-  /**
-   * Return the size of a directory in bytes
-   */
-  public static long dirSize(File dir) {
-
-    long result = 0;
-    if (dir.exists()) {
-      File[] fileList = dir.listFiles();
-      if (fileList != null) {
-        for (int i = 0; i < fileList.length; i++) {
-          // Recursive call if it's a directory
-          if (fileList[i].isDirectory()) {
-            result += dirSize(fileList[i]);
-          } else {
-            // Sum the file size in bytes
-            result += fileList[i].length();
-          }
-        }
-      }
-    }
-    return result;
-  }
-
   public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm,
       Bitmap.CompressFormat format, int quality) {
 
@@ -106,6 +83,29 @@ public class FileUtils {
       }
     }
     return false;
+  }
+
+  /**
+   * Return the size of a directory in bytes
+   */
+  public long dirSize(File dir) {
+
+    long result = 0;
+    if (dir.exists()) {
+      File[] fileList = dir.listFiles();
+      if (fileList != null) {
+        for (int i = 0; i < fileList.length; i++) {
+          // Recursive call if it's a directory
+          if (fileList[i].isDirectory()) {
+            result += dirSize(fileList[i]);
+          } else {
+            // Sum the file size in bytes
+            result += fileList[i].length();
+          }
+        }
+      }
+    }
+    return result;
   }
 
   /**
