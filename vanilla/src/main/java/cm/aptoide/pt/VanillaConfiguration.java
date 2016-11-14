@@ -8,6 +8,7 @@ package cm.aptoide.pt;
 import android.os.Environment;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 
 /**
  * Created by neuro on 10-05-2016.
@@ -100,6 +101,10 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public String getDefaultTheme() {
     return "default";
+  }
+
+  @Override public int getDefaultThemeRes() {
+    return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
   }
 
   @Override public String getFeedbackEmail() {

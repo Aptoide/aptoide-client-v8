@@ -62,5 +62,7 @@ public interface AptoidePreferencesConfiguration {
 
   String getDefaultTheme();
 
+  int getDefaultThemeRes();
+
   String getFeedbackEmail();
 }
