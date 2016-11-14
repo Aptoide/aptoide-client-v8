@@ -19,11 +19,12 @@ import java.lang.ref.WeakReference;
  */
 class AptoideLoginUtils {
 
-  public static final String APTOIDE_LOGIN_USER_NAME_KEY = "aptoide_login_user_name";
-  public static final String APTOIDE_LOGIN_PASSWORD_KEY = "aptoide_login_password";
-  public static final String APTOIDE_LOGIN_REFRESH_TOKEN_KEY = "aptoide_login_refresh_token";
-  public static final String APTOIDE_LOGIN_ACCESS_TOKEN_KEY = "aptoide_login_access_token";
-  static int REQ_SIGNUP = 8;
+  static final String APTOIDE_LOGIN_USER_NAME_KEY = "aptoide_login_user_name";
+  static final String APTOIDE_LOGIN_PASSWORD_KEY = "aptoide_login_password";
+  static final String APTOIDE_LOGIN_REFRESH_TOKEN_KEY = "aptoide_login_refresh_token";
+  static final String APTOIDE_LOGIN_ACCESS_TOKEN_KEY = "aptoide_login_access_token";
+
+  private static int REQ_SIGNUP = 8;
 
   static void setupAptoideLogin(Activity activity, Button loginButton, Button registerButton) {
 
