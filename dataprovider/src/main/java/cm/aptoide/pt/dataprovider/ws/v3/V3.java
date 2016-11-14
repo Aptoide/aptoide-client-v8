@@ -29,7 +29,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 21/07/16.
@@ -88,7 +87,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
               return DataProvider.invalidateAccessToken()
                   .flatMap(s -> {
                     this.map.setAccess_token(s);
-                    return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
+                    return V3.this.observe(bypassCache);
                   });
             }
           } else {
@@ -100,7 +99,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         }
       }
       return Observable.error(throwable);
-    }).observeOn(AndroidSchedulers.mainThread());
+    });
   }
 
   interface Interfaces {

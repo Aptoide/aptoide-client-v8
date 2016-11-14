@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullReviews;
@@ -27,8 +28,6 @@ import rx.Observable;
  * http://ws2.aptoide.com/api/7/listReviews/info/1
  */
 public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsRequest.Body> {
-
-  private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
 
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -21,7 +22,7 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-  private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
+  private static final String BASE_URL = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_HOST + "/api/2/";
 
   Aptwords() {
     super(
