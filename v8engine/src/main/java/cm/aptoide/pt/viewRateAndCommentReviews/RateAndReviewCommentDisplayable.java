@@ -9,9 +9,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 
-/**
- * Created by sithengineer on 14/07/16.
- */
 public class RateAndReviewCommentDisplayable
     extends DisplayablePojo<ReviewWithAppName> {
 

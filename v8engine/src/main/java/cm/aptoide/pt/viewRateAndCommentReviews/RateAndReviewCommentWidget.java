@@ -38,9 +38,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by sithengineer on 14/07/16.
- */
 @Displayables({ RateAndReviewCommentDisplayable.class }) public class RateAndReviewCommentWidget
     extends Widget<RateAndReviewCommentDisplayable> {
 

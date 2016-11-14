@@ -6,16 +6,13 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import com.trello.rxlifecycle.FragmentEvent;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -45,14 +42,11 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
             review.getComments().getView(), review.getId(), 3, fragment.storeName,
             StoreUtils.getStoreCredentials(fragment.storeName),
             AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-            aptoideClientUuid)
-            .observe()
-            .subscribeOn(Schedulers.io()) // parallel I/O split point
-            .map(
-                listComments -> {
-                  review.setCommentList(listComments);
-                  return review;
-                }))
+            aptoideClientUuid).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
+            .map(listComments -> {
+              review.setCommentList(listComments);
+              return review;
+            }))
         .toList() // parallel I/O merge point
         .observeOn(AndroidSchedulers.mainThread())
         .compose(fragment.bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -70,29 +64,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
     for (final Review review : reviews) {
       displayables.add(
           new RateAndReviewCommentDisplayable(new ReviewWithAppName(fragment.appName, review),
-              new CommentAdder(count) {
-                @Override public void addComment(List<Comment> comments) {
-                  List<Displayable> displayableList = new ArrayList<>();
-                  fragment.createDisplayableComments(comments, displayableList);
-                  int reviewPosition = fragment.getAdapter().getReviewPosition(reviewIndex);
-                  if (comments.size() > 2) {
-                    displayableList.add(fragment.createReadMoreDisplayable(reviewPosition, review));
-                  }
-                  fragment.getAdapter().addDisplayables(reviewPosition + 1, displayableList);
-                }
-
-                @Override public void collapseComments() {
-                  ReviewsAndCommentsAdapter adapter = fragment.getAdapter();
-                  int reviewIndex = adapter.getReviewPosition(this.reviewIndex);
-                  int nextReview = adapter.getReviewPosition(this.reviewIndex + 1);
-                  nextReview = nextReview == -1 ? fragment.getAdapter().getItemCount() : nextReview;
-                  adapter.removeDisplayables(reviewIndex + 1, nextReview
-                      - 1); // the -1 because we don't want to remove the next review,only until
-                  // the
-                  // comment
-                  // before the review
-                }
-              }));
+              new FullReviewCommentAdder(count, fragment, review)));
 
       if (review.getId() == fragment.reviewId) {
         index = count;

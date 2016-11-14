@@ -45,12 +45,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingBarsLayout;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingTotalsLayout;
-import java.util.ArrayList;
+import com.trello.rxlifecycle.FragmentEvent;
 import java.util.List;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-/**
- * Created by sithengineer on 13/05/16.
- */
 public class RateAndReviewsFragment extends GridRecyclerFragment {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
@@ -182,12 +181,21 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).execute(getApp -> {
-      GetAppMeta.App data = getApp.getNodes().getMeta().getData();
-      setupTitle(data.getName());
-      setupRating(data);
-      finishLoading();
-    }, refresh);
+            DataProvider.getContext()).getAptoideClientUUID())
+        .observe(refresh)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(getApp -> {
+          if (getApp.isOk()) {
+            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
+            setupTitle(data.getName());
+            setupRating(data);
+          }
+          finishLoading();
+        }, err -> {
+          CrashReports.logException(err);
+        });
   }
 
   private void setupRating(GetAppMeta.App data) {
@@ -219,21 +227,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
   @NonNull CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
     return new CommentsReadMoreDisplayable(review, review.getCommentList().getDatalist().getNext(),
-        new CommentAdder(count) {
-          @Override public void addComment(List<Comment> comments) {
-            int nextReviewPosition = getAdapter().getReviewPosition(reviewIndex + 1);
-            nextReviewPosition =
-                nextReviewPosition == -1 ? getAdapter().getItemCount() : nextReviewPosition;
-            getAdapter().removeDisplayable(nextReviewPosition - 1);
-            List<Displayable> displayableList = new ArrayList<>();
-            createDisplayableComments(comments, displayableList);
-            getAdapter().addDisplayables(nextReviewPosition - 1, displayableList);
-          }
-
-          @Override public void collapseComments() {
-
-          }
-        });
+        new SimpleReviewCommentAdder(count, this));
   }
 
   List<Displayable> createDisplayableComments(List<Comment> comments,

@@ -13,5 +13,7 @@ abstract class CommentAdder {
 
   public abstract void addComment(List<Comment> comments);
 
-  public abstract void collapseComments();
+  public void collapseComments() {
+    // non-mandatory method
+  }
 }
