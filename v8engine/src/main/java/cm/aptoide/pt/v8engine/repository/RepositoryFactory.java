@@ -5,12 +5,21 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.iab.InAppBillingSerializer;
+import cm.aptoide.pt.v8engine.payment.PaymentFactory;
+import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
+
 
 /**
  * Created by sithengineer on 02/09/16.
@@ -40,5 +49,16 @@ public final class RepositoryFactory {
 
   public static RequestRepository getRequestRepository() {
     return new RequestRepository();
+  }
+
+  public static PaymentRepository getPaymentRepository(Context context) {
+    final NetworkOperatorManager operatorManager = new NetworkOperatorManager(
+        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+    final ProductFactory productFactory = new ProductFactory();
+
+    return new PaymentRepository(new AppRepository(operatorManager, productFactory),
+        new InAppBillingRepository(operatorManager, productFactory), operatorManager,
+        productFactory, new PurchaseFactory(new InAppBillingSerializer()), new PaymentFactory(),
+        AccessorFactory.getAccessorFor(PaymentConfirmation.class));
   }
 }
