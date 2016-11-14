@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 02/09/2016.
  */
 
-package cm.aptoide.pt.downloadmanager;
+package cm.aptoide.pt.v8engine.util;
 
 import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
