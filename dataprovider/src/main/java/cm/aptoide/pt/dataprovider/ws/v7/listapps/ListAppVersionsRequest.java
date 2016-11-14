@@ -48,6 +48,19 @@ import rx.Observable;
     return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
+  public static ListAppVersionsRequest of(String packageName, List<String> storeNames, String accessToken, String email,
+      String aptoideClientUUID) {
+    if(storeNames!= null && !storeNames.isEmpty()) {
+      BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      Body body = new Body(packageName, storeNames);
+      body.setLimit(MAX_LIMIT);
+      return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    }
+    else{
+      return of(packageName,accessToken,email,aptoideClientUUID);
+    }
+  }
+
   public static ListAppVersionsRequest of(String packageName, String accessToken, String email,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
@@ -90,6 +103,11 @@ import rx.Observable;
 
     public Body(String packageName) {
       this.packageName = packageName;
+    }
+
+    public Body(String packageName, List<String> storeNames) {
+      this.packageName = packageName;
+      this.storeNames = storeNames;
     }
   }
 }

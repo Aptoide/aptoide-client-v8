@@ -87,7 +87,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     Logger.d(TAG, "Other versions should refresh? " + create);
 
-    fetchOtherVersions();
+    fetchOtherVersions(new ArrayList<>());
 
     if (header != null) {
       header.setImage(appImgUrl);
@@ -146,7 +146,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private void fetchOtherVersions() {
+  protected void fetchOtherVersions(List<String> storeNames) {
 
     final SuccessRequestListener<ListAppVersions> otherVersionsSuccessRequestListener =
         listAppVersions -> {
@@ -159,7 +159,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
-        ListAppVersionsRequest.of(appPackge, AptoideAccountManager.getAccessToken(),
+        ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
             AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID()),
