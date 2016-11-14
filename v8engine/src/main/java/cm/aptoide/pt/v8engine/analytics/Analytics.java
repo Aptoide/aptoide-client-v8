@@ -166,11 +166,9 @@ public class Analytics {
         setupDimensions();
 
         //Integrate FacebookSDK
-        if (checkBuildVariant()) {
-          FacebookSdk.sdkInitialize(application);
-          AppEventsLogger.activateApp(application);
-          facebookLogger = AppEventsLogger.newLogger(application);
-        }
+        FacebookSdk.sdkInitialize(application);
+        AppEventsLogger.activateApp(application);
+        facebookLogger = AppEventsLogger.newLogger(application);
 
         Logger.d(TAG, "Localytics session configured");
       }
@@ -647,13 +645,11 @@ public class Analytics {
 
         track(EVENT_NAME, stringObjectHashMap, flags);
 
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString(PACKAGE_NAME, packageName);
-          parameters.putString(TRUSTED_BADGE, trustedBadge);
-          parameters.putString(TYPE, type);
-          facebookLogger.logEvent(EVENT_NAME, parameters);
-        }
+        Bundle parameters = new Bundle();
+        parameters.putString(PACKAGE_NAME, packageName);
+        parameters.putString(TRUSTED_BADGE, trustedBadge);
+        parameters.putString(TYPE, type);
+        facebookLogger.logEvent(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -739,12 +735,10 @@ public class Analytics {
 
         track(EVENT_NAME, map, ALL);
 
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString(APPLICATION_NAME, app.getPackageName());
-          parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
-          facebookLogger.logEvent(EVENT_NAME, parameters);
-        }
+        Bundle parameters = new Bundle();
+        parameters.putString(APPLICATION_NAME, app.getPackageName());
+        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
+        facebookLogger.logEvent(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -783,12 +777,10 @@ public class Analytics {
           track(EVENT_NAME, map, ALL);
         }
 
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString(PACKAGE_NAME, app.getPackageName());
-          parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
-          facebookLogger.logEvent(EVENT_NAME, parameters);
-        }
+        Bundle parameters = new Bundle();
+        parameters.putString(PACKAGE_NAME, app.getPackageName());
+        parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
+        facebookLogger.logEvent(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -975,14 +967,12 @@ public class Analytics {
           track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
         }
 
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString("Package Name", packageName);
-          parameters.putString("Source", stringForSourceEvent);
-          parameters.putString("Trusted Badge", trustedBadge);
-          parameters.putString("Application Publisher", developerName);
-          facebookLogger.logEvent(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
-        }
+        Bundle parameters = new Bundle();
+        parameters.putString("Package Name", packageName);
+        parameters.putString("Source", stringForSourceEvent);
+        parameters.putString("Trusted Badge", trustedBadge);
+        parameters.putString("Application Publisher", developerName);
+        facebookLogger.logEvent(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
       }
       STEPS.clear();
     }
