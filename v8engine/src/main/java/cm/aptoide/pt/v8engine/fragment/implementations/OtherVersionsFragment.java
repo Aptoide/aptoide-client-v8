@@ -40,6 +40,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Oth
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * Created by sithengineer on 05/07/16.
@@ -48,9 +49,9 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
-  private static final String APP_NAME = "app_name";
-  private static final String APP_IMG_URL = "app_img_url";
-  private static final String APP_PACKAGE = "app_package";
+  @Getter private static final String APP_NAME = "app_name";
+  @Getter private static final String APP_IMG_URL = "app_img_url";
+  @Getter private static final String APP_PACKAGE = "app_package";
   // vars
   private String appName;
   private String appImgUrl;
@@ -88,7 +89,10 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     Logger.d(TAG, "Other versions should refresh? " + create);
 
     fetchOtherVersions(new ArrayList<>());
+    setHeader();
+  }
 
+  protected void setHeader(){
     if (header != null) {
       header.setImage(appImgUrl);
       setTitle(appName);
