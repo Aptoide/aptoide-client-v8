@@ -118,6 +118,13 @@ public class Analytics {
     }
   }
 
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    facebookLogger.logEvent(eventName, parameters);
+  }
+
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -649,7 +656,6 @@ public class Analytics {
         parameters.putString(PACKAGE_NAME, packageName);
         parameters.putString(TRUSTED_BADGE, trustedBadge);
         parameters.putString(TYPE, type);
-        facebookLogger.logEvent(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -738,7 +744,7 @@ public class Analytics {
         Bundle parameters = new Bundle();
         parameters.putString(APPLICATION_NAME, app.getPackageName());
         parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
-        facebookLogger.logEvent(EVENT_NAME, parameters);
+        logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -780,7 +786,7 @@ public class Analytics {
         Bundle parameters = new Bundle();
         parameters.putString(PACKAGE_NAME, app.getPackageName());
         parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
-        facebookLogger.logEvent(EVENT_NAME, parameters);
+        logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -972,7 +978,7 @@ public class Analytics {
         parameters.putString("Source", stringForSourceEvent);
         parameters.putString("Trusted Badge", trustedBadge);
         parameters.putString("Application Publisher", developerName);
-        facebookLogger.logEvent(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
+        logFacebookEvents(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
       }
       STEPS.clear();
     }
