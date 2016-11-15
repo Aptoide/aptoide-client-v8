@@ -35,6 +35,9 @@ public class FileUtils {
     this.sendFileMoveEvent = sendFileMoveEvent;
   }
 
+  public FileUtils() {
+  }
+
   public static boolean fileExists(String path) {
     return !TextUtils.isEmpty(path) && new File(path).exists();
   }
@@ -52,27 +55,6 @@ public class FileUtils {
     if (!dir.exists()) {
       dir.mkdirs();
     }
-  }
-
-  /**
-   * Return the size of a directory in bytes
-   */
-  public static long dirSize(File dir) {
-
-    long result = 0;
-    if (dir.exists()) {
-      File[] fileList = dir.listFiles();
-      for (int i = 0; i < fileList.length; i++) {
-        // Recursive call if it's a directory
-        if (fileList[i].isDirectory()) {
-          result += dirSize(fileList[i]);
-        } else {
-          // Sum the file size in bytes
-          result += fileList[i].length();
-        }
-      }
-    }
-    return result;
   }
 
   public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm,
@@ -104,6 +86,29 @@ public class FileUtils {
   }
 
   /**
+   * Return the size of a directory in bytes
+   */
+  public long dirSize(File dir) {
+
+    long result = 0;
+    if (dir.exists()) {
+      File[] fileList = dir.listFiles();
+      if (fileList != null) {
+        for (int i = 0; i < fileList.length; i++) {
+          // Recursive call if it's a directory
+          if (fileList[i].isDirectory()) {
+            result += dirSize(fileList[i]);
+          } else {
+            // Sum the file size in bytes
+            result += fileList[i].length();
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
    * Method used to copy files from <code>inputPath</code> to <code>outputPath</code> <p>If any
    * exception occurs,
    * both
@@ -114,8 +119,8 @@ public class FileUtils {
    * @param fileName Name of the file to be copied
    */
   public void copyFile(String inputPath, String outputPath, String fileName) {
-    if (!fileExists(inputPath)) {
-      throw new RuntimeException("Input file doesn't exists");
+    if (!fileExists(inputPath + fileName)) {
+      throw new RuntimeException("Input file(" + inputPath + fileName + ") doesn't exists");
     }
 
     File file = new File(inputPath + fileName);

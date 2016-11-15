@@ -62,5 +62,14 @@ public interface AptoidePreferencesConfiguration {
 
   String getDefaultTheme();
 
+  int getDefaultThemeRes();
+
   String getFeedbackEmail();
+
+  boolean isLoginAvailable(SocialLogin login);
+
+  enum SocialLogin {
+    FACEBOOK,
+    GOOGLE
+  }
 }

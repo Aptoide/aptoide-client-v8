@@ -54,8 +54,12 @@ public class L2Cache extends StringBaseCache<Request, Response> {
 
     try{
       load();
-    } catch (Exception e) {
-      Logger.e(TAG, e);
+    } catch (IOException e) {
+      //Logger.e(TAG, e);
+      // do nothing in case of an IOException. Android File.fileExists() and File.canRead()
+      // are not viable, so an exception is thrown in case the cache file does not exist
+      // but that exception is not relevant to the common developer and only causes confusion
+      // when reading the log.
     }
   }
 
@@ -184,6 +188,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
    */
   private void load() throws IOException {
     File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
+    //if(!cacheFile.exists() || !cacheFile.canRead()) return;
+
     cache = new ObjectMapper().readValue(cacheFile,  new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>(){});
     Logger.d(TAG, "Loaded cache file");
   }

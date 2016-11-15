@@ -91,7 +91,7 @@ public class SimilarWidget extends Widget<SimilarDisplayable> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
       Analytics.AppsTimeline.clickOnCard("Similar", displayable.getPackageName(),
-          Analytics.AppsTimeline.BLANK, displayable.getTitle(getContext()),
+          Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(cardType)

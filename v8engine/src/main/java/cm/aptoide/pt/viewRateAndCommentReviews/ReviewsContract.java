@@ -15,6 +15,6 @@ public interface ReviewsContract {
   }
 
   interface Presenter extends BasePresenter {
-    
+
   }
 }

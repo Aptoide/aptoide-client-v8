@@ -204,8 +204,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //}
 
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    Subscription unManagedSubscription = installedAccessor.get(packageName)
+    installedAccessor.get(packageName)
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
             ((FragmentShower) getActivity()).pushFragmentV4(

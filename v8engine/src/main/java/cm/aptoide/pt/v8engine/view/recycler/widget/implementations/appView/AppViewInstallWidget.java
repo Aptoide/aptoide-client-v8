@@ -92,6 +92,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private PermissionRequest permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
+  private boolean triedInstall;
 
   //private Subscription subscribe;
   //private long appID;
@@ -196,6 +197,11 @@ import rx.android.schedulers.AndroidSchedulers;
     permissionRequest = ((PermissionRequest) getContext());
   }
 
+  @Override public void unbindView() {
+    super.unbindView();
+    triedInstall = false;
+  }
+
   private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {
     actionButton.setText(text);
     actionButton.setOnClickListener(onClickListener);
@@ -228,8 +234,9 @@ import rx.android.schedulers.AndroidSchedulers;
           installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
       if (displayable.isShouldInstall()) {
         actionButton.postDelayed(() -> {
-          if (displayable.isVisible()) {
+          if (displayable.isVisible() && !triedInstall) {
             actionButton.performClick();
+            triedInstall = true;
           }
         }, 1000);
       }

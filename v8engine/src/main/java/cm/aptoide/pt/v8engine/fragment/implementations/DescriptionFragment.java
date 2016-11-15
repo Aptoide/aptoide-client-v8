@@ -103,6 +103,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
         bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
             .getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+        bar.setDisplayHomeAsUpEnabled(true);
       }
     }
   }

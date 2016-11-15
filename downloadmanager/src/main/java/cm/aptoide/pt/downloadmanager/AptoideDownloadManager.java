@@ -7,7 +7,6 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -50,7 +49,6 @@ public class AptoideDownloadManager {
   static String DOWNLOADS_STORAGE_PATH;
   static String APK_PATH;
   static String OBB_PATH;
-  static String GENERIC_PATH;
   private static AptoideDownloadManager instance;
   private static Context context;
   private boolean isDownloading = false;
@@ -81,7 +79,7 @@ public class AptoideDownloadManager {
   private void createDownloadDirs() {
     FileUtils.createDir(APK_PATH);
     FileUtils.createDir(OBB_PATH);
-    FileUtils.createDir(GENERIC_PATH);
+    //FileUtils.createDir(GENERIC_PATH);
   }
 
   /**
@@ -228,11 +226,7 @@ public class AptoideDownloadManager {
 
     DOWNLOADS_STORAGE_PATH = settingsInterface.getDownloadDir();
     APK_PATH = DOWNLOADS_STORAGE_PATH + "apks/";
-    GENERIC_PATH = DOWNLOADS_STORAGE_PATH + "generic/";
-    OBB_PATH = settingsInterface.getObbDir();
-    if (TextUtils.isEmpty(OBB_PATH)) {
-      OBB_PATH = GENERIC_PATH;
-    }
+    OBB_PATH = DOWNLOADS_STORAGE_PATH + "obb/";
     this.downloadAccessor = downloadAccessor;
   }
 
@@ -332,5 +326,17 @@ public class AptoideDownloadManager {
         FileUtils.removeFile(DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName() + ".temp");
       }
     }
+  }
+
+  public Observable<Void> invalidateDatabase() {
+    return getDownloads().first()
+        .flatMapIterable(downloads -> downloads)
+        .filter(download -> getStateIfFileExists(download) == Download.FILE_MISSING)
+        .map(download -> {
+          downloadAccessor.delete(download.getMd5());
+          return null;
+        })
+        .toList()
+        .flatMap(success -> Observable.just(null));
   }
 }

@@ -43,17 +43,17 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
     return displayables.get(position).getViewLayout();
   }
 
+  @Override public void onViewRecycled(Widget holder) {
+    super.onViewRecycled(holder);
+    holder.unbindView();
+  }
+
   @Override public long getItemId(int position) {
     return position;
   }
 
   @Override public int getItemCount() {
     return displayables.size();
-  }
-
-  @Override public void onViewDetachedFromWindow(Widget holder) {
-    super.onViewDetachedFromWindow(holder);
-    holder.unbindView();
   }
 
   public Displayable popDisplayable() {

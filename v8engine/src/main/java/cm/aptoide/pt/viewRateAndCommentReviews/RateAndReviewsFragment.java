@@ -47,6 +47,7 @@ import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingBarsLayout;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingTotalsLayout;
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.List;
+import lombok.Getter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -60,16 +61,15 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   private static final String REVIEW_ID = "review_id";
   private static final String STORE_THEME = "store_theme";
 
-  String storeName;
-  long reviewId;
-
   private long appId;
+  @Getter private long reviewId;
   private String packageName;
+  @Getter private String storeName;
   private String storeTheme;
-  String appName;
+  @Getter private String appName;
+  private MenuItem installMenuItem;
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
-  private MenuItem installMenuItem;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -104,10 +104,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(APP_ID);
+    reviewId = args.getLong(REVIEW_ID);
     packageName = args.getString(PACKAGE_NAME);
     storeName = args.getString(STORE_NAME);
     appName = args.getString(APP_NAME);
-    reviewId = args.getLong(REVIEW_ID, -1);
     storeTheme = args.getString(STORE_THEME);
   }
 
@@ -123,7 +123,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+    final FloatingActionButton floatingActionButton =
+        (FloatingActionButton) view.findViewById(R.id.fab);
     setHasOptionsMenu(true);
 
     ratingTotalsLayout = new RatingTotalsLayout(view);
@@ -172,7 +173,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     }
     if (itemId == R.id.menu_install) {
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-          .newAppViewFragment(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
+          .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
     return super.onOptionsItemSelected(item);
