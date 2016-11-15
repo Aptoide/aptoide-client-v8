@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -194,8 +193,7 @@ import rx.android.schedulers.AndroidSchedulers;
       latestAvailableLayout.setVisibility(View.GONE);
     }
 
-    ContextWrapper ctx = (ContextWrapper) versionName.getContext();
-    permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+    permissionRequest = ((PermissionRequest) getContext());
   }
 
   private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {
@@ -241,9 +239,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
     return view -> {
       final Context context = view.getContext();
-      ContextWrapper contextWrapper = (ContextWrapper) context;
-      final PermissionRequest permissionRequest =
-          ((PermissionRequest) contextWrapper.getBaseContext());
+      final PermissionRequest permissionRequest = (PermissionRequest) getContext();
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 

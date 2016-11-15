@@ -48,8 +48,6 @@ import java.util.ArrayList;
  */
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
 
-  private static final String TAG = MainActivityFragment.class.getSimpleName();
-
   @Override protected android.support.v4.app.Fragment createFragment() {
     return V8Engine.getFragmentProvider()
         .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,

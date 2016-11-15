@@ -1,4 +1,4 @@
-package cm.aptoide.pt.networkclient.okhttp.newCache;
+package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import cm.aptoide.pt.logger.Logger;
 import java.io.IOException;

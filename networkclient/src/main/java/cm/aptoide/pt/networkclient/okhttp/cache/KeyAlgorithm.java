@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 27/04/2016.
  */
 
-package cm.aptoide.pt.networkclient.okhttp.newCache;
+package cm.aptoide.pt.networkclient.okhttp.cache;
 
 /**
  * Created by sithengineer on 27/04/16.
