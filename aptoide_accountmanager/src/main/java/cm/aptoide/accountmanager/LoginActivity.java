@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
@@ -45,6 +47,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   private boolean setSkipButton;
 
   private CompositeSubscription subscriptions;
+  private TextView orMessage;
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     if (setSkipButton) {
@@ -59,7 +62,6 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     super.onCreate(savedInstanceState);
 
     subscriptions = new CompositeSubscription();
-
     FacebookSdk.sdkInitialize(getApplicationContext());
     setContentView(getLayoutId());
     bindViews();
@@ -68,6 +70,9 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     setSkipButton = getIntent().getBooleanExtra(SKIP_BUTTON, false);
     AptoideAccountManager.getInstance()
         .setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
+    if (!isSocialLoginsAvailable()) {
+      orMessage.setVisibility(View.GONE);
+    }
     setupShowHidePassButton();
     setupToolbar();
     setupViewListeners();
@@ -156,6 +161,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     forgotPassword = (TextView) findViewById(R.id.forgot_password);
+    orMessage = (TextView) findViewById(R.id.or_message);
   }
 
   @Override public void onLoginSuccess() {
@@ -179,5 +185,18 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
   @Override public String getIntroducedPassword() {
     return password_box.getText().toString();
+  }
+
+  public boolean isSocialLoginsAvailable() {
+    for (AptoidePreferencesConfiguration.SocialLogin socialLogin : AptoidePreferencesConfiguration.SocialLogin
+        .values()) {
+      if (Application.getConfiguration().isLoginAvailable(socialLogin)) {
+        if (socialLogin == AptoidePreferencesConfiguration.SocialLogin.GOOGLE) {
+          return GoogleLoginUtils.isGoogleEnabledOnCurrentDevice(this);
+        }
+        return true;
+      }
+    }
+    return false;
   }
 }

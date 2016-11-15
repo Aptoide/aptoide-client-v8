@@ -103,6 +103,15 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return "default";
   }
 
+  @Override public boolean isLoginAvailable(SocialLogin loginType) {
+    switch (loginType) {
+      case FACEBOOK:
+      case GOOGLE:
+        return true;
+    }
+    return false;
+  }
+
   @Override public int getDefaultThemeRes() {
     return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
   }

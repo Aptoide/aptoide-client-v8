@@ -34,7 +34,6 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
   private static final int REQUEST_RESOLVE_ERROR = 1001;
   // Unique tag for the error dialog fragment
   private static final String DIALOG_ERROR = "dialog_error";
-  private static boolean gmsAvailable;
   private static WeakReference activityReference;
   // Bool to track whether the app is already resolving an error
   private static boolean mResolvingError = false;
@@ -43,30 +42,18 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
    * This method set's up google social login
    *
    * @param activity Where the login button is
+   * @param googleSignInButton
    */
-  protected static void setUpGoogle(FragmentActivity activity) {
+  protected static void setUpGoogle(FragmentActivity activity, View googleSignInButton) {
     activityReference = new WeakReference(activity);
-    final View googleSignIn = activity.findViewById(R.id.g_sign_in_button);
-    final int connectionResult =
-        GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
-
-    //final Collection<Integer> badResults =
-    //    Arrays.asList(ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_DISABLED, ConnectionResult.SERVICE_DISABLED);
-    //GoogleLoginUtils.gmsAvailable =
-    //    BuildConfig.GMS_CONFIGURED && !badResults.contains(connectionResult);
-
-    GoogleLoginUtils.gmsAvailable =
-        BuildConfig.GMS_CONFIGURED && connectionResult == ConnectionResult.SUCCESS;
-
-    if (!gmsAvailable) {
-      googleSignIn.setVisibility(View.GONE);
+    if (!isGoogleEnabledOnCurrentDevice(activity)) {
       return;
     }
 
     Logger.d(TAG, "setUpGoogle serverId: " + BuildConfig.GMS_SERVER_ID);
     GoogleApiClient googleApiClient = setupGoogleApiClient(activity);
-    if (googleSignIn != null) {
-      googleSignIn.setOnClickListener(new View.OnClickListener() {
+    if (googleSignInButton != null) {
+      googleSignInButton.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(final View v) {
           Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
           if (v.getContext() instanceof Activity) {
@@ -78,6 +65,12 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
       });
     }
     googleApiClient.disconnect();
+  }
+
+  public static boolean isGoogleEnabledOnCurrentDevice(FragmentActivity activity) {
+    final int connectionResult =
+        GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
+    return BuildConfig.GMS_CONFIGURED && connectionResult == ConnectionResult.SUCCESS;
   }
 
   public static GoogleApiClient setupGoogleApiClient(FragmentActivity activity) {
