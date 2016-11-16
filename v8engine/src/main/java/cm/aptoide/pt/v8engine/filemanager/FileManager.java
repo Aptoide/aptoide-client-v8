@@ -46,8 +46,7 @@ public class FileManager implements CacheManager {
     return fileUtils.deleteFolder(cacheFolders)
         .flatMap(deletedSize -> {
           if (deletedSize > 0) {
-            return AptoideDownloadManager.getInstance()
-                .invalidateDatabase()
+            return downloadManager.invalidateDatabase()
                 .map(success -> deletedSize);
           } else {
             return Observable.just(deletedSize);
