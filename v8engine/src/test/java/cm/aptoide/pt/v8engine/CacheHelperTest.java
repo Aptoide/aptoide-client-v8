@@ -1,14 +1,14 @@
 package cm.aptoide.pt.v8engine;
 
 import cm.aptoide.pt.utils.FileUtils;
-import cm.aptoide.pt.v8engine.util.CacheHelper;
+import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
 
-import static cm.aptoide.pt.v8engine.util.CacheHelper.VALUE_TO_CONVERT_MB_TO_BYTES;
+import static cm.aptoide.pt.v8engine.filemanager.CacheHelper.VALUE_TO_CONVERT_MB_TO_BYTES;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

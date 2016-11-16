@@ -3,13 +3,17 @@
  * Modified by SithEngineer on 02/09/2016.
  */
 
-package cm.aptoide.pt.v8engine.util;
+package cm.aptoide.pt.v8engine.filemanager;
 
+import android.text.format.DateUtils;
 import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.DownloadManagerSettingsI;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import rx.Observable;
@@ -19,6 +23,7 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 7/7/16.
  */
 public class CacheHelper implements CacheManager {
+  public static final long MONTH_CACHE_TIME = DateUtils.DAY_IN_MILLIS * 30;
   public static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();
   private final List<FolderToManage> foldersToCleanPath;
@@ -33,6 +38,20 @@ public class CacheHelper implements CacheManager {
     this.foldersToCleanPath = foldersToCleanPath;
     this.maxCacheSize = maxCacheSize * VALUE_TO_CONVERT_MB_TO_BYTES;
     this.fileUtils = fileUtils;
+  }
+
+  public static CacheHelper build() {
+    final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
+    List<CacheHelper.FolderToManage> folders = new LinkedList<>();
+
+    String cachePath = Application.getConfiguration().getCachePath();
+
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath), DateUtils.HOUR_IN_MILLIS));
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), MONTH_CACHE_TIME));
+    folders.add(new CacheHelper.FolderToManage(
+        new File(Application.getContext().getCacheDir() + "image_manager_disk_cache/"),
+        MONTH_CACHE_TIME));
+    return new CacheHelper(settingsInterface.getMaxCacheSize(), folders, new FileUtils());
   }
 
   public Observable<Long> cleanCache() {
