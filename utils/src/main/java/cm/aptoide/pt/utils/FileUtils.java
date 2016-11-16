@@ -93,13 +93,12 @@ public class FileUtils {
     }
     long size = 0;
     if (dir.isDirectory()) {
-      String[] children = dir.list() == null ? new String[0] : dir.list();
-      for (String child : children) {
-        size += deleteDir(new File(dir, child));
+      File[] children = dir.listFiles() == null ? new File[0] : dir.listFiles();
+      for (File child : children) {
+        size += deleteDir(child);
       }
-    } else {
-      size += dir.length();
     }
+    size += dir.length();
     if (!dir.exists() || dir.delete()) {
       return size;
     } else {
