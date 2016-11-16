@@ -44,7 +44,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     return database.get(Installed.class, Installed.PACKAGE_NAME, packageName);
   }
 
-  public void delete(String packageName) {
+  public void remove(String packageName) {
     database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
   }
 
@@ -82,7 +82,4 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     database.insertAll(installedList);
   }
 
-  public void remove(String packageName) {
-    database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
-  }
 }
