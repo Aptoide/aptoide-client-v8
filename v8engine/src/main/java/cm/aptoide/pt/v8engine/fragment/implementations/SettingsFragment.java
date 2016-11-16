@@ -237,6 +237,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .observeOn(Schedulers.io())
                 .flatMap(eResponse -> checkInstalling())
                 .flatMap(eResponse -> fileUtils.deleteFolder(cacheFolders))
+                .flatMap(deletedSize -> {
+                  if (deletedSize > 0) {
+                    return AptoideDownloadManager.getInstance()
+                        .invalidateDatabase()
+                        .map(success -> deletedSize);
+                  } else {
+                    return Observable.just(deletedSize);
+                  }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> dialog.dismiss())
                 .subscribe(deletedSize -> {
