@@ -32,7 +32,7 @@ public class CacheHelper {
   /**
    * @param maxCacheSize max cache size in MB
    */
-  public CacheHelper(long maxCacheSize, List<FolderToManage> foldersToCleanPath,
+  protected CacheHelper(long maxCacheSize, List<FolderToManage> foldersToCleanPath,
       FileUtils fileUtils) {
     this.foldersToCleanPath = foldersToCleanPath;
     this.maxCacheSize = maxCacheSize * VALUE_TO_CONVERT_MB_TO_BYTES;

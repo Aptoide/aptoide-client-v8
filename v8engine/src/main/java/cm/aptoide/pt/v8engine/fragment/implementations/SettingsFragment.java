@@ -52,8 +52,6 @@ import cm.aptoide.pt.v8engine.util.SettingsConstants;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static cm.aptoide.pt.v8engine.filemanager.FileManager.DownloadIsRunningException;
-
 /**
  * Created by fabio on 26-10-2015.
  *
@@ -217,13 +215,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 getString(R.string.storage_dialog_title),
                 getString(R.string.clear_cache_dialog_message))
                 .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
-                .doOnNext(eResponse -> dialog.show()).flatMap(eResponse -> fileManager.clearCache())
+                .doOnNext(eResponse -> dialog.show())
+                .flatMap(eResponse -> fileManager.deleteCache())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> dialog.dismiss())
                 .subscribe(deletedSize -> {
-                  deleteFilesSuccessMessage(deletedSize);
+                  ShowMessage.asSnack(SettingsFragment.this,
+                      AptoideUtils.StringU.getFormattedString(R.string.freed_space,
+                          AptoideUtils.StringU.formatBytes(deletedSize)));
                 }, throwable -> {
-                  deleteFilesErrorMessage(throwable);
+                  ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
+                  throwable.printStackTrace();
                 }));
             return false;
           }
@@ -347,21 +349,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (isSetingPIN) {
       dialogSetAdultPin(mp).show();
     }
-  }
-
-  private void deleteFilesErrorMessage(Throwable throwable) {
-    if (throwable instanceof DownloadIsRunningException) {
-      ShowMessage.asSnack(SettingsFragment.this, R.string.download_is_running_error);
-    } else {
-      ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
-      throwable.printStackTrace();
-    }
-  }
-
-  private void deleteFilesSuccessMessage(Long deletedSize) {
-    ShowMessage.asSnack(SettingsFragment.this,
-        AptoideUtils.StringU.getFormattedString(R.string.freed_space,
-            AptoideUtils.StringU.formatBytes(deletedSize)));
   }
 
   private Dialog dialogSetAdultPin(final Preference mp) {
