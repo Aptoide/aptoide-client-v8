@@ -41,7 +41,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
@@ -1192,6 +1192,8 @@ public class AptoideUtils {
     static final private int baseLineXNotification = 320;
     static final private int baseLineYNotification = 180;
     private static final String AVATAR_STRING = "_avatar";
+    private static final Pattern urlWithDimensionPattern =
+        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
     private static int baseLineScreenshotLand = 256;
     private static int baseLineScreenshotPort = 96;
 
@@ -1459,9 +1461,6 @@ public class AptoideUtils {
       return imageUrl;
     }
 
-    private static final Pattern urlWithDimensionPattern =
-        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
-
     /**
      * Cleans the image URL out of "_widthXheight"
      */
@@ -1579,7 +1578,8 @@ public class AptoideUtils {
       return false;
     }
 
-    public static String getDefaultUserAgent(GenerateClientId generateClientId, UserData userData) {
+    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID,
+        UserData userData) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1599,8 +1599,8 @@ public class AptoideUtils {
       StringBuilder sb = new StringBuilder(
           "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
-      if (generateClientId != null) {
-        sb.append(generateClientId.getClientId());
+      if (aptoideClientUUID != null) {
+        sb.append(aptoideClientUUID.getAptoideClientUUID());
       }
       sb.append(";");
 
